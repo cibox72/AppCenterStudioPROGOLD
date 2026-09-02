@@ -53,6 +53,8 @@
         .screen { display: none; }
         .screen.active { display: block; }
         label { display: block; margin-bottom: 5px; font-size: 13px; color: #ffd700; }
+        .workflow-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 5px solid #f1c40f; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .foto-provino { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); text-align: center; width: 150px; position: relative; display: inline-block; margin: 10px; }
     </style>
 </head>
 <body>
@@ -67,7 +69,7 @@
         </div>
     </div>
 
-    <!-- 2. PANNELLO CONTENITORE PRINCIPALE -->
+    <!-- 2. PANNELLO CONTENITORE -->
     <div id="mainSuiteSection" class="screen">
         <div class="container">
             <header>
@@ -75,16 +77,17 @@
                 <p style="color: #aaa; margin-top: 5px;">Suite Gestionale Privata v16.8</p>
             </header>
 
-            <!-- Menu Navigazione -->
+            <!-- Menu Navigazione Sbloccato -->
             <div class="nav-menu">
                 <button id="btn-plancia" onclick="attivaModulo('planciaFornitore', 'btn-plancia')" style="background:#ffd700; color:#000;">👑 Plancia Fornitore</button>
-                <button id="btn-prev" onclick="attivaModulo('moduloPreventivi', 'btn-prev')" style="background:#f1c40f; color:#000;">📝 01 Preventivi</button>
-                <button id="btn-cli" onclick="attivaModulo('moduloClienti', 'btn-cli')" style="background:#3498db; color:#fff;">👤 02 Clienti</button>
-                <button id="btn-work" onclick="alert('Il Modulo 03 Workflow verrà collegato al Passo 3')" style="background:#7f8c8d; color:#fff;">⚙️ 03 Workflow</button>
+                <button id="btn-prev" onclick="attivaModulo('moduloPreventivi', 'btn-prev')" style="background:#rgba(52, 73, 94, 0.8); color:#ecf0f1;">📝 01 Preventivi</button>
+                <button id="btn-cli" onclick="attivaModulo('moduloClienti', 'btn-cli')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">👤 02 Clienti</button>
+                <button id="btn-work" onclick="attivaModulo('moduloWorkflow', 'btn-work')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">⚙️ 03 Workflow</button>
+                <button id="btn-foto" onclick="attivaModulo('moduloFotoGru', 'btn-foto')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">📸 04 Configura GRU</button>
                 <button onclick="logoutUniversale()" style="background: #e74c3c; color:#fff;">🚪 Esci dallo Studio</button>
             </div>
 
-            <!-- SCHERMATA: PLANCIA FORNITORE SUPREMO -->
+            <!-- TAB: PLANCIA FORNITORE SUPREMO -->
             <div id="planciaFornitore" class="screen-module active">
                 <div class="grid">
                     <div class="card" style="text-align: center;">
@@ -113,7 +116,7 @@
                 </div>
             </div>
 
-            <!-- MODULO 02: GESTIONE CLIENTI -->
+            <!-- TAB: GESTIONE CLIENTI -->
             <div id="moduloClienti" class="screen-module">
                 <div class="card">
                     <h2>📇 Gestione Anagrafica Clienti</h2>
@@ -130,25 +133,12 @@
                     <label>Indirizzo residenza</label><input type="text" id="cInd" placeholder="Via / Piazza, Città">
                     <label>Note aggiuntive cliente</label><textarea id="cNote" rows="2" placeholder="Informazioni particolari..."></textarea>
                     <button onclick="salvaNuovoCliente()" style="width:100%; margin-top:10px; background:#3498db; color:#fff;">Salva in Archivio</button>
-                    
-                    <h3 style="margin-top:25px; color:#ffd700;">Elenco Clienti Registrati</h3>
                     <table id="tabellaClienti"><thead><tr><th>ID</th><th>Nominativo</th><th>Recapiti</th><th>Indirizzo</th></tr></thead><tbody></tbody></table>
                 </div>
             </div>
 
-            <!-- MODULO 01: PREVENTIVI & CONTRATTI -->
+            <!-- TAB: PREVENTIVI & CONTRATTI -->
             <div id="moduloPreventivi" class="screen-module">
                 <div class="card" style="border: 1px solid #f1c40f;">
                     <h2>📝 Generatore Preventivi & Contratti</h2>
-                    
                     <div class="grid" style="margin-top: 15px;">
-                        <!-- CLIENTE A -->
-                        <div class="card" style="background:rgba(0,0,0,0.2);">
-                            <h3 style="color:#f1c40f; margin-bottom:10px;">👤 Anagrafica Cliente A (Intestatario)</h3>
-                            <input type="text" id="p_nomeA" placeholder="Nome">
-                            <input type="text" id="p_cognomeA" placeholder="Cognome">
-                            <input type="text" id="p_telA" placeholder="Telefono">
-                            <input type="text" id="p_emailA" placeholder="Email">
-                            <input type="text" id="p_cittaA" placeholder="Città">
-                            <button onclick="mappaIndirizzo('p_cittaA')" style="width:100%; font-size:12px; padding:5px;">🗺️ Maps indirizzo cliente A</button>
-                        </div>
