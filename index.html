@@ -56,104 +56,89 @@
         .workflow-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 5px solid #f1c40f; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .foto-provino { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); text-align: center; width: 150px; position: relative; display: inline-block; margin: 10px; }
     </style>
+</head>
+<body>
 
-    <script>
-        // Carichiamo tutte le variabili e le funzioni nell'head in modo che siano subito disponibili
-        let databaseClienti = JSON.parse(localStorage.getItem('suite_clienti')) || [];
-        let databaseOfferte = JSON.parse(localStorage.getItem('suite_offerte')) || [];
-        let databaseStudi = JSON.parse(localStorage.getItem('suite_studi')) || [];
-        let databaseWorkflow = JSON.parse(localStorage.getItem('suite_workflow')) || [];
-        let elencoCuoriciniSelezionati = [];
+    <!-- 1. LOGIN -->
+    <div id="loginScreen" class="screen active">
+        <div class="card" style="width: 360px; text-align: center; position: relative; z-index: 10;">
+            <h2 style="color: #ffd700; margin-bottom: 15px;">🔐 Accesso Suite Premium</h2>
+            <input type="text" id="username" placeholder="Username" value="admin">
+            <input type="password" id="password" placeholder="Password" value="58879@Stella">
+            <button onclick="loginUniversale()" style="width: 100%; margin-top: 10px; background: #ffd700; color: #000;">Entra nel Sistema</button>
+        </div>
+    </div>
 
-        function loginUniversale() {
-            const u = document.getElementById('username').value.trim();
-            const p = document.getElementById('password').value.trim();
-            if (u === 'admin' && p === '58879@Stella') {
-                document.getElementById('loginScreen').classList.remove('active');
-                document.getElementById('mainSuiteSection').classList.add('active');
-                aggiornaPannelli();
-            } else { 
-                alert('Credenziali errate.'); 
-            }
-        }
+    <!-- 2. PANNELLO CONTENITORE -->
+    <div id="mainSuiteSection" class="screen">
+        <div class="container">
+            <header>
+                <h1>🎨 AppCenter Studio Premium Gold</h1>
+                <p style="color: #aaa; margin-top: 5px;">Suite Gestionale Privata v16.8</p>
+            </header>
 
-        function logoutUniversale() {
-            document.getElementById('mainSuiteSection').classList.remove('active');
-            document.getElementById('loginSection').classList.add('active');
-        }
+            <!-- Menu Navigazione -->
+            <div class="nav-menu">
+                <button id="btn-plancia" onclick="attivaModulo('planciaFornitore', 'btn-plancia')" style="background:#ffd700; color:#000;">👑 Plancia Fornitore</button>
+                <button id="btn-prev" onclick="attivaModulo('moduloPreventivi', 'btn-prev')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">📝 01 Preventivi</button>
+                <button id="btn-cli" onclick="attivaModulo('moduloClienti', 'btn-cli')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">👤 02 Clienti</button>
+                <button id="btn-work" onclick="attivaModulo('moduloWorkflow', 'btn-work')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">⚙️ 03 Workflow</button>
+                <button id="btn-foto" onclick="attivaModulo('moduloFotoGru', 'btn-foto')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">📸 04 Configura GRU</button>
+                <button onclick="logoutUniversale()" style="background: #e74c3c; color:#fff;">🚪 Esci dallo Studio</button>
+            </div>
 
-        function attivaModulo(idModulo, idBottone) {
-            document.querySelectorAll('.screen-module').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('.nav-menu button').forEach(btn => {
-                btn.style.background = 'rgba(52, 73, 94, 0.8)'; btn.style.color = '#ecf0f1';
-            });
-            document.getElementById(idModulo).classList.add('active');
-            const clicked = document.getElementById(idBottone);
-            if(clicked) {
-                clicked.style.background = '#ffd700'; clicked.style.color = '#000';
-            }
-        }
+            <!-- TAB: PLANCIA FORNITORE SUPREMO -->
+            <div id="planciaFornitore" class="screen-module active">
+                <div class="grid">
+                    <div class="card" style="text-align: center;">
+                        <h3>Studi Attivi nel Cloud</h3>
+                        <p id="txt-studi-totali" style="font-size: 2.5em; color: #ffd700; font-weight: 300;">0</p>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <h3>Offerte Configurate</h3>
+                        <p id="txt-offerte-totali" style="font-size: 2.5em; color: #ffd700; font-weight: 300;">0</p>
+                    </div>
+                </div>
+                <div class="grid" style="margin-top: 20px;">
+                    <div class="card">
+                        <h3>➕ Configura Nuovo Studio</h3>
+                        <input type="text" id="admStudioName" placeholder="Nome Studio">
+                        <input type="text" id="admStudioRef" placeholder="Referente">
+                        <select id="admStudioOffer"><option value="">Scegli Offerta</option></select>
+                        <button onclick="adminAggiungiStudio()" style="width:100%;">Salva Studio</button>
+                    </div>
+                    <div class="card">
+                        <h3>🏷️ Gestione Offerte</h3>
+                        <input type="text" id="admOfferTitle" placeholder="Titolo Offerta">
+                        <input type="text" id="admOfferPrice" placeholder="Prezzo (es. €50/mese)">
+                        <button onclick="adminAggiungiOfferta()" style="width:100%;">🏷️ Aggiungi Offerta</button>
+                    </div>
+                </div>
+            </div>
 
-        function aggiornaPannelli() {
-            const txtStudi = document.getElementById('txt-studi-totali');
-            const txtOfferte = document.getElementById('txt-offerte-totali');
-            if(txtStudi) txtStudi.innerText = databaseStudi.length;
-            if(txtOfferte) txtOfferte.innerText = databaseOfferte.length;
-            
-            const sel = document.getElementById('admStudioOffer');
-            if(sel) { sel.innerHTML = '<option value="">Scegli Offerta</option>' + databaseOfferte.map(o => `<option value="${o.titolo}">${o.titolo}</option>`).join(''); }
-            renderizzaClienti();
-            renderizzaWorkflowLista();
-            renderizzaGrigliaVisualeProvini();
-        }
+            <!-- TAB: GESTIONE CLIENTI -->
+            <div id="moduloClienti" class="screen-module">
+                <div class="card">
+                    <h2>📇 Gestione Anagrafica Clienti</h2>
+                    <div class="grid" style="margin-top:15px;">
+                        <div>
+                            <label>Nome *</label><input type="text" id="cNome" placeholder="Inserisci Nome">
+                            <label>Cognome *</label><input type="text" id="cCognome" placeholder="Inserisci Cognome">
+                        </div>
+                        <div>
+                            <label>Telefono</label><input type="text" id="cTel" placeholder="Inserisci Telefono">
+                            <label>Email</label><input type="email" id="cEmail" placeholder="Inserisci Email">
+                        </div>
+                    </div>
+                    <label>Indirizzo residenza</label><input type="text" id="cInd" placeholder="Via / Piazza, Città">
+                    <label>Note aggiuntive cliente</label><textarea id="cNote" rows="2" placeholder="Informazioni particolari..."></textarea>
+                    <button onclick="salvaNuovoCliente()" style="width:100%; margin-top:10px; background:#3498db; color:#fff;">Salva in Archivio</button>
+                    <table id="tabellaClienti"><thead><tr><th>ID</th><th>Nominativo</th><th>Recapiti</th><th>Indirizzo</th></tr></thead><tbody></tbody></table>
+                </div>
+            </div>
 
-        function adminAggiungiOfferta() {
-            const t = document.getElementById('admOfferTitle').value.trim();
-            const p = document.getElementById('admOfferPrice').value.trim();
-            if(!t || !p) return alert('Compila i campi');
-            databaseOfferte.push({titolo: t, prezzo: p});
-            localStorage.setItem('suite_offerte', JSON.stringify(databaseOfferte));
-            document.getElementById('admOfferTitle').value = ''; document.getElementById('admOfferPrice').value = '';
-            aggiornaPannelli();
-        }
-
-        function adminAggiungiStudio() {
-            const n = document.getElementById('admStudioName').value.trim();
-            const r = document.getElementById('admStudioRef').value.trim();
-            if(!n || !r) return alert('Compila i campi');
-            databaseStudi.push({nome: n, referente: r});
-            localStorage.setItem('suite_studi', JSON.stringify(databaseStudi));
-            document.getElementById('admStudioName').value = ''; document.getElementById('admStudioRef').value = '';
-            aggiornaPannelli();
-        }
-
-        function salvaNuovoCliente() {
-            const nome = document.getElementById('cNome').value.trim();
-            const cognome = document.getElementById('cCognome').value.trim();
-            if(!nome || !cognome) return alert('Compila nome e cognome');
-            
-            const nId = 'CLI-' + Math.floor(100000 + Math.random() * 900000);
-            const c = { id: nId, nome, cognome, tel: document.getElementById('cTel').value, email: document.getElementById('cEmail').value, ind: document.getElementById('cInd').value };
-            databaseClienti.push(c);
-            localStorage.setItem('suite_clienti', JSON.stringify(databaseClienti));
-
-            databaseWorkflow.push({ id: 'WRK-' + Math.floor(1000 + Math.random() * 9000), cliente_id: nId, cliente_nome: nome + ' ' + cognome, step: 1, stato_foto: 'In lavorazione', stato_video: 'In lavorazione', consegnato: false });
-            localStorage.setItem('suite_workflow', JSON.stringify(databaseWorkflow));
-
-            document.getElementById('cNome').value = ''; document.getElementById('cCognome').value = '';
-            document.getElementById('cTel').value = ''; document.getElementById('cEmail').value = ''; document.getElementById('cInd').value = '';
-            aggiornaPannelli();
-        }
-
-        function renderizzaClienti() {
-            const tbody = document.querySelector('#tabellaClienti tbody'); if(!tbody) return; tbody.innerHTML = '';
-            if(databaseClienti.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#888;">Nessun cliente in archivio.</td></tr>'; return; }
-            databaseClienti.forEach(c => { tbody.innerHTML += `<tr><td>${c.id}</td><td><strong>${c.nome} ${c.cognome}</strong></td><td>📱 ${c.tel}<br>📧 ${c.email}</td><td>📍 ${c.ind}</td></tr>`; });
-        }
-
-        function mappaIndirizzo(fId) {
-            const v = document.getElementById(fId).value.trim(); if(!v) return alert('Nessun indirizzo.');
-            window.open('https://google.com' + encodeURIComponent(v), '_blank');
-        }
-
-        function eseguiCalcoloMatematico() {
+            <!-- TAB: PREVENTIVI & CONTRATTI -->
+            <div id="moduloPreventivi" class="screen-module">
+                <div class="card" style="border: 1px solid #f1c40f;">
+                    <h2>📝 Generatore Preventivi & Contratti</h2>
+                    <div class="grid" style="margin-top: 15px;">
