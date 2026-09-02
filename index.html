@@ -56,6 +56,26 @@
         .workflow-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 5px solid #f1c40f; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .foto-provino { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); text-align: center; width: 150px; position: relative; display: inline-block; margin: 10px; }
     </style>
+
+    <script>
+        // Spostiamo le funzioni principali nell'head per caricarle istantaneamente
+        function loginUniversale() {
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value.trim();
+            if (u === 'admin' && p === '58879@Stella') {
+                document.getElementById('loginScreen').classList.remove('active');
+                document.getElementById('mainSuiteSection').classList.add('active');
+                aggiornaPannelli();
+            } else { 
+                alert('Credenziali errate.'); 
+            }
+        }
+
+        function logoutUniversale() {
+            document.getElementById('mainSuiteSection').classList.remove('active');
+            document.getElementById('loginSection').classList.add('active');
+        }
+    </script>
 </head>
 <body>
 
@@ -77,10 +97,10 @@
                 <p style="color: #aaa; margin-top: 5px;">Suite Gestionale Privata v16.8</p>
             </header>
 
-            <!-- Menu Navigazione Sbloccato -->
+            <!-- Menu Navigazione -->
             <div class="nav-menu">
                 <button id="btn-plancia" onclick="attivaModulo('planciaFornitore', 'btn-plancia')" style="background:#ffd700; color:#000;">👑 Plancia Fornitore</button>
-                <button id="btn-prev" onclick="attivaModulo('moduloPreventivi', 'btn-prev')" style="background:#rgba(52, 73, 94, 0.8); color:#ecf0f1;">📝 01 Preventivi</button>
+                <button id="btn-prev" onclick="attivaModulo('moduloPreventivi', 'btn-prev')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">📝 01 Preventivi</button>
                 <button id="btn-cli" onclick="attivaModulo('moduloClienti', 'btn-cli')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">👤 02 Clienti</button>
                 <button id="btn-work" onclick="attivaModulo('moduloWorkflow', 'btn-work')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">⚙️ 03 Workflow</button>
                 <button id="btn-foto" onclick="attivaModulo('moduloFotoGru', 'btn-foto')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">📸 04 Configura GRU</button>
@@ -133,12 +153,3 @@
                     <label>Indirizzo residenza</label><input type="text" id="cInd" placeholder="Via / Piazza, Città">
                     <label>Note aggiuntive cliente</label><textarea id="cNote" rows="2" placeholder="Informazioni particolari..."></textarea>
                     <button onclick="salvaNuovoCliente()" style="width:100%; margin-top:10px; background:#3498db; color:#fff;">Salva in Archivio</button>
-                    <table id="tabellaClienti"><thead><tr><th>ID</th><th>Nominativo</th><th>Recapiti</th><th>Indirizzo</th></tr></thead><tbody></tbody></table>
-                </div>
-            </div>
-
-            <!-- TAB: PREVENTIVI & CONTRATTI -->
-            <div id="moduloPreventivi" class="screen-module">
-                <div class="card" style="border: 1px solid #f1c40f;">
-                    <h2>📝 Generatore Preventivi & Contratti</h2>
-                    <div class="grid" style="margin-top: 15px;">
