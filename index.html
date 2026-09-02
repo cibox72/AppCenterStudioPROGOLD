@@ -3,140 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>01 Preventivi & Contratti - AppCenterStudio Premium GOLD</title>
+    <title>AppCenterStudioPremiumGold - Login Admin</title>
     <style>
-        :root{--nero:#111;--grigio:#444;--bordo:#d9d9d9;--chiaro:#f7f7f7;--gold:#d4af37}
-        *{box-sizing:border-box}
-        body{margin:0;font-family:Georgia,'Segoe UI',Tahoma,sans-serif;background:radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(240,242,247,0.6) 35%, rgba(220,225,235,0.3) 100%),linear-gradient(180deg,#fafafb 0%,#e4e7ee 100%);background-attachment:fixed;color:var(--nero);min-height:100vh}
-        .topbar{display:flex;gap:6px;padding:8px 14px;background:rgba(255,255,255,0.85);border-bottom:1px solid var(--bordo);flex-wrap:wrap;align-items:center}
-        .topbar .pill{background:rgba(255,255,255,0.8);color:#111;border:1px solid #bbb;padding:7px 14px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
-        .topbar .pill:hover{background:#111;color:#fff}
-        header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 22px;background:linear-gradient(90deg,#000,#333);color:#fff}
-        .brandName{font-weight:800;font-size:19px;font-family:Georgia,serif}
-        #studioNameHead{font-size:13px;opacity:.85}
-        .btn{background:#111;color:#fff;border:none;padding:10px 18px;border-radius:999px;font-weight:600;cursor:pointer;font-size:13px; text-decoration:none; display:inline-block;}
-        .btn:hover{opacity:.88}
-        .btn.secondary{background:#fff;color:#111;border:1px solid #bbb}
-        .btn.danger{background:#b00020;color:#fff}
-        .btn.primary{background:#1d5c74;color:#fff}
-        nav{display:flex;gap:6px;padding:10px 16px;background:rgba(255,255,255,0.85);border-bottom:1px solid var(--bordo);flex-wrap:wrap;position:sticky;top:0;z-index:5}
-        .tab{border:1px solid var(--bordo);background:#fff;padding:9px 14px;border-radius:999px;cursor:pointer;font-weight:600;color:#222;font-size:13px}
-        .tab.active{background:#111;color:#fff}
-        main{max-width:1080px;margin:18px auto;padding:0 16px 60px}
-        .card{background:rgba(255,255,255,0.92);border:1px solid var(--bordo);border-radius:12px;padding:18px;margin-bottom:16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);}
-        h2{margin:0 0 12px;font-size:17px;border-left:4px solid #000;padding-left:10px;font-family:Georgia,serif}
-        .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-        label{font-size:11px;color:#666;display:block;margin-bottom:3px; font-weight: bold;}
-        input,select,textarea{width:100%;padding:10px;border:1px solid var(--bordo);border-radius:8px;background:#fff;font-size:13px;font-family:inherit; box-sizing: border-box;}
-        input[readonly]{background:#f0f0f0;font-weight:700}
-        .highlight{background:linear-gradient(90deg,#000,#3a3a3a);color:#fff;padding:16px;border-radius:12px;display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
-        .highlight label{color:#bbb}
-        .highlight input{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4);color:#fff;font-weight:700}
-        .rowBetween{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-        .badge{background:#111;color:#fff;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700}
-        .locRow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-bottom:10px}
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #fff; }
-        th, td { padding: 12px 10px; border-bottom: 1px solid #e3e3e3; font-size: 13px; text-align: left; }
-        th { background: #111; color: #fff; }
-        .hidden { display: none !important; }
-        .active-block { display: block !important; }
-        .dark-panel { background: #111 !important; color: #fff !important; border: 1px solid rgba(255,255,255,0.1) !important; }
-        .dark-panel h2 { border-left: 4px solid var(--gold); color: #fff; }
-        .dark-panel label { color: #aaa; }
-        .dark-panel input, .dark-panel select { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 15px; }
-        .foto-card { background: #fff; border: 1px solid var(--bordo); padding: 8px; border-radius: 8px; text-align: center; position: relative; }
-        @media(max-width:800px){.grid,.highlight{grid-template-columns:1fr}.locRow{grid-template-columns:1fr}}
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #111 0%, #222 50%, #000 100%);
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h2 { margin-bottom: 24px; font-weight: 400; letter-spacing: 1px; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-bottom: 8px; font-size: 14px; color: #aaa; }
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus { border-color: #ffd700; outline: none; }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #ffd700;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover { background: #ffea70; }
     </style>
 </head>
 <body>
 
-    <div class="topbar">
-        <button class="pill" onclick="logoutSistema()">🚪 Esci</button>
-        <span id="info-utente" style="font-size: 12px; font-weight: bold; margin-left: auto; color: var(--grigio);">Sistema Connesso a Cloudflare R2</span>
+    <div class="login-card">
+        <h2>AppCenter Admin</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <label>Username Admin</label>
+                <input type="text" id="username" required placeholder="Inserisci username">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" required placeholder="••••••••">
+            </div>
+            <button type="submit">Accedi</button>
+        </form>
     </div>
 
-    <header>
-        <div class="brand"><span class="brandName">AppCenterStudio Gold Piattaforma Privata</span></div>
-        <div id="studioNameHead">Cloud Storage Attivo</div>
-    </header>
-
-    <!-- ========================================================================= -->
-    <!-- 🔐 1. SCHERMATA LOGIN SUPREMA                                             -->
-    <!-- ========================================================================= -->
-    <main id="view-login" class="active-block">
-        <div class="card dark-panel" style="max-width: 400px; margin: 60px auto; padding: 30px; border-radius: 12px;">
-            <h2 style="text-align: center; margin-bottom: 20px;">🔐 Login Piattaforma</h2>
-            <div style="display: flex; flex-direction: column; gap: 15px;">
-                <div>
-                    <label>Username / Email</label>
-                    <input type="text" id="login-user" placeholder="Nome utente">
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input type="password" id="login-pass" placeholder="Password">
-                </div>
-                <button type="button" class="btn" style="background: var(--gold); color: #000;" onclick="avviaLoginCore()">Entra nel Sistema</button>
-            </div>
-        </div>
-    </main>
-
-    <!-- ========================================================================= -->
-    <!-- 👑 2. PANNELLO AMMINISTRATORE (FORNITORE)                                 -->
-    <!-- ========================================================================= -->
-    <main id="view-admin" class="hidden">
-        <div class="card dark-panel">
-            <h2>👑 Plancia Fornitore Supremo (Luigi)</h2>
-            <div class="grid" style="margin-top: 15px;">
-                <div style="padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px; text-align: center;">
-                    <span>Studi Attivi su R2</span>
-                    <h3 id="adm-counter-studi" style="font-size: 2em; margin: 5px 0 0; color: #2ecc71;">0</h3>
-                </div>
-                <div style="padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px; text-align: center;">
-                    <span>Offerte Abbonamento</span>
-                    <h3 id="adm-counter-offerte" style="font-size: 2em; margin: 5px 0 0; color: #3498db;">0</h3>
-                </div>
-            </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 16px;">
-            <div class="card dark-panel">
-                <h3>➕ Configura Nuovo Studio</h3>
-                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
-                    <input type="text" id="add-stu-nome" placeholder="Nome Studio Fotografico">
-                    <input type="text" id="add-stu-ref" placeholder="Nome Referente">
-                    <input type="text" id="add-stu-tel" placeholder="Telefono / WhatsApp">
-                    <input type="email" id="add-stu-email" placeholder="Email d'Accesso">
-                    <input type="text" id="add-stu-pass" placeholder="Password (Editabile)">
-                    <select id="add-stu-offerta"><option value="">Seleziona Offerta</option></select>
-                    <button type="button" class="btn" style="background:#2ecc71; color:#fff;" onclick="creaStudioSuCloudflare()">Salva Studio</button>
-                </div>
-            </div>
-
-            <div class="card dark-panel">
-                <h3>🏷️ Gestione Offerte</h3>
-                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
-                    <input type="text" id="add-off-titolo" placeholder="Nome Offerta">
-                    <input type="text" id="add-off-prezzo" placeholder="Prezzo (es: €299/anno)">
-                    <button type="button" class="btn" style="background:#3498db; color:#fff;" onclick="creaOffertaSuCloudflare()">Aggiungi Offerta</button>
-                </div>
-                <div id="render-offerte-admin" style="margin-top:10px; max-height:100px; overflow-y:auto;"></div>
-            </div>
-        </div>
-
-        <div class="card dark-panel" style="margin-top:16px;">
-            <h3>📁 Archivio Studi & Interruttore Abbonamenti</h3>
-            <table style="color:#fff;">
-                <thead>
-                    <tr><th>Studio</th><th>Referente</th><th>Credenziali</th><th>Offerta</th><th>Stato</th><th style="text-align:right;">Azioni</th></tr>
-                </thead>
-                <tbody id="tbody-studi-admin"></tbody>
-            </table>
-        </div>
-    </main>
-
-    <!-- ========================================================================= -->
-    <!-- 📸 3. IL TUO SITO DI PREVENTIVI (IL TUO SCHEMA SACRO)                     -->
-    <!-- ========================================================================= -->
-    <main id="view-studio" class="hidden">
-        <nav>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            
+            // Logica temporanea di controllo credenziali richiesta da te
+            if(user === 'Mairaluigi@hotmail.com' && pass === '58879@Stella') {
+                alert('Accesso eseguito! Presto configureremo la dashboard.');
+                // Qui collegheremo il redirect alla dashboard
+            } else {
+                alert('Credenziali errate.');
+            }
+        });
+    </script>
+</body>
+</html>
