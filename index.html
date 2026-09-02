@@ -32,38 +32,23 @@
             border-radius: 8px;
             margin-bottom: 25px;
         }
-        h1, h2 { color: var(--primary-color); font-weight: 400; }
-        input, select, button {
+        h1, h2, h3 { color: var(--primary-color); font-weight: 400; }
+        input, select, button, textarea {
             padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #444; font-size: 15px;
         }
-        input, select { background: #222; color: #fff; width: 100%; box-sizing: border-box; }
+        input, select, textarea { background: #222; color: #fff; width: 100%; box-sizing: border-box; }
         button { background: var(--primary-color); color: #000; font-weight: bold; cursor: pointer; border: none; }
         button:hover { opacity: 0.9; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .color-picker-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; display: inline-block; margin-right: 10px; }
         #effectCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
         #loginScreen { display: flex; justify-content: center; align-items: center; height: 100vh; }
         #dashboardScreen { display: none; }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
+        table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 10px; }
         th, td { padding: 12px; border-bottom: 1px solid #333; }
         th { color: var(--primary-color); }
+        .totale-evidenza { font-size: 24px; font-weight: bold; color: #32cd32; margin-top: 10px; }
     </style>
-    
-    <script>
-        // Funzione di login inserita nell'head per essere subito disponibile al click
-        function handleLogin() {
-            const user = document.getElementById('username').value.trim();
-            const pass = document.getElementById('password').value.trim();
-            
-            if(user === 'Mairaluigi@hotmail.com' && pass === '58879@Stella') {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('dashboardScreen').style.display = 'block';
-                loadStudios();
-            } else {
-                alert('Credenziali non corrette. Riprova.');
-            }
-        }
-    </script>
 </head>
 <body>
 
@@ -73,21 +58,21 @@
     <div id="loginScreen">
         <div class="card" style="width: 350px; text-align: center;">
             <h2>AppCenter PROGOLD</h2>
-            <input type="text" id="username" placeholder="Mairaluigi@hotmail.com" value="Mairaluigi@hotmail.com">
+            <input type="text" id="username" placeholder="Username" value="admin">
             <input type="password" id="password" placeholder="Password" value="58879@Stella">
             <button onclick="handleLogin()" style="width: 100%; margin-top: 15px;">Accedi</button>
         </div>
     </div>
 
-    <!-- 2. DASHBOARD SUPER ADMIN -->
+    <!-- 2. DASHBOARD PRINCIPALE -->
     <div id="dashboardScreen">
         <div class="gradient-row">
-            <h1 style="margin:0; font-size: 24px; letter-spacing: 2px;">APPCENTER STUDIO PROGOLD — SUPER ADMIN PANEL</h1>
+            <h1 style="margin:0; font-size: 24px; letter-spacing: 2px;">APPCENTER STUDIO PROGOLD — PANEL</h1>
         </div>
         
         <div class="container">
+            <!-- SEZIONE ADMIN -->
             <div class="grid">
-                <!-- Personalizzazione Grafica -->
                 <div class="card">
                     <h2>Personalizzazione Grafica</h2>
                     <p>Cambia il colore del tema dell'app:</p>
@@ -101,18 +86,16 @@
                     <button onclick="toggleEffect('confetti')" style="margin-top: 5px;">Attiva/Disattiva Coriandoli 🎉</button>
                 </div>
 
-                <!-- Creazione Nuovo Studio -->
                 <div class="card">
                     <h2>Registra Nuovo Studio</h2>
                     <input type="text" id="studioName" placeholder="Nome Studio Fotografico">
-                    <input type="text" id="studioPhone" placeholder="Telefono con prefisso (es. 39333...)">
+                    <input type="text" id="studioPhone" placeholder="Telefono (es. 39333...)">
                     <input type="email" id="studioEmail" placeholder="Email">
                     <button onclick="createStudio()" style="width: 100%; margin-top: 10px;">Invia Link & Crea</button>
                 </div>
             </div>
 
-            <!-- Elenco degli Studi -->
-            <div class="card" style="margin-top: 25px;">
+            <div class="card">
                 <h2>Anagrafica Studi & Gestione Licenze (Telecomando)</h2>
                 <div style="overflow-x: auto;">
                     <table id="studiosTable">
@@ -126,16 +109,78 @@
                                 <th>Azioni</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- Dati dinamici -->
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
+            </div>
+
+            <!-- GENERATORE PREVENTIVI & CONTRATTI -->
+            <div class="card" style="margin-top: 40px; border: 1px solid var(--primary-color);">
+                <h2>📝 Generatore Preventivi e Contratti (Modulo Studio)</h2>
+                <div class="grid">
+                    <div>
+                        <h3>Dati Cliente & Evento</h3>
+                        <input type="text" id="clientName" placeholder="Nome e Cognome Cliente">
+                        <input type="text" id="clientPhone" placeholder="Telefono Cliente">
+                        <input type="text" id="eventDate" placeholder="Data Evento (GG/MM/AA)">
+                        
+                        <label style="display:block; margin-top:10px; color:#aaa;">Tipo Evento</label>
+                        <select id="eventType">
+                            <option value="Matrimonio">Matrimonio</option>
+                            <option value="Battesimo">Battesimo</option>
+                            <option value="Anniversario">Anniversario</option>
+                            <option value="Compleanno">Compleanno</option>
+                            <option value="Comunione">Comunione</option>
+                            <option value="Cresima">Cresima</option>
+                            <option value="Comunione/Cresima">Comunione/Cresima</option>
+                            <option value="Maternity">Maternity</option>
+                            <option value="New Born">New Born</option>
+                            <option value="Family">Family</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <h3>Luoghi & Geolocalizzazione</h3>
+                        <div style="display:flex; gap:5px;">
+                            <input type="text" id="churchLoc" placeholder="Indirizzo Chiesa / Comune">
+                            <button onclick="openMap('churchLoc')" style="margin:5px 0;">🗺️</button>
+                        </div>
+                        <div style="display:flex; gap:5px;">
+                            <input type="text" id="venueLoc" placeholder="Indirizzo Location / Sala ricevimenti">
+                            <button onclick="openMap('venueLoc')" style="margin:5px 0;">🗺️</button>
+                        </div>
+                        
+                        <h3>Calcolo Economico (€)</h3>
+                        <input type="number" id="totalAmount" placeholder="Prezzo di Listino Totale (€)" oninput="calcolaPrezzo()">
+                        <input type="number" id="discountAmount" placeholder="Sconto Applicato (€)" value="0" oninput="calcolaPrezzo()">
+                        <div class="totale-evidenza">Totale Scontato: <span id="finalAmountText">0.00</span> €</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <h3>💳 Specchietto Piano dei Pagamenti (Rate)</h3>
+                    <textarea id="paymentPlan" rows="3" placeholder="Es. €300 alla prenotazione, €500 il giorno dell'evento, saldo alla consegna dei file."></textarea>
+                </div>
+
+                <button onclick="salvaPreventivo()" style="margin-top:15px; width:100%; font-size:18px; background:#32cd32; color:#000;">Salva e Genera Contratto</button>
             </div>
         </div>
     </div>
 
     <script>
+        // Controllo modificato con le credenziali richieste da te: admin
+        function handleLogin() {
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            if(user === 'admin' && pass === '58879@Stella') {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboardScreen').style.display = 'block';
+                loadStudios();
+            } else {
+                alert('Credenziali non corrette.');
+            }
+        }
+
         function changeTheme(color) {
             document.documentElement.style.setProperty('--primary-color', color);
         }
@@ -145,79 +190,3 @@
         function createStudio() {
             const name = document.getElementById('studioName').value;
             const phone = document.getElementById('studioPhone').value;
-            const email = document.getElementById('studioEmail').value;
-
-            if(!name || !email) return alert('Nome e Email sono obbligatori');
-
-            const newStudio = {
-                id: localStudios.length + 1,
-                name: name,
-                phone: phone,
-                email: email,
-                license_token: 'tok_' + Math.random().toString(36).substr(2, 9).toUpperCase(),
-                license_active: true
-            };
-
-            localStudios.push(newStudio);
-            localStorage.setItem('studios_data', JSON.stringify(localStudios));
-            
-            alert(`Studio PROGOLD registrato con successo!`);
-            
-            const textMsg = encodeURIComponent(`Benvenuto su AppCenter Studio PROGOLD! Ecco il tuo Token Licenza: ${newStudio.license_token}`);
-            window.open(`https://wa.me{phone}?text=${textMsg}`, '_blank');
-            
-            loadStudios();
-            
-            document.getElementById('studioName').value = '';
-            document.getElementById('studioPhone').value = '';
-            document.getElementById('studioEmail').value = '';
-        }
-
-        function loadStudios() {
-            const tbody = document.querySelector('#studiosTable tbody');
-            tbody.innerHTML = '';
-            
-            if(localStudios.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#aaa;">Nessun studio registrato al momento.</td></tr>';
-                return;
-            }
-
-            localStudios.forEach(s => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${s.id}</td>
-                        <td>${s.name}</td>
-                        <td>${s.email}</td>
-                        <td style="font-family:monospace; font-size:13px;">${s.license_token}</td>
-                        <td>${s.license_active ? '✅ Attiva' : '❌ Disattivata'}</td>
-                        <td>
-                            <button onclick="toggleLicense(${s.id})">
-                                ${s.license_active ? 'Spegni' : 'Attiva'}
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function toggleLicense(id) {
-            localStudios = localStudios.map(s => {
-                if(s.id === id) s.license_active = !s.license_active;
-                return s;
-            });
-            localStorage.setItem('studios_data', JSON.stringify(localStudios));
-            loadStudios();
-        }
-
-        // --- SISTEMA EFFETTI ATMOSFERICI ---
-        const canvas = document.getElementById('effectCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        let activeEffect = null;
-
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        function toggleEffect(type) {
-            if (activeEffect === type) { activeEffect = null; particles = []; } 
