@@ -3,89 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AppCenterStudioPremiumGold - Login Admin</title>
+    <title>AppCenterStudioPROGOLD - Panel</title>
     <style>
+        :root {
+            --primary-color: #ffd700; /* Oro di default */
+            --bg-gradient: linear-gradient(180deg, #111 0%, #222 50%, #000 100%);
+        }
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(180deg, #111 0%, #222 50%, #000 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg-gradient);
             color: #fff;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-        .login-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            width: 100%;
-            max-width: 400px;
+        /* Righe sfumate b/n richieste nel design */
+        .gradient-row {
+            background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(50,50,50,0.8) 50%, rgba(0,0,0,1) 100%);
+            border-bottom: 2px solid var(--primary-color);
+            padding: 15px;
             text-align: center;
         }
-        h2 { margin-bottom: 24px; font-weight: 400; letter-spacing: 1px; }
-        .input-group { margin-bottom: 20px; text-align: left; }
-        label { display: block; margin-bottom: 8px; font-size: 14px; color: #aaa; }
-        input {
-            width: 100%;
-            padding: 12px;
-            background: #222;
-            border: 1px solid #444;
-            border-radius: 6px;
-            color: #fff;
-            font-size: 16px;
-            box-sizing: border-box;
+        .container { padding: 30px; max-width: 1200px; margin: auto; }
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
         }
-        input:focus { border-color: #ffd700; outline: none; }
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #ffd700;
-            color: #000;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
+        h1, h2 { color: var(--primary-color); font-weight: 400; }
+        input, select, button {
+            padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #444; font-size: 15px;
         }
-        button:hover { background: #ffea70; }
+        input, select { background: #222; color: #fff; width: 100%; box-sizing: border-box; }
+        button { background: var(--primary-color); color: #000; font-weight: bold; cursor: pointer; border: none; }
+        button:hover { opacity: 0.9; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        
+        /* Controlli grafici dashboard */
+        .color-picker-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; display: inline-block; margin-right: 10px; }
+        
+        /* Canvas per effetti atmosferici */
+        #effectCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
+        
+        /* Schermate */
+        #loginScreen { display: flex; justify-content: center; align-items: center; height: 100vh; }
+        #dashboardScreen { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="login-card">
-        <h2>AppCenter Admin</h2>
-        <form id="loginForm">
-            <div class="input-group">
-                <label>Username Admin</label>
-                <input type="text" id="username" required placeholder="Inserisci username">
+    <canvas id="effectCanvas"></canvas>
+
+    <!-- 1. SCHERMATA LOGIN -->
+    <div id="loginScreen">
+        <div class="card" style="width: 350px; text-align: center;">
+            <h2>AppCenter PROGOLD Admin</h2>
+            <input type="text" id="username" placeholder="Mairaluigi@hotmail.com">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="handleLogin()" style="width: 100%; margin-top: 15px;">Accedi</button>
+        </div>
+    </div>
+
+    <!-- 2. DASHBOARD SUPER ADMIN -->
+    <div id="dashboardScreen">
+        <div class="gradient-row">
+            <h1 style="margin:0; font-size: 24px; letter-spacing: 2px;">APPCENTER STUDIO PROGOLD — SUPER ADMIN PANEL</h1>
+        </div>
+        
+        <div class="container">
+            <div class="grid">
+                <!-- Configurazione Estetica Dinamica -->
+                <div class="card">
+                    <h2>Personalizzazione Grafica</h2>
+                    <p>Cambia il colore del tema dell'app:</p>
+                    <div class="color-picker-btn" style="background: #ffd700;" onclick="changeTheme('#ffd700')"></div>
+                    <div class="color-picker-btn" style="background: #ff4500;" onclick="changeTheme('#ff4500')"></div>
+                    <div class="color-picker-btn" style="background: #1e90ff;" onclick="changeTheme('#1e90ff')"></div>
+                    <div class="color-picker-btn" style="background: #32cd32;" onclick="changeTheme('#32cd32')"></div>
+                    
+                    <h3 style="margin-top:20px;">Effetti Atmosferici</h3>
+                    <button onclick="toggleEffect('snow')">Attiva/Disattiva Neve ❄️</button>
+                    <button onclick="toggleEffect('confetti')" style="margin-top: 5px;">Attiva/Disattiva Coriandoli 🎉</button>
+                </div>
+
+                <!-- Creazione Nuovo Studio -->
+                <div class="card">
+                    <h2>Registra Nuovo Studio</h2>
+                    <input type="text" id="studioName" placeholder="Nome Studio Fotografico">
+                    <input type="text" id="studioPhone" placeholder="Telefono con prefisso (es. 39333...)">
+                    <input type="email" id="studioEmail" placeholder="Email">
+                    <button onclick="createStudio()" style="width: 100%; margin-top: 10px;">Invia Link & Crea</button>
+                </div>
             </div>
-            <div class="input-group">
-                <label>Password</label>
-                <input type="password" id="password" required placeholder="••••••••">
+
+            <!-- Elenco degli Studi con Telecomando Licenza -->
+            <div class="card" style="margin-top: 25px;">
+                <h2>Anagrafica Studi & Gestione Licenze (Telecomando)</h2>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;" id="studiosTable">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--primary-color);">
+                                <th style="padding: 10px;">ID</th>
+                                <th>Nome Studio</th>
+                                <th>Email</th>
+                                <th>Token Licenza</th>
+                                <th>Stato</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Riempito dinamicamente da JS -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <button type="submit">Accedi</button>
-        </form>
+        </div>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        const API_URL = "https://workers.dev"; // URL del tuo Worker
+
+        function handleLogin() {
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
-            
-            // Logica temporanea di controllo credenziali richiesta da te
             if(user === 'Mairaluigi@hotmail.com' && pass === '58879@Stella') {
-                alert('Accesso eseguito! Presto configureremo la dashboard.');
-                // Qui collegheremo il redirect alla dashboard
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboardScreen').style.display = 'block';
+                loadStudios();
             } else {
                 alert('Credenziali errate.');
             }
-        });
-    </script>
-</body>
-</html>
+        }
+
+        function changeTheme(color) {
+            document.documentElement.style.setProperty('--primary-color', color);
+        }
+
+        // --- Logica dei File e delle Chiamate API ---
+        async function createStudio() {
+            const name = document.getElementById('studioName').value;
+            const phone = document.getElementById('studioPhone').value;
+            const email = document.getElementById('studioEmail').value;
+
+            if(!name || !email) return alert('Nome e Email obbligatori');
+
+            const res = await fetch(`${API_URL}/api/studios`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, phone, email })
+            });
+            const data = await res.json();
+            if(data.success) {
+                alert(`Studio PROGOLD creato con successo! Token Licenza generato.`);
+                // Link di benvenuto da inviare via WhatsApp con testo aggiornato
+                const textMsg = encodeURIComponent(`Benvenuto su AppCenter Studio PROGOLD! Il tuo spazio è pronto. Ecco il tuo Token di accesso licenza unico: ${data.token}`);
+                window.open(`https://wa.me{phone}?text=${textMsg}`, '_blank');
+                loadStudios();
+            }
+        }
+
+        async function loadStudios() {
+            try {
+                const res = await fetch(`${API_URL}/api/studios`);
+                const studios = await res.json();
+                const tbody = document.querySelector('#studiosTable tbody');
+                tbody.innerHTML = '';
+                studios.forEach(s => {
+                    tbody.innerHTML += `
+                        <tr style="border-bottom: 1px solid #333;">
+                            <td style="padding: 10px;">${s.id}</td>
+                            <td>${s.name}</td>
+                            <td>${s.email}</td>
+                            <td style="font-family:monospace; font-size:12px;">${s.license_token}</td>
+                            <td>${s.license_active ? '✅ Attiva' : '❌ Disattivata'}</td>
+                            <td>
+                                <button onclick="toggleLicense(${s.id}, ${s.license_active ? "'deactivate'" : "'activate'"})">
+                                    ${s.license_active ? 'Disattiva' : 'Attiva'}
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                console.log("Nessuno studio presente o errore di connessione.");
+            }
+        }
+
+        async function toggleLicense(id, action) {
+            const res = await fetch(`${API_URL}/api/license`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ studio_id: id, action })
+            });
+            if(res.ok) {
+                loadStudios();
+            }
+        }
+
+        // --- Sistema per gli Effetti Neve / Coriandoli ---
+        const canvas = document.getElementById('effectCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let activeEffect = null;
+
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
