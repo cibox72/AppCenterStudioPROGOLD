@@ -3,172 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AppCenterStudioPROGOLD - Panel</title>
+    <title>AppCenter Studio Premium Gold</title>
     <style>
-        :root {
-            --primary-color: #ffd700; 
-            --bg-gradient: linear-gradient(180deg, #111 0%, #222 50%, #000 100%);
-        }
+        /* Sfondo Premium Elegante Geometrico recuperato dai tuoi vecchi file */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            margin: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: var(--bg-gradient);
-            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c4c 0%, #2a4a5e 30%, #3d5a6c 70%, #2c3e50 100%),
+                        repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255, 255, 255, 0.02) 30px, rgba(255, 255, 255, 0.02) 60px);
+            background-size: cover, 100px 100px;
+            background-attachment: fixed;
             min-height: 100vh;
+            padding: 20px;
+            color: #ecf0f1;
             overflow-x: hidden;
         }
-        .gradient-row {
-            background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(50,50,50,0.8) 50%, rgba(0,0,0,1) 100%);
-            border-bottom: 2px solid var(--primary-color);
-            padding: 15px;
-            text-align: center;
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent 49%, rgba(255, 255, 255, 0.03) 50%, transparent 51%),
+                        linear-gradient(-45deg, transparent 49%, rgba(255, 255, 255, 0.03) 50%, transparent 51%);
+            pointer-events: none; z-index: 0;
         }
-        .container { padding: 30px; max-width: 1200px; margin: auto; }
-        .card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 25px;
-            border-radius: 8px;
-            margin-bottom: 25px;
+        .container {
+            max-width: 1200px; margin: 0 auto; background: rgba(44, 62, 80, 0.95);
+            border-radius: 15px; padding: 30px; box-shadow: 0 4px 30px rgba(0,0,0,0.3), 0 0 60px rgba(0,0,0,0.4);
+            position: relative; z-index: 1; border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        h1, h2, h3 { color: var(--primary-color); font-weight: 400; }
-        input, select, button, textarea {
-            padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #444; font-size: 15px;
+        header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
+        header h1 { color: #ffd700; font-size: 2.3em; font-weight: 300; letter-spacing: 2px; }
+        .nav-menu { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        button {
+            background: rgba(52, 73, 94, 0.8); color: #ecf0f1; border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 25px; border-radius: 8px; cursor: pointer; font-size: 15px; transition: all 0.3s;
         }
-        input, select, textarea { background: #222; color: #fff; width: 100%; box-sizing: border-box; }
-        button { background: var(--primary-color); color: #000; font-weight: bold; cursor: pointer; border: none; }
-        button:hover { opacity: 0.9; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .color-picker-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; display: inline-block; margin-right: 10px; }
-        #effectCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
-        #loginScreen { display: flex; justify-content: center; align-items: center; height: 100vh; }
-        #dashboardScreen { display: none; }
-        table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 10px; }
-        th, td { padding: 12px; border-bottom: 1px solid #333; }
-        th { color: var(--primary-color); }
-        .totale-evidenza { font-size: 24px; font-weight: bold; color: #32cd32; margin-top: 10px; }
+        button:hover { background: #ffd700; color: #000; transform: translateY(-2px); }
+        .screen { display: none; }
+        .screen.active { display: block; }
+        .card { background: rgba(52, 73, 94, 0.4); padding: 20px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        input, select, textarea {
+            padding: 12px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px;
+            background: rgba(52, 73, 94, 0.6); color: #ecf0f1; width: 100%; box-sizing: border-box; margin-bottom: 10px;
+        }
+        input:focus { background: rgba(52, 73, 94, 0.8); outline: none; border-color: #ffd700; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; }
+        th { color: #ffd700; }
     </style>
 </head>
 <body>
 
-    <canvas id="effectCanvas"></canvas>
-
-    <!-- 1. SCHERMATA LOGIN -->
-    <div id="loginScreen">
-        <div class="card" style="width: 350px; text-align: center;">
-            <h2>AppCenter PROGOLD</h2>
+    <!-- PLESAL PER IL LOGIN -->
+    <div id="loginSection" class="screen active" style="max-width: 400px; margin: 100px auto;">
+        <div class="card" style="text-align: center;">
+            <h2 style="color: #ffd700; margin-bottom: 15px;">🔐 Accesso Suite Premium</h2>
             <input type="text" id="username" placeholder="Username" value="admin">
             <input type="password" id="password" placeholder="Password" value="58879@Stella">
-            
-            <!-- Logica di sblocco forzato in linea per ignorare i vecchi file -->
-            <button onclick="
-                const u = document.getElementById('username').value.trim();
-                const p = document.getElementById('password').value.trim();
-                if(u === 'admin' && p === '58879@Stella') {
-                    document.getElementById('loginScreen').style.display = 'none';
-                    document.getElementById('dashboardScreen').style.display = 'block';
-                    if(typeof loadStudios === 'function') { loadStudios(); }
-                } else {
-                    alert('Credenziali errate.');
-                }
-            " style="width: 100%; margin-top: 15px;">Accedi</button>
+            <button onclick="loginUniversale()" style="width: 100%; margin-top: 10px; background: #ffd700; color: #000;">Entra nel Sistema</button>
         </div>
     </div>
 
-    <!-- 2. DASHBOARD PRINCIPALE -->
-    <div id="dashboardScreen">
-        <div class="gradient-row">
-            <h1 style="margin:0; font-size: 24px; letter-spacing: 2px;">APPCENTER STUDIO PROGOLD — PANEL</h1>
-        </div>
-        
+    <!-- PANNELLO PRINCIPALE CONTENITORE -->
+    <div id="mainSuiteSection" class="screen">
         <div class="container">
-            <div class="grid">
-                <div class="card">
-                    <h2>Personalizzazione Grafica</h2>
-                    <p>Cambia il colore del tema dell'app:</p>
-                    <div class="color-picker-btn" style="background: #ffd700;" onclick="document.documentElement.style.setProperty('--primary-color', '#ffd700')"></div>
-                    <div class="color-picker-btn" style="background: #ff4500;" onclick="document.documentElement.style.setProperty('--primary-color', '#ff4500')"></div>
-                    <div class="color-picker-btn" style="background: #1e90ff;" onclick="document.documentElement.style.setProperty('--primary-color', '#1e90ff')"></div>
-                    <div class="color-picker-btn" style="background: #32cd32;" onclick="document.documentElement.style.setProperty('--primary-color', '#32cd32')"></div>
-                    
-                    <h3 style="margin-top:20px;">Effetti Atmosferici</h3>
-                    <button onclick="toggleEffect('snow')">Attiva/Disattiva Neve ❄️</button>
-                    <button onclick="toggleEffect('confetti')" style="margin-top: 5px;">Attiva/Disattiva Coriandoli 🎉</button>
-                </div>
+            <header>
+                <h1>🎨 AppCenter Studio Premium Gold</h1>
+                <p style="color: #aaa; margin-top: 5px;">Suite Gestionale Privata v16.8</p>
+            </header>
 
-                <div class="card">
-                    <h2>Registra Nuovo Studio</h2>
-                    <input type="text" id="studioName" placeholder="Nome Studio Fotografico">
-                    <input type="text" id="studioPhone" placeholder="Telefono (es. 39333...)">
-                    <input type="email" id="studioEmail" placeholder="Email">
-                    <button onclick="createStudio()" style="width: 100%; margin-top: 10px;">Invia Link & Crea</button>
-                </div>
+            <!-- Menu Navigazione Superiore -->
+            <div class="nav-menu">
+                <button onclick="cambiaSchermata('planciaFornitore')">👑 Plancia Fornitore</button>
+                <button onclick="alert('Il Modulo 01 verrà integrato al prossimo passo')">📝 01 Preventivi</button>
+                <button onclick="alert('Il Modulo 02 verrà integrato al prossimo passo')">👤 02 Clienti</button>
+                <button onclick="alert('Il Modulo 03 verrà integrato al prossimo passo')">⚙️ 03 Workflow</button>
+                <button onclick="logoutUniversale()" style="background: #e74c3c;">🚪 Esci dallo Studio</button>
             </div>
 
-            <div class="card">
-                <h2>Anagrafica Studi & Gestione Licenze (Telecomando)</h2>
-                <div style="overflow-x: auto;">
-                    <table id="studiosTable">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome Studio</th>
-                                <th>Email</th>
-                                <th>Token Licenza</th>
-                                <th>Stato</th>
-                                <th>Azioni</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- GENERATORE PREVENTIVI & CONTRATTI -->
-            <div class="card" style="margin-top: 40px; border: 1px solid var(--primary-color);">
-                <h2>📝 Generatore Preventivi e Contratti (Modulo Studio)</h2>
+            <!-- SOTTO-SCHERMATA: PLANCIA FORNITORE SUPREMO -->
+            <div id="planciaFornitore" class="screen active">
                 <div class="grid">
-                    <div>
-                        <h3>Dati Cliente & Evento</h3>
-                        <input type="text" id="clientName" placeholder="Nome e Cognome Cliente">
-                        <input type="text" id="clientPhone" placeholder="Telefono Cliente">
-                        <input type="text" id="eventDate" placeholder="Data Evento (GG/MM/AA)">
-                        
-                        <label style="display:block; margin-top:10px; color:#aaa;">Tipo Evento</label>
-                        <select id="eventType">
-                            <option value="Matrimonio">Matrimonio</option>
-                            <option value="Battesimo">Battesimo</option>
-                            <option value="Anniversario">Anniversario</option>
-                            <option value="Compleanno">Compleanno</option>
-                            <option value="Comunione">Comunione</option>
-                            <option value="Cresima">Cresima</option>
-                            <option value="Comunione/Cresima">Comunione/Cresima</option>
-                            <option value="Maternity">Maternity</option>
-                            <option value="New Born">New Born</option>
-                            <option value="Family">Family</option>
-                        </select>
+                    <div class="card" style="text-align: center;">
+                        <h3>Studi Attivi nel Cloud</h3>
+                        <p style="font-size: 2.5em; color: #ffd700; font-weight: 300;">0</p>
                     </div>
+                    <div class="card" style="text-align: center;">
+                        <h3>Offerte Configurate</h3>
+                        <p style="font-size: 2.5em; color: #ffd700; font-weight: 300;">0</p>
+                    </div>
+                </div>
 
-                    <div>
-                        <h3>Luoghi & Geolocalizzazione</h3>
-                        <div style="display:flex; gap:5px;">
-                            <input type="text" id="churchLoc" placeholder="Indirizzo Chiesa / Comune">
-                            <button onclick="window.open('https://google.com' + encodeURIComponent(document.getElementById('churchLoc').value), '_blank')" style="margin:5px 0;">🗺️</button>
-                        </div>
-                        <div style="display:flex; gap:5px;">
-                            <input type="text" id="venueLoc" placeholder="Indirizzo Location / Sala ricevimenti">
-                            <button onclick="window.open('https://google.com' + encodeURIComponent(document.getElementById('venueLoc').value), '_blank')" style="margin:5px 0;">🗺️</button>
-                        </div>
-                        
-                        <h3>Calcolo Economico (€)</h3>
-                        <input type="number" id="totalAmount" placeholder="Prezzo di Listino Totale (€)" oninput="
-                            const t = parseFloat(document.getElementById('totalAmount').value) || 0;
-                            const s = parseFloat(document.getElementById('discountAmount').value) || 0;
-                            document.getElementById('finalAmountText').innerText = Math.max(0, t - s).toFixed(2);
-                        ">
-                        <input type="number" id="discountAmount" placeholder="Sconto Applicato (€)" value="0" oninput="
-                            const t = parseFloat(document.getElementById('totalAmount').value) || 0;
-                            const s = parseFloat(document.getElementById('discountAmount').value) || 0;
-                            document.getElementById('finalAmountText').innerText = Math.max(0, t - s).toFixed(2);
-                        ">
+                <div class="grid" style="margin-top: 20px;">
+                    <div class="card">
+                        <h3>➕ Configura Nuovo Studio</h3>
+                        <input type="text" placeholder="Nome Studio">
+                        <input type="text" placeholder="Referente">
+                        <select><option>Scegli Offerta</option></select>
+                        <button style="width:100%;">Salva Studio</button>
+                    </div>
+                    <div class="card">
+                        <h3>🏷️ Gestione Offerte</h3>
+                        <button style="width:100%;">🏷️ Aggiungi Offerta</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function loginUniversale() {
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value.trim();
+            if (u === 'admin' && p === '58879@Stella') {
+                document.getElementById('loginSection').classList.remove('active');
+                document.getElementById('mainSuiteSection').classList.add('active');
+            } else {
+                alert('Credenziali errate.');
+            }
+        }
+
+        function logoutUniversale() {
+            document.getElementById('mainSuiteSection').classList.remove('active');
+            document.getElementById('loginSection').classList.add('active');
+        }
+
+        function cambiaSchermata(idSchermata) {
+            // Predisposizione per la navigazione dei moduli successivi
+            alert('Navigazione pronta per ricevere i moduli.');
+        }
+    </script>
+</body>
+</html>
