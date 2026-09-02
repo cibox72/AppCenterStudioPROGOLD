@@ -60,7 +60,19 @@
             <h2>AppCenter PROGOLD</h2>
             <input type="text" id="username" placeholder="Username" value="admin">
             <input type="password" id="password" placeholder="Password" value="58879@Stella">
-            <button onclick="handleLogin()" style="width: 100%; margin-top: 15px;">Accedi</button>
+            
+            <!-- Logica di sblocco forzato in linea per ignorare i vecchi file -->
+            <button onclick="
+                const u = document.getElementById('username').value.trim();
+                const p = document.getElementById('password').value.trim();
+                if(u === 'admin' && p === '58879@Stella') {
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('dashboardScreen').style.display = 'block';
+                    if(typeof loadStudios === 'function') { loadStudios(); }
+                } else {
+                    alert('Credenziali errate.');
+                }
+            " style="width: 100%; margin-top: 15px;">Accedi</button>
         </div>
     </div>
 
@@ -71,15 +83,14 @@
         </div>
         
         <div class="container">
-            <!-- SEZIONE ADMIN -->
             <div class="grid">
                 <div class="card">
                     <h2>Personalizzazione Grafica</h2>
                     <p>Cambia il colore del tema dell'app:</p>
-                    <div class="color-picker-btn" style="background: #ffd700;" onclick="changeTheme('#ffd700')"></div>
-                    <div class="color-picker-btn" style="background: #ff4500;" onclick="changeTheme('#ff4500')"></div>
-                    <div class="color-picker-btn" style="background: #1e90ff;" onclick="changeTheme('#1e90ff')"></div>
-                    <div class="color-picker-btn" style="background: #32cd32;" onclick="changeTheme('#32cd32')"></div>
+                    <div class="color-picker-btn" style="background: #ffd700;" onclick="document.documentElement.style.setProperty('--primary-color', '#ffd700')"></div>
+                    <div class="color-picker-btn" style="background: #ff4500;" onclick="document.documentElement.style.setProperty('--primary-color', '#ff4500')"></div>
+                    <div class="color-picker-btn" style="background: #1e90ff;" onclick="document.documentElement.style.setProperty('--primary-color', '#1e90ff')"></div>
+                    <div class="color-picker-btn" style="background: #32cd32;" onclick="document.documentElement.style.setProperty('--primary-color', '#32cd32')"></div>
                     
                     <h3 style="margin-top:20px;">Effetti Atmosferici</h3>
                     <button onclick="toggleEffect('snow')">Attiva/Disattiva Neve ❄️</button>
@@ -143,50 +154,21 @@
                         <h3>Luoghi & Geolocalizzazione</h3>
                         <div style="display:flex; gap:5px;">
                             <input type="text" id="churchLoc" placeholder="Indirizzo Chiesa / Comune">
-                            <button onclick="openMap('churchLoc')" style="margin:5px 0;">🗺️</button>
+                            <button onclick="window.open('https://google.com' + encodeURIComponent(document.getElementById('churchLoc').value), '_blank')" style="margin:5px 0;">🗺️</button>
                         </div>
                         <div style="display:flex; gap:5px;">
                             <input type="text" id="venueLoc" placeholder="Indirizzo Location / Sala ricevimenti">
-                            <button onclick="openMap('venueLoc')" style="margin:5px 0;">🗺️</button>
+                            <button onclick="window.open('https://google.com' + encodeURIComponent(document.getElementById('venueLoc').value), '_blank')" style="margin:5px 0;">🗺️</button>
                         </div>
                         
                         <h3>Calcolo Economico (€)</h3>
-                        <input type="number" id="totalAmount" placeholder="Prezzo di Listino Totale (€)" oninput="calcolaPrezzo()">
-                        <input type="number" id="discountAmount" placeholder="Sconto Applicato (€)" value="0" oninput="calcolaPrezzo()">
-                        <div class="totale-evidenza">Totale Scontato: <span id="finalAmountText">0.00</span> €</div>
-                    </div>
-                </div>
-
-                <div style="margin-top: 20px;">
-                    <h3>💳 Specchietto Piano dei Pagamenti (Rate)</h3>
-                    <textarea id="paymentPlan" rows="3" placeholder="Es. €300 alla prenotazione, €500 il giorno dell'evento, saldo alla consegna dei file."></textarea>
-                </div>
-
-                <button onclick="salvaPreventivo()" style="margin-top:15px; width:100%; font-size:18px; background:#32cd32; color:#000;">Salva e Genera Contratto</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Controllo modificato con le credenziali richieste da te: admin
-        function handleLogin() {
-            const user = document.getElementById('username').value.trim();
-            const pass = document.getElementById('password').value.trim();
-            if(user === 'admin' && pass === '58879@Stella') {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('dashboardScreen').style.display = 'block';
-                loadStudios();
-            } else {
-                alert('Credenziali non corrette.');
-            }
-        }
-
-        function changeTheme(color) {
-            document.documentElement.style.setProperty('--primary-color', color);
-        }
-
-        let localStudios = JSON.parse(localStorage.getItem('studios_data')) || [];
-
-        function createStudio() {
-            const name = document.getElementById('studioName').value;
-            const phone = document.getElementById('studioPhone').value;
+                        <input type="number" id="totalAmount" placeholder="Prezzo di Listino Totale (€)" oninput="
+                            const t = parseFloat(document.getElementById('totalAmount').value) || 0;
+                            const s = parseFloat(document.getElementById('discountAmount').value) || 0;
+                            document.getElementById('finalAmountText').innerText = Math.max(0, t - s).toFixed(2);
+                        ">
+                        <input type="number" id="discountAmount" placeholder="Sconto Applicato (€)" value="0" oninput="
+                            const t = parseFloat(document.getElementById('totalAmount').value) || 0;
+                            const s = parseFloat(document.getElementById('discountAmount').value) || 0;
+                            document.getElementById('finalAmountText').innerText = Math.max(0, t - s).toFixed(2);
+                        ">
