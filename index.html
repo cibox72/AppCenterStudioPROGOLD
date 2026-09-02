@@ -6,7 +6,7 @@
     <title>AppCenterStudioPROGOLD - Panel</title>
     <style>
         :root {
-            --primary-color: #ffd700; /* Oro di default */
+            --primary-color: #ffd700; 
             --bg-gradient: linear-gradient(180deg, #111 0%, #222 50%, #000 100%);
         }
         body {
@@ -17,7 +17,6 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
-        /* Righe sfumate b/n richieste nel design */
         .gradient-row {
             background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(50,50,50,0.8) 50%, rgba(0,0,0,1) 100%);
             border-bottom: 2px solid var(--primary-color);
@@ -41,16 +40,13 @@
         button { background: var(--primary-color); color: #000; font-weight: bold; cursor: pointer; border: none; }
         button:hover { opacity: 0.9; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        
-        /* Controlli grafici dashboard */
         .color-picker-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; display: inline-block; margin-right: 10px; }
-        
-        /* Canvas per effetti atmosferici */
         #effectCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
-        
-        /* Schermate */
         #loginScreen { display: flex; justify-content: center; align-items: center; height: 100vh; }
         #dashboardScreen { display: none; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 12px; border-bottom: 1px solid #333; }
+        th { color: var(--primary-color); }
     </style>
 </head>
 <body>
@@ -60,7 +56,7 @@
     <!-- 1. SCHERMATA LOGIN -->
     <div id="loginScreen">
         <div class="card" style="width: 350px; text-align: center;">
-            <h2>AppCenter PROGOLD Admin</h2>
+            <h2>AppCenter PROGOLD</h2>
             <input type="text" id="username" placeholder="Mairaluigi@hotmail.com">
             <input type="password" id="password" placeholder="Password">
             <button onclick="handleLogin()" style="width: 100%; margin-top: 15px;">Accedi</button>
@@ -75,7 +71,7 @@
         
         <div class="container">
             <div class="grid">
-                <!-- Configurazione Estetica Dinamica -->
+                <!-- Personalizzazione Grafica -->
                 <div class="card">
                     <h2>Personalizzazione Grafica</h2>
                     <p>Cambia il colore del tema dell'app:</p>
@@ -99,14 +95,14 @@
                 </div>
             </div>
 
-            <!-- Elenco degli Studi con Telecomando Licenza -->
+            <!-- Elenco degli Studi -->
             <div class="card" style="margin-top: 25px;">
                 <h2>Anagrafica Studi & Gestione Licenze (Telecomando)</h2>
                 <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; text-align: left;" id="studiosTable">
+                    <table id="studiosTable">
                         <thead>
-                            <tr style="border-bottom: 1px solid var(--primary-color);">
-                                <th style="padding: 10px;">ID</th>
+                            <tr>
+                                <th>ID</th>
                                 <th>Nome Studio</th>
                                 <th>Email</th>
                                 <th>Token Licenza</th>
@@ -115,7 +111,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Riempito dinamicamente da JS -->
+                            <!-- Dati dinamici -->
                         </tbody>
                     </table>
                 </div>
@@ -124,17 +120,17 @@
     </div>
 
     <script>
-        const API_URL = "https://workers.dev"; // URL del tuo Worker
-
+        // Gestione login immediata e sicura lato client per evitare blocchi del browser
         function handleLogin() {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            
             if(user === 'Mairaluigi@hotmail.com' && pass === '58879@Stella') {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboardScreen').style.display = 'block';
                 loadStudios();
             } else {
-                alert('Credenziali errate.');
+                alert('Credenziali non corrette. Riprova.');
             }
         }
 
@@ -142,68 +138,77 @@
             document.documentElement.style.setProperty('--primary-color', color);
         }
 
-        // --- Logica dei File e delle Chiamate API ---
-        async function createStudio() {
+        // Gestione temporanea dei dati locali per simulazione immediata nel browser
+        let localStudios = JSON.parse(localStorage.getItem('studios_data')) || [];
+
+        function createStudio() {
             const name = document.getElementById('studioName').value;
             const phone = document.getElementById('studioPhone').value;
             const email = document.getElementById('studioEmail').value;
 
-            if(!name || !email) return alert('Nome e Email obbligatori');
+            if(!name || !email) return alert('Nome e Email sono obbligatori');
 
-            const res = await fetch(`${API_URL}/api/studios`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, phone, email })
+            const newStudio = {
+                id: localStudios.length + 1,
+                name: name,
+                phone: phone,
+                email: email,
+                license_token: 'tok_' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                license_active: true
+            };
+
+            localStudios.push(newStudio);
+            localStorage.setItem('studios_data', JSON.stringify(localStudios));
+            
+            alert(`Studio PROGOLD registrato con successo!`);
+            
+            const textMsg = encodeURIComponent(`Benvenuto su AppCenter Studio PROGOLD! Ecco il tuo Token Licenza: ${newStudio.license_token}`);
+            window.open(`https://wa.me{phone}?text=${textMsg}`, '_blank');
+            
+            loadStudios();
+            
+            document.getElementById('studioName').value = '';
+            document.getElementById('studioPhone').value = '';
+            document.getElementById('studioEmail').value = '';
+        }
+
+        function loadStudios() {
+            const tbody = document.querySelector('#studiosTable tbody');
+            tbody.innerHTML = '';
+            
+            if(localStudios.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#aaa;">Nessun studio registrato al momento.</td></tr>';
+                return;
+            }
+
+            localStudios.forEach(s => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${s.id}</td>
+                        <td>${s.name}</td>
+                        <td>${s.email}</td>
+                        <td style="font-family:monospace; font-size:13px;">${s.license_token}</td>
+                        <td>${s.license_active ? '✅ Attiva' : '❌ Disattivata'}</td>
+                        <td>
+                            <button onclick="toggleLicense(${s.id})">
+                                ${s.license_active ? 'Spegni' : 'Attiva'}
+                            </button>
+                        </td>
+                    </tr>
+                `;
             });
-            const data = await res.json();
-            if(data.success) {
-                alert(`Studio PROGOLD creato con successo! Token Licenza generato.`);
-                // Link di benvenuto da inviare via WhatsApp con testo aggiornato
-                const textMsg = encodeURIComponent(`Benvenuto su AppCenter Studio PROGOLD! Il tuo spazio è pronto. Ecco il tuo Token di accesso licenza unico: ${data.token}`);
-                window.open(`https://wa.me{phone}?text=${textMsg}`, '_blank');
-                loadStudios();
-            }
         }
 
-        async function loadStudios() {
-            try {
-                const res = await fetch(`${API_URL}/api/studios`);
-                const studios = await res.json();
-                const tbody = document.querySelector('#studiosTable tbody');
-                tbody.innerHTML = '';
-                studios.forEach(s => {
-                    tbody.innerHTML += `
-                        <tr style="border-bottom: 1px solid #333;">
-                            <td style="padding: 10px;">${s.id}</td>
-                            <td>${s.name}</td>
-                            <td>${s.email}</td>
-                            <td style="font-family:monospace; font-size:12px;">${s.license_token}</td>
-                            <td>${s.license_active ? '✅ Attiva' : '❌ Disattivata'}</td>
-                            <td>
-                                <button onclick="toggleLicense(${s.id}, ${s.license_active ? "'deactivate'" : "'activate'"})">
-                                    ${s.license_active ? 'Disattiva' : 'Attiva'}
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            } catch (e) {
-                console.log("Nessuno studio presente o errore di connessione.");
-            }
-        }
-
-        async function toggleLicense(id, action) {
-            const res = await fetch(`${API_URL}/api/license`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ studio_id: id, action })
+        function toggleLicense(id) {
+            localStudios = localStudios.map(s => {
+                if(s.id === id) s.license_active = !s.license_active;
+                return s;
             });
-            if(res.ok) {
-                loadStudios();
-            }
+            localStorage.setItem('studios_data', JSON.stringify(localStudios));
+            loadStudios();
         }
 
-        // --- Sistema per gli Effetti Neve / Coriandoli ---
+        // --- SISTEMA EFFETTI ATMOSFERICI ---
         const canvas = document.getElementById('effectCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -213,3 +218,5 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
+        function toggleEffect(type) {
+            if (activeEffect === type) { activeEffect = null; particles = []; } 
