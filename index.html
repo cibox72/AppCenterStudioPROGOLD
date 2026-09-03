@@ -59,17 +59,27 @@
 </head>
 <body>
 
-    <!-- 1. LOGIN -->
+    <!-- 1. LOGIN (BLINDATO DIRETTAMENTE SUL PULSANTE CONTRO I PROBLEMI DI CACHE) -->
     <div id="loginScreen" class="screen active">
         <div class="card" style="width: 360px; text-align: center; position: relative; z-index: 10;">
             <h2 style="color: #ffd700; margin-bottom: 15px;">🔐 Accesso Suite Premium</h2>
             <input type="text" id="username" placeholder="Username" value="admin">
             <input type="password" id="password" placeholder="Password" value="58879@Stella">
-            <button onclick="loginUniversale()" style="width: 100%; margin-top: 10px; background: #ffd700; color: #000;">Entra nel Sistema</button>
+            <button onclick="
+                const u = document.getElementById('username').value.trim();
+                const p = document.getElementById('password').value.trim();
+                if (u === 'admin' && p === '58879@Stella') {
+                    document.getElementById('loginScreen').classList.remove('active');
+                    document.getElementById('mainSuiteSection').classList.add('active');
+                    if (typeof aggiornaPannelli === 'function') { aggiornaPannelli(); }
+                } else { 
+                    alert('Credenziali errate.'); 
+                }
+            " style="width: 100%; margin-top: 10px; background: #ffd700; color: #000;">Entra nel Sistema</button>
         </div>
     </div>
 
-    <!-- 2. PANNELLO CONTENITORE -->
+    <!-- 2. PANNELLO CONTENITORE PRINCIPALE -->
     <div id="mainSuiteSection" class="screen">
         <div class="container">
             <header>
@@ -84,7 +94,10 @@
                 <button id="btn-cli" onclick="attivaModulo('moduloClienti', 'btn-cli')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">👤 02 Clienti</button>
                 <button id="btn-work" onclick="attivaModulo('moduloWorkflow', 'btn-work')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">⚙️ 03 Workflow</button>
                 <button id="btn-foto" onclick="attivaModulo('moduloFotoGru', 'btn-foto')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">📸 04 Configura GRU</button>
-                <button onclick="logoutUniversale()" style="background: #e74c3c; color:#fff;">🚪 Esci dallo Studio</button>
+                <button onclick="
+                    document.getElementById('mainSuiteSection').classList.remove('active');
+                    document.getElementById('loginScreen').classList.add('active');
+                " style="background: #e74c3c; color:#fff;">🚪 Esci dallo Studio</button>
             </div>
 
             <!-- TAB: PLANCIA FORNITORE SUPREMO -->
@@ -111,7 +124,7 @@
                         <h3>🏷️ Gestione Offerte</h3>
                         <input type="text" id="admOfferTitle" placeholder="Titolo Offerta">
                         <input type="text" id="admOfferPrice" placeholder="Prezzo (es. €50/mese)">
-                        <button onclick="adminAggiungiOfferta()" style="width:100%;">🏷️ Aggiungi Offerta</button>
+                        <button onclick="adminAggiungiOffer()" style="width:100%;">🏷️ Aggiungi Offerta</button>
                     </div>
                 </div>
             </div>
@@ -132,13 +145,3 @@
                     </div>
                     <label>Indirizzo residenza</label><input type="text" id="cInd" placeholder="Via / Piazza, Città">
                     <label>Note aggiuntive cliente</label><textarea id="cNote" rows="2" placeholder="Informazioni particolari..."></textarea>
-                    <button onclick="salvaNuovoCliente()" style="width:100%; margin-top:10px; background:#3498db; color:#fff;">Salva in Archivio</button>
-                    <table id="tabellaClienti"><thead><tr><th>ID</th><th>Nominativo</th><th>Recapiti</th><th>Indirizzo</th></tr></thead><tbody></tbody></table>
-                </div>
-            </div>
-
-            <!-- TAB: PREVENTIVI & CONTRATTI -->
-            <div id="moduloPreventivi" class="screen-module">
-                <div class="card" style="border: 1px solid #f1c40f;">
-                    <h2>📝 Generatore Preventivi & Contratti</h2>
-                    <div class="grid" style="margin-top: 15px;">
