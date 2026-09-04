@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRU nel browser - AppCenterStudio Premium</title>
+    <style>
+        :root {
+            --carta-zucchero: #7ea4b5;
+            --verde-salvia: #9caf88;
+            --rosa-antico: #dcaeaf;
+            --scuro: #2b3a42;
+            --chiaro: #f4f7f6;
+            --rosso-alert: #e07a7a;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--chiaro);
+            color: var(--scuro);
+            margin: 0;
+            padding: 0;
+        }
+        /* BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA */
+        .navbar {
+            background-color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 3px solid var(--carta-zucchero);
+        }
+        .nav-links { display: flex; gap: 10px; }
+        .nav-links button {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background: white;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--scuro);
+            transition: all 0.2s;
+        }
+        .nav-links button:hover { background: var(--chiaro); }
+        .btn-sync { background-color: #e8f0fe !important; border-color: var(--carta-zucchero) !important; color: var(--carta-zucchero) !important; }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            margin: 30px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .main-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1, h2, h3 { color: var(--scuro); margin-top: 0; }
+        
+        /* AVVERTENZA BROWSER OBBLIGATORIO */
+        .browser-warning {
+            background-color: #fff0f0;
+            border: 2px solid var(--rosa-antico);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: bold;
+            color: #b94a48;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        /* BLOCCHI DI COSTRUZIONE STEP */
+        .step-block {
+            border: 1px solid #e0e0 e0;
+            border-left: 5px solid var(--carta-zucchero);
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .step-block h3 { text-align: left; margin-bottom: 10px; color: var(--scuro); }
+        
+        textarea, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            background: white;
+        }
+        
+        .folder-select-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .folder-status { font-weight: bold; color: #666; font-size: 14px; }
+
+        button.btn-sfoglia {
+            background-color: var(--scuro);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            width: auto;
+        }
+        button.btn-copia-azione {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--verde-salvia);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        button:hover { opacity: 0.9; }
+
+        /* DOWNLOAD PROGRAMMI ALTERNATIVI */
+        .download-box {
+            margin-top: 25px;
+            padding: 15px;
+            border: 1px dashed #ccc;
+            border-radius: 6px;
+            text-align: center;
+            background: #fff;
+        }
+        .btn-download-app {
+            display: inline-block;
+            padding: 8px 15px;
+            margin: 5px;
+            background-color: var(--carta-zucchero);
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        /* BOX ASSISTENZA */
+        .assistenza-box {
+            margin-top: 35px;
+            padding: 20px;
+            background-color: #fcf8f2;
+            border: 1px solid var(--rosa-antico);
+            border-radius: 8px;
+        }
+        .assistenza-buttons { display: flex; gap: 15px; margin-top: 15px; }
+        .assistenza-buttons a {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            color: white;
+        }
+        .btn-anydesk { background-color: #ef4444; }
+        .btn-whatsapp { background-color: #22c55e; }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA -->
+    <div class="navbar">
+        <div class="nav-links">
+            <button onclick="window.history.back()">← Indietro</button>
+            <button onclick="location.href='index.html'">🏠 Home</button>
+        </div>
+        <div class="nav-links">
+            <button onclick="eseguiBackupNomiGru()">📥 Backup Nomi</button>
+            <button onclick="eseguiRipristinoNomiGru()">📤 Ripristino Nomi</button>
+            <button class="btn-sync" id="status-sync">Sync Cloud: OK</button>
+            <button style="background-color: var(--rosa-antico); color: white;" onclick="location.href='index.html'">Esci</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-card">
+            <h1>⚙️ GRU nel Browser</h1>
+            <p style="text-align: center; color: #666; margin-top: -10px; margin-bottom: 20px;">
+                Esegui la scrematura automatica degli scatti: copia istantaneamente i file originali ad alta risoluzione basandoti sul file di pulizia del cliente.
+            </p>
+
+            <!-- ⚠️ ATTENZIONE OBBLIGATORIA CHROME/EDGE -->
+            <div class="browser-warning">
+                📢 REQUISITO HARDWARE BLOCCANTE: Questa utility richiede l'utilizzo esclusivo di Google Chrome o Microsoft Edge sul computer per poter accedere in sicurezza alle cartelle locali.
+            </div>
+
+            <!-- STEP 1: ELENCO NOMI -->
+            <div class="step-block">
+                <h3>1 · Elenco nomi da copiare (.GRU / .TXT)</h3>
+                <p style="font-size: 13px; color: #555; margin-top: -5px;">Carica il file generato dalla selezione degli sposi oppure incolla i nomi dei file direttamente nel box di testo (uno per riga).</p>
+                <input type="file" id="file-gru-input" accept=".GRU,.txt" onchange="caricaFileGruLocale(this)" style="margin-bottom: 15px;">
+                <textarea id="nomi-gru-textarea" rows="6" placeholder="Incolla i nomi dei file qui (es. DSC_001.JPG)..." oninput="aggiornaConteggioNomi()"></textarea>
+                <div style="font-weight: bold; margin-top: 5px; font-size: 14px; color: var(--carta-zucchero);" id="conteggio-nomi-label">0 nomi rilevati e pronti</div>
+            </div>
+
+            <!-- STEP 2: CARTELLA SORGENTE -->
+            <div class="step-block">
+                <h3>2 · Cartella SORGENTE (Originali ad Alta Risoluzione)</h3>
+                <p style="font-size: 13px; color: #555; margin-top: -5px;">Seleziona la cartella locale del PC contenente tutti gli scatti originali del servizio (il sistema effettuerà una scansione ricorsiva delle sotto-cartelle).</p>
+                <div class="folder-select-box">
+                    <button class="btn-sfoglia" onclick="selezionaCartellaSorgente()">Sfoglia sorgente...</button>
+                    <span class="folder-status" id="status-sorgente">Nessuna cartella selezionata</span>
+                </div>
+            </div>
+
+            <!-- STEP 3: CARTELLA DESTINAZIONE -->
+            <div class="step-block">
+                <h3>3 · Cartella DESTINAZIONE (Es. "DA STAMPARE")</h3>
+                <p style="font-size: 13px; color: #555; margin-top: -5px;">Indica la cartella locale all'interno della quale desideri salvare gli scatti originali estratti automaticamente.</p>
+                <div class="folder-select-box">
+                    <button class="btn-sfoglia" onclick="selezionaCartellaDestinazione()">Sfoglia destinazione...</button>
+                    <span class="folder-status" id="status-destinazione">Nessuna cartella selezionata</span>
+                </div>
+            </div>
+
+            <!-- STEP 4: COPIA -->
+            <div style="margin-top: 30px;">
+                <button class="btn-copia-azione" onclick="avviaProcessoDiCopiaHardware()">🚀 AVVIA COPIA HARDWARE LOCALE</button>
+                <div id="progresso-copia-label" style="text-align: center; margin-top: 15px; font-weight: bold; color: var(--verde-salvia); font-size: 16px;"></div>
+            </div>
+
+            <!-- NON USI CHROME? AVVERTENZA DOWNLOAD PROGRAMMA ZIP -->
+            <div class="download-box">
+                <span style="font-size: 13px; font-weight: bold; color: #555;">Non stai usando Chrome o Edge?</span><br>
+                <p style="font-size: 12px; color: #777; margin: 5px 0;">Scarica l'applicazione GRU nativa estratta dallo ZIP per sistemi operativi desktop stabili:</p>
+                <a href="https://github.com" class="btn-download-app">📦 GRU per Mac</a>
