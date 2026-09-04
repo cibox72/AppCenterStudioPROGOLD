@@ -30,7 +30,7 @@ h2{margin:0 0 12px;font-size:17px;border-left:4px solid #000;padding-left:10px;f
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 label{font-size:11px;color:#666;display:block;margin-bottom:3px}
 input,select,textarea{width:100%;padding:8px;border:1px solid var(--bordo);border-radius:8px;background:#fff;font-size:13px;font-family:inherit}
-input[readonly]{background:#f0f0f0;font-weight:700}
+input[readonly]{background:#f0f0f0;font-weight:700;color:#000}
 .highlight{background:linear-gradient(90deg,#000,#3a3a3a);color:#fff;padding:16px;border-radius:12px;display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
 .highlight label{color:#bbb}
 .highlight input{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4);color:#fff;font-weight:700}
@@ -38,6 +38,14 @@ input[readonly]{background:#f0f0f0;font-weight:700}
 .badge{background:#111;color:#fff;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700}
 .hidden{display:none !important}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;padding-top:20px;border-top:2px solid #000}
+
+/* Tabelle Servizi Dinamici */
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{padding:10px 8px;border-bottom:1px solid #e3e3e3;font-size:13px;text-align:left}
+th{background:#111;color:#fff}
+.totCard{background:#f9f9f9;border:1px solid #ccc;border-radius:8px;padding:14px;margin-top:12px}
+.totCard .riga{display:flex;justify-content:space-between;padding:5px 0;font-size:14px}
+.totCard .big{font-size:22px;font-weight:800;border-top:2px solid #000;margin-top:8px;padding-top:8px}
 
 @media(max-width:800px){.grid,.highlight{grid-template-columns:1fr}}
 </style>
@@ -58,7 +66,7 @@ input[readonly]{background:#f0f0f0;font-weight:700}
   <button class="btn green" style="width:100%;" onclick="eseguiLogin()">🔓 Entra nel Sistema</button>
 </div>
 
-<!-- 🌐 APPLICAZIONE REALE (Nascosta prima del Login) -->
+<!-- 🌐 APPLICAZIONE REALE -->
 <div id="app-content" class="hidden">
   <header>
     <div class="brand"><span class="brandName">AppCenter Studio Premium Gold</span></div>
@@ -76,11 +84,10 @@ input[readonly]{background:#f0f0f0;font-weight:700}
 
   <main style="padding:20px; max-width:1100px; margin:0 auto;">
 
-    <!-- 🛑 MODULO FORNITORE (Creazione Studi e Credenziali) -->
+    <!-- 🛑 MODULO FORNITORE -->
     <section id="mod-fornitore" class="hidden">
       <div class="card">
         <h2>Plancia Amministratore / Fornitore</h2>
-        <p>Usa questa sezione per generare nuovi studi fotografici da vendere ai tuoi clienti.</p>
         <div class="grid">
           <div><label>Nuovo ID Studio da creare</label><input id="f_new_id" placeholder="Es. STU-002"></div>
           <div><label>Token / Password da associare</label><input id="f_new_token" placeholder="Es. PasswordSegreta"></div>
@@ -89,15 +96,15 @@ input[readonly]{background:#f0f0f0;font-weight:700}
       </div>
     </section>
 
-    <!-- 📝 MODULO 01: PREVENTIVI & CONTRATTI (Preso dal vecchio Repository) -->
+    <!-- 📝 MODULO 01: PREVENTIVI & CONTRATTI DYN -->
     <section id="mod-preventivi" class="hidden">
       <div class="card">
         <div class="rowBetween">
           <h2 style="margin:0">Preventivo / Contratto Fotografico</h2>
-          <span id="pBadge" class="badge">Pronto per Sincronizzazione KV</span>
+          <span id="pBadge" class="badge">Sincronizzazione Realtime KV Abilitata</span>
         </div>
         <div class="grid" style="margin-top:12px">
-          <div><label>Numero Preventivo (Generato al salvataggio)</label><input id="p_numero" readonly placeholder="Auto-generato"></div>
+          <div><label>Numero Preventivo</label><input id="p_numero" readonly placeholder="Auto-generato al salvataggio"></div>
           <div><label>Data emissione</label><input id="p_dataCreazione" type="date"></div>
         </div>
       </div>
@@ -141,56 +148,45 @@ input[readonly]{background:#f0f0f0;font-weight:700}
         <div><label>Location / Ricevimento</label><input id="p_location"></div>
       </div>
 
+      <!-- 💰 NUOVA SEZIONE INTERATTIVA: SERVIZI & COSTI -->
       <div class="card">
-        <h2>Azioni Registro</h2>
-        <div class="actions" style="margin:0; padding-top:0; border-top:none;">
-          <button type="button" class="btn green" onclick="salvaInCloudflareKV()">💾 Salva e Fai Backup Istantaneo</button>
-          <button type="button" class="btn secondary" onclick="pulisciCampiPreventivi()">🧹 Svuota Campi</button>
+        <h2>Servizi & Costi a Listino</h2>
+        <div class="grid" style="background:#f5f5f5; padding:10px; border-radius:8px; margin-bottom:12px;">
+          <div>
+            <label>Descrizione Servizio / Prodotto</label>
+            <input id="add_serv_desc" placeholder="Es. Servizio Fotografico + Album Premium">
+          </div>
+          <div>
+            <label>Prezzo (€)</label>
+            <input id="add_serv_prezzo" type="number" step="0.01" placeholder="0.00">
+          </div>
+        </div>
+        <button type="button" class="btn secondary" onclick="aggiungiServizioRiga()">➕ Aggiungi Servizio alla Tabella</button>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Servizio / Voce di Spesa</th>
+              <th style="width:120px;">Prezzo</th>
+              <th style="width:80px;">Azione</th>
+            </tr>
+          </thead>
+          <tbody id="tabella-servizi-body">
+            <!-- Qui compaiono i servizi inseriti al volo -->
+          </tbody>
+        </table>
+
+        <!-- Box Calcoli Automatici -->
+        <div class="totCard">
+          <div class="riga"><span>Totale Lordo Servizi:</span><span>€ <span id="lbl_tot_lordo">0.00</span></span></div>
+          <div class="riga" style="margin-top:5px;">
+            <span>Acconto Versato (€):</span>
+            <input id="p_acconto_versato" type="number" step="0.01" value="0.00" oninput="ricalcolaSpeseTotali()" style="width:140px; text-align:right;">
+          </div>
+          <div class="riga big"><span>SALDO RESIDUO:</span><span>€ <span id="lbl_saldo_residuo">0.00</span></span></div>
         </div>
       </div>
-    </section>
 
-    <!-- 👥 MODULO 02: CLIENTI -->
-    <section id="mod-clienti" class="hidden">
-      <div class="card"><h2>02 Archivio Clienti Studio</h2><p>Spazio per la gestione anagrafiche.</p></div>
-    </section>
-
-    <!-- 🔄 MODULO 03: WORKFLOW -->
-    <section id="mod-workflow" class="hidden">
-      <div class="card"><h2>03 Stato Avanzamento Lavori (Workflow)</h2><p>Controlla lo stato di lavorazione degli album.</p></div>
-    </section>
-
-    <!-- ⚙️ MODULO 04: CONFIGURA GRU -->
-    <section id="mod-gru" class="hidden">
-      <div class="card"><h2>04 Integrazione Programma GRU</h2><p>Pannello di configurazione del file di testo (.txt) restituito dalla selezione del cliente.</p></div>
-    </section>
-
-  </main>
-</div>
-
-<script>
-// Configurazione degli endpoint verso il tuo Cloudflare Worker potenziato v17
-const WORKER_URL = 'https://workers.dev';
-
-// Funzione di Login Multi-Tenant
-function eseguiLogin() {
-    const sId = document.getElementById('login_studio_id').value.trim();
-    const sToken = document.getElementById('login_studio_token').value.trim();
-
-    if(!sId || !sToken) {
-        alert('Inserisci credenziali valide!');
-        return;
-    }
-
-    // Salviamo in memoria locale per mantenere la sessione attiva
-    localStorage.setItem('current_studio_id', sId);
-    localStorage.setItem('studio_token', sToken);
-
-    document.getElementById('lbl_studio_id').textContent = sId;
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('app-content').classList.remove('hidden');
-
-    // Se l'utente è l'amministratore supremo mostra la plancia fornitore, altrimenti la nasconde
-    if(sId.toLowerCase() === 'admin') {
-        document.getElementById('btn-nav-fornitore').classList.remove('hidden');
-    } else {
+      <div class="card">
+        <h2>Azioni Registro</h2>
+        <div class="actions" style="margin-top:0; padding-top:0; border-top:none;">
