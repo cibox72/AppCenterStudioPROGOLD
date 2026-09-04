@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AppCenter - Suite Premium Gold</title>
+  <title>Suite Premium - AppCenter Studio Gold</title>
   <style>
     :root { 
       --bg-app: #f7f9fa; 
       --card-white: #ffffff;
-      --pastel-primary: #7ca5b8; /* Carta da zucchero pastello uniforme */
+      --pastel-primary: #7ca5b8; 
       --pastel-primary-hover: #678da0;
-      --pastel-success: #8cb89f; /* Verde salvia pastello */
-      --pastel-danger: #d99694;  /* Rosa antico / Rosso pastello */
-      --pastel-warning: #e6c280; /* Giallo ocra pastello */
+      --pastel-success: #8cb89f; 
+      --pastel-danger: #d99694;  
+      --pastel-warning: #e6c280; 
       --text-dark: #4a5560;
       --text-light: #718096;
       --border-soft: #e2e8f0;
@@ -20,7 +20,6 @@
     body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; background: var(--bg-app); color: var(--text-dark); -webkit-font-smoothing: antialiased; }
     .hidden { display: none !important; }
     
-    /* Navigazione Universale */
     .top-nav-controls { display: flex; gap: 8px; padding: 10px 20px; background: #fff; border-bottom: 1px solid var(--border-soft); align-items: center; }
     .nav-ctrl-btn { background: #f1f5f9; border: 1px solid var(--border-soft); color: var(--text-dark); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px; }
     .nav-ctrl-btn:hover { background: var(--border-soft); }
@@ -71,17 +70,15 @@
 </head>
 <body>
 
-  <!-- BARRA NAVIGAZIONE UNIVERSALE -->
   <div class="top-nav-controls">
     <button class="nav-ctrl-btn" onclick="navigazioneIndietro()">⬅️ Indietro</button>
     <button class="nav-ctrl-btn" onclick="navigazioneAvanti()">➡️ Avanti</button>
     <button class="nav-ctrl-btn" onclick="tornaAllaHome()">🏠 Home</button>
-    <span style="font-size:12px; color:var(--text-light); margin-left:auto;" id="lbl_stato_salvataggio">Piattaforma Connessa Cloudflare in tempo reale</span>
+    <span style="font-size:12px; color:var(--text-light); margin-left:auto;" id="lbl_stato_salvataggio">Sistema Serverless Connesso</span>
   </div>
 
-  <!-- PORTA ACCESSO LOGIN UNIVERSALE -->
   <div id="login-screen" class="login-wrapper">
-    <img id="app_login_logo_dinamico" src="https://github.io" alt="AppCenter Logo" style="max-width:180px; margin-bottom:20px; display:block; margin-left:auto; margin-right:auto;" onerror="this.src='https://placeholder.com'" />
+    <img id="app_login_logo_dinamico" src="https://github.io" alt="AppCenter Logo" style="max-width:180px; margin-bottom:20px; display:block; margin-left:auto; margin-right:auto;" />
     <h2 id="lbl_login_title">Suite Premium SaaS</h2>
     <p id="lbl_login_subtitle" style="color: var(--text-light); font-size: 14px; margin-bottom: 25px;">Punto di accesso unico per Fornitori, Studi e Clienti.</p>
     <div class="form-group" style="margin-bottom:15px;"><input type="text" id="login_studio_id" placeholder="ID Studio / ID Cliente Permanente" /></div>
@@ -89,7 +86,6 @@
     <button class="action-btn" style="width:100%; padding:12px;" onclick="avviaProceduraLoginDiretta()">Accedi al tuo Profilo</button>
   </div>
 
-  <!-- AREA GENERALE APPLICAZIONE -->
   <div id="app-content" class="hidden">
     <div class="main-navbar">
       <img id="app_header_logo_studio" class="nav-brand-logo" src="https://placeholder.com" alt="Logo" />
@@ -107,11 +103,20 @@
 
     <div class="app-container">
 
-      <!-- 👑 DASHBOARD FORNITORE -->
+      <!-- DASHBOARD FORNITORE -->
       <div id="mod-fornitore" class="hidden elegant-card">
         <h2>👑 Pannello Fornitore Supremo - Gestione Licenze</h2>
-        <p>I pagamenti degli abbonamenti annuali degli studi fotografici sono indirizzati a: <strong>appcenterstudiopremium@gmail.com</strong></p>
         <div style="background:#f1f5f9; padding:20px; border-radius:8px; margin-bottom:30px;">
           <h4>Crea / Modifica Stato Licenza Studio</h4>
           <div class="form-grid">
             <div class="form-group"><label>ID Studio Permanente *</label><input type="text" id="f_new_id" /></div>
+            <div class="form-group"><label>Password Studio *</label><input type="password" id="f_new_token" /></div>
+            <div class="form-group">
+              <label>Stato</label>
+              <select id="f_stato_studio">
+                <option value="trial">⏳ In Prova Omaggio (15 GG)</option>
+                <option value="active">🟢 Licenza Attiva</option>
+                <option value="suspended">🔴 Sospeso (Spegni Accesso)</option>
+              </select>
+            </div>
+          </div>
