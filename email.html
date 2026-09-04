@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>09 Email - AppCenterStudio Premium</title>
+    <style>
+        :root {
+            --carta-zucchero: #7ea4b5;
+            --verde-salvia: #9caf88;
+            --rosa-antico: #dcaeaf;
+            --scuro: #2b3a42;
+            --chiaro: #f4f7f6;
+            --rosso-alert: #e07a7a;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--chiaro);
+            color: var(--scuro);
+            margin: 0;
+            padding: 0;
+        }
+        /* BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA */
+        .navbar {
+            background-color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 3px solid var(--carta-zucchero);
+        }
+        .nav-links { display: flex; gap: 10px; }
+        .nav-links button {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background: white;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--scuro);
+            transition: all 0.2s;
+        }
+        .nav-links button:hover { background: var(--chiaro); }
+        .btn-sync { background-color: #e8f0fe !important; border-color: var(--carta-zucchero) !important; color: var(--carta-zucchero) !important; }
+        
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            margin: 30px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .main-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1, h2, h3 { color: var(--scuro); margin-top: 0; }
+        
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        @media(max-width: 768px) { .grid-layout { grid-template-columns: 1fr; } }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .btn-container { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .btn-container button { flex: 1; min-width: 120px; padding: 10px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; color: white; }
+        
+        .btn-email { background-color: var(--carta-zucchero); }
+        .btn-pec { background-color: var(--scuro); }
+        .btn-copy { background-color: #6c757d; }
+        .btn-save { background-color: var(--verde-salvia); }
+
+        .archivio-box {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            background: #fafafa;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .email-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 5px solid var(--carta-zucchero);
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            cursor: pointer;
+        }
+        
+        /* BOX ASSISTENZA */
+        .assistenza-box {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fcf8f2;
+            border: 1px solid var(--rosa-antico);
+            border-radius: 8px;
+        }
+        .assistenza-buttons { display: flex; gap: 15px; margin-top: 15px; }
+        .assistenza-buttons a {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            color: white;
+        }
+        .btn-anydesk { background-color: #ef4444; }
+        .btn-whatsapp { background-color: #22c55e; }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA -->
+    <div class="navbar">
+        <div class="nav-links">
+            <button onclick="window.history.back()">← Indietro</button>
+            <button onclick="location.href='index.html'">🏠 Home</button>
+        </div>
+        <div class="nav-links">
+            <button onclick="eseguiBackupGlobaleEmail()">📥 Backup Globale</button>
+            <button onclick="eseguiRipristinoGlobaleEmail()">📤 Ripristino Globale</button>
+            <button class="btn-sync" id="status-sync">Sync Cloud: OK</button>
+            <button style="background-color: var(--rosa-antico); color: white;" onclick="location.href='index.html'">Esci</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-card">
+            <h1>📩 Gestione Comunicazioni & Modelli Email</h1>
+            <p style="color: #666; margin-top: -10px;">Configura i tuoi indirizzi di studio, utilizza i modelli rapidi e archivia le comunicazioni inviate live sul cloud.</p>
+            
+            <!-- SEZIONE MITTENTE -->
+            <div style="background: #fdfdfd; padding: 20px; border: 1px solid #eaeaea; border-radius: 8px; margin-bottom: 25px;">
+                <h3>🏢 Mittente (Indirizzo dello Studio)</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr gap: 20px;" id="mittente-grid">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>Email dello Studio</label>
+                        <input type="email" id="studio-email-addr" placeholder="studio@esempio.com">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>PEC dello Studio (Facoltativa)</label>
+                        <input type="email" id="studio-pec-addr" placeholder="studio@pec.it">
+                    </div>
+                </div>
+                <button class="btn-save" style="margin-top: 15px; width: auto; padding: 10px 20px;" onclick="salvaMittenteStudioCloud()">Salva Mittente</button>
+            </div>
+
+            <div class="grid-layout">
+                
+                <!-- COMPOSIZIONE EMAIL -->
+                <div>
+                    <h3>✍️ Nuova Email</h3>
+                    
+                    <div class="form-group">
+                        <label>Modello Rapido</label>
+                        <select id="modello-rapido-select" onchange="applicaModelloRapido()">
+                            <option value="libero">-- Testo libero --</option>
+                            <option value="promemoria">📅 Promemoria appuntamento</option>
+                            <option value="consegna">🎁 Ordine / album pronto per consegna</option>
+                            <option value="sollecito">💳 Sollecito saldo</option>
+                            <option value="ringraziamento">❤️ Ringraziamento post servizio</option>
+                            <option value="acconto">🧾 Conferma ricevuta acconto</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>A: Email o PEC Destinatario *</label>
+                        <input type="email" id="email-destinatario" placeholder="cliente@esempio.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Oggetto *</label>
+                        <input type="text" id="email-oggetto" placeholder="Oggetto della comunicazione">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Messaggio</label>
+                        <textarea id="email-messaggio" rows="6" placeholder="Scrivi qui il testo del messaggio..."></textarea>
+                    </div>
+
+                    <div class="btn-container">
+                        <button class="btn-email" onclick="inviaConClientEmail('standard')">Invia con app email</button>
+                        <button class="btn-pec" onclick="inviaConClientEmail('pec')">Invia con PEC</button>
+                        <button class="btn-copy" onclick="copiaOggettoETesto()">Copia oggetto + testo</button>
+                        <button class="btn-save" onclick="salvaInArchivioEmailCloud()">Salva in archivio</button>
+                    </div>
+                </div>
+
+                <!-- ARCHIVIO EMAIL -->
+                <div>
+                    <h3>📋 Archivio Comunicazioni Inviate</h3>
+                    <div class="archivio-box" id="contenitore-email-archiviate">
+                        <p style="text-align:center; color:#999;">Nessuna email salvata in archivio.</p>
+                    </div>
+                    
+                    <!-- DETTAGLIO EMAIL -->
+                    <div id="dettaglio-email-box" style="display:none; margin-top:20px; padding:15px; background:white; border:1px solid var(--carta-zucchero); border-radius:6px;">
+                        <h4 id="det-oggetto" style="margin-top:0; color:var(--carta-zucchero);"></h4>
+                        <p style="font-size:13px; margin:5px 0;"><strong>A:</strong> <span id="det-a"></span> | <strong>Data:</strong> <span id="det-data"></span></p>
+                        <hr style="border:0; border-top:1px solid #eee;">
+                        <div id="det-corpo" style="white-space:pre-wrap; font-size:14px; background:#fafafa; padding:10px; border-radius:4px;"></div>
+                        <button class="btn-copy" style="margin-top:10px; width:auto; padding:5px 15px;" onclick="document.getElementById('dettaglio-email-box').style.display='none'">Chiudi</button>
+                    </div>
