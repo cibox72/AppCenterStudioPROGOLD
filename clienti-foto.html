@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03 Clienti & Foto - AppCenterStudio Premium</title>
+    <style>
+        :root {
+            --carta-zucchero: #7ea4b5;
+            --verde-salvia: #9caf88;
+            --rosa-antico: #dcaeaf;
+            --scuro: #2b3a42;
+            --chiaro: #f4f7f6;
+            --rosso-alert: #e07a7a;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--chiaro);
+            color: var(--scuro);
+            margin: 0;
+            padding: 0;
+        }
+        /* BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA */
+        .navbar {
+            background-color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 3px solid var(--carta-zucchero);
+        }
+        .nav-links { display: flex; gap: 10px; }
+        .nav-links button {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background: white;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--scuro);
+            transition: all 0.2s;
+        }
+        .nav-links button:hover { background: var(--chiaro); }
+        .btn-sync { background-color: #e8f0fe !important; border-color: var(--carta-zucchero) !important; color: var(--carta-zucchero) !important; }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 30px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .main-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1, h2, h3 { color: var(--scuro); margin-top: 0; }
+        
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        @media(max-width: 768px) { .grid-layout { grid-template-columns: 1fr; } }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        button.btn-azione {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--verde-salvia);
+            color: white;
+            border: none;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button.btn-azione:hover { opacity: 0.9; }
+
+        .archivio-box {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            background: #fafafa;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+        .servizio-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 5px solid var(--carta-zucchero);
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        /* BOX ASSISTENZA */
+        .assistenza-box {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fcf8f2;
+            border: 1px solid var(--rosa-antico);
+            border-radius: 8px;
+        }
+        .assistenza-buttons { display: flex; gap: 15px; margin-top: 15px; }
+        .assistenza-buttons a {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            color: white;
+        }
+        .btn-anydesk { background-color: #ef4444; }
+        .btn-whatsapp { background-color: #22c55e; }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA -->
+    <div class="navbar">
+        <div class="nav-links">
+            <button onclick="window.history.back()">← Indietro</button>
+            <button onclick="location.href='index.html'">🏠 Home</button>
+        </div>
+        <div class="nav-links">
+            <button onclick="eseguiBackupGlobaleFoto()">📥 Backup Globale</button>
+            <button onclick="eseguiRipristinoAnagraficheFoto()">📤 Ripristino Globale</button>
+            <button class="btn-sync" id="status-sync">Sync Cloud: OK</button>
+            <button style="background-color: var(--rosa-antico); color: white;" onclick="location.href='index.html'">Esci</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-card">
+            <h1>📸 Clienti & Foto</h1>
+            <p style="color: #666; margin-top: -10px;">Gestisci il caricamento multimediale delle immagini su Cloudflare R2 con ottimizzazione hardware locale dei file.</p>
+            
+            <div class="grid-layout">
+                
+                <!-- CARICATORE FOTO -->
+                <div>
+                    <h3>📦 Carica Foto nel Magazzino Cloud</h3>
+                    
+                    <div class="form-group">
+                        <label>Seleziona ID Sposi / Cliente Permanente *</label>
+                        <input type="text" id="upload-cliente-id" placeholder="Es. rossi-2026">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sotto-cartella Destinazione *</label>
+                        <select id="upload-folder-select">
+                            <option value="Preparativi">🏠 Preparativi</option>
+                            <option value="Chiesa">⛪ Chiesa</option>
+                            <option value="Ricevimento">🍽️ Ricevimento</option>
+                            <option value="Taglio Torta">🎂 Taglio Torta</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Seleziona Immagini JPEG *</label>
+                        <input type="file" id="upload-file-input" multiple accept="image/jpeg">
+                    </div>
+
+                    <button class="btn-azione" id="btn-upload" onclick="elaboraECaricaFotoLocali()">COMPRIMI IN LOCALE E CARICA SU R2</button>
+                    <div id="upload-status" style="margin-top: 12px; font-weight: bold; text-align: center; color: var(--carta-zucchero);"></div>
+                </div>
+
+                <!-- ARCHIVIO SERVIZI -->
+                <div>
+                    <h3>📋 Archivio Servizi Registrati Live</h3>
+                    <div class="archivio-box" id="contenitore-servizi">
+                        <p style="text-align:center; color:#999;">Inserisci un ID cliente per caricare lo stato o visualizzare i metadati.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SEZIONE ASSISTENZA SUPREMA -->
+            <div class="assistenza-box">
+                <h3>🛠️ Centro Assistenza Suprema & Interventi Rapidi</h3>
+                <p style="margin: 0; font-size: 14px; color: #555;">Se riscontri difficoltà con il caricamento delle immagini o la banda di rete, puoi richiedere assistenza immediata.</p>
+                <div class="assistenza-buttons">
+                    <a href="https://anydesk.com" target="_blank" class="btn-anydesk">🖥️ Connettiti con AnyDesk</a>
+                    <a href="https://wa.me" target="_blank" class="btn-whatsapp">📅 Richiedi Appuntamento su WhatsApp</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+const WORKER_URL = "https://workers.dev";
+const STUDIO_ID = window.currentStudioId || "studio-demo";
+
+async function elaboraECaricaFotoLocali() {
+    const clienteId = document.getElementById("upload-cliente-id").value.trim();
+    const folder = document.getElementById("upload-folder-select").value;
+    const files = document.getElementById("upload-file-input").files;
+    const statusDiv = document.getElementById("upload-status");
+
+    if(!clienteId || files.length === 0) {
+        alert("Inserisci l'ID cliente permanente e seleziona almeno un file JPEG.");
+        return;
+    }
+
+    statusDiv.innerText = "Avvio compressione hardware locale...";
+
+    for(let i = 0; i < files.length; i++) {
+        const file = files[i];
+        statusDiv.innerText = `Elaborazione file ${i+1} di ${files.length}: ${file.name}`;
+        
+        // Esecuzione compressione hardware nativa su Canvas per risparmiare banda
+        const compressedBlob = await eseguiCompressioneCanvas(file);
+        
+        const uploadUrl = `${WORKER_URL}/api/studio/upload?clienteId=${encodeURIComponent(clienteId)}&folder=${encodeURIComponent(folder)}&filename=${encodeURIComponent(file.name)}`;
+        
+        try {
+            const res = await fetch(uploadUrl, {
+                method: "POST",
+                body: compressedBlob
+            });
+            if (!res.ok) throw new Error("Errore durante il caricamento");
+        } catch (err) {
+            alert(`Errore nell'invio del file: ${file.name}`);
+            statusDiv.innerText = "❌ Caricamento interrotto per errore.";
+            return;
+        }
+    }
+
+    statusDiv.innerText = "✅ Caricamento completato su Cloudflare R2!";
+    alert("Tutti i file sono stati elaborati in locale e salvati nel bucket isolato dello studio.");
+    aggiornaVisualizzazioneArchivio(clienteId);
+}
+
+function eseguiCompressioneCanvas(file) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
