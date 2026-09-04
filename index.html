@@ -89,20 +89,14 @@ th{background:#111;color:#fff}
 
   <main style="padding:20px; max-width:1100px; margin:0 auto;">
 
-    <!-- 🛑 MODULO FORNITORE (Gestione Abbonati Multi-Tenant) -->
+    <!-- 🛑 MODULO FORNITORE -->
     <section id="mod-fornitore" class="hidden">
       <div class="card">
         <h2>Pannello Amministratore Supremo</h2>
         <p>Utilizza questo box privato per generare e attivare nuove credenziali per gli studi fotografici a cui venderai l'applicazione.</p>
         <div class="grid" style="background:#f9f9f9; padding:15px; border-radius:10px;">
-          <div>
-            <label>Nuovo ID Studio Fotografico da registrare *</label>
-            <input id="f_new_id" placeholder="Es. STU-002">
-          </div>
-          <div>
-            <label>Token / Password segreta da associare *</label>
-            <input id="f_new_token" placeholder="Es. Stella@2026">
-          </div>
+          <div><label>Nuovo ID Studio Fotografico da registrare *</label><input id="f_new_id" placeholder="Es. STU-002"></div>
+          <div><label>Token / Password segreta da associare *</label><input id="f_new_token" placeholder="Es. Stella@2026"></div>
         </div>
         <button class="btn green" style="margin-top:15px;" onclick="creaNuovoStudioSaaS()">✨ Attiva Studio & Salva in KV</button>
       </div>
@@ -177,3 +171,5 @@ th{background:#111;color:#fff}
 
         <div class="totCard">
           <div class="riga"><span>Totale Lordo Servizi:</span><span>€ <span id="lbl_tot_lordo">0.00</span></span></div>
+          <div class="riga" style="margin-top:5px;">
+            <span>Acconto Versato (€):</span>
