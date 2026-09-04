@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AppCenter Studio Premium Gold</title>
-<script src="https://cloudflare.com"></script>
 <style>
 :root{--nero:#111;--grigio:#444;--bordo:#d9d9d9;--chiaro:#f7f7f7;--primary:#1d5c74}
 *{box-sizing:border-box}
@@ -75,7 +74,8 @@ th{background:#111;color:#fff}
     <label>Password / Token di Accesso</label>
     <input id="login_studio_token" type="password" placeholder="Inserisci il token segreto">
   </div>
-  <button class="btn green" style="width:100%;" onclick="eseguiLogin()">🔓 Entra nel Sistema</button>
+  <!-- Modificato l'ID del pulsante per aggancio diretto -->
+  <button class="btn green" style="width:100%;" id="pulsante-login-principale">🔓 Entra nel Sistema</button>
 </div>
 
 <!-- 🌐 APPLICAZIONE REALE -->
