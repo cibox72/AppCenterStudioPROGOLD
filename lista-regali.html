@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Regali - AppCenterStudio Premium</title>
+    <style>
+        :root {
+            --carta-zucchero: #7ea4b5;
+            --verde-salvia: #9caf88;
+            --rosa-antico: #dcaeaf;
+            --scuro: #2b3a42;
+            --chiaro: #f4f7f6;
+            --rosso-alert: #e07a7a;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--chiaro);
+            color: var(--scuro);
+            margin: 0;
+            padding: 0;
+        }
+        /* BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA */
+        .navbar {
+            background-color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 3px solid var(--carta-zucchero);
+        }
+        .nav-links { display: flex; gap: 10px; }
+        .nav-links button {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background: white;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--scuro);
+            transition: all 0.2s;
+        }
+        .nav-links button:hover { background: var(--chiaro); }
+        .btn-sync { background-color: #e8f0fe !important; border-color: var(--carta-zucchero) !important; color: var(--carta-zucchero) !important; }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 30px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .main-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1, h2, h3 { color: var(--scuro); text-align: center; }
+        
+        /* GRIGLIA LAYOUT */
+        .gift-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 25px;
+        }
+        @media(max-width: 768px) { .gift-grid { grid-template-columns: 1fr; } }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        
+        /* SCHEDE QUOTE REGALO */
+        .quote-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .quota-card {
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            border-top: 4px solid var(--verde-salvia);
+        }
+        .quota-card.completata {
+            border-top-color: var(--rosa-antico);
+            opacity: 0.7;
+        }
+        .price-tag { font-size: 24px; font-weight: bold; color: var(--scuro); margin: 10px 0; }
+        
+        button.btn-pay {
+            background-color: #ffc439;
+            color: #003087;
+            border: 1px solid #ffc439;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* STRUTTURA REGISTRO MESSAGGI */
+        .registro-auguri {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            background: #fdfdfd;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        .messaggio-item {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 4px solid var(--carta-zucchero);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        /* BOX ASSISTENZA */
+        .assistenza-box {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #fcf8f2;
+            border: 1px solid var(--rosa-antico);
+            border-radius: 8px;
+        }
+        .assistenza-buttons { display: flex; gap: 15px; margin-top: 15px; }
+        .assistenza-buttons a {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            color: white;
+        }
+        .btn-anydesk { background-color: #ef4444; }
+        .btn-whatsapp { background-color: #22c55e; }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA -->
+    <div class="navbar">
+        <div class="nav-links">
+            <button onclick="window.history.back()">← Indietro</button>
+            <button onclick="location.href='index.html'">🏠 Home</button>
+        </div>
+        <div class="nav-links">
+            <button onclick="eseguiBackupListaRegali()">📥 Backup Globale</button>
+            <button onclick="eseguiRipristinoListaRegali()">📤 Ripristino Globale</button>
+            <button class="btn-sync" id="status-sync">Sync Cloud: OK</button>
+            <button style="background-color: var(--rosa-antico); color: white;" onclick="location.reload()">Esci</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-card">
+            <h1 style="color: var(--carta-zucchero);">🎁 Lista Nozze & Regali Servizio</h1>
+            <p style="text-align:center; color: #666; margin-top: -10px;">Piattaforma di contribuzione quote e crowdfunding per i servizi fotografici degli sposi.</p>
+            
+            <!-- CONTROLLO INGRESSO SPOSI / INVITATI -->
+            <div id="blocco-ricerca-lista" style="max-width: 450px; margin: 30px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; text-align: center;">
+                <h4>Sblocca Registro Lista Nozze</h4>
+                <input type="text" id="target-cliente-id" placeholder="Inserisci ID Sposi Permanente *">
+                <button style="background-color: var(--carta-zucchero); margin-top: 10px;" onclick="caricaListaRegaliCloud()">APRI LISTA REGALI LIVE</button>
+            </div>
+
+            <!-- CONTENUTO PRINCIPALE PROTETTO (SI ATTIVA ALL'APERTURA) -->
+            <div id="area-lista-regali-attiva" style="display: none;">
+                
+                <h3 id="intestazione-sposi" style="color: var(--scuro); margin-bottom: 25px;"></h3>
+
+                <!-- GRIGLIA STRUTTURALE -->
+                <div class="gift-grid">
+                    
+                    <!-- LATO SINISTRO: PARTECIPAZIONE / REGALO QUOTA -->
+                    <div>
+                        <h3>💝 Regala una Quota del Servizio</h3>
+                        <p style="font-size: 13px; color: #666; margin-top:-5px;">Scegli una delle quote disponibili per contribuire alla realizzazione dell'album e dei servizi fotografici.</p>
+                        
+                        <div class="quote-container" id="contenitore-schede-quote">
+                            <!-- Iniezione automatica delle schede quote via Cloudflare KV -->
+                        </div>
+
+                        <div style="margin-top: 25px; padding: 15px; background: #fdfdfd; border: 1px dashed #ccc; border-radius: 6px;">
+                            <h4>✍️ Lascia un messaggio di Auguri agli Sposi</h4>
+                            <div class="form-group">
+                                <label>Il tuo Nome / Famiglia *</label>
+                                <input type="text" id="regalo-firmato" placeholder="Es. Famiglia Bianchi">
+                            </div>
+                            <div class="form-group">
+                                <label>Dedica / Messaggio di Auguri *</label>
+                                <textarea id="regalo-dedica" rows="3" placeholder="Scrivi qui i tuoi auguri più affettuosi..."></textarea>
+                            </div>
+                            <button style="background-color: var(--verde-salvia); color: white; font-weight: bold;" onclick="registraAugurioSenzaPagamento()">INVIA SOLO IL MESSAGGIO DI AUGURI</button>
+                        </div>
+                    </div>
+
+                    <!-- LATO DESTRO: REGISTRO DEDICHE E AVANZAMENTO -->
+                    <div>
+                        <h3>📈 Stato Raccolta & Messaggi Ricevuti</h3>
+                        <div style="padding: 15px; background: #e8f0fe; border-radius: 6px; font-weight: bold; text-align: center; color: var(--scuro); margin-bottom: 20px;" id="box-riepilogo-totali">
+                            Quote Finanziate: -- / -- €
+                        </div>
+
+                        <h4>📜 Albo delle Dediche e degli Auguri</h4>
+                        <div class="registro-auguri" id="contenitore-messaggi-auguri">
+                            <p style="text-align:center; color:#999; margin-top:20px;">Ancora nessun messaggio nel registro.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SEZIONE ASSISTENZA SUPREMA -->
+            <div class="assistenza-box">
+                <h3>🛠️ Centro Assistenza Suprema Lista Nozze</h3>
+                <p style="margin: 0; font-size: 14px; color: #555;">Se riscontri blocchi durante l'indirizzamento hardware sul canale sicuro di pagamento PayPal, puoi richiedere assistenza immediata.</p>
+                <div class="assistenza-buttons">
+                    <a href="https://anydesk.com" target="_blank" class="btn-anydesk">🖥️ Connettiti con AnyDesk</a>
