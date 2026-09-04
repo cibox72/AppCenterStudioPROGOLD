@@ -3,192 +3,145 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Suite Premium - Compilazione Preventivo / Contratto</title>
+  <title>AppCenter - Modulo Preventivi & Contratti</title>
   <style>
-    :root { --primary: #1e5571; --danger: #d9534f; --success: #5cb85c; }
-    body { font-family: system-ui, sans-serif; margin: 20px; background: #f4f6f9; color: #333; }
-    .container { max-width: 800px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    h2, h3, h4 { color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 8px; }
-    .form-group { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
-    input, select, textarea { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
-    .row { display: flex; gap: 15px; margin-bottom: 10px; }
-    .col { flex: 1; }
-    .btn { background: var(--primary); color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; margin-top: 10px; }
-    .btn.green { background: var(--success); }
-    .btn.danger { background: var(--danger); }
-    table { width: 100%; border-collapse: collapse; margin: 20px 0; background: white; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-    th { background: #f2f2f2; color: #333; }
-    .totali-box { background: #eee; padding: 15px; border-radius: 4px; text-align: right; font-size: 16px; font-weight: bold; margin-top: 15px; }
+    :root { 
+      --bg-app: #f7f9fa; 
+      --card-white: #ffffff;
+      --pastel-primary: #7ca5b8; /* Stesso colore coordinato pastello */
+      --pastel-primary-hover: #678da0;
+      --pastel-success: #8cb89f; 
+      --pastel-danger: #d99694;  
+      --pastel-warning: #e6c280; 
+      --text-dark: #4a5560;
+      --text-light: #718096;
+      --border-soft: #e2e8f0;
+    }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; background: var(--bg-app); color: var(--text-dark); -webkit-font-smoothing: antialiased; }
+    .hidden { display: none !important; }
+    
+    .top-nav-controls { display: flex; gap: 8px; padding: 10px 20px; background: #fff; border-bottom: 1px solid var(--border-soft); align-items: center; }
+    .nav-ctrl-btn { background: #f1f5f9; border: 1px solid var(--border-soft); color: var(--text-dark); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px; }
+    .nav-ctrl-btn:hover { background: var(--border-soft); }
+
+    .main-navbar { background: var(--card-white); padding: 15px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; gap: 10px; align-items: center; border-bottom: 1px solid var(--border-soft); }
+    .nav-brand-logo { height: 40px; max-width: 150px; object-fit: contain; margin-right: 15px; }
+
+    .app-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; box-sizing: border-box; }
+    .elegant-card { background: var(--card-white); padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); border: 1px solid rgba(0,0,0,0.01); margin-bottom: 25px; }
+    .elegant-card h2 { margin-top: 0; color: var(--text-dark); font-weight: 600; font-size: 22px; border-bottom: 1px solid var(--border-soft); padding-bottom: 12px; margin-bottom: 20px; }
+    .elegant-card h3 { color: var(--text-dark); font-size: 18px; margin-top: 30px; font-weight: 600; border-bottom: 1px dashed var(--border-soft); padding-bottom: 6px; }
+
+    .preventivi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-top: 20px; }
+    .preventivo-card { background: var(--card-white); border: 1px solid var(--border-soft); padding: 20px; border-radius: 10px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 5px rgba(0,0,0,0.01); }
+    .preventivo-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; border-bottom: 1px solid var(--border-soft); padding-bottom: 10px; }
+    .preventivo-titolo { margin: 0; font-size: 16px; font-weight: 600; }
+    .preventivo-importo { font-size: 18px; font-weight: 700; color: var(--pastel-primary-hover); }
+    .preventivo-info { font-size: 13px; line-height: 1.6; }
+    .preventivo-actions { margin-top: 15px; text-align: right; border-top: 1px dashed var(--border-soft); padding-top: 10px; }
+
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 15px; }
+    .form-group { display: flex; flex-direction: column; text-align: left; }
+    .form-group label { font-size: 13px; font-weight: 600; color: var(--text-light); margin-bottom: 6px; text-transform: uppercase; }
+    input, select, textarea { padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; color: var(--text-dark); background-color: #fff; width: 100%; box-sizing: border-box; }
+
+    .action-btn { background-color: var(--pastel-primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: background-color 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+    .action-btn:hover { background-color: var(--pastel-primary-hover); }
+    .action-btn.success { background-color: var(--pastel-success); }
+    .action-btn.danger { background-color: var(--pastel-danger); }
+
+    .preventivo-stato { padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; display: inline-block; color: white; }
+    .preventivo-stato.stato-in_attesa { background: var(--pastel-warning); color: #5a431c; }
+    .preventivo-stato.stato-accettato { background: var(--pastel-success); }
+    .preventivo-stato.stato-rifiutato { background: var(--pastel-danger); }
+
+    .documento-stampa-container { background: white; padding: 50px; border-radius: 8px; max-width: 850px; margin: 30px auto; color: #000; text-align: left; font-size: 14px; border: 1px solid var(--border-soft); }
+    .documento-header { display: flex; justify-content: space-between; margin-bottom: 40px; border-bottom: 2px solid #333; padding-bottom: 20px; }
+
+    @media print {
+      body { background: white; }
+      .top-nav-controls, .main-navbar, .elegant-card, button, .action-btn { display: none !important; }
+      .documento-stampa-container { box-shadow: none; border: none; margin: 0; padding: 0; width: 100%; }
+    }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h2>Scheda Compilazione Preventivo / Contratto</h2>
-    
-    <!-- Selezione Rapida Cliente (se presente in archivio) -->
-    <div class="form-group">
-      <label>Caricamento Rapido Anagrafica da Archivio Clienti</label>
-      <select id="prev_selettore_cliente_rapido" onchange="autoCompilaAnagraficaPreventivo()">
-        <option value="">-- Seleziona un cliente dall'archivio (Opzionale) --</option>
-      </select>
-    </div>
-
-    <!-- Dati Generali Preventivo -->
-    <div class="row">
-      <div class="col">
-        <label>Numero Preventivo / Contratto</label>
-        <input type="text" id="p_numero" placeholder="Es. PRV-2026-001" />
-      </div>
-      <div class="col">
-        <label>Data Emissione</label>
-        <input type="date" id="p_dataCreazione" />
-      </div>
-    </div>
-
-    <!-- SEZIONE ANAGRAFICA CLIENTE A -->
-    <h3>Anagrafica Cliente A (Primo Intestatario)</h3>
-    <div class="row">
-      <div class="col"><label>Nome *</label><input type="text" id="a_nome" required /></div>
-      <div class="col"><label>Cognome *</label><input type="text" id="a_cognome" required /></div>
-    </div>
-    <div class="row">
-      <div class="col"><label>Telefono</label><input type="text" id="a_telefono" /></div>
-      <div class="col"><label>Email</label><input type="email" id="a_email" /></div>
-    </div>
-    <div class="form-group"><label>Via / Piazza e n. civico</label><input type="text" id="a_via" /></div>
-    <div class="row">
-      <div class="col"><label>Città</label><input type="text" id="a_citta" /></div>
-      <div class="col"><label>CAP</label><input type="text" id="a_cap" /></div>
-      <div class="col"><label>Provincia</label><input type="text" id="a_prov" /></div>
-    </div>
-
-    <!-- SEZIONE ANAGRAFICA CLIENTE B -->
-    <h3>Anagrafica Cliente B (Secondo Intestatario)</h3>
-    <div class="row">
-      <div class="col"><label>Nome</label><input type="text" id="b_nome" /></div>
-      <div class="col"><label>Cognome</label><input type="text" id="b_cognome" /></div>
-    </div>
-    <div class="row">
-      <div class="col"><label>Telefono</label><input type="text" id="b_telefono" /></div>
-      <div class="col"><label>Email</label><input type="email" id="b_email" /></div>
-    </div>
-    <div class="form-group"><label>Via / Piazza e n. civico</label><input type="text" id="b_via" /></div>
-    <div class="row">
-      <div class="col"><label>Città</label><input type="text" id="b_citta" /></div>
-      <div class="col"><label>CAP</label><input type="text" id="b_cap" /></div>
-      <div class="col"><label>Provincia</label><input type="text" id="b_prov" /></div>
-    </div>
-
-    <!-- DETTAGLI SERVIZIO / EVENTO -->
-    <h3>Dettagli Servizio dell'Evento</h3>
-    <div class="row">
-      <div class="col"><label>Data del Servizio (In Evidenza)</label><input type="date" id="p_dataServizio" /></div>
-      <div class="col"><label>Tipo di Servizio Richiesto</label><input type="text" id="p_tipo" placeholder="Es. Matrimonio, Battesimo..." /></div>
-    </div>
-    <div class="row">
-      <div class="col"><label>Chiesa / Luogo Cerimonia</label><input type="text" id="p_chiesa" /></div>
-      <div class="col"><label>Location / Ricevimento</label><input type="text" id="p_location" /></div>
-    </div>
-
-    <!-- LISTINO SERVIZI E COSTI -->
-    <h3>Servizi & Costi a Listino</h3>
-    <div class="row" style="align-items: flex-end;">
-      <div class="col" style="flex: 2;"><label>Descrizione Servizio / Prodotto</label><input type="text" id="add_serv_desc" placeholder="Es. Servizio Fotografico + Album" /></div>
-      <div class="col"><label>Prezzo (EUR)</label><input type="number" id="add_serv_prezzo" placeholder="0.00" step="0.01" /></div>
-      <div class="col" style="flex: 0.5;"><button type="button" class="btn" onclick="aggiungiServizioRiga()" style="margin-top:0;">+</button></div>
-    </div>
-
-    <table>
-      <thead>
-        <tr><th>Descrizione Servizio / Prodotto</th><th>Prezzo (EUR)</th><th style="width: 50px;">Azione</th></tr>
-      </thead>
-      <tbody id="tabella-servizi-body">
-        <!-- Le righe aggiunte compariranno qui -->
-      </tbody>
-    </table>
-
-    <!-- TOTALI E SCONTI -->
-    <div class="totali-box">
-      <div>Totale Lordo: EUR <span id="lbl_tot_lordo">0.00</span></div>
-      <div style="margin-top: 10px; font-weight: normal; font-size: 14px;">
-        <label style="display:inline; margin-right: 10px;">Acconto Versato (EUR):</label>
-        <input type="number" id="p_acconto_versato" value="0" step="0.01" oninput="ricalcolaSpeseTotali()" style="width: 150px; display: inline-block; padding: 5px;" />
-      </div>
-      <div style="margin-top: 10px; color: var(--primary);">Saldo Residuo: EUR <span id="lbl_saldo_residuo">0.00</span></div>
-    </div>
-
-    <!-- AZIONI DI SALVATAGGIO -->
-    <div class="row">
-      <div class="col"><button class="btn green" onclick="salvaInCloudflareKV()">Salva Preventivo nel Cloud</button></div>
-      <div class="col"><button class="btn danger" onclick="pulisciCampiPreventivi()">Svuota Campi</button></div>
-    </div>
+  <!-- BARRA NAVIGAZIONE -->
+  <div class="top-nav-controls">
+    <a href="index.html" class="nav-ctrl-btn">🏠 Torna alla Home Plancia</a>
+    <span style="font-size:12px; color:var(--text-light); margin-left:auto;" id="lbl_stato_salvataggio">Modulo Preventivi Sincronizzato Cloud</span>
   </div>
 
-  <!-- INTERFACCIA DI COLLEGAMENTO CON CLOUDFLARE -->
-  <script>
-    const WORKER_URL = 'https://workers.dev';
-    let arrayServiziAggiunti = [];
-    let cacheClientiArchivio = [];
+  <div class="main-navbar">
+    <img id="app_header_logo_studio" class="nav-brand-logo" src="https://placeholder.com" alt="Logo" />
+    <span style="font-size:16px; font-weight:bold; color:var(--text-dark);">Sezione Gestione Contratti & Preventivi dello Studio</span>
+  </div>
 
-    // Recupera i dati di sessione (se presenti)
-    const studio_id = localStorage.getItem('current_studio_id') || 'STU-001';
-    const studio_token = localStorage.getItem('studio_token') || '';
+  <div class="app-container">
+    
+    <div id="mod-preventivi" class="elegant-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-soft); padding-bottom:15px; margin-bottom:20px;">
+        <h2 style="margin:0; border:none; padding:0;">Compilazione e Archivio Commesse</h2>
+        <button class="action-btn success" onclick="apriFormNuovoPreventivo()">➕ Nuovo Preventivo / Contratto</button>
+      </div>
 
-    // Funzione per inserire una riga nel listino
-    function aggiungiServizioRiga() {
-      const d = document.getElementById('add_serv_desc').value.trim(); 
-      const p = parseFloat(document.getElementById('add_serv_prezzo').value); 
-      if(!d || isNaN(p)) return alert('Inserisci descrizione e prezzo validi!');
-      
-      arrayServiziAggiunti.push({descrizione: d, prezzo: p}); 
-      document.getElementById('add_serv_desc').value = ''; 
-      document.getElementById('add_serv_prezzo').value = ''; 
-      renderizzaTabellaServizi();
-    }
+      <!-- BOX REGISTRAZIONE STRUTTURATO AL 100% SUI TUOI CAMPI -->
+      <div id="box-compilazione-preventivo" class="hidden" style="background:#f8fafc; padding:25px; border-radius:10px; border:1px solid var(--border-soft); margin-bottom:30px;">
+        <h3 id="form-preventivo-titolo-dinamico" style="margin-top:0;">Nuovo Documento</h3>
+        <input type="hidden" id="p_id" />
+        
+        <div class="form-grid">
+          <div class="form-group"><label>Titolo del Servizio / Commessa *</label><input type="text" id="p_titolo" placeholder="Es. Servizio Matrimonio Rossi" /></div>
+          <div class="form-group"><label>Importo Pattuito (€) *</label><input type="number" id="p_importo" step="0.01" /></div>
+          <div class="form-group"><label>Data Scadenza / Evento</label><input type="date" id="p_data_scadenza" /></div>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group"><label>Cliente Associato (ID o Nome) *</label><input type="text" id="p_cliente_id" placeholder="Es. Mario Rossi (ID Permanente)" /></div>
+          <div class="form-group">
+            <label>Stato Documento</label>
+            <select id="p_stato">
+              <option value="in_attesa">⏳ In attesa (Preventivo)</option>
+              <option value="accettato">✅ Accettato (Contratto Attivo)</option>
+              <option value="rifiutato">❌ Rifiutato / Scaduto</option>
+            </select>
+          </div>
+        </div>
 
-    function rimuoviServizioRiga(i) {
-      arrayServiziAggiunti.splice(i, 1);
-      renderizzaTabellaServizi();
-    }
+        <div class="form-group" style="margin-bottom:15px;">
+          <label>Descrizione della Prestazione Accordata</label>
+          <textarea id="p_descrizione" rows="4" placeholder="Inserisci qui i patti, gli album inclusi, acconti, note legali..."></textarea>
+        </div>
 
-    function renderizzaTabellaServizi() {
-      const tb = document.getElementById('tabella-servizi-body');
-      if(!tb) return;
-      tb.innerHTML = arrayServiziAggiunti.map((x, idx) => `
-        <tr>
-          <td>${x.descrizione}</td>
-          <td>EUR ${x.prezzo.toFixed(2)}</td>
-          <td><button type="button" class="btn danger" style="padding:4px 8px; margin:0; font-size:12px;" onclick="rimuoviServizioRiga(${idx})">X</button></td>
-        </tr>
-      `).join(''); 
-      ricalcolaSpeseTotali();
-    }
+        <div style="display:flex; gap:10px;">
+          <button class="action-btn success" onclick="salvaPreventivoMappatoOriginale()">💾 Salva e Invia al Cloud</button>
+          <button class="action-btn warning hidden" id="btn-anteprima-pdf" onclick="apriAnteprimaStampaContratto()">🖨️ Genera Anteprima PDF</button>
+          <button class="action-btn danger" onclick="chiudiFormCompilazione()">Annulla</button>
+        </div>
+      </div>
 
-    function ricalcolaSpeseTotali() {
-      let tot = 0;
-      arrayServiziAggiunti.forEach(x => tot += x.prezzo); 
-      const acc = parseFloat(document.getElementById('p_acconto_versato').value) || 0;
-      document.getElementById('lbl_tot_lordo').textContent = tot.toFixed(2); 
-      document.getElementById('lbl_saldo_residuo').textContent = (tot - acc).toFixed(2);
-    }
+      <h3>Elenco Storico Documenti</h3>
+      <div id="preventivi-list" class="preventivi-grid">
+        <p style="color:#999; text-align:center; grid-column:1/-1;">Connessione al database di postazione...</p>
+      </div>
+    </div>
 
-    // Salva i dati direttamente sul database Cloudflare KV tramite le API del tuo Worker
-    async function salvaInCloudflareKV() {
-      const num = document.getElementById('p_numero').value.trim() || 'PRV-' + Math.floor(100000 + Math.random() * 900000);
-      if(!document.getElementById('a_nome').value.trim()) return alert('Il nome del Cliente A è obbligatorio!');
-
-      const data = {
-        id: num, 
-        data_creazione: document.getElementById('p_dataCreazione').value,
-        cliente_a: {
-          nome: document.getElementById('a_nome').value, cognome: document.getElementById('a_cognome').value, 
-          telefono: document.getElementById('a_telefono').value, email: document.getElementById('a_email').value, 
-          via: document.getElementById('a_via').value, citta: document.getElementById('a_citta').value, 
-          cap: document.getElementById('a_cap').value, provincia: document.getElementById('a_prov').value
-        },
-        cliente_b: {
-          nome: document.getElementById('b_nome').value, cognome: document.getElementById('b_cognome').value, 
-          telefono: document.getElementById('b_telefono').value, email: document.getElementById('b_email').value, 
+    <!-- ANTEPRIMA STAMPA PDF -->
+    <div id="sezione-stampa-contratto-pdf" class="hidden text-center">
+      <button class="action-btn success" style="margin-bottom:20px;" onclick="window.print()">🔥 Avvia Stampa / Esporta PDF</button>
+      <button class="action-btn danger" style="margin-bottom:20px;" onclick="chiudiAnteprimaStampa()">Chiudi Anteprima</button>
+      <div class="documento-stampa-container" id="foglio-a4-pdf">
+        <div class="documento-header">
+          <div>
+            <h1 id="print_studio_nome" style="margin:0 0 5px 0;">Nome Studio</h1>
+            <p id="print_studio_dati" style="margin:0; color:#555; font-size:12px;">Dati Studio</p>
+          </div>
+          <img id="print_studio_logo" src="" alt="Logo" style="height:60px; max-width:180px; object-fit:contain;" />
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:30px;">
+          <div>
+            <h3 style="margin:0; border:none; padding:0; font-size:12px; color:var(--text-light);">RIFERIMENTO COMMESSA</h3>
+            <p id="print_cliente_dati" style="margin:0; font-weight:bold; font-size:16px;"></p>
+          </div>
+          <div style="text-align:right;">
