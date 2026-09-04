@@ -56,12 +56,12 @@ th{background:#111;color:#fff}
 </head>
 <body>
 
-<!-- 🔑 SCHERMATA LOGIN -->
+<!-- 🔑 SCHERMATA LOGIN MULTI-TENANT -->
 <div id="login-screen">
   <h2 style="border:none; text-align:center; padding:0;">Accesso Suite Premium</h2>
   <div style="margin-bottom:12px;">
     <label>ID Studio Fotografico</label>
-    <input id="login_studio_id" placeholder="Es. STU-001">
+    <input id="login_studio_id" placeholder="Es. STU-001 o admin">
   </div>
   <div style="margin-bottom:20px;">
     <label>Password / Token di Accesso</label>
@@ -74,12 +74,12 @@ th{background:#111;color:#fff}
 <div id="app-content" class="hidden">
   <header>
     <div class="brand"><span class="brandName">AppCenter Studio Premium Gold</span></div>
-    <div id="studioNameHead">Studio: <span id="lbl_studio_id"></span></div>
+    <div id="studioNameHead">Studio Attivo: <span id="lbl_studio_id" style="font-weight:bold; color:#00ffff;"></span></div>
     <button class="btn danger" onclick="eseguiLogout()">🚪 Esci</button>
   </header>
 
   <nav>
-    <button class="btn secondary" onclick="mostraModulo('fornitore')" id="btn-nav-fornitore">Plancia Fornitore</button>
+    <button class="btn secondary hidden" onclick="mostraModulo('fornitore')" id="btn-nav-fornitore">👑 Plancia Fornitore</button>
     <button class="btn secondary" onclick="mostraModulo('preventivi')">01 Nuovo Preventivo</button>
     <button class="btn secondary" onclick="mostraModulo('archivio-prev')">📋 Archivio Preventivi</button>
     <button class="btn secondary" onclick="mostraModulo('clienti')">02 Clienti</button>
@@ -89,15 +89,22 @@ th{background:#111;color:#fff}
 
   <main style="padding:20px; max-width:1100px; margin:0 auto;">
 
-    <!-- 🛑 MODULO FORNITORE -->
+    <!-- 🛑 MODULO FORNITORE (Gestione Abbonati Multi-Tenant) -->
     <section id="mod-fornitore" class="hidden">
       <div class="card">
-        <h2>Plancia Amministratore / Fornitore</h2>
-        <div class="grid">
-          <div><label>Nuovo ID Studio da creare</label><input id="f_new_id" placeholder="Es. STU-002"></div>
-          <div><label>Token / Password da associare</label><input id="f_new_token" placeholder="Es. PasswordSegreta"></div>
+        <h2>Pannello Amministratore Supremo</h2>
+        <p>Utilizza questo box privato per generare e attivare nuove credenziali per gli studi fotografici a cui venderai l'applicazione.</p>
+        <div class="grid" style="background:#f9f9f9; padding:15px; border-radius:10px;">
+          <div>
+            <label>Nuovo ID Studio Fotografico da registrare *</label>
+            <input id="f_new_id" placeholder="Es. STU-002">
+          </div>
+          <div>
+            <label>Token / Password segreta da associare *</label>
+            <input id="f_new_token" placeholder="Es. Stella@2026">
+          </div>
         </div>
-        <button class="btn green" style="margin-top:15px;" onclick="creaNuovoStudio()">✨ Genera e Salva Studio</button>
+        <button class="btn green" style="margin-top:15px;" onclick="creaNuovoStudioSaaS()">✨ Attiva Studio & Salva in KV</button>
       </div>
     </section>
 
@@ -170,12 +177,3 @@ th{background:#111;color:#fff}
 
         <div class="totCard">
           <div class="riga"><span>Totale Lordo Servizi:</span><span>€ <span id="lbl_tot_lordo">0.00</span></span></div>
-          <div class="riga" style="margin-top:5px;">
-            <span>Acconto Versato (€):</span>
-            <input id="p_acconto_versato" type="number" step="0.01" value="0.00" oninput="ricalcolaSpeseTotali()" style="width:140px; text-align:right;">
-          </div>
-          <div class="riga big"><span>SALDO RESIDUO:</span><span>€ <span id="lbl_saldo_residuo">0.00</span></span></div>
-        </div>
-      </div>
-
-      <div class="card">
