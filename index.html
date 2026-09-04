@@ -34,7 +34,6 @@
     .elegant-card { background: var(--card-white); padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); border: 1px solid rgba(0,0,0,0.01); margin-bottom: 25px; }
     .elegant-card h2 { margin-top: 0; color: var(--text-dark); font-weight: 600; font-size: 22px; border-bottom: 1px solid var(--border-soft); padding-bottom: 12px; margin-bottom: 20px; }
     
-    /* Box Notifiche Luminoso Pastello */
     .notifica-alert-box { background-color: #fef3c7; border: 1px solid var(--pastel-warning); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: #92400e; }
 
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 15px; }
@@ -77,10 +76,10 @@
     <button class="nav-ctrl-btn" onclick="navigazioneIndietro()">⬅️ Indietro</button>
     <button class="nav-ctrl-btn" onclick="navigazioneAvanti()">➡️ Avanti</button>
     <button class="nav-ctrl-btn" onclick="tornaAllaHome()">🏠 Home</button>
-    <span style="font-size:12px; color:var(--text-light); margin-left:auto;" id="lbl_stato_salvataggio">Sistema Sincronizzato Cloudflare</span>
+    <span style="font-size:12px; color:var(--text-light); margin-left:auto;" id="lbl_stato_salvataggio">Piattaforma Connessa Cloudflare in tempo reale</span>
   </div>
 
-  <!-- PORTA ACCESSO LOGIN -->
+  <!-- PORTA ACCESSO LOGIN UNIVERSALE -->
   <div id="login-screen" class="login-wrapper">
     <img id="app_login_logo_dinamico" src="https://github.io" alt="AppCenter Logo" style="max-width:180px; margin-bottom:20px; display:block; margin-left:auto; margin-right:auto;" onerror="this.src='https://placeholder.com'" />
     <h2 id="lbl_login_title">Suite Premium SaaS</h2>
@@ -97,7 +96,7 @@
       
       <button class="navbar-menu-btn studio-feature hidden active" id="btn-mod-home" onclick="mostraModulo('home')">Pannello Studio</button>
       <button class="navbar-menu-btn studio-feature hidden" id="btn-mod-profilo-studio" onclick="mostraModulo('profilo-studio')">⚙️ Configura Studio</button>
-      <a href="preventivi.html" class="navbar-menu-btn studio-feature hidden">📋 Gestione Preventivi</a>
+      <button class="navbar-menu-btn studio-feature hidden" id="btn-nav-preventivi-link" onclick="reindirizzaModuloPreventiviPrivato()">📋 Gestione Preventivi</button>
       <button class="navbar-menu-btn studio-feature hidden" id="btn-mod-clienti" onclick="mostraModulo('clienti')">👥 Gestione Credenziali Clienti</button>
       
       <button id="btn-nav-fornitore" class="navbar-menu-btn hidden" style="color:var(--pastel-danger); font-weight:bold;" onclick="mostraModulo('fornitore')">👑 DASHBOARD SAAS FORNITORE</button>
@@ -115,4 +114,4 @@
         <div style="background:#f1f5f9; padding:20px; border-radius:8px; margin-bottom:30px;">
           <h4>Crea / Modifica Stato Licenza Studio</h4>
           <div class="form-grid">
-            <div class="form-group"><label>ID Studio</label><input type="text" id="f_new_id" /></div>
+            <div class="form-group"><label>ID Studio Permanente *</label><input type="text" id="f_new_id" /></div>
