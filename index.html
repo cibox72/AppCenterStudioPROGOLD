@@ -34,8 +34,9 @@
     /* Contenitori e Cards Eleganti */
     .app-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; box-sizing: border-box; }
     .elegant-card { background: var(--card-white); padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); border: 1px solid rgba(0,0,0,0.01); margin-bottom: 25px; }
-    .elegant-card h2 { margin-top: 0; color: var(--text-dark); font-weight: 600; font-size: 22px; border-bottom: 1px solid var(--border-soft); padding-bottom: 12px; }
-    .elegant-card h3 { color: var(--text-dark); font-size: 18px; margin-top: 25px; font-weight: 600; }
+    .elegant-card h2 { margin-top: 0; color: var(--text-dark); font-weight: 600; font-size: 22px; border-bottom: 1px solid var(--border-soft); padding-bottom: 12px; margin-bottom: 20px; }
+    .elegant-card h3 { color: var(--text-dark); font-size: 18px; margin-top: 30px; font-weight: 600; border-bottom: 1px dashed var(--border-soft); padding-bottom: 6px; }
+    .elegant-card h4 { color: var(--text-dark); font-size: 15px; margin-top: 20px; margin-bottom: 10px; }
 
     /* Form e Campi Input moderni */
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 15px; }
@@ -54,11 +55,33 @@
     .action-btn.danger:hover { background-color: #c48381; }
     .action-btn.warning { background-color: var(--pastel-warning); color: #5a431c; }
 
+    /* Tabelle Eleganti */
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; background: white; font-size: 14px; }
+    th, td { border: 1px solid var(--border-soft); padding: 12px; text-align: left; }
+    th { background: #f8fafc; font-weight: 600; color: var(--text-dark); }
+    
+    .totali-box { background: #f8fafc; padding: 20px; border-radius: 8px; text-align: right; font-size: 16px; font-weight: bold; border: 1px solid var(--border-soft); margin-top: 20px; }
+
     /* Login Box Scenografica */
     .login-wrapper { max-width: 420px; margin: 80px auto; padding: 40px 35px; background: var(--card-white); border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.04); text-align: center; border: 1px solid var(--border-soft); }
     
     /* Sezione Backup Stile */
     .backup-panel { background: #f8fafc; border: 1px solid var(--border-soft); padding: 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+
+    /* Foglio Stampa Contratto / PDF */
+    .documento-stampa-container { background: white; padding: 50px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.05); max-width: 850px; margin: 30px auto; color: #000; text-align: left; font-size: 14px; line-height: 1.5; border: 1px solid var(--border-soft); }
+    .documento-header { display: flex; justify-content: space-between; margin-bottom: 40px; border-bottom: 2px solid #333; padding-bottom: 20px; }
+    .documento-stampa-container table { margin-top: 30px; width: 100%; }
+    .documento-stampa-container th { background: #f0f0f0; color: #000; }
+    .badge-stato { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; color: white; }
+    .badge-stato.preventivo { background: var(--pastel-warning); color: #5a431c; }
+    .badge-stato.contratto { background: var(--pastel-success); }
+
+    @media print {
+      body { background: white; margin: 0; padding: 0; }
+      .top-nav-controls, .main-navbar, .elegant-card, button, .action-btn { display: none !important; }
+      .documento-stampa-container { box-shadow: none; border: none; margin: 0; padding: 0; width: 100%; max-width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -91,45 +114,20 @@
     <div class="main-navbar">
       <img id="app_header_logo_studio" class="nav-brand-logo" src="https://placeholder.com" alt="Logo Studio" />
       <button class="navbar-menu-btn active" id="btn-mod-home" onclick="mostraModulo('home')">Pannello Principale</button>
-      <button class="navbar-menu-btn" onclick="mostraModulo('profilo-studio')">⚙️ Configura Studio</button>
-      <button class="navbar-menu-btn studio-feature hidden" onclick="mostraModulo('preventivi')">Nuovo Preventivo</button>
+      <button class="navbar-menu-btn" id="btn-mod-profilo-studio" onclick="mostraModulo('profilo-studio')">⚙️ Configura Studio</button>
+      <button class="navbar-menu-btn studio-feature hidden" id="btn-mod-preventivi" onclick="mostraModulo('preventivi')">Nuovo Preventivo</button>
+      <button class="navbar-menu-btn studio-feature hidden" id="btn-mod-archivio-prev" onclick="mostraModulo('archivio-prev')">Archivio Documenti</button>
       <button id="btn-nav-fornitore" class="navbar-menu-btn hidden" style="color:var(--pastel-danger);" onclick="mostraModulo('fornitore')">👑 Gestione SaaS Fornitore</button>
       <span style="margin-left:auto; font-size:13px; font-weight:600; color:var(--text-light);">Studio: <span id="lbl_studio_id" style="color:var(--text-dark);"></span></span>
     </div>
 
     <div class="app-container">
 
-      <!-- BLOCCO OBBLIGATORIO: CONFIGURAZIONE PROFILO STUDIO (Richiesto al primo avvio) -->
+      <!-- CONFIGURAZIONE PROFILO STUDIO -->
       <div id="mod-profilo-studio" class="hidden elegant-card">
         <h2>Impostazioni Profilo & Configurazione Intestazioni Studio</h2>
-        <p style="color:var(--text-light); font-size:14px;">I dati inseriti in questa scheda verranno stampati automaticamente nelle intestazioni di contratti, preventivi e fatture. In caso di modifiche future, il database si aggiornerà istantaneamente e invierà una notifica al Fornitore.</p>
+        <p style="color:var(--text-light); font-size:14px;">I dati inseriti in questa scheda verranno stampati automaticamente nelle intestazioni di contratti, preventivi e fatture.</p>
         
         <div class="form-grid">
-          <div class="form-group"><label>Denominazione Studio Fotografico *</label><input type="text" id="st_nome" required /></div>
-          <div class="form-group"><label>Partita IVA / Codice Fiscale *</label><input type="text" id="st_piva" required /></div>
-          <div class="form-group"><label>Indirizzo della Sede Operativa</label><input type="text" id="st_indirizzo" /></div>
-        </div>
-        <div class="form-grid">
-          <div class="form-group"><label>Telefono dello Studio</label><input type="text" id="st_telefono" /></div>
-          <div class="form-group"><label>Email di Contatto</label><input type="email" id="st_email" /></div>
-          <div class="form-group"><label>Indirizzo URL del tuo Logo (Link Immagine)</label><input type="text" id="st_logo_url" placeholder="https://tuosito.com" oninput="aggiornaAnteprimaLogoVeloce(this.value)" /></div>
-        </div>
-        
-        <button class="action-btn success" style="margin-top:15px;" onclick="salvaProfiloStudioKV(true)">Aggiorna Dati e Invia al Fornitore</button>
-        
-        <!-- SEZIONE VISIVA DATI ATTUALMENTE IN USO -->
-        <h3 style="border-top:1px dashed var(--border-soft); padding-top:20px;">Dati Attualmente Depositati e Attivi nelle Intestazioni</h3>
-        <div id="box-visualizzazione-dati-studio" style="background:#f8fafc; padding:15px; border-radius:8px; font-size:14px; line-height:1.6;">
-          Nessun dato configurato. Compila i campi sopra per attivare l'applicazione.
-        </div>
-      </div>
-
-      <!-- MODULO HOME PRINCIPALE -->
-      <div id="mod-home" class="elegant-card">
-        <h2>Benvenuto nella Suite Gestione Premium Gold</h2>
-        <p>Utilizza la barra dei moduli superiore per spostarti tra le funzioni attive del tuo abbonamento. Da qui puoi gestire la sicurezza locale tramite i comandi di salvataggio manuale.</p>
-        
-        <!-- BOX BACKUP MANUALE GLOBALE E RIPRISTINO SICURO -->
-        <div class="backup-panel">
-          <div>
-            <h4 style="margin:0 0 5px 0; color:var(--text-dark);">Pannello Sicurezza Locale (Scatola Nera)</h4>
+          <div class="form-group"><label>Denominazione Studio *</label><input type="text" id="st_nome" required /></div>
+          <div class="form-group"><label>Partita IVA / CF *</label><input type="text" id="st_piva" required /></div>
