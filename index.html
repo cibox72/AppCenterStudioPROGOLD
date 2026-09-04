@@ -62,7 +62,7 @@ th{background:#111;color:#fff}
 </head>
 <body>
 
-<!-- 🔑 SCHERMATA LOGIN MULTI-TENANT -->
+<!-- Schermata Login -->
 <div id="login-screen">
   <h2 style="border:none; text-align:center; padding:0;">Accesso Suite Premium</h2>
   <div style="margin-bottom:12px;">
@@ -73,42 +73,41 @@ th{background:#111;color:#fff}
     <label>Password / Token di Accesso</label>
     <input id="login_studio_token" type="password" placeholder="Inserisci il token segreto">
   </div>
-  <!-- Ripristinato l'onclick diretto e pulito per massima compatibilità -->
-  <button class="btn green" style="width:100%;" onclick="avviaProceduraLoginDiretta()">🔓 Entra nel Sistema</button>
+  <button class="btn green" style="width:100%;" onclick="avviaProceduraLoginDiretta()">Entra nel Sistema</button>
 </div>
 
-<!-- 🌐 APPLICAZIONE REALE -->
+<!-- Applicazione Reale -->
 <div id="app-content" class="hidden">
   <header>
     <div class="brand"><span class="brandName">AppCenter Studio Premium Gold</span></div>
     <div id="studioNameHead">Studio Attivo: <span id="lbl_studio_id" style="font-weight:bold; color:#00ffff;"></span></div>
-    <button class="btn danger" onclick="eseguiLogout()">🚪 Esci</button>
+    <button class="btn danger" onclick="eseguiLogout()">Esci</button>
   </header>
 
   <nav>
-    <button class="btn secondary hidden" onclick="mostraModulo('fornitore')" id="btn-nav-fornitore">👑 Plancia Fornitore</button>
+    <button class="btn secondary hidden" onclick="mostraModulo('fornitore')" id="btn-nav-fornitore">Plancia Fornitore</button>
     <button class="btn secondary" onclick="mostraModulo('preventivi')">01 Nuovo Preventivo</button>
-    <button class="btn secondary" onclick="mostraModulo('archivio-prev')">📋 Archivio Preventivi</button>
+    <button class="btn secondary" onclick="mostraModulo('archivio-prev')">Archivio Preventivi</button>
     <button class="btn secondary" onclick="mostraModulo('clienti')">02 Archivio Clienti</button>
     <button class="btn secondary" onclick="mostraModulo('workflow')">03 Workflow SAL</button>
-    <button class="btn secondary" onclick="mostraModulo('gru')">04 Selezione Foto & GRU</button>
+    <button class="btn secondary" onclick="mostraModulo('gru')">04 Selezione Foto e GRU</button>
   </nav>
 
   <main style="padding:20px; max-width:1100px; margin:0 auto;">
 
-    <!-- 🛑 MODULO FORNITORE -->
+    <!-- Modulo Fornitore -->
     <section id="mod-fornitore" class="hidden">
       <div class="card">
         <h2>Pannello Amministratore Supremo</h2>
         <div class="grid" style="background:#f9f9f9; padding:15px; border-radius:10px;">
           <div><label>Nuovo ID Studio Fotografico da registrare *</label><input id="f_new_id" placeholder="Es. STU-002"></div>
-          <div><label>Token / Password segreta da associare *</label><input id="f_new_token" placeholder="Es. Stella@2026"></div>
+          <div><label>Token / Password segreta da associare *</label><input id="f_new_token" placeholder="Es. Stella2026"></div>
         </div>
-        <button class="btn green" style="margin-top:15px;" onclick="creaNuovoStudioSaaS()">✨ Attiva Studio & Salva in KV</button>
+        <button class="btn green" style="margin-top:15px;" onclick="creaNuovoStudioSaaS()">Attiva Studio e Salva in KV</button>
       </div>
     </section>
 
-    <!-- 📝 MODULO 01: NUOVO PREVENTIVO -->
+    <!-- Modulo 01: Nuovo Preventivo -->
     <section id="mod-preventivi" class="hidden">
       <div class="card" style="background:linear-gradient(90deg, #1d5c74, #133d4f); color:#fff;">
         <h2>Caricamento Rapido Anagrafica da Archivio Clienti</h2>
@@ -121,7 +120,7 @@ th{background:#111;color:#fff}
       <div class="card">
         <div class="rowBetween">
           <h2 style="margin:0">Scheda Compilazione Preventivo / Contratto</h2>
-          <span id="pBadge" class="badge">Modalità Inserimento</span>
+          <span id="pBadge" class="badge">Modalita Inserimento</span>
         </div>
         <div class="grid" style="margin-top:12px">
           <div><label>Numero Preventivo</label><input id="p_numero" readonly placeholder="Auto-generato"></div>
@@ -137,7 +136,7 @@ th{background:#111;color:#fff}
           <div><label>Telefono</label><input id="a_telefono"></div>
           <div><label>Email</label><input id="a_email"></div>
           <div><label>Via / Piazza e n. civico</label><input id="a_via"></div>
-          <div><label>Città</label><input id="a_citta"></div>
+          <div><label>Citta</label><input id="a_citta"></div>
           <div><label>CAP</label><input id="a_cap"></div>
           <div><label>Provincia</label><input id="a_prov"></div>
         </div>
@@ -151,7 +150,7 @@ th{background:#111;color:#fff}
           <div><label>Telefono</label><input id="b_telefono"></div>
           <div><label>Email</label><input id="b_email"></div>
           <div><label>Via / Piazza e n. civico</label><input id="b_via"></div>
-          <div><label>Città</label><input id="b_citta"></div>
+          <div><label>Citta</label><input id="b_citta"></div>
           <div><label>CAP</label><input id="b_cap"></div>
           <div><label>Provincia</label><input id="b_prov"></div>
         </div>
@@ -172,5 +171,9 @@ th{background:#111;color:#fff}
         <h2>Servizi & Costi a Listino</h2>
         <div class="grid" style="background:#f5f5f5; padding:10px; border-radius:8px; margin-bottom:12px;">
           <div><label>Descrizione Servizio / Prodotto</label><input id="add_serv_desc" placeholder="Es. Servizio Fotografico"></div>
-          <div><label>Prezzo (€)</label><input id="add_serv_prezzo" type="number" step="0.01" placeholder="0.00"></div>
+          <div><label>Prezzo (EUR)</label><input id="add_serv_prezzo" type="number" step="0.01" placeholder="0.00"></div>
         </div>
+        <button type="button" class="btn secondary" onclick="aggiungiServizioRiga()">Aggiungi Servizio</button>
+
+        <table>
+          <thead>
