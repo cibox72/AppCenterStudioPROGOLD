@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestione Preventivi - AppCenter Studio Gold</title>
+    <title>01 Preventivi & Contratti - Premium Gold</title>
     <style>
         :root {
             --carta-zucchero: #7ea4b5;
@@ -11,66 +11,198 @@
             --rosa-antico: #dcaeaf;
             --scuro: #2b3a42;
             --chiaro: #f4f7f6;
+            --rosso-alert: #e07a7a;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--chiaro);
             color: var(--scuro);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            margin: 0;
+            padding: 0;
         }
+        /* BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA */
+        .navbar {
+            background-color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 3px solid var(--carta-zucchero);
+        }
+        .nav-links { display: flex; gap: 10px; }
+        .nav-links button {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background: white;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--scuro);
+            transition: all 0.2s;
+        }
+        .nav-links button:hover { background: var(--chiaro); }
+        .btn-sync { background-color: #e8f0fe !important; border-color: var(--carta-zucchero) !important; color: var(--carta-zucchero) !important; }
+        
         .container {
-            max-width: 700px;
+            max-width: 1200px;
             width: 100%;
+            margin: 30px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .main-card {
             background: white;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-        h2 { color: var(--scuro); text-align: center; margin-bottom: 20px; }
-        p { text-align: center; font-size: 14px; color: #666; }
-        input, button {
+        h1, h2, h3, h4 { color: var(--scuro); margin-top: 0; text-align: center; }
+        
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 30px;
+            margin-top: 25px;
+        }
+        @media(max-width: 992px) { .grid-layout { grid-template-columns: 1fr; } }
+
+        .sub-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-section {
+            background: #fdfdfd;
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--carta-zucchero);
+        }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
+        input, select, textarea {
             width: 100%;
             padding: 10px;
-            margin: 8px 0;
             border-radius: 6px;
             border: 1px solid #ccc;
             box-sizing: border-box;
         }
-        button {
-            background-color: var(--verde-salvia);
-            color: white;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            transition: opacity 0.2s;
+        
+        .btn-panel { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-panel button { flex: 1; padding: 12px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; color: white; }
+        
+        .btn-prev { background-color: var(--carta-zucchero); }
+        .btn-cont { background-color: var(--verde-salvia); }
+        .btn-clear { background-color: #6c757d; }
+
+        /* TABELLE */
+        .table-wrapper { overflow-x: auto; margin-top: 15px; background: #fafafa; border: 1px solid #ddd; border-radius: 6px; max-height: 300px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        th, td { padding: 12px; border-bottom: 1px solid #eee; }
+        th { background: #f1f1f1; color: var(--scuro); font-weight: bold; }
+        
+        .assistenza-box {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #fcf8f2;
+            border: 1px solid var(--rosa-antico);
+            border-radius: 8px;
         }
-        button:hover { opacity: 0.9; }
-        .btn-indietro { background-color: var(--rosa-antico); }
+        .assistenza-buttons { display: flex; gap: 15px; margin-top: 15px; }
+        .assistenza-buttons a { flex: 1; text-align: center; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold; color: white; }
+        .btn-anydesk { background-color: #ef4444; }
+        .btn-whatsapp { background-color: #22c55e; }
     </style>
 </head>
 <body>
-<div class="container">
-    <h2>📋 Generatore Preventivi PDF Hardware Local</h2>
-    <p>Compila i campi per generare il preventivo istantaneo con l'interfaccia grafica coordinata al millimetro.</p>
-    
-    <input type="text" id="prev-cliente" placeholder="Nome Cliente / Sposi">
-    <input type="number" id="prev-importo" placeholder="Importo Totale (€)">
-    <button onclick="generaPreventivoLocale()">Genera & Scarica PDF</button>
-    <button class="btn-indietro" onclick="location.href='index.html'">⬅ Torna alla Plancia</button>
-</div>
 
-<script>
-function generaPreventivoLocale() {
-    const cliente = document.getElementById("prev-cliente").value;
-    const importo = document.getElementById("prev-importo").value;
-    if(!cliente || !importo) { alert("Compila tutti i campi"); return; }
-    
-    alert(`Preventivo per ${cliente} di €${importo} generato localmente dal browser hardware.`);
-    // Qui implementeremo la libreria PDF locale senza passare da server
-}
-</script>
-</body>
-</html>
+    <!-- BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA -->
+    <div class="navbar">
+        <div class="nav-links">
+            <button onclick="window.history.back()">← Indietro</button>
+            <button onclick="location.href='index.html'">🏠 Home</button>
+        </div>
+        <div class="nav-links">
+            <button onclick="eseguiBackupDocumenti()">📥 Backup Globale</button>
+            <button onclick="eseguiRipristinoDocumenti()">📤 Ripristino Globale</button>
+            <button class="btn-sync" id="status-sync">Sync Cloud: OK</button>
+            <button style="background-color: var(--rosa-antico); color: white;" onclick="location.href='index.html'">Esci</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-card">
+            <h1>📋 Gestione Preventivi & Contratti</h1>
+            <p style="color: #666; margin-top: -10px; text-align: center;">Emetti preventivi, sigla contratti generandone l'ID permanente e archivia l'anagrafica anti-omonimia nel database Cloudflare.</p>
+            
+            <div class="grid-layout">
+                
+                <!-- SCHEDA COMPOSIZIONE DOCUMENTO -->
+                <div>
+                    <!-- STEP 1: DATI DOCUMENTO -->
+                    <div class="form-section">
+                        <h3>📄 Dati Documento</h3>
+                        <div class="sub-grid">
+                            <div class="form-group">
+                                <label>Numero Documento (Automatico)</label>
+                                <input type="text" id="doc-numero" readonly value="Nuovo preventivo">
+                            </div>
+                            <div class="form-group">
+                                <label>Data Emissione (GG/MM/AAAA) *</label>
+                                <input type="text" id="doc-data" placeholder="Es. 04/09/2026" onblur="validaDataFormato(this)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: ANAGRAFICA CLIENTE A -->
+                    <div class="form-section" style="border-left-color: var(--verde-salvia);">
+                        <h3>👥 Anagrafica Intestatario Principale (Cliente A)</h3>
+                        <div class="sub-grid">
+                            <div class="form-group"><label>Nome *</label><input type="text" id="cliA-nome"></div>
+                            <div class="form-group"><label>Cognome *</label><input type="text" id="cliA-cognome"></div>
+                            <div class="form-group"><label>Telefono *</label><input type="text" id="cliA-tel"></div>
+                            <div class="form-group"><label>Email *</label><input type="email" id="cliA-email"></div>
+                        </div>
+                        <div class="sub-grid">
+                            <div class="form-group"><label>Codice Fiscale / P.IVA</label><input type="text" id="cliA-cf"></div>
+                            <div class="form-group"><label>Città</label><input type="text" id="cliA-citta"></div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: ANAGRAFICA CLIENTE B -->
+                    <div class="form-section" style="border-left-color: var(--rosa-antico);">
+                        <h3>👥 Secondo Intestatario / Coniuge (Cliente B)</h3>
+                        <div class="sub-grid">
+                            <div class="form-group"><label>Nome</label><input type="text" id="cliB-nome"></div>
+                            <div class="form-group"><label>Cognome</label><input type="text" id="cliB-cognome"></div>
+                            <div class="form-group"><label>Telefono</label><input type="text" id="cliB-tel"></div>
+                            <div class="form-group"><label>Email</label><input type="email" id="cliB-email"></div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4: DETTAGLI SERVIZIO -->
+                    <div class="form-section">
+                        <h3>💍 Dettagli dell'Evento / Servizio</h3>
+                        <div class="sub-grid">
+                            <div class="form-group">
+                                <label>Data del Servizio / Evento (GG/MM/AAAA) *</label>
+                                <input type="text" id="servizio-data" placeholder="Es. 20/06/2027" onblur="validaDataFormato(this)">
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo di Evento</label>
+                                <input type="text" id="servizio-tipo" placeholder="Es. Matrimonio, Comunione, Portfolio">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 5: DETTAGLI ECONOMICI -->
+                    <div class="form-section" style="border-left-color: var(--scuro);">
+                        <h3>💶 Dettagli Economici & Note</h3>
+                        <div class="sub-grid">
+                            <div class="form-group"><label>Prezzo Base Listino (€)</label><input type="number" id="prezzo-base" value="0" oninput="ricalcolaTotaleNetto()"></div>
+                            <div class="form-group"><label>Sconto (%)</label><input type="number" id="prezzo-sconto" value="0" oninput="ricalcolaTotaleNetto()"></div>
+                            <div class="form-group"><label>Totale Netto (€)</label><input type="number" id="prezzo-netto" readonly value="0"></div>
