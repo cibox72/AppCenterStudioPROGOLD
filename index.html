@@ -23,153 +23,8 @@
     .foto-card { background: white; padding: 10px; border: 1px solid #ddd; border-radius: 4px; text-align: center; position: relative; }
     .cuore { cursor: pointer; padding: 5px; background: #eee; border-radius: 4px; font-size: 12px; font-weight: bold; }
   </style>
-</head>
-<body>
 
-  <!-- SCHERMATA LOGIN -->
-  <div id="login-screen" class="card">
-    <h2>Accesso Suite Premium</h2>
-    <input type="text" id="login_studio_id" placeholder="ID Studio Fotografico" />
-    <input type="password" id="login_studio_token" placeholder="Password / Token di Accesso" />
-    <button class="btn" onclick="avviaProceduraLoginDiretta()">Entra nel Sistema</button>
-  </div>
-
-  <!-- CONTENUTO APPLICAZIONE -->
-  <div id="app-content" class="hidden">
-    <div class="nav-bar">
-      <span style="color: white; font-weight: bold; align-self: center; margin-right: 10px;">Studio: <span id="lbl_studio_id"></span></span>
-      <button id="btn-nav-fornitore" onclick="mostraModulo('fornitore')">Pannello Supremo</button>
-      <button onclick="mostraModulo('preventivi')">Nuovo Preventivo</button>
-      <button onclick="mostraModulo('archivio-prev')">Archivio Preventivi</button>
-      <button onclick="mostraModulo('clienti')">Archivio Clienti</button>
-      <button onclick="mostraModulo('workflow')">Workflow SAL</button>
-      <button onclick="mostraModulo('gru')">Selezione Foto & GRU</button>
-      <button style="background: var(--danger);" onclick="eseguiLogout()">Esci</button>
-    </div>
-
-    <!-- MODULO AMMINISTRATORE -->
-    <div id="mod-fornitore" class="hidden">
-      <h3>Pannello Amministratore Supremo</h3>
-      <input type="text" id="f_new_id" placeholder="Nuovo ID Studio" />
-      <input type="password" id="f_new_token" placeholder="Token / Password segreta" />
-      <button class="btn green" onclick="creaNuovoStudioSaaS()">Attiva Studio e Salva in KV</button>
-    </div>
-
-    <!-- MODULO PREVENTIVI -->
-    <div id="mod-preventivi" class="hidden">
-      <h3>Scheda Compilazione Preventivo / Contratto</h3>
-      <select id="prev_selettore_cliente_rapido" onchange="autoCompilaAnagraficaPreventivo()">
-        <option value="">-- Seleziona un cliente dall'archivio --</option>
-      </select>
-      
-      <input type="text" id="p_numero" placeholder="Numero Preventivo (Auto o Manuale)" />
-      <input type="date" id="p_dataCreazione" placeholder="Data emissione" />
-      
-      <h4>Anagrafica Cliente A</h4>
-      <input type="text" id="a_nome" placeholder="Nome *" />
-      <input type="text" id="a_cognome" placeholder="Cognome *" />
-      <input type="text" id="a_telefono" placeholder="Telefono" />
-      <input type="text" id="a_email" placeholder="Email" />
-      <input type="text" id="a_via" placeholder="Via / Piazza e n. civico" />
-      <input type="text" id="a_citta" placeholder="Città" />
-      <input type="text" id="a_cap" placeholder="CAP" />
-      <input type="text" id="a_prov" placeholder="Provincia" />
-
-      <h4>Anagrafica Cliente B</h4>
-      <input type="text" id="b_nome" placeholder="Nome" />
-      <input type="text" id="b_cognome" placeholder="Cognome" />
-      <input type="text" id="b_telefono" placeholder="Telefono" />
-      <input type="text" id="b_email" placeholder="Email" />
-      <input type="text" id="b_via" placeholder="Via / Piazza" />
-      <input type="text" id="b_citta" placeholder="Città" />
-      <input type="text" id="b_cap" placeholder="CAP" />
-      <input type="text" id="b_prov" placeholder="Provincia" />
-
-      <h4>Dettagli Evento</h4>
-      <input type="date" id="p_dataServizio" title="Data del Servizio" />
-      <input type="text" id="p_tipo" placeholder="Tipo servizio richiesto" />
-      <input type="text" id="p_chiesa" placeholder="Chiesa / Luogo Cerimonia" />
-      <input type="text" id="p_location" placeholder="Location / Ricevimento" />
-
-      <h4>Servizi & Costi</h4>
-      <input type="text" id="add_serv_desc" placeholder="Descrizione Prodotto/Servizio" />
-      <input type="number" id="add_serv_prezzo" placeholder="Prezzo (EUR)" step="0.01" />
-      <button class="btn" onclick="aggiungiServizioRiga()">Aggiungi Servizio</button>
-
-      <table>
-        <thead><tr><th>Descrizione</th><th>Prezzo</th><th>Azione</th></tr></thead>
-        <tbody id="tabella-servizi-body"></tbody>
-      </table>
-
-      <p>Totale Lordo: EUR <span id="lbl_tot_lordo">0.00</span></p>
-      <input type="number" id="p_acconto_versato" placeholder="Acconto versato" oninput="ricalcolaSpeseTotali()" step="0.01" />
-      <p>Saldo Residuo: EUR <span id="lbl_saldo_residuo">0.00</span></p>
-      
-      <button class="btn green" onclick="salvaInCloudflareKV()">Salva Preventivo nel Cloud</button>
-      <button class="btn danger" onclick="pulisciCampiPreventivi()">Svuota Campi</button>
-    </div>
-
-    <!-- MODULO ARCHIVIO PREVENTIVI -->
-    <div id="mod-archivio-prev" class="hidden">
-      <h3>Archivio Preventivi</h3>
-      <table>
-        <thead><tr><th>ID</th><th>Cliente</th><th>Data Servizio</th><th>Tipo</th><th>Totale</th><th>Saldo</th><th>Azioni</th></tr></thead>
-        <tbody id="tabella-archivio-body"></tbody>
-      </table>
-    </div>
-
-    <!-- MODULO CLIENTI -->
-    <div id="mod-clienti" class="hidden">
-      <h3>Archivio Clienti Anagrafica</h3>
-      <input type="hidden" id="c_id" />
-      <input type="text" id="ca_nome" placeholder="Cliente A Nome *" />
-      <input type="text" id="ca_cognome" placeholder="Cliente A Cognome" />
-      <input type="text" id="ca_telefono" placeholder="Cliente A Tel" />
-      <input type="text" id="ca_email" placeholder="Cliente A Mail" />
-      <input type="text" id="ca_indirizzo" placeholder="Cliente A Indirizzo" />
-      
-      <input type="text" id="cb_nome" placeholder="Cliente B Nome" />
-      <input type="text" id="cb_cognome" placeholder="Cliente B Cognome" />
-      <input type="text" id="cb_telefono" placeholder="Cliente B Tel" />
-      <input type="text" id="cb_email" placeholder="Cliente B Mail" />
-      <textarea id="c_note" placeholder="Note aggiuntive cliente"></textarea>
-
-      <button class="btn green" onclick="salvaNuovoClienteKV()">Registra Cliente</button>
-      <button class="btn danger" onclick="pulisciCampiClienti()">Svuota Campi</button>
-
-      <h4>Elenco Clienti</h4>
-      <table>
-        <thead><tr><th>ID</th><th>Cliente A</th><th>Contatti</th><th>Cliente B</th><th>Azioni</th></tr></thead>
-        <tbody id="tabella-clienti-body"></tbody>
-      </table>
-    </div>
-
-    <!-- MODULO WORKFLOW -->
-    <div id="mod-workflow" class="hidden">
-      <h3>Stato Avanzamento Lavori (Workflow)</h3>
-      <table>
-        <thead><tr><th>ID Contratto</th><th>Cliente</th><th>Data Servizio</th><th>Tipo</th><th>Stato Fase</th><th>Aggiornato</th></tr></thead>
-        <tbody id="tabella-workflow-body"></tbody>
-      </table>
-    </div>
-
-    <!-- MODULO GRU / FOTO -->
-    <div id="mod-gru" class="hidden">
-      <h3>Selezione Foto e Generazione File .GRU</h3>
-      <input type="text" id="foto_cliente_id" placeholder="Inserisci ID Cliente" />
-      <button class="btn" onclick="aggiornaGalleriaInterfaccia()">Carica Galleria</button>
-      
-      <div style="margin-top: 15px; border: 1px dashed #ccc; padding: 15px;">
-        <input type="file" id="file_uploader_input" multiple />
-        <button class="btn green" onclick="eseguiUploadFotoR2()">Esegui Upload su Cloudflare R2</button>
-      </div>
-
-      <div id="gallery-grid-container" class="grid-foto"></div>
-      <button class="btn green" onclick="confermaSelezioneEAvviaPuliziaGru()">Conferma Selezione e Scarica File GRU</button>
-    </div>
-  </div>
-
-  <!-- SCRIPT LOGICA LOGISTICA BACKEND -->
+  <!-- LOGICA LOGISTICA BACKEND IN PRIMO PIANO -->
   <script>
     const WORKER_URL = 'https://workers.dev';
     let arrayServiziAggiunti = [];
@@ -184,6 +39,130 @@
       const sToken = document.getElementById('login_studio_token').value.trim();
       if(!sId || !sToken) return alert('Compila i campi!');
       try {
-        const r = await fetch(`${WORKER_URL}/api/auth/login`, {
+        const r = await fetch(WORKER_URL + '/api/auth/login', {
           method:'POST', 
           headers:{'Content-Type':'application/json'}, 
+          body:JSON.stringify({studio_id:sId, token:sToken})
+        });
+        const e = await r.json();
+        if(r.ok && e.success) {
+          localStorage.setItem('current_studio_id', sId);
+          localStorage.setItem('studio_token', sToken);
+          document.getElementById('lbl_studio_id').textContent = sId;
+          document.getElementById('login-screen').classList.add('hidden');
+          document.getElementById('app-content').classList.remove('hidden');
+          if(e.ruolo === 'admin') {
+            document.getElementById('btn-nav-fornitore').classList.remove('hidden');
+            mostraModulo('fornitore');
+          } else {
+            document.getElementById('btn-nav-fornitore').classList.add('hidden');
+            mostraModulo('preventivi');
+          }
+        } else { alert('Errore: ' + (e.error || 'Credenziali errate')); }
+      } catch(err) { alert('Errore server durante il login.'); }
+    }
+
+    function eseguiLogout() { localStorage.clear(); location.reload(); }
+
+    function mostraModulo(idm) {
+      ['fornitore','preventivi','archivio-prev','clienti','workflow','gru'].forEach(m=>{
+        if(document.getElementById('mod-' + m)) document.getElementById('mod-' + m).classList.add('hidden');
+      });
+      if(document.getElementById('mod-' + idm)) document.getElementById('mod-' + idm).classList.remove('hidden');
+      if(idm==='archivio-prev') caricaListaArchivioKV();
+      if(idm==='clienti') caricaListaClientiKV();
+      if(idm==='workflow') caricaTabelloneWorkflowKV();
+      if(idm==='preventivi') sincronizzaSelettoreClientiRapido();
+    }
+
+    async function creaNuovoStudioSaaS() {
+      const t = localStorage.getItem('studio_token'); 
+      const id = document.getElementById('f_new_id').value.trim(); 
+      const tk = document.getElementById('f_new_token').value.trim();
+      if(!id || !tk) return alert('Mancano dati!');
+      try {
+        const r = await fetch(WORKER_URL + '/api/admin/crea-studio', {
+          method:'POST', 
+          headers:{'Content-Type':'application/json','X-Studio-Token':t}, 
+          body:JSON.stringify({nuovo_studio_id:id, nuovo_token:tk})
+        });
+        if((await r.json()).success) { alert('Studio attivato!'); document.getElementById('f_new_id').value=''; document.getElementById('f_new_token').value=''; }
+      } catch(e){}
+    }
+
+    async function salvaNuovoClienteKV() {
+      const s = localStorage.getItem('current_studio_id'); 
+      const t = localStorage.getItem('studio_token');
+      const id = document.getElementById('c_id').value || 'CLIE-'+Math.floor(100000+Math.random()*900000);
+      const data = {
+        id:id, 
+        note:document.getElementById('c_note').value.trim(),
+        cliente_a:{nome:document.getElementById('ca_nome').value.trim(), cognome:document.getElementById('ca_cognome').value.trim(), telefono:document.getElementById('ca_telefono').value.trim(), email:document.getElementById('ca_email').value.trim(), indirizzo:document.getElementById('ca_indirizzo').value.trim()},
+        cliente_b:{nome:document.getElementById('cb_nome').value.trim(), cognome:document.getElementById('cb_cognome').value.trim(), telefono:document.getElementById('cb_telefono').value.trim(), email:document.getElementById('cb_email').value.trim()},
+        tipo_record:'cliente', 
+        timestamp:new Date().toISOString()
+      };
+      if(!data.cliente_a.nome) return alert('Nome obbligatorio.');
+      try {
+        await fetch(WORKER_URL + '/api/kv-save', {
+          method:'POST', 
+          headers:{'Content-Type':'application/json','X-Studio-Token':t,'X-Studio-Id':s}, 
+          body:JSON.stringify({studio_id:s, chiave:'cliente_' + id, dati:data})
+        });
+        alert('Cliente registrato!'); pulisciCampiClienti(); caricaListaClientiKV();
+      } catch(e){}
+    }
+
+    async function caricaListaClientiKV() {
+      const s = localStorage.getItem('current_studio_id'); 
+      const t = localStorage.getItem('studio_token'); 
+      const tb = document.getElementById('tabella-clienti-body');
+      try {
+        const r = await fetch(WORKER_URL + '/api/kv-load?studio_id=' + s, {headers:{'X-Studio-Token':t,'X-Studio-Id':s}});
+        cacheClientiArchivio = (await r.json()).filter(x=>x && x.tipo_record==='cliente');
+        tb.innerHTML = cacheClientiArchivio.map(c=>'<tr><td><strong>' + c.id + '</strong></td><td>' + c.cliente_a.nome + ' ' + c.cliente_a.cognome + '</td><td>' + c.cliente_a.telefono + '</td><td>' + (c.cliente_b.nome||'N/A') + '</td><td><button class="btn green" style="padding:4px 8px; font-size:11px;" onclick="riapriClientePerModifica(\'' + c.id + '\')">Carica</button></td></tr>').join('');
+      } catch(e){ if(tb) tb.innerHTML='Errore caricamento.'; }
+    }
+
+    function riapriClientePerModifica(id) {
+      const c = cacheClientiArchivio.find(x=>x.id===id); if(!c) return;
+      document.getElementById('c_id').value=c.id; 
+      document.getElementById('c_note').value=c.note||''; 
+      document.getElementById('ca_nome').value=c.cliente_a.nome||''; 
+      document.getElementById('ca_cognome').value=c.cliente_a.cognome||''; 
+      document.getElementById('ca_telefono').value=c.cliente_a.telefono||''; 
+      document.getElementById('ca_email').value=c.cliente_a.email||''; 
+      document.getElementById('ca_indirizzo').value=c.cliente_a.indirizzo||''; 
+      document.getElementById('cb_nome').value=c.cliente_b.nome||''; 
+      document.getElementById('cb_cognome').value=c.cliente_b.cognome||''; 
+      document.getElementById('cb_telefono').value=c.cliente_b.telefono||''; 
+      document.getElementById('cb_email').value=c.cliente_b.email||'';
+    }
+
+    function pulisciCampiClienti() { 
+      document.getElementById('c_id').value=''; 
+      ['ca_nome','ca_cognome','ca_telefono','ca_email','ca_indirizzo','cb_nome','cb_cognome','cb_telefono','cb_email'].forEach(id=>{
+        if(document.getElementById(id)) document.getElementById(id).value='';
+      }); 
+    }
+
+    async function sincronizzaSelettoreClientiRapido() {
+      const sel = document.getElementById('prev_selettore_cliente_rapido'); if(!sel) return;
+      sel.innerHTML = '<option value="">-- Seleziona cliente --</option>'+cacheClientiArchivio.map(x=>'<option value="' + x.id + '">' + x.cliente_a.nome + ' ' + x.cliente_a.cognome + '</option>').join('');
+    }
+
+    function autoCompilaAnagraficaPreventivo() {
+      const id = document.getElementById('prev_selettore_cliente_rapido').value; if(!id) return; 
+      const c = cacheClientiArchivio.find(x=>x.id===id); if(!c) return;
+      document.getElementById('a_nome').value=c.cliente_a.nome||''; 
+      document.getElementById('a_cognome').value=c.cliente_a.cognome||''; 
+      document.getElementById('a_telefono').value=c.cliente_a.telefono||''; 
+      document.getElementById('a_email').value=c.cliente_a.email||''; 
+      document.getElementById('a_via').value=c.cliente_a.indirizzo||''; 
+      document.getElementById('b_nome').value=c.cliente_b.nome||''; 
+      document.getElementById('b_cognome').value=c.cliente_b.cognome||''; 
+      document.getElementById('b_telefono').value=c.cliente_b.telefono||''; 
+      document.getElementById('b_email').value=c.cliente_b.email||'';
+    }
+
+    function aggiungiServizioRiga() {
