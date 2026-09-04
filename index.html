@@ -171,7 +171,7 @@
 
   <!-- SCRIPT LOGICA LOGISTICA BACKEND -->
   <script>
-    const WORKER_URL = 'https://workers.dev'; // Sostituisci se hai un sottodominio preciso (es. tuo-nome.workers.dev)
+    const WORKER_URL = 'https://workers.dev';
     let arrayServiziAggiunti = [];
     let cachePreventiviArchivio = [];
     let cacheClientiArchivio = [];
@@ -186,3 +186,4 @@
       try {
         const r = await fetch(`${WORKER_URL}/api/auth/login`, {
           method:'POST', 
+          headers:{'Content-Type':'application/json'}, 
