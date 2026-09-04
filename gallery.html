@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - AppCenterStudio Premium</title>
+    <style>
+        :root {
+            --carta-zucchero: #7ea4b5;
+            --verde-salvia: #9caf88;
+            --rosa-antico: #dcaeaf;
+            --scuro: #2b3a42;
+            --chiaro: #f4f7f6;
+            --rosso-alert: #e07a7a;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--chiaro);
+            color: var(--scuro);
+            margin: 0;
+            padding: 0;
+        }
+        /* BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA */
+        .navbar {
+            background-color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 3px solid var(--carta-zucchero);
+        }
+        .nav-links { display: flex; gap: 10px; }
+        .nav-links button {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background: white;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--scuro);
+            transition: all 0.2s;
+        }
+        .nav-links button:hover { background: var(--chiaro); }
+        .btn-sync { background-color: #e8f0fe !important; border-color: var(--carta-zucchero) !important; color: var(--carta-zucchero) !important; }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 30px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .main-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1, h2, h3 { color: var(--scuro); text-align: center; }
+        
+        /* MURO DI SICUREZZA LOGIN CLIENTE */
+        .login-box-clienti {
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border: 2px solid var(--carta-zucchero);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        button.btn-accesso {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--carta-zucchero);
+            color: white;
+            border: none;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button.btn-accesso:hover { opacity: 0.9; }
+
+        /* GRIGLIA SEZIONI FOTO */
+        .section-folder {
+            margin-top: 35px;
+            border-top: 2px dashed var(--carta-zucchero);
+            padding-top: 20px;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .photo-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+            transition: transform 0.2s;
+        }
+        .photo-card:hover { transform: scale(1.02); }
+        .photo-card img {
+            max-width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        .heart-button {
+            background: #fff0f0;
+            color: #cc0000;
+            border: 1px solid #ffcccc;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .heart-button.attivo {
+            background: #cc0000;
+            color: white;
+            border-color: #cc0000;
+        }
+
+        /* BOX ASSISTENZA */
+        .assistenza-box {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #fcf8f2;
+            border: 1px solid var(--rosa-antico);
+            border-radius: 8px;
+        }
+        .assistenza-buttons { display: flex; gap: 15px; margin-top: 15px; }
+        .assistenza-buttons a {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            color: white;
+        }
+        .btn-anydesk { background-color: #ef4444; }
+        .btn-whatsapp { background-color: #22c55e; }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA -->
+    <div class="navbar">
+        <div class="nav-links">
+            <button onclick="window.history.back()">← Indietro</button>
+            <button onclick="location.href='index.html'">🏠 Home</button>
+        </div>
+        <div class="nav-links">
+            <button onclick="eseguiBackupSelezioneSposi()">📥 Backup Globale</button>
+            <button onclick="eseguiRipristinoSelezioneSposi()">📤 Ripristino Globale</button>
+            <button class="btn-sync" id="status-sync">Sync Cloud: OK</button>
+            <button style="background-color: var(--rosa-antico); color: white;" onclick="azioneEsciSessione()">Esci</button>
+        </div>
+    </div>
+
+    <!-- 👥 MURO DI SICUREZZA (VISIBILE ALL'APERTURA) -->
+    <div id="muro-sicurezza-box" class="login-box-clienti">
+        <div id="box-logo-studio" style="text-align: center; margin-bottom: 20px;">
+            <h3 style="color: var(--carta-zucchero); margin:0;">🔒 Galleria Protetta</h3>
+        </div>
+        <p style="text-align: center; font-size: 13px; color: #666; margin-top: 0;">Inserisci le credenziali permanenti fornite dal tuo studio fotografico.</p>
+        <input type="text" id="client-login-id" placeholder="ID Sposi / Cliente *">
+        <input type="password" id="client-login-pass" placeholder="Password di Sblocco *">
+        <button class="btn-accesso" onclick="sbloccaGalleriaSposiLive()">SBLOCCA LA TUA GALLERIA ❤️</button>
+    </div>
+
+    <!-- 🖼️ CONTENITORE PRINCIPALE GALLERIA (VOLATILE E PROTETTO) -->
+    <div class="container" id="galleria-principale-box" style="display: none;">
+        <div class="main-card">
+            <div id="box-logo-personalizzato" style="text-align: center; margin-bottom: 20px;"></div>
+            <h2 id="titolo-evento-sposi">❤️ Galleria Fotografica</h2>
+            <p style="text-align: center; color: #555; max-width: 600px; margin: 0 auto 30px auto;">
+                Esplorate i quattro quadranti del vostro evento. Cliccate sul pulsante "Preferita ❤️" per includere lo scatto nella selezione. Al termine fate clic su Salva Selezione per notificare lo studio.
+            </p>
+            
+            <div id="contenitore-quadranti-r2">
+                <!-- Sezioni multimediali dinamiche gestite dal Cervello R2 -->
+            </div>
+
+            <button style="background-color: var(--verde-salvia); color: white; width: 100%; padding: 15px; border-radius: 6px; font-weight: bold; border: none; font-size: 18px; cursor: pointer; margin-top: 35px;" onclick="salvaSelezioneLiveCloud()">
+                💾 SALVA SELEZIONE & NOTIFICA LIVE LO STUDIO FOTOGRAFICO
+            </button>
+
+            <!-- SEZIONE ASSISTENZA SUPREMA -->
+            <div class="assistenza-box">
+                <h3>🛠️ Supporto Tecnico Clienti</h3>
+                <p style="margin: 0; font-size: 14px; color: #555;">Se riscontri difficoltà nel caricamento visivo delle immagini ad alta risoluzione o nella selezione dei cuori, contatta il supporto.</p>
+                <div class="assistenza-buttons">
+                    <a href="https://anydesk.com" target="_blank" class="btn-anydesk">🖥️ Connettiti con AnyDesk</a>
+                    <a href="https://wa.me" target="_blank" class="btn-whatsapp">📅 Richiedi Appuntamento su WhatsApp</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+const WORKER_URL = "https://workers.dev";
+let CLIENTE_ID = "";
+let preferiteLocali = [];
+
+function azioneEsciSessione() {
+    location.reload();
+}
+
+async function sbloccaGalleriaSposiLive() {
+    const idSposi = document.getElementById("client-login-id").value.trim();
+    const password = document.getElementById("client-login-pass").value.trim();
+
+    if(!idSposi || !password) {
+        alert("Compila tutti i campi obbligatori del muro di sicurezza.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${WORKER_URL}/api/cliente/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ clienteId: idSposi, password: password })
+        });
+        const data = await response.json();
+
+        if(data.success) {
+            CLIENTE_ID = idSposi;
+            document.getElementById("muro-sicurezza-box").style.display = "none";
+            document.getElementById("galleria-principale-box").style.display = "block";
+            document.getElementById("titolo-evento-sposi").innerText = `❤️ ${data.nomeEvento}`;
+            
+            if(data.logoUrl) {
+                document.getElementById("box-logo-personalizzato").innerHTML = `<img src="${data.logoUrl}" style="max-height:90px; margin-bottom:15px;">`;
+            }
+            
+            // Scarica e organizza la galleria d'immagini da Cloudflare R2
+            await prelevaImmaginiR2Cloud();
+        } else {
+            alert("Errore Accesso: " + data.error);
+        }
