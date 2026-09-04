@@ -8,7 +8,7 @@
     :root { 
       --bg-app: #f7f9fa; 
       --card-white: #ffffff;
-      --pastel-primary: #7ca5b8; /* Stesso colore coordinato pastello */
+      --pastel-primary: #7ca5b8; /* Identico colore coordinato pastello */
       --pastel-primary-hover: #678da0;
       --pastel-success: #8cb89f; 
       --pastel-danger: #d99694;  
@@ -30,22 +30,20 @@
     .app-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; box-sizing: border-box; }
     .elegant-card { background: var(--card-white); padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); border: 1px solid rgba(0,0,0,0.01); margin-bottom: 25px; }
     .elegant-card h2 { margin-top: 0; color: var(--text-dark); font-weight: 600; font-size: 22px; border-bottom: 1px solid var(--border-soft); padding-bottom: 12px; margin-bottom: 20px; }
-    .elegant-card h3 { color: var(--text-dark); font-size: 18px; margin-top: 30px; font-weight: 600; border-bottom: 1px dashed var(--border-soft); padding-bottom: 6px; }
 
     .preventivi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-top: 20px; }
-    .preventivo-card { background: var(--card-white); border: 1px solid var(--border-soft); padding: 20px; border-radius: 10px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 5px rgba(0,0,0,0.01); }
+    .preventivo-card { background: var(--card-white); border: 1px solid var(--border-soft); padding: 20px; border-radius: 10px; display: flex; flex-direction: column; justify-content: space-between; }
     .preventivo-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; border-bottom: 1px solid var(--border-soft); padding-bottom: 10px; }
     .preventivo-titolo { margin: 0; font-size: 16px; font-weight: 600; }
     .preventivo-importo { font-size: 18px; font-weight: 700; color: var(--pastel-primary-hover); }
     .preventivo-info { font-size: 13px; line-height: 1.6; }
-    .preventivo-actions { margin-top: 15px; text-align: right; border-top: 1px dashed var(--border-soft); padding-top: 10px; }
 
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 15px; }
     .form-group { display: flex; flex-direction: column; text-align: left; }
     .form-group label { font-size: 13px; font-weight: 600; color: var(--text-light); margin-bottom: 6px; text-transform: uppercase; }
     input, select, textarea { padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; color: var(--text-dark); background-color: #fff; width: 100%; box-sizing: border-box; }
 
-    .action-btn { background-color: var(--pastel-primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: background-color 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+    .action-btn { background-color: var(--pastel-primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: background-color 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
     .action-btn:hover { background-color: var(--pastel-primary-hover); }
     .action-btn.success { background-color: var(--pastel-success); }
     .action-btn.danger { background-color: var(--pastel-danger); }
@@ -67,10 +65,9 @@
 </head>
 <body>
 
-  <!-- BARRA NAVIGAZIONE -->
   <div class="top-nav-controls">
-    <a href="index.html" class="nav-ctrl-btn">🏠 Torna alla Home Plancia</a>
-    <span style="font-size:12px; color:var(--text-light); margin-left:auto;" id="lbl_stato_salvataggio">Modulo Preventivi Sincronizzato Cloud</span>
+    <button class="nav-ctrl-btn" onclick="ritornaAllaHomePlanciaCloud()">🏠 Torna alla Plancia Studio</button>
+    <span style="font-size:12px; color:var(--text-light); margin-left:auto;" id="lbl_stato_salvataggio">Modulo Sincronizzato Cloud puro</span>
   </div>
 
   <div class="main-navbar">
@@ -82,11 +79,11 @@
     
     <div id="mod-preventivi" class="elegant-card">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-soft); padding-bottom:15px; margin-bottom:20px;">
-        <h2 style="margin:0; border:none; padding:0;">Compilazione e Archivio Commesse</h2>
+        <h2>Compilazione e Archivio Commesse dello Studio</h2>
         <button class="action-btn success" onclick="apriFormNuovoPreventivo()">➕ Nuovo Preventivo / Contratto</button>
       </div>
 
-      <!-- BOX REGISTRAZIONE STRUTTURATO AL 100% SUI TUOI CAMPI -->
+      <!-- FORM STRUTTURATO AL 100% SUI CAMPI ORIGINALI -->
       <div id="box-compilazione-preventivo" class="hidden" style="background:#f8fafc; padding:25px; border-radius:10px; border:1px solid var(--border-soft); margin-bottom:30px;">
         <h3 id="form-preventivo-titolo-dinamico" style="margin-top:0;">Nuovo Documento</h3>
         <input type="hidden" id="p_id" />
@@ -98,7 +95,7 @@
         </div>
         
         <div class="form-grid">
-          <div class="form-group"><label>Cliente Associato (ID o Nome) *</label><input type="text" id="p_cliente_id" placeholder="Es. Mario Rossi (ID Permanente)" /></div>
+          <div class="form-group"><label>Cliente Associato (Nome o ID Permanente) *</label><input type="text" id="p_cliente_id" placeholder="Es. Mario Rossi" /></div>
           <div class="form-group">
             <label>Stato Documento</label>
             <select id="p_stato">
@@ -111,7 +108,7 @@
 
         <div class="form-group" style="margin-bottom:15px;">
           <label>Descrizione della Prestazione Accordata</label>
-          <textarea id="p_descrizione" rows="4" placeholder="Inserisci qui i patti, gli album inclusi, acconti, note legali..."></textarea>
+          <textarea id="p_descrizione" rows="4"></textarea>
         </div>
 
         <div style="display:flex; gap:10px;">
@@ -121,9 +118,9 @@
         </div>
       </div>
 
-      <h3>Elenco Storico Documenti</h3>
+      <h3>Elenco Storico Documenti Emessi</h3>
       <div id="preventivi-list" class="preventivi-grid">
-        <p style="color:#999; text-align:center; grid-column:1/-1;">Connessione al database di postazione...</p>
+        <p style="color:#999; text-align:center; grid-column:1/-1;">Connessione database in corso...</p>
       </div>
     </div>
 
@@ -141,7 +138,12 @@
         </div>
         <div style="display:flex; justify-content:space-between; margin-bottom:30px;">
           <div>
-            <h3 style="margin:0; border:none; padding:0; font-size:12px; color:var(--text-light);">RIFERIMENTO COMMESSA</h3>
+            <h3 style="margin:0; border:none; padding:0; font-size:12px; color:var(--text-light);">RIFERIMENTO ANAGRAFICA</h3>
             <p id="print_cliente_dati" style="margin:0; font-weight:bold; font-size:16px;"></p>
           </div>
           <div style="text-align:right;">
+            <div id="print_badge_stato" class="preventivo-stato stato-accettato">CONTRATTO</div>
+            <p style="margin:5px 0 0 0; font-weight:bold;">Documento N: <span id="print_doc_numero">---</span></p>
+            <p style="margin:2px 0 0 0; font-size:12px; color:#555;">Scadenza: <span id="print_doc_data"></span></p>
+          </div>
+        </div>
