@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suite Premium - Compilazione Preventivo / Contratto</title>
+  <style>
+    :root { --primary: #1e5571; --danger: #d9534f; --success: #5cb85c; }
+    body { font-family: system-ui, sans-serif; margin: 20px; background: #f4f6f9; color: #333; }
+    .container { max-width: 800px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    h2, h3, h4 { color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 8px; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+    input, select, textarea { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+    .row { display: flex; gap: 15px; margin-bottom: 10px; }
+    .col { flex: 1; }
+    .btn { background: var(--primary); color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; margin-top: 10px; }
+    .btn.green { background: var(--success); }
+    .btn.danger { background: var(--danger); }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; background: white; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #f2f2f2; color: #333; }
+    .totali-box { background: #eee; padding: 15px; border-radius: 4px; text-align: right; font-size: 16px; font-weight: bold; margin-top: 15px; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Scheda Compilazione Preventivo / Contratto</h2>
+    
+    <!-- Selezione Rapida Cliente (se presente in archivio) -->
+    <div class="form-group">
+      <label>Caricamento Rapido Anagrafica da Archivio Clienti</label>
+      <select id="prev_selettore_cliente_rapido" onchange="autoCompilaAnagraficaPreventivo()">
+        <option value="">-- Seleziona un cliente dall'archivio (Opzionale) --</option>
+      </select>
+    </div>
+
+    <!-- Dati Generali Preventivo -->
+    <div class="row">
+      <div class="col">
+        <label>Numero Preventivo / Contratto</label>
+        <input type="text" id="p_numero" placeholder="Es. PRV-2026-001" />
+      </div>
+      <div class="col">
+        <label>Data Emissione</label>
+        <input type="date" id="p_dataCreazione" />
+      </div>
+    </div>
+
+    <!-- SEZIONE ANAGRAFICA CLIENTE A -->
+    <h3>Anagrafica Cliente A (Primo Intestatario)</h3>
+    <div class="row">
+      <div class="col"><label>Nome *</label><input type="text" id="a_nome" required /></div>
+      <div class="col"><label>Cognome *</label><input type="text" id="a_cognome" required /></div>
+    </div>
+    <div class="row">
+      <div class="col"><label>Telefono</label><input type="text" id="a_telefono" /></div>
+      <div class="col"><label>Email</label><input type="email" id="a_email" /></div>
+    </div>
+    <div class="form-group"><label>Via / Piazza e n. civico</label><input type="text" id="a_via" /></div>
+    <div class="row">
+      <div class="col"><label>Città</label><input type="text" id="a_citta" /></div>
+      <div class="col"><label>CAP</label><input type="text" id="a_cap" /></div>
+      <div class="col"><label>Provincia</label><input type="text" id="a_prov" /></div>
+    </div>
+
+    <!-- SEZIONE ANAGRAFICA CLIENTE B -->
+    <h3>Anagrafica Cliente B (Secondo Intestatario)</h3>
+    <div class="row">
+      <div class="col"><label>Nome</label><input type="text" id="b_nome" /></div>
+      <div class="col"><label>Cognome</label><input type="text" id="b_cognome" /></div>
+    </div>
+    <div class="row">
+      <div class="col"><label>Telefono</label><input type="text" id="b_telefono" /></div>
+      <div class="col"><label>Email</label><input type="email" id="b_email" /></div>
+    </div>
+    <div class="form-group"><label>Via / Piazza e n. civico</label><input type="text" id="b_via" /></div>
+    <div class="row">
+      <div class="col"><label>Città</label><input type="text" id="b_citta" /></div>
+      <div class="col"><label>CAP</label><input type="text" id="b_cap" /></div>
+      <div class="col"><label>Provincia</label><input type="text" id="b_prov" /></div>
+    </div>
+
+    <!-- DETTAGLI SERVIZIO / EVENTO -->
+    <h3>Dettagli Servizio dell'Evento</h3>
+    <div class="row">
+      <div class="col"><label>Data del Servizio (In Evidenza)</label><input type="date" id="p_dataServizio" /></div>
+      <div class="col"><label>Tipo di Servizio Richiesto</label><input type="text" id="p_tipo" placeholder="Es. Matrimonio, Battesimo..." /></div>
+    </div>
+    <div class="row">
+      <div class="col"><label>Chiesa / Luogo Cerimonia</label><input type="text" id="p_chiesa" /></div>
+      <div class="col"><label>Location / Ricevimento</label><input type="text" id="p_location" /></div>
+    </div>
+
+    <!-- LISTINO SERVIZI E COSTI -->
+    <h3>Servizi & Costi a Listino</h3>
+    <div class="row" style="align-items: flex-end;">
+      <div class="col" style="flex: 2;"><label>Descrizione Servizio / Prodotto</label><input type="text" id="add_serv_desc" placeholder="Es. Servizio Fotografico + Album" /></div>
+      <div class="col"><label>Prezzo (EUR)</label><input type="number" id="add_serv_prezzo" placeholder="0.00" step="0.01" /></div>
+      <div class="col" style="flex: 0.5;"><button type="button" class="btn" onclick="aggiungiServizioRiga()" style="margin-top:0;">+</button></div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Descrizione Servizio / Prodotto</th><th>Prezzo (EUR)</th><th style="width: 50px;">Azione</th></tr>
+      </thead>
+      <tbody id="tabella-servizi-body">
+        <!-- Le righe aggiunte compariranno qui -->
+      </tbody>
+    </table>
+
+    <!-- TOTALI E SCONTI -->
+    <div class="totali-box">
+      <div>Totale Lordo: EUR <span id="lbl_tot_lordo">0.00</span></div>
+      <div style="margin-top: 10px; font-weight: normal; font-size: 14px;">
+        <label style="display:inline; margin-right: 10px;">Acconto Versato (EUR):</label>
+        <input type="number" id="p_acconto_versato" value="0" step="0.01" oninput="ricalcolaSpeseTotali()" style="width: 150px; display: inline-block; padding: 5px;" />
+      </div>
+      <div style="margin-top: 10px; color: var(--primary);">Saldo Residuo: EUR <span id="lbl_saldo_residuo">0.00</span></div>
+    </div>
+
+    <!-- AZIONI DI SALVATAGGIO -->
+    <div class="row">
+      <div class="col"><button class="btn green" onclick="salvaInCloudflareKV()">Salva Preventivo nel Cloud</button></div>
+      <div class="col"><button class="btn danger" onclick="pulisciCampiPreventivi()">Svuota Campi</button></div>
+    </div>
+  </div>
+
+  <!-- INTERFACCIA DI COLLEGAMENTO CON CLOUDFLARE -->
+  <script>
+    const WORKER_URL = 'https://workers.dev';
+    let arrayServiziAggiunti = [];
+    let cacheClientiArchivio = [];
+
+    // Recupera i dati di sessione (se presenti)
+    const studio_id = localStorage.getItem('current_studio_id') || 'STU-001';
+    const studio_token = localStorage.getItem('studio_token') || '';
+
+    // Funzione per inserire una riga nel listino
+    function aggiungiServizioRiga() {
+      const d = document.getElementById('add_serv_desc').value.trim(); 
+      const p = parseFloat(document.getElementById('add_serv_prezzo').value); 
+      if(!d || isNaN(p)) return alert('Inserisci descrizione e prezzo validi!');
+      
+      arrayServiziAggiunti.push({descrizione: d, prezzo: p}); 
+      document.getElementById('add_serv_desc').value = ''; 
+      document.getElementById('add_serv_prezzo').value = ''; 
+      renderizzaTabellaServizi();
+    }
+
+    function rimuoviServizioRiga(i) {
+      arrayServiziAggiunti.splice(i, 1);
+      renderizzaTabellaServizi();
+    }
+
+    function renderizzaTabellaServizi() {
+      const tb = document.getElementById('tabella-servizi-body');
+      if(!tb) return;
+      tb.innerHTML = arrayServiziAggiunti.map((x, idx) => `
+        <tr>
+          <td>${x.descrizione}</td>
+          <td>EUR ${x.prezzo.toFixed(2)}</td>
+          <td><button type="button" class="btn danger" style="padding:4px 8px; margin:0; font-size:12px;" onclick="rimuoviServizioRiga(${idx})">X</button></td>
+        </tr>
+      `).join(''); 
+      ricalcolaSpeseTotali();
+    }
+
+    function ricalcolaSpeseTotali() {
+      let tot = 0;
+      arrayServiziAggiunti.forEach(x => tot += x.prezzo); 
+      const acc = parseFloat(document.getElementById('p_acconto_versato').value) || 0;
+      document.getElementById('lbl_tot_lordo').textContent = tot.toFixed(2); 
+      document.getElementById('lbl_saldo_residuo').textContent = (tot - acc).toFixed(2);
+    }
+
+    // Salva i dati direttamente sul database Cloudflare KV tramite le API del tuo Worker
+    async function salvaInCloudflareKV() {
+      const num = document.getElementById('p_numero').value.trim() || 'PRV-' + Math.floor(100000 + Math.random() * 900000);
+      if(!document.getElementById('a_nome').value.trim()) return alert('Il nome del Cliente A è obbligatorio!');
+
+      const data = {
+        id: num, 
+        data_creazione: document.getElementById('p_dataCreazione').value,
+        cliente_a: {
+          nome: document.getElementById('a_nome').value, cognome: document.getElementById('a_cognome').value, 
+          telefono: document.getElementById('a_telefono').value, email: document.getElementById('a_email').value, 
+          via: document.getElementById('a_via').value, citta: document.getElementById('a_citta').value, 
+          cap: document.getElementById('a_cap').value, provincia: document.getElementById('a_prov').value
+        },
+        cliente_b: {
+          nome: document.getElementById('b_nome').value, cognome: document.getElementById('b_cognome').value, 
+          telefono: document.getElementById('b_telefono').value, email: document.getElementById('b_email').value, 
