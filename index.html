@@ -47,6 +47,26 @@
         }
         .card-login.admin { border-color: var(--rosa-antico); }
         .card-login.studio { border-color: var(--verde-salvia); }
+        
+        /* STRUTTURA DEL CAMPO PASSWORD CON OCCHIO HARDWARE */
+        .password-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        .password-container input {
+            width: 100%;
+            padding-right: 40px;
+        }
+        .toggle-password-eye {
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+            user-select: none;
+            font-size: 18px;
+        }
+
         input, select, button {
             width: 100%;
             padding: 10px;
@@ -61,14 +81,11 @@
             border: none;
             font-weight: bold;
             cursor: pointer;
-            transition: opacity 0.2s;
         }
         button:hover { opacity: 0.9; }
         .btn-admin { background-color: var(--rosa-antico); }
         .btn-studio { background-color: var(--verde-salvia); }
         .pannello-privato { display: none; margin-top: 30px; padding: 20px; border-radius: 8px; background: #fafafa; border: 1px solid #ddd; }
-        .logo-box { text-align: center; margin-bottom: 20px; }
-        .logo-box img { max-height: 80px; object-fit: contain; }
     </style>
 </head>
 <body>
@@ -87,7 +104,10 @@
             <div class="card-login">
                 <h3>👥 Accesso Clienti (Sposi)</h3>
                 <input type="text" id="id-sposi" placeholder="ID Sposi Permanente *">
-                <input type="password" id="pass-sposi" placeholder="Password Galleria *">
+                <div class="password-container">
+                    <input type="password" id="pass-sposi" placeholder="Password Galleria *">
+                    <span class="toggle-password-eye" onclick="invertiVisibilitaPassword('pass-sposi', this)">👁️</span>
+                </div>
                 <button onclick="azioneLoginCliente()">Sblocca Galleria ❤️</button>
             </div>
 
@@ -95,14 +115,20 @@
             <div class="card-login studio">
                 <h3>📸 Cabina Regia Studio</h3>
                 <input type="text" id="id-studio" placeholder="ID Studio Permanente *">
-                <input type="password" id="pass-studio" placeholder="Password Studio *">
+                <div class="password-container">
+                    <input type="password" id="pass-studio" placeholder="Password Studio *">
+                    <span class="toggle-password-eye" onclick="invertiVisibilitaPassword('pass-studio', this)">👁️</span>
+                </div>
                 <button class="btn-studio" onclick="azioneLoginStudio()">Entra in Plancia</button>
             </div>
 
             <!-- ACCESSO FORNITORE -->
             <div class="card-login admin">
                 <h3>👑 Fornitore Supremo</h3>
-                <input type="password" id="pass-admin" placeholder="Chiave di Accesso Suprema *">
+                <div class="password-container">
+                    <input type="password" id="pass-admin" placeholder="Chiave di Accesso Suprema *">
+                    <span class="toggle-password-eye" onclick="invertiVisibilitaPassword('pass-admin', this)">👁️</span>
+                </div>
                 <button class="btn-admin" onclick="azioneLoginAdmin()">Accedi al Server</button>
             </div>
         </div>
@@ -126,52 +152,35 @@
     <!-- 📸 PANNELLO STUDIO FOTOGRAFICO -->
     <div id="pannello-studio" class="pannello-privato">
         <h2>📸 Cabina di Regia Studio: <span id="nome-studio-attivo"></span></h2>
-        <button class="btn-studio" onclick="location.href='preventivi.html'">📋 Gestione Preventivi</button>
-        
-        <h4>⚙ Configura Dati Fiscali & Logo</h4>
-        <input type="text" id="studio-piva" placeholder="Partita IVA / Codice Fiscale">
-        <input type="text" id="studio-logo" placeholder="URL Logo Studio (Link Immagine)">
-        <button class="btn-studio" onclick="salvaConfigurazioneStudio()">Salva Dati Studio</button>
-
-        <h4>👥 Crea Credenziali Sposi (Eterne)</h4>
-        <input type="text" id="nuovo-cliente-id" placeholder="ID Sposi Permanente (es. rossi-2026)">
-        <input type="text" id="nuovo-cliente-pass" placeholder="Password per gli Sposi">
-        <input type="text" id="nuovo-cliente-evento" placeholder="Nome Evento (es. Matrimonio Mario e Elena)">
-        <button class="btn-studio" onclick="creaNuovoCliente()">Genera Galleria Eterna</button>
-        <button onclick="esciSessione()">Esci Sessione</button>
-    </div>
-
-    <!-- 👥 PANNELLO GALLERIA SPOSI -->
-    <div id="pannello-clienti" class="pannello-privato">
-        <div id="box-logo-personalizzato" style="text-align: center; margin-bottom: 20px;"></div>
-        <h2 id="titolo-evento-sposi">❤️ La Vostra Galleria Foto</h2>
-        <p style="text-align: center;">Selezionate le vostre foto preferite cliccando sul cuore. Al termine, cliccate su "Salva Selezione".</p>
-        
-        <!-- Simulazione Foto (Verrà espansa con R2) -->
-        <div style="display: flex; gap: 10px; justify-content: center; margin: 20px 0;">
-            <div style="border: 1px solid #ccc; padding: 10px; text-align: center; background: white;">
-                <p>Foto_001.jpg</p>
-                <button onclick="aggiungiPreferita('Foto_001.jpg')">❤️ Preferita</button>
-            </div>
-            <div style="border: 1px solid #ccc; padding: 10px; text-align: center; background: white;">
-                <p>Foto_002.jpg</p>
-                <button onclick="aggiungiPreferita('Foto_002.jpg')">❤️ Preferita</button>
-            </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:20px;">
+            <button class="btn-studio" onclick="location.href='preventivi.html'">📋 Preventivi & Contratti</button>
+            <button class="btn-studio" onclick="location.href='agenda.html'">📅 Agenda Studio</button>
+            <button class="btn-studio" onclick="location.href='workflow.html'">⚙️ Workflow Produzione</button>
+            <button class="btn-studio" onclick="location.href='negozio.html'">🛒 Negozio & Ordini</button>
+            <button class="btn-studio" onclick="location.href='ricevute.html'">🧾 Cassa & Ricevute</button>
+            <button class="btn-studio" onclick="location.href='clienti-foto.html'">📸 Carica Foto R2</button>
+            <button class="btn-studio" onclick="location.href='selezione-album.html'">🔗 Monitor Selezioni</button>
+            <button class="btn-studio" onclick="location.href='email.html'">📩 Email & Modelli</button>
         </div>
-
-        <button style="background-color: var(--verde-salvia);" onclick="inviaSelezioneFoto()">💾 SALVA SELEZIONE & NOTIFICA FOTOGRAFO</button>
         <button onclick="esciSessione()">Esci Sessione</button>
     </div>
 </div>
 
-<!-- ==========================================
-     LOGICA DI COLLEGAMENTO STATELESS CLOUDFLARE
-     ========================================== -->
 <script>
 const WORKER_URL = "https://workers.dev";
-let listaPreferite = [];
 
-// Funzioni di cambio vista volatili (Senza localStorage)
+// Funzione Hardware per mostrare/nascondere la password al clic dell'occhio
+function invertiVisibilitaPassword(inputId, elementoOcchio) {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") {
+        input.type = "text";
+        elementoOcchio.innerText = "🙈";
+    } else {
+        input.type = "password";
+        elementoOcchio.innerText = "👁️";
+    }
+}
+
 function mostraPannelloFornitore() {
     document.getElementById("sezione-ingressi").style.display = "none";
     document.getElementById("pannello-admin").style.display = "block";
@@ -181,19 +190,8 @@ function mostraPannelloStudio() {
     document.getElementById("pannello-studio").style.display = "block";
     document.getElementById("nome-studio-attivo").innerText = window.currentStudioId;
 }
-function mostraGalleriaSposi(nomeEvento, logoUrl) {
-    document.getElementById("sezione-ingressi").style.display = "none";
-    document.getElementById("pannello-clienti").style.display = "block";
-    document.getElementById("titolo-evento-sposi").innerText = `❤️ ${nomeEvento}`;
-    if(logoUrl) {
-        document.getElementById("box-logo-personalizzato").innerHTML = `<img src="${logoUrl}" style="max-height:80px;">`;
-    }
-}
-function esciSessione() {
-    location.reload(); // Il reset rinfresca lo stato volatile istantaneamente senza conflitti
-}
+function esciSessione() { location.reload(); }
 
-// 1. CHIAMATE ADMIN
 async function azioneLoginAdmin() {
     const password = document.getElementById("pass-admin").value;
     try {
@@ -204,7 +202,7 @@ async function azioneLoginAdmin() {
         });
         const d = await r.json();
         if (d.success) mostraPannelloFornitore();
-        else alert("Password Suprema errata!");
+        else alert("Password errata!");
     } catch { alert("Errore di connessione a Cloudflare"); }
 }
 
@@ -221,9 +219,22 @@ async function salvaLicenzaStudio() {
             body: JSON.stringify({ studioId, password, active })
         });
         const d = await r.json();
-        if(d.success) alert("Licenza Studio configurata sul Server!");
+        if(d.success) alert("Licenza Studio registrata sul server!");
     } catch { alert("Errore di salvataggio licenza"); }
 }
 
-// 2. CHIAMATE STUDIO
 async function azioneLoginStudio() {
+    const studioId = document.getElementById("id-studio").value;
+    const password = document.getElementById("pass-studio").value;
+    try {
+        const r = await fetch(`${WORKER_URL}/api/studio/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ studioId, password })
+        });
+        const d = await r.json();
+        if (d.success) {
+            window.currentStudioId = studioId;
+            window.localStorage.setItem("studioId", studioId); // Bridge per le sotto-pagine
+            mostraPannelloStudio();
+        } else alert("Errore: " + d.error);
