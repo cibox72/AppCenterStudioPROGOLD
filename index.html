@@ -1,147 +1,196 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AppCenter Studio Premium Gold</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c4c 0%, #2a4a5e 30%, #3d5a6c 70%, #2c3e50 100%),
-                        repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255, 255, 255, 0.02) 30px, rgba(255, 255, 255, 0.02) 60px);
-            background-size: cover, 100px 100px;
-            background-attachment: fixed;
-            min-height: 100vh;
-            padding: 20px;
-            color: #ecf0f1;
-            overflow-x: hidden;
-        }
-        body::before {
-            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, transparent 49%, rgba(255, 255, 255, 0.03) 50%, transparent 51%),
-                        linear-gradient(-45deg, transparent 49%, rgba(255, 255, 255, 0.03) 50%, transparent 51%);
-            pointer-events: none; z-index: 0;
-        }
-        .container {
-            max-width: 1200px; margin: 0 auto; background: rgba(44, 62, 80, 0.95);
-            border-radius: 15px; padding: 30px; box-shadow: 0 4px 30px rgba(0,0,0,0.3), 0 0 60px rgba(0,0,0,0.4);
-            position: relative; z-index: 1; border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
-        header h1 { color: #ffd700; font-size: 2.3em; font-weight: 300; letter-spacing: 2px; }
-        .nav-menu { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
-        button {
-            background: rgba(52, 73, 94, 0.8); color: #ecf0f1; border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 12px 25px; border-radius: 8px; cursor: pointer; font-size: 15px; transition: all 0.3s; font-weight: bold;
-        }
-        button:hover { background: #ffd700; color: #000; transform: translateY(-2px); }
-        .screen-module { display: none; }
-        .screen-module.active { display: block; }
-        .card { background: rgba(52, 73, 94, 0.4); padding: 20px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        input, select, textarea {
-            padding: 12px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px;
-            background: rgba(52, 73, 94, 0.6); color: #ecf0f1; width: 100%; box-sizing: border-box; margin-bottom: 10px; font-size: 14px;
-        }
-        input:focus, select:focus, textarea:focus { background: rgba(52, 73, 94, 0.8); outline: none; border-color: #ffd700; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; }
-        th { color: #ffd700; }
-        .totale-evidenza-box { font-size: 22px; font-weight: bold; color: #2ecc71; margin-top: 15px; padding: 10px; background: rgba(46, 204, 113, 0.1); border-radius: 6px; border: 1px solid rgba(46, 204, 113, 0.2); text-align: center; }
-        #loginScreen { display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .screen { display: none; }
-        .screen.active { display: block; }
-        label { display: block; margin-bottom: 5px; font-size: 13px; color: #ffd700; }
-        .workflow-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 5px solid #f1c40f; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .foto-provino { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); text-align: center; width: 150px; position: relative; display: inline-block; margin: 10px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AppCenter Studio Premium Gold</title>
+<script src="https://cloudflare.com"></script>
+<style>
+:root{--nero:#111;--grigio:#444;--bordo:#d9d9d9;--chiaro:#f7f7f7;--primary:#1d5c74}
+*{box-sizing:border-box}
+body{margin:0;font-family:Georgia,'Segoe UI',Tahoma,sans-serif;background:radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(240,242,247,0.6) 35%, rgba(220,225,235,0.3) 100%),linear-gradient(180deg,#fafafb 0%,#e4e7ee 100%);background-attachment:fixed;color:var(--nero);min-height:100vh}
+
+/* Schermata Login */
+#login-screen{max-width:400px;margin:100px auto;padding:20px;background:#fff;border-radius:12px;border:1px solid var(--bordo);box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+
+/* Layout Principale */
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 22px;background:linear-gradient(90deg,#000,#333);color:#fff}
+.brandName{font-weight:800;font-size:19px;font-family:Georgia,serif}
+#studioNameHead{font-size:13px;opacity:.85}
+nav{display:flex;gap:6px;padding:10px 16px;background:rgba(255,255,255,0.85);border-bottom:1px solid var(--bordo);flex-wrap:wrap;position:sticky;top:0;z-index:5}
+
+/* Elementi Comuni */
+.btn{background:#111;color:#fff;border:none;padding:10px 18px;border-radius:999px;font-weight:600;cursor:pointer;font-size:13px;display:inline-block}
+.btn:hover{opacity:.88}
+.btn.secondary{background:#fff;color:#111;border:1px solid #bbb}
+.btn.green{background:var(--primary);color:#fff;border:none}
+.btn.danger{background:#b00020;color:#fff}
+.card{background:rgba(255,255,255,0.92);border:1px solid var(--bordo);border-radius:12px;padding:18px;margin-bottom:16px}
+h2{margin:0 0 12px;font-size:17px;border-left:4px solid #000;padding-left:10px;font-family:Georgia,serif}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{font-size:11px;color:#666;display:block;margin-bottom:3px}
+input,select,textarea{width:100%;padding:8px;border:1px solid var(--bordo);border-radius:8px;background:#fff;font-size:13px;font-family:inherit}
+input[readonly]{background:#f0f0f0;font-weight:700}
+.highlight{background:linear-gradient(90deg,#000,#3a3a3a);color:#fff;padding:16px;border-radius:12px;display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.highlight label{color:#bbb}
+.highlight input{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4);color:#fff;font-weight:700}
+.rowBetween{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.badge{background:#111;color:#fff;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700}
+.hidden{display:none !important}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;padding-top:20px;border-top:2px solid #000}
+
+@media(max-width:800px){.grid,.highlight{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 
-    <!-- 1. LOGIN (BLINDATO DIRETTAMENTE SUL PULSANTE CONTRO I PROBLEMI DI CACHE) -->
-    <div id="loginScreen" class="screen active">
-        <div class="card" style="width: 360px; text-align: center; position: relative; z-index: 10;">
-            <h2 style="color: #ffd700; margin-bottom: 15px;">🔐 Accesso Suite Premium</h2>
-            <input type="text" id="username" placeholder="Username" value="admin">
-            <input type="password" id="password" placeholder="Password" value="58879@Stella">
-            <button onclick="
-                const u = document.getElementById('username').value.trim();
-                const p = document.getElementById('password').value.trim();
-                if (u === 'admin' && p === '58879@Stella') {
-                    document.getElementById('loginScreen').classList.remove('active');
-                    document.getElementById('mainSuiteSection').classList.add('active');
-                    if (typeof aggiornaPannelli === 'function') { aggiornaPannelli(); }
-                } else { 
-                    alert('Credenziali errate.'); 
-                }
-            " style="width: 100%; margin-top: 10px; background: #ffd700; color: #000;">Entra nel Sistema</button>
+<!-- 🔑 SCHERMATA LOGIN -->
+<div id="login-screen">
+  <h2 style="border:none; text-align:center; padding:0;">Accesso Suite Premium</h2>
+  <div style="margin-bottom:12px;">
+    <label>ID Studio Fotografico</label>
+    <input id="login_studio_id" placeholder="Es. STU-001">
+  </div>
+  <div style="margin-bottom:20px;">
+    <label>Password / Token di Accesso</label>
+    <input id="login_studio_token" type="password" placeholder="Inserisci il token segreto">
+  </div>
+  <button class="btn green" style="width:100%;" onclick="eseguiLogin()">🔓 Entra nel Sistema</button>
+</div>
+
+<!-- 🌐 APPLICAZIONE REALE (Nascosta prima del Login) -->
+<div id="app-content" class="hidden">
+  <header>
+    <div class="brand"><span class="brandName">AppCenter Studio Premium Gold</span></div>
+    <div id="studioNameHead">Studio: <span id="lbl_studio_id"></span></div>
+    <button class="btn danger" onclick="eseguiLogout()">🚪 Esci</button>
+  </header>
+
+  <nav>
+    <button class="btn secondary" onclick="mostraModulo('fornitore')" id="btn-nav-fornitore">Plancia Fornitore</button>
+    <button class="btn secondary" onclick="mostraModulo('preventivi')">01 Preventivi</button>
+    <button class="btn secondary" onclick="mostraModulo('clienti')">02 Clienti</button>
+    <button class="btn secondary" onclick="mostraModulo('workflow')">03 Workflow</button>
+    <button class="btn secondary" onclick="mostraModulo('gru')">04 Configura GRU</button>
+  </nav>
+
+  <main style="padding:20px; max-width:1100px; margin:0 auto;">
+
+    <!-- 🛑 MODULO FORNITORE (Creazione Studi e Credenziali) -->
+    <section id="mod-fornitore" class="hidden">
+      <div class="card">
+        <h2>Plancia Amministratore / Fornitore</h2>
+        <p>Usa questa sezione per generare nuovi studi fotografici da vendere ai tuoi clienti.</p>
+        <div class="grid">
+          <div><label>Nuovo ID Studio da creare</label><input id="f_new_id" placeholder="Es. STU-002"></div>
+          <div><label>Token / Password da associare</label><input id="f_new_token" placeholder="Es. PasswordSegreta"></div>
         </div>
-    </div>
+        <button class="btn green" style="margin-top:15px;" onclick="creaNuovoStudio()">✨ Genera e Salva Studio</button>
+      </div>
+    </section>
 
-    <!-- 2. PANNELLO CONTENITORE PRINCIPALE -->
-    <div id="mainSuiteSection" class="screen">
-        <div class="container">
-            <header>
-                <h1>🎨 AppCenter Studio Premium Gold</h1>
-                <p style="color: #aaa; margin-top: 5px;">Suite Gestionale Privata v16.8</p>
-            </header>
+    <!-- 📝 MODULO 01: PREVENTIVI & CONTRATTI (Preso dal vecchio Repository) -->
+    <section id="mod-preventivi" class="hidden">
+      <div class="card">
+        <div class="rowBetween">
+          <h2 style="margin:0">Preventivo / Contratto Fotografico</h2>
+          <span id="pBadge" class="badge">Pronto per Sincronizzazione KV</span>
+        </div>
+        <div class="grid" style="margin-top:12px">
+          <div><label>Numero Preventivo (Generato al salvataggio)</label><input id="p_numero" readonly placeholder="Auto-generato"></div>
+          <div><label>Data emissione</label><input id="p_dataCreazione" type="date"></div>
+        </div>
+      </div>
 
-            <!-- Menu Navigazione -->
-            <div class="nav-menu">
-                <button id="btn-plancia" onclick="attivaModulo('planciaFornitore', 'btn-plancia')" style="background:#ffd700; color:#000;">👑 Plancia Fornitore</button>
-                <button id="btn-prev" onclick="attivaModulo('moduloPreventivi', 'btn-prev')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">📝 01 Preventivi</button>
-                <button id="btn-cli" onclick="attivaModulo('moduloClienti', 'btn-cli')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">👤 02 Clienti</button>
-                <button id="btn-work" onclick="attivaModulo('moduloWorkflow', 'btn-work')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">⚙️ 03 Workflow</button>
-                <button id="btn-foto" onclick="attivaModulo('moduloFotoGru', 'btn-foto')" style="background:rgba(52, 73, 94, 0.8); color:#ecf0f1;">📸 04 Configura GRU</button>
-                <button onclick="
-                    document.getElementById('mainSuiteSection').classList.remove('active');
-                    document.getElementById('loginScreen').classList.add('active');
-                " style="background: #e74c3c; color:#fff;">🚪 Esci dallo Studio</button>
-            </div>
+      <div class="card">
+        <h2>Anagrafica Cliente A (Primo Intestatario)</h2>
+        <div class="grid">
+          <div><label>Nome *</label><input id="a_nome" required></div>
+          <div><label>Cognome *</label><input id="a_cognome" required></div>
+          <div><label>Telefono</label><input id="a_telefono"></div>
+          <div><label>Email</label><input id="a_email"></div>
+          <div><label>Via / Piazza e n. civico</label><input id="a_via"></div>
+          <div><label>Città</label><input id="a_citta"></div>
+          <div><label>CAP</label><input id="a_cap"></div>
+          <div><label>Provincia</label><input id="a_prov"></div>
+        </div>
+      </div>
 
-            <!-- TAB: PLANCIA FORNITORE SUPREMO -->
-            <div id="planciaFornitore" class="screen-module active">
-                <div class="grid">
-                    <div class="card" style="text-align: center;">
-                        <h3>Studi Attivi nel Cloud</h3>
-                        <p id="txt-studi-totali" style="font-size: 2.5em; color: #ffd700; font-weight: 300;">0</p>
-                    </div>
-                    <div class="card" style="text-align: center;">
-                        <h3>Offerte Configurate</h3>
-                        <p id="txt-offerte-totali" style="font-size: 2.5em; color: #ffd700; font-weight: 300;">0</p>
-                    </div>
-                </div>
-                <div class="grid" style="margin-top: 20px;">
-                    <div class="card">
-                        <h3>➕ Configura Nuovo Studio</h3>
-                        <input type="text" id="admStudioName" placeholder="Nome Studio">
-                        <input type="text" id="admStudioRef" placeholder="Referente">
-                        <select id="admStudioOffer"><option value="">Scegli Offerta</option></select>
-                        <button onclick="adminAggiungiStudio()" style="width:100%;">Salva Studio</button>
-                    </div>
-                    <div class="card">
-                        <h3>🏷️ Gestione Offerte</h3>
-                        <input type="text" id="admOfferTitle" placeholder="Titolo Offerta">
-                        <input type="text" id="admOfferPrice" placeholder="Prezzo (es. €50/mese)">
-                        <button onclick="adminAggiungiOffer()" style="width:100%;">🏷️ Aggiungi Offerta</button>
-                    </div>
-                </div>
-            </div>
+      <div class="card">
+        <h2>Anagrafica Cliente B (Secondo Intestatario)</h2>
+        <div class="grid">
+          <div><label>Nome</label><input id="b_nome"></div>
+          <div><label>Cognome</label><input id="b_cognome"></div>
+          <div><label>Telefono</label><input id="b_telefono"></div>
+          <div><label>Email</label><input id="b_email"></div>
+          <div><label>Via / Piazza e n. civico</label><input id="b_via"></div>
+          <div><label>Città</label><input id="b_citta"></div>
+          <div><label>CAP</label><input id="b_cap"></div>
+          <div><label>Provincia</label><input id="b_prov"></div>
+        </div>
+      </div>
 
-            <!-- TAB: GESTIONE CLIENTI -->
-            <div id="moduloClienti" class="screen-module">
-                <div class="card">
-                    <h2>📇 Gestione Anagrafica Clienti</h2>
-                    <div class="grid" style="margin-top:15px;">
-                        <div>
-                            <label>Nome *</label><input type="text" id="cNome" placeholder="Inserisci Nome">
-                            <label>Cognome *</label><input type="text" id="cCognome" placeholder="Inserisci Cognome">
-                        </div>
-                        <div>
-                            <label>Telefono</label><input type="text" id="cTel" placeholder="Inserisci Telefono">
-                            <label>Email</label><input type="email" id="cEmail" placeholder="Inserisci Email">
-                        </div>
-                    </div>
-                    <label>Indirizzo residenza</label><input type="text" id="cInd" placeholder="Via / Piazza, Città">
-                    <label>Note aggiuntive cliente</label><textarea id="cNote" rows="2" placeholder="Informazioni particolari..."></textarea>
+      <div class="highlight">
+        <div><label>DATA DEL SERVIZIO (In Evidenza)</label><input type="date" id="p_dataServizio"></div>
+        <div><label>TIPO DI SERVIZIO RICHIESTO</label><input id="p_tipo" placeholder="Es. Matrimonio, Battesimo, Comunione..."></div>
+      </div>
+
+      <div class="card">
+        <h2>Luoghi dell'Evento</h2>
+        <div style="margin-bottom:10px;"><label>Chiesa / Luogo Cerimonia</label><input id="p_chiesa"></div>
+        <div><label>Location / Ricevimento</label><input id="p_location"></div>
+      </div>
+
+      <div class="card">
+        <h2>Azioni Registro</h2>
+        <div class="actions" style="margin:0; padding-top:0; border-top:none;">
+          <button type="button" class="btn green" onclick="salvaInCloudflareKV()">💾 Salva e Fai Backup Istantaneo</button>
+          <button type="button" class="btn secondary" onclick="pulisciCampiPreventivi()">🧹 Svuota Campi</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 👥 MODULO 02: CLIENTI -->
+    <section id="mod-clienti" class="hidden">
+      <div class="card"><h2>02 Archivio Clienti Studio</h2><p>Spazio per la gestione anagrafiche.</p></div>
+    </section>
+
+    <!-- 🔄 MODULO 03: WORKFLOW -->
+    <section id="mod-workflow" class="hidden">
+      <div class="card"><h2>03 Stato Avanzamento Lavori (Workflow)</h2><p>Controlla lo stato di lavorazione degli album.</p></div>
+    </section>
+
+    <!-- ⚙️ MODULO 04: CONFIGURA GRU -->
+    <section id="mod-gru" class="hidden">
+      <div class="card"><h2>04 Integrazione Programma GRU</h2><p>Pannello di configurazione del file di testo (.txt) restituito dalla selezione del cliente.</p></div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// Configurazione degli endpoint verso il tuo Cloudflare Worker potenziato v17
+const WORKER_URL = 'https://workers.dev';
+
+// Funzione di Login Multi-Tenant
+function eseguiLogin() {
+    const sId = document.getElementById('login_studio_id').value.trim();
+    const sToken = document.getElementById('login_studio_token').value.trim();
+
+    if(!sId || !sToken) {
+        alert('Inserisci credenziali valide!');
+        return;
+    }
+
+    // Salviamo in memoria locale per mantenere la sessione attiva
+    localStorage.setItem('current_studio_id', sId);
+    localStorage.setItem('studio_token', sToken);
+
+    document.getElementById('lbl_studio_id').textContent = sId;
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app-content').classList.remove('hidden');
+
+    // Se l'utente è l'amministratore supremo mostra la plancia fornitore, altrimenti la nasconde
+    if(sId.toLowerCase() === 'admin') {
+        document.getElementById('btn-nav-fornitore').classList.remove('hidden');
+    } else {
