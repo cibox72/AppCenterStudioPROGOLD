@@ -8,17 +8,11 @@
 :root{--nero:#111;--grigio:#444;--bordo:#d9d9d9;--chiaro:#f7f7f7;--primary:#1d5c74}
 *{box-sizing:border-box}
 body{margin:0;font-family:Georgia,'Segoe UI',Tahoma,sans-serif;background:radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(240,242,247,0.6) 35%, rgba(220,225,235,0.3) 100%),linear-gradient(180deg,#fafafb 0%,#e4e7ee 100%);background-attachment:fixed;color:var(--nero);min-height:100vh}
-
-/* Schermata Login */
 #login-screen{max-width:400px;margin:100px auto;padding:20px;background:#fff;border-radius:12px;border:1px solid var(--bordo);box-shadow:0 4px 12px rgba(0,0,0,0.1)}
-
-/* Layout Principale */
 header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 22px;background:linear-gradient(90deg,#000,#333);color:#fff}
 .brandName{font-weight:800;font-size:19px;font-family:Georgia,serif}
 #studioNameHead{font-size:13px;opacity:.85}
 nav{display:flex;gap:6px;padding:10px 16px;background:rgba(255,255,255,0.85);border-bottom:1px solid var(--bordo);flex-wrap:wrap;position:sticky;top:0;z-index:5}
-
-/* Elementi Comuni */
 .btn{background:#111;color:#fff;border:none;padding:10px 18px;font-weight:600;cursor:pointer;font-size:13px;display:inline-block;border-radius:999px}
 .btn:hover{opacity:.88}
 .btn.secondary{background:#fff;color:#111;border:1px solid #bbb}
@@ -37,143 +31,149 @@ input[readonly]{background:#f0f0f0;font-weight:700;color:#000}
 .badge{background:#111;color:#fff;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700}
 .hidden{display:none !important}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;padding-top:20px;border-top:2px solid #000}
-
-/* Tabelle e Griglie */
 table{width:100%;border-collapse:collapse;margin-top:10px}
 th,td{padding:10px 8px;border-bottom:1px solid #e3e3e3;font-size:13px;text-align:left}
 th{background:#111;color:#fff}
 .totCard{background:#f9f9f9;border:1px solid #ccc;border-radius:8px;padding:14px;margin-top:12px}
 .totCard .riga{display:flex;justify-content:space-between;padding:5px 0;font-size:14px}
 .totCard .big{font-size:22px;font-weight:800;border-top:2px solid #000;margin-top:8px;padding-top:8px}
-
 .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));gap:15px;margin-top:15px}
 .foto-card{background:#fff;border:1px solid var(--bordo);border-radius:8px;padding:8px;text-align:center;position:relative;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-
-/* Workflow Classes */
 .status-select{font-weight:bold;padding:5px;border-radius:6px;cursor:pointer}
 .wf-0{background:#fff3cd;color:#856404}
 .wf-1{background:#cce5ff;color:#004085}
 .wf-2{background:#e2e3e5;color:#383d41}
 .wf-3{background:#d1ecf1;color:#0c5460}
 .wf-4{background:#d4edda;color:#155724}
-
 @media(max-width:800px){.grid,.highlight,.gallery-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<!-- Schermata Login -->
 <div id="login-screen">
-  <h2 style="border:none; text-align:center; padding:0;">Accesso Suite Premium</h2>
+  <h2>Accesso Suite Premium</h2>
   <div style="margin-bottom:12px;">
-    <label>ID Studio Fotografico</label>
-    <input id="login_studio_id" placeholder="Es. STU-001 o admin" value="">
+    <label>ID Studio</label>
+    <input id="login_studio_id" placeholder="Es. admin">
   </div>
   <div style="margin-bottom:20px;">
-    <label>Password / Token di Accesso</label>
-    <input id="login_studio_token" type="password" placeholder="Inserisci il token segreto" value="">
+    <label>Password</label>
+    <input id="login_studio_token" type="password" placeholder="Token segreto">
   </div>
   <button class="btn green" style="width:100%;" onclick="avviaProceduraLoginDiretta()">Entra nel Sistema</button>
 </div>
 
-<!-- Applicazione Reale -->
 <div id="app-content" class="hidden">
   <header>
-    <div class="brand"><span class="brandName">AppCenter Studio Premium Gold</span></div>
-    <div id="studioNameHead">Studio Attivo: <span id="lbl_studio_id" style="font-weight:bold; color:#00ffff;"></span></div>
+    <div><span class="brandName">AppCenter Studio Premium Gold</span></div>
+    <div>Studio: <span id="lbl_studio_id"></span></div>
     <button class="btn danger" onclick="eseguiLogout()">Esci</button>
   </header>
-
   <nav>
     <button class="btn secondary hidden" onclick="mostraModulo('fornitore')" id="btn-nav-fornitore">Plancia Fornitore</button>
     <button class="btn secondary" onclick="mostraModulo('preventivi')">01 Nuovo Preventivo</button>
     <button class="btn secondary" onclick="mostraModulo('archivio-prev')">Archivio Preventivi</button>
     <button class="btn secondary" onclick="mostraModulo('clienti')">02 Archivio Clienti</button>
     <button class="btn secondary" onclick="mostraModulo('workflow')">03 Workflow SAL</button>
-    <button class="btn secondary" onclick="mostraModulo('gru')">04 Selezione Foto e GRU</button>
+    <button class="btn secondary" onclick="mostraModulo('gru')">04 Selezione Foto</button>
   </nav>
-
   <main style="padding:20px; max-width:1100px; margin:0 auto;">
-
-    <!-- Modulo Fornitore -->
     <section id="mod-fornitore" class="hidden">
       <div class="card">
-        <h2>Pannello Amministratore Supremo</h2>
-        <div class="grid" style="background:#f9f9f9; padding:15px; border-radius:10px;">
-          <div><label>Nuovo ID Studio Fotografico da registrare *</label><input id="f_new_id" placeholder="Es. STU-002"></div>
-          <div><label>Token / Password segreta da associare *</label><input id="f_new_token" placeholder="Es. Stella2026"></div>
+        <h2>Pannello Amministratore</h2>
+        <div class="grid">
+          <div><label>ID Studio *</label><input id="f_new_id" placeholder="Es. STU-002"></div>
+          <div><label>Password *</label><input id="f_new_token" placeholder="Es. Password2026"></div>
         </div>
-        <button class="btn green" style="margin-top:15px;" onclick="creaNuovoStudioSaaS()">Attiva Studio e Salva in KV</button>
+        <button class="btn green" style="margin-top:15px;" onclick="creaNuovoStudioSaaS()">Attiva Studio</button>
       </div>
     </section>
-
-    <!-- Modulo 01: Nuovo Preventivo -->
     <section id="mod-preventivi" class="hidden">
-      <div class="card" style="background:linear-gradient(90deg, #1d5c74, #133d4f); color:#fff;">
-        <h2>Caricamento Rapido Anagrafica da Archivio Clienti</h2>
-        <label style="color:#eee;">Seleziona un Cliente registrato per compilare i campi all'istante</label>
-        <select id="prev_selettore_cliente_rapido" onchange="autoCompilaAnagraficaPreventivo()" style="color:#111; font-weight:bold; margin-top:5px;">
-          <option value="">-- Seleziona un cliente dall'archivio --</option>
-        </select>
-      </div>
-
       <div class="card">
-        <div class="rowBetween">
-          <h2 style="margin:0">Scheda Compilazione Preventivo / Contratto</h2>
-          <span id="pBadge" class="badge">Modalita Inserimento</span>
-        </div>
-        <div class="grid" style="margin-top:12px">
-          <div><label>Numero Preventivo</label><input id="p_numero" readonly placeholder="Auto-generato"></div>
+        <h2>Richiama Cliente</h2>
+        <select id="prev_selettore_cliente_rapido" onchange="autoCompilaAnagraficaPreventivo()"></select>
+      </div>
+      <div class="card">
+        <div class="grid">
+          <div><label>Numero Preventivo</label><input id="p_numero" readonly></div>
           <div><label>Data emissione</label><input id="p_dataCreazione" type="date"></div>
         </div>
       </div>
-
       <div class="card">
-        <h2>Anagrafica Cliente A (Primo Intestatario)</h2>
+        <h2>Anagrafica Cliente A</h2>
         <div class="grid">
           <div><label>Nome *</label><input id="a_nome" required></div>
           <div><label>Cognome *</label><input id="a_cognome" required></div>
           <div><label>Telefono</label><input id="a_telefono"></div>
           <div><label>Email</label><input id="a_email"></div>
-          <div><label>Via / Piazza e n. civico</label><input id="a_via"></div>
+          <div><label>Via</label><input id="a_via"></div>
           <div><label>Citta</label><input id="a_citta"></div>
           <div><label>CAP</label><input id="a_cap"></div>
           <div><label>Provincia</label><input id="a_prov"></div>
         </div>
       </div>
-
       <div class="card">
-        <h2>Anagrafica Cliente B (Secondo Intestatario)</h2>
+        <h2>Anagrafica Cliente B</h2>
         <div class="grid">
           <div><label>Nome</label><input id="b_nome"></div>
           <div><label>Cognome</label><input id="b_cognome"></div>
           <div><label>Telefono</label><input id="b_telefono"></div>
           <div><label>Email</label><input id="b_email"></div>
-          <div><label>Via / Piazza e n. civico</label><input id="b_via"></div>
+          <div><label>Via</label><input id="b_via"></div>
           <div><label>Citta</label><input id="b_citta"></div>
           <div><label>CAP</label><input id="b_cap"></div>
           <div><label>Provincia</label><input id="b_prov"></div>
         </div>
       </div>
-
       <div class="highlight">
-        <div><label>DATA DEL SERVIZIO (In Evidenza)</label><input type="date" id="p_dataServizio"></div>
-        <div><label>TIPO DI SERVIZIO RICHIESTO</label><input id="p_tipo" placeholder="Es. Matrimonio..."></div>
+        <div><label>DATA DEL SERVIZIO</label><input type="date" id="p_dataServizio"></div>
+        <div><label>TIPO DI SERVIZIO</label><input id="p_tipo"></div>
       </div>
-
       <div class="card">
-        <h2>Luoghi dell'Evento</h2>
-        <div style="margin-bottom:10px;"><label>Chiesa / Luogo Cerimonia</label><input id="p_chiesa"></div>
-        <div><label>Location / Ricevimento</label><input id="p_location"></div>
-      </div>
-
-      <div class="card">
-        <h2>Servizi & Costi a Listino</h2>
-        <div class="grid" style="background:#f5f5f5; padding:10px; border-radius:8px; margin-bottom:12px;">
-          <div><label>Descrizione Servizio / Prodotto</label><input id="add_serv_desc" placeholder="Es. Servizio Fotografico"></div>
-          <div><label>Prezzo (EUR)</label><input id="add_serv_prezzo" type="number" step="0.01" placeholder="0.00"></div>
+        <h2>Luoghi</h2>
+        <div class="grid">
+          <div><label>Cerimonia</label><input id="p_chiesa"></div>
+          <div><label>Ricevimento</label><input id="p_location"></div>
         </div>
-        <button type="button" class="btn secondary" onclick="aggiungiServizioRiga()">Aggiungi Servizio</button>
-
+      </div>
+      <div class="card">
+        <h2>Servizi e Costi</h2>
+        <div class="grid">
+          <div><label>Descrizione</label><input id="add_serv_desc"></div>
+          <div><label>Prezzo (EUR)</label><input id="add_serv_prezzo" type="number" step="0.01"></div>
+        </div>
+        <button class="btn secondary" style="margin-top:10px;" onclick="aggiungiServizioRiga()">Aggiungi</button>
         <table>
-          <thead>
+          <thead><tr><th>Servizio</th><th>Prezzo</th><th>Azione</th></tr></thead>
+          <tbody id="tabella-servizi-body"></tbody>
+        </table>
+        <div class="totCard">
+          <div class="riga"><span>Totale Lordo:</span><span>EUR <span id="lbl_tot_lordo">0.00</span></span></div>
+          <div class="riga"><span>Acconto:</span><input id="p_acconto_versato" type="number" step="0.01" value="0.00" oninput="ricalcolaSpeseTotali()"></div>
+          <div class="riga big"><span>SALDO RESIDUO:</span><span>EUR <span id="lbl_saldo_residuo">0.00</span></span></div>
+        </div>
+      </div>
+      <div class="card">
+        <button class="btn green" onclick="salvaInCloudflareKV()">Salva in Cloud KV</button>
+        <button class="btn secondary" onclick="pulisciCampiPreventivi()">Svuota</button>
+      </div>
+    </section>
+    <section id="mod-archivio-prev" class="hidden">
+      <div class="card">
+        <h2>Archivio Preventivi</h2>
+        <button class="btn secondary" onclick="caricaListaArchivioKV()">Aggiorna</button>
+        <table>
+          <thead><tr><th>Num</th><th>Cliente</th><th>Data</th><th>Tipo</th><th>Totale</th><th>Saldo</th><th>Azione</th></tr></thead>
+          <tbody id="tabella-archivio-body"></tbody>
+        </table>
+      </div>
+    </section>
+    <section id="mod-clienti" class="hidden">
+      <div class="card">
+        <h2>Nuovo Cliente</h2>
+        <div class="grid">
+          <div><label>ID</label><input id="c_id" readonly></div>
+          <div><label>Note</label><input id="c_note"></div>
+        </div>
+      </div>
+      <div class="grid">
