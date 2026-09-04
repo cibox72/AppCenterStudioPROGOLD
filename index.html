@@ -77,6 +77,16 @@
     .badge-stato.preventivo { background: var(--pastel-warning); color: #5a431c; }
     .badge-stato.contratto { background: var(--pastel-success); }
 
+    /* Stili per il tabellone SAL Workflow */
+    .sal-select { padding: 6px 10px; border-radius: 6px; font-weight: 600; font-size: 13px; }
+    .sal-select.fase-0 { background: #f1f5f9; color: #475569; } /* Da scaricare */
+    .sal-select.fase-1 { background: #fee2e2; color: #991b1b; } /* Schede scaricate */
+    .sal-select.fase-2 { background: #fef3c7; color: #92400e; } /* Backup Esterno */
+    .sal-select.fase-3 { background: #e0f2fe; color: #0369a1; } /* Cloud R2 */
+    .sal-select.fase-4 { background: #f3e8ff; color: #6b21a8; } /* In Lavorazione */
+    .sal-select.fase-5 { background: #e0f2fe; color: #047857; } /* In Stampa */
+    .sal-select.fase-6 { background: #dcfce7; color: #166534; } /* Consegnato */
+
     @media print {
       body { background: white; margin: 0; padding: 0; }
       .top-nav-controls, .main-navbar, .elegant-card, button, .action-btn { display: none !important; }
@@ -117,17 +127,7 @@
       <button class="navbar-menu-btn" id="btn-mod-profilo-studio" onclick="mostraModulo('profilo-studio')">⚙️ Configura Studio</button>
       <button class="navbar-menu-btn studio-feature hidden" id="btn-mod-preventivi" onclick="mostraModulo('preventivi')">Nuovo Preventivo</button>
       <button class="navbar-menu-btn studio-feature hidden" id="btn-mod-archivio-prev" onclick="mostraModulo('archivio-prev')">Archivio Documenti</button>
+      <button class="navbar-menu-btn studio-feature hidden" id="btn-mod-workflow" onclick="mostraModulo('workflow')">📈 Workflow SAL & Controllo Memorie</button>
       <button id="btn-nav-fornitore" class="navbar-menu-btn hidden" style="color:var(--pastel-danger);" onclick="mostraModulo('fornitore')">👑 Gestione SaaS Fornitore</button>
-      <span style="margin-left:auto; font-size:13px; font-weight:600; color:var(--text-light);">Studio: <span id="lbl_studio_id" style="color:var(--text-dark);"></span></span>
-    </div>
 
-    <div class="app-container">
-
-      <!-- CONFIGURAZIONE PROFILO STUDIO -->
-      <div id="mod-profilo-studio" class="hidden elegant-card">
-        <h2>Impostazioni Profilo & Configurazione Intestazioni Studio</h2>
-        <p style="color:var(--text-light); font-size:14px;">I dati inseriti in questa scheda verranno stampati automaticamente nelle intestazioni di contratti, preventivi e fatture.</p>
-        
-        <div class="form-grid">
-          <div class="form-group"><label>Denominazione Studio *</label><input type="text" id="st_nome" required /></div>
-          <div class="form-group"><label>Partita IVA / CF *</label><input type="text" id="st_piva" required /></div>
+      
