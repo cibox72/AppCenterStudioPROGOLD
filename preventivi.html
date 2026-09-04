@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>01 Preventivi & Contratti - Premium Gold</title>
+    <title>01 Preventivi & Contratti - AppCenterStudio Premium</title>
     <style>
         :root {
             --carta-zucchero: #7ea4b5;
@@ -69,7 +69,7 @@
 
         .sub-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
         }
 
@@ -99,23 +99,21 @@
         .btn-cont { background-color: var(--verde-salvia); }
         .btn-clear { background-color: #6c757d; }
 
+        .financial-summary {
+            background: #f4f7f6;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+        .financial-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .financial-total { font-size: 16px; font-weight: bold; border-top: 1px solid #ccc; padding-top: 5px; margin-top: 5px; }
+
         /* TABELLE */
-        .table-wrapper { overflow-x: auto; margin-top: 15px; background: #fafafa; border: 1px solid #ddd; border-radius: 6px; max-height: 300px; }
+        .table-wrapper { overflow-x: auto; margin-top: 15px; background: #fafafa; border: 1px solid #ddd; border-radius: 6px; max-height: 400px; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
         th, td { padding: 12px; border-bottom: 1px solid #eee; }
         th { background: #f1f1f1; color: var(--scuro); font-weight: bold; }
-        
-        .assistenza-box {
-            margin-top: 40px;
-            padding: 20px;
-            background-color: #fcf8f2;
-            border: 1px solid var(--rosa-antico);
-            border-radius: 8px;
-        }
-        .assistenza-buttons { display: flex; gap: 15px; margin-top: 15px; }
-        .assistenza-buttons a { flex: 1; text-align: center; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold; color: white; }
-        .btn-anydesk { background-color: #ef4444; }
-        .btn-whatsapp { background-color: #22c55e; }
     </style>
 </head>
 <body>
@@ -136,31 +134,25 @@
 
     <div class="container">
         <div class="main-card">
-            <h1>📋 Gestione Preventivi & Contratti</h1>
-            <p style="color: #666; margin-top: -10px; text-align: center;">Emetti preventivi, sigla contratti generandone l'ID permanente e archivia l'anagrafica anti-omonimia nel database Cloudflare.</p>
+            <h1>📋 Preventivi & Contratti - Avanzato</h1>
+            <p style="color: #666; margin-top: -10px; text-align: center;">Emissione completa con gestione luoghi, sconti analitici, acconti progressivi e piano rateale anti-omonimia.</p>
             
             <div class="grid-layout">
                 
-                <!-- SCHEDA COMPOSIZIONE DOCUMENTO -->
+                <!-- PARTE SINISTRA: FORM DI COMPOSIZIONE -->
                 <div>
-                    <!-- STEP 1: DATI DOCUMENTO -->
+                    <!-- DATI DOCUMENTO -->
                     <div class="form-section">
                         <h3>📄 Dati Documento</h3>
                         <div class="sub-grid">
-                            <div class="form-group">
-                                <label>Numero Documento (Automatico)</label>
-                                <input type="text" id="doc-numero" readonly value="Nuovo preventivo">
-                            </div>
-                            <div class="form-group">
-                                <label>Data Emissione (GG/MM/AAAA) *</label>
-                                <input type="text" id="doc-data" placeholder="Es. 04/09/2026" onblur="validaDataFormato(this)">
-                            </div>
+                            <div class="form-group"><label>Numero Documento</label><input type="text" id="doc-numero" readonly value="Assegnato al salvataggio"></div>
+                            <div class="form-group"><label>Data Emissione (GG/MM/AAAA) *</label><input type="text" id="doc-data" onblur="validaDataFormato(this)"></div>
                         </div>
                     </div>
 
-                    <!-- STEP 2: ANAGRAFICA CLIENTE A -->
+                    <!-- ANAGRAFICA CLIENTE A -->
                     <div class="form-section" style="border-left-color: var(--verde-salvia);">
-                        <h3>👥 Anagrafica Intestatario Principale (Cliente A)</h3>
+                        <h3>👥 Anagrafica Cliente A (Intestatario Principale)</h3>
                         <div class="sub-grid">
                             <div class="form-group"><label>Nome *</label><input type="text" id="cliA-nome"></div>
                             <div class="form-group"><label>Cognome *</label><input type="text" id="cliA-cognome"></div>
@@ -168,41 +160,36 @@
                             <div class="form-group"><label>Email *</label><input type="email" id="cliA-email"></div>
                         </div>
                         <div class="sub-grid">
-                            <div class="form-group"><label>Codice Fiscale / P.IVA</label><input type="text" id="cliA-cf"></div>
+                            <div class="form-group"><label>Via / Piazza e Civico</label><input type="text" id="cliA-indirizzo"></div>
                             <div class="form-group"><label>Città</label><input type="text" id="cliA-citta"></div>
+                            <div class="form-group"><label>CAP</label><input type="text" id="cliA-cap"></div>
+                            <div class="form-group"><label>Provincia</label><input type="text" id="cliA-prov"></div>
                         </div>
                     </div>
 
-                    <!-- STEP 3: ANAGRAFICA CLIENTE B -->
+                    <!-- ANAGRAFICA CLIENTE B -->
                     <div class="form-section" style="border-left-color: var(--rosa-antico);">
-                        <h3>👥 Secondo Intestatario / Coniuge (Cliente B)</h3>
+                        <h3>👥 Anagrafica Cliente B (Secondo Intestatario / Coniuge)</h3>
                         <div class="sub-grid">
                             <div class="form-group"><label>Nome</label><input type="text" id="cliB-nome"></div>
                             <div class="form-group"><label>Cognome</label><input type="text" id="cliB-cognome"></div>
                             <div class="form-group"><label>Telefono</label><input type="text" id="cliB-tel"></div>
                             <div class="form-group"><label>Email</label><input type="email" id="cliB-email"></div>
                         </div>
-                    </div>
-
-                    <!-- STEP 4: DETTAGLI SERVIZIO -->
-                    <div class="form-section">
-                        <h3>💍 Dettagli dell'Evento / Servizio</h3>
                         <div class="sub-grid">
-                            <div class="form-group">
-                                <label>Data del Servizio / Evento (GG/MM/AAAA) *</label>
-                                <input type="text" id="servizio-data" placeholder="Es. 20/06/2027" onblur="validaDataFormato(this)">
-                            </div>
-                            <div class="form-group">
-                                <label>Tipo di Evento</label>
-                                <input type="text" id="servizio-tipo" placeholder="Es. Matrimonio, Comunione, Portfolio">
-                            </div>
+                            <div class="form-group"><label>Via / Piazza e Civico</label><input type="text" id="cliB-indirizzo"></div>
+                            <div class="form-group"><label>Città</label><input type="text" id="cliB-citta"></div>
+                            <div class="form-group"><label>CAP</label><input type="text" id="cliB-cap"></div>
+                            <div class="form-group"><label>Provincia</label><input type="text" id="cliB-prov"></div>
                         </div>
                     </div>
 
-                    <!-- STEP 5: DETTAGLI ECONOMICI -->
+                    <!-- DATA E LUOGHI -->
                     <div class="form-section" style="border-left-color: var(--scuro);">
-                        <h3>💶 Dettagli Economici & Note</h3>
+                        <h3>📍 Data del Servizio & Luoghi dell'Evento</h3>
                         <div class="sub-grid">
-                            <div class="form-group"><label>Prezzo Base Listino (€)</label><input type="number" id="prezzo-base" value="0" oninput="ricalcolaTotaleNetto()"></div>
-                            <div class="form-group"><label>Sconto (%)</label><input type="number" id="prezzo-sconto" value="0" oninput="ricalcolaTotaleNetto()"></div>
-                            <div class="form-group"><label>Totale Netto (€)</label><input type="number" id="prezzo-netto" readonly value="0"></div>
+                            <div class="form-group"><label style="color:var(--carta-zucchero)">DATA DEL SERVIZIO (GG/MM/AAAA) *</label><input type="text" id="servizio-data" placeholder="Es. 15/05/2027" onblur="validaDataFormato(this)"></div>
+                            <div class="form-group"><label style="color:var(--carta-zucchero)">TIPO DI SERVIZIO RICHIESTO *</label><input type="text" id="servizio-tipo" placeholder="Es. Matrimonio"></div>
+                        </div>
+                        <div class="sub-grid">
+                            <div class="form-group"><label>Chiesa / Luogo Cerimonia</label><input type="text" id="luogo-chiesa" placeholder="Nome Chiesa"><input type="text" id="maps-chiesa" placeholder="Link Google Maps" style="margin-top:5px; font-size:11px;"></div>
