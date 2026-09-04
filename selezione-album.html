@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>04 Selezione per Album - AppCenterStudio Premium</title>
+    <style>
+        :root {
+            --carta-zucchero: #7ea4b5;
+            --verde-salvia: #9caf88;
+            --rosa-antico: #dcaeaf;
+            --scuro: #2b3a42;
+            --chiaro: #f4f7f6;
+            --rosso-alert: #e07a7a;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--chiaro);
+            color: var(--scuro);
+            margin: 0;
+            padding: 0;
+        }
+        /* BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA */
+        .navbar {
+            background-color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 3px solid var(--carta-zucchero);
+        }
+        .nav-links { display: flex; gap: 10px; }
+        .nav-links button {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background: white;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--scuro);
+            transition: all 0.2s;
+        }
+        .nav-links button:hover { background: var(--chiaro); }
+        .btn-sync { background-color: #e8f0fe !important; border-color: var(--carta-zucchero) !important; color: var(--carta-zucchero) !important; }
+        
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            margin: 30px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .main-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1, h2, h3, h4 { color: var(--scuro); margin-top: 0; text-align: center; }
+        
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 25px;
+        }
+        @media(max-width: 768px) { .grid-layout { grid-template-columns: 1fr; } }
+
+        .form-section {
+            background: #fdfdfd;
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--carta-zucchero);
+        }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        
+        button.btn-azione {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--carta-zucchero);
+            color: white;
+            border: none;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button.btn-azione:hover { opacity: 0.9; }
+        .btn-wa { background-color: #22c55e !important; }
+        .btn-del { background-color: var(--rosso-alert) !important; }
+
+        .monitor-box {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            background: #fafafa;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+        .client-status-card {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 5px solid var(--verde-salvia);
+            margin-bottom: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .btn-small-group { display: flex; gap: 8px; margin-top: 10px; }
+        .btn-small-group button { flex: 1; padding: 6px; font-size: 12px; font-weight: bold; border-radius: 4px; border: none; cursor: pointer; color: white; }
+
+        /* BOX ASSISTENZA */
+        .assistenza-box {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #fcf8f2;
+            border: 1px solid var(--rosa-antico);
+            border-radius: 8px;
+        }
+        .assistenza-buttons { display: flex; gap: 15px; margin-top: 15px; }
+        .assistenza-buttons a { flex: 1; text-align: center; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold; color: white; }
+        .btn-anydesk { background-color: #ef4444; }
+        .btn-whatsapp { background-color: #22c55e; }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA -->
+    <div class="navbar">
+        <div class="nav-links">
+            <button onclick="window.history.back()">← Indietro</button>
+            <button onclick="location.href='index.html'">🏠 Home</button>
+        </div>
+        <div class="nav-links">
+            <button onclick="eseguiBackupSelezioni()">📥 Backup Globale</button>
+            <button onclick="eseguiRipristinoSelezioni()">📤 Ripristino Globale</button>
+            <button class="btn-sync" id="status-sync">Sync Cloud: OK</button>
+            <button style="background-color: var(--rosa-antico); color: white;" onclick="location.href='index.html'">Esci</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-card">
+            <h1>📸 Cabina Regia: Selezione per Album</h1>
+            <p style="color: #666; margin-top: -10px; text-align: center;">Monitora le scelte dei clienti, genera collegamenti sicuri protetti a tempo e organizza le consegne dei ritocchi.</p>
+            
+            <div class="grid-layout">
+                
+                <!-- PARTE SINISTRA: GENERATORE CONTROLLO -->
+                <div>
+                    <div class="form-section">
+                        <h3>🔗 Genera Link Ordinazione da Casa</h3>
+                        <p style="font-size:12px; color:#666; margin-top:-5px;">Crea una chiave di accesso volatile valida esattamente 7 giorni per la selezione a distanza.</p>
+                        
+                        <div class="form-group">
+                            <label>ID Sposi / Cliente Permanente *</label>
+                            <input type="text" id="sel-cliente-id" placeholder="Es. rossi-2026">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Recapito WhatsApp Cliente (Per invio immediato)</label>
+                            <input type="text" id="sel-cliente-wa" placeholder="Es. 3330000000">
+                        </div>
+
+                        <button class="btn-azione" onclick="generaEInviaLinkCasaLive()">ATTIVA LINK & GENERA MESSAGGIO</button>
+                    </div>
+
+                    <div class="form-section" style="border-left-color: var(--rosa-antico);">
+                        <h3>✨ Consegna File Ritoccati Finali</h3>
+                        <p style="font-size:12px; color:#666; margin-top:-5px;">Carica gli scatti lavorati definitivi. Rimarranno visibili in galleria per 6 mesi.</p>
+                        
+                        <div class="form-group">
+                            <label>Seleziona File JPEG Elaborati *</label>
+                            <input type="file" id="ritocchi-file-input" multiple accept="image/jpeg">
+                        </div>
+                        <button class="btn-azione" style="background-color: var(--rosa-antico);" onclick="caricaFotoRitoccateR2()">CARICA RITOCCHI SU CLOUD</button>
+                        <div id="ritocchi-status" style="margin-top:10px; font-weight:bold; text-align:center; color:var(--carta-zucchero);"></div>
+                    </div>
+                </div>
+
+                <!-- PARTE DESTRA: MONITORAGGIO LIVE CLOUD -->
+                <div>
+                    <h3>👥 Stato Avanzamento Gallerie Sposi</h3>
+                    <div class="monitor-box" id="contenitore-monitor-selezioni">
+                        <p style="text-align:center; color:#999; margin-top:15px;">Caricamento flussi dal cloud server...</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SEZIONE ASSISTENZA SUPREMA -->
+            <div class="assistenza-box">
+                <h3>🛠️ Centro Assistenza Suprema - Selezione & Scadenze</h3>
+                <p style="margin: 0; font-size: 14px; color: #555;">Se riscontri problematiche nella generazione delle chiavi temporanee o nel calcolo automatico dei 7 giorni, richiedi l'intervento immediato dell'amministratore.</p>
+                <div class="assistenza-buttons">
+                    <a href="https://anydesk.com" target="_blank" class="btn-anydesk">🖥️ Connettiti con AnyDesk</a>
+                    <a href="https://wa.me" target="_blank" class="btn-whatsapp">📅 Richiedi Appuntamento su WhatsApp</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+const WORKER_URL = "https://workers.dev";
+const STUDIO_ID = window.currentStudioId || "studio-demo";
+let registroSelezioniCloud = [];
+
+document.addEventListener("DOMContentLoaded", () => {
+    caricaStatoSelezioniCloud();
+});
+
+function ottieniDataFormattataTraSetteGiorni() {
+    const dataScadenza = new Date();
+    dataScadenza.setDate(dataScadenza.getDate() + 7);
+    const g = String(dataScadenza.getDate()).padStart(2, '0');
+    const m = String(dataScadenza.getMonth() + 1).padStart(2, '0');
+    const a = dataScadenza.getFullYear();
+    return `${g}/${m}/${a}`;
+}
+
+async function caricaStatoSelezioniCloud() {
+    try {
+        const response = await fetch(`${WORKER_URL}/api/studio/selezioni-monitor?studioId=${encodeURIComponent(STUDIO_ID)}`);
+        if(response.ok) {
