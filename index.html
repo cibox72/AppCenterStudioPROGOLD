@@ -20,7 +20,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:10px;pa
 nav{display:flex;gap:6px;padding:10px 16px;background:rgba(255,255,255,0.85);border-bottom:1px solid var(--bordo);flex-wrap:wrap;position:sticky;top:0;z-index:5}
 
 /* Elementi Comuni */
-.btn{background:#111;color:#fff;border:none;padding:10px 18px;border-radius999px;font-weight:600;cursor:pointer;font-size:13px;display:inline-block;border-radius:999px}
+.btn{background:#111;color:#fff;border:none;padding:10px 18px;font-weight:600;cursor:pointer;font-size:13px;display:inline-block;border-radius:999px}
 .btn:hover{opacity:.88}
 .btn.secondary{background:#fff;color:#111;border:1px solid #bbb}
 .btn.green{background:var(--primary);color:#fff;border:none}
@@ -50,6 +50,14 @@ th{background:#111;color:#fff}
 .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));gap:15px;margin-top:15px}
 .foto-card{background:#fff;border:1px solid var(--bordo);border-radius:8px;padding:8px;text-align:center;position:relative;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
 .foto-card .cuore{position:absolute;top:8px;left:8px;font-size:22px;cursor:pointer;user-select:none}
+
+/* Stili specifici Workflow */
+.status-select{font-weight:bold;padding:5px;border-radius:6px;cursor:pointer}
+.wf-0{background:#fff3cd;color:#856404} /* Da effettuare */
+.wf-1{background:#cce5ff;color:#004085} /* In selezione */
+.wf-2{background:#e2e3e5;color:#383d41} /* In impaginazione */
+.wf-3{background:#d1ecf1;color:#0c5460} /* In stampa */
+.wf-4{background:#d4edda;color:#155724} /* Consegnato */
 
 @media(max-width:800px){.grid,.highlight,.gallery-grid{grid-template-columns:1fr}}
 </style>
@@ -83,7 +91,7 @@ th{background:#111;color:#fff}
     <button class="btn secondary" onclick="mostraModulo('preventivi')">01 Nuovo Preventivo</button>
     <button class="btn secondary" onclick="mostraModulo('archivio-prev')">📋 Archivio Preventivi</button>
     <button class="btn secondary" onclick="mostraModulo('clienti')">02 Archivio Clienti</button>
-    <button class="btn secondary" onclick="mostraModulo('workflow')">03 Workflow</button>
+    <button class="btn secondary" onclick="mostraModulo('workflow')">03 Workflow SAL</button>
     <button class="btn secondary" onclick="mostraModulo('gru')">04 Selezione Foto & GRU</button>
   </nav>
 
@@ -103,7 +111,6 @@ th{background:#111;color:#fff}
 
     <!-- 📝 MODULO 01: NUOVO PREVENTIVO -->
     <section id="mod-preventivi" class="hidden">
-      <!-- Iniezione Scelta Rapida Cliente Registrato -->
       <div class="card" style="background:linear-gradient(90deg, #1d5c74, #133d4f); color:#fff;">
         <h2 style="color:#fff; border-left-color:#fff;">Caricamento Rapido Anagrafica da Archivio Clienti</h2>
         <label style="color:#eee;">Seleziona un Cliente registrato per compilare i campi all'istante</label>
@@ -165,8 +172,3 @@ th{background:#111;color:#fff}
       <div class="card">
         <h2>Servizi & Costi a Listino</h2>
         <div class="grid" style="background:#f5f5f5; padding:10px; border-radius:8px; margin-bottom:12px;">
-          <div><label>Descrizione Servizio / Prodotto</label><input id="add_serv_desc" placeholder="Es. Servizio Fotografico"></div>
-          <div><label>Prezzo (€)</label><input id="add_serv_prezzo" type="number" step="0.01" placeholder="0.00"></div>
-        </div>
-        <button type="button" class="btn secondary" onclick="aggiungiServizioRiga()">➕ Aggiungi Servizio alla Tabella</button>
-
