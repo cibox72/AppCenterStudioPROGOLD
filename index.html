@@ -48,7 +48,6 @@ th{background:#111;color:#fff}
 
 .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));gap:15px;margin-top:15px}
 .foto-card{background:#fff;border:1px solid var(--bordo);border-radius:8px;padding:8px;text-align:center;position:relative;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-.foto-card .cuore{position:absolute;top:8px;left:8px;font-size:22px;cursor:pointer;user-select:none}
 
 /* Workflow Classes */
 .status-select{font-weight:bold;padding:5px;border-radius:6px;cursor:pointer}
@@ -74,7 +73,8 @@ th{background:#111;color:#fff}
     <label>Password / Token di Accesso</label>
     <input id="login_studio_token" type="password" placeholder="Inserisci il token segreto">
   </div>
-  <button class="btn green" style="width:100%;" id="pulsante-login-principale">🔓 Entra nel Sistema</button>
+  <!-- Ripristinato l'onclick diretto e pulito per massima compatibilità -->
+  <button class="btn green" style="width:100%;" onclick="avviaProceduraLoginDiretta()">🔓 Entra nel Sistema</button>
 </div>
 
 <!-- 🌐 APPLICAZIONE REALE -->
@@ -111,7 +111,7 @@ th{background:#111;color:#fff}
     <!-- 📝 MODULO 01: NUOVO PREVENTIVO -->
     <section id="mod-preventivi" class="hidden">
       <div class="card" style="background:linear-gradient(90deg, #1d5c74, #133d4f); color:#fff;">
-        <h2 style="color:#fff; border-left-color:#fff;">Caricamento Rapido Anagrafica da Archivio Clienti</h2>
+        <h2>Caricamento Rapido Anagrafica da Archivio Clienti</h2>
         <label style="color:#eee;">Seleziona un Cliente registrato per compilare i campi all'istante</label>
         <select id="prev_selettore_cliente_rapido" onchange="autoCompilaAnagraficaPreventivo()" style="color:#111; font-weight:bold; margin-top:5px;">
           <option value="">-- Seleziona un cliente dall'archivio --</option>
