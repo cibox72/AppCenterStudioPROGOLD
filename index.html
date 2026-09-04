@@ -1,122 +1,67 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Suite Premium - AppCenter Studio Gold</title>
-  <style>
-    :root { 
-      --bg-app: #f7f9fa; 
-      --card-white: #ffffff;
-      --pastel-primary: #7ca5b8; 
-      --pastel-primary-hover: #678da0;
-      --pastel-success: #8cb89f; 
-      --pastel-danger: #d99694;  
-      --pastel-warning: #e6c280; 
-      --text-dark: #4a5560;
-      --text-light: #718096;
-      --border-soft: #e2e8f0;
+const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+
+// 1. GESTIONE LOGIN ADMIN (FORNITORE SUPREMO)
+async function loginAdmin(passwordFornita) {
+  try {
+    const response = await fetch(`${WORKER_URL}/api/admin/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: passwordFornita })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      // Sessione volatile: cambiamo solo la vista grafica senza salvare nel localStorage
+      mostraPannelloFornitore();
+      caricaListaStudi(); // Aggiorna la tabella degli studi attivi/spenti
+    } else {
+      alert("Accesso negato: " + data.error);
     }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; background: var(--bg-app); color: var(--text-dark); -webkit-font-smoothing: antialiased; }
-    .hidden { display: none !important; }
+  } catch (error) {
+    alert("Errore di connessione al server");
+  }
+}
+
+// 2. SALVATAGGIO / MODIFICA LICENZA (ACCENDI - SPEGNI - PROVA)
+async function salvaLicenzaStudio() {
+  const idStudio = document.getElementById("id-studio-permanente").value; // Verifica l'ID esatto del tuo input
+  const passwordStudio = document.getElementById("password-studio").value; // Verifica l'ID esatto del tuo input
+  const statoLicenza = document.getElementById("stato-licenza-select").value; // In Prova, Attiva, Sospeso
+  
+  // Determina se l'accesso deve essere acceso o spento
+  const isActive = statoLicenza !== "🔴 Sospeso (Spegni Accesso)";
+
+  try {
+    const response = await fetch(`${WORKER_URL}/api/admin/studio`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        studioId: idStudio,
+        password: passwordStudio,
+        active: isActive
+      })
+    });
+
+    const data = await response.json();
+    if (data.success) {
+      alert("Stato licenza aggiornato con successo sul server!");
+      caricaListaStudi(); // Ricarica l'elenco visivo
+    }
+  } catch (error) {
+    alert("Impossibile aggiornare la licenza");
+  }
+}
+
+// 3. RECUPERO LIVE DEGLI STUDI REGISTRATI
+async function caricaListaStudi() {
+  try {
+    const response = await fetch(`${WORKER_URL}/api/admin/studios`);
+    const studios = await response.json();
     
-    .top-nav-controls { display: flex; gap: 8px; padding: 10px 20px; background: #fff; border-bottom: 1px solid var(--border-soft); align-items: center; }
-    .nav-ctrl-btn { background: #f1f5f9; border: 1px solid var(--border-soft); color: var(--text-dark); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px; }
-    .nav-ctrl-btn:hover { background: var(--border-soft); }
-
-    .main-navbar { background: var(--card-white); padding: 15px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; gap: 10px; align-items: center; border-bottom: 1px solid var(--border-soft); flex-wrap: wrap; }
-    .nav-brand-logo { height: 40px; max-width: 150px; object-fit: contain; margin-right: 15px; }
-    .navbar-menu-btn { background: transparent; border: 1px solid transparent; color: var(--text-light); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; text-decoration: none; }
-    .navbar-menu-btn:hover, .navbar-menu-btn.active { background: #f0f4f8; color: var(--pastel-primary); border-color: #e2e8f0; }
-
-    .app-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; box-sizing: border-box; }
-    .elegant-card { background: var(--card-white); padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); border: 1px solid rgba(0,0,0,0.01); margin-bottom: 25px; }
-    .elegant-card h2 { margin-top: 0; color: var(--text-dark); font-weight: 600; font-size: 22px; border-bottom: 1px solid var(--border-soft); padding-bottom: 12px; margin-bottom: 20px; }
-    
-    .notifica-alert-box { background-color: #fef3c7; border: 1px solid var(--pastel-warning); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: #92400e; }
-
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 15px; }
-    .form-group { display: flex; flex-direction: column; text-align: left; }
-    .form-group label { font-size: 13px; font-weight: 600; color: var(--text-light); margin-bottom: 6px; text-transform: uppercase; }
-    input, select, textarea { padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; color: var(--text-dark); background-color: #fff; width: 100%; box-sizing: border-box; }
-
-    .action-btn { background-color: var(--pastel-primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: background-color 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
-    .action-btn:hover { background-color: var(--pastel-primary-hover); }
-    .action-btn.success { background-color: var(--pastel-success); }
-    .action-btn.danger { background-color: var(--pastel-danger); }
-    .action-btn.warning { background-color: var(--pastel-warning); color: #5a431c; }
-
-    .tabs-cartelle-container { display: flex; gap: 10px; margin: 20px 0; flex-wrap: wrap; }
-    .tab-cartella-btn { padding: 8px 16px; background: #fff; border: 1px solid var(--border-soft); border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text-light); transition: all 0.2s; }
-    .tab-cartella-btn.active { background: var(--pastel-primary); color: white; border-color: var(--pastel-primary); }
-
-    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; background: white; }
-    th, td { border: 1px solid var(--border-soft); padding: 12px; text-align: left; }
-    th { background: #f8fafc; font-weight: 600; color: var(--text-dark); }
-    
-    .grid-foto { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; margin-top: 20px; }
-    .foto-card { background: white; border: 1px solid var(--border-soft); border-radius: 8px; padding: 12px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-    .foto-card img { max-width: 100%; height: 140px; object-fit: cover; border-radius: 6px; display: block; margin: 0 auto 10px auto; background: #f1f5f9; }
-    .cuore-btn { cursor: pointer; padding: 6px 12px; background: #f1f5f9; border-radius: 6px; font-size: 13px; font-weight: bold; border: 1px solid var(--border-soft); margin-bottom: 8px; display: inline-block; user-select: none; }
-    .cuore-btn.selezionato { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
-
-    .login-wrapper { max-width: 420px; margin: 80px auto; padding: 40px 35px; background: var(--card-white); border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.04); text-align: center; border: 1px solid var(--border-soft); }
-    .backup-panel { background: #f8fafc; border: 1px solid var(--border-soft); padding: 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
-    .badge-stato { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-block; color: white; text-align: center; }
-    .badge-stato.active, .badge-stato.attivo, .badge-stato.confermato { background: var(--pastel-success); }
-    .badge-stato.trial, .badge-stato.in_scelta { background: var(--pastel-primary); }
-    .badge-stato.suspended { background: var(--pastel-danger); }
-  </style>
-</head>
-<body>
-
-  <div class="top-nav-controls">
-    <button class="nav-ctrl-btn" onclick="navigazioneIndietro()">⬅️ Indietro</button>
-    <button class="nav-ctrl-btn" onclick="navigazioneAvanti()">➡️ Avanti</button>
-    <button class="nav-ctrl-btn" onclick="tornaAllaHome()">🏠 Home</button>
-    <span style="font-size:12px; color:var(--text-light); margin-left:auto;" id="lbl_stato_salvataggio">Sistema Serverless Connesso</span>
-  </div>
-
-  <div id="login-screen" class="login-wrapper">
-    <img id="app_login_logo_dinamico" src="https://github.io" alt="AppCenter Logo" style="max-width:180px; margin-bottom:20px; display:block; margin-left:auto; margin-right:auto;" />
-    <h2 id="lbl_login_title">Suite Premium SaaS</h2>
-    <p id="lbl_login_subtitle" style="color: var(--text-light); font-size: 14px; margin-bottom: 25px;">Punto di accesso unico per Fornitori, Studi e Clienti.</p>
-    <div class="form-group" style="margin-bottom:15px;"><input type="text" id="login_studio_id" placeholder="ID Studio / ID Cliente Permanente" /></div>
-    <div class="form-group" style="margin-bottom:25px;"><input type="password" id="login_studio_token" placeholder="Password d'Accesso Segreta" /></div>
-    <button class="action-btn" style="width:100%; padding:12px;" onclick="avviaProceduraLoginDiretta()">Accedi al tuo Profilo</button>
-  </div>
-
-  <div id="app-content" class="hidden">
-    <div class="main-navbar">
-      <img id="app_header_logo_studio" class="nav-brand-logo" src="https://placeholder.com" alt="Logo" />
-      
-      <button class="navbar-menu-btn studio-feature hidden active" id="btn-mod-home" onclick="mostraModulo('home')">Pannello Studio</button>
-      <button class="navbar-menu-btn studio-feature hidden" id="btn-mod-profilo-studio" onclick="mostraModulo('profilo-studio')">⚙️ Configura Studio</button>
-      <button class="navbar-menu-btn studio-feature hidden" id="btn-nav-preventivi-link" onclick="reindirizzaModuloPreventiviPrivato()">📋 Gestione Preventivi</button>
-      <button class="navbar-menu-btn studio-feature hidden" id="btn-mod-clienti" onclick="mostraModulo('clienti')">👥 Gestione Credenziali Clienti</button>
-      
-      <button id="btn-nav-fornitore" class="navbar-menu-btn hidden" style="color:var(--pastel-danger); font-weight:bold;" onclick="mostraModulo('fornitore')">👑 DASHBOARD SAAS FORNITORE</button>
-      <button class="navbar-menu-btn cliente-feature hidden" id="btn-mod-client-gallery" onclick="mostraModulo('client-gallery')">📸 La Tua Galleria Foto</button>
-
-      <button class="action-btn danger" style="margin-left:auto; padding:6px 12px; font-size:12px;" onclick="eseguiLogout()">Esci Sessione</button>
-    </div>
-
-    <div class="app-container">
-
-      <!-- DASHBOARD FORNITORE -->
-      <div id="mod-fornitore" class="hidden elegant-card">
-        <h2>👑 Pannello Fornitore Supremo - Gestione Licenze</h2>
-        <div style="background:#f1f5f9; padding:20px; border-radius:8px; margin-bottom:30px;">
-          <h4>Crea / Modifica Stato Licenza Studio</h4>
-          <div class="form-grid">
-            <div class="form-group"><label>ID Studio Permanente *</label><input type="text" id="f_new_id" /></div>
-            <div class="form-group"><label>Password Studio *</label><input type="password" id="f_new_token" /></div>
-            <div class="form-group">
-              <label>Stato</label>
-              <select id="f_stato_studio">
-                <option value="trial">⏳ In Prova Omaggio (15 GG)</option>
-                <option value="active">🟢 Licenza Attiva</option>
-                <option value="suspended">🔴 Sospeso (Spegni Accesso)</option>
-              </select>
-            </div>
-          </div>
+    // Qui inserisci la logica per stampare a schermo l'elenco degli studi (Accesi/Spenti)
+    console.log("Studi caricati dal server:", studios);
+  } catch (error) {
+    console.error("Errore nel caricamento della lista studi");
+  }
+}
