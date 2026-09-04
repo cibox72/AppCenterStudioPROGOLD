@@ -48,7 +48,6 @@
         .card-login.admin { border-color: var(--rosa-antico); }
         .card-login.studio { border-color: var(--verde-salvia); }
         
-        /* STRUTTURA DEL CAMPO PASSWORD CON OCCHIO HARDWARE */
         .password-container {
             position: relative;
             display: flex;
@@ -86,6 +85,14 @@
         .btn-admin { background-color: var(--rosa-antico); }
         .btn-studio { background-color: var(--verde-salvia); }
         .pannello-privato { display: none; margin-top: 30px; padding: 20px; border-radius: 8px; background: #fafafa; border: 1px solid #ddd; }
+        
+        /* Griglia Bottoni Cabina Regia */
+        .grid-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -95,7 +102,7 @@
         <h2 style="color: var(--carta-zucchero); margin: 0;">✨ AppCenter Studio Premium</h2>
     </div>
 
-    <!-- SEZIONE INGRESSI PUBBLICI (VISTI DA TUTTI) -->
+    <!-- SEZIONE INGRESSI PUBBLICI -->
     <div id="sezione-ingressi">
         <h1>Punto di accesso unico per Fornitori, Studi e Clienti</h1>
         <div class="grid-ingressi">
@@ -149,10 +156,10 @@
         <button onclick="esciSessione()">Esci Sessione</button>
     </div>
 
-    <!-- 📸 PANNELLO STUDIO FOTOGRAFICO -->
+    <!-- 📸 PANNELLO STUDIO FOTOGRAFICO (CABINA DI REGIA CON LINK AGGIORNATI) -->
     <div id="pannello-studio" class="pannello-privato">
         <h2>📸 Cabina di Regia Studio: <span id="nome-studio-attivo"></span></h2>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:20px;">
+        <div class="grid-dashboard">
             <button class="btn-studio" onclick="location.href='preventivi.html'">📋 Preventivi & Contratti</button>
             <button class="btn-studio" onclick="location.href='agenda.html'">📅 Agenda Studio</button>
             <button class="btn-studio" onclick="location.href='workflow.html'">⚙️ Workflow Produzione</button>
@@ -161,7 +168,10 @@
             <button class="btn-studio" onclick="location.href='clienti-foto.html'">📸 Carica Foto R2</button>
             <button class="btn-studio" onclick="location.href='selezione-album.html'">🔗 Monitor Selezioni</button>
             <button class="btn-studio" onclick="location.href='email.html'">📩 Email & Modelli</button>
+            <button class="btn-studio" onclick="location.href='gru.html'">⚙️ Utilità GRU</button>
+            <button class="btn-studio" onclick="location.href='lista-regali.html'">🎁 Lista Nozze</button>
         </div>
+        <br>
         <button onclick="esciSessione()">Esci Sessione</button>
     </div>
 </div>
@@ -169,7 +179,6 @@
 <script>
 const WORKER_URL = "https://workers.dev";
 
-// Funzione Hardware per mostrare/nascondere la password al clic dell'occhio
 function invertiVisibilitaPassword(inputId, elementoOcchio) {
     const input = document.getElementById(inputId);
     if (input.type === "password") {
@@ -185,11 +194,13 @@ function mostraPannelloFornitore() {
     document.getElementById("sezione-ingressi").style.display = "none";
     document.getElementById("pannello-admin").style.display = "block";
 }
+
 function mostraPannelloStudio() {
     document.getElementById("sezione-ingressi").style.display = "none";
     document.getElementById("pannello-studio").style.display = "block";
     document.getElementById("nome-studio-attivo").innerText = window.currentStudioId;
 }
+
 function esciSessione() { location.reload(); }
 
 async function azioneLoginAdmin() {
@@ -201,9 +212,14 @@ async function azioneLoginAdmin() {
             body: JSON.stringify({ password })
         });
         const d = await r.json();
-        if (d.success) mostraPannelloFornitore();
-        else alert("Password errata!");
-    } catch { alert("Errore di connessione a Cloudflare"); }
+        if (d.success) {
+            mostraPannelloFornitore();
+        } else {
+            alert("Password errata!");
+        }
+    } catch { 
+        alert("Errore di connessione a Cloudflare"); 
+    }
 }
 
 async function salvaLicenzaStudio() {
@@ -220,7 +236,9 @@ async function salvaLicenzaStudio() {
         });
         const d = await r.json();
         if(d.success) alert("Licenza Studio registrata sul server!");
-    } catch { alert("Errore di salvataggio licenza"); }
+    } catch { 
+        alert("Errore di salvataggio licenza"); 
+    }
 }
 
 async function azioneLoginStudio() {
@@ -229,12 +247,3 @@ async function azioneLoginStudio() {
     try {
         const r = await fetch(`${WORKER_URL}/api/studio/login`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ studioId, password })
-        });
-        const d = await r.json();
-        if (d.success) {
-            window.currentStudioId = studioId;
-            window.localStorage.setItem("studioId", studioId); // Bridge per le sotto-pagine
-            mostraPannelloStudio();
-        } else alert("Errore: " + d.error);
