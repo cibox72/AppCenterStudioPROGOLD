@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>08 Ricevute - AppCenterStudio Premium</title>
+    <style>
+        :root {
+            --carta-zucchero: #7ea4b5;
+            --verde-salvia: #9caf88;
+            --rosa-antico: #dcaeaf;
+            --scuro: #2b3a42;
+            --chiaro: #f4f7f6;
+            --rosso-alert: #e07a7a;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--chiaro);
+            color: var(--scuro);
+            margin: 0;
+            padding: 0;
+        }
+        /* BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA */
+        .navbar {
+            background-color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 3px solid var(--carta-zucchero);
+        }
+        .nav-links { display: flex; gap: 10px; }
+        .nav-links button {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background: white;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--scuro);
+            transition: all 0.2s;
+        }
+        .nav-links button:hover { background: var(--chiaro); }
+        .btn-sync { background-color: #e8f0fe !important; border-color: var(--carta-zucchero) !important; color: var(--carta-zucchero) !important; }
+        
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            margin: 30px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .main-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1, h2, h3, h4 { color: var(--scuro); margin-top: 0; text-align: center; }
+        
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 25px;
+        }
+        @media(max-width: 768px) { .grid-layout { grid-template-columns: 1fr; } }
+
+        .form-section {
+            background: #fdfdfd;
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--carta-zucchero);
+        }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        
+        .btn-panel { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-panel button { flex: 1; padding: 12px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; color: white; }
+        .btn-save { background-color: var(--verde-salvia); }
+        .btn-clear { background-color: #6c757d; }
+
+        .archivio-box {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            background: #fafafa;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .ricevuta-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 5px solid var(--carta-zucchero);
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            cursor: pointer;
+        }
+
+        /* BOX ASSISTENZA */
+        .assistenza-box {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #fcf8f2;
+            border: 1px solid var(--rosa-antico);
+            border-radius: 8px;
+        }
+        .assistenza-buttons { display: flex; gap: 15px; margin-top: 15px; }
+        .assistenza-buttons a { flex: 1; text-align: center; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold; color: white; }
+        .btn-anydesk { background-color: #ef4444; }
+        .btn-whatsapp { background-color: #22c55e; }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA -->
+    <div class="navbar">
+        <div class="nav-links">
+            <button onclick="window.history.back()">← Indietro</button>
+            <button onclick="location.href='index.html'">🏠 Home</button>
+        </div>
+        <div class="nav-links">
+            <button onclick="eseguiBackupRicevute()">📥 Backup Globale</button>
+            <button onclick="eseguiRipristinoRicevute()">📤 Ripristino Globale</button>
+            <button class="btn-sync" id="status-sync">Sync Cloud: OK</button>
+            <button style="background-color: var(--rosa-antico); color: white;" onclick="location.href='index.html'">Esci</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-card">
+            <h1>🧾 Gestione Cassa & Ricevute Live</h1>
+            <p style="color: #666; margin-top: -10px; text-align: center;">Emetti ricevute valide per servizi fotografici, stampe e video. Archiviazione immediata sul cloud multi-tenant.</p>
+            
+            <div class="grid-layout">
+                
+                <!-- COMPOSIZIONE NUOVA RICEVUTA -->
+                <div>
+                    <div class="form-section">
+                        <h3>✍️ Nuova Ricevuta</h3>
+                        
+                        <div class="form-group">
+                            <label>Nome Cliente *</label>
+                            <input type="text" id="ric-cliente" placeholder="Es. Mario Rossi">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tipo di Servizio *</label>
+                            <input type="text" id="ric-servizio" placeholder="Es. Servizio Fotografico Matrimoniale / Stampa Album">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Ricevo (€) *</label>
+                            <input type="number" id="ric-importo" placeholder="0.00" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Data Pagamento (GG/MM/AAAA) *</label>
+                            <input type="text" id="ric-data" placeholder="Es. 04/09/2026" onblur="validaDataFormato(this)">
+                        </div>
+
+                        <div class="form-group">
+                            <label>A titolo di acconto / saldo per...</label>
+                            <select id="ric-causale">
+                                <option value="Acconto">🧾 Acconto iniziale</option>
+                                <option value="Acconto Intermedio">🧾 Acconto intermedio</option>
+                                <option value="Saldo">💰 Saldo finale</option>
+                                <option value="Pagamento Intero">💶 Pagamento in un'unica soluzione</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Note aggiuntive (Facoltative)</label>
+                            <textarea id="ric-note" rows="2" placeholder="Es. Pagamento ricevuto tramite POS / Contanti..."></textarea>
+                        </div>
+
+                        <div class="btn-panel">
+                            <button class="btn-save" onclick="salvaRicevutaCloud()">Salva Ricevuta</button>
+                            <button class="btn-clear" onclick="pulisciFormRicevute()">Annulla / Nuova</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ARCHIVIO STORICO RICEVUTE -->
+                <div>
+                    <h3>📋 Archivio Storico Ricevute Emesse</h3>
+                    <div class="archivio-box" id="contenitore-ricevute-cloud">
+                        <p style="text-align:center; color:#999; margin-top:15px;">Nessuna ricevuta emessa in archivio.</p>
+                    </div>
+
+                    <!-- BLOCCO DETTAGLIO VISIVO -->
+                    <div id="dettaglio-ricevuta-box" style="display:none; margin-top:20px; padding:15px; background:white; border:1px solid var(--carta-zucchero); border-radius:6px;">
+                        <h4 style="margin-top:0; color:var(--carta-zucchero);">Dettaglio Documento di Cassa</h4>
+                        <p id="det-ric-testo" style="font-size:14px; line-height:1.6; background:#fafafa; padding:10px; border-radius:4px; white-space:pre-wrap;"></p>
+                        <button class="btn-clear" style="width:auto; padding:5px 15px;" onclick="document.getElementById('dettaglio-ricevuta-box').style.display='none'">Chiudi</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SEZIONE ASSISTENZA SUPREMA -->
+            <div class="assistenza-box">
+                <h3>🛠️ Centro Assistenza Suprema - Gestione Cassa</h3>
+                <p style="margin: 0; font-size: 14px; color: #555;">Se riscontri anomalie nel salvataggio dei flussi finanziari o nell'indicizzazione cronologica, richiedi supporto.</p>
+                <div class="assistenza-buttons">
+                    <a href="https://anydesk.com" target="_blank" class="btn-anydesk">🖥️ Connettiti con AnyDesk</a>
+                    <a href="https://wa.me" target="_blank" class="btn-whatsapp">📅 Richiedi Appuntamento su WhatsApp</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+const WORKER_URL = "https://workers.dev";
