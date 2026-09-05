@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Plancia Fornitore Supremo - AppCenterStudio</title>
+    <style>
+        :root {
+            --primary: #8e44ad;
+            --primary-light: #f4ecf7;
+            --primary-hover: #7d3c98;
+            --secondary: #2980b9;
+            --secondary-light: #ebf5fb;
+            --bg-color: #fdfbfb;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e8e8e8;
+            --alert-bg: #fff8e1;
+            --alert-border: #ffb74d;
+            --alert-text: #e65100;
+            --success: #27ae60;
+            --success-light: #eafaf1;
+            --danger: #e74c3c;
+            --danger-light: #fdedec;
+            --shadow: 0 2px 12px rgba(0,0,0,0.06);
+            --shadow-hover: 0 4px 20px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            background: var(--primary-light);
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
+
+        .nav-btn {
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .sync-status { font-size: 13px; color: var(--success); font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .sync-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
+
+        .page-header { text-align: center; margin-bottom: 32px; }
+        .page-header h1 { font-size: 28px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+        .page-header p { color: var(--text-light); font-size: 15px; }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .card-title { font-size: 18px; font-weight: 600; color: var(--primary); margin-bottom: 6px; }
+        .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .stat-value { font-size: 36px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+        .stat-label { font-size: 13px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .stat-card.alert .stat-value { color: var(--alert-text); }
+        .stat-card.success .stat-value { color: var(--success); }
+        .stat-card.danger .stat-value { color: var(--danger); }
+
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 11px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: white;
+        }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.1); }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-whatsapp { background: #25D366; color: white; }
+        .btn-outline { background: white; color: var(--primary); border: 1px solid var(--primary); }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+
+        .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-color); }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        th { background: var(--primary-light); color: var(--primary); font-weight: 600; text-transform: uppercase; font-size: 12px; }
+        tr:hover td { background: #fafafa; }
+
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        .badge-success { background: var(--success-light); color: var(--success); }
+        .badge-warning { background: var(--alert-bg); color: var(--alert-text); }
+        .badge-danger { background: var(--danger-light); color: var(--danger); }
+
+        .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: flex; align-items: center; gap: 12px; min-width: 300px; animation: slideIn 0.3s ease; border-left: 4px solid var(--success);
+        }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast-icon { font-size: 20px; }
+        .toast-message { flex: 1; font-size: 14px; }
+
+        @media (max-width: 768px) {
+            .top-bar { flex-direction: column; gap: 10px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+      <!-- TOP BAR -->
+    <div class="top-bar">
+        <div class="nav-left">
+            <button class="nav-btn" onclick="window.history.back()">← Indietro</button>
+            <button class="nav-btn" onclick="window.location.href='index.html'">🏠 Home</button>
+        </div>
+        <div class="nav-right">
+            <button class="nav-btn" onclick="eseguiBackupGlobale()">📥 Backup Globale</button>
+            <button class="nav-btn" onclick="eseguiRipristinoGlobale()">📤 Ripristino Globale</button>
+            <div class="sync-status"><span class="sync-dot"></span> Sync Cloud: OK</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>👑 Plancia Fornitore Supremo</h1>
+            <p>CRM, Gestione Licenze, Monitoraggio Scadenze e Invio Offerte Commerciali</p>
+        </div>
+
+        <!-- DASHBOARD STATS -->
+        <div class="stats-grid">
+            <div class="stat-card success">
+                <div class="stat-value" id="stat-attivi">0</div>
+                <div class="stat-label">Studi Attivi</div>
+            </div>
+            <div class="stat-card alert">
+                <div class="stat-value" id="stat-prova">0</div>
+                <div class="stat-label">In Prova (15gg)</div>
+            </div>
+            <div class="stat-card danger">
+                <div class="stat-value" id="stat-scadenza">0</div>
+                <div class="stat-label">In Scadenza (30gg)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-totale">0</div>
+                <div class="stat-label">Totale Registrati</div>
+            </div>
+        </div>
+
+        <!-- SEZIONE 1: REGISTRA NUOVO STUDIO -->
+        <div class="card">
+            <div class="card-title"> Registra Nuovo Studio Fotografico</div>
+            <div class="card-subtitle">Inserisci i dati anagrafici. Verranno usati per i PDF e per la fatturazione.</div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nome Studio / Ragione Sociale *</label>
+                    <input type="text" id="studioNome" placeholder="es. Studio Fotografico Rossi">
+                </div>
+                <div class="form-group">
+                    <label>P.IVA / Codice Fiscale *</label>
+                    <input type="text" id="studioPiva" placeholder="01234567890">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email PEC / Principale *</label>
+                    <input type="email" id="studioEmail" placeholder="studio@pec.it">
+                </div>
+                <div class="form-group">
+                    <label>Telefono / WhatsApp *</label>
+                    <input type="tel" id="studioTel" placeholder="+39 333 1234567">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Indirizzo Completo</label>
+                    <input type="text" id="studioIndirizzo" placeholder="Via Roma 1, Milano">
+                </div>
+                <div class="form-group">
+                    <label>Stato Licenza Iniziale</label>
+                    <select id="studioStato">
+                        <option value="prova">⏳ In Prova Omaggio (15 GG)</option>
+                        <option value="attiva">🟢 Licenza Attiva (Pagata)</option>
+                        <option value="sospesa">🔴 Sospeso</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>ID Studio (Generato automaticamente)</label>
+                    <input type="text" id="studioId" readonly style="background: #f8f9fa;">
+                </div>
+                <div class="form-group">
+                    <label>Password Accesso (Generata automaticamente)</label>
+                    <input type="text" id="studioPwd" readonly style="background: #f8f9fa;">
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="salvaNuovoStudio()">💾 REGISTRA STUDIO NEL CRM</button>
+                <button class="btn btn-outline" onclick="generaCredenziali()">🔄 Rigenera ID/Password</button>
+            </div>
+        </div>
+
+        <!-- SEZIONE 2: ARCHIVIO STUDI (CRM) -->
+        <div class="card">
+            <div class="card-title">📋 Archivio Studi Registrati (CRM)</div>
+            <div class="card-subtitle">Gestisci licenze, invia offerte e monitora lo stato di tutti i tuoi clienti.</div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome Studio</th>
+                            <th>ID Unico</th>
+                            <th>Contatto</th>
+                            <th>Stato</th>
+                            <th>Scadenza</th>
+                            <th>Azioni Rapide</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabellaStudi">
+                        <tr><td colspan="6" style="text-align:center; color: #7f8c8d;">Caricamento dati dal cloud...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SEZIONE 3: AZIONI RAPIDE FORNITORE -->
+        <div class="card">
+            <div class="card-title">🚀 Invio Offerta Commerciale Rapida</div>
+            <div class="card-subtitle">Genera un messaggio precompilato per WhatsApp o Email con il tuo link PayPal.</div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Seleziona Studio Destinazione</label>
+                    <select id="selectStudioOfferta">
+                        <option value="">-- Seleziona uno studio --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tipo di Offerta</label>
+                    <select id="tipoOfferta">
+                        <option value="premium">Suite Premium Gold (Annuale)</option>
+                        <option value="base">Suite Base (Mensile)</option>
+                        <option value="upgrade">Upgrade Pacchetto Foto</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-whatsapp" onclick="inviaOffertaWhatsApp()">📱 Invia Offerta via WhatsApp (3347507656)</button>
+                <button class="btn btn-primary" onclick="inviaOffertaPayPal()"> Invia Link PayPal (appcenterstudiopremium@gmail.com)</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+        <script>
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        let studiRegistrati = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            generaCredenziali();
+            caricaStudiDaCloud();
+        });
+
+        function generaCredenziali() {
+            const randomId = 'studio-' + Math.random().toString(36).substring(2, 8);
+            const randomPwd = Math.random().toString(36).substring(2, 10) + '!A1';
+            document.getElementById('studioId').value = randomId;
+            document.getElementById('studioPwd').value = randomPwd;
+        }
+
+        async function salvaNuovoStudio() {
+            const nome = document.getElementById('studioNome').value.trim();
+            const piva = document.getElementById('studioPiva').value.trim();
+            const email = document.getElementById('studioEmail').value.trim();
+            const tel = document.getElementById('studioTel').value.trim();
+            const indirizzo = document.getElementById('studioIndirizzo').value.trim();
+            const stato = document.getElementById('studioStato').value;
+            const id = document.getElementById('studioId').value;
+            const pwd = document.getElementById('studioPwd').value;
+
+            if (!nome || !email || !tel) {
+                mostraToast('Compila i campi obbligatori (Nome, Email, Telefono)', 'error');
+                return;
+            }
+
+            const nuovoStudio = {
+                id, pwd, nome, piva, email, tel, indirizzo, stato,
+                dataRegistrazione: new Date().toISOString(),
+                scadenza: calcolaScadenza(stato)
+            };
+
+            try {
+                // Salvataggio su Cloudflare KV
+                await fetch(`${WORKER_URL}/api/admin/studio`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(nuovoStudio)
+                });
+                
+                // Salvataggio locale immediato per UI
+                studiRegistrati.push(nuovoStudio);
+                localStorage.setItem('crm_studi', JSON.stringify(studiRegistrati));
+                
+                mostraToast(`Studio "${nome}" registrato con successo!`, 'success');
+                aggiornaTabella();
+                aggiornaStats();
+                pulisciForm();
+            } catch (error) {
+                mostraToast('Errore di connessione al server', 'error');
+            }
+        }
+
+        function calcolaScadenza(stato) {
+            const data = new Date();
+            if (stato === 'prova') data.setDate(data.getDate() + 15);
+            else if (stato === 'attiva') data.setFullYear(data.getFullYear() + 1);
+            else data.setDate(data.getDate() - 1);
+            return data.toISOString();
+        }
+
+        function caricaStudiDaCloud() {
+            // In un ambiente reale, qui faresti una GET al Worker. 
+            // Per ora usiamo il localStorage per testare l'UI immediatamente.
+            const datiLocali = localStorage.getItem('crm_studi');
+            if (datiLocali) {
+                studiRegistrati = JSON.parse(datiLocali);
+                aggiornaTabella();
+                aggiornaStats();
+            } else {
+                document.getElementById('tabellaStudi').innerHTML = '<tr><td colspan="6" style="text-align:center;">Nessuno studio registrato. Inizia aggiungendone uno sopra.</td></tr>';
+            }
+        }
+
+        function aggiornaTabella() {
+            const tbody = document.getElementById('tabellaStudi');
+            const selectOfferta = document.getElementById('selectStudioOfferta');
+            
+            tbody.innerHTML = '';
+            selectOfferta.innerHTML = '<option value="">-- Seleziona uno studio --</option>';
+
+            studiRegistrati.forEach((studio, index) => {
+                const badgeClass = studio.stato === 'attiva' ? 'badge-success' : studio.stato === 'prova' ? 'badge-warning' : 'badge-danger';
+                const statoText = studio.stato === 'attiva' ? 'Attivo' : studio.stato === 'prova' ? 'In Prova' : 'Sospeso';
+                const dataScad = new Date(studio.scadenza).toLocaleDateString('it-IT');
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${studio.nome}</strong><br><small style="color:#7f8c8d">${studio.piva}</small></td>
+                        <td><code>${studio.id}</code></td>
+                        <td>${studio.email}<br><small>${studio.tel}</small></td>
+                        <td><span class="badge ${badgeClass}">${statoText}</span></td>
+                        <td>${dataScad}</td>
+                        <td>
+                            <button class="btn btn-success" style="padding:6px 12px; font-size:12px;" onclick="cambiaStato(${index}, 'attiva')">Attiva</button>
+                            <button class="btn btn-danger" style="padding:6px 12px; font-size:12px;" onclick="cambiaStato(${index}, 'sospesa')">Sospendi</button>
+                        </td>
+                    </tr>
+                `;
+
+                selectOfferta.innerHTML += `<option value="${index}">${studio.nome}</option>`;
+            });
+        }
+
+        function cambiaStato(index, nuovoStato) {
+            studiRegistrati[index].stato = nuovoStato;
+            studiRegistrati[index].scadenza = calcolaScadenza(nuovoStato);
+            localStorage.setItem('crm_studi', JSON.stringify(studiRegistrati));
+            aggiornaTabella();
+            aggiornaStats();
+            mostraToast(`Stato aggiornato a: ${nuovoStato}`, 'success');
+        }
+
+        function aggiornaStats() {
+            const attivi = studiRegistrati.filter(s => s.stato === 'attiva').length;
+            const prova = studiRegistrati.filter(s => s.stato === 'prova').length;
+            const oggi = new Date();
+            const tra30gg = new Date(); tra30gg.setDate(oggi.getDate() + 30);
+            const inScadenza = studiRegistrati.filter(s => {
+                const scad = new Date(s.scadenza);
+                return s.stato !== 'sospesa' && scad <= tra30gg && scad >= oggi;
+            }).length;
+
+            document.getElementById('stat-attivi').textContent = attivi;
+            document.getElementById('stat-prova').textContent = prova;
+            document.getElementById('stat-scadenza').textContent = inScadenza;
+            document.getElementById('stat-totale').textContent = studiRegistrati.length;
+        }
+
+        function inviaOffertaWhatsApp() {
+            const index = document.getElementById('selectStudioOfferta').value;
+            if (index === "") { mostraToast('Seleziona uno studio', 'error'); return; }
+            
+            const studio = studiRegistrati[index];
+            const offerta = document.getElementById('tipoOfferta').value;
+            const messaggio = `Ciao ${studio.nome}! Sono Luigi di AppCenter Studio. Ti invio l'offerta per la ${offerta}. Link pagamento: https://paypal.me/appcenterstudiopremium. Fammi sapere!`;
+            const url = `https://wa.me/393347507656?text=${encodeURIComponent(messaggio)}`;
+            window.open(url, '_blank');
+        }
+
+        function inviaOffertaPayPal() {
+            const index = document.getElementById('selectStudioOfferta').value;
+            if (index === "") { mostraToast('Seleziona uno studio', 'error'); return; }
+            
+            const studio = studiRegistrati[index];
+            const subject = encodeURIComponent(`Offerta AppCenter Studio per ${studio.nome}`);
+            const body = encodeURIComponent(`Gentile ${studio.nome},\n\ntrovi il link per il pagamento della licenza qui:\nhttps://www.paypal.com/paypalme/appcenterstudiopremium\n\nCordiali saluti,\nLuigi - Fornitore Supremo`);
+            window.open(`mailto:${studio.email}?subject=${subject}&body=${body}`);
+        }
+
+        function pulisciForm() {
+            document.getElementById('studioNome').value = '';
+            document.getElementById('studioPiva').value = '';
+            document.getElementById('studioEmail').value = '';
+            document.getElementById('studioTel').value = '';
+            document.getElementById('studioIndirizzo').value = '';
+            generaCredenziali();
+        }
+
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? '✅' : '❌'}</div><div class="toast-message">${msg}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        function eseguiBackupGlobale() {
+            const dati = { crm: studiRegistrati, data: new Date().toISOString() };
+            const blob = new Blob([JSON.stringify(dati, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `backup-crm-fornitore-${Date.now()}.json`;
+            a.click();
+            mostraToast('Backup CRM scaricato', 'success');
+        }
+
+        function eseguiRipristinoGlobale() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = e => {
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    try {
+                        const dati = JSON.parse(ev.target.result);
+                        if (dati.crm) {
+                            studiRegistrati = dati.crm;
+                            localStorage.setItem('crm_studi', JSON.stringify(studiRegistrati));
+                            aggiornaTabella();
+                            aggiornaStats();
+                            mostraToast('CRM ripristinato con successo', 'success');
+                        }
+                    } catch { mostraToast('File non valido', 'error'); }
+                };
+                reader.readAsText(e.target.files[0]);
+            };
+            input.click();
+        }
+    </script>
+</body>
+</html>
