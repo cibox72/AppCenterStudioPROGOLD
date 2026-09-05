@@ -6,89 +6,139 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Plancia Fornitore Supremo - AppCenterStudio</title>
+    <title>Plancia Fornitore - AppCenterStudioPROGOLD</title>
     <style>
         :root {
             --primary: #8e44ad;
             --primary-light: #f4ecf7;
-            --primary-hover: #7d3c98;
+            --primary-gradient: linear-gradient(135deg, #a569bd 0%, #8e44ad 50%, #6c3483 100%);
             --secondary: #2980b9;
-            --secondary-light: #ebf5fb;
-            --bg-color: #fdfbfb;
+            --secondary-gradient: linear-gradient(135deg, #5dade2 0%, #2980b9 50%, #1a5276 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #f4ecf7 50%, #ebf5fb 100%);
             --card-bg: #ffffff;
+            --card-gradient: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
             --text-main: #2c3e50;
             --text-light: #7f8c8d;
             --border-color: #e8e8e8;
-            --alert-bg: #fff8e1;
-            --alert-border: #ffb74d;
-            --alert-text: #e65100;
             --success: #27ae60;
             --success-light: #eafaf1;
+            --warning: #f39c12;
+            --warning-light: #fef9e7;
             --danger: #e74c3c;
             --danger-light: #fdedec;
-            --shadow: 0 2px 12px rgba(0,0,0,0.06);
-            --shadow-hover: 0 4px 20px rgba(0,0,0,0.1);
-            --radius: 12px;
+            --shadow: 0 4px 16px rgba(142, 68, 173, 0.08);
+            --shadow-hover: 0 8px 32px rgba(142, 68, 173, 0.15);
+            --radius: 14px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg-color);
+            background: var(--bg-gradient);
+            background-attachment: fixed;
             color: var(--text-main);
             line-height: 1.6;
             min-height: 100vh;
         }
 
         .top-bar {
-            background: var(--primary-light);
-            padding: 14px 24px;
+            background: var(--primary-gradient);
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 2px 12px rgba(142, 68, 173, 0.2);
         }
 
         .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
 
         .nav-btn {
-            background: white;
-            border: 1px solid var(--border-color);
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(255,255,255,0.3);
             padding: 8px 16px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
-            color: var(--text-main);
+            color: var(--primary);
             transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
         }
 
-        .nav-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        .nav-btn:hover { 
+            background: white; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
 
-        .sync-status { font-size: 13px; color: var(--success); font-weight: 500; display: flex; align-items: center; gap: 6px; }
-        .sync-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
+        .sync-status { 
+            font-size: 13px; 
+            color: white; 
+            font-weight: 500; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+        }
+        .sync-dot { 
+            width: 8px; 
+            height: 8px; 
+            background: #2ecc71; 
+            border-radius: 50%; 
+            animation: pulse 2s infinite; 
+            box-shadow: 0 0 8px rgba(46, 204, 113, 0.6);
+        }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
 
-        .page-header { text-align: center; margin-bottom: 32px; }
-        .page-header h1 { font-size: 28px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+        .page-header { 
+            text-align: center; 
+            margin-bottom: 32px;
+            padding: 24px;
+            background: var(--card-gradient);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+        .page-header h1 { 
+            font-size: 28px; 
+            font-weight: 700; 
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px; 
+        }
         .page-header p { color: var(--text-light); font-size: 15px; }
 
         .card {
-            background: var(--card-bg);
+            background: var(--card-gradient);
             border-radius: var(--radius);
             padding: 28px;
             margin-bottom: 24px;
             box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
         }
 
-        .card-title { font-size: 18px; font-weight: 600; color: var(--primary); margin-bottom: 6px; }
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .card-title { 
+            font-size: 18px; 
+            font-weight: 600; 
+            color: var(--primary); 
+            margin-bottom: 6px; 
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+        }
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
 
         .stats-grid {
@@ -99,19 +149,40 @@
         }
 
         .stat-card {
-            background: white;
+            background: var(--card-gradient);
             border-radius: var(--radius);
             padding: 24px;
             box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
             text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
         }
 
         .stat-value { font-size: 36px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
         .stat-label { font-size: 13px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
-        .stat-card.alert .stat-value { color: var(--alert-text); }
+        .stat-card.alert .stat-value { color: var(--warning); }
+        .stat-card.alert::before { background: linear-gradient(90deg, #f39c12, #e67e22); }
         .stat-card.success .stat-value { color: var(--success); }
+        .stat-card.success::before { background: linear-gradient(90deg, #27ae60, #229954); }
         .stat-card.danger .stat-value { color: var(--danger); }
+        .stat-card.danger::before { background: linear-gradient(90deg, #e74c3c, #c0392b); }
 
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; }
@@ -123,8 +194,13 @@
             font-size: 14px;
             font-family: inherit;
             background: white;
+            transition: all 0.2s ease;
         }
-        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.1); }
+        .form-group input:focus, .form-group select:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.1); 
+        }
 
         .btn {
             padding: 12px 24px;
@@ -140,23 +216,40 @@
             gap: 8px;
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-success { background: var(--success); color: white; }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-whatsapp { background: #25D366; color: white; }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); color: white; }
+        .btn-anydesk { background: linear-gradient(135deg, #ef443b, #c0392b); color: white; }
         .btn-outline { background: white; color: var(--primary); border: 1px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
 
-        .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-color); }
+        .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-color); background: white; }
         table { width: 100%; border-collapse: collapse; background: white; }
         th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
-        th { background: var(--primary-light); color: var(--primary); font-weight: 600; text-transform: uppercase; font-size: 12px; }
+        th { 
+            background: var(--primary-light); 
+            color: var(--primary); 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
         tr:hover td { background: #fafafa; }
 
-        .badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
-        .badge-success { background: var(--success-light); color: var(--success); }
-        .badge-warning { background: var(--alert-bg); color: var(--alert-text); }
-        .badge-danger { background: var(--danger-light); color: var(--danger); }
+        .badge { 
+            display: inline-block; 
+            padding: 5px 12px; 
+            border-radius: 6px; 
+            font-size: 11px; 
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .badge-success { background: var(--success); color: white; }
+        .badge-warning { background: var(--warning); color: white; }
+        .badge-danger { background: var(--danger); color: white; }
 
         .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
         .toast {
@@ -168,6 +261,41 @@
         .toast-icon { font-size: 20px; }
         .toast-message { flex: 1; font-size: 14px; }
 
+        .footer-branding {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-branding strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .teleassistenza-box {
+            background: linear-gradient(135deg, #fdedec 0%, #fadbd8 100%);
+            border-left: 4px solid var(--danger);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .teleassistenza-box h4 {
+            color: var(--danger);
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .teleassistenza-box p {
+            color: var(--text-main);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
         @media (max-width: 768px) {
             .top-bar { flex-direction: column; gap: 10px; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
@@ -176,22 +304,22 @@
     </style>
 </head>
 <body>
-      <!-- TOP BAR -->
+    <!-- TOP BAR -->
     <div class="top-bar">
         <div class="nav-left">
-            <button class="nav-btn" onclick="window.history.back()">← Indietro</button>
-            <button class="nav-btn" onclick="window.location.href='index.html'">🏠 Home</button>
+            <button class="nav-btn" onclick="window.history.back()">Indietro</button>
+            <button class="nav-btn" onclick="window.location.href='index.html'">Home</button>
         </div>
         <div class="nav-right">
-            <button class="nav-btn" onclick="eseguiBackupGlobale()">📥 Backup Globale</button>
-            <button class="nav-btn" onclick="eseguiRipristinoGlobale()">📤 Ripristino Globale</button>
+            <button class="nav-btn" onclick="eseguiBackupGlobale()">Backup Globale</button>
+            <button class="nav-btn" onclick="eseguiRipristinoGlobale()">Ripristino Globale</button>
             <div class="sync-status"><span class="sync-dot"></span> Sync Cloud: OK</div>
         </div>
     </div>
 
     <div class="container">
         <div class="page-header">
-            <h1>👑 Plancia Fornitore Supremo</h1>
+            <h1>Plancia Fornitore Supremo</h1>
             <p>CRM, Gestione Licenze, Monitoraggio Scadenze e Invio Offerte Commerciali</p>
         </div>
 
@@ -217,7 +345,7 @@
 
         <!-- SEZIONE 1: REGISTRA NUOVO STUDIO -->
         <div class="card">
-            <div class="card-title"> Registra Nuovo Studio Fotografico</div>
+            <div class="card-title">Registra Nuovo Studio Fotografico</div>
             <div class="card-subtitle">Inserisci i dati anagrafici. Verranno usati per i PDF e per la fatturazione.</div>
             
             <div class="form-row">
@@ -250,9 +378,9 @@
                 <div class="form-group">
                     <label>Stato Licenza Iniziale</label>
                     <select id="studioStato">
-                        <option value="prova">⏳ In Prova Omaggio (15 GG)</option>
-                        <option value="attiva">🟢 Licenza Attiva (Pagata)</option>
-                        <option value="sospesa">🔴 Sospeso</option>
+                        <option value="prova">PROVA - Omaggio 15 GG</option>
+                        <option value="attiva">ATTIVO - Licenza Pagata</option>
+                        <option value="sospesa">SOSPESO - Accesso Bloccato</option>
                     </select>
                 </div>
             </div>
@@ -269,14 +397,14 @@
             </div>
 
             <div class="btn-group">
-                <button class="btn btn-primary" onclick="salvaNuovoStudio()">💾 REGISTRA STUDIO NEL CRM</button>
-                <button class="btn btn-outline" onclick="generaCredenziali()">🔄 Rigenera ID/Password</button>
+                <button class="btn btn-primary" onclick="salvaNuovoStudio()">REGISTRA STUDIO NEL CRM</button>
+                <button class="btn btn-outline" onclick="generaCredenziali()">Rigenera ID/Password</button>
             </div>
         </div>
 
         <!-- SEZIONE 2: ARCHIVIO STUDI (CRM) -->
         <div class="card">
-            <div class="card-title">📋 Archivio Studi Registrati (CRM)</div>
+            <div class="card-title">Archivio Studi Registrati (CRM)</div>
             <div class="card-subtitle">Gestisci licenze, invia offerte e monitora lo stato di tutti i tuoi clienti.</div>
             
             <div class="table-container">
@@ -300,7 +428,7 @@
 
         <!-- SEZIONE 3: AZIONI RAPIDE FORNITORE -->
         <div class="card">
-            <div class="card-title">🚀 Invio Offerta Commerciale Rapida</div>
+            <div class="card-title">Invio Offerta Commerciale Rapida</div>
             <div class="card-subtitle">Genera un messaggio precompilato per WhatsApp o Email con il tuo link PayPal.</div>
             
             <div class="form-row">
@@ -321,9 +449,29 @@
             </div>
 
             <div class="btn-group">
-                <button class="btn btn-whatsapp" onclick="inviaOffertaWhatsApp()">📱 Invia Offerta via WhatsApp (3347507656)</button>
-                <button class="btn btn-primary" onclick="inviaOffertaPayPal()"> Invia Link PayPal (appcenterstudiopremium@gmail.com)</button>
+                <button class="btn btn-whatsapp" onclick="inviaOffertaWhatsApp()">Invia Offerta via WhatsApp (3347507656)</button>
+                <button class="btn btn-primary" onclick="inviaOffertaPayPal()">Invia Link PayPal (appcenterstudiopremium@gmail.com)</button>
             </div>
+        </div>
+
+        <!-- SEZIONE 4: TELEASSISTENZA ANYDESK -->
+        <div class="card">
+            <div class="card-title">Teleassistenza Remota con AnyDesk</div>
+            <div class="card-subtitle">Supporto tecnico in tempo reale per gli studi clienti.</div>
+            
+            <div class="teleassistenza-box">
+                <h4>Assistenza Remota Immediata</h4>
+                <p>Per risolvere problemi tecnici in tempo reale, lo studio può scaricare AnyDesk e connettersi al nostro supporto. Il codice di connessione verrà fornito telefonicamente o via WhatsApp.</p>
+                <div class="btn-group" style="margin-top: 10px;">
+                    <a href="https://anydesk.com/it/downloads" target="_blank" class="btn btn-anydesk" style="text-decoration: none;">Scarica AnyDesk (Sito Ufficiale)</a>
+                    <button class="btn btn-warning" onclick="contattaWhatsApp()">Contatta Supporto via WhatsApp</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER BRANDING -->
+        <div class="footer-branding">
+            Sviluppato e gestito da <strong>AppCenterStudioPROGOLD</strong> - Piattaforma SaaS per Studi Fotografici Professionali
         </div>
     </div>
 
@@ -366,14 +514,12 @@
             };
 
             try {
-                // Salvataggio su Cloudflare KV
                 await fetch(`${WORKER_URL}/api/admin/studio`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(nuovoStudio)
                 });
                 
-                // Salvataggio locale immediato per UI
                 studiRegistrati.push(nuovoStudio);
                 localStorage.setItem('crm_studi', JSON.stringify(studiRegistrati));
                 
@@ -395,8 +541,6 @@
         }
 
         function caricaStudiDaCloud() {
-            // In un ambiente reale, qui faresti una GET al Worker. 
-            // Per ora usiamo il localStorage per testare l'UI immediatamente.
             const datiLocali = localStorage.getItem('crm_studi');
             if (datiLocali) {
                 studiRegistrati = JSON.parse(datiLocali);
@@ -415,8 +559,18 @@
             selectOfferta.innerHTML = '<option value="">-- Seleziona uno studio --</option>';
 
             studiRegistrati.forEach((studio, index) => {
-                const badgeClass = studio.stato === 'attiva' ? 'badge-success' : studio.stato === 'prova' ? 'badge-warning' : 'badge-danger';
-                const statoText = studio.stato === 'attiva' ? 'Attivo' : studio.stato === 'prova' ? 'In Prova' : 'Sospeso';
+                let badgeClass, statoText;
+                if (studio.stato === 'attiva') {
+                    badgeClass = 'badge-success';
+                    statoText = 'ATTIVO';
+                } else if (studio.stato === 'prova') {
+                    badgeClass = 'badge-warning';
+                    statoText = 'PROVA';
+                } else {
+                    badgeClass = 'badge-danger';
+                    statoText = 'SOSPESO';
+                }
+                
                 const dataScad = new Date(studio.scadenza).toLocaleDateString('it-IT');
 
                 tbody.innerHTML += `
@@ -468,7 +622,7 @@
             
             const studio = studiRegistrati[index];
             const offerta = document.getElementById('tipoOfferta').value;
-            const messaggio = `Ciao ${studio.nome}! Sono Luigi di AppCenter Studio. Ti invio l'offerta per la ${offerta}. Link pagamento: https://paypal.me/appcenterstudiopremium. Fammi sapere!`;
+            const messaggio = `Ciao ${studio.nome}! Sono il supporto di AppCenterStudioPROGOLD. Ti invio l'offerta per la ${offerta}. Link pagamento: https://paypal.me/appcenterstudiopremium. Fammi sapere!`;
             const url = `https://wa.me/393347507656?text=${encodeURIComponent(messaggio)}`;
             window.open(url, '_blank');
         }
@@ -478,9 +632,14 @@
             if (index === "") { mostraToast('Seleziona uno studio', 'error'); return; }
             
             const studio = studiRegistrati[index];
-            const subject = encodeURIComponent(`Offerta AppCenter Studio per ${studio.nome}`);
-            const body = encodeURIComponent(`Gentile ${studio.nome},\n\ntrovi il link per il pagamento della licenza qui:\nhttps://www.paypal.com/paypalme/appcenterstudiopremium\n\nCordiali saluti,\nLuigi - Fornitore Supremo`);
+            const subject = encodeURIComponent(`Offerta AppCenterStudioPROGOLD per ${studio.nome}`);
+            const body = encodeURIComponent(`Gentile ${studio.nome},\n\ntrovi il link per il pagamento della licenza qui:\nhttps://www.paypal.com/paypalme/appcenterstudiopremium\n\nCordiali saluti,\nAppCenterStudioPROGOLD - Supporto Tecnico`);
             window.open(`mailto:${studio.email}?subject=${subject}&body=${body}`);
+        }
+
+        function contattaWhatsApp() {
+            const messaggio = encodeURIComponent('Salve, ho bisogno di assistenza tecnica per AppCenterStudioPROGOLD. Il mio ID studio è: ');
+            window.open(`https://wa.me/393347507656?text=${messaggio}`, '_blank');
         }
 
         function pulisciForm() {
@@ -496,7 +655,7 @@
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? '✅' : '❌'}</div><div class="toast-message">${msg}</div>`;
+            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? 'OK' : 'ERRORE'}</div><div class="toast-message">${msg}</div>`;
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 4000);
         }
