@@ -3,240 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- DISTRUGGI CACHE: Forza il browser a scaricare sempre l'ultima versione -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <title>Suite Premium - AppCenter Studio Gold</title>
     <style>
-        :root {
-            --carta-zucchero: #7ea4b5;
-            --verde-salvia: #9caf88;
-            --rosa-antico: #dcaeaf;
-            --scuro: #2b3a42;
-            --chiaro: #f4f7f6;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--chiaro);
-            color: var(--scuro);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .container {
-            max-width: 900px;
-            width: 100%;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        h1, h2, h3, h4 { color: var(--scuro); text-align: center; }
-        .grid-ingressi {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        .card-login {
-            border: 2px solid var(--carta-zucchero);
-            border-radius: 8px;
-            padding: 20px;
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-        }
-        .card-login.admin { border-color: var(--rosa-antico); }
-        .card-login.studio { border-color: var(--verde-salvia); }
-        
-        .password-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-            width: 100%;
-        }
-        .password-container input {
-            width: 100%;
-            padding-right: 40px;
-        }
-        .toggle-password-eye {
-            position: absolute;
-            right: 10px;
-            cursor: pointer;
-            user-select: none;
-            font-size: 18px;
-        }
-        input, select, button {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: var(--carta-zucchero);
-            color: white;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        button:hover { opacity: 0.9; }
-        .btn-admin { background-color: var(--rosa-antico); }
-        .btn-studio { background-color: var(--verde-salvia); }
-        .pannello-privato { display: none; margin-top: 30px; padding: 20px; border-radius: 8px; background: #fafafa; border: 1px solid #ddd; }
-        .grid-dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
-            margin-top: 20px;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: #f4f6f9; padding: 20px; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1, h2 { text-align: center; color: #2c3e50; }
+        .section { margin-bottom: 30px; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; }
+        .input-group { margin-bottom: 15px; position: relative; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: 600; }
+        .input-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .eye-icon { position: absolute; right: 10px; top: 32px; cursor: pointer; font-size: 18px; user-select: none; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: background 0.3s; }
+        .btn-primary { background-color: #3498db; color: white; }
+        .btn-primary:hover { background-color: #2980b9; }
+        .btn-supreme { background-color: #9b59b6; color: white; }
+        .btn-supreme:hover { background-color: #8e44ad; }
+        .hidden { display: none; }
+        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+        .menu-item { background: #ecf0f1; padding: 10px; text-align: center; border-radius: 6px; text-decoration: none; color: #2c3e50; font-weight: 600; }
+        .menu-item:hover { background: #d5dbdb; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="logo-box">
-        <h2 style="color: var(--carta-zucchero); margin: 0;">✨ AppCenter Studio Premium</h2>
-    </div>
+    <h1>✨ AppCenter Studio Premium</h1>
+    <p style="text-align: center;">Punto di accesso unico per Fornitori, Studi e Clienti</p>
 
-    <div id="sezione-ingressi">
-        <h1>Punto di accesso unico per Fornitori, Studi e Clienti</h1>
-        <div class="grid-ingressi">
-            
-            <div class="card-login">
-                <h3>👥 Accesso Clienti (Sposi)</h3>
-                <input type="text" id="id-sposi" placeholder="ID Sposi Permanente *">
-                <div class="password-container">
-                    <input type="password" id="pass-sposi" placeholder="Password Galleria *">
-                    <span class="toggle-password-eye" onclick="invertiVisibilitaPassword('pass-sposi', this)">👁️</span>
-                </div>
-                <button onclick="azioneLoginCliente()">Sblocca Galleria ❤️</button>
-            </div>
-
-            <div class="card-login studio">
-                <h3>📸 Cabina Regia Studio</h3>
-                <input type="text" id="id-studio" placeholder="ID Studio Permanente *">
-                <div class="password-container">
-                    <input type="password" id="pass-studio" placeholder="Password Studio *">
-                    <span class="toggle-password-eye" onclick="invertiVisibilitaPassword('pass-studio', this)">👁️</span>
-                </div>
-                <button class="btn-studio" onclick="azioneLoginStudio()">Entra in Plancia</button>
-            </div>
-
-            <div class="card-login admin">
-                <h3>👑 Fornitore Supremo</h3>
-                <div class="password-container">
-                    <input type="password" id="pass-admin" placeholder="Chiave di Accesso Suprema *">
-                    <span class="toggle-password-eye" onclick="invertiVisibilitaPassword('pass-admin', this)">👁️</span>
-                </div>
-                <button class="btn-admin" onclick="azioneLoginAdmin()">Accedi al Server</button>
-            </div>
+    <!-- SEZIONE 1: ACCESSO CLIENTI -->
+    <div class="section">
+        <h2>👥 Accesso Clienti (Sposi)</h2>
+        <div class="input-group">
+            <label>ID Evento</label>
+            <input type="text" id="cliente-id" placeholder="Inserisci ID Evento">
         </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="cliente-pwd" placeholder="Password">
+            <span class="eye-icon" onclick="invertiVisibilitaPassword('cliente-pwd')">👁️</span>
+        </div>
+        <button class="btn btn-primary" onclick="azioneLoginCliente()">Sblocca Galleria ❤️</button>
     </div>
 
-    <div id="pannello-admin" class="pannello-privato">
+    <!-- SEZIONE 2: CABINA REGIA STUDIO -->
+    <div class="section">
+        <h2>📸 Cabina Regia Studio</h2>
+        <div class="input-group">
+            <label>ID Studio</label>
+            <input type="text" id="studio-id" placeholder="es. studio-gold">
+        </div>
+        <div class="input-group">
+            <label>Password Studio</label>
+            <input type="password" id="studio-pwd" placeholder="Password">
+            <span class="eye-icon" onclick="invertiVisibilitaPassword('studio-pwd')">👁️</span>
+        </div>
+        <button class="btn btn-primary" onclick="azioneLoginStudio()">Entra in Plancia</button>
+    </div>
+
+    <!-- SEZIONE 3: FORNITORE SUPREMO -->
+    <div class="section">
+        <h2>👑 Fornitore Supremo</h2>
+        <div class="input-group">
+            <label>Password Suprema</label>
+            <input type="password" id="admin-pwd" placeholder="Password Fornitore">
+            <span class="eye-icon" onclick="invertiVisibilitaPassword('admin-pwd')">👁️</span>
+        </div>
+        <button class="btn btn-supreme" onclick="azioneLoginAdmin()">Accedi al Server</button>
+    </div>
+
+    <!-- SEZIONE 4: PANNELLO FORNITORE (Nascosto di default) -->
+    <div id="pannello-fornitore" class="section hidden">
         <h2>👑 Pannello Fornitore Supremo - Gestione Licenze</h2>
-        <h4>Crea / Modifica Stato Licenza Studio</h4>
-        <input type="text" id="id-studio-permanente" placeholder="ID Studio Permanente *">
-        <input type="text" id="password-studio" placeholder="Password Studio *">
-        <select id="stato-licenza-select">
-            <option value="PROVA">⏳ In Prova Omaggio (15 GG)</option>
-            <option value="ATTIVA" selected>🟢 Licenza Attiva</option>
-            <option value="SOSPESA">🔴 Sospeso (Spegni Accesso)</option>
-        </select>
-        <button class="btn-admin" onclick="salvaLicenzaStudio()">SALVA CONFIGURAZIONE SERVER</button>
-        <button onclick="esciSessione()">Esci Sessione</button>
+        <p>Crea / Modifica Stato Licenza Studio</p>
+        <div class="input-group">
+            <label>ID Studio da configurare</label>
+            <input type="text" id="nuovo-studio-id" placeholder="es. studio-gold">
+        </div>
+        <div class="input-group">
+            <label>Stato Licenza</label>
+            <select id="stato-licenza" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+                <option value="prova">⏳ In Prova Omaggio (15 GG)</option>
+                <option value="attiva">🟢 Licenza Attiva</option>
+                <option value="sospesa">🔴 Sospeso (Spegni Accesso)</option>
+            </select>
+        </div>
+        <button class="btn btn-supreme" onclick="azioneSalvaLicenza()">SALVA CONFIGURAZIONE SERVER</button>
+        <button class="btn" style="background: #e74c3c; color: white; margin-top: 10px;" onclick="document.getElementById('pannello-fornitore').classList.add('hidden')">Esci Sessione</button>
     </div>
 
-    <div id="pannello-studio" class="pannello-privato">
-        <h2>📸 Cabina di Regia Studio: <span id="nome-studio-attivo"></span></h2>
-        <div class="grid-dashboard">
-            <button class="btn-studio" onclick="location.href='preventivi.html'">📋 Preventivi & Contratti</button>
-            <button class="btn-studio" onclick="location.href='agenda.html'">📅 Agenda Studio</button>
-            <button class="btn-studio" onclick="location.href='workflow.html'">⚙️ Workflow Produzione</button>
-            <button class="btn-studio" onclick="location.href='negozio.html'">🛒 Negozio & Ordini</button>
-            <button class="btn-studio" onclick="location.href='ricevute.html'">🧾 Cassa & Ricevute</button>
-            <button class="btn-studio" onclick="location.href='clienti-foto.html'">📸 Carica Foto R2</button>
-            <button class="btn-studio" onclick="location.href='selezione-album.html'">🔗 Monitor Selezioni</button>
-            <button class="btn-studio" onclick="location.href='email.html'">📩 Email & Modelli</button>
-            <button class="btn-studio" onclick="location.href='gru.html'">⚙️ Utilità GRU</button>
-            <button class="btn-studio" onclick="location.href='lista-regali.html'">🎁 Lista Nozze</button>
+    <!-- SEZIONE 5: CABINA DI REGIA (Nascosta di default) -->
+    <div id="pannello-studio" class="section hidden">
+        <h2>📸 Cabina di Regia Studio</h2>
+        <div class="menu-grid">
+            <a href="preventivi.html" class="menu-item">📋 Preventivi & Contratti</a>
+            <a href="agenda.html" class="menu-item">📅 Agenda Studio</a>
+            <a href="workflow.html" class="menu-item">⚙️ Workflow Produzione</a>
+            <a href="negozio.html" class="menu-item">🛒 Negozio & Ordini</a>
+            <a href="ricevute.html" class="menu-item">🧾 Cassa & Ricevute</a>
+            <a href="carica.html" class="menu-item">📸 Carica Foto R2</a>
+            <a href="selezioni.html" class="menu-item">🔗 Monitor Selezioni</a>
+            <a href="email.html" class="menu-item">📩 Email & Modelli</a>
+            <a href="gru.html" class="menu-item">⚙️ Utilità GRU</a>
+            <a href="lista-nozze.html" class="menu-item">🎁 Lista Nozze</a>
         </div>
-        <br>
-        <button onclick="esciSessione()">Esci Sessione</button>
+        <button class="btn" style="background: #e74c3c; color: white; margin-top: 15px;" onclick="document.getElementById('pannello-studio').classList.add('hidden')">Esci Sessione</button>
     </div>
+
 </div>
 
+<!-- SCRIPT INLINE: Distrugge qualsiasi problema di cache e definisce le funzioni mancanti -->
 <script>
-const WORKER_URL = "https://workers.dev";
+    // URL REALE DEL TUO WORKER (Sostituisci se il tuo sottodominio è diverso)
+    const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
 
-function invertiVisibilitaPassword(inputId, elementoOcchio) {
-    const input = document.getElementById(inputId);
-    if (input.type === "password") {
-        input.type = "text";
-        elementoOcchio.innerText = "🙈";
-    } else {
-        input.type = "password";
-        elementoOcchio.innerText = "👁️";
+    // 1. FUNZIONE PER INVERTIRE LA VISIBILITÀ DELLA PASSWORD
+    function invertiVisibilitaPassword(idInput) {
+        const input = document.getElementById(idInput);
+        if (input.type === "password") {
+            input.type = "text";
+        } else {
+            input.type = "password";
+        }
     }
-}
 
-function mostraPannelloFornitore() {
-    document.getElementById("sezione-ingressi").style.display = "none";
-    document.getElementById("pannello-admin").style.display = "block";
-}
+    // 2. FUNZIONE LOGIN ADMIN (Fornitore Supremo)
+    async function azioneLoginAdmin() {
+        const pwd = document.getElementById('admin-pwd').value;
+        const btn = event.target;
+        btn.textContent = "Verifica in corso...";
+        
+        try {
+            const response = await fetch(WORKER_URL + "/api/admin/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password: pwd })
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                alert("✅ Accesso Fornitore Supremo riuscito!");
+                document.getElementById('pannello-fornitore').classList.remove('hidden');
+                // Scrolla verso il pannello
+                document.getElementById('pannello-fornitore').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert("❌ Password errata: " + (data.error || "Controlla le credenziali"));
+            }
+        } catch (e) {
+            alert("❌ Errore di connessione al Worker: " + e.message);
+        } finally {
+            btn.textContent = "Accedi al Server";
+        }
+    }
 
-function mostraPannelloStudio() {
-    document.getElementById("sezione-ingressi").style.display = "none";
-    document.getElementById("pannello-studio").style.display = "block";
-    document.getElementById("nome-studio-attivo").innerText = window.currentStudioId;
-}
+    // 3. FUNZIONE LOGIN STUDIO
+    async function azioneLoginStudio() {
+        const studioId = document.getElementById('studio-id').value;
+        const pwd = document.getElementById('studio-pwd').value;
+        const btn = event.target;
+        btn.textContent = "Verifica in corso...";
 
-function esciSessione() { location.reload(); }
+        try {
+            const response = await fetch(WORKER_URL + "/api/studio/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ studioId: studioId, password: pwd })
+            });
+            const data = await response.json();
 
-async function azioneLoginAdmin() {
-    const password = document.getElementById("pass-admin").value;
-    try {
-        const r = await fetch(`${WORKER_URL}/api/admin/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ password })
-        });
-        const d = await r.json();
-        if (d.success) mostraPannelloFornitore();
-        else alert("Password errata!");
-    } catch { alert("Errore di connessione a Cloudflare"); }
-}
+            if (data.success) {
+                alert("✅ Accesso Cabina Regia riuscito! Benvenuto " + data.studioId);
+                document.getElementById('pannello-studio').classList.remove('hidden');
+                document.getElementById('pannello-studio').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert("❌ Errore: " + (data.error || "Credenziali non valide"));
+            }
+        } catch (e) {
+            alert("❌ Errore di connessione: " + e.message);
+        } finally {
+            btn.textContent = "Entra in Plancia";
+        }
+    }
 
-async function salvaLicenzaStudio() {
-    const studioId = document.getElementById("id-studio-permanente").value;
-    const password = document.getElementById("password-studio").value;
-    const stato = document.getElementById("stato-licenza-select").value;
-    const active = stato !== "SOSPESA";
+    // 4. FUNZIONE LOGIN CLIENTE
+    async function azioneLoginCliente() {
+        const clienteId = document.getElementById('cliente-id').value;
+        const pwd = document.getElementById('cliente-pwd').value;
+        alert("Funzione login cliente attivata per ID: " + clienteId + "\n(Implementare reindirizzamento a gallery.html)");
+        // Qui puoi aggiungere il fetch a WORKER_URL + "/api/cliente/login"
+    }
 
-    try {
-        const r = await fetch(`${WORKER_URL}/api/admin/studio`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ studioId, password, active })
-        });
-        const d = await r.json();
-        if(d.success) alert("Licenza Studio registrata sul server!");
-    } catch { alert("Errore di salvataggio licenza"); }
-}
+    // 5. FUNZIONE SALVA LICENZA (Admin)
+    async function azioneSalvaLicenza() {
+        const studioId = document.getElementById('nuovo-studio-id').value;
+        const stato = document.getElementById('stato-licenza').value;
+        
+        if (!studioId) {
+            alert("Inserisci un ID Studio valido");
+            return;
+        }
 
-async function azioneLoginStudio() {
-    const studioId = document.getElementById("id-studio").value;
-    const password = document.getElementById("pass-studio").value;
-    try {
-        const r = await fetch(`${WORKER_URL}/api/studio/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ studioId, password })
-        });
-        const d = await r.json();
-        if (d.success) {
-            window.currentStudioId = studioId;
-            window.localStorage.setItem("studioId", studioId);
-            mostraPannelloStudio();
-        } else alert("Errore: " + d.error);
+        try {
+            const response = await fetch(WORKER_URL + "/api/admin/studio", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    studioId: studioId, 
+                    stato: stato,
+                    dataAggiornamento: new Date().toISOString()
+                })
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                alert("✅ Configurazione server salvata con successo per: " + studioId);
+            } else {
+                alert("❌ Errore nel salvataggio");
+            }
+        } catch (e) {
+            alert("❌ Errore di connessione: " + e.message);
+        }
+    }
+</script>
+
+</body>
+</html>
