@@ -110,7 +110,7 @@
                 <input type="text" id="id-sposi" placeholder="ID Sposi Permanente *">
                 <div class="password-container">
                     <input type="password" id="pass-sposi" placeholder="Password Galleria *">
-                    <span class="toggle-password-eye" onclick="invertiVisibilitaPassword('pass-sposi', this)">👁️</span>
+                    <span class="toggle-password-eye" onclick="const i = document.getElementById('pass-sposi'); if(i.type==='password'){i.type='text'; this.innerText='🙈';}else{i.type='password'; this.innerText='👁️';}">👁️</span>
                 </div>
                 <button onclick="azioneLoginCliente()">Sblocca Galleria ❤️</button>
             </div>
@@ -121,17 +121,17 @@
                 <input type="text" id="id-studio" placeholder="ID Studio Permanente *">
                 <div class="password-container">
                     <input type="password" id="pass-studio" placeholder="Password Studio *">
-                    <span class="toggle-password-eye" onclick="invertiVisibilitaPassword('pass-studio', this)">👁️</span>
+                    <span class="toggle-password-eye" onclick="const i = document.getElementById('pass-studio'); if(i.type==='password'){i.type='text'; this.innerText='🙈';}else{i.type='password'; this.innerText='👁️';}">👁️</span>
                 </div>
                 <button class="btn-studio" onclick="azioneLoginStudio()">Entra in Plancia</button>
             </div>
 
-            <!-- ACCESSO FORNITORE -->
+            <!-- ACCESSO FORNITORE (AZIONE DIRETTA BLINDATA) -->
             <div class="card-login admin">
                 <h3>👑 Fornitore Supremo</h3>
                 <div class="password-container">
                     <input type="password" id="pass-admin" placeholder="Chiave di Accesso Suprema *">
-                    <span class="toggle-password-eye" onclick="invertiVisibilitaPassword('pass-admin', this)">👁️</span>
+                    <span class="toggle-password-eye" onclick="const i = document.getElementById('pass-admin'); if(i.type==='password'){i.type='text'; this.innerText='🙈';}else{i.type='password'; this.innerText='👁️';}">👁️</span>
                 </div>
                 <button class="btn-admin" onclick="azioneLoginAdmin()">Accedi al Server</button>
             </div>
@@ -150,7 +150,7 @@
             <option value="SOSPESA">🔴 Sospeso (Spegni Accesso)</option>
         </select>
         <button class="btn-admin" onclick="salvaLicenzaStudio()">SALVA CONFIGURAZIONE SERVER</button>
-        <button onclick="esciSessione()">Esci Sessione</button>
+        <button onclick="location.reload()">Esci Sessione</button>
     </div>
 
     <!-- 📸 PANNELLO STUDIO FOTOGRAFICO -->
@@ -169,81 +169,63 @@
             <button class="btn-studio" onclick="location.href='lista-regali.html'">🎁 Lista Nozze</button>
         </div>
         <br>
-        <button onclick="esciSessione()">Esci Sessione</button>
+        <button onclick="location.reload()">Esci Sessione</button>
     </div>
 </div>
 
 <script>
 const WORKER_URL = "https://workers.dev";
 
-function invertiVisibilitaPassword(inputId, elementoOcchio) {
-    const input = document.getElementById(inputId);
-    if (input.type === "password") {
-        input.type = "text";
-        elementoOcchio.innerText = "🙈";
-    } else {
-        input.type = "password";
-        elementoOcchio.innerText = "👁️";
-    }
-}
-
 function mostraPannelloFornitore() {
     document.getElementById("sezione-ingressi").style.display = "none";
     document.getElementById("pannello-admin").style.display = "block";
 }
-
 function mostraPannelloStudio() {
     document.getElementById("sezione-ingressi").style.display = "none";
     document.getElementById("pannello-studio").style.display = "block";
     document.getElementById("nome-studio-attivo").innerText = window.currentStudioId;
 }
 
-function esciSessione() { location.reload(); }
-
 async function azioneLoginAdmin() {
-    const password = document.getElementById("pass-admin").value;
+    const p = document.getElementById("pass-admin").value;
     try {
         const r = await fetch(`${WORKER_URL}/api/admin/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ password })
+            body: JSON.stringify({ password: p })
         });
         const d = await r.json();
-        if (d.success) {
-            mostraPannelloFornitore();
-        } else {
-            alert("Password errata!");
-        }
-    } catch { 
-        alert("Errore di connessione a Cloudflare"); 
-    }
+        if (d.success) mostraPannelloFornitore();
+        else alert("Password errata!");
+    } catch { alert("Errore connessione server"); }
 }
 
 async function salvaLicenzaStudio() {
-    const studioId = document.getElementById("id-studio-permanente").value;
-    const password = document.getElementById("password-studio").value;
-    const stato = document.getElementById("stato-licenza-select").value;
-    const active = stato !== "SOSPESA";
-
+    const sId = document.getElementById("id-studio-permanente").value;
+    const p = document.getElementById("password-studio").value;
+    const s = document.getElementById("stato-licenza-select").value;
     try {
-        const r = await fetch(`${WORKER_URL}/api/admin/studio`, {
+        await fetch(`${WORKER_URL}/api/admin/studio`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ studioId, password, active })
+            body: JSON.stringify({ studioId: sId, password: p, active: s!=="SOSPESA" })
         });
-        const d = await r.json();
-        if(d.success) alert("Licenza Studio registrata sul server!");
-    } catch { 
-        alert("Errore di salvataggio licenza"); 
-    }
+        alert("Licenza registrata!");
+    } catch { alert("Errore server"); }
 }
 
 async function azioneLoginStudio() {
-    const studioId = document.getElementById("id-studio").value;
-    const password = document.getElementById("pass-studio").value;
+    const sId = document.getElementById("id-studio").value;
+    const p = document.getElementById("pass-studio").value;
     try {
         const r = await fetch(`${WORKER_URL}/api/studio/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ studioId, password })
+            body: JSON.stringify({ studioId: sId, password: p })
         });
+        const d = await r.json();
+        if (d.success) {
+            window.currentStudioId = sId;
+            window.localStorage.setItem("studioId", sId);
+            mostraPannelloStudio();
+        } else alert("Errore: " + d.error);
