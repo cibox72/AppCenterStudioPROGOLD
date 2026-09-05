@@ -3,250 +3,1385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>03 Clienti & Foto - AppCenterStudio Premium</title>
     <style>
         :root {
-            --carta-zucchero: #7ea4b5;
-            --verde-salvia: #9caf88;
-            --rosa-antico: #dcaeaf;
-            --scuro: #2b3a42;
-            --chiaro: #f4f7f6;
-            --rosso-alert: #e07a7a;
+            --primary: #8e44ad;
+            --primary-light: #f4ecf7;
+            --primary-hover: #7d3c98;
+            --secondary: #2980b9;
+            --secondary-light: #ebf5fb;
+            --bg-color: #fdfbfb;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e8e8e8;
+            --alert-bg: #fff8e1;
+            --alert-border: #ffb74d;
+            --alert-text: #e65100;
+            --success: #27ae60;
+            --success-light: #eafaf1;
+            --danger: #e74c3c;
+            --danger-light: #fdedec;
+            --shadow: 0 2px 12px rgba(0,0,0,0.06);
+            --shadow-hover: 0 4px 20px rgba(0,0,0,0.1);
+            --radius: 12px;
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--chiaro);
-            color: var(--scuro);
-            margin: 0;
-            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
         }
-        /* BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA */
-        .navbar {
-            background-color: white;
-            padding: 12px 20px;
+
+        /* ===== TOP BAR ===== */
+        .top-bar {
+            background: var(--primary-light);
+            padding: 14px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-bottom: 3px solid var(--carta-zucchero);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
         }
-        .nav-links { display: flex; gap: 10px; }
-        .nav-links button {
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
+
+        .nav-left, .nav-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-btn {
             background: white;
-            font-weight: bold;
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 8px;
             cursor: pointer;
-            color: var(--scuro);
-            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-        .nav-links button:hover { background: var(--chiaro); }
-        .btn-sync { background-color: #e8f0fe !important; border-color: var(--carta-zucchero) !important; color: var(--carta-zucchero) !important; }
-        
+
+        .nav-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .sync-status {
+            font-size: 13px;
+            color: var(--success);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sync-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ===== CONTAINER ===== */
         .container {
-            max-width: 1000px;
-            width: 100%;
-            margin: 30px auto;
-            padding: 0 20px;
-            box-sizing: border-box;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 24px;
         }
-        .main-card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+
+        /* ===== HEADER ===== */
+        .page-header {
+            text-align: center;
+            margin-bottom: 32px;
         }
-        h1, h2, h3 { color: var(--scuro); margin-top: 0; }
-        
-        .grid-layout {
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: var(--text-light);
+            font-size: 15px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-subtitle {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 24px;
+        }
+
+        /* ===== ALERT BOX ===== */
+        .alert-box {
+            background: var(--alert-bg);
+            border-left: 4px solid var(--alert-border);
+            padding: 18px 22px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .alert-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .alert-content h4 {
+            color: var(--alert-text);
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .alert-content p {
+            color: var(--alert-text);
+            font-size: 13px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        .alert-content code {
+            background: rgba(230, 81, 0, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: "SF Mono", Monaco, monospace;
+            font-size: 12px;
+        }
+
+        /* ===== FORM ===== */
+        .form-row {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .form-group label .required {
+            color: var(--danger);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 11px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: white;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.1);
+        }
+
+        .form-group input[readonly] {
+            background: #f8f9fa;
+            color: var(--text-light);
+            cursor: not-allowed;
+        }
+
+        .input-with-btn {
+            display: flex;
+            gap: 8px;
+        }
+
+        .input-with-btn input {
+            flex: 1;
+        }
+
+        .btn-small {
+            padding: 8px 14px;
+            background: var(--secondary-light);
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .btn-small:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #1f6a9e;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #219a52;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-light);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
             margin-top: 20px;
         }
-        @media(max-width: 768px) { .grid-layout { grid-template-columns: 1fr; } }
 
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-        button.btn-azione {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--verde-salvia);
-            color: white;
-            border: none;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button.btn-azione:hover { opacity: 0.9; }
-
-        .archivio-box {
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 15px;
-            background: #fafafa;
-            max-height: 450px;
-            overflow-y: auto;
-        }
-        .servizio-item {
-            background: white;
-            padding: 12px;
-            border-radius: 6px;
-            border-left: 5px solid var(--carta-zucchero);
-            margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-        }
-
-        /* BOX ASSISTENZA */
-        .assistenza-box {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #fcf8f2;
-            border: 1px solid var(--rosa-antico);
-            border-radius: 8px;
-        }
-        .assistenza-buttons { display: flex; gap: 15px; margin-top: 15px; }
-        .assistenza-buttons a {
-            flex: 1;
+        /* ===== FILE UPLOAD ===== */
+        .upload-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius);
+            padding: 40px 20px;
             text-align: center;
-            padding: 10px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-            color: white;
+            background: #fafafa;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
-        .btn-anydesk { background-color: #ef4444; }
-        .btn-whatsapp { background-color: #22c55e; }
+
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .upload-zone.dragover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            transform: scale(1.01);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .upload-text {
+            font-size: 15px;
+            color: var(--text-main);
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .upload-hint {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .upload-zone input[type="file"] {
+            display: none;
+        }
+
+        /* ===== PROGRESS ===== */
+        .progress-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .progress-container.active {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 5px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* ===== CLIENT LIST ===== */
+        .client-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .client-item {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .client-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .client-info {
+            flex: 1;
+        }
+
+        .client-name {
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .client-meta {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .client-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .badge-success {
+            background: var(--success-light);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: var(--alert-bg);
+            color: var(--alert-text);
+        }
+
+        .badge-danger {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            padding: 32px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .modal h3 {
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-size: 20px;
+        }
+
+        .modal p {
+            color: var(--text-main);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .modal .btn-group {
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 24px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: white;
+            border-radius: 10px;
+            padding: 14px 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+            animation: slideIn 0.3s ease;
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger);
+        }
+
+        .toast.warning {
+            border-left-color: var(--alert-border);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-icon {
+            font-size: 20px;
+        }
+
+        .toast-message {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-main);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .top-bar {
+                flex-direction: column;
+                gap: 10px;
+                padding: 12px 16px;
+            }
+
+            .nav-left, .nav-right {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .container {
+                padding: 20px 16px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .client-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .client-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+
+        /* ===== LOADING ===== */
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
     </style>
 </head>
 <body>
 
-    <!-- BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA -->
-    <div class="navbar">
-        <div class="nav-links">
-            <button onclick="window.history.back()">← Indietro</button>
-            <button onclick="location.href='index.html'">🏠 Home</button>
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <div class="nav-left">
+            <button class="nav-btn" onclick="window.history.back()">← Indietro</button>
+            <button class="nav-btn" onclick="window.location.href='index.html'"> Home</button>
         </div>
-        <div class="nav-links">
-            <button onclick="eseguiBackupGlobaleFoto()">📥 Backup Globale</button>
-            <button onclick="eseguiRipristinoAnagraficheFoto()">📤 Ripristino Globale</button>
-            <button class="btn-sync" id="status-sync">Sync Cloud: OK</button>
-            <button style="background-color: var(--rosa-antico); color: white;" onclick="location.href='index.html'">Esci</button>
+        <div class="nav-right">
+            <button class="nav-btn" onclick="eseguiBackupGlobale()">📥 Backup Globale</button>
+            <button class="nav-btn" onclick="eseguiRipristinoGlobale()">📤 Ripristino Globale</button>
+            <div class="sync-status">
+                <span class="sync-dot"></span>
+                Sync Cloud: OK
+            </div>
         </div>
     </div>
 
+    <!-- CONTAINER PRINCIPALE -->
     <div class="container">
-        <div class="main-card">
+
+        <!-- HEADER -->
+        <div class="page-header">
             <h1>📸 Clienti & Foto</h1>
-            <p style="color: #666; margin-top: -10px;">Gestisci il caricamento multimediale delle immagini su Cloudflare R2 con ottimizzazione hardware locale dei file.</p>
-            
-            <div class="grid-layout">
-                
-                <!-- CARICATORE FOTO -->
-                <div>
-                    <h3>📦 Carica Foto nel Magazzino Cloud</h3>
-                    
-                    <div class="form-group">
-                        <label>Seleziona ID Sposi / Cliente Permanente *</label>
-                        <input type="text" id="upload-cliente-id" placeholder="Es. rossi-2026">
-                    </div>
+            <p>Gestione completa dei clienti, creazione credenziali automatiche e caricamento cartelle a bassa risoluzione su Cloudflare R2.</p>
+        </div>
 
-                    <div class="form-group">
-                        <label>Sotto-cartella Destinazione *</label>
-                        <select id="upload-folder-select">
-                            <option value="Preparativi">🏠 Preparativi</option>
-                            <option value="Chiesa">⛪ Chiesa</option>
-                            <option value="Ricevimento">🍽️ Ricevimento</option>
-                            <option value="Taglio Torta">🎂 Taglio Torta</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Seleziona Immagini JPEG *</label>
-                        <input type="file" id="upload-file-input" multiple accept="image/jpeg">
-                    </div>
-
-                    <button class="btn-azione" id="btn-upload" onclick="elaboraECaricaFotoLocali()">COMPRIMI IN LOCALE E CARICA SU R2</button>
-                    <div id="upload-status" style="margin-top: 12px; font-weight: bold; text-align: center; color: var(--carta-zucchero);"></div>
-                </div>
-
-                <!-- ARCHIVIO SERVIZI -->
-                <div>
-                    <h3>📋 Archivio Servizi Registrati Live</h3>
-                    <div class="archivio-box" id="contenitore-servizi">
-                        <p style="text-align:center; color:#999;">Inserisci un ID cliente per caricare lo stato o visualizzare i metadati.</p>
-                    </div>
-                </div>
-
+        <!-- AVVISO OTTIMIZZAZIONE -->
+        <div class="alert-box">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <h4>Ottimizzazione Spazio Cloud & Velocità Upload</h4>
+                <p>Per evitare saturazione dello spazio Cloudflare R2 e velocizzare l'upload, <strong>prepara le cartelle a bassa risoluzione prima del caricamento</strong>. 
+                Se usi <strong>Adobe Lightroom</strong>: seleziona le foto → Esporta → Imposta <code>Lunghezza massima: 1500 px</code> → Qualità JPEG 80%. 
+                Crea una cartella per evento (es. <code>Matrimonio-Rossi-2026</code>) con sotto-cartelle: <code>Preparativi</code>, <code>Chiesa</code>, <code>Ricevimento</code>, <code>Taglio Torta</code>.</p>
             </div>
+        </div>
 
-            <!-- SEZIONE ASSISTENZA SUPREMA -->
-            <div class="assistenza-box">
-                <h3>🛠️ Centro Assistenza Suprema & Interventi Rapidi</h3>
-                <p style="margin: 0; font-size: 14px; color: #555;">Se riscontri difficoltà con il caricamento delle immagini o la banda di rete, puoi richiedere assistenza immediata.</p>
-                <div class="assistenza-buttons">
-                    <a href="https://anydesk.com" target="_blank" class="btn-anydesk">🖥️ Connettiti con AnyDesk</a>
-                    <a href="https://wa.me" target="_blank" class="btn-whatsapp">📅 Richiedi Appuntamento su WhatsApp</a>
+        <!-- SEZIONE 1: CREAZIONE NUOVO CLIENTE -->
+        <div class="card">
+            <div class="card-title">👤 Crea Nuovo Cliente / Evento</div>
+            <div class="card-subtitle">Il sistema genera automaticamente ID e Password. Puoi modificarli prima del salvataggio.</div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nome Evento / Cliente <span class="required">*</span></label>
+                    <input type="text" id="nomeEvento" placeholder="es. Matrimonio Rossi-Bianchi">
+                </div>
+                <div class="form-group">
+                    <label>Tipologia Evento <span class="required">*</span></label>
+                    <select id="tipoEvento">
+                        <option value="matrimonio"> Matrimonio</option>
+                        <option value="compleanno">🎂 Compleanno</option>
+                        <option value="battesimo">⛪ Battesimo</option>
+                        <option value="comunione">️ Comunione</option>
+                        <option value="ritratto">📷 Ritratto</option>
+                        <option value="evento">🎉 Evento Aziendale</option>
+                        <option value="altro">📌 Altro</option>
+                    </select>
                 </div>
             </div>
 
+            <div class="form-row">
+                <div class="form-group">
+                    <label>ID Cliente (generato automaticamente)</label>
+                    <div class="input-with-btn">
+                        <input type="text" id="idCliente" readonly>
+                        <button class="btn-small" onclick="generaIDCliente()">🔄 Rigenera</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password (generata automaticamente)</label>
+                    <div class="input-with-btn">
+                        <input type="text" id="passwordCliente" readonly>
+                        <button class="btn-small" onclick="generaPasswordCliente()">🔄 Rigenera</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email Cliente (per invio credenziali)</label>
+                    <input type="email" id="emailCliente" placeholder="cliente@esempio.com">
+                </div>
+                <div class="form-group">
+                    <label>Telefono / WhatsApp</label>
+                    <input type="tel" id="telefonoCliente" placeholder="+39 333 1234567">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Data Evento</label>
+                    <input type="date" id="dataEvento">
+                </div>
+                <div class="form-group">
+                    <label>Durata Galleria (mesi)</label>
+                    <select id="durataGalleria">
+                        <option value="3">3 mesi</option>
+                        <option value="6" selected>6 mesi (default)</option>
+                        <option value="12">12 mesi</option>
+                        <option value="24">24 mesi</option>
+                        <option value="0">Illimitata</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="salvaCliente()">💾 SALVA CLIENTE</button>
+                <button class="btn btn-outline" onclick="pulisciFormCliente()">🗑️ Pulisci Campi</button>
+            </div>
+        </div>
+
+        <!-- SEZIONE 2: UPLOAD CARTELLE -->
+        <div class="card">
+            <div class="card-title">📁 Carica Cartelle Foto (Bassa Risoluzione)</div>
+            <div class="card-subtitle">Seleziona una cartella completa dal tuo computer. Il sistema caricherà tutte le foto al suo interno.</div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Cliente Destinazione <span class="required">*</span></label>
+                    <select id="clienteDestinazione">
+                        <option value="">-- Seleziona un cliente salvato --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Nome Cartella Principale</label>
+                    <input type="text" id="nomeCartella" placeholder="es. Matrimonio-Rossi-2026">
+                </div>
+            </div>
+
+            <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-icon">📂</div>
+                <div class="upload-text">Clicca qui o trascina una cartella</div>
+                <div class="upload-hint">Il sistema caricherà automaticamente tutte le immagini JPEG/PNG presenti</div>
+                <input type="file" id="fileInput" webkitdirectory directory multiple onchange="gestisciSelezioneCartella(event)">
+            </div>
+
+            <div id="infoCartella" style="margin-top: 16px; display: none;">
+                <div class="alert-box" style="background: var(--success-light); border-left-color: var(--success); margin-bottom: 0;">
+                    <div class="alert-icon">✅</div>
+                    <div class="alert-content">
+                        <h4 style="color: var(--success);">Cartella selezionata</h4>
+                        <p style="color: var(--success);"><span id="nomeCartellaSelezionata">-</span> — <span id="numeroFoto">0</span> foto rilevate</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-info">
+                    <span id="progressText">0 / 0 foto caricate</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-success" id="btnUpload" onclick="avviaUploadCartella()" disabled>
+                    🚀 AVVIA UPLOAD CARTELLA
+                </button>
+            </div>
+        </div>
+
+        <!-- SEZIONE 3: ARCHIVIO CLIENTI -->
+        <div class="card">
+            <div class="card-title">📋 Archivio Clienti Registrati</div>
+            <div class="card-subtitle">Gestisci i clienti esistenti, estendi la durata galleria o genera nuovi link di selezione.</div>
+
+            <div class="client-list" id="clientList">
+                <div style="text-align: center; padding: 40px; color: var(--text-light);">
+                    <div style="font-size: 48px; margin-bottom: 12px;"></div>
+                    <p>Nessun cliente registrato. Crea il primo cliente usando il modulo sopra.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- MODAL CONFERMA -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h3 id="modalTitle">Conferma</h3>
+            <p id="modalMessage">Sei sicuro?</p>
+            <div class="btn-group">
+                <button class="btn btn-outline" onclick="chiudiModal()">Annulla</button>
+                <button class="btn btn-primary" id="modalConfirmBtn" onclick="confermaModal()">Conferma</button>
+            </div>
         </div>
     </div>
 
-<script>
-const WORKER_URL = "https://workers.dev";
-const STUDIO_ID = window.currentStudioId || "studio-demo";
+    <script>
+        // ===== CONFIGURAZIONE WORKER =====
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        let studioId = localStorage.getItem('studioId') || 'studio-gold';
+        let clienti = [];
+        let cartellaSelezionata = null;
+        let fileDaCaricare = [];
 
-async function elaboraECaricaFotoLocali() {
-    const clienteId = document.getElementById("upload-cliente-id").value.trim();
-    const folder = document.getElementById("upload-folder-select").value;
-    const files = document.getElementById("upload-file-input").files;
-    const statusDiv = document.getElementById("upload-status");
+        // ===== INIZIALIZZAZIONE =====
+        document.addEventListener('DOMContentLoaded', function() {
+            generaIDCliente();
+            generaPasswordCliente();
+            caricaClientiDaCloud();
+            aggiornaSelectClienti();
 
-    if(!clienteId || files.length === 0) {
-        alert("Inserisci l'ID cliente permanente e seleziona almeno un file JPEG.");
-        return;
-    }
-
-    statusDiv.innerText = "Avvio compressione hardware locale...";
-
-    for(let i = 0; i < files.length; i++) {
-        const file = files[i];
-        statusDiv.innerText = `Elaborazione file ${i+1} di ${files.length}: ${file.name}`;
-        
-        // Esecuzione compressione hardware nativa su Canvas per risparmiare banda
-        const compressedBlob = await eseguiCompressioneCanvas(file);
-        
-        const uploadUrl = `${WORKER_URL}/api/studio/upload?clienteId=${encodeURIComponent(clienteId)}&folder=${encodeURIComponent(folder)}&filename=${encodeURIComponent(file.name)}`;
-        
-        try {
-            const res = await fetch(uploadUrl, {
-                method: "POST",
-                body: compressedBlob
+            // Drag & drop per upload zone
+            const uploadZone = document.getElementById('uploadZone');
+            uploadZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadZone.classList.add('dragover');
             });
-            if (!res.ok) throw new Error("Errore durante il caricamento");
-        } catch (err) {
-            alert(`Errore nell'invio del file: ${file.name}`);
-            statusDiv.innerText = "❌ Caricamento interrotto per errore.";
-            return;
+            uploadZone.addEventListener('dragleave', function() {
+                uploadZone.classList.remove('dragover');
+            });
+            uploadZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadZone.classList.remove('dragover');
+                const items = e.dataTransfer.items;
+                if (items) {
+                    const files = [];
+                    for (let i = 0; i < items.length; i++) {
+                        const entry = items[i].webkitGetAsEntry && items[i].webkitGetAsEntry();
+                        if (entry) {
+                            traverseFileTree(entry, files);
+                        }
+                    }
+                    setTimeout(() => {
+                        if (files.length > 0) {
+                            cartellaSelezionata = items[0].webkitGetAsEntry().name;
+                            fileDaCaricare = files;
+                            mostraInfoCartella(cartellaSelezionata, files.length);
+                        }
+                    }, 500);
+                }
+            });
+        });
+
+        // ===== GENERAZIONE AUTOMATICA ID =====
+        function generaIDCliente() {
+            const nome = document.getElementById('nomeEvento').value.trim();
+            const anno = new Date().getFullYear();
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            
+            if (nome) {
+                const slug = nome.toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-|-$/g, '')
+                    .substring(0, 30);
+                document.getElementById('idCliente').value = `${slug}-${anno}-${random}`;
+            } else {
+                document.getElementById('idCliente').value = `cliente-${anno}-${random}`;
+            }
         }
-    }
 
-    statusDiv.innerText = "✅ Caricamento completato su Cloudflare R2!";
-    alert("Tutti i file sono stati elaborati in locale e salvati nel bucket isolato dello studio.");
-    aggiornaVisualizzazioneArchivio(clienteId);
-}
+        // ===== GENERAZIONE AUTOMATICA PASSWORD =====
+        function generaPasswordCliente() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+            let password = '';
+            for (let i = 0; i < 12; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('passwordCliente').value = password;
+        }
 
-function eseguiCompressioneCanvas(file) {
-    return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
+        // ===== AGGIORNAMENTO ID AL CAMBIO NOME =====
+        document.getElementById('nomeEvento').addEventListener('input', function() {
+            if (!document.getElementById('idCliente').value.includes('-')) {
+                generaIDCliente();
+            }
+        });
+
+        // ===== SALVATAGGIO CLIENTE =====
+        async function salvaCliente() {
+            const nomeEvento = document.getElementById('nomeEvento').value.trim();
+            const tipoEvento = document.getElementById('tipoEvento').value;
+            const idCliente = document.getElementById('idCliente').value.trim();
+            const passwordCliente = document.getElementById('passwordCliente').value.trim();
+            const emailCliente = document.getElementById('emailCliente').value.trim();
+            const telefonoCliente = document.getElementById('telefonoCliente').value.trim();
+            const dataEvento = document.getElementById('dataEvento').value;
+            const durataGalleria = parseInt(document.getElementById('durataGalleria').value);
+
+            if (!nomeEvento) {
+                mostraToast('Inserisci il nome dell\'evento o del cliente', 'error');
+                return;
+            }
+
+            if (!idCliente || !passwordCliente) {
+                mostraToast('ID e Password devono essere generati', 'error');
+                return;
+            }
+
+            const btn = event.target;
+            const testoOriginale = btn.innerHTML;
+            btn.innerHTML = '<span class="loading"></span> Salvataggio...';
+            btn.disabled = true;
+
+            try {
+                const clienteData = {
+                    studioId: studioId,
+                    clienteId: idCliente,
+                    password: passwordCliente,
+                    nomeEvento: nomeEvento,
+                    tipoEvento: tipoEvento,
+                    email: emailCliente,
+                    telefono: telefonoCliente,
+                    dataEvento: dataEvento,
+                    durataGalleria: durataGalleria,
+                    dataCreazione: new Date().toISOString(),
+                    stato: 'attivo',
+                    fotoCaricate: 0,
+                    linkSelezione: null,
+                    scadenzaLink: null
+                };
+
+                const response = await fetch(`${WORKER_URL}/api/studio/crea-cliente`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(clienteData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Salva anche in locale per velocità
+                    const clienteLocale = JSON.parse(localStorage.getItem(`clienti_${studioId}`) || '[]');
+                    clienteLocale.push(clienteData);
+                    localStorage.setItem(`clienti_${studioId}`, JSON.stringify(clienteLocale));
+
+                    mostraToast(`✅ Cliente "${nomeEvento}" salvato con successo!`, 'success');
+                    pulisciFormCliente();
+                    generaIDCliente();
+                    generaPasswordCliente();
+                    caricaClientiDaCloud();
+                    aggiornaSelectClienti();
+                } else {
+                    mostraToast('Errore nel salvataggio: ' + (result.error || 'Errore sconosciuto'), 'error');
+                }
+            } catch (error) {
+                console.error('Errore salvataggio cliente:', error);
+                mostraToast('Errore di connessione al server', 'error');
+            } finally {
+                btn.innerHTML = testoOriginale;
+                btn.disabled = false;
+            }
+        }
+
+        // ===== PULIZIA FORM =====
+        function pulisciFormCliente() {
+            document.getElementById('nomeEvento').value = '';
+            document.getElementById('emailCliente').value = '';
+            document.getElementById('telefonoCliente').value = '';
+            document.getElementById('dataEvento').value = '';
+            document.getElementById('durataGalleria').value = '6';
+            generaIDCliente();
+            generaPasswordCliente();
+        }
+
+        // ===== CARICAMENTO CLIENTI DA CLOUD =====
+        async function caricaClientiDaCloud() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/clienti?studioId=${studioId}`);
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.clienti) {
+                        clienti = result.clienti;
+                        renderizzaListaClienti();
+                    }
+                }
+            } catch (error) {
+                console.log('Caricamento da cloud non disponibile, uso localStorage');
+                const clienteLocale = JSON.parse(localStorage.getItem(`clienti_${studioId}`) || '[]');
+                clienti = clienteLocale;
+                renderizzaListaClienti();
+            }
+        }
+
+        // ===== RENDERIZZA LISTA CLIENTI =====
+        function renderizzaListaClienti() {
+            const container = document.getElementById('clientList');
+            
+            if (clienti.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-light);">
+                        <div style="font-size: 48px; margin-bottom: 12px;">📭</div>
+                        <p>Nessun cliente registrato. Crea il primo cliente usando il modulo sopra.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = clienti.map(cliente => {
+                const badgeStato = cliente.stato === 'attivo' 
+                    ? '<span class="badge badge-success">Attivo</span>'
+                    : cliente.stato === 'scaduto'
+                    ? '<span class="badge badge-warning">Scaduto</span>'
+                    : '<span class="badge badge-danger">Sospeso</span>';
+
+                const dataCreazione = new Date(cliente.dataCreazione).toLocaleDateString('it-IT');
+                
+                return `
+                    <div class="client-item">
+                        <div class="client-info">
+                            <div class="client-name">
+                                ${cliente.nomeEvento} ${badgeStato}
+                            </div>
+                            <div class="client-meta">
+                                ID: <strong>${cliente.clienteId}</strong> · 
+                                Creato: ${dataCreazione} · 
+                                Foto: ${cliente.fotoCaricate || 0}
+                            </div>
+                        </div>
+                        <div class="client-actions">
+                            <button class="btn-small" onclick="estendiGalleria('${cliente.clienteId}')">⏱️ Estendi</button>
+                            <button class="btn-small" onclick="generaLinkSelezione('${cliente.clienteId}')">🔗 Link</button>
+                            <button class="btn-small" onclick="inviaCredenziali('${cliente.clienteId}')">📧 Invia</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ===== AGGIORNA SELECT CLIENTI =====
+        function aggiornaSelectClienti() {
+            const select = document.getElementById('clienteDestinazione');
+            select.innerHTML = '<option value="">-- Seleziona un cliente salvato --</option>';
+            
+            clienti.forEach(cliente => {
+                const option = document.createElement('option');
+                option.value = cliente.clienteId;
+                option.textContent = `${cliente.nomeEvento} (${cliente.clienteId})`;
+                select.appendChild(option);
+            });
+        }
+
+        // ===== GESTIONE SELEZIONE CARTELLA =====
+        function gestisciSelezioneCartella(event) {
+            const files = Array.from(event.target.files);
+            const imageFiles = files.filter(f => f.type.startsWith('image/'));
+            
+            if (imageFiles.length === 0) {
+                mostraToast('Nessuna immagine trovata nella cartella selezionata', 'warning');
+                return;
+            }
+
+            // Estrai il nome della cartella dal primo file
+            const primoFile = imageFiles[0];
+            const pathParts = primoFile.webkitRelativePath.split('/');
+            cartellaSelezionata = pathParts[0];
+            fileDaCaricare = imageFiles;
+
+            mostraInfoCartella(cartellaSelezionata, imageFiles.length);
+            document.getElementById('btnUpload').disabled = false;
+        }
+
+        function mostraInfoCartella(nome, numero) {
+            document.getElementById('nomeCartellaSelezionata').textContent = nome;
+            document.getElementById('numeroFoto').textContent = numero;
+            document.getElementById('infoCartella').style.display = 'block';
+        }
+
+        // ===== UPLOAD CARTELLA =====
+        async function avviaUploadCartella() {
+            const clienteId = document.getElementById('clienteDestinazione').value;
+            const nomeCartella = document.getElementById('nomeCartella').value.trim() || cartellaSelezionata;
+
+            if (!clienteId) {
+                mostraToast('Seleziona un cliente destinazione', 'error');
+                return;
+            }
+
+            if (fileDaCaricare.length === 0) {
+                mostraToast('Nessun file da caricare', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btnUpload');
+            btn.disabled = true;
+            document.getElementById('progressContainer').classList.add('active');
+
+            let caricati = 0;
+            const totale = fileDaCaricare.length;
+
+            for (const file of fileDaCaricare) {
+                try {
+                    // Comprimi localmente prima dell'upload
+                    const blobCompresso = await comprimiImmagine(file);
+                    
+                    const formData = new FormData();
+                    formData.append('file', blobCompresso, file.name);
+                    formData.append('clienteId', clienteId);
+                    formData.append('cartella', nomeCartella);
+                    formData.append('percorsoRelativo', file.webkitRelativePath);
+
+                    await fetch(`${WORKER_URL}/api/studio/upload?studioId=${studioId}&clienteId=${clienteId}&folder=${encodeURIComponent(nomeCartella)}&filename=${encodeURIComponent(file.name)}`, {
+                        method: 'POST',
+                        body: blobCompresso
+                    });
+
+                    caricati++;
+                    aggiornaProgress(caricati, totale);
+                } catch (error) {
+                    console.error('Errore upload file:', file.name, error);
+                }
+            }
+
+            // Aggiorna conteggio foto nel cliente
+            const cliente = clienti.find(c => c.clienteId === clienteId);
+            if (cliente) {
+                cliente.fotoCaricate = (cliente.fotoCaricate || 0) + caricati;
+                localStorage.setItem(`clienti_${studioId}`, JSON.stringify(clienti));
+            }
+
+            mostraToast(`✅ Upload completato! ${caricati} foto caricate su R2`, 'success');
+            
+            btn.disabled = false;
+            setTimeout(() => {
+                document.getElementById('progressContainer').classList.remove('active');
+            }, 2000);
+        }
+
+        function aggiornaProgress(caricati, totale) {
+            const percent = Math.round((caricati / totale) * 100);
+            document.getElementById('progressFill').style.width = `${percent}%`;
+            document.getElementById('progressText').textContent = `${caricati} / ${totale} foto caricate`;
+            document.getElementById('progressPercent').textContent = `${percent}%`;
+        }
+
+        // ===== COMPRESSIONE IMMAGINE LOCALE =====
+        function comprimiImmagine(file) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const maxWidth = 1500;
+                    const maxHeight = 1500;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > maxWidth || height > maxHeight) {
+                        const ratio = Math.min(maxWidth / width, maxHeight / height);
+                        width *= ratio;
+                        height *= ratio;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    canvas.toBlob(function(blob) {
+                        resolve(blob);
+                    }, 'image/jpeg', 0.8);
+                };
+                img.onerror = reject;
+                img.src = URL.createObjectURL(file);
+            });
+        }
+
+        // ===== ESTENDI GALLERIA =====
+        function estendiGalleria(clienteId) {
+            const cliente = clienti.find(c => c.clienteId === clienteId);
+            if (!cliente) return;
+
+            const nuovaDurata = prompt(`Estendi galleria per "${cliente.nomeEvento}".\nDurata attuale: ${cliente.durataGalleria} mesi.\nNuova durata (mesi):`, cliente.durataGalleria);
+            
+            if (nuovaDurata !== null && !isNaN(parseInt(nuovaDurata))) {
+                cliente.durataGalleria = parseInt(nuovaDurata);
+                localStorage.setItem(`clienti_${studioId}`, JSON.stringify(clienti));
+                renderizzaListaClienti();
+                mostraToast(`Galleria estesa a ${nuovaDurata} mesi`, 'success');
+            }
+        }
+
+        // ===== GENERA LINK SELEZIONE =====
+        function generaLinkSelezione(clienteId) {
+            const cliente = clienti.find(c => c.clienteId === clienteId);
+            if (!cliente) return;
+
+            const token = Math.random().toString(36).substring(2, 15);
+            const scadenza = new Date();
+            scadenza.setDate(scadenza.getDate() + 7);
+            
+            cliente.linkSelezione = `${window.location.origin}/gallery.html?token=${token}&cliente=${clienteId}`;
+            cliente.scadenzaLink = scadenza.toISOString();
+            
+            localStorage.setItem(`clienti_${studioId}`, JSON.stringify(clienti));
+            
+            const messaggio = `Link selezione generato per ${cliente.nomeEvento}:\n\n${cliente.linkSelezione}\n\nScade il: ${scadenza.toLocaleDateString('it-IT')}\n\nCredenziali:\nID: ${cliente.clienteId}\nPassword: ${cliente.password}`;
+            
+            alert(messaggio);
+            mostraToast('Link selezione generato (valido 7 giorni)', 'success');
+        }
+
+        // ===== INVIA CREDENZIALI =====
+        function inviaCredenziali(clienteId) {
+            const cliente = clienti.find(c => c.clienteId === clienteId);
+            if (!cliente) return;
+
+            if (cliente.email) {
+                const subject = encodeURIComponent(`Credenziali Galleria - ${cliente.nomeEvento}`);
+                const body = encodeURIComponent(`Gentile Cliente,\n\necco le credenziali per accedere alla tua galleria fotografica:\n\nID: ${cliente.clienteId}\nPassword: ${cliente.password}\n\nLink: ${cliente.linkSelezione || 'Da generare'}\n\nGrazie per averci scelto!`);
+                window.open(`mailto:${cliente.email}?subject=${subject}&body=${body}`);
+            } else if (cliente.telefono) {
+                const messaggio = encodeURIComponent(`Ciao! Ecco le credenziali per la tua galleria ${cliente.nomeEvento}:\nID: ${cliente.clienteId}\nPassword: ${cliente.password}`);
+                window.open(`https://wa.me/${cliente.telefono.replace(/\D/g, '')}?text=${messaggio}`);
+            } else {
+                mostraToast('Nessun contatto email o telefono per questo cliente', 'warning');
+            }
+        }
+
+        // ===== BACKUP GLOBALE =====
+        function eseguiBackupGlobale() {
+            const datiBackup = {
+                studioId: studioId,
+                dataBackup: new Date().toISOString(),
+                clienti: clienti
+            };
+            
+            const blob = new Blob([JSON.stringify(datiBackup, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backup-clienti-${studioId}-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            mostraToast('Backup globale scaricato', 'success');
+        }
+
+        // ===== RIPRISTINO GLOBALE =====
+        function eseguiRipristinoGlobale() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const dati = JSON.parse(event.target.result);
+                        if (dati.clienti) {
+                            clienti = dati.clienti;
+                            localStorage.setItem(`clienti_${studioId}`, JSON.stringify(clienti));
+                            renderizzaListaClienti();
+                            aggiornaSelectClienti();
+                            mostraToast('Ripristino completato con successo', 'success');
+                        }
+                    } catch (error) {
+                        mostraToast('File di backup non valido', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // ===== TOAST NOTIFICATIONS =====
+        function mostraToast(messaggio, tipo = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            
+            const icona = tipo === 'success' ? '✅' : tipo === 'error' ? '❌' : '⚠️';
+            
+            toast.innerHTML = `
+                <div class="toast-icon">${icona}</div>
+                <div class="toast-message">${messaggio}</div>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(400px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // ===== MODAL =====
+        function mostraModal(titolo, messaggio, callback) {
+            document.getElementById('modalTitle').textContent = titolo;
+            document.getElementById('modalMessage').textContent = messaggio;
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('modalConfirmBtn').onclick = function() {
+                chiudiModal();
+                if (callback) callback();
+            };
+        }
+
+        function chiudiModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        function confermaModal() {
+            chiudiModal();
+        }
+
+        // ===== TRAVERSE FILE TREE (per drag & drop cartelle) =====
+        function traverseFileTree(item, files) {
+            if (item.isFile) {
+                item.file(function(file) {
+                    if (file.type.startsWith('image/')) {
+                        files.push(file);
+                    }
+                });
+            } else if (item.isDirectory) {
+                const dirReader = item.createReader();
+                dirReader.readEntries(function(entries) {
+                    for (let i = 0; i < entries.length; i++) {
+                        traverseFileTree(entries[i], files);
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>
