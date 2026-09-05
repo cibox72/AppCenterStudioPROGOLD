@@ -99,46 +99,41 @@
         <h2 style="color: var(--carta-zucchero); margin: 0;">✨ AppCenter Studio Premium</h2>
     </div>
 
-    <!-- SEZIONE INGRESSI PUBBLICI -->
     <div id="sezione-ingressi">
         <h1>Punto di accesso unico per Fornitori, Studi e Clienti</h1>
         <div class="grid-ingressi">
             
-            <!-- ACCESSO SPOSI -->
             <div class="card-login">
                 <h3>👥 Accesso Clienti (Sposi)</h3>
                 <input type="text" id="id-sposi" placeholder="ID Sposi Permanente *">
                 <div class="password-container">
                     <input type="password" id="pass-sposi" placeholder="Password Galleria *">
-                    <span class="toggle-password-eye" onclick="const i = document.getElementById('pass-sposi'); if(i.type==='password'){i.type='text'; this.innerText='🙈';}else{i.type='password'; this.innerText='👁️';}">👁️</span>
+                    <span class="toggle-password-eye" onclick="invertiVisibilitaPassword('pass-sposi', this)">👁️</span>
                 </div>
                 <button onclick="azioneLoginCliente()">Sblocca Galleria ❤️</button>
             </div>
 
-            <!-- ACCESSO STUDIO -->
             <div class="card-login studio">
                 <h3>📸 Cabina Regia Studio</h3>
                 <input type="text" id="id-studio" placeholder="ID Studio Permanente *">
                 <div class="password-container">
                     <input type="password" id="pass-studio" placeholder="Password Studio *">
-                    <span class="toggle-password-eye" onclick="const i = document.getElementById('pass-studio'); if(i.type==='password'){i.type='text'; this.innerText='🙈';}else{i.type='password'; this.innerText='👁️';}">👁️</span>
+                    <span class="toggle-password-eye" onclick="invertiVisibilitaPassword('pass-studio', this)">👁️</span>
                 </div>
                 <button class="btn-studio" onclick="azioneLoginStudio()">Entra in Plancia</button>
             </div>
 
-            <!-- ACCESSO FORNITORE (AZIONE DIRETTA BLINDATA) -->
             <div class="card-login admin">
                 <h3>👑 Fornitore Supremo</h3>
                 <div class="password-container">
                     <input type="password" id="pass-admin" placeholder="Chiave di Accesso Suprema *">
-                    <span class="toggle-password-eye" onclick="const i = document.getElementById('pass-admin'); if(i.type==='password'){i.type='text'; this.innerText='🙈';}else{i.type='password'; this.innerText='👁️';}">👁️</span>
+                    <span class="toggle-password-eye" onclick="invertiVisibilitaPassword('pass-admin', this)">👁️</span>
                 </div>
                 <button class="btn-admin" onclick="azioneLoginAdmin()">Accedi al Server</button>
             </div>
         </div>
     </div>
 
-    <!-- 👑 PANNELLO FORNITORE SUPREMO -->
     <div id="pannello-admin" class="pannello-privato">
         <h2>👑 Pannello Fornitore Supremo - Gestione Licenze</h2>
         <h4>Crea / Modifica Stato Licenza Studio</h4>
@@ -150,10 +145,9 @@
             <option value="SOSPESA">🔴 Sospeso (Spegni Accesso)</option>
         </select>
         <button class="btn-admin" onclick="salvaLicenzaStudio()">SALVA CONFIGURAZIONE SERVER</button>
-        <button onclick="location.reload()">Esci Sessione</button>
+        <button onclick="esciSessione()">Esci Sessione</button>
     </div>
 
-    <!-- 📸 PANNELLO STUDIO FOTOGRAFICO -->
     <div id="pannello-studio" class="pannello-privato">
         <h2>📸 Cabina di Regia Studio: <span id="nome-studio-attivo"></span></h2>
         <div class="grid-dashboard">
@@ -169,63 +163,80 @@
             <button class="btn-studio" onclick="location.href='lista-regali.html'">🎁 Lista Nozze</button>
         </div>
         <br>
-        <button onclick="location.reload()">Esci Sessione</button>
+        <button onclick="esciSessione()">Esci Sessione</button>
     </div>
 </div>
 
 <script>
 const WORKER_URL = "https://workers.dev";
 
+function invertiVisibilitaPassword(inputId, elementoOcchio) {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") {
+        input.type = "text";
+        elementoOcchio.innerText = "🙈";
+    } else {
+        input.type = "password";
+        elementoOcchio.innerText = "👁️";
+    }
+}
+
 function mostraPannelloFornitore() {
     document.getElementById("sezione-ingressi").style.display = "none";
     document.getElementById("pannello-admin").style.display = "block";
 }
+
 function mostraPannelloStudio() {
     document.getElementById("sezione-ingressi").style.display = "none";
     document.getElementById("pannello-studio").style.display = "block";
     document.getElementById("nome-studio-attivo").innerText = window.currentStudioId;
 }
 
+function esciSessione() { location.reload(); }
+
 async function azioneLoginAdmin() {
-    const p = document.getElementById("pass-admin").value;
+    const password = document.getElementById("pass-admin").value;
     try {
         const r = await fetch(`${WORKER_URL}/api/admin/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ password: p })
+            body: JSON.stringify({ password })
         });
         const d = await r.json();
         if (d.success) mostraPannelloFornitore();
         else alert("Password errata!");
-    } catch { alert("Errore connessione server"); }
+    } catch { alert("Errore di connessione a Cloudflare"); }
 }
 
 async function salvaLicenzaStudio() {
-    const sId = document.getElementById("id-studio-permanente").value;
-    const p = document.getElementById("password-studio").value;
-    const s = document.getElementById("stato-licenza-select").value;
+    const studioId = document.getElementById("id-studio-permanente").value;
+    const password = document.getElementById("password-studio").value;
+    const stato = document.getElementById("stato-licenza-select").value;
+    const active = stato !== "SOSPESA";
+
     try {
-        await fetch(`${WORKER_URL}/api/admin/studio`, {
+        const r = await fetch(`${WORKER_URL}/api/admin/studio`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ studioId: sId, password: p, active: s!=="SOSPESA" })
+            body: JSON.stringify({ studioId, password, active })
         });
-        alert("Licenza registrata!");
-    } catch { alert("Errore server"); }
+        const d = await r.json();
+        if(d.success) alert("Licenza Studio registrata sul server!");
+    } catch { alert("Errore di salvataggio licenza"); }
 }
 
 async function azioneLoginStudio() {
-    const sId = document.getElementById("id-studio").value;
-    const p = document.getElementById("pass-studio").value;
+    const studioId = document.getElementById("id-studio").value;
+    const password = document.getElementById("pass-studio").value;
     try {
         const r = await fetch(`${WORKER_URL}/api/studio/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ studioId: sId, password: p })
+            body: JSON.stringify({ studioId, password })
         });
         const d = await r.json();
         if (d.success) {
-            window.currentStudioId = sId;
-            window.localStorage.setItem("studioId", sId);
+            window.currentStudioId = studioId;
+            window.localStorage.setItem("studioId", studioId);
             mostraPannelloStudio();
         } else alert("Errore: " + d.error);
