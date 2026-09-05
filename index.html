@@ -3,233 +3,510 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- DISTRUGGI CACHE: Forza il browser a scaricare sempre l'ultima versione -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    
-    <title>Suite Premium - AppCenter Studio Gold</title>
+    <title>AppCenterStudioPROGOLD - Accesso Suite Premium</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: #f4f6f9; padding: 20px; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1, h2 { text-align: center; color: #2c3e50; }
-        .section { margin-bottom: 30px; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; }
-        .input-group { margin-bottom: 15px; position: relative; }
-        .input-group label { display: block; margin-bottom: 5px; font-weight: 600; }
-        .input-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        .eye-icon { position: absolute; right: 10px; top: 32px; cursor: pointer; font-size: 18px; user-select: none; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: background 0.3s; }
-        .btn-primary { background-color: #3498db; color: white; }
-        .btn-primary:hover { background-color: #2980b9; }
-        .btn-supreme { background-color: #9b59b6; color: white; }
-        .btn-supreme:hover { background-color: #8e44ad; }
-        .hidden { display: none; }
-        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
-        .menu-item { background: #ecf0f1; padding: 10px; text-align: center; border-radius: 6px; text-decoration: none; color: #2c3e50; font-weight: 600; }
-        .menu-item:hover { background: #d5dbdb; }
+        :root {
+            --primary: #8e44ad;
+            --primary-dark: #6c3483;
+            --primary-light: #f4ecf7;
+            --primary-gradient: linear-gradient(135deg, #a569bd 0%, #8e44ad 50%, #6c3483 100%);
+            --secondary: #2980b9;
+            --secondary-gradient: linear-gradient(135deg, #5dade2 0%, #2980b9 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #f4ecf7 40%, #ebf5fb 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e8e8e8;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --shadow: 0 8px 32px rgba(142, 68, 173, 0.12);
+            --shadow-hover: 0 12px 40px rgba(142, 68, 173, 0.2);
+            --radius: 16px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        /* LOGO CARD */
+        .logo-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 32px 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            margin-bottom: 32px;
+            backdrop-filter: blur(10px);
+            max-width: 480px;
+            width: 100%;
+        }
+
+        .logo-card img {
+            max-width: 180px;
+            height: auto;
+            margin-bottom: 16px;
+            border-radius: 8px;
+        }
+
+        .logo-card h1 {
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-card p {
+            color: var(--text-light);
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        /* LOGIN CARDS GRID */
+        .login-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 1000px;
+            width: 100%;
+            margin-bottom: 32px;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-4px);
+        }
+
+        .login-card.cliente { border-top: 4px solid var(--secondary); }
+        .login-card.studio { border-top: 4px solid var(--primary); }
+        .login-card.admin { border-top: 4px solid var(--danger); }
+
+        .login-card h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .login-card .subtitle {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .login-card.cliente h2 { color: var(--secondary); }
+        .login-card.studio h2 { color: var(--primary); }
+        .login-card.admin h2 { color: var(--danger); }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            padding: 11px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: white;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.1);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding-right: 40px;
+        }
+
+        .eye-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--text-light);
+            padding: 4px;
+        }
+
+        .eye-btn:hover { color: var(--primary); }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            color: white;
+        }
+
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .btn-login.cliente { background: var(--secondary-gradient); }
+        .btn-login.studio { background: var(--primary-gradient); }
+        .btn-login.admin { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* STATUS MESSAGE */
+        .status-msg {
+            margin-top: 12px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .status-msg.success {
+            display: block;
+            background: #eafaf1;
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-msg.error {
+            display: block;
+            background: #fdedec;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        /* FOOTER BRANDING */
+        .footer-branding {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 13px;
+            font-weight: 500;
+            border-top: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .footer-branding strong {
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* LOADING */
+        .loading {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .main-wrapper { padding: 24px 16px; }
+            .logo-card { padding: 24px; }
+            .logo-card h1 { font-size: 20px; }
+            .login-grid { grid-template-columns: 1fr; }
+            .login-card { padding: 24px; }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>✨ AppCenter Studio Premium</h1>
-    <p style="text-align: center;">Punto di accesso unico per Fornitori, Studi e Clienti</p>
+    <div class="main-wrapper">
 
-    <!-- SEZIONE 1: ACCESSO CLIENTI -->
-    <div class="section">
-        <h2>👥 Accesso Clienti (Sposi)</h2>
-        <div class="input-group">
-            <label>ID Evento</label>
-            <input type="text" id="cliente-id" placeholder="Inserisci ID Evento">
+        <!-- LOGO CARD -->
+        <div class="logo-card">
+            <img src="logo.jpg" alt="AppCenterStudioPROGOLD Logo">
+            <h1>AppCenterStudioPROGOLD</h1>
+            <p>Suite Premium per Studi Fotografici Professionali</p>
         </div>
-        <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="cliente-pwd" placeholder="Password">
-            <span class="eye-icon" onclick="invertiVisibilitaPassword('cliente-pwd')">👁️</span>
+
+        <!-- LOGIN CARDS -->
+        <div class="login-grid">
+
+            <!-- CLIENTI (SPOSI) -->
+            <div class="login-card cliente">
+                <h2>Accesso Clienti</h2>
+                <div class="subtitle">Galleria fotografica e selezione album</div>
+                <div class="form-group">
+                    <label>ID Evento</label>
+                    <input type="text" id="cliente-id" placeholder="Inserisci ID Evento">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="cliente-pwd" placeholder="Password">
+                        <button class="eye-btn" onclick="invertiVisibilitaPassword('cliente-pwd')" type="button">Mostra</button>
+                    </div>
+                </div>
+                <button class="btn-login cliente" onclick="azioneLoginCliente()">Accedi Galleria</button>
+                <div class="status-msg" id="status-cliente"></div>
+            </div>
+
+            <!-- STUDIO -->
+            <div class="login-card studio">
+                <h2>Cabina Regia Studio</h2>
+                <div class="subtitle">Gestione completa servizi e clienti</div>
+                <div class="form-group">
+                    <label>ID Studio</label>
+                    <input type="text" id="studio-id" placeholder="es. studio-gold">
+                </div>
+                <div class="form-group">
+                    <label>Password Studio</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="studio-pwd" placeholder="Password">
+                        <button class="eye-btn" onclick="invertiVisibilitaPassword('studio-pwd')" type="button">Mostra</button>
+                    </div>
+                </div>
+                <button class="btn-login studio" onclick="azioneLoginStudio()">Entra in Plancia</button>
+                <div class="status-msg" id="status-studio"></div>
+            </div>
+
+            <!-- FORNITORE SUPREMO -->
+            <div class="login-card admin">
+                <h2>Fornitore Supremo</h2>
+                <div class="subtitle">CRM, licenze e gestione piattaforma</div>
+                <div class="form-group">
+                    <label>Password Suprema</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="admin-pwd" placeholder="Password Fornitore">
+                        <button class="eye-btn" onclick="invertiVisibilitaPassword('admin-pwd')" type="button">Mostra</button>
+                    </div>
+                </div>
+                <button class="btn-login admin" onclick="azioneLoginAdmin()">Accedi al Server</button>
+                <div class="status-msg" id="status-admin"></div>
+            </div>
+
         </div>
-        <button class="btn btn-primary" onclick="azioneLoginCliente()">Sblocca Galleria ❤️</button>
+
     </div>
 
-    <!-- SEZIONE 2: CABINA REGIA STUDIO -->
-    <div class="section">
-        <h2>📸 Cabina Regia Studio</h2>
-        <div class="input-group">
-            <label>ID Studio</label>
-            <input type="text" id="studio-id" placeholder="es. studio-gold">
-        </div>
-        <div class="input-group">
-            <label>Password Studio</label>
-            <input type="password" id="studio-pwd" placeholder="Password">
-            <span class="eye-icon" onclick="invertiVisibilitaPassword('studio-pwd')">👁️</span>
-        </div>
-        <button class="btn btn-primary" onclick="azioneLoginStudio()">Entra in Plancia</button>
+    <!-- FOOTER BRANDING -->
+    <div class="footer-branding">
+        Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong> - Tutti i diritti riservati
     </div>
+        <script>
+        // URL REALE DEL WORKER CLOUDFLARE
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
 
-    <!-- SEZIONE 3: FORNITORE SUPREMO -->
-    <div class="section">
-        <h2>👑 Fornitore Supremo</h2>
-        <div class="input-group">
-            <label>Password Suprema</label>
-            <input type="password" id="admin-pwd" placeholder="Password Fornitore">
-            <span class="eye-icon" onclick="invertiVisibilitaPassword('admin-pwd')">👁️</span>
-        </div>
-        <button class="btn btn-supreme" onclick="azioneLoginAdmin()">Accedi al Server</button>
-    </div>
-
-    <!-- SEZIONE 4: PANNELLO FORNITORE (Nascosto di default) -->
-    <div id="pannello-fornitore" class="section hidden">
-        <h2>👑 Pannello Fornitore Supremo - Gestione Licenze</h2>
-        <p>Crea / Modifica Stato Licenza Studio</p>
-        <div class="input-group">
-            <label>ID Studio da configurare</label>
-            <input type="text" id="nuovo-studio-id" placeholder="es. studio-gold">
-        </div>
-        <div class="input-group">
-            <label>Stato Licenza</label>
-            <select id="stato-licenza" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
-                <option value="prova">⏳ In Prova Omaggio (15 GG)</option>
-                <option value="attiva">🟢 Licenza Attiva</option>
-                <option value="sospesa">🔴 Sospeso (Spegni Accesso)</option>
-            </select>
-        </div>
-        <button class="btn btn-supreme" onclick="azioneSalvaLicenza()">SALVA CONFIGURAZIONE SERVER</button>
-        <button class="btn" style="background: #e74c3c; color: white; margin-top: 10px;" onclick="document.getElementById('pannello-fornitore').classList.add('hidden')">Esci Sessione</button>
-    </div>
-
-    <!-- SEZIONE 5: CABINA DI REGIA (Nascosta di default) -->
-    <div id="pannello-studio" class="section hidden">
-        <h2>📸 Cabina di Regia Studio</h2>
-        <div class="menu-grid">
-            <a href="preventivi.html" class="menu-item">📋 Preventivi & Contratti</a>
-            <a href="agenda.html" class="menu-item">📅 Agenda Studio</a>
-            <a href="workflow.html" class="menu-item">⚙️ Workflow Produzione</a>
-            <a href="negozio.html" class="menu-item">🛒 Negozio & Ordini</a>
-            <a href="ricevute.html" class="menu-item">🧾 Cassa & Ricevute</a>
-            <a href="carica.html" class="menu-item">📸 Carica Foto R2</a>
-            <a href="selezioni.html" class="menu-item">🔗 Monitor Selezioni</a>
-            <a href="email.html" class="menu-item">📩 Email & Modelli</a>
-            <a href="gru.html" class="menu-item">⚙️ Utilità GRU</a>
-            <a href="lista-nozze.html" class="menu-item">🎁 Lista Nozze</a>
-        </div>
-        <button class="btn" style="background: #e74c3c; color: white; margin-top: 15px;" onclick="document.getElementById('pannello-studio').classList.add('hidden')">Esci Sessione</button>
-    </div>
-
-</div>
-
-<!-- SCRIPT INLINE: Distrugge qualsiasi problema di cache e definisce le funzioni mancanti -->
-<script>
-    // URL REALE DEL TUO WORKER (Sostituisci se il tuo sottodominio è diverso)
-    const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
-
-    // 1. FUNZIONE PER INVERTIRE LA VISIBILITÀ DELLA PASSWORD
-    function invertiVisibilitaPassword(idInput) {
-        const input = document.getElementById(idInput);
-        if (input.type === "password") {
-            input.type = "text";
-        } else {
-            input.type = "password";
-        }
-    }
-
-    // 2. FUNZIONE LOGIN ADMIN (Fornitore Supremo)
-    async function azioneLoginAdmin() {
-        const pwd = document.getElementById('admin-pwd').value;
-        const btn = event.target;
-        btn.textContent = "Verifica in corso...";
-        
-        try {
-            const response = await fetch(WORKER_URL + "/api/admin/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ password: pwd })
-            });
-            const data = await response.json();
-            
-            if (data.success) {
-                alert("✅ Accesso Fornitore Supremo riuscito!");
-                document.getElementById('pannello-fornitore').classList.remove('hidden');
-                // Scrolla verso il pannello
-                document.getElementById('pannello-fornitore').scrollIntoView({ behavior: 'smooth' });
+        // FUNZIONE: Inverti visibilità password
+        function invertiVisibilitaPassword(idInput) {
+            const input = document.getElementById(idInput);
+            const btn = input.nextElementSibling;
+            if (input.type === "password") {
+                input.type = "text";
+                btn.textContent = "Nascondi";
             } else {
-                alert("❌ Password errata: " + (data.error || "Controlla le credenziali"));
+                input.type = "password";
+                btn.textContent = "Mostra";
             }
-        } catch (e) {
-            alert("❌ Errore di connessione al Worker: " + e.message);
-        } finally {
-            btn.textContent = "Accedi al Server";
         }
-    }
 
-    // 3. FUNZIONE LOGIN STUDIO
-    async function azioneLoginStudio() {
-        const studioId = document.getElementById('studio-id').value;
-        const pwd = document.getElementById('studio-pwd').value;
-        const btn = event.target;
-        btn.textContent = "Verifica in corso...";
+        // FUNZIONE: Mostra messaggio di stato
+        function mostraStato(idElemento, messaggio, tipo) {
+            const el = document.getElementById(idElemento);
+            el.textContent = messaggio;
+            el.className = 'status-msg ' + tipo;
+            setTimeout(() => {
+                el.className = 'status-msg';
+            }, 5000);
+        }
 
-        try {
-            const response = await fetch(WORKER_URL + "/api/studio/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ studioId: studioId, password: pwd })
+        // FUNZIONE: Login Cliente (Sposi)
+        async function azioneLoginCliente() {
+            const id = document.getElementById('cliente-id').value.trim();
+            const pwd = document.getElementById('cliente-pwd').value.trim();
+            const btn = event.target;
+
+            if (!id || !pwd) {
+                mostraStato('status-cliente', 'Inserisci ID Evento e Password', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span>Verifica...';
+
+            try {
+                const response = await fetch(WORKER_URL + '/api/cliente/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ clienteId: id, password: pwd })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    mostraStato('status-cliente', 'Accesso riuscito. Apertura galleria...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'gallery.html?clienteId=' + encodeURIComponent(id);
+                    }, 1000);
+                } else {
+                    mostraStato('status-cliente', data.error || 'Credenziali non valide', 'error');
+                }
+            } catch (e) {
+                mostraStato('status-cliente', 'Errore di connessione al server', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Accedi Galleria';
+            }
+        }
+
+        // FUNZIONE: Login Studio
+        async function azioneLoginStudio() {
+            const id = document.getElementById('studio-id').value.trim();
+            const pwd = document.getElementById('studio-pwd').value.trim();
+            const btn = event.target;
+
+            if (!id || !pwd) {
+                mostraStato('status-studio', 'Inserisci ID Studio e Password', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span>Verifica...';
+
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studioId: id, password: pwd })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    // Salva ID studio in localStorage per gli altri moduli
+                    localStorage.setItem('studioId', data.studioId || id);
+                    mostraStato('status-studio', 'Benvenuto ' + (data.studioId || id) + '. Accesso in corso...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'agenda.html';
+                    }, 1000);
+                } else {
+                    mostraStato('status-studio', data.error || 'Credenziali non valide', 'error');
+                }
+            } catch (e) {
+                mostraStato('status-studio', 'Errore di connessione al server', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Entra in Plancia';
+            }
+        }
+
+        // FUNZIONE: Login Admin (Fornitore Supremo)
+        async function azioneLoginAdmin() {
+            const pwd = document.getElementById('admin-pwd').value.trim();
+            const btn = event.target;
+
+            if (!pwd) {
+                mostraStato('status-admin', 'Inserisci la Password Suprema', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span>Verifica...';
+
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: pwd })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    mostraStato('status-admin', 'Accesso Fornitore Supremo riuscito. Apertura Plancia...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'admin.html';
+                    }, 1000);
+                } else {
+                    mostraStato('status-admin', data.error || 'Password errata', 'error');
+                }
+            } catch (e) {
+                mostraStato('status-admin', 'Errore di connessione al server', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Accedi al Server';
+            }
+        }
+
+        // Permetti invio con tasto Enter nei campi password
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('cliente-pwd').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') azioneLoginCliente();
             });
-            const data = await response.json();
-
-            if (data.success) {
-                alert("✅ Accesso Cabina Regia riuscito! Benvenuto " + data.studioId);
-                document.getElementById('pannello-studio').classList.remove('hidden');
-                document.getElementById('pannello-studio').scrollIntoView({ behavior: 'smooth' });
-            } else {
-                alert("❌ Errore: " + (data.error || "Credenziali non valide"));
-            }
-        } catch (e) {
-            alert("❌ Errore di connessione: " + e.message);
-        } finally {
-            btn.textContent = "Entra in Plancia";
-        }
-    }
-
-    // 4. FUNZIONE LOGIN CLIENTE
-    async function azioneLoginCliente() {
-        const clienteId = document.getElementById('cliente-id').value;
-        const pwd = document.getElementById('cliente-pwd').value;
-        alert("Funzione login cliente attivata per ID: " + clienteId + "\n(Implementare reindirizzamento a gallery.html)");
-        // Qui puoi aggiungere il fetch a WORKER_URL + "/api/cliente/login"
-    }
-
-    // 5. FUNZIONE SALVA LICENZA (Admin)
-    async function azioneSalvaLicenza() {
-        const studioId = document.getElementById('nuovo-studio-id').value;
-        const stato = document.getElementById('stato-licenza').value;
-        
-        if (!studioId) {
-            alert("Inserisci un ID Studio valido");
-            return;
-        }
-
-        try {
-            const response = await fetch(WORKER_URL + "/api/admin/studio", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 
-                    studioId: studioId, 
-                    stato: stato,
-                    dataAggiornamento: new Date().toISOString()
-                })
+            document.getElementById('studio-pwd').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') azioneLoginStudio();
             });
-            const data = await response.json();
-            
-            if (data.success) {
-                alert("✅ Configurazione server salvata con successo per: " + studioId);
-            } else {
-                alert("❌ Errore nel salvataggio");
-            }
-        } catch (e) {
-            alert("❌ Errore di connessione: " + e.message);
-        }
-    }
-</script>
-
+            document.getElementById('admin-pwd').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') azioneLoginAdmin();
+            });
+        });
+    </script>
 </body>
 </html>
