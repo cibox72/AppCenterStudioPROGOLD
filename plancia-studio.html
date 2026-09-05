@@ -114,7 +114,6 @@
         .studio-details h3 { font-size: 16px; color: var(--text-main); margin-bottom: 2px; }
         .studio-details p { font-size: 13px; color: var(--text-light); }
 
-        /* CARD GRIGLIA MODULI */
         .modules-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -166,7 +165,6 @@
             display: block;
         }
 
-        /* Colori specifici per modulo */
         .module-agenda::before { background: linear-gradient(90deg, #48c9b0, #117a65); }
         .module-agenda h3 { color: #117a65; }
         .module-preventivi::before { background: linear-gradient(90deg, #5dade2, #1a5276); }
@@ -188,7 +186,6 @@
         .module-gru::before { background: linear-gradient(90deg, #aab7b8, #566573); }
         .module-gru h3 { color: #566573; }
 
-        /* SCHEDA REGISTRAZIONE (prima volta) */
         .registration-card {
             background: var(--card-bg);
             border-radius: var(--radius);
@@ -265,7 +262,6 @@
         .btn-outline:hover { background: var(--primary-light); }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; justify-content: center; }
 
-        /* FOOTER */
         .footer-branding {
             text-align: center;
             padding: 20px;
@@ -277,7 +273,6 @@
         }
         .footer-branding strong { color: var(--primary); font-weight: 700; }
 
-        /* TOAST */
         .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
         .toast {
             background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
@@ -300,7 +295,7 @@
     </style>
 </head>
 <body>
-    <!-- TOP BAR -->
+
     <div class="top-bar">
         <div class="nav-left">
             <button class="nav-btn" onclick="window.history.back()">Indietro</button>
@@ -327,7 +322,6 @@
             </div>
         </div>
 
-        <!-- SEZIONE REGISTRAZIONE (prima volta) -->
         <div id="registrationSection" class="registration-card hidden">
             <h2>Completa la Registrazione del tuo Studio</h2>
             <p class="subtitle">Inserisci i dati del tuo studio. Verranno usati per i tuoi documenti e per il tuo profilo.</p>
@@ -382,7 +376,6 @@
             </div>
         </div>
 
-        <!-- SEZIONE MODULI (dopo registrazione) -->
         <div id="modulesSection" class="hidden">
             <div class="modules-grid">
                 <a href="agenda.html" class="module-card module-agenda">
@@ -404,7 +397,7 @@
                 </a>
 
                 <a href="workflow.html" class="module-card module-workflow">
-                    <span class="module-icon">⚙️</span>
+                    <span class="module-icon">️</span>
                     <h3>Workflow Produzione</h3>
                     <p>Traccia lo stato di lavorazione dei servizi</p>
                 </a>
@@ -428,7 +421,7 @@
                 </a>
 
                 <a href="selezione-album.html" class="module-card module-selezione">
-                    <span class="module-icon">️</span>
+                    <span class="module-icon">🖼️</span>
                     <h3>Monitor Selezioni</h3>
                     <p>Controlla le selezioni dei clienti</p>
                 </a>
@@ -440,21 +433,21 @@
                 </a>
 
                 <a href="gru.html" class="module-card module-gru">
-                    <span class="module-icon">🛠️</span>
+                    <span class="module-icon">️</span>
                     <h3>Utility GRU</h3>
                     <p>Scrematura automatica foto selezionate</p>
                 </a>
             </div>
         </div>
 
-        <!-- FOOTER BRANDING -->
         <div class="footer-branding">
             Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong> - Tutti i diritti riservati
         </div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-      <script>
+
+    <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         let studioId = localStorage.getItem('studioId') || 'studio-gold';
         let logoBase64 = null;
@@ -464,15 +457,12 @@
         });
 
         function verificaRegistrazione() {
-            // Controllo se lo studio è già registrato (dati salvati in localStorage)
             const datiStudio = localStorage.getItem(`studio_dati_${studioId}`);
             
             if (datiStudio) {
-                // Studio già registrato: mostra i moduli
                 const studio = JSON.parse(datiStudio);
                 mostraPlanciaModuli(studio);
             } else {
-                // Prima volta: mostra scheda registrazione
                 document.getElementById('registrationSection').classList.remove('hidden');
             }
         }
@@ -509,7 +499,6 @@
                 return;
             }
 
-            // Controllo anti-doppio locale
             const studiEsistenti = JSON.parse(localStorage.getItem('studi_registrati_db') || '[]');
             const esisteGia = studiEsistenti.find(s => s.email === email || s.piva === piva);
             
@@ -532,17 +521,14 @@
             };
 
             try {
-                // Invio dati al fornitore (Worker)
                 await fetch(`${WORKER_URL}/api/studio/registra`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(datiStudio)
                 }).catch(err => console.log('Sync cloud in background...', err));
 
-                // Salvataggio locale
                 localStorage.setItem(`studio_dati_${studioId}`, JSON.stringify(datiStudio));
                 
-                // Aggiorna database locale studi
                 studiEsistenti.push(datiStudio);
                 localStorage.setItem('studi_registrati_db', JSON.stringify(studiEsistenti));
 
@@ -561,7 +547,6 @@
             document.getElementById('registrationSection').classList.add('hidden');
             document.getElementById('modulesSection').classList.remove('hidden');
             
-            // Mostra info studio nell'header
             document.getElementById('studioInfo').style.display = 'flex';
             document.getElementById('studioNomeDisplay').textContent = studio.nome;
             document.getElementById('studioEmailDisplay').textContent = studio.email;
