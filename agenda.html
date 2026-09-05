@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>07 Agenda - AppCenterStudio Premium</title>
+    <title>03 Agenda & Appuntamenti - AppCenterStudio Premium</title>
     <style>
         :root {
             --carta-zucchero: #7ea4b5;
@@ -11,7 +11,6 @@
             --rosa-antico: #dcaeaf;
             --scuro: #2b3a42;
             --chiaro: #f4f7f6;
-            --rosso-alert: #e07a7a;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -42,10 +41,9 @@
             transition: all 0.2s;
         }
         .nav-links button:hover { background: var(--chiaro); }
-        .btn-sync { background-color: #e8f0fe !important; border-color: var(--carta-zucchero) !important; color: var(--carta-zucchero) !important; }
         
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             width: 100%;
             margin: 30px auto;
             padding: 0 20px;
@@ -57,28 +55,33 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-        h1, h2, h3 { color: var(--scuro); margin-top: 0; }
+        h1, h2, h3 { color: var(--scuro); text-align: center; margin-top: 0; }
         
-        /* GRIGLIA LAYOUT */
-        .agenda-grid {
+        .grid-layout {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
-            margin-top: 20px;
+            margin-top: 25px;
         }
-        @media(max-width: 768px) { .agenda-grid { grid-template-columns: 1fr; } }
+        @media(max-width: 768px) { .grid-layout { grid-template-columns: 1fr; } }
 
-        /* FORM E INPUTS */
+        .form-section {
+            background: #fdfdfd;
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid var(--carta-zucchero);
+        }
         .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
         input, select, textarea {
             width: 100%;
             padding: 10px;
             border-radius: 6px;
             border: 1px solid #ccc;
             box-sizing: border-box;
-            font-family: inherit;
         }
+        
         button.btn-azione {
             width: 100%;
             padding: 12px;
@@ -88,60 +91,28 @@
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
         }
         button.btn-azione:hover { opacity: 0.9; }
 
-        /* LISTA IMPEGNI */
-        .lista-eventi {
-            max-height: 450px;
-            overflow-y: auto;
+        .agenda-list {
             border: 1px solid #ddd;
             border-radius: 6px;
             padding: 15px;
             background: #fafafa;
+            max-height: 450px;
+            overflow-y: auto;
         }
-        .evento-item {
+        .event-card {
             background: white;
             padding: 12px;
             border-radius: 6px;
             border-left: 5px solid var(--carta-zucchero);
             margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            position: relative;
         }
-        .evento-item.doppio { border-left-color: var(--rosa-antico); }
-        .delete-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            color: #cc0000;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* BOX ASSISTENZA */
-        .assistenza-box {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #fcf8f2;
-            border: 1px solid var(--rosa-antico);
-            border-radius: 8px;
-        }
-        .assistenza-buttons { display: flex; gap: 15px; margin-top: 15px; }
-        .assistenza-buttons a {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-            color: white;
-        }
-        .btn-anydesk { background-color: #ef4444; }
-        .btn-whatsapp { background-color: #22c55e; }
     </style>
 </head>
 <body>
@@ -151,102 +122,147 @@
         <div class="nav-links">
             <button onclick="window.history.back()">← Indietro</button>
             <button onclick="location.href='index.html'">🏠 Home</button>
-            <button onclick="inviaPromemoriaWhatsAppStudio()">📲 Promemoria WhatsApp</button>
         </div>
         <div class="nav-links">
-            <button onclick="eseguiBackupGlobaleKV()">📥 Backup Globale</button>
-            <button onclick="eseguiRipristinoGlobaleKV()">📤 Ripristino Globale</button>
-            <button class="btn-sync" id="status-sync">Sync Cloud: OK</button>
-            <button style="background-color: var(--rosa-antico); color: white;" onclick="location.href='index.html'">Esci</button>
+            <button onclick="eseguiBackupAgenda()">📥 Backup Globale</button>
+            <button onclick="eseguiRipristinoAgenda()">📤 Ripristino Globale</button>
         </div>
     </div>
 
     <div class="container">
         <div class="main-card">
-            <h1>📅 Agenda Digitale dello Studio</h1>
-            <p style="color: #666; margin-top: -10px;">I contratti approvati compaiono automaticamente. Gli impegni sono sincronizzati live su Cloudflare KV senza conflitti hardware.</p>
+            <h1>📅 Agenda Live Studio Condivisa</h1>
+            <p style="color: #666; margin-top: -10px; text-align: center;">Pianifica appuntamenti, scadenze e servizi fotografici in tempo reale su tutti i dispositivi dello studio.</p>
             
-            <div class="agenda-grid">
+            <div class="grid-layout">
                 
-                <!-- BLOCCO SINISTRO: INSERIMENTO EVENTO -->
+                <!-- PARTE SINISTRA: FORM DI INSERIMENTO -->
                 <div>
-                    <h3>✍️ Registra Nuovo Appuntamento / Servizio</h3>
-                    
-                    <div class="form-group">
-                        <label>Data Evento (GG/MM/AAAA) *</label>
-                        <input type="text" id="agenda-data" placeholder="Es. 25/12/2026" onblur="validaFormatoData(this)">
-                    </div>
+                    <div class="form-section">
+                        <h3>➕ Aggiungi Impegno / Evento</h3>
+                        
+                        <div class="form-group">
+                            <label>Titolo Evento *</label>
+                            <input type="text" id="age-titolo" placeholder="Es. Matrimonio Luca e Anna">
+                        </div>
 
-                    <div class="form-group">
-                        <label>Nome Cliente / Sposi *</label>
-                        <input type="text" id="agenda-cliente" placeholder="Es. Matrimonio Rossi">
-                    </div>
+                        <div class="form-group">
+                            <label>Data Evento (GG/MM/AAAA) *</label>
+                            <input type="text" id="age-data" placeholder="Es. 24/09/2026" onblur="validaDataFormato(this)">
+                        </div>
 
-                    <div class="form-group">
-                        <label>Tipologia Servizio</label>
-                        <select id="agenda-tipo">
-                            <option value="Matrimonio">💍 Matrimonio</option>
-                            <option value="Prematrimoniale">📸 Prematrimoniale</option>
-                            <option value="Battesimo/Comunione">👶 Battesimo / Comunione</option>
-                            <option value="Studio/Ritratto">🖼️ Servizio in Studio</option>
-                        </select>
-                    </div>
+                        <div class="form-group">
+                            <label>Tipologia Appuntamento</label>
+                            <select id="age-tipo">
+                                <option value="Servizio">📸 Servizio Fotografico</option>
+                                <option value="Appuntamento">💼 Appuntamento in Studio</option>
+                                <option value="Consegna">📖 Consegna Materiali</option>
+                            </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label>Note Interne e Orari</label>
-                        <textarea id="agenda-note" rows="3" placeholder="Dettagli logistici, orari chiesa o note aggiuntive..."></textarea>
-                    </div>
+                        <div class="form-group">
+                            <label>Note Interne / Dettagli</label>
+                            <textarea id="age-note" rows="3" placeholder="Inserisci orari, note di acconto o dettagli logistici..."></textarea>
+                        </div>
 
-                    <div id="alert-sovrapposizione" style="display:none; padding:10px; background-color: var(--rosso-alert); color:white; border-radius:6px; margin-bottom:15px; font-size:14px; font-weight:bold;">
-                        ⚠️ ATTENZIONE: Risulti già impegnato in questa data! Desideri forzare la memorizzazione come secondo evento parallelo?
+                        <button class="btn-azione" onclick="salvaEventoAgendaCloud()">REGISTRA APPUNTAMENTO</button>
                     </div>
-
-                    <button class="btn-azione" id="btn-salva-evento" onclick="controllaESalvaEvento()">SALVA IN AGENDA LIVE</button>
                 </div>
 
-                <!-- BLOCCO DESTRO: TABELLA VISUALIZZAZIONE LIVE -->
+                <!-- PARTE DESTRA: ELENCO CRONOLOGICO LIVE -->
                 <div>
-                    <h3>📋 Calendario Impegni Cronologico</h3>
-                    <div class="lista-eventi" id="contenitore-impegni">
-                        <p style="text-align:center; color:#999;">Caricamento eventi dal cloud...</p>
+                    <h3>📋 Elenco Cronologico Scadenze</h3>
+                    <div class="agenda-list" id="contenitore-eventi-agenda">
+                        <p style="text-align:center; color:#999; margin-top:15px;">Caricamento impegni dal cloud database...</p>
                     </div>
                 </div>
 
             </div>
-
-            <!-- SEZIONE ASSISTENZA SUPREMA -->
-            <div class="assistenza-box">
-                <h3>🛠️ Centro Assistenza Suprema & Interventi Rapidi</h3>
-                <p style="margin: 0; font-size: 14px; color: #555;">Se riscontri difficoltà o hai bisogno di configurazioni personalizzate, puoi richiedere assistenza immediata o prenotare un appuntamento.</p>
-                <div class="assistenza-buttons">
-                    <a href="https://anydesk.com" target="_blank" class="btn-anydesk">🖥️ Connettiti con AnyDesk</a>
-                    <a href="https://wa.me" target="_blank" class="btn-whatsapp">📅 Richiedi Appuntamento su WhatsApp</a>
-                </div>
-            </div>
-
         </div>
     </div>
 
 <script>
 const WORKER_URL = "https://workers.dev";
-// Recupero dell'ID dello studio dalla sessione volatile dell'index
-const STUDIO_ID = window.currentStudioId || "studio-demo"; 
+const STUDIO_ID = window.localStorage.getItem("studioId") || "demo";
 let impegniLocali = [];
-let forzaturaSecondoEvento = false;
 
-// Esegui il caricamento automatico appena si apre la pagina
-document.addEventListener("DOMContentLoaded", () => {
-    caricaEventiAgendaCloud();
-});
+document.addEventListener("DOMContentLoaded", caricaAgendaCloud);
 
-// Regola Rigida Formato Data: GG/MM/AAAA
-function validaFormatoData(input) {
+function validaDataFormato(input) {
     const regex = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
     if (input.value && !regex.test(input.value)) {
-        alert("Formato data non valido! Usa strettamente il formato GG/MM/AAAA (es. 15/09/2026).");
+        alert("Formato data non valido! Inserisci rigorosamente GG/MM/AAAA.");
         input.value = "";
     }
 }
 
-// Caricamento stateless dei dati da Cloudflare Worker
-async function caricaEventiAgendaCloud() {
+async function caricaAgendaCloud() {
+    try {
+        const response = await fetch(`${WORKER_URL}/api/studio/agenda?studioId=${encodeURIComponent(STUDIO_ID)}`);
+        if(response.ok) {
+            const data = await response.json();
+            impegniLocali = data.eventi || [];
+            renderizzaAgenda();
+        }
+    } catch {
+        renderizzaAgenda();
+    }
+}
+
+function renderizzaAgenda() {
+    const contenitore = document.getElementById("contenitore-eventi-agenda");
+    if(impegniLocali.length === 0) {
+        contenitore.innerHTML = '<p style="text-align:center; color:#999; margin-top:15px;">Nessun impegno salvato nel cloud.</p>';
+        return;
+    }
+    contenitore.innerHTML = "";
+    impegniLocali.forEach((e, idx) => {
+        const div = document.createElement("div");
+        div.className = "event-card";
+        
+        // Colore dinamico del bordo a seconda della tipologia
+        if (e.tipo === "Appuntamento") div.style.borderLeftColor = "var(--verde-salvia)";
+        if (e.tipo === "Consegna") div.style.borderLeftColor = "var(--rosa-antico)";
+
+        div.innerHTML = `
+            <div>
+                <strong>${e.titolo}</strong> - Data: <code>${e.data}</code><br>
+                <small style="color:#555;">Note: ${e.note || '--'}</small>
+            </div>
+            <button style="background:var(--rosa-antico); color:white; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-weight:bold;" onclick="eliminaEvento(${idx})">Elimina</button>
+        `;
+        contenitore.appendChild(div);
+    });
+}
+
+async function salvaEventoAgendaCloud() {
+    const titolo = document.getElementById("age-titolo").value.trim();
+    const data = document.getElementById("age-data").value.trim();
+    const tipo = document.getElementById("age-tipo").value;
+    const note = document.getElementById("age-note").value.trim();
+
+    if(!titolo || !data) {
+        alert("Compila tutti i campi obbligatori (*).");
+        return;
+    }
+
+    impegniLocali.unshift({ titolo, data, tipo, note });
+
+    try {
+        await fetch(`${WORKER_URL}/api/studio/agenda/salva`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ studioId: STUDIO_ID, eventi: impegniLocali })
+        });
+        alert("Appuntamento registrato live sul cloud!");
+        document.getElementById("age-titolo").value = "";
+        document.getElementById("age-data").value = "";
+        document.getElementById("age-note").value = "";
+        renderizzaAgenda();
+    } catch {
+        alert("Errore durante l'invio dell'appuntamento al cloud.");
+    }
+}
+
+async function eliminaEvento(idx) {
+    if(!confirm("Vuoi rimuovere definitivamente questo impegno dall'agenda condivisa?")) return;
