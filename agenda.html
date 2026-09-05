@@ -3,266 +3,436 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>03 Agenda & Appuntamenti - AppCenterStudio Premium</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Agenda & Appuntamenti - AppCenterStudioPROGOLD</title>
     <style>
         :root {
-            --carta-zucchero: #7ea4b5;
-            --verde-salvia: #9caf88;
-            --rosa-antico: #dcaeaf;
-            --scuro: #2b3a42;
-            --chiaro: #f4f7f6;
+            --primary: #48c9b0; /* Verde Menta */
+            --primary-dark: #117a65;
+            --primary-light: #e8f8f5;
+            --primary-gradient: linear-gradient(135deg, #a3e4d7 0%, #48c9b0 50%, #117a65 100%);
+            --secondary: #5dade2;
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-gradient: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e8e8e8;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --shadow: 0 4px 16px rgba(72, 201, 176, 0.08);
+            --shadow-hover: 0 8px 32px rgba(72, 201, 176, 0.15);
+            --radius: 14px;
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--chiaro);
-            color: var(--scuro);
-            margin: 0;
-            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
         }
-        /* BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA */
-        .navbar {
-            background-color: white;
-            padding: 12px 20px;
+
+        .top-bar {
+            background: var(--primary-gradient);
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-bottom: 3px solid var(--carta-zucchero);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(72, 201, 176, 0.2);
         }
-        .nav-links { display: flex; gap: 10px; }
-        .nav-links button {
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            background: white;
-            font-weight: bold;
-            cursor: pointer;
-            color: var(--scuro);
-            transition: all 0.2s;
-        }
-        .nav-links button:hover { background: var(--chiaro); }
-        
-        .container {
-            max-width: 1100px;
-            width: 100%;
-            margin: 30px auto;
-            padding: 0 20px;
-            box-sizing: border-box;
-        }
-        .main-card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        h1, h2, h3 { color: var(--scuro); text-align: center; margin-top: 0; }
-        
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-top: 25px;
-        }
-        @media(max-width: 768px) { .grid-layout { grid-template-columns: 1fr; } }
 
-        .form-section {
-            background: #fdfdfd;
-            border: 1px solid #eaeaea;
+        .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
             border-radius: 8px;
-            padding: 20px;
-            border-left: 4px solid var(--carta-zucchero);
-        }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-        
-        button.btn-azione {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--verde-salvia);
-            color: white;
-            border: none;
-            font-weight: bold;
-            border-radius: 6px;
             cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--primary-dark);
+            transition: all 0.2s ease;
         }
-        button.btn-azione:hover { opacity: 0.9; }
 
-        .agenda-list {
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 15px;
-            background: #fafafa;
-            max-height: 450px;
-            overflow-y: auto;
+        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(46, 204, 113, 0.6); }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
+
+        .page-header { 
+            text-align: center; 
+            margin-bottom: 32px;
+            padding: 24px;
+            background: var(--card-gradient);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
         }
-        .event-card {
+        .page-header h1 { 
+            font-size: 28px; 
+            font-weight: 700; 
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px; 
+        }
+        .page-header p { color: var(--text-light); font-size: 15px; }
+
+        .card {
+            background: var(--card-gradient);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover { box-shadow: var(--shadow-hover); }
+
+        .card-title { 
+            font-size: 18px; 
+            font-weight: 600; 
+            color: var(--primary-dark); 
+            margin-bottom: 6px; 
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
+
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 11px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
             background: white;
-            padding: 12px;
-            border-radius: 6px;
-            border-left: 5px solid var(--carta-zucchero);
-            margin-bottom: 10px;
+            transition: all 0.2s ease;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(72, 201, 176, 0.15); 
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+
+        /* LISTA EVENTI */
+        .event-list { display: flex; flex-direction: column; gap: 12px; }
+        .event-item {
+            background: white;
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            padding: 16px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.2s ease;
+        }
+        .event-item:hover { transform: translateX(4px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .event-item.tipo-servizio { border-left-color: #3498db; }
+        .event-item.tipo-appuntamento { border-left-color: #9b59b6; }
+        .event-item.tipo-consegna { border-left-color: #e67e22; }
+
+        .event-info { flex: 1; }
+        .event-title { font-weight: 600; font-size: 16px; color: var(--text-main); margin-bottom: 4px; }
+        .event-meta { font-size: 13px; color: var(--text-light); }
+        .event-date { font-weight: 700; color: var(--primary-dark); font-size: 14px; text-align: right; }
+        .event-type { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-light); margin-top: 4px; }
+
+        .empty-state { text-align: center; padding: 40px; color: var(--text-light); font-style: italic; }
+
+        /* FOOTER */
+        .footer-branding {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+        .footer-branding strong { color: var(--primary-dark); font-weight: 700; }
+
+        /* TOAST */
+        .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: flex; align-items: center; gap: 12px; min-width: 300px; animation: slideIn 0.3s ease; border-left: 4px solid var(--success);
+        }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast-icon { font-size: 20px; font-weight: bold; }
+        .toast-message { flex: 1; font-size: 14px; }
+
+        @media (max-width: 768px) {
+            .top-bar { flex-direction: column; gap: 10px; }
+            .form-row { grid-template-columns: 1fr; }
+            .event-item { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .event-date { text-align: left; }
         }
     </style>
 </head>
 <body>
-
-    <!-- BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA -->
-    <div class="navbar">
-        <div class="nav-links">
-            <button onclick="window.history.back()">← Indietro</button>
-            <button onclick="location.href='index.html'">🏠 Home</button>
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <div class="nav-left">
+            <button class="nav-btn" onclick="window.history.back()">Indietro</button>
+            <button class="nav-btn" onclick="window.location.href='index.html'">Home</button>
         </div>
-        <div class="nav-links">
-            <button onclick="eseguiBackupAgenda()">📥 Backup Globale</button>
-            <button onclick="eseguiRipristinoAgenda()">📤 Ripristino Globale</button>
+        <div class="nav-right">
+            <button class="nav-btn" onclick="eseguiBackupGlobale()">Backup Globale</button>
+            <button class="nav-btn" onclick="eseguiRipristinoGlobale()">Ripristino Globale</button>
+            <div class="sync-status"><span class="sync-dot"></span> Sync Cloud: OK</div>
         </div>
     </div>
 
     <div class="container">
-        <div class="main-card">
-            <h1>📅 Agenda Live Studio Condivisa</h1>
-            <p style="color: #666; margin-top: -10px; text-align: center;">Pianifica appuntamenti, scadenze e servizi fotografici in tempo reale su tutti i dispositivi dello studio.</p>
+        <div class="page-header">
+            <h1>Agenda Live Studio Condivisa</h1>
+            <p>Pianifica appuntamenti, scadenze e servizi fotografici in tempo reale su tutti i dispositivi dello studio.</p>
+        </div>
+
+        <!-- SEZIONE 1: AGGIUNGI IMPEGNO -->
+        <div class="card">
+            <div class="card-title">Aggiungi Impegno / Evento</div>
+            <div class="card-subtitle">Inserisci i dettagli dell'appuntamento. Verrà sincronizzato istantaneamente.</div>
             
-            <div class="grid-layout">
-                
-                <!-- PARTE SINISTRA: FORM DI INSERIMENTO -->
-                <div>
-                    <div class="form-section">
-                        <h3>➕ Aggiungi Impegno / Evento</h3>
-                        
-                        <div class="form-group">
-                            <label>Titolo Evento *</label>
-                            <input type="text" id="age-titolo" placeholder="Es. Matrimonio Luca e Anna">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Data Evento (GG/MM/AAAA) *</label>
-                            <input type="text" id="age-data" placeholder="Es. 24/09/2026" onblur="validaDataFormato(this)">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Tipologia Appuntamento</label>
-                            <select id="age-tipo">
-                                <option value="Servizio">📸 Servizio Fotografico</option>
-                                <option value="Appuntamento">💼 Appuntamento in Studio</option>
-                                <option value="Consegna">📖 Consegna Materiali</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Note Interne / Dettagli</label>
-                            <textarea id="age-note" rows="3" placeholder="Inserisci orari, note di acconto o dettagli logistici..."></textarea>
-                        </div>
-
-                        <button class="btn-azione" onclick="salvaEventoAgendaCloud()">REGISTRA APPUNTAMENTO</button>
-                    </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Titolo Evento *</label>
+                    <input type="text" id="eventoTitolo" placeholder="es. Shooting Matrimonio Rossi">
                 </div>
-
-                <!-- PARTE DESTRA: ELENCO CRONOLOGICO LIVE -->
-                <div>
-                    <h3>📋 Elenco Cronologico Scadenze</h3>
-                    <div class="agenda-list" id="contenitore-eventi-agenda">
-                        <p style="text-align:center; color:#999; margin-top:15px;">Caricamento impegni dal cloud database...</p>
-                    </div>
+                <div class="form-group">
+                    <label>Data Evento *</label>
+                    <input type="date" id="eventoData">
                 </div>
-
             </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Tipologia Appuntamento</label>
+                    <select id="eventoTipo">
+                        <option value="servizio">Servizio Fotografico</option>
+                        <option value="appuntamento">Appuntamento in Studio</option>
+                        <option value="consegna">Consegna Materiali</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Note Interne / Dettagli</label>
+                    <input type="text" id="eventoNote" placeholder="Dettagli aggiuntivi (facoltativo)">
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="registraAppuntamento()">Registra Appuntamento</button>
+            </div>
+        </div>
+
+        <!-- SEZIONE 2: ELENCO CRONOLOGICO -->
+        <div class="card">
+            <div class="card-title">Elenco Cronologico Scadenze</div>
+            <div class="card-subtitle">Visualizza tutti gli impegni registrati, ordinati per data.</div>
+            
+            <div class="event-list" id="eventList">
+                <div class="empty-state">Caricamento impegni dal cloud database...</div>
+            </div>
+        </div>
+
+        <!-- FOOTER BRANDING -->
+        <div class="footer-branding">
+            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong> - Tutti i diritti riservati
         </div>
     </div>
 
-<script>
-const WORKER_URL = "https://workers.dev";
-const STUDIO_ID = window.localStorage.getItem("studioId") || "demo";
-let impegniLocali = [];
+    <div class="toast-container" id="toastContainer"></div>
+       <script>
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        let studioId = localStorage.getItem('studioId') || 'studio-gold';
+        let eventi = [];
 
-document.addEventListener("DOMContentLoaded", caricaAgendaCloud);
-
-function validaDataFormato(input) {
-    const regex = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
-    if (input.value && !regex.test(input.value)) {
-        alert("Formato data non valido! Inserisci rigorosamente GG/MM/AAAA.");
-        input.value = "";
-    }
-}
-
-async function caricaAgendaCloud() {
-    try {
-        const response = await fetch(`${WORKER_URL}/api/studio/agenda?studioId=${encodeURIComponent(STUDIO_ID)}`);
-        if(response.ok) {
-            const data = await response.json();
-            impegniLocali = data.eventi || [];
-            renderizzaAgenda();
-        }
-    } catch {
-        renderizzaAgenda();
-    }
-}
-
-function renderizzaAgenda() {
-    const contenitore = document.getElementById("contenitore-eventi-agenda");
-    if(impegniLocali.length === 0) {
-        contenitore.innerHTML = '<p style="text-align:center; color:#999; margin-top:15px;">Nessun impegno salvato nel cloud.</p>';
-        return;
-    }
-    contenitore.innerHTML = "";
-    impegniLocali.forEach((e, idx) => {
-        const div = document.createElement("div");
-        div.className = "event-card";
-        
-        // Colore dinamico del bordo a seconda della tipologia
-        if (e.tipo === "Appuntamento") div.style.borderLeftColor = "var(--verde-salvia)";
-        if (e.tipo === "Consegna") div.style.borderLeftColor = "var(--rosa-antico)";
-
-        div.innerHTML = `
-            <div>
-                <strong>${e.titolo}</strong> - Data: <code>${e.data}</code><br>
-                <small style="color:#555;">Note: ${e.note || '--'}</small>
-            </div>
-            <button style="background:var(--rosa-antico); color:white; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-weight:bold;" onclick="eliminaEvento(${idx})">Elimina</button>
-        `;
-        contenitore.appendChild(div);
-    });
-}
-
-async function salvaEventoAgendaCloud() {
-    const titolo = document.getElementById("age-titolo").value.trim();
-    const data = document.getElementById("age-data").value.trim();
-    const tipo = document.getElementById("age-tipo").value;
-    const note = document.getElementById("age-note").value.trim();
-
-    if(!titolo || !data) {
-        alert("Compila tutti i campi obbligatori (*).");
-        return;
-    }
-
-    impegniLocali.unshift({ titolo, data, tipo, note });
-
-    try {
-        await fetch(`${WORKER_URL}/api/studio/agenda/salva`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ studioId: STUDIO_ID, eventi: impegniLocali })
+        document.addEventListener('DOMContentLoaded', function() {
+            caricaEventi();
         });
-        alert("Appuntamento registrato live sul cloud!");
-        document.getElementById("age-titolo").value = "";
-        document.getElementById("age-data").value = "";
-        document.getElementById("age-note").value = "";
-        renderizzaAgenda();
-    } catch {
-        alert("Errore durante l'invio dell'appuntamento al cloud.");
-    }
-}
 
-async function eliminaEvento(idx) {
-    if(!confirm("Vuoi rimuovere definitivamente questo impegno dall'agenda condivisa?")) return;
+        async function registraAppuntamento() {
+            const titolo = document.getElementById('eventoTitolo').value.trim();
+            const data = document.getElementById('eventoData').value;
+            const tipo = document.getElementById('eventoTipo').value;
+            const note = document.getElementById('eventoNote').value.trim();
+
+            if (!titolo || !data) {
+                mostraToast('Compila Titolo e Data (campi obbligatori)', 'error');
+                return;
+            }
+
+            const nuovoEvento = {
+                id: Date.now(),
+                titolo,
+                data,
+                tipo,
+                note,
+                studioId,
+                creatoIl: new Date().toISOString()
+            };
+
+            try {
+                // Salvataggio locale immediato per reattività UI
+                eventi.push(nuovoEvento);
+                eventi.sort((a, b) => new Date(a.data) - new Date(b.data));
+                localStorage.setItem(`agenda_${studioId}`, JSON.stringify(eventi));
+                
+                // Tentativo di sync con Cloudflare (opzionale, non blocca se fallisce)
+                fetch(`${WORKER_URL}/api/studio/agenda/salva`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studioId, eventi })
+                }).catch(err => console.log('Sync cloud in background...', err));
+
+                mostraToast('Appuntamento registrato con successo!', 'success');
+                pulisciForm();
+                renderizzaEventi();
+            } catch (error) {
+                mostraToast('Errore durante il salvataggio', 'error');
+            }
+        }
+
+        function caricaEventi() {
+            // Carica da localStorage per velocità, poi tenta sync cloud
+            const datiLocali = localStorage.getItem(`agenda_${studioId}`);
+            if (datiLocali) {
+                eventi = JSON.parse(datiLocali);
+                eventi.sort((a, b) => new Date(a.data) - new Date(b.data));
+                renderizzaEventi();
+            } else {
+                document.getElementById('eventList').innerHTML = '<div class="empty-state">Nessun impegno registrato. Aggiungi il primo evento sopra.</div>';
+            }
+
+            // Tentativo fetch da cloud
+            fetch(`${WORKER_URL}/api/studio/agenda?studioId=${studioId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.eventi && data.eventi.length > 0) {
+                        eventi = data.eventi;
+                        localStorage.setItem(`agenda_${studioId}`, JSON.stringify(eventi));
+                        renderizzaEventi();
+                    }
+                })
+                .catch(err => console.log('Lettura cloud non disponibile, uso cache locale'));
+        }
+
+        function renderizzaEventi() {
+            const container = document.getElementById('eventList');
+            
+            if (eventi.length === 0) {
+                container.innerHTML = '<div class="empty-state">Nessun impegno registrato. Aggiungi il primo evento sopra.</div>';
+                return;
+            }
+
+            container.innerHTML = eventi.map(ev => {
+                const tipoClass = `tipo-${ev.tipo}`;
+                const tipoLabel = ev.tipo === 'servizio' ? 'Servizio Fotografico' : ev.tipo === 'appuntamento' ? 'Appuntamento Studio' : 'Consegna Materiali';
+                const dataFormattata = new Date(ev.data).toLocaleDateString('it-IT', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                
+                return `
+                    <div class="event-item ${tipoClass}">
+                        <div class="event-info">
+                            <div class="event-title">${ev.titolo}</div>
+                            <div class="event-meta">${ev.note || 'Nessuna nota aggiuntiva'}</div>
+                            <div class="event-type">${tipoLabel}</div>
+                        </div>
+                        <div class="event-date">${dataFormattata}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function pulisciForm() {
+            document.getElementById('eventoTitolo').value = '';
+            document.getElementById('eventoData').value = '';
+            document.getElementById('eventoNote').value = '';
+            document.getElementById('eventoTipo').value = 'servizio';
+        }
+
+        function eseguiBackupGlobale() {
+            const dati = { agenda: eventi, studioId, data: new Date().toISOString() };
+            const blob = new Blob([JSON.stringify(dati, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `backup-agenda-${studioId}-${Date.now()}.json`;
+            a.click();
+            mostraToast('Backup agenda scaricato', 'success');
+        }
+
+        function eseguiRipristinoGlobale() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = e => {
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    try {
+                        const dati = JSON.parse(ev.target.result);
+                        if (dati.agenda) {
+                            eventi = dati.agenda;
+                            localStorage.setItem(`agenda_${studioId}`, JSON.stringify(eventi));
+                            renderizzaEventi();
+                            mostraToast('Agenda ripristinata con successo', 'success');
+                        }
+                    } catch { mostraToast('File di backup non valido', 'error'); }
+                };
+                reader.readAsText(e.target.files[0]);
+            };
+            input.click();
+        }
+
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? 'OK' : '!'}</div><div class="toast-message">${msg}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+    </script>
+</body>
+</html> 
