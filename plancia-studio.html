@@ -159,32 +159,62 @@
             line-height: 1.5;
         }
 
-        .module-card .module-icon {
-            font-size: 32px;
-            margin-bottom: 12px;
-            display: block;
+        /* Badge iniziale al posto delle emoji */
+        .module-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 14px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
+        /* Colori specifici per modulo */
         .module-agenda::before { background: linear-gradient(90deg, #48c9b0, #117a65); }
         .module-agenda h3 { color: #117a65; }
+        .module-agenda .module-badge { background: linear-gradient(135deg, #48c9b0, #117a65); }
+
         .module-preventivi::before { background: linear-gradient(90deg, #5dade2, #1a5276); }
         .module-preventivi h3 { color: #1a5276; }
+        .module-preventivi .module-badge { background: linear-gradient(135deg, #5dade2, #1a5276); }
+
         .module-clienti::before { background: linear-gradient(90deg, #1abc9c, #0e6655); }
         .module-clienti h3 { color: #0e6655; }
+        .module-clienti .module-badge { background: linear-gradient(135deg, #1abc9c, #0e6655); }
+
         .module-workflow::before { background: linear-gradient(90deg, #f0b27a, #ca6f1e); }
         .module-workflow h3 { color: #ca6f1e; }
+        .module-workflow .module-badge { background: linear-gradient(135deg, #f0b27a, #ca6f1e); }
+
         .module-email::before { background: linear-gradient(90deg, #f4d03f, #b7950b); }
         .module-email h3 { color: #b7950b; }
+        .module-email .module-badge { background: linear-gradient(135deg, #f4d03f, #b7950b); }
+
         .module-negozio::before { background: linear-gradient(90deg, #f1948a, #943126); }
         .module-negozio h3 { color: #943126; }
+        .module-negozio .module-badge { background: linear-gradient(135deg, #f1948a, #943126); }
+
         .module-ricevute::before { background: linear-gradient(90deg, #82e0aa, #1e8449); }
         .module-ricevute h3 { color: #1e8449; }
+        .module-ricevute .module-badge { background: linear-gradient(135deg, #82e0aa, #1e8449); }
+
         .module-selezione::before { background: linear-gradient(90deg, #bb8fce, #6c3483); }
         .module-selezione h3 { color: #6c3483; }
+        .module-selezione .module-badge { background: linear-gradient(135deg, #bb8fce, #6c3483); }
+
         .module-lista::before { background: linear-gradient(90deg, #f1948a, #c0392b); }
         .module-lista h3 { color: #c0392b; }
+        .module-lista .module-badge { background: linear-gradient(135deg, #f1948a, #c0392b); }
+
         .module-gru::before { background: linear-gradient(90deg, #aab7b8, #566573); }
         .module-gru h3 { color: #566573; }
+        .module-gru .module-badge { background: linear-gradient(135deg, #aab7b8, #566573); }
 
         .registration-card {
             background: var(--card-bg);
@@ -379,61 +409,61 @@
         <div id="modulesSection" class="hidden">
             <div class="modules-grid">
                 <a href="agenda.html" class="module-card module-agenda">
-                    <span class="module-icon"></span>
+                    <div class="module-badge">AG</div>
                     <h3>Agenda</h3>
                     <p>Pianifica appuntamenti e servizi fotografici</p>
                 </a>
 
                 <a href="preventivi.html" class="module-card module-preventivi">
-                    <span class="module-icon">📋</span>
+                    <div class="module-badge">PR</div>
                     <h3>Preventivi & Contratti</h3>
                     <p>Crea preventivi professionali con il tuo logo</p>
                 </a>
 
                 <a href="clienti-foto.html" class="module-card module-clienti">
-                    <span class="module-icon">📸</span>
+                    <div class="module-badge">CF</div>
                     <h3>Clienti & Foto</h3>
                     <p>Gestisci clienti e carica foto su cloud</p>
                 </a>
 
                 <a href="workflow.html" class="module-card module-workflow">
-                    <span class="module-icon">️</span>
+                    <div class="module-badge">WF</div>
                     <h3>Workflow Produzione</h3>
                     <p>Traccia lo stato di lavorazione dei servizi</p>
                 </a>
 
                 <a href="email.html" class="module-card module-email">
-                    <span class="module-icon">📩</span>
+                    <div class="module-badge">EM</div>
                     <h3>Email & Modelli</h3>
                     <p>Gestisci comunicazioni e modelli rapidi</p>
                 </a>
 
                 <a href="negozio.html" class="module-card module-negozio">
-                    <span class="module-icon">🛒</span>
+                    <div class="module-badge">NZ</div>
                     <h3>Negozio & Ordini</h3>
                     <p>Vendi stampe, gadget e servizi online</p>
                 </a>
 
                 <a href="ricevute.html" class="module-card module-ricevute">
-                    <span class="module-icon">🧾</span>
+                    <div class="module-badge">RC</div>
                     <h3>Cassa & Ricevute</h3>
                     <p>Emetti ricevute e gestisci la cassa</p>
                 </a>
 
                 <a href="selezione-album.html" class="module-card module-selezione">
-                    <span class="module-icon">🖼️</span>
+                    <div class="module-badge">SA</div>
                     <h3>Monitor Selezioni</h3>
                     <p>Controlla le selezioni dei clienti</p>
                 </a>
 
                 <a href="lista-regali.html" class="module-card module-lista">
-                    <span class="module-icon">🎁</span>
+                    <div class="module-badge">LN</div>
                     <h3>Lista Nozze</h3>
                     <p>Gestisci contributi e messaggi auguri</p>
                 </a>
 
                 <a href="gru.html" class="module-card module-gru">
-                    <span class="module-icon">️</span>
+                    <div class="module-badge">GR</div>
                     <h3>Utility GRU</h3>
                     <p>Scrematura automatica foto selezionate</p>
                 </a>
