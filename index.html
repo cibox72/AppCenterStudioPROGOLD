@@ -13,20 +13,15 @@
             --primary-dark: #6c3483;
             --primary-light: #f4ecf7;
             --primary-gradient: linear-gradient(135deg, #a569bd 0%, #8e44ad 50%, #6c3483 100%);
-            --secondary: #2980b9;
-            --secondary-gradient: linear-gradient(135deg, #5dade2 0%, #2980b9 100%);
-            --lead-accent: #f39c12;
-            --lead-gradient: linear-gradient(135deg, #f8c471 0%, #f39c12 100%);
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #f4ecf7 40%, #ebf5fb 100%);
-            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-bg: rgba(255, 255, 255, 0.98);
             --text-main: #2c3e50;
             --text-light: #7f8c8d;
             --border-color: #e8e8e8;
             --success: #27ae60;
-            --warning: #f39c12;
             --danger: #e74c3c;
-            --shadow: 0 8px 32px rgba(142, 68, 173, 0.12);
-            --shadow-hover: 0 12px 40px rgba(142, 68, 173, 0.2);
+            --lead-accent: #f39c12;
+            --shadow: 0 12px 40px rgba(142, 68, 173, 0.15);
             --radius: 16px;
         }
 
@@ -41,396 +36,320 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
-        .main-wrapper {
-            flex: 1;
+        .main-container {
+            width: 100%;
+            max-width: 480px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
         }
 
-        /* LOGO CARD */
-        .logo-card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 32px 40px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
+        /* LOGO AREA */
+        .brand-header {
             text-align: center;
             margin-bottom: 32px;
-            backdrop-filter: blur(10px);
-            max-width: 480px;
-            width: 100%;
         }
 
-        .logo-card img {
-            max-width: 180px;
+        .brand-header img {
+            max-width: 140px;
             height: auto;
             margin-bottom: 16px;
-            border-radius: 8px;
+            border-radius: 12px;
         }
 
-        .logo-card h1 {
-            font-size: 24px;
-            font-weight: 700;
+        .brand-header h1 {
+            font-size: 22px;
+            font-weight: 800;
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 8px;
             letter-spacing: -0.5px;
+            margin-bottom: 4px;
         }
 
-        .logo-card p {
+        .brand-header p {
             color: var(--text-light);
-            font-size: 14px;
-            font-weight: 400;
+            font-size: 13px;
+            font-weight: 500;
         }
 
-        /* LOGIN CARDS GRID */
-        .login-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            width: 100%;
-            margin-bottom: 40px;
-        }
-
+        /* UNIFIED LOGIN CARD */
         .login-card {
             background: var(--card-bg);
             border-radius: var(--radius);
-            padding: 28px;
+            padding: 36px 32px;
             box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            width: 100%;
+            backdrop-filter: blur(20px);
         }
-
-        .login-card:hover {
-            box-shadow: var(--shadow-hover);
-            transform: translateY(-4px);
-        }
-
-        .login-card.cliente { border-top: 4px solid var(--secondary); }
-        .login-card.studio { border-top: 4px solid var(--primary); }
-        .login-card.admin { border-top: 4px solid var(--danger); }
 
         .login-card h2 {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 6px;
             color: var(--text-main);
+            text-align: center;
+            margin-bottom: 24px;
         }
 
-        .login-card .subtitle {
+        /* ROLE SELECTOR (Segmented Control) */
+        .role-selector {
+            display: flex;
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 24px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 10px 0;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
             font-size: 13px;
+            font-weight: 600;
             color: var(--text-light);
-            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .login-card.cliente h2 { color: var(--secondary); }
-        .login-card.studio h2 { color: var(--primary); }
-        .login-card.admin h2 { color: var(--danger); }
+        .role-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
 
+        /* FORM FIELDS */
         .form-group {
             display: flex;
             flex-direction: column;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
         }
 
         .form-group label {
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-main);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .form-group input, .form-group select {
-            padding: 11px 14px;
+        .form-group input {
+            padding: 14px 16px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 10px;
+            font-size: 15px;
             font-family: inherit;
             background: white;
             transition: all 0.2s ease;
             width: 100%;
         }
 
-        .form-group input:focus, .form-group select:focus {
+        .form-group input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.1);
+            box-shadow: 0 0 0 4px rgba(142, 68, 173, 0.1);
         }
-
-        .input-wrapper { position: relative; }
-        .input-wrapper input { width: 100%; padding-right: 40px; }
-
-        .eye-btn {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 12px;
-            color: var(--text-light);
-            padding: 4px;
-            font-weight: 600;
-        }
-        .eye-btn:hover { color: var(--primary); }
 
         .btn-login {
             width: 100%;
-            padding: 12px 20px;
+            padding: 14px;
             border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
+            border-radius: 10px;
+            background: var(--primary-gradient);
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
             margin-top: 8px;
-            color: white;
+            letter-spacing: 0.5px;
         }
 
-        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .btn-login.cliente { background: var(--secondary-gradient); }
-        .btn-login.studio { background: var(--primary-gradient); }
-        .btn-login.admin { background: linear-gradient(135deg, #e74c3c, #c0392b); }
-        .btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(142, 68, 173, 0.3);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+        }
 
         .status-msg {
-            margin-top: 12px;
-            padding: 10px 14px;
+            margin-top: 16px;
+            padding: 12px;
             border-radius: 8px;
             font-size: 13px;
+            text-align: center;
             display: none;
         }
         .status-msg.success { display: block; background: #eafaf1; color: var(--success); border: 1px solid var(--success); }
         .status-msg.error { display: block; background: #fdedec; color: var(--danger); border: 1px solid var(--danger); }
 
-        /* SEZIONE REGISTRAZIONE STUDIO (LEAD GENERATION) */
-        .lead-section {
-            width: 100%;
-            max-width: 800px;
-            margin-bottom: 40px;
+        /* LEAD LINK (Below card) */
+        .lead-link-container {
+            margin-top: 24px;
+            text-align: center;
         }
 
-        .lead-card {
+        .lead-link {
+            color: var(--lead-accent);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .lead-link:hover {
+            color: #d68910;
+            text-decoration: underline;
+        }
+
+        /* LEAD FORM (Hidden by default) */
+        .lead-form-card {
+            display: none;
             background: var(--card-bg);
             border-radius: var(--radius);
             padding: 32px;
             box-shadow: var(--shadow);
             border: 2px solid var(--lead-accent);
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .lead-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 6px;
-            background: var(--lead-gradient);
-        }
-
-        .lead-header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .lead-header h2 {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 8px;
-        }
-
-        .lead-header p {
-            color: var(--text-light);
-            font-size: 14px;
-        }
-
-        .lead-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-        }
-
-        .lead-form .full-width {
-            grid-column: 1 / -1;
-        }
-
-        .btn-lead {
-            background: var(--lead-gradient);
-            color: white;
-            padding: 14px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 20px;
         }
 
-        .btn-lead:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(243, 156, 18, 0.3); }
+        .lead-form-card.active { display: block; }
+        .lead-form-card h3 { color: var(--text-main); margin-bottom: 16px; text-align: center; font-size: 18px; }
+        .btn-lead { background: var(--lead-accent); color: white; width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 10px; }
 
-        /* FOOTER BRANDING */
+        /* FOOTER */
         .footer-branding {
+            margin-top: 40px;
             text-align: center;
-            padding: 20px;
             color: var(--text-light);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
-            border-top: 1px solid var(--border-color);
-            background: rgba(255, 255, 255, 0.5);
-            margin-top: auto;
         }
-        .footer-branding strong { color: var(--primary); font-weight: 700; letter-spacing: 0.5px; }
+        .footer-branding strong { color: var(--primary); }
 
         /* LOADING */
         .loading {
             display: inline-block; width: 14px; height: 14px;
             border: 2px solid rgba(255,255,255,0.3); border-top-color: white;
             border-radius: 50%; animation: spin 0.8s linear infinite;
-            margin-right: 6px; vertical-align: middle;
+            margin-right: 8px; vertical-align: middle;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        @media (max-width: 768px) {
-            .main-wrapper { padding: 24px 16px; }
-            .logo-card { padding: 24px; }
-            .logo-card h1 { font-size: 20px; }
-            .login-grid { grid-template-columns: 1fr; }
-            .login-card { padding: 24px; }
-            .lead-card { padding: 24px; }
+        @media (max-width: 480px) {
+            .login-card { padding: 24px 20px; }
+            .role-btn { font-size: 12px; padding: 8px 0; }
         }
     </style>
 </head>
 <body>
 
-    <div class="main-wrapper">
+    <div class="main-container">
 
-        <!-- LOGO CARD -->
-        <div class="logo-card">
-            <img src="logo.jpg" alt="AppCenterStudioPROGOLD Logo">
+        <!-- LOGO & BRANDING -->
+        <div class="brand-header">
+            <img src="logo.jpg" alt="AppCenterStudioPROGOLD">
             <h1>AppCenterStudioPROGOLD</h1>
-            <p>Suite Premium per Studi Fotografici Professionali</p>
+            <p>Suite Premium per Studi Fotografici</p>
         </div>
 
-        <!-- LOGIN CARDS -->
-        <div class="login-grid">
-
-            <!-- CLIENTI -->
-            <div class="login-card cliente">
-                <h2>Accesso Clienti</h2>
-                <div class="subtitle">Galleria fotografica e selezione album</div>
-                <div class="form-group">
-                    <label>ID Evento</label>
-                    <input type="text" id="cliente-id" placeholder="Inserisci ID Evento">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <div class="input-wrapper">
-                        <input type="password" id="cliente-pwd" placeholder="Password">
-                        <button class="eye-btn" onclick="invertiVisibilitaPassword('cliente-pwd')" type="button">Mostra</button>
-                    </div>
-                </div>
-                <button class="btn-login cliente" onclick="azioneLoginCliente()">Accedi Galleria</button>
-                <div class="status-msg" id="status-cliente"></div>
+        <!-- UNIFIED LOGIN CARD -->
+        <div class="login-card">
+            <h2>Accedi alla tua Area</h2>
+            
+            <!-- Role Selector -->
+            <div class="role-selector">
+                <button class="role-btn active" onclick="selezionaRuolo('cliente', this)">Cliente</button>
+                <button class="role-btn" onclick="selezionaRuolo('studio', this)">Studio</button>
+                <button class="role-btn" onclick="selezionaRuolo('admin', this)">Fornitore</button>
             </div>
 
-            <!-- STUDIO -->
-            <div class="login-card studio">
-                <h2>Cabina Regia Studio</h2>
-                <div class="subtitle">Gestione completa servizi e clienti</div>
-                <div class="form-group">
-                    <label>ID Studio</label>
-                    <input type="text" id="studio-id" placeholder="es. studio-gold">
-                </div>
-                <div class="form-group">
-                    <label>Password Studio</label>
-                    <div class="input-wrapper">
-                        <input type="password" id="studio-pwd" placeholder="Password">
-                        <button class="eye-btn" onclick="invertiVisibilitaPassword('studio-pwd')" type="button">Mostra</button>
-                    </div>
-                </div>
-                <button class="btn-login studio" onclick="azioneLoginStudio()">Entra in Plancia</button>
-                <div class="status-msg" id="status-studio"></div>
+            <div class="form-group">
+                <label id="label-id">ID Evento / Cliente</label>
+                <input type="text" id="user-id" placeholder="Inserisci il tuo ID univoco">
             </div>
 
-            <!-- FORNITORE SUPREMO -->
-            <div class="login-card admin">
-                <h2>Fornitore Supremo</h2>
-                <div class="subtitle">CRM, licenze e gestione piattaforma</div>
-                <div class="form-group">
-                    <label>Password Suprema</label>
-                    <div class="input-wrapper">
-                        <input type="password" id="admin-pwd" placeholder="Password Fornitore">
-                        <button class="eye-btn" onclick="invertiVisibilitaPassword('admin-pwd')" type="button">Mostra</button>
-                    </div>
-                </div>
-                <button class="btn-login admin" onclick="azioneLoginAdmin()">Accedi al Server</button>
-                <div class="status-msg" id="status-admin"></div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="user-pwd" placeholder="Inserisci la tua password">
             </div>
 
+            <button class="btn-login" id="btn-login" onclick="effettuaLogin()">ACCEDI</button>
+            
+            <div class="status-msg" id="status-msg"></div>
         </div>
 
-        <!-- SEZIONE REGISTRAZIONE STUDIO (LEAD GENERATION) -->
-        <div class="lead-section">
-            <div class="lead-card">
-                <div class="lead-header">
-                    <h2>Sei uno Studio Fotografico?</h2>
-                    <p>Registra la tua attività per richiedere una demo gratuita della suite. Un nostro consulente ti contatterà entro 24 ore.</p>
-                </div>
-                <div class="lead-form">
-                    <div class="form-group">
-                        <label>Nome Studio / Ragione Sociale *</label>
-                        <input type="text" id="leadNome" placeholder="es. Studio Fotografico Rossi">
-                    </div>
-                    <div class="form-group">
-                        <label>Email Principale *</label>
-                        <input type="email" id="leadEmail" placeholder="studio@esempio.com">
-                    </div>
-                    <div class="form-group">
-                        <label>Telefono / WhatsApp *</label>
-                        <input type="tel" id="leadTel" placeholder="+39 333 1234567">
-                    </div>
-                    <div class="form-group">
-                        <label>Città / Provincia</label>
-                        <input type="text" id="leadCitta" placeholder="es. Milano (MI)">
-                    </div>
-                    <div class="form-group full-width">
-                        <button class="btn-lead" onclick="inviaRichiestaStudio()">INVIA RICHIESTA DEMO GRATUITA</button>
-                    </div>
-                </div>
-                <div class="status-msg" id="status-lead" style="text-align: center; margin-top: 16px;"></div>
+        <!-- LEAD GENERATION LINK -->
+        <div class="lead-link-container" id="leadLinkContainer">
+            <span class="lead-link" onclick="mostraFormLead()">Sei uno Studio Fotografico? Richiedi una Demo Gratuita</span>
+        </div>
+
+        <!-- LEAD FORM (Hidden) -->
+        <div class="lead-form-card" id="leadFormCard">
+            <h3>Richiedi Demo Gratuita</h3>
+            <div class="form-group">
+                <label>Nome Studio</label>
+                <input type="text" id="lead-nome" placeholder="es. Studio Rossi">
             </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="lead-email" placeholder="studio@esempio.com">
+            </div>
+            <div class="form-group">
+                <label>Telefono</label>
+                <input type="tel" id="lead-tel" placeholder="+39 333...">
+            </div>
+            <button class="btn-lead" onclick="inviaLead()">INVIA RICHIESTA</button>
+            <button class="btn-login" style="background: #e0e0e0; color: #333; margin-top: 10px;" onclick="nascondiFormLead()">Annulla</button>
+            <div class="status-msg" id="status-lead"></div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer-branding">
+            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong>
         </div>
 
     </div>
-
-    <!-- FOOTER BRANDING -->
-    <div class="footer-branding">
-        Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong> - Tutti i diritti riservati
-    </div>
-        <script>
+       <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        let ruoloAttuale = 'cliente';
 
-        function invertiVisibilitaPassword(idInput) {
-            const input = document.getElementById(idInput);
-            const btn = input.nextElementSibling;
-            if (input.type === "password") { input.type = "text"; btn.textContent = "Nascondi"; } 
-            else { input.type = "password"; btn.textContent = "Mostra"; }
+        function selezionaRuolo(ruolo, btn) {
+            ruoloAttuale = ruolo;
+            document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const labelId = document.getElementById('label-id');
+            const inputId = document.getElementById('user-id');
+            
+            if (ruolo === 'cliente') {
+                labelId.textContent = 'ID Evento / Cliente';
+                inputId.placeholder = 'es. matrimonio-rossi-2026';
+            } else if (ruolo === 'studio') {
+                labelId.textContent = 'ID Studio';
+                inputId.placeholder = 'es. studio-gold';
+            } else {
+                labelId.textContent = 'Password Suprema';
+                inputId.placeholder = 'Inserisci password amministratore';
+                inputId.type = 'password'; // Nasconde l'ID se è admin
+                return;
+            }
+            inputId.type = 'text';
         }
 
         function mostraStato(idElemento, messaggio, tipo) {
@@ -440,116 +359,110 @@
             setTimeout(() => { el.className = 'status-msg'; }, 5000);
         }
 
-        async function azioneLoginCliente() {
-            const id = document.getElementById('cliente-id').value.trim();
-            const pwd = document.getElementById('cliente-pwd').value.trim();
-            const btn = event.target;
-            if (!id || !pwd) { mostraStato('status-cliente', 'Inserisci ID Evento e Password', 'error'); return; }
-            btn.disabled = true; btn.innerHTML = '<span class="loading"></span>Verifica...';
-            try {
-                const response = await fetch(WORKER_URL + '/api/cliente/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ clienteId: id, password: pwd }) });
-                const data = await response.json();
-                if (data.success) { mostraStato('status-cliente', 'Accesso riuscito. Apertura galleria...', 'success'); setTimeout(() => { window.location.href = 'gallery.html?clienteId=' + encodeURIComponent(id); }, 1000); } 
-                else { mostraStato('status-cliente', data.error || 'Credenziali non valide', 'error'); }
-            } catch (e) { mostraStato('status-cliente', 'Errore di connessione al server', 'error'); } 
-            finally { btn.disabled = false; btn.textContent = 'Accedi Galleria'; }
-        }
+        async function effettuaLogin() {
+            const id = document.getElementById('user-id').value.trim();
+            const pwd = document.getElementById('user-pwd').value.trim();
+            const btn = document.getElementById('btn-login');
 
-        async function azioneLoginStudio() {
-            const id = document.getElementById('studio-id').value.trim();
-            const pwd = document.getElementById('studio-pwd').value.trim();
-            const btn = event.target;
-            if (!id || !pwd) { mostraStato('status-studio', 'Inserisci ID Studio e Password', 'error'); return; }
-            btn.disabled = true; btn.innerHTML = '<span class="loading"></span>Verifica...';
-            try {
-                const response = await fetch(WORKER_URL + '/api/studio/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ studioId: id, password: pwd }) });
-                const data = await response.json();
-                if (data.success) { localStorage.setItem('studioId', data.studioId || id); mostraStato('status-studio', 'Benvenuto ' + (data.studioId || id) + '. Accesso in corso...', 'success'); setTimeout(() => { window.location.href = 'agenda.html'; }, 1000); } 
-                else { mostraStato('status-studio', data.error || 'Credenziali non valide', 'error'); }
-            } catch (e) { mostraStato('status-studio', 'Errore di connessione al server', 'error'); } 
-            finally { btn.disabled = false; btn.textContent = 'Entra in Plancia'; }
-        }
-
-        async function azioneLoginAdmin() {
-            const pwd = document.getElementById('admin-pwd').value.trim();
-            const btn = event.target;
-            if (!pwd) { mostraStato('status-admin', 'Inserisci la Password Suprema', 'error'); return; }
-            btn.disabled = true; btn.innerHTML = '<span class="loading"></span>Verifica...';
-            try {
-                const response = await fetch(WORKER_URL + '/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pwd }) });
-                const data = await response.json();
-                if (data.success) { mostraStato('status-admin', 'Accesso Fornitore Supremo riuscito. Apertura Plancia...', 'success'); setTimeout(() => { window.location.href = 'admin.html'; }, 1000); } 
-                else { mostraStato('status-admin', data.error || 'Password errata', 'error'); }
-            } catch (e) { mostraStato('status-admin', 'Errore di connessione al server', 'error'); } 
-            finally { btn.disabled = false; btn.textContent = 'Accedi al Server'; }
-        }
-
-        // NUOVA FUNZIONE: INVIO RICHIESTA DEMO (LEAD GENERATION)
-        async function inviaRichiestaStudio() {
-            const nome = document.getElementById('leadNome').value.trim();
-            const email = document.getElementById('leadEmail').value.trim();
-            const tel = document.getElementById('leadTel').value.trim();
-            const citta = document.getElementById('leadCitta').value.trim();
-            const btn = event.target;
-
-            if (!nome || !email || !tel) {
-                mostraStato('status-lead', 'Compila i campi obbligatori (Nome, Email, Telefono)', 'error');
+            if (!id || !pwd) {
+                mostraStato('status-msg', 'Compila ID e Password', 'error');
                 return;
             }
 
             btn.disabled = true;
-            btn.innerHTML = '<span class="loading" style="border-top-color: white; border-color: rgba(255,255,255,0.3);"></span> Invio in corso...';
+            btn.innerHTML = '<span class="loading"></span> Verifica in corso...';
+
+            try {
+                let endpoint = '';
+                let body = {};
+
+                if (ruoloAttuale === 'admin') {
+                    endpoint = '/api/admin/login';
+                    body = { password: pwd }; // Per admin usiamo solo la pwd
+                } else if (ruoloAttuale === 'studio') {
+                    endpoint = '/api/studio/login';
+                    body = { studioId: id, password: pwd };
+                } else {
+                    endpoint = '/api/cliente/login';
+                    body = { clienteId: id, password: pwd };
+                }
+
+                const response = await fetch(WORKER_URL + endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    mostraStato('status-msg', 'Accesso riuscito. Reindirizzamento...', 'success');
+                    setTimeout(() => {
+                        if (ruoloAttuale === 'admin') window.location.href = 'admin.html';
+                        else if (ruoloAttuale === 'studio') {
+                            localStorage.setItem('studioId', data.studioId || id);
+                            window.location.href = 'agenda.html'; // O la futura dashboard studio
+                        }
+                        else window.location.href = 'gallery.html?clienteId=' + encodeURIComponent(id);
+                    }, 1000);
+                } else {
+                    mostraStato('status-msg', data.error || 'Credenziali non valide', 'error');
+                }
+            } catch (e) {
+                mostraStato('status-msg', 'Errore di connessione al server', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'ACCEDI';
+            }
+        }
+
+        // Gestione Form Lead
+        function mostraFormLead() {
+            document.getElementById('leadLinkContainer').style.display = 'none';
+            document.getElementById('leadFormCard').classList.add('active');
+        }
+
+        function nascondiFormLead() {
+            document.getElementById('leadLinkContainer').style.display = 'block';
+            document.getElementById('leadFormCard').classList.remove('active');
+        }
+
+        async function inviaLead() {
+            const nome = document.getElementById('lead-nome').value.trim();
+            const email = document.getElementById('lead-email').value.trim();
+            const tel = document.getElementById('lead-tel').value.trim();
+
+            if (!nome || !email || !tel) {
+                mostraStato('status-lead', 'Compila i campi obbligatori', 'error');
+                return;
+            }
 
             const leadData = {
                 tipo: 'nuova_richiesta_demo',
-                nomeStudio: nome,
-                email: email,
-                telefono: tel,
-                citta: citta,
+                nomeStudio: nome, email, telefono: tel,
                 dataRichiesta: new Date().toISOString(),
                 stato: 'da_contattare'
             };
 
-            try {
-                // Inviamo i dati al Worker (endpoint /api/admin/lead o simile, per ora usiamo un fallback locale se il worker non ha la route)
-                const response = await fetch(WORKER_URL + '/api/admin/lead', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(leadData)
-                });
-                
-                // Salvataggio locale di sicurezza per non perdere il lead
-                const leadsSalvati = JSON.parse(localStorage.getItem('leads_crm') || '[]');
-                leadsSalvati.push(leadData);
-                localStorage.setItem('leads_crm', JSON.stringify(leadsSalvati));
+            // Salvataggio locale di sicurezza
+            const leads = JSON.parse(localStorage.getItem('leads_crm') || '[]');
+            leads.push(leadData);
+            localStorage.setItem('leads_crm', JSON.stringify(leads));
 
-                if (response.ok || response.status === 404) { // 404 va bene per ora se l'endpoint non esiste ancora nel worker
-                    mostraStato('status-lead', 'Richiesta inviata con successo! Ti contatteremo presto.', 'success');
-                    document.getElementById('leadNome').value = '';
-                    document.getElementById('leadEmail').value = '';
-                    document.getElementById('leadTel').value = '';
-                    document.getElementById('leadCitta').value = '';
-                } else {
-                    throw new Error('Errore server');
-                }
-            } catch (e) {
-                // Fallback: se il worker non risponde, salviamo solo in locale e mostriamo successo (per non bloccare l'utente)
-                const leadsSalvati = JSON.parse(localStorage.getItem('leads_crm') || '[]');
-                leadsSalvati.push(leadData);
-                localStorage.setItem('leads_crm', JSON.stringify(leadsSalvati));
-                mostraStato('status-lead', 'Richiesta registrata! Ti contatteremo al più presto.', 'success');
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'INVIA RICHIESTA DEMO GRATUITA';
-            }
+            // Tentativo invio al worker
+            fetch(WORKER_URL + '/api/admin/lead', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(leadData)
+            }).catch(() => {});
+
+            mostraStato('status-lead', 'Richiesta inviata! Ti contatteremo presto.', 'success');
+            setTimeout(nascondiFormLead, 3000);
         }
 
         // Invio con tasto Enter
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('cliente-pwd').addEventListener('keypress', function(e) { if (e.key === 'Enter') azioneLoginCliente(); });
-            document.getElementById('studio-pwd').addEventListener('keypress', function(e) { if (e.key === 'Enter') azioneLoginStudio(); });
-            document.getElementById('admin-pwd').addEventListener('keypress', function(e) { if (e.key === 'Enter') azioneLoginAdmin(); });
+            document.getElementById('user-pwd').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') effettuaLogin();
+            });
         });
     </script>
 </body>
-</html>
+</html> 
