@@ -6,1382 +6,648 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>03 Clienti & Foto - AppCenterStudio Premium</title>
+    <title>Gestione Clienti & Foto - AppCenterStudioPROGOLD</title>
     <style>
         :root {
-            --primary: #8e44ad;
-            --primary-light: #f4ecf7;
-            --primary-hover: #7d3c98;
-            --secondary: #2980b9;
-            --secondary-light: #ebf5fb;
-            --bg-color: #fdfbfb;
-            --card-bg: #ffffff;
+            --primary: #1abc9c;
+            --primary-dark: #0e6655;
+            --primary-light: #e8f8f5;
+            --primary-gradient: linear-gradient(135deg, #48c9b0 0%, #1abc9c 50%, #0e6655 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --card-gradient: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
             --text-main: #2c3e50;
             --text-light: #7f8c8d;
             --border-color: #e8e8e8;
-            --alert-bg: #fff8e1;
-            --alert-border: #ffb74d;
-            --alert-text: #e65100;
             --success: #27ae60;
-            --success-light: #eafaf1;
+            --warning: #f39c12;
             --danger: #e74c3c;
-            --danger-light: #fdedec;
-            --shadow: 0 2px 12px rgba(0,0,0,0.06);
-            --shadow-hover: 0 4px 20px rgba(0,0,0,0.1);
-            --radius: 12px;
+            --shadow: 0 4px 16px rgba(26, 188, 156, 0.08);
+            --shadow-hover: 0 8px 32px rgba(26, 188, 156, 0.15);
+            --radius: 14px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg-color);
+            background: var(--bg-gradient);
+            background-attachment: fixed;
             color: var(--text-main);
             line-height: 1.6;
             min-height: 100vh;
         }
 
-        /* ===== TOP BAR ===== */
         .top-bar {
-            background: var(--primary-light);
-            padding: 14px 24px;
+            background: var(--primary-gradient);
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
             position: sticky;
             top: 0;
             z-index: 100;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 12px rgba(26, 188, 156, 0.2);
         }
 
-        .nav-left, .nav-right {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
+        .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
 
         .nav-btn {
-            background: white;
-            border: 1px solid var(--border-color);
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(255,255,255,0.3);
             padding: 8px 16px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
-            color: var(--text-main);
+            color: var(--primary-dark);
             transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
 
-        .nav-btn:hover {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-            transform: translateY(-1px);
-        }
+        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-        .sync-status {
-            font-size: 13px;
-            color: var(--success);
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(46, 204, 113, 0.6); }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-        .sync-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--success);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        /* ===== CONTAINER ===== */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 30px 24px;
-        }
-
-        /* ===== HEADER ===== */
-        .page-header {
-            text-align: center;
+        .page-header { 
+            text-align: center; 
             margin-bottom: 32px;
+            padding: 24px;
+            background: var(--card-gradient);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
         }
-
-        .page-header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 8px;
+        .page-header h1 { 
+            font-size: 28px; 
+            font-weight: 700; 
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px; 
         }
+        .page-header p { color: var(--text-light); font-size: 15px; }
 
-        .page-header p {
-            color: var(--text-light);
-            font-size: 15px;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        /* ===== CARDS ===== */
         .card {
-            background: var(--card-bg);
+            background: var(--card-gradient);
             border-radius: var(--radius);
             padding: 28px;
             margin-bottom: 24px;
             box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
-            transition: box-shadow 0.2s ease;
+            transition: all 0.3s ease;
         }
 
-        .card:hover {
-            box-shadow: var(--shadow-hover);
-        }
+        .card:hover { box-shadow: var(--shadow-hover); }
 
-        .card-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .card-title { 
+            font-size: 18px; 
+            font-weight: 600; 
+            color: var(--primary-dark); 
+            margin-bottom: 6px; 
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
         }
+        .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
 
-        .card-subtitle {
-            font-size: 13px;
-            color: var(--text-light);
-            margin-bottom: 24px;
-        }
-
-        /* ===== ALERT BOX ===== */
-        .alert-box {
-            background: var(--alert-bg);
-            border-left: 4px solid var(--alert-border);
-            padding: 18px 22px;
-            border-radius: 8px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
-        }
-
-        .alert-icon {
-            font-size: 22px;
-            flex-shrink: 0;
-        }
-
-        .alert-content h4 {
-            color: var(--alert-text);
-            font-size: 15px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .alert-content p {
-            color: var(--alert-text);
-            font-size: 13px;
-            line-height: 1.5;
-            opacity: 0.9;
-        }
-
-        .alert-content code {
-            background: rgba(230, 81, 0, 0.1);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: "SF Mono", Monaco, monospace;
-            font-size: 12px;
-        }
-
-        /* ===== FORM ===== */
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-main);
-            margin-bottom: 6px;
-        }
-
-        .form-group label .required {
-            color: var(--danger);
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
             padding: 11px 14px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 14px;
             font-family: inherit;
             background: white;
-            color: var(--text-main);
             transition: all 0.2s ease;
         }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.1);
+        .form-group input:focus, .form-group select:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.15); 
         }
 
-        .form-group input[readonly] {
-            background: #f8f9fa;
-            color: var(--text-light);
-            cursor: not-allowed;
-        }
-
-        .input-with-btn {
-            display: flex;
-            gap: 8px;
-        }
-
-        .input-with-btn input {
-            flex: 1;
-        }
-
-        .btn-small {
-            padding: 8px 14px;
-            background: var(--secondary-light);
-            color: var(--secondary);
-            border: 1px solid var(--secondary);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            white-space: nowrap;
-            transition: all 0.2s ease;
-        }
-
-        .btn-small:hover {
-            background: var(--secondary);
-            color: white;
-        }
-
-        /* ===== BUTTONS ===== */
         .btn {
-            padding: 12px 24px;
+            padding: 10px 18px;
             border: none;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            font-family: inherit;
+            gap: 6px;
         }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-hover);
-        }
-
-        .btn-secondary {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #1f6a9e;
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #219a52;
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-
-        .btn-outline {
-            background: white;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-        }
-
-        .btn-outline:hover {
-            background: var(--primary-light);
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        /* ===== FILE UPLOAD ===== */
-        .upload-zone {
-            border: 2px dashed var(--border-color);
-            border-radius: var(--radius);
-            padding: 40px 20px;
-            text-align: center;
-            background: #fafafa;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .upload-zone:hover {
-            border-color: var(--primary);
-            background: var(--primary-light);
-        }
-
-        .upload-zone.dragover {
-            border-color: var(--primary);
-            background: var(--primary-light);
-            transform: scale(1.01);
-        }
-
-        .upload-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
-
-        .upload-text {
-            font-size: 15px;
-            color: var(--text-main);
-            font-weight: 500;
-            margin-bottom: 6px;
-        }
-
-        .upload-hint {
-            font-size: 13px;
-            color: var(--text-light);
-        }
-
-        .upload-zone input[type="file"] {
-            display: none;
-        }
-
-        /* ===== PROGRESS ===== */
-        .progress-container {
-            margin-top: 20px;
-            display: none;
-        }
-
-        .progress-container.active {
-            display: block;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 10px;
-            background: #e9ecef;
-            border-radius: 5px;
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 5px;
-            transition: width 0.3s ease;
-            width: 0%;
-        }
-
-        .progress-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            color: var(--text-light);
-        }
-
-        /* ===== CLIENT LIST ===== */
-        .client-list {
-            display: grid;
-            gap: 12px;
-        }
-
-        .client-item {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.2s ease;
-        }
-
-        .client-item:hover {
-            border-color: var(--primary);
-            box-shadow: var(--shadow);
-        }
-
-        .client-info {
-            flex: 1;
-        }
-
-        .client-name {
-            font-weight: 600;
-            color: var(--text-main);
-            font-size: 15px;
-            margin-bottom: 4px;
-        }
-
-        .client-meta {
-            font-size: 12px;
-            color: var(--text-light);
-        }
-
-        .client-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 12px;
+        .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-color); background: white; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; vertical-align: middle; }
+        th { 
+            background: var(--primary-light); 
+            color: var(--primary-dark); 
+            font-weight: 600; 
+            text-transform: uppercase; 
             font-size: 11px;
-            font-weight: 600;
-            margin-left: 8px;
+            letter-spacing: 0.5px;
+        }
+        tr:hover td { background: #fafafa; }
+
+        .cred-input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: monospace;
+            background: #f8f9fa;
+            transition: all 0.2s;
+        }
+        .cred-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 2px rgba(26, 188, 156, 0.1);
         }
 
-        .badge-success {
-            background: var(--success-light);
-            color: var(--success);
+        .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: flex; align-items: center; gap: 12px; min-width: 300px; animation: slideIn 0.3s ease; border-left: 4px solid var(--success);
         }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast-icon { font-size: 20px; font-weight: bold; }
+        .toast-message { flex: 1; font-size: 14px; }
 
-        .badge-warning {
-            background: var(--alert-bg);
-            color: var(--alert-text);
+        .footer-branding {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
         }
+        .footer-branding strong { color: var(--primary-dark); font-weight: 700; }
 
-        .badge-danger {
-            background: var(--danger-light);
-            color: var(--danger);
-        }
-
-        /* ===== MODAL ===== */
         .modal-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
+            z-index: 3000;
             align-items: center;
+            justify-content: center;
             padding: 20px;
         }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
+        .modal-overlay.active { display: flex; }
+        
+        .modal-content {
             background: white;
             border-radius: var(--radius);
             padding: 32px;
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            position: relative;
         }
 
-        .modal h3 {
-            color: var(--primary);
-            margin-bottom: 16px;
-            font-size: 20px;
-        }
-
-        .modal p {
-            color: var(--text-main);
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        .modal .btn-group {
-            justify-content: flex-end;
-            margin-top: 24px;
-        }
-
-        /* ===== TOAST ===== */
-        .toast-container {
-            position: fixed;
-            top: 80px;
-            right: 24px;
-            z-index: 2000;
+        .modal-header {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .toast {
-            background: white;
-            border-radius: 10px;
-            padding: 14px 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            min-width: 300px;
-            animation: slideIn 0.3s ease;
-            border-left: 4px solid var(--success);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--primary-light);
         }
 
-        .toast.error {
-            border-left-color: var(--danger);
-        }
-
-        .toast.warning {
-            border-left-color: var(--alert-border);
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .toast-icon {
+        .modal-header h3 {
             font-size: 20px;
+            color: var(--primary);
+            font-weight: 700;
         }
 
-        .toast-message {
-            flex: 1;
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-light);
+            padding: 4px 8px;
+        }
+        .modal-close:hover { color: var(--danger); }
+
+        .scheda-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .scheda-row:last-child { border-bottom: none; }
+        .scheda-label { font-weight: 600; color: var(--text-light); font-size: 13px; }
+        .scheda-value { font-weight: 500; color: var(--text-main); text-align: right; }
+
+        .scheda-cred {
+            background: var(--primary-light);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-family: monospace;
             font-size: 14px;
-            color: var(--text-main);
+            color: var(--primary-dark);
+            word-break: break-all;
         }
 
-        /* ===== RESPONSIVE ===== */
+        @media print {
+            .top-bar, .btn, .modal-close, .footer-branding { display: none !important; }
+            .modal-overlay { position: static; background: white; padding: 0; }
+            .modal-content { box-shadow: none; max-height: none; padding: 0; }
+            body { background: white; }
+        }
+
         @media (max-width: 768px) {
-            .top-bar {
-                flex-direction: column;
-                gap: 10px;
-                padding: 12px 16px;
-            }
-
-            .nav-left, .nav-right {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .container {
-                padding: 20px 16px;
-            }
-
-            .card {
-                padding: 20px;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .client-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-
-            .client-actions {
-                width: 100%;
-                justify-content: flex-end;
-            }
-        }
-
-        /* ===== LOADING ===== */
-        .loading {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
+            .top-bar { flex-direction: column; gap: 10px; }
+            .form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-
-    <!-- TOP BAR -->
-    <div class="top-bar">
+      <div class="top-bar">
         <div class="nav-left">
-            <button class="nav-btn" onclick="window.history.back()">← Indietro</button>
-            <button class="nav-btn" onclick="window.location.href='index.html'"> Home</button>
+            <button class="nav-btn" onclick="window.history.back()">Indietro</button>
+            <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Plancia</button>
         </div>
         <div class="nav-right">
-            <button class="nav-btn" onclick="eseguiBackupGlobale()">📥 Backup Globale</button>
-            <button class="nav-btn" onclick="eseguiRipristinoGlobale()">📤 Ripristino Globale</button>
-            <div class="sync-status">
-                <span class="sync-dot"></span>
-                Sync Cloud: OK
-            </div>
+            <button class="nav-btn" onclick="eseguiBackupCloud()">Backup Cloud</button>
+            <button class="nav-btn" onclick="eseguiRipristinoCloud()">Ripristino Cloud</button>
+            <div class="sync-status"><span class="sync-dot"></span> Sync Cloud: OK</div>
         </div>
     </div>
 
-    <!-- CONTAINER PRINCIPALE -->
     <div class="container">
-
-        <!-- HEADER -->
         <div class="page-header">
-            <h1>📸 Clienti & Foto</h1>
-            <p>Gestione completa dei clienti, creazione credenziali automatiche e caricamento cartelle a bassa risoluzione su Cloudflare R2.</p>
+            <h1>Gestione Clienti & Foto</h1>
+            <p>Registra i tuoi clienti, genera credenziali di accesso e gestisci le gallerie fotografiche</p>
         </div>
 
-        <!-- AVVISO OTTIMIZZAZIONE -->
-        <div class="alert-box">
-            <div class="alert-icon">⚠️</div>
-            <div class="alert-content">
-                <h4>Ottimizzazione Spazio Cloud & Velocità Upload</h4>
-                <p>Per evitare saturazione dello spazio Cloudflare R2 e velocizzare l'upload, <strong>prepara le cartelle a bassa risoluzione prima del caricamento</strong>. 
-                Se usi <strong>Adobe Lightroom</strong>: seleziona le foto → Esporta → Imposta <code>Lunghezza massima: 1500 px</code> → Qualità JPEG 80%. 
-                Crea una cartella per evento (es. <code>Matrimonio-Rossi-2026</code>) con sotto-cartelle: <code>Preparativi</code>, <code>Chiesa</code>, <code>Ricevimento</code>, <code>Taglio Torta</code>.</p>
-            </div>
-        </div>
-
-        <!-- SEZIONE 1: CREAZIONE NUOVO CLIENTE -->
         <div class="card">
-            <div class="card-title">👤 Crea Nuovo Cliente / Evento</div>
-            <div class="card-subtitle">Il sistema genera automaticamente ID e Password. Puoi modificarli prima del salvataggio.</div>
+            <div class="card-title">Registra Nuovo Cliente / Evento</div>
+            <div class="card-subtitle">Inserisci i dati del cliente. Il sistema genererà automaticamente ID e Password per l'accesso alla galleria.</div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nome Cliente A *</label>
+                    <input type="text" id="cliNomeA" placeholder="es. Mario">
+                </div>
+                <div class="form-group">
+                    <label>Cognome Cliente A *</label>
+                    <input type="text" id="cliCognomeA" placeholder="es. Rossi">
+                </div>
+            </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Nome Evento / Cliente <span class="required">*</span></label>
-                    <input type="text" id="nomeEvento" placeholder="es. Matrimonio Rossi-Bianchi">
+                    <label>Nome Cliente B (Coniuge/Altro)</label>
+                    <input type="text" id="cliNomeB" placeholder="es. Lucia">
                 </div>
                 <div class="form-group">
-                    <label>Tipologia Evento <span class="required">*</span></label>
-                    <select id="tipoEvento">
-                        <option value="matrimonio"> Matrimonio</option>
-                        <option value="compleanno">🎂 Compleanno</option>
-                        <option value="battesimo">⛪ Battesimo</option>
-                        <option value="comunione">️ Comunione</option>
-                        <option value="ritratto">📷 Ritratto</option>
-                        <option value="evento">🎉 Evento Aziendale</option>
-                        <option value="altro">📌 Altro</option>
+                    <label>Cognome Cliente B</label>
+                    <input type="text" id="cliCognomeB" placeholder="es. Bianchi">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email Principale *</label>
+                    <input type="email" id="cliEmail" placeholder="cliente@esempio.com">
+                </div>
+                <div class="form-group">
+                    <label>Telefono *</label>
+                    <input type="tel" id="cliTelefono" placeholder="+39 333 1234567">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Tipo Evento *</label>
+                    <select id="cliTipoEvento">
+                        <option value="matrimonio">Matrimonio</option>
+                        <option value="battesimo">Battesimo</option>
+                        <option value="comunione">Comunione</option>
+                        <option value="cresima">Cresima</option>
+                        <option value="compleanno">Compleanno</option>
+                        <option value="ritratto">Ritratto</option>
+                        <option value="evento-aziendale">Evento Aziendale</option>
+                        <option value="altro">Altro</option>
                     </select>
                 </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>ID Cliente (generato automaticamente)</label>
-                    <div class="input-with-btn">
-                        <input type="text" id="idCliente" readonly>
-                        <button class="btn-small" onclick="generaIDCliente()">🔄 Rigenera</button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Password (generata automaticamente)</label>
-                    <div class="input-with-btn">
-                        <input type="text" id="passwordCliente" readonly>
-                        <button class="btn-small" onclick="generaPasswordCliente()">🔄 Rigenera</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Email Cliente (per invio credenziali)</label>
-                    <input type="email" id="emailCliente" placeholder="cliente@esempio.com">
-                </div>
-                <div class="form-group">
-                    <label>Telefono / WhatsApp</label>
-                    <input type="tel" id="telefonoCliente" placeholder="+39 333 1234567">
-                </div>
-            </div>
-
-            <div class="form-row">
                 <div class="form-group">
                     <label>Data Evento</label>
-                    <input type="date" id="dataEvento">
-                </div>
-                <div class="form-group">
-                    <label>Durata Galleria (mesi)</label>
-                    <select id="durataGalleria">
-                        <option value="3">3 mesi</option>
-                        <option value="6" selected>6 mesi (default)</option>
-                        <option value="12">12 mesi</option>
-                        <option value="24">24 mesi</option>
-                        <option value="0">Illimitata</option>
-                    </select>
+                    <input type="date" id="cliDataEvento">
                 </div>
             </div>
-
-            <div class="btn-group">
-                <button class="btn btn-primary" onclick="salvaCliente()">💾 SALVA CLIENTE</button>
-                <button class="btn btn-outline" onclick="pulisciFormCliente()">🗑️ Pulisci Campi</button>
-            </div>
-        </div>
-
-        <!-- SEZIONE 2: UPLOAD CARTELLE -->
-        <div class="card">
-            <div class="card-title">📁 Carica Cartelle Foto (Bassa Risoluzione)</div>
-            <div class="card-subtitle">Seleziona una cartella completa dal tuo computer. Il sistema caricherà tutte le foto al suo interno.</div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Cliente Destinazione <span class="required">*</span></label>
-                    <select id="clienteDestinazione">
-                        <option value="">-- Seleziona un cliente salvato --</option>
-                    </select>
+                    <label>ID Cliente (Generato automaticamente)</label>
+                    <input type="text" id="cliId" readonly style="background: #f8f9fa;">
                 </div>
                 <div class="form-group">
-                    <label>Nome Cartella Principale</label>
-                    <input type="text" id="nomeCartella" placeholder="es. Matrimonio-Rossi-2026">
-                </div>
-            </div>
-
-            <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
-                <div class="upload-icon">📂</div>
-                <div class="upload-text">Clicca qui o trascina una cartella</div>
-                <div class="upload-hint">Il sistema caricherà automaticamente tutte le immagini JPEG/PNG presenti</div>
-                <input type="file" id="fileInput" webkitdirectory directory multiple onchange="gestisciSelezioneCartella(event)">
-            </div>
-
-            <div id="infoCartella" style="margin-top: 16px; display: none;">
-                <div class="alert-box" style="background: var(--success-light); border-left-color: var(--success); margin-bottom: 0;">
-                    <div class="alert-icon">✅</div>
-                    <div class="alert-content">
-                        <h4 style="color: var(--success);">Cartella selezionata</h4>
-                        <p style="color: var(--success);"><span id="nomeCartellaSelezionata">-</span> — <span id="numeroFoto">0</span> foto rilevate</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="progress-container" id="progressContainer">
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <div class="progress-info">
-                    <span id="progressText">0 / 0 foto caricate</span>
-                    <span id="progressPercent">0%</span>
+                    <label>Password Accesso (Generata automaticamente)</label>
+                    <input type="text" id="cliPwd" readonly style="background: #f8f9fa;">
                 </div>
             </div>
 
             <div class="btn-group">
-                <button class="btn btn-success" id="btnUpload" onclick="avviaUploadCartella()" disabled>
-                    🚀 AVVIA UPLOAD CARTELLA
-                </button>
+                <button class="btn btn-primary" onclick="salvaNuovoCliente()">REGISTRA CLIENTE E GENERA CREDENZIALI</button>
+                <button class="btn btn-outline" onclick="generaCredenzialiCliente()">Rigenera ID/Password</button>
             </div>
         </div>
 
-        <!-- SEZIONE 3: ARCHIVIO CLIENTI -->
         <div class="card">
-            <div class="card-title">📋 Archivio Clienti Registrati</div>
-            <div class="card-subtitle">Gestisci i clienti esistenti, estendi la durata galleria o genera nuovi link di selezione.</div>
-
-            <div class="client-list" id="clientList">
-                <div style="text-align: center; padding: 40px; color: var(--text-light);">
-                    <div style="font-size: 48px; margin-bottom: 12px;"></div>
-                    <p>Nessun cliente registrato. Crea il primo cliente usando il modulo sopra.</p>
-                </div>
+            <div class="card-title">Archivio Clienti Registrati</div>
+            <div class="card-subtitle">Gestisci le credenziali di accesso dei tuoi clienti. Modifica ID e Password direttamente dalla tabella e stampa le schede da consegnare.</div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>ID Accesso</th>
+                            <th>Password</th>
+                            <th>Contatto</th>
+                            <th>Evento</th>
+                            <th>Data</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabellaClienti">
+                        <tr><td colspan="7" style="text-align:center; color: #7f8c8d;">Caricamento dati...</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
+        <div class="footer-branding">
+            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong> - Tutti i diritti riservati
+        </div>
     </div>
 
-    <!-- TOAST CONTAINER -->
+    <!-- MODAL SCHEDA CLIENTE -->
+    <div class="modal-overlay" id="modalScheda">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Scheda Cliente - Credenziali Accesso Galleria</h3>
+                <button class="modal-close" onclick="chiudiModalScheda()">×</button>
+            </div>
+            <div id="schedaContenuto">
+                <!-- Contenuto dinamico -->
+            </div>
+            <div class="btn-group" style="justify-content: center; margin-top: 24px;">
+                <button class="btn btn-primary" onclick="window.print()">STAMPA SCHEDA</button>
+                <button class="btn btn-outline" onclick="chiudiModalScheda()">CHIUDI</button>
+            </div>
+        </div>
+    </div>
+
     <div class="toast-container" id="toastContainer"></div>
-
-    <!-- MODAL CONFERMA -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal">
-            <h3 id="modalTitle">Conferma</h3>
-            <p id="modalMessage">Sei sicuro?</p>
-            <div class="btn-group">
-                <button class="btn btn-outline" onclick="chiudiModal()">Annulla</button>
-                <button class="btn btn-primary" id="modalConfirmBtn" onclick="confermaModal()">Conferma</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // ===== CONFIGURAZIONE WORKER =====
+       <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         let studioId = localStorage.getItem('studioId') || 'studio-gold';
-        let clienti = [];
-        let cartellaSelezionata = null;
-        let fileDaCaricare = [];
+        let clientiRegistrati = [];
 
-        // ===== INIZIALIZZAZIONE =====
         document.addEventListener('DOMContentLoaded', function() {
-            generaIDCliente();
-            generaPasswordCliente();
+            generaCredenzialiCliente();
             caricaClientiDaCloud();
-            aggiornaSelectClienti();
-
-            // Drag & drop per upload zone
-            const uploadZone = document.getElementById('uploadZone');
-            uploadZone.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                uploadZone.classList.add('dragover');
-            });
-            uploadZone.addEventListener('dragleave', function() {
-                uploadZone.classList.remove('dragover');
-            });
-            uploadZone.addEventListener('drop', function(e) {
-                e.preventDefault();
-                uploadZone.classList.remove('dragover');
-                const items = e.dataTransfer.items;
-                if (items) {
-                    const files = [];
-                    for (let i = 0; i < items.length; i++) {
-                        const entry = items[i].webkitGetAsEntry && items[i].webkitGetAsEntry();
-                        if (entry) {
-                            traverseFileTree(entry, files);
-                        }
-                    }
-                    setTimeout(() => {
-                        if (files.length > 0) {
-                            cartellaSelezionata = items[0].webkitGetAsEntry().name;
-                            fileDaCaricare = files;
-                            mostraInfoCartella(cartellaSelezionata, files.length);
-                        }
-                    }, 500);
-                }
-            });
         });
 
-        // ===== GENERAZIONE AUTOMATICA ID =====
-        function generaIDCliente() {
-            const nome = document.getElementById('nomeEvento').value.trim();
-            const anno = new Date().getFullYear();
-            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-            
-            if (nome) {
-                const slug = nome.toLowerCase()
-                    .replace(/[^a-z0-9]+/g, '-')
-                    .replace(/^-|-$/g, '')
-                    .substring(0, 30);
-                document.getElementById('idCliente').value = `${slug}-${anno}-${random}`;
-            } else {
-                document.getElementById('idCliente').value = `cliente-${anno}-${random}`;
-            }
+        function generaCredenzialiCliente() {
+            const randomId = 'cliente-' + Math.random().toString(36).substring(2, 8);
+            const randomPwd = Math.random().toString(36).substring(2, 10) + '!C1';
+            document.getElementById('cliId').value = randomId;
+            document.getElementById('cliPwd').value = randomPwd;
         }
 
-        // ===== GENERAZIONE AUTOMATICA PASSWORD =====
-        function generaPasswordCliente() {
-            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
-            let password = '';
-            for (let i = 0; i < 12; i++) {
-                password += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            document.getElementById('passwordCliente').value = password;
-        }
+        async function salvaNuovoCliente() {
+            const nomeA = document.getElementById('cliNomeA').value.trim();
+            const cognomeA = document.getElementById('cliCognomeA').value.trim();
+            const email = document.getElementById('cliEmail').value.trim();
+            const telefono = document.getElementById('cliTelefono').value.trim();
+            const tipoEvento = document.getElementById('cliTipoEvento').value;
+            const dataEvento = document.getElementById('cliDataEvento').value;
+            const id = document.getElementById('cliId').value;
+            const pwd = document.getElementById('cliPwd').value;
 
-        // ===== AGGIORNAMENTO ID AL CAMBIO NOME =====
-        document.getElementById('nomeEvento').addEventListener('input', function() {
-            if (!document.getElementById('idCliente').value.includes('-')) {
-                generaIDCliente();
-            }
-        });
-
-        // ===== SALVATAGGIO CLIENTE =====
-        async function salvaCliente() {
-            const nomeEvento = document.getElementById('nomeEvento').value.trim();
-            const tipoEvento = document.getElementById('tipoEvento').value;
-            const idCliente = document.getElementById('idCliente').value.trim();
-            const passwordCliente = document.getElementById('passwordCliente').value.trim();
-            const emailCliente = document.getElementById('emailCliente').value.trim();
-            const telefonoCliente = document.getElementById('telefonoCliente').value.trim();
-            const dataEvento = document.getElementById('dataEvento').value;
-            const durataGalleria = parseInt(document.getElementById('durataGalleria').value);
-
-            if (!nomeEvento) {
-                mostraToast('Inserisci il nome dell\'evento o del cliente', 'error');
+            if (!nomeA || !cognomeA || !email || !telefono) {
+                mostraToast('Compila i campi obbligatori (Nome, Cognome, Email, Telefono)', 'error');
                 return;
             }
 
-            if (!idCliente || !passwordCliente) {
-                mostraToast('ID e Password devono essere generati', 'error');
-                return;
-            }
-
-            const btn = event.target;
-            const testoOriginale = btn.innerHTML;
-            btn.innerHTML = '<span class="loading"></span> Salvataggio...';
-            btn.disabled = true;
+            const nuovoCliente = {
+                id, pwd,
+                clienteA: { nome: nomeA, cognome: cognomeA },
+                clienteB: { 
+                    nome: document.getElementById('cliNomeB').value.trim(), 
+                    cognome: document.getElementById('cliCognomeB').value.trim() 
+                },
+                email,
+                telefono,
+                tipoEvento,
+                dataEvento,
+                dataRegistrazione: new Date().toISOString(),
+                studioId
+            };
 
             try {
-                const clienteData = {
-                    studioId: studioId,
-                    clienteId: idCliente,
-                    password: passwordCliente,
-                    nomeEvento: nomeEvento,
-                    tipoEvento: tipoEvento,
-                    email: emailCliente,
-                    telefono: telefonoCliente,
-                    dataEvento: dataEvento,
-                    durataGalleria: durataGalleria,
-                    dataCreazione: new Date().toISOString(),
-                    stato: 'attivo',
-                    fotoCaricate: 0,
-                    linkSelezione: null,
-                    scadenzaLink: null
-                };
-
-                const response = await fetch(`${WORKER_URL}/api/studio/crea-cliente`, {
+                await fetch(`${WORKER_URL}/api/studio/clienti/salva`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(clienteData)
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    // Salva anche in locale per velocità
-                    const clienteLocale = JSON.parse(localStorage.getItem(`clienti_${studioId}`) || '[]');
-                    clienteLocale.push(clienteData);
-                    localStorage.setItem(`clienti_${studioId}`, JSON.stringify(clienteLocale));
-
-                    mostraToast(`✅ Cliente "${nomeEvento}" salvato con successo!`, 'success');
-                    pulisciFormCliente();
-                    generaIDCliente();
-                    generaPasswordCliente();
-                    caricaClientiDaCloud();
-                    aggiornaSelectClienti();
-                } else {
-                    mostraToast('Errore nel salvataggio: ' + (result.error || 'Errore sconosciuto'), 'error');
-                }
+                    body: JSON.stringify(nuovoCliente)
+                }).catch(err => console.log('Sync cloud in background...', err));
+                
+                clientiRegistrati.push(nuovoCliente);
+                localStorage.setItem(`clienti_${studioId}`, JSON.stringify(clientiRegistrati));
+                
+                mostraToast(`Cliente "${nomeA} ${cognomeA}" registrato con successo!`, 'success');
+                aggiornaTabella();
+                pulisciForm();
             } catch (error) {
-                console.error('Errore salvataggio cliente:', error);
                 mostraToast('Errore di connessione al server', 'error');
-            } finally {
-                btn.innerHTML = testoOriginale;
-                btn.disabled = false;
             }
         }
 
-        // ===== PULIZIA FORM =====
-        function pulisciFormCliente() {
-            document.getElementById('nomeEvento').value = '';
-            document.getElementById('emailCliente').value = '';
-            document.getElementById('telefonoCliente').value = '';
-            document.getElementById('dataEvento').value = '';
-            document.getElementById('durataGalleria').value = '6';
-            generaIDCliente();
-            generaPasswordCliente();
+        function caricaClientiDaCloud() {
+            const datiLocali = localStorage.getItem(`clienti_${studioId}`);
+            if (datiLocali) {
+                clientiRegistrati = JSON.parse(datiLocali);
+                aggiornaTabella();
+            } else {
+                document.getElementById('tabellaClienti').innerHTML = '<tr><td colspan="7" style="text-align:center;">Nessun cliente registrato. Inizia aggiungendone uno sopra.</td></tr>';
+            }
         }
 
-        // ===== CARICAMENTO CLIENTI DA CLOUD =====
-        async function caricaClientiDaCloud() {
+        function aggiornaTabella() {
+            const tbody = document.getElementById('tabellaClienti');
+            tbody.innerHTML = '';
+
+            clientiRegistrati.forEach((cliente, index) => {
+                const nomeCompleto = `${cliente.clienteA.nome} ${cliente.clienteA.cognome}${cliente.clienteB.nome ? ' & ' + cliente.clienteB.nome + ' ' + cliente.clienteB.cognome : ''}`;
+                const dataEvento = cliente.dataEvento ? new Date(cliente.dataEvento).toLocaleDateString('it-IT') : 'N/D';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${nomeCompleto}</strong></td>
+                        <td><input class="cred-input" value="${cliente.id}" onchange="aggiornaCredenziale(${index}, 'id', this.value)"></td>
+                        <td><input class="cred-input" value="${cliente.pwd}" onchange="aggiornaCredenziale(${index}, 'pwd', this.value)"></td>
+                        <td>${cliente.email}<br><small>${cliente.telefono}</small></td>
+                        <td>${cliente.tipoEvento.toUpperCase()}</td>
+                        <td>${dataEvento}</td>
+                        <td>
+                            <div style="display:flex; gap:6px; flex-direction:column;">
+                                <button class="btn btn-outline" style="padding:6px 10px; font-size:11px;" onclick="apriSchedaCliente(${index})">Scheda</button>
+                                <button class="btn btn-success" style="padding:6px 10px; font-size:11px;" onclick="inviaCredenzialiEmail(${index})">Invia Credenziali</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function aggiornaCredenziale(index, campo, valore) {
+            clientiRegistrati[index][campo] = valore;
+            localStorage.setItem(`clienti_${studioId}`, JSON.stringify(clientiRegistrati));
+            mostraToast('Credenziale aggiornata e salvata', 'success');
+        }
+
+        function apriSchedaCliente(index) {
+            const cliente = clientiRegistrati[index];
+            const dataEvento = cliente.dataEvento ? new Date(cliente.dataEvento).toLocaleDateString('it-IT') : 'N/D';
+            const dataReg = new Date(cliente.dataRegistrazione).toLocaleDateString('it-IT');
+            const nomeCompleto = `${cliente.clienteA.nome} ${cliente.clienteA.cognome}${cliente.clienteB.nome ? ' & ' + cliente.clienteB.nome + ' ' + cliente.clienteB.cognome : ''}`;
+
+            const html = `
+                <div style="text-align:center; margin-bottom:24px;">
+                    <h2 style="color:var(--primary-dark); margin-bottom:8px;">CREDENZIALI ACCESSO GALLERIA</h2>
+                    <p style="color:var(--text-light); font-size:14px;">AppCenterStudioPROGOLD</p>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Cliente</span>
+                    <span class="scheda-value">${nomeCompleto}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Tipo Evento</span>
+                    <span class="scheda-value">${cliente.tipoEvento.toUpperCase()}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Data Evento</span>
+                    <span class="scheda-value">${dataEvento}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Email</span>
+                    <span class="scheda-value">${cliente.email}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Telefono</span>
+                    <span class="scheda-value">${cliente.telefono}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Data Registrazione</span>
+                    <span class="scheda-value">${dataReg}</span>
+                </div>
+                <div class="scheda-cred">
+                    <div style="text-align:center; margin-bottom:12px; font-weight:700;">CREDENZIALI DI ACCESSO</div>
+                    <div style="margin-bottom:8px;"><strong>ID Cliente:</strong> ${cliente.id}</div>
+                    <div><strong>Password:</strong> ${cliente.pwd}</div>
+                </div>
+                <div style="margin-top:20px; padding:16px; background:#f8f9fa; border-radius:8px; font-size:12px; color:var(--text-light); text-align:center;">
+                    Per accedere alla tua galleria fotografica, visita:<br>
+                    <strong style="color:var(--primary-dark);">https://cibox72.github.io/AppCenterStudioPROGOLD/gallery.html</strong>
+                </div>
+            `;
+
+            document.getElementById('schedaContenuto').innerHTML = html;
+            document.getElementById('modalScheda').classList.add('active');
+        }
+
+        function chiudiModalScheda() {
+            document.getElementById('modalScheda').classList.remove('active');
+        }
+
+        function inviaCredenzialiEmail(index) {
+            const cliente = clientiRegistrati[index];
+            const subject = encodeURIComponent(`Credenziali Accesso Galleria - AppCenterStudioPROGOLD`);
+            const body = encodeURIComponent(`Gentile ${cliente.clienteA.nome} ${cliente.clienteA.cognome},\n\necco le tue credenziali per accedere alla galleria fotografica:\n\nID Cliente: ${cliente.id}\nPassword: ${cliente.pwd}\n\nLink accesso: https://cibox72.github.io/AppCenterStudioPROGOLD/gallery.html\n\nCordiali saluti,\nLo Studio`);
+            
+            window.open(`mailto:${cliente.email}?subject=${subject}&body=${body}`);
+            mostraToast('Email pronta per l\'invio', 'success');
+        }
+
+        function pulisciForm() {
+            document.getElementById('cliNomeA').value = '';
+            document.getElementById('cliCognomeA').value = '';
+            document.getElementById('cliNomeB').value = '';
+            document.getElementById('cliCognomeB').value = '';
+            document.getElementById('cliEmail').value = '';
+            document.getElementById('cliTelefono').value = '';
+            document.getElementById('cliDataEvento').value = '';
+            generaCredenzialiCliente();
+        }
+
+        async function eseguiBackupCloud() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/clienti?studioId=${studioId}`);
-                if (response.ok) {
-                    const result = await response.json();
-                    if (result.clienti) {
-                        clienti = result.clienti;
-                        renderizzaListaClienti();
-                    }
+                await fetch(`${WORKER_URL}/api/studio/clienti/backup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studioId, clienti: clientiRegistrati, timestamp: Date.now() })
+                });
+                mostraToast('Backup salvato su Cloud', 'success');
+            } catch (error) {
+                mostraToast('Errore backup Cloud', 'error');
+            }
+        }
+
+        async function eseguiRipristinoCloud() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/clienti/backup?studioId=${studioId}`);
+                const data = await response.json();
+                
+                if (data.clienti) {
+                    clientiRegistrati = data.clienti;
+                    localStorage.setItem(`clienti_${studioId}`, JSON.stringify(clientiRegistrati));
+                    aggiornaTabella();
+                    mostraToast('Backup ripristinato con successo', 'success');
                 }
             } catch (error) {
-                console.log('Caricamento da cloud non disponibile, uso localStorage');
-                const clienteLocale = JSON.parse(localStorage.getItem(`clienti_${studioId}`) || '[]');
-                clienti = clienteLocale;
-                renderizzaListaClienti();
+                mostraToast('Errore ripristino Cloud', 'error');
             }
         }
 
-        // ===== RENDERIZZA LISTA CLIENTI =====
-        function renderizzaListaClienti() {
-            const container = document.getElementById('clientList');
-            
-            if (clienti.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: var(--text-light);">
-                        <div style="font-size: 48px; margin-bottom: 12px;">📭</div>
-                        <p>Nessun cliente registrato. Crea il primo cliente usando il modulo sopra.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = clienti.map(cliente => {
-                const badgeStato = cliente.stato === 'attivo' 
-                    ? '<span class="badge badge-success">Attivo</span>'
-                    : cliente.stato === 'scaduto'
-                    ? '<span class="badge badge-warning">Scaduto</span>'
-                    : '<span class="badge badge-danger">Sospeso</span>';
-
-                const dataCreazione = new Date(cliente.dataCreazione).toLocaleDateString('it-IT');
-                
-                return `
-                    <div class="client-item">
-                        <div class="client-info">
-                            <div class="client-name">
-                                ${cliente.nomeEvento} ${badgeStato}
-                            </div>
-                            <div class="client-meta">
-                                ID: <strong>${cliente.clienteId}</strong> · 
-                                Creato: ${dataCreazione} · 
-                                Foto: ${cliente.fotoCaricate || 0}
-                            </div>
-                        </div>
-                        <div class="client-actions">
-                            <button class="btn-small" onclick="estendiGalleria('${cliente.clienteId}')">⏱️ Estendi</button>
-                            <button class="btn-small" onclick="generaLinkSelezione('${cliente.clienteId}')">🔗 Link</button>
-                            <button class="btn-small" onclick="inviaCredenziali('${cliente.clienteId}')">📧 Invia</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ===== AGGIORNA SELECT CLIENTI =====
-        function aggiornaSelectClienti() {
-            const select = document.getElementById('clienteDestinazione');
-            select.innerHTML = '<option value="">-- Seleziona un cliente salvato --</option>';
-            
-            clienti.forEach(cliente => {
-                const option = document.createElement('option');
-                option.value = cliente.clienteId;
-                option.textContent = `${cliente.nomeEvento} (${cliente.clienteId})`;
-                select.appendChild(option);
-            });
-        }
-
-        // ===== GESTIONE SELEZIONE CARTELLA =====
-        function gestisciSelezioneCartella(event) {
-            const files = Array.from(event.target.files);
-            const imageFiles = files.filter(f => f.type.startsWith('image/'));
-            
-            if (imageFiles.length === 0) {
-                mostraToast('Nessuna immagine trovata nella cartella selezionata', 'warning');
-                return;
-            }
-
-            // Estrai il nome della cartella dal primo file
-            const primoFile = imageFiles[0];
-            const pathParts = primoFile.webkitRelativePath.split('/');
-            cartellaSelezionata = pathParts[0];
-            fileDaCaricare = imageFiles;
-
-            mostraInfoCartella(cartellaSelezionata, imageFiles.length);
-            document.getElementById('btnUpload').disabled = false;
-        }
-
-        function mostraInfoCartella(nome, numero) {
-            document.getElementById('nomeCartellaSelezionata').textContent = nome;
-            document.getElementById('numeroFoto').textContent = numero;
-            document.getElementById('infoCartella').style.display = 'block';
-        }
-
-        // ===== UPLOAD CARTELLA =====
-        async function avviaUploadCartella() {
-            const clienteId = document.getElementById('clienteDestinazione').value;
-            const nomeCartella = document.getElementById('nomeCartella').value.trim() || cartellaSelezionata;
-
-            if (!clienteId) {
-                mostraToast('Seleziona un cliente destinazione', 'error');
-                return;
-            }
-
-            if (fileDaCaricare.length === 0) {
-                mostraToast('Nessun file da caricare', 'error');
-                return;
-            }
-
-            const btn = document.getElementById('btnUpload');
-            btn.disabled = true;
-            document.getElementById('progressContainer').classList.add('active');
-
-            let caricati = 0;
-            const totale = fileDaCaricare.length;
-
-            for (const file of fileDaCaricare) {
-                try {
-                    // Comprimi localmente prima dell'upload
-                    const blobCompresso = await comprimiImmagine(file);
-                    
-                    const formData = new FormData();
-                    formData.append('file', blobCompresso, file.name);
-                    formData.append('clienteId', clienteId);
-                    formData.append('cartella', nomeCartella);
-                    formData.append('percorsoRelativo', file.webkitRelativePath);
-
-                    await fetch(`${WORKER_URL}/api/studio/upload?studioId=${studioId}&clienteId=${clienteId}&folder=${encodeURIComponent(nomeCartella)}&filename=${encodeURIComponent(file.name)}`, {
-                        method: 'POST',
-                        body: blobCompresso
-                    });
-
-                    caricati++;
-                    aggiornaProgress(caricati, totale);
-                } catch (error) {
-                    console.error('Errore upload file:', file.name, error);
-                }
-            }
-
-            // Aggiorna conteggio foto nel cliente
-            const cliente = clienti.find(c => c.clienteId === clienteId);
-            if (cliente) {
-                cliente.fotoCaricate = (cliente.fotoCaricate || 0) + caricati;
-                localStorage.setItem(`clienti_${studioId}`, JSON.stringify(clienti));
-            }
-
-            mostraToast(`✅ Upload completato! ${caricati} foto caricate su R2`, 'success');
-            
-            btn.disabled = false;
-            setTimeout(() => {
-                document.getElementById('progressContainer').classList.remove('active');
-            }, 2000);
-        }
-
-        function aggiornaProgress(caricati, totale) {
-            const percent = Math.round((caricati / totale) * 100);
-            document.getElementById('progressFill').style.width = `${percent}%`;
-            document.getElementById('progressText').textContent = `${caricati} / ${totale} foto caricate`;
-            document.getElementById('progressPercent').textContent = `${percent}%`;
-        }
-
-        // ===== COMPRESSIONE IMMAGINE LOCALE =====
-        function comprimiImmagine(file) {
-            return new Promise((resolve, reject) => {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const maxWidth = 1500;
-                    const maxHeight = 1500;
-                    let width = img.width;
-                    let height = img.height;
-
-                    if (width > maxWidth || height > maxHeight) {
-                        const ratio = Math.min(maxWidth / width, maxHeight / height);
-                        width *= ratio;
-                        height *= ratio;
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    
-                    canvas.toBlob(function(blob) {
-                        resolve(blob);
-                    }, 'image/jpeg', 0.8);
-                };
-                img.onerror = reject;
-                img.src = URL.createObjectURL(file);
-            });
-        }
-
-        // ===== ESTENDI GALLERIA =====
-        function estendiGalleria(clienteId) {
-            const cliente = clienti.find(c => c.clienteId === clienteId);
-            if (!cliente) return;
-
-            const nuovaDurata = prompt(`Estendi galleria per "${cliente.nomeEvento}".\nDurata attuale: ${cliente.durataGalleria} mesi.\nNuova durata (mesi):`, cliente.durataGalleria);
-            
-            if (nuovaDurata !== null && !isNaN(parseInt(nuovaDurata))) {
-                cliente.durataGalleria = parseInt(nuovaDurata);
-                localStorage.setItem(`clienti_${studioId}`, JSON.stringify(clienti));
-                renderizzaListaClienti();
-                mostraToast(`Galleria estesa a ${nuovaDurata} mesi`, 'success');
-            }
-        }
-
-        // ===== GENERA LINK SELEZIONE =====
-        function generaLinkSelezione(clienteId) {
-            const cliente = clienti.find(c => c.clienteId === clienteId);
-            if (!cliente) return;
-
-            const token = Math.random().toString(36).substring(2, 15);
-            const scadenza = new Date();
-            scadenza.setDate(scadenza.getDate() + 7);
-            
-            cliente.linkSelezione = `${window.location.origin}/gallery.html?token=${token}&cliente=${clienteId}`;
-            cliente.scadenzaLink = scadenza.toISOString();
-            
-            localStorage.setItem(`clienti_${studioId}`, JSON.stringify(clienti));
-            
-            const messaggio = `Link selezione generato per ${cliente.nomeEvento}:\n\n${cliente.linkSelezione}\n\nScade il: ${scadenza.toLocaleDateString('it-IT')}\n\nCredenziali:\nID: ${cliente.clienteId}\nPassword: ${cliente.password}`;
-            
-            alert(messaggio);
-            mostraToast('Link selezione generato (valido 7 giorni)', 'success');
-        }
-
-        // ===== INVIA CREDENZIALI =====
-        function inviaCredenziali(clienteId) {
-            const cliente = clienti.find(c => c.clienteId === clienteId);
-            if (!cliente) return;
-
-            if (cliente.email) {
-                const subject = encodeURIComponent(`Credenziali Galleria - ${cliente.nomeEvento}`);
-                const body = encodeURIComponent(`Gentile Cliente,\n\necco le credenziali per accedere alla tua galleria fotografica:\n\nID: ${cliente.clienteId}\nPassword: ${cliente.password}\n\nLink: ${cliente.linkSelezione || 'Da generare'}\n\nGrazie per averci scelto!`);
-                window.open(`mailto:${cliente.email}?subject=${subject}&body=${body}`);
-            } else if (cliente.telefono) {
-                const messaggio = encodeURIComponent(`Ciao! Ecco le credenziali per la tua galleria ${cliente.nomeEvento}:\nID: ${cliente.clienteId}\nPassword: ${cliente.password}`);
-                window.open(`https://wa.me/${cliente.telefono.replace(/\D/g, '')}?text=${messaggio}`);
-            } else {
-                mostraToast('Nessun contatto email o telefono per questo cliente', 'warning');
-            }
-        }
-
-        // ===== BACKUP GLOBALE =====
-        function eseguiBackupGlobale() {
-            const datiBackup = {
-                studioId: studioId,
-                dataBackup: new Date().toISOString(),
-                clienti: clienti
-            };
-            
-            const blob = new Blob([JSON.stringify(datiBackup, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `backup-clienti-${studioId}-${Date.now()}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            
-            mostraToast('Backup globale scaricato', 'success');
-        }
-
-        // ===== RIPRISTINO GLOBALE =====
-        function eseguiRipristinoGlobale() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    try {
-                        const dati = JSON.parse(event.target.result);
-                        if (dati.clienti) {
-                            clienti = dati.clienti;
-                            localStorage.setItem(`clienti_${studioId}`, JSON.stringify(clienti));
-                            renderizzaListaClienti();
-                            aggiornaSelectClienti();
-                            mostraToast('Ripristino completato con successo', 'success');
-                        }
-                    } catch (error) {
-                        mostraToast('File di backup non valido', 'error');
-                    }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
-        }
-
-        // ===== TOAST NOTIFICATIONS =====
-        function mostraToast(messaggio, tipo = 'success') {
+        function mostraToast(msg, tipo) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${tipo}`;
-            
-            const icona = tipo === 'success' ? '✅' : tipo === 'error' ? '❌' : '⚠️';
-            
-            toast.innerHTML = `
-                <div class="toast-icon">${icona}</div>
-                <div class="toast-message">${messaggio}</div>
-            `;
-            
+            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? 'OK' : '!'}</div><div class="toast-message">${msg}</div>`;
             container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(400px)';
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
-        }
-
-        // ===== MODAL =====
-        function mostraModal(titolo, messaggio, callback) {
-            document.getElementById('modalTitle').textContent = titolo;
-            document.getElementById('modalMessage').textContent = messaggio;
-            document.getElementById('modalOverlay').classList.add('active');
-            document.getElementById('modalConfirmBtn').onclick = function() {
-                chiudiModal();
-                if (callback) callback();
-            };
-        }
-
-        function chiudiModal() {
-            document.getElementById('modalOverlay').classList.remove('active');
-        }
-
-        function confermaModal() {
-            chiudiModal();
-        }
-
-        // ===== TRAVERSE FILE TREE (per drag & drop cartelle) =====
-        function traverseFileTree(item, files) {
-            if (item.isFile) {
-                item.file(function(file) {
-                    if (file.type.startsWith('image/')) {
-                        files.push(file);
-                    }
-                });
-            } else if (item.isDirectory) {
-                const dirReader = item.createReader();
-                dirReader.readEntries(function(entries) {
-                    for (let i = 0; i < entries.length; i++) {
-                        traverseFileTree(entries[i], files);
-                    }
-                });
-            }
+            setTimeout(() => toast.remove(), 4000);
         }
     </script>
-
 </body>
-</html>
+</html> 
