@@ -13,19 +13,15 @@
             --primary-light: #f4ecf7;
             --primary-gradient: linear-gradient(135deg, #a569bd 0%, #8e44ad 50%, #6c3483 100%);
             --secondary: #2980b9;
-            --secondary-gradient: linear-gradient(135deg, #5dade2 0%, #2980b9 50%, #1a5276 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #f4ecf7 50%, #ebf5fb 100%);
-            --card-bg: #ffffff;
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #f4ecf7 40%, #ebf5fb 100%);
+            --card-bg: rgba(255, 255, 255, 0.98);
             --card-gradient: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
             --text-main: #2c3e50;
             --text-light: #7f8c8d;
             --border-color: #e8e8e8;
             --success: #27ae60;
-            --success-light: #eafaf1;
             --warning: #f39c12;
-            --warning-light: #fef9e7;
             --danger: #e74c3c;
-            --danger-light: #fdedec;
             --shadow: 0 4px 16px rgba(142, 68, 173, 0.08);
             --shadow-hover: 0 8px 32px rgba(142, 68, 173, 0.15);
             --radius: 14px;
@@ -67,31 +63,12 @@
             font-weight: 500;
             color: var(--primary);
             transition: all 0.2s ease;
-            backdrop-filter: blur(10px);
         }
 
-        .nav-btn:hover { 
-            background: white; 
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
+        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-        .sync-status { 
-            font-size: 13px; 
-            color: white; 
-            font-weight: 500; 
-            display: flex; 
-            align-items: center; 
-            gap: 6px; 
-        }
-        .sync-dot { 
-            width: 8px; 
-            height: 8px; 
-            background: #2ecc71; 
-            border-radius: 50%; 
-            animation: pulse 2s infinite; 
-            box-shadow: 0 0 8px rgba(46, 204, 113, 0.6);
-        }
+        .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(46, 204, 113, 0.6); }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
@@ -126,10 +103,7 @@
             transition: all 0.3s ease;
         }
 
-        .card:hover {
-            box-shadow: var(--shadow-hover);
-            transform: translateY(-2px);
-        }
+        .card:hover { box-shadow: var(--shadow-hover); }
 
         .card-title { 
             font-size: 18px; 
@@ -163,17 +137,11 @@
         .stat-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
+            top: 0; left: 0; right: 0; height: 4px;
             background: var(--primary-gradient);
         }
 
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-hover);
-        }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
 
         .stat-value { font-size: 36px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
         .stat-label { font-size: 13px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
@@ -203,17 +171,17 @@
         }
 
         .btn {
-            padding: 12px 24px;
+            padding: 10px 18px;
             border: none;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
@@ -221,27 +189,26 @@
         .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
         .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
         .btn-whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); color: white; }
-        .btn-anydesk { background: linear-gradient(135deg, #ef443b, #c0392b); color: white; }
         .btn-outline { background: white; color: var(--primary); border: 1px solid var(--primary); }
         .btn-outline:hover { background: var(--primary-light); }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
 
         .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-color); background: white; }
         table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; vertical-align: middle; }
         th { 
             background: var(--primary-light); 
             color: var(--primary); 
             font-weight: 600; 
             text-transform: uppercase; 
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 0.5px;
         }
         tr:hover td { background: #fafafa; }
 
         .badge { 
             display: inline-block; 
-            padding: 5px 12px; 
+            padding: 4px 10px; 
             border-radius: 6px; 
             font-size: 11px; 
             font-weight: 700;
@@ -251,6 +218,23 @@
         .badge-warning { background: var(--warning); color: white; }
         .badge-danger { background: var(--danger); color: white; }
 
+        .cred-input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: monospace;
+            background: #f8f9fa;
+            transition: all 0.2s;
+        }
+        .cred-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 2px rgba(142, 68, 173, 0.1);
+        }
+
         .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
         .toast {
             background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
@@ -258,7 +242,7 @@
         }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .toast-icon { font-size: 20px; }
+        .toast-icon { font-size: 20px; font-weight: bold; }
         .toast-message { flex: 1; font-size: 14px; }
 
         .footer-branding {
@@ -270,30 +254,84 @@
             margin-top: 40px;
             border-top: 1px solid var(--border-color);
         }
+        .footer-branding strong { color: var(--primary); font-weight: 700; }
 
-        .footer-branding strong {
+        /* MODAL SCHEDA */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            padding: 32px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
             color: var(--primary);
             font-weight: 700;
         }
 
-        .teleassistenza-box {
-            background: linear-gradient(135deg, #fdedec 0%, #fadbd8 100%);
-            border-left: 4px solid var(--danger);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-light);
+            padding: 4px 8px;
         }
+        .modal-close:hover { color: var(--danger); }
 
-        .teleassistenza-box h4 {
-            color: var(--danger);
-            margin-bottom: 10px;
-            font-size: 16px;
+        .scheda-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
         }
+        .scheda-row:last-child { border-bottom: none; }
+        .scheda-label { font-weight: 600; color: var(--text-light); font-size: 13px; }
+        .scheda-value { font-weight: 500; color: var(--text-main); text-align: right; }
 
-        .teleassistenza-box p {
-            color: var(--text-main);
+        .scheda-cred {
+            background: var(--primary-light);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-family: monospace;
             font-size: 14px;
-            margin-bottom: 15px;
+            color: var(--primary-dark);
+            word-break: break-all;
+        }
+
+        @media print {
+            .top-bar, .btn, .modal-close, .footer-branding { display: none !important; }
+            .modal-overlay { position: static; background: white; padding: 0; }
+            .modal-content { box-shadow: none; max-height: none; padding: 0; }
+            body { background: white; }
         }
 
         @media (max-width: 768px) {
@@ -304,8 +342,7 @@
     </style>
 </head>
 <body>
-    <!-- TOP BAR -->
-    <div class="top-bar">
+       <div class="top-bar">
         <div class="nav-left">
             <button class="nav-btn" onclick="window.history.back()">Indietro</button>
             <button class="nav-btn" onclick="window.location.href='index.html'">Home</button>
@@ -323,7 +360,6 @@
             <p>CRM, Gestione Licenze, Monitoraggio Scadenze e Invio Offerte Commerciali</p>
         </div>
 
-        <!-- DASHBOARD STATS -->
         <div class="stats-grid">
             <div class="stat-card success">
                 <div class="stat-value" id="stat-attivi">0</div>
@@ -343,7 +379,6 @@
             </div>
         </div>
 
-        <!-- SEZIONE 1: REGISTRA NUOVO STUDIO -->
         <div class="card">
             <div class="card-title">Registra Nuovo Studio Fotografico</div>
             <div class="card-subtitle">Inserisci i dati anagrafici. Verranno usati per i PDF e per la fatturazione.</div>
@@ -402,31 +437,30 @@
             </div>
         </div>
 
-        <!-- SEZIONE 2: ARCHIVIO STUDI (CRM) -->
         <div class="card">
             <div class="card-title">Archivio Studi Registrati (CRM)</div>
-            <div class="card-subtitle">Gestisci licenze, invia offerte e monitora lo stato di tutti i tuoi clienti.</div>
+            <div class="card-subtitle">Gestisci licenze, credenziali e monitora lo stato di tutti i tuoi clienti. Modifica ID e Password direttamente dalla tabella.</div>
             
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
                             <th>Nome Studio</th>
-                            <th>ID Unico</th>
+                            <th>ID Accesso</th>
+                            <th>Password</th>
                             <th>Contatto</th>
                             <th>Stato</th>
                             <th>Scadenza</th>
-                            <th>Azioni Rapide</th>
+                            <th>Azioni</th>
                         </tr>
                     </thead>
                     <tbody id="tabellaStudi">
-                        <tr><td colspan="6" style="text-align:center; color: #7f8c8d;">Caricamento dati dal cloud...</td></tr>
+                        <tr><td colspan="7" style="text-align:center; color: #7f8c8d;">Caricamento dati dal cloud...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- SEZIONE 3: AZIONI RAPIDE FORNITORE -->
         <div class="card">
             <div class="card-title">Invio Offerta Commerciale Rapida</div>
             <div class="card-subtitle">Genera un messaggio precompilato per WhatsApp o Email con il tuo link PayPal.</div>
@@ -449,29 +483,30 @@
             </div>
 
             <div class="btn-group">
-                <button class="btn btn-whatsapp" onclick="inviaOffertaWhatsApp()">Invia Offerta via WhatsApp (3347507656)</button>
-                <button class="btn btn-primary" onclick="inviaOffertaPayPal()">Invia Link PayPal (appcenterstudiopremium@gmail.com)</button>
+                <button class="btn btn-whatsapp" onclick="inviaOffertaWhatsApp()">Invia Offerta via WhatsApp</button>
+                <button class="btn btn-primary" onclick="inviaOffertaPayPal()">Invia Link PayPal</button>
             </div>
         </div>
 
-        <!-- SEZIONE 4: TELEASSISTENZA ANYDESK -->
-        <div class="card">
-            <div class="card-title">Teleassistenza Remota con AnyDesk</div>
-            <div class="card-subtitle">Supporto tecnico in tempo reale per gli studi clienti.</div>
-            
-            <div class="teleassistenza-box">
-                <h4>Assistenza Remota Immediata</h4>
-                <p>Per risolvere problemi tecnici in tempo reale, lo studio può scaricare AnyDesk e connettersi al nostro supporto. Il codice di connessione verrà fornito telefonicamente o via WhatsApp.</p>
-                <div class="btn-group" style="margin-top: 10px;">
-                    <a href="https://anydesk.com/it/downloads" target="_blank" class="btn btn-anydesk" style="text-decoration: none;">Scarica AnyDesk (Sito Ufficiale)</a>
-                    <button class="btn btn-warning" onclick="contattaWhatsApp()">Contatta Supporto via WhatsApp</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- FOOTER BRANDING -->
         <div class="footer-branding">
             Sviluppato e gestito da <strong>AppCenterStudioPROGOLD</strong> - Piattaforma SaaS per Studi Fotografici Professionali
+        </div>
+    </div>
+
+    <!-- MODAL SCHEDA STUDIO -->
+    <div class="modal-overlay" id="modalScheda">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Scheda Studio</h3>
+                <button class="modal-close" onclick="chiudiModalScheda()">×</button>
+            </div>
+            <div id="schedaContenuto">
+                <!-- Contenuto dinamico -->
+            </div>
+            <div class="btn-group" style="justify-content: center; margin-top: 24px;">
+                <button class="btn btn-primary" onclick="window.print()">STAMPA SCHEDA</button>
+                <button class="btn btn-outline" onclick="chiudiModalScheda()">CHIUDI</button>
+            </div>
         </div>
     </div>
 
@@ -518,7 +553,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(nuovoStudio)
-                });
+                }).catch(err => console.log('Sync cloud in background...', err));
                 
                 studiRegistrati.push(nuovoStudio);
                 localStorage.setItem('crm_studi', JSON.stringify(studiRegistrati));
@@ -547,7 +582,7 @@
                 aggiornaTabella();
                 aggiornaStats();
             } else {
-                document.getElementById('tabellaStudi').innerHTML = '<tr><td colspan="6" style="text-align:center;">Nessuno studio registrato. Inizia aggiungendone uno sopra.</td></tr>';
+                document.getElementById('tabellaStudi').innerHTML = '<tr><td colspan="7" style="text-align:center;">Nessuno studio registrato. Inizia aggiungendone uno sopra.</td></tr>';
             }
         }
 
@@ -560,35 +595,92 @@
 
             studiRegistrati.forEach((studio, index) => {
                 let badgeClass, statoText;
-                if (studio.stato === 'attiva') {
-                    badgeClass = 'badge-success';
-                    statoText = 'ATTIVO';
-                } else if (studio.stato === 'prova') {
-                    badgeClass = 'badge-warning';
-                    statoText = 'PROVA';
-                } else {
-                    badgeClass = 'badge-danger';
-                    statoText = 'SOSPESO';
-                }
+                if (studio.stato === 'attiva') { badgeClass = 'badge-success'; statoText = 'ATTIVO'; } 
+                else if (studio.stato === 'prova') { badgeClass = 'badge-warning'; statoText = 'PROVA'; } 
+                else { badgeClass = 'badge-danger'; statoText = 'SOSPESO'; }
                 
                 const dataScad = new Date(studio.scadenza).toLocaleDateString('it-IT');
 
                 tbody.innerHTML += `
                     <tr>
-                        <td><strong>${studio.nome}</strong><br><small style="color:#7f8c8d">${studio.piva}</small></td>
-                        <td><code>${studio.id}</code></td>
+                        <td><strong>${studio.nome}</strong><br><small style="color:#7f8c8d">${studio.piva || ''}</small></td>
+                        <td><input class="cred-input" value="${studio.id}" onchange="aggiornaCredenziale(${index}, 'id', this.value)"></td>
+                        <td><input class="cred-input" value="${studio.pwd}" onchange="aggiornaCredenziale(${index}, 'pwd', this.value)"></td>
                         <td>${studio.email}<br><small>${studio.tel}</small></td>
                         <td><span class="badge ${badgeClass}">${statoText}</span></td>
                         <td>${dataScad}</td>
                         <td>
-                            <button class="btn btn-success" style="padding:6px 12px; font-size:12px;" onclick="cambiaStato(${index}, 'attiva')">Attiva</button>
-                            <button class="btn btn-danger" style="padding:6px 12px; font-size:12px;" onclick="cambiaStato(${index}, 'sospesa')">Sospendi</button>
+                            <div style="display:flex; gap:6px; flex-direction:column;">
+                                <button class="btn btn-outline" style="padding:6px 10px; font-size:11px;" onclick="apriSchedaStudio(${index})">Scheda</button>
+                                <div style="display:flex; gap:4px;">
+                                    <button class="btn btn-success" style="padding:6px 10px; font-size:11px;" onclick="cambiaStato(${index}, 'attiva')">Attiva</button>
+                                    <button class="btn btn-danger" style="padding:6px 10px; font-size:11px;" onclick="cambiaStato(${index}, 'sospesa')">Sospendi</button>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 `;
 
                 selectOfferta.innerHTML += `<option value="${index}">${studio.nome}</option>`;
             });
+        }
+
+        function aggiornaCredenziale(index, campo, valore) {
+            studiRegistrati[index][campo] = valore;
+            localStorage.setItem('crm_studi', JSON.stringify(studiRegistrati));
+            mostraToast('Credenziale aggiornata e salvata', 'success');
+        }
+
+        function apriSchedaStudio(index) {
+            const studio = studiRegistrati[index];
+            const dataScad = new Date(studio.scadenza).toLocaleDateString('it-IT');
+            const dataReg = new Date(studio.dataRegistrazione).toLocaleDateString('it-IT');
+
+            const html = `
+                <div class="scheda-row">
+                    <span class="scheda-label">Ragione Sociale</span>
+                    <span class="scheda-value">${studio.nome}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">P.IVA / CF</span>
+                    <span class="scheda-value">${studio.piva || 'N/A'}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Indirizzo</span>
+                    <span class="scheda-value">${studio.indirizzo || 'N/A'}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Email</span>
+                    <span class="scheda-value">${studio.email}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Telefono</span>
+                    <span class="scheda-value">${studio.tel}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Stato Licenza</span>
+                    <span class="scheda-value">${studio.stato.toUpperCase()}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Data Registrazione</span>
+                    <span class="scheda-value">${dataReg}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Scadenza Licenza</span>
+                    <span class="scheda-value">${dataScad}</span>
+                </div>
+                <div class="scheda-cred">
+                    <strong>ID Accesso:</strong> ${studio.id}<br>
+                    <strong>Password:</strong> ${studio.pwd}
+                </div>
+            `;
+
+            document.getElementById('schedaContenuto').innerHTML = html;
+            document.getElementById('modalScheda').classList.add('active');
+        }
+
+        function chiudiModalScheda() {
+            document.getElementById('modalScheda').classList.remove('active');
         }
 
         function cambiaStato(index, nuovoStato) {
@@ -619,27 +711,17 @@
         function inviaOffertaWhatsApp() {
             const index = document.getElementById('selectStudioOfferta').value;
             if (index === "") { mostraToast('Seleziona uno studio', 'error'); return; }
-            
             const studio = studiRegistrati[index];
             const offerta = document.getElementById('tipoOfferta').value;
-            const messaggio = `Ciao ${studio.nome}! Sono il supporto di AppCenterStudioPROGOLD. Ti invio l'offerta per la ${offerta}. Link pagamento: https://paypal.me/appcenterstudiopremium. Fammi sapere!`;
-            const url = `https://wa.me/393347507656?text=${encodeURIComponent(messaggio)}`;
-            window.open(url, '_blank');
+            const messaggio = `Ciao ${studio.nome}! Sono il supporto di AppCenterStudioPROGOLD. Ti invio l'offerta per la ${offerta}. Link pagamento: https://paypal.me/appcenterstudiopremium.`;
+            window.open(`https://wa.me/393347507656?text=${encodeURIComponent(messaggio)}`, '_blank');
         }
 
         function inviaOffertaPayPal() {
             const index = document.getElementById('selectStudioOfferta').value;
             if (index === "") { mostraToast('Seleziona uno studio', 'error'); return; }
-            
             const studio = studiRegistrati[index];
-            const subject = encodeURIComponent(`Offerta AppCenterStudioPROGOLD per ${studio.nome}`);
-            const body = encodeURIComponent(`Gentile ${studio.nome},\n\ntrovi il link per il pagamento della licenza qui:\nhttps://www.paypal.com/paypalme/appcenterstudiopremium\n\nCordiali saluti,\nAppCenterStudioPROGOLD - Supporto Tecnico`);
-            window.open(`mailto:${studio.email}?subject=${subject}&body=${body}`);
-        }
-
-        function contattaWhatsApp() {
-            const messaggio = encodeURIComponent('Salve, ho bisogno di assistenza tecnica per AppCenterStudioPROGOLD. Il mio ID studio è: ');
-            window.open(`https://wa.me/393347507656?text=${messaggio}`, '_blank');
+            window.open(`mailto:${studio.email}?subject=Offerta AppCenterStudioPROGOLD&body=Gentile ${studio.nome}, link pagamento: https://www.paypal.com/paypalme/appcenterstudiopremium`);
         }
 
         function pulisciForm() {
@@ -655,7 +737,7 @@
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? 'OK' : 'ERRORE'}</div><div class="toast-message">${msg}</div>`;
+            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? 'OK' : '!'}</div><div class="toast-message">${msg}</div>`;
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 4000);
         }
