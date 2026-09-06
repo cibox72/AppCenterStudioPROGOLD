@@ -1,0 +1,16 @@
+name = "appcenter-backend"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[[kv_namespaces]]
+binding = "APPCENTER_DATA"
+id = "e955f9cc8c3047ecac2ab101158516ea"
+
+[[r2_buckets]]
+binding = "appcenter_studio_foto"
+bucket_name = "appcenter-studio-foto"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "appcenter_db"
+database_id = "ceede3b7-e838-4d5e-9774-3e072f92e4ee"
