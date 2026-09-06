@@ -3,193 +3,970 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>01 Preventivi & Contratti - AppCenterStudio Premium</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Preventivi & Contratti - AppCenterStudioPROGOLD</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
-            --carta-zucchero: #7ea4b5;
-            --verde-salvia: #9caf88;
-            --rosa-antico: #dcaeaf;
-            --scuro: #2b3a42;
-            --chiaro: #f4f7f6;
-            --rosso-alert: #e07a7a;
+            --primary: #5dade2;
+            --primary-dark: #1a5276;
+            --primary-light: #ebf5fb;
+            --primary-gradient: linear-gradient(135deg, #85c1e9 0%, #5dade2 50%, #1a5276 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebf5fb 40%, #f4ecf7 100%);
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e8e8e8;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --shadow: 0 4px 16px rgba(93, 173, 226, 0.08);
+            --shadow-hover: 0 8px 32px rgba(93, 173, 226, 0.15);
+            --radius: 14px;
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--chiaro);
-            color: var(--scuro);
-            margin: 0;
-            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
         }
-        /* BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA */
-        .navbar {
-            background-color: white;
-            padding: 12px 20px;
+
+        .top-bar {
+            background: var(--primary-gradient);
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-bottom: 3px solid var(--carta-zucchero);
-        }
-        .nav-links { display: flex; gap: 10px; }
-        .nav-links button {
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            background: white;
-            font-weight: bold;
-            cursor: pointer;
-            color: var(--scuro);
-            transition: all 0.2s;
-        }
-        .nav-links button:hover { background: var(--chiaro); }
-        .btn-sync { background-color: #e8f0fe !important; border-color: var(--carta-zucchero) !important; color: var(--carta-zucchero) !important; }
-        
-        .container {
-            max-width: 1200px;
-            width: 100%;
-            margin: 30px auto;
-            padding: 0 20px;
-            box-sizing: border-box;
-        }
-        .main-card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        h1, h2, h3, h4 { color: var(--scuro); margin-top: 0; text-align: center; }
-        
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 30px;
-            margin-top: 25px;
-        }
-        @media(max-width: 992px) { .grid-layout { grid-template-columns: 1fr; } }
-
-        .sub-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(93, 173, 226, 0.2);
         }
 
-        .form-section {
-            background: #fdfdfd;
-            border: 1px solid #eaeaea;
+        .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--carta-zucchero);
-        }
-
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-        
-        .btn-panel { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-panel button { flex: 1; padding: 12px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; color: white; }
-        
-        .btn-prev { background-color: var(--carta-zucchero); }
-        .btn-cont { background-color: var(--verde-salvia); }
-        .btn-clear { background-color: #6c757d; }
-
-        .financial-summary {
-            background: #f4f7f6;
-            padding: 15px;
-            border-radius: 6px;
+            cursor: pointer;
             font-size: 14px;
-            margin-top: 15px;
+            font-weight: 500;
+            color: var(--primary-dark);
+            transition: all 0.2s ease;
         }
-        .financial-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
-        .financial-total { font-size: 16px; font-weight: bold; border-top: 1px solid #ccc; padding-top: 5px; margin-top: 5px; }
 
-        /* TABELLE */
-        .table-wrapper { overflow-x: auto; margin-top: 15px; background: #fafafa; border: 1px solid #ddd; border-radius: 6px; max-height: 400px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
-        th, td { padding: 12px; border-bottom: 1px solid #eee; }
-        th { background: #f1f1f1; color: var(--scuro); font-weight: bold; }
+        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(46, 204, 113, 0.6); }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
+
+        .page-header { 
+            text-align: center; 
+            margin-bottom: 32px;
+            padding: 24px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+        .page-header h1 { 
+            font-size: 28px; 
+            font-weight: 700; 
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px; 
+        }
+        .page-header p { color: var(--text-light); font-size: 15px; }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover { box-shadow: var(--shadow-hover); }
+
+        .card-title { 
+            font-size: 18px; 
+            font-weight: 600; 
+            color: var(--primary-dark); 
+            margin-bottom: 6px; 
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 0.5px;
+            background: var(--primary-gradient);
+        }
+
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; position: relative; }
+        .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 11px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: white;
+            transition: all 0.2s ease;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(93, 173, 226, 0.15); 
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+
+        .btn-map {
+            position: absolute;
+            right: 8px;
+            top: 38px;
+            padding: 6px 10px;
+            font-size: 11px;
+            background: linear-gradient(135deg, #48c9b0, #117a65);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-map:hover { transform: scale(1.05); box-shadow: 0 2px 8px rgba(72, 201, 176, 0.3); }
+
+        .services-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .services-table th, .services-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .services-table th {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .services-table input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .total-box {
+            background: linear-gradient(135deg, var(--primary-light) 0%, #d6eaf8 100%);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .total-box .total-label {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .total-box .total-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-bozza { background: #f8f9fa; color: #7f8c8d; border: 1px solid #dee2e6; }
+        .status-inviato { background: #ebf5fb; color: #1a5276; border: 1px solid #aed6f1; }
+        .status-accettato { background: #eafaf1; color: #1e8449; border: 1px solid #82e0aa; }
+        .status-rifiutato { background: #fdedec; color: #943126; border: 1px solid #f1948a; }
+        .status-scaduto { background: #fef9e7; color: #b7950b; border: 1px solid #f4d03f; }
+
+        .footer-branding {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+        .footer-branding strong { color: var(--primary-dark); font-weight: 700; }
+
+        .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: flex; align-items: center; gap: 12px; min-width: 300px; animation: slideIn 0.3s ease; border-left: 4px solid var(--success);
+        }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast-icon { font-size: 20px; font-weight: bold; }
+        .toast-message { flex: 1; font-size: 14px; }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 768px) {
+            .top-bar { flex-direction: column; gap: 10px; }
+            .form-row { grid-template-columns: 1fr; }
+            .services-table { font-size: 12px; }
+            .services-table input { font-size: 12px; }
+        }
     </style>
 </head>
 <body>
-
-    <!-- BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA -->
-    <div class="navbar">
-        <div class="nav-links">
-            <button onclick="window.history.back()">← Indietro</button>
-            <button onclick="location.href='index.html'">🏠 Home</button>
+        <div class="top-bar">
+        <div class="nav-left">
+            <button class="nav-btn" onclick="window.history.back()">Indietro</button>
+            <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Plancia</button>
         </div>
-        <div class="nav-links">
-            <button onclick="eseguiBackupDocumenti()">📥 Backup Globale</button>
-            <button onclick="eseguiRipristinoDocumenti()">📤 Ripristino Globale</button>
-            <button class="btn-sync" id="status-sync">Sync Cloud: OK</button>
-            <button style="background-color: var(--rosa-antico); color: white;" onclick="location.href='index.html'">Esci</button>
+        <div class="nav-right">
+            <button class="nav-btn" onclick="eseguiBackupCloud()">Backup Cloud</button>
+            <button class="nav-btn" onclick="eseguiRipristinoCloud()">Ripristino Cloud</button>
+            <button class="nav-btn" onclick="esciSessione()">Esci</button>
+            <div class="sync-status"><span class="sync-dot"></span> Sync Cloud: OK</div>
         </div>
     </div>
 
     <div class="container">
-        <div class="main-card">
-            <h1>📋 Preventivi & Contratti - Avanzato</h1>
-            <p style="color: #666; margin-top: -10px; text-align: center;">Emissione completa con gestione luoghi, sconti analitici, acconti progressivi e piano rateale anti-omonimia.</p>
-            
-            <div class="grid-layout">
-                
-                <!-- PARTE SINISTRA: FORM DI COMPOSIZIONE -->
+        <div class="page-header">
+            <h1>Preventivi & Contratti</h1>
+            <p>Emissione completa con gestione luoghi, sconti analitici, acconti progressivi e piano rateale</p>
+        </div>
+
+        <!-- DATI STUDIO (Automatici) -->
+        <div class="card" id="studioDataCard" style="display: none;">
+            <div class="card-title"><span class="badge">ST</span> Dati del Tuo Studio</div>
+            <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                <img id="studioLogoPrev" style="width: 80px; height: 80px; border-radius: 8px; object-fit: contain; border: 1px solid var(--border-color);" src="" alt="Logo">
                 <div>
-                    <!-- DATI DOCUMENTO -->
-                    <div class="form-section">
-                        <h3>📄 Dati Documento</h3>
-                        <div class="sub-grid">
-                            <div class="form-group"><label>Numero Documento</label><input type="text" id="doc-numero" readonly value="Assegnato al salvataggio"></div>
-                            <div class="form-group"><label>Data Emissione (GG/MM/AAAA) *</label><input type="text" id="doc-data" onblur="validaDataFormato(this)"></div>
+                    <h3 id="studioNomePrev" style="font-size: 18px; color: var(--text-main); margin-bottom: 4px;"></h3>
+                    <p id="studioPivaPrev" style="font-size: 13px; color: var(--text-light); margin-bottom: 2px;"></p>
+                    <p id="studioIndirizzoPrev" style="font-size: 13px; color: var(--text-light);"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DATI DOCUMENTO -->
+        <div class="card">
+            <div class="card-title"><span class="badge">DD</span> Dati Documento</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Numero Documento *</label>
+                    <input type="text" id="docNumero" placeholder="es. 2026/001" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Data Emissione *</label>
+                    <input type="date" id="docData">
+                </div>
+                <div class="form-group">
+                    <label>Validità (giorni)</label>
+                    <select id="docValidita">
+                        <option value="15">15 giorni</option>
+                        <option value="30" selected>30 giorni</option>
+                        <option value="60">60 giorni</option>
+                        <option value="90">90 giorni</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Stato Documento</label>
+                    <select id="docStato">
+                        <option value="bozza">Bozza</option>
+                        <option value="inviato">Inviato</option>
+                        <option value="accettato">Accettato</option>
+                        <option value="rifiutato">Rifiutato</option>
+                        <option value="scaduto">Scaduto</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANAGRAFICA CLIENTE A -->
+        <div class="card">
+            <div class="card-title"><span class="badge">A1</span> Anagrafica Cliente A (Intestatario Principale)</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nome *</label>
+                    <input type="text" id="cliANome" placeholder="Nome">
+                </div>
+                <div class="form-group">
+                    <label>Cognome *</label>
+                    <input type="text" id="cliACognome" placeholder="Cognome">
+                </div>
+                <div class="form-group">
+                    <label>Telefono *</label>
+                    <input type="tel" id="cliATel" placeholder="+39 333 1234567">
+                </div>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="cliAEmail" placeholder="email@esempio.com">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Via / Piazza e Civico</label>
+                    <input type="text" id="cliAIndirizzo" placeholder="Via Roma 1">
+                    <button class="btn-map" onclick="apriMappa('cliAIndirizzo')">Maps</button>
+                </div>
+                <div class="form-group">
+                    <label>Città</label>
+                    <input type="text" id="cliACitta" placeholder="Milano">
+                </div>
+                <div class="form-group">
+                    <label>CAP</label>
+                    <input type="text" id="cliACAP" placeholder="20100">
+                </div>
+                <div class="form-group">
+                    <label>Provincia</label>
+                    <input type="text" id="cliAProv" placeholder="MI">
+                </div>
+            </div>
+        </div>
+
+        <!-- ANAGRAFICA CLIENTE B -->
+        <div class="card">
+            <div class="card-title"><span class="badge">A2</span> Anagrafica Cliente B (Secondo Intestatario)</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" id="cliBNome" placeholder="Nome">
+                </div>
+                <div class="form-group">
+                    <label>Cognome</label>
+                    <input type="text" id="cliBCognome" placeholder="Cognome">
+                </div>
+                <div class="form-group">
+                    <label>Telefono</label>
+                    <input type="tel" id="cliBTel" placeholder="+39 333 1234567">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="cliBEmail" placeholder="email@esempio.com">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Via / Piazza e Civico</label>
+                    <input type="text" id="cliBIndirizzo" placeholder="Via Roma 1">
+                    <button class="btn-map" onclick="apriMappa('cliBIndirizzo')">Maps</button>
+                </div>
+                <div class="form-group">
+                    <label>Città</label>
+                    <input type="text" id="cliBCitta" placeholder="Milano">
+                </div>
+                <div class="form-group">
+                    <label>CAP</label>
+                    <input type="text" id="cliBCAP" placeholder="20100">
+                </div>
+                <div class="form-group">
+                    <label>Provincia</label>
+                    <input type="text" id="cliBProv" placeholder="MI">
+                </div>
+            </div>
+        </div>
+
+        <!-- DATA SERVIZIO & LUOGHI -->
+        <div class="card">
+            <div class="card-title"><span class="badge">LS</span> Data del Servizio & Luoghi dell'Evento</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Data Servizio *</label>
+                    <input type="date" id="servData">
+                </div>
+                <div class="form-group">
+                    <label>Tipo di Servizio *</label>
+                    <select id="servTipo">
+                        <option value="">Seleziona...</option>
+                        <option value="matrimonio">Matrimonio</option>
+                        <option value="battesimo">Battesimo</option>
+                        <option value="comunione">Comunione</option>
+                        <option value="cresima">Cresima</option>
+                        <option value="compleanno">Compleanno</option>
+                        <option value="ritratto">Ritratto</option>
+                        <option value="evento-aziendale">Evento Aziendale</option>
+                        <option value="altro">Altro</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Chiesa / Luogo Cerimonia</label>
+                    <input type="text" id="luogoCerimonia" placeholder="Nome e indirizzo chiesa">
+                    <button class="btn-map" onclick="apriMappa('luogoCerimonia')">Maps</button>
+                </div>
+                <div class="form-group">
+                    <label>Luogo Ricevimento</label>
+                    <input type="text" id="luogoRicevimento" placeholder="Nome e indirizzo ricevimento">
+                </div>
+                <div class="form-group">
+                    <label>Altri Luoghi Evento</label>
+                    <input type="text" id="luoghiAltri" placeholder="Altri indirizzi utili">
+                </div>
+            </div>
+        </div>
+
+        <!-- SERVIZI E PREZZI -->
+        <div class="card">
+            <div class="card-title"><span class="badge">PZ</span> Servizi e Prezzi</div>
+            <table class="services-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40%;">Descrizione Servizio</th>
+                        <th style="width: 15%;">Quantità</th>
+                        <th style="width: 20%;">Prezzo Unitario (€)</th>
+                        <th style="width: 15%;">Sconto (%)</th>
+                        <th style="width: 10%;">Totale</th>
+                    </tr>
+                </thead>
+                <tbody id="servicesBody">
+                    <tr>
+                        <td><input type="text" placeholder="Descrizione servizio"></td>
+                        <td><input type="number" value="1" min="1" onchange="calcolaTotali()"></td>
+                        <td><input type="number" value="0" min="0" step="0.01" onchange="calcolaTotali()"></td>
+                        <td><input type="number" value="0" min="0" max="100" step="0.01" onchange="calcolaTotali()"></td>
+                        <td style="text-align: right; font-weight: 600;">€ 0,00</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="btn-group">
+                <button class="btn btn-outline" onclick="aggiungiRigaServizio()">+ Aggiungi Riga</button>
+                <button class="btn btn-danger" onclick="rimuoviUltimaRiga()">- Rimuovi Ultima</button>
+            </div>
+
+            <div class="total-box">
+                <div class="total-label">Totale Parziale</div>
+                <div class="total-amount" id="totaleParziale">€ 0,00</div>
+                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+                    <div class="form-row" style="margin-bottom: 0; margin-top: 12px;">
+                        <div class="form-group">
+                            <label>Sconto Globale (%)</label>
+                            <input type="number" id="scontoPercent" value="0" min="0" max="100" step="0.01" onchange="calcolaTotali()">
+                        </div>
+                        <div class="form-group">
+                            <label>Sconto Globale (€)</label>
+                            <input type="number" id="scontoFisso" value="0" min="0" step="0.01" onchange="calcolaTotali()">
                         </div>
                     </div>
+                </div>
+                <div style="margin-top: 16px; font-size: 32px; font-weight: 800; color: var(--primary-dark);">
+                    TOTALE: <span id="totaleFinale">€ 0,00</span>
+                </div>
+            </div>
+        </div>
 
-                    <!-- ANAGRAFICA CLIENTE A -->
-                    <div class="form-section" style="border-left-color: var(--verde-salvia);">
-                        <h3>👥 Anagrafica Cliente A (Intestatario Principale)</h3>
-                        <div class="sub-grid">
-                            <div class="form-group"><label>Nome *</label><input type="text" id="cliA-nome"></div>
-                            <div class="form-group"><label>Cognome *</label><input type="text" id="cliA-cognome"></div>
-                            <div class="form-group"><label>Telefono *</label><input type="text" id="cliA-tel"></div>
-                            <div class="form-group"><label>Email *</label><input type="email" id="cliA-email"></div>
-                        </div>
-                        <div class="sub-grid">
-                            <div class="form-group"><label>Via / Piazza e Civico</label><input type="text" id="cliA-indirizzo"></div>
-                            <div class="form-group"><label>Città</label><input type="text" id="cliA-citta"></div>
-                            <div class="form-group"><label>CAP</label><input type="text" id="cliA-cap"></div>
-                            <div class="form-group"><label>Provincia</label><input type="text" id="cliA-prov"></div>
-                        </div>
-                    </div>
+        <!-- PAGAMENTI -->
+        <div class="card">
+            <div class="card-title"><span class="badge">PG</span> Pagamenti e Rateizzazione</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Acconto Iniziale (€)</label>
+                    <input type="number" id="pagAcconto" value="0" min="0" step="0.01" onchange="calcolaRate()">
+                </div>
+                <div class="form-group">
+                    <label>Saldo Finale (€)</label>
+                    <input type="number" id="pagSaldo" value="0" min="0" step="0.01" readonly>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Numero Rate</label>
+                    <select id="pagNumeroRate" onchange="calcolaRate()">
+                        <option value="0">Nessuna rata</option>
+                        <option value="2">2 rate</option>
+                        <option value="3">3 rate</option>
+                        <option value="4">4 rate</option>
+                        <option value="6">6 rate</option>
+                        <option value="12">12 rate</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Importo per Rata (€)</label>
+                    <input type="number" id="pagImportoRata" value="0" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Metodo Pagamento</label>
+                    <select id="pagMetodo">
+                        <option value="contanti">Contanti</option>
+                        <option value="bonifico">Bonifico Bancario</option>
+                        <option value="carta">Carta di Credito</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="misto">Misto</option>
+                    </select>
+                </div>
+            </div>
+        </div>
 
-                    <!-- ANAGRAFICA CLIENTE B -->
-                    <div class="form-section" style="border-left-color: var(--rosa-antico);">
-                        <h3>👥 Anagrafica Cliente B (Secondo Intestatario / Coniuge)</h3>
-                        <div class="sub-grid">
-                            <div class="form-group"><label>Nome</label><input type="text" id="cliB-nome"></div>
-                            <div class="form-group"><label>Cognome</label><input type="text" id="cliB-cognome"></div>
-                            <div class="form-group"><label>Telefono</label><input type="text" id="cliB-tel"></div>
-                            <div class="form-group"><label>Email</label><input type="email" id="cliB-email"></div>
-                        </div>
-                        <div class="sub-grid">
-                            <div class="form-group"><label>Via / Piazza e Civico</label><input type="text" id="cliB-indirizzo"></div>
-                            <div class="form-group"><label>Città</label><input type="text" id="cliB-citta"></div>
-                            <div class="form-group"><label>CAP</label><input type="text" id="cliB-cap"></div>
-                            <div class="form-group"><label>Provincia</label><input type="text" id="cliB-prov"></div>
-                        </div>
-                    </div>
+        <!-- NOTE E CONDIZIONI -->
+        <div class="card">
+            <div class="card-title"><span class="badge">NT</span> Note e Condizioni</div>
+            <div class="form-group">
+                <label>Note Libere</label>
+                <textarea id="noteLibere" rows="4" placeholder="Note aggiuntive per il cliente..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Condizioni di Vendita</label>
+                <textarea id="condizioniVendita" rows="3" placeholder="Termini e condizioni..."></textarea>
+            </div>
+        </div>
 
-                    <!-- DATA E LUOGHI -->
-                    <div class="form-section" style="border-left-color: var(--scuro);">
-                        <h3>📍 Data del Servizio & Luoghi dell'Evento</h3>
-                        <div class="sub-grid">
-                            <div class="form-group"><label style="color:var(--carta-zucchero)">DATA DEL SERVIZIO (GG/MM/AAAA) *</label><input type="text" id="servizio-data" placeholder="Es. 15/05/2027" onblur="validaDataFormato(this)"></div>
-                            <div class="form-group"><label style="color:var(--carta-zucchero)">TIPO DI SERVIZIO RICHIESTO *</label><input type="text" id="servizio-tipo" placeholder="Es. Matrimonio"></div>
-                        </div>
-                        <div class="sub-grid">
-                            <div class="form-group"><label>Chiesa / Luogo Cerimonia</label><input type="text" id="luogo-chiesa" placeholder="Nome Chiesa"><input type="text" id="maps-chiesa" placeholder="Link Google Maps" style="margin-top:5px; font-size:11px;"></div>
+        <!-- AZIONI FINALI -->
+        <div class="card">
+            <div class="card-title"><span class="badge">AZ</span> Azioni Documento</div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="salvaPreventivo()"> Salva Preventivo</button>
+                <button class="btn btn-success" onclick="generaPDF()">📄 Genera PDF</button>
+                <button class="btn btn-warning" onclick="inviaEmail()">📧 Invia Email</button>
+                <button class="btn btn-outline" onclick="convertiContratto()"> Converti in Contratto</button>
+            </div>
+        </div>
+
+        <div class="footer-branding">
+            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong> - Tutti i diritti riservati
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+        <script>
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        let studioId = localStorage.getItem('studioId') || 'studio-gold';
+        let studioDati = null;
+        let preventiviSalvati = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            caricaDatiStudio();
+            generaNumeroDocumento();
+            document.getElementById('docData').valueAsDate = new Date();
+        });
+
+        function caricaDatiStudio() {
+            const dati = localStorage.getItem(`studio_dati_${studioId}`);
+            if (dati) {
+                studioDati = JSON.parse(dati);
+                document.getElementById('studioDataCard').style.display = 'block';
+                document.getElementById('studioNomePrev').textContent = studioDati.nome;
+                document.getElementById('studioPivaPrev').textContent = `P.IVA: ${studioDati.piva || 'N/A'}`;
+                document.getElementById('studioIndirizzoPrev').textContent = `${studioDati.indirizzo || ''} - ${studioDati.citta || ''}`;
+                if (studioDati.logo) {
+                    document.getElementById('studioLogoPrev').src = studioDati.logo;
+                }
+            }
+        }
+
+        function generaNumeroDocumento() {
+            const anno = new Date().getFullYear();
+            const timestamp = Date.now().toString().slice(-6);
+            document.getElementById('docNumero').value = `${anno}/${timestamp}`;
+        }
+
+        function apriMappa(fieldId) {
+            const indirizzo = document.getElementById(fieldId).value.trim();
+            if (!indirizzo) {
+                mostraToast('Inserisci prima l\'indirizzo nel campo', 'error');
+                return;
+            }
+            const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(indirizzo)}`;
+            window.open(url, '_blank');
+        }
+
+        function aggiungiRigaServizio() {
+            const tbody = document.getElementById('servicesBody');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" placeholder="Descrizione servizio"></td>
+                <td><input type="number" value="1" min="1" onchange="calcolaTotali()"></td>
+                <td><input type="number" value="0" min="0" step="0.01" onchange="calcolaTotali()"></td>
+                <td><input type="number" value="0" min="0" max="100" step="0.01" onchange="calcolaTotali()"></td>
+                <td style="text-align: right; font-weight: 600;">€ 0,00</td>
+            `;
+            tbody.appendChild(newRow);
+        }
+
+        function rimuoviUltimaRiga() {
+            const tbody = document.getElementById('servicesBody');
+            if (tbody.rows.length > 1) {
+                tbody.deleteRow(-1);
+                calcolaTotali();
+            }
+        }
+
+        function calcolaTotali() {
+            let totaleParziale = 0;
+            const rows = document.getElementById('servicesBody').rows;
+            
+            for (let row of rows) {
+                const qty = parseFloat(row.cells[1].querySelector('input').value) || 0;
+                const prezzo = parseFloat(row.cells[2].querySelector('input').value) || 0;
+                const sconto = parseFloat(row.cells[3].querySelector('input').value) || 0;
+                
+                const subtotale = qty * prezzo;
+                const scontoImporto = subtotale * (sconto / 100);
+                const totaleRiga = subtotale - scontoImporto;
+                
+                row.cells[4].textContent = `€ ${totaleRiga.toFixed(2)}`;
+                totaleParziale += totaleRiga;
+            }
+
+            const scontoPercent = parseFloat(document.getElementById('scontoPercent').value) || 0;
+            const scontoFisso = parseFloat(document.getElementById('scontoFisso').value) || 0;
+            
+            let scontoTotale = totaleParziale * (scontoPercent / 100) + scontoFisso;
+            let totaleFinale = totaleParziale - scontoTotale;
+            
+            if (totaleFinale < 0) totaleFinale = 0;
+
+            document.getElementById('totaleParziale').textContent = `€ ${totaleParziale.toFixed(2)}`;
+            document.getElementById('totaleFinale').textContent = `€ ${totaleFinale.toFixed(2)}`;
+            
+            calcolaRate(totaleFinale);
+        }
+
+        function calcolaRate(totaleDaCalcolo) {
+            if (totaleDaCalcolo === undefined) {
+                totaleDaCalcolo = parseFloat(document.getElementById('totaleFinale').textContent.replace('€ ', '')) || 0;
+            }
+            
+            const acconto = parseFloat(document.getElementById('pagAcconto').value) || 0;
+            const saldo = totaleDaCalcolo - acconto;
+            const numRate = parseInt(document.getElementById('pagNumeroRate').value) || 0;
+            
+            document.getElementById('pagSaldo').value = saldo.toFixed(2);
+            
+            if (numRate > 0 && saldo > 0) {
+                const importoRata = saldo / numRate;
+                document.getElementById('pagImportoRata').value = importoRata.toFixed(2);
+            } else {
+                document.getElementById('pagImportoRata').value = '0.00';
+            }
+        }
+
+        async function salvaPreventivo() {
+            const preventivo = raccogliDatiPreventivo();
+            
+            if (!preventivo.cliANome || !preventivo.cliACognome || !preventivo.servData) {
+                mostraToast('Compila i campi obbligatori (Cliente A, Data Servizio)', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/preventivi/salva`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studioId, preventivo })
+                });
+
+                if (response.ok) {
+                    mostraToast('Preventivo salvato su Cloud con successo!', 'success');
+                    generaNumeroDocumento();
+                } else {
+                    throw new Error('Errore server');
+                }
+            } catch (error) {
+                mostraToast('Errore durante il salvataggio su Cloud', 'error');
+            }
+        }
+
+        function raccogliDatiPreventivo() {
+            const services = [];
+            const rows = document.getElementById('servicesBody').rows;
+            for (let row of rows) {
+                services.push({
+                    descrizione: row.cells[0].querySelector('input').value,
+                    quantita: parseFloat(row.cells[1].querySelector('input').value) || 0,
+                    prezzoUnitario: parseFloat(row.cells[2].querySelector('input').value) || 0,
+                    scontoPercent: parseFloat(row.cells[3].querySelector('input').value) || 0
+                });
+            }
+
+            return {
+                numero: document.getElementById('docNumero').value,
+                dataEmissione: document.getElementById('docData').value,
+                validita: parseInt(document.getElementById('docValidita').value),
+                stato: document.getElementById('docStato').value,
+                clienteA: {
+                    nome: document.getElementById('cliANome').value,
+                    cognome: document.getElementById('cliACognome').value,
+                    telefono: document.getElementById('cliATel').value,
+                    email: document.getElementById('cliAEmail').value,
+                    indirizzo: document.getElementById('cliAIndirizzo').value,
+                    citta: document.getElementById('cliACitta').value,
+                    cap: document.getElementById('cliACAP').value,
+                    provincia: document.getElementById('cliAProv').value
+                },
+                clienteB: {
+                    nome: document.getElementById('cliBNome').value,
+                    cognome: document.getElementById('cliBCognome').value,
+                    telefono: document.getElementById('cliBTel').value,
+                    email: document.getElementById('cliBEmail').value,
+                    indirizzo: document.getElementById('cliBIndirizzo').value,
+                    citta: document.getElementById('cliBCitta').value,
+                    cap: document.getElementById('cliBCAP').value,
+                    provincia: document.getElementById('cliBProv').value
+                },
+                servizio: {
+                    data: document.getElementById('servData').value,
+                    tipo: document.getElementById('servTipo').value,
+                    luogoCerimonia: document.getElementById('luogoCerimonia').value,
+                    luogoRicevimento: document.getElementById('luogoRicevimento').value,
+                    luoghiAltri: document.getElementById('luoghiAltri').value
+                },
+                servizi: services,
+                scontoPercent: parseFloat(document.getElementById('scontoPercent').value) || 0,
+                scontoFisso: parseFloat(document.getElementById('scontoFisso').value) || 0,
+                totaleParziale: parseFloat(document.getElementById('totaleParziale').textContent.replace('€ ', '')) || 0,
+                totaleFinale: parseFloat(document.getElementById('totaleFinale').textContent.replace('€ ', '')) || 0,
+                pagamenti: {
+                    acconto: parseFloat(document.getElementById('pagAcconto').value) || 0,
+                    saldo: parseFloat(document.getElementById('pagSaldo').value) || 0,
+                    numeroRate: parseInt(document.getElementById('pagNumeroRate').value) || 0,
+                    importoRata: parseFloat(document.getElementById('pagImportoRata').value) || 0,
+                    metodo: document.getElementById('pagMetodo').value
+                },
+                note: document.getElementById('noteLibere').value,
+                condizioni: document.getElementById('condizioniVendita').value,
+                dataCreazione: new Date().toISOString(),
+                studioId: studioId
+            };
+        }
+
+        async function generaPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const preventivo = raccogliDatiPreventivo();
+
+            // Logo Studio (se presente)
+            if (studioDati && studioDati.logo) {
+                try {
+                    doc.addImage(studioDati.logo, 'JPEG', 10, 10, 40, 20);
+                } catch (e) {
+                    console.log('Logo non inserito nel PDF');
+                }
+            }
+
+            // Dati Studio
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text(studioDati ? studioDati.nome : 'Studio Fotografico', 150, 15, { align: 'right' });
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            doc.text(`P.IVA: ${studioDati ? studioDati.piva : 'N/A'}`, 150, 22, { align: 'right' });
+            doc.text(`${studioDati ? studioDati.indirizzo : ''} - ${studioDati ? studioDati.citta : ''}`, 150, 28, { align: 'right' });
+
+            // Titolo Documento
+            doc.setFontSize(18);
+            doc.setFont(undefined, 'bold');
+            doc.text('PREVENTIVO', 105, 45, { align: 'center' });
+            
+            // Numero e Data
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'normal');
+            doc.text(`N. ${preventivo.numero}`, 10, 55);
+            doc.text(`Data: ${new Date(preventivo.dataEmissione).toLocaleDateString('it-IT')}`, 10, 62);
+
+            // Cliente A
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.text('Cliente Principale:', 10, 75);
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            doc.text(`${preventivo.clienteA.nome} ${preventivo.clienteA.cognome}`, 10, 82);
+            doc.text(`${preventivo.clienteA.indirizzo}`, 10, 88);
+            doc.text(`${preventivo.clienteA.cap} ${preventivo.clienteA.citta} (${preventivo.clienteA.provincia})`, 10, 94);
+            doc.text(`Tel: ${preventivo.clienteA.telefono}`, 10, 100);
+            doc.text(`Email: ${preventivo.clienteA.email}`, 10, 106);
+
+            // Servizio
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.text('Dettagli Servizio:', 10, 120);
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            doc.text(`Data: ${new Date(preventivo.servizio.data).toLocaleDateString('it-IT')}`, 10, 127);
+            doc.text(`Tipo: ${preventivo.servizio.tipo}`, 10, 133);
+            doc.text(`Luogo Cerimonia: ${preventivo.servizio.luogoCerimonia}`, 10, 139);
+
+            // Tabella Servizi
+            let y = 155;
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'bold');
+            doc.text('Descrizione', 10, y);
+            doc.text('Q.tà', 120, y);
+            doc.text('Prezzo', 145, y);
+            doc.text('Totale', 175, y);
+            doc.line(10, y+2, 200, y+2);
+            
+            y += 8;
+            doc.setFont(undefined, 'normal');
+            preventivo.servizi.forEach(serv => {
+                doc.text(serv.descrizione.substring(0, 40), 10, y);
+                doc.text(serv.quantita.toString(), 120, y);
+                doc.text(`€ ${serv.prezzoUnitario.toFixed(2)}`, 145, y);
+                doc.text(`€ ${(serv.quantita * serv.prezzoUnitario).toFixed(2)}`, 175, y);
+                y += 6;
+            });
+
+            // Totali
+            y += 10;
+            doc.line(140, y, 200, y);
+            y += 6;
+            doc.setFont(undefined, 'bold');
+            doc.text(`Totale: € ${preventivo.totaleFinale.toFixed(2)}`, 140, y);
+
+            // Pagamenti
+            y += 15;
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'bold');
+            doc.text('Condizioni di Pagamento:', 10, y);
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            y += 6;
+            doc.text(`Acconto: € ${preventivo.pagamenti.acconto.toFixed(2)}`, 10, y);
+            y += 6;
+            doc.text(`Saldo: € ${preventivo.pagamenti.saldo.toFixed(2)}`, 10, y);
+            if (preventivo.pagamenti.numeroRate > 0) {
+                y += 6;
+                doc.text(`Rateizzazione: ${preventivo.pagamenti.numeroRate} rate da € ${preventivo.pagamenti.importoRata.toFixed(2)}`, 10, y);
+            }
+
+            // Salva PDF
+            doc.save(`Preventivo_${preventivo.numero}.pdf`);
+            mostraToast('PDF generato con successo!', 'success');
+        }
+
+        function inviaEmail() {
+            const preventivo = raccogliDatiPreventivo();
+            const email = preventivo.clienteA.email;
+            
+            if (!email) {
+                mostraToast('Inserisci l\'email del cliente', 'error');
+                return;
+            }
+
+            const subject = encodeURIComponent(`Preventivo N. ${preventivo.numero} - AppCenterStudioPROGOLD`);
+            const body = encodeURIComponent(`Gentile ${preventivo.clienteA.nome} ${preventivo.clienteA.cognome},\n\nin allegato il preventivo per il servizio del ${new Date(preventivo.servizio.data).toLocaleDateString('it-IT')}.\n\nTotale: € ${preventivo.totaleFinale.toFixed(2)}\n\nRestiamo a disposizione per qualsiasi chiarimento.\n\nCordiali saluti,\n${studioDati ? studioDati.nome : 'Lo Studio'}`);
+            
+            window.open(`mailto:${email}?subject=${subject}&body=${body}`);
+            mostraToast('Email pronta per l\'invio', 'success');
+        }
+
+        function convertiContratto() {
+            mostraToast('Funzione di conversione in contratto in sviluppo', 'warning');
+        }
+
+        async function eseguiBackupCloud() {
+            const preventivo = raccogliDatiPreventivo();
+            
+            try {
+                await fetch(`${WORKER_URL}/api/studio/preventivi/backup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studioId, preventivo, timestamp: Date.now() })
+                });
+                mostraToast('Backup salvato su Cloud', 'success');
+            } catch (error) {
+                mostraToast('Errore backup Cloud', 'error');
+            }
+        }
+
+        async function eseguiRipristinoCloud() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/preventivi/backup?studioId=${studioId}`);
+                const data = await response.json();
+                
+                if (data.backup) {
+                    // Carica dati dal backup
+                    mostraToast('Backup ripristinato con successo', 'success');
+                }
+            } catch (error) {
+                mostraToast('Errore ripristino Cloud', 'error');
+            }
+        }
+
+        function esciSessione() {
+            localStorage.removeItem('studioId');
+            window.location.href = 'index.html';
+        }
+
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? 'OK' : '!'}</div><div class="toast-message">${msg}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+    </script>
+</body>
+</html>
