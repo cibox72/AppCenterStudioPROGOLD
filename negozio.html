@@ -338,10 +338,10 @@
             </div>
         </div>
 
-        <!-- CONFIGURAZIONE -->
+        <!-- CONFIGURAZIONE PAYPAL (ORA SUL CLOUD!) -->
         <div class="card-3d">
             <div class="card-title"><span class="badge">CF</span> Configura Cassa dello Studio</div>
-            <div class="card-subtitle">I pagamenti dei clienti verranno accreditati direttamente su questi conti. Configurazione salvata sul cloud.</div>
+            <div class="card-subtitle">I pagamenti dei clienti verranno accreditati direttamente su questi conti. Configurazione salvata sul cloud multi-tenant in tempo reale.</div>
             
             <div class="form-row">
                 <div class="form-group">
@@ -360,7 +360,7 @@
             </div>
 
             <div class="btn-group">
-                <button class="btn btn-success" onclick="salvaConfigurazione()">SALVA CONFIGURAZIONE LIVE</button>
+                <button class="btn btn-success" onclick="salvaConfigurazione()">SALVA CONFIGURAZIONE SUL CLOUD</button>
             </div>
         </div>
 
@@ -527,38 +527,57 @@
         async function eliminaProdotto(id) {
             if (!confirm('Sei sicuro di voler eliminare questo prodotto?')) return;
             
-            // Nota: il Worker attuale non ha un endpoint DELETE per i prodotti, 
-            // per ora lo rimuoviamo solo dalla vista locale. 
-            // In futuro aggiungeremo l'endpoint DELETE.
             prodotti = prodotti.filter(p => p.id !== id);
             renderizzaProdotti();
             mostraToast('Prodotto rimosso dalla vista', 'success');
         }
 
+        // ✅ CONFIGURAZIONE PAYPAL ORA SUL CLOUD D1 (niente localStorage!)
         async function caricaConfigurazione() {
-            // Usiamo un endpoint generico o salviamo in locale solo per la config statica
-            // Per rispettare "no localStorage", useremmo un endpoint, ma per ora 
-            // la config è statica. Se vuoi migrarla, dimmelo e aggiungiamo l'endpoint.
-            const config = JSON.parse(localStorage.getItem(`negozio_config_${studioId}`) || '{}');
-            if (config.paypalEmail) document.getElementById('paypalEmail').value = config.paypalEmail;
-            if (config.whatsappNumero) document.getElementById('whatsappNumero').value = config.whatsappNumero;
-            if (config.studioIndirizzo) document.getElementById('studioIndirizzo').value = config.studioIndirizzo;
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/negozio-config?studioId=${studioId}`);
+                const data = await response.json();
+                
+                if (data.success && data.config) {
+                    if (data.config.paypal_email) document.getElementById('paypalEmail').value = data.config.paypal_email;
+                    if (data.config.whatsapp_numero) document.getElementById('whatsappNumero').value = data.config.whatsapp_numero;
+                    if (data.config.studio_indirizzo) document.getElementById('studioIndirizzo').value = data.config.studio_indirizzo;
+                }
+            } catch (error) {
+                console.error('Errore caricamento configurazione:', error);
+            }
         }
 
-        function salvaConfigurazione() {
+        async function salvaConfigurazione() {
             const config = {
-                paypalEmail: document.getElementById('paypalEmail').value.trim(),
-                whatsappNumero: document.getElementById('whatsappNumero').value.trim(),
-                studioIndirizzo: document.getElementById('studioIndirizzo').value.trim()
+                studio_id: studioId,
+                paypal_email: document.getElementById('paypalEmail').value.trim(),
+                whatsapp_numero: document.getElementById('whatsappNumero').value.trim(),
+                studio_indirizzo: document.getElementById('studioIndirizzo').value.trim()
             };
 
-            if (!config.paypalEmail) {
+            if (!config.paypal_email) {
                 mostraToast('Inserisci l\'email PayPal dello studio', 'error');
                 return;
             }
 
-            localStorage.setItem(`negozio_config_${studioId}`, JSON.stringify(config));
-            mostraToast('Configurazione salvata', 'success');
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/negozio-config`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config)
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    mostraToast('Configurazione PayPal salvata sul cloud con successo!', 'success');
+                } else {
+                    mostraToast('Errore nel salvataggio', 'error');
+                }
+            } catch (error) {
+                console.error('Errore salvataggio configurazione:', error);
+                mostraToast('Errore di connessione al cloud', 'error');
+            }
         }
 
         async function caricaOrdini() {
