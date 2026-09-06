@@ -2,234 +2,569 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>04 Selezione per Album - AppCenterStudio Premium</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Selezione Foto Album - AppCenterStudioPROGOLD</title>
     <style>
         :root {
-            --carta-zucchero: #7ea4b5;
-            --verde-salvia: #9caf88;
-            --rosa-antico: #dcaeaf;
-            --scuro: #2b3a42;
-            --chiaro: #f4f7f6;
-            --rosso-alert: #e07a7a;
+            --primary: #bb8fce;
+            --primary-dark: #6c3483;
+            --primary-light: #f4ecf7;
+            --primary-gradient: linear-gradient(135deg, #d7bde2 0%, #bb8fce 50%, #6c3483 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #f4ecf7 40%, #ebf5fb 100%);
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e8e8e8;
+            --heart-color: #e74c3c;
+            --success: #27ae60;
+            --shadow: 0 4px 16px rgba(187, 143, 206, 0.1);
+            --shadow-hover: 0 8px 32px rgba(187, 143, 206, 0.2);
+            --radius: 14px;
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--chiaro);
-            color: var(--scuro);
-            margin: 0;
-            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 80px;
         }
-        /* BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA */
-        .navbar {
-            background-color: white;
-            padding: 12px 20px;
+
+        .top-bar {
+            background: var(--primary-gradient);
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-bottom: 3px solid var(--carta-zucchero);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(187, 143, 206, 0.2);
         }
-        .nav-links { display: flex; gap: 10px; }
-        .nav-links button {
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            background: white;
-            font-weight: bold;
-            cursor: pointer;
-            color: var(--scuro);
-            transition: all 0.2s;
-        }
-        .nav-links button:hover { background: var(--chiaro); }
-        .btn-sync { background-color: #e8f0fe !important; border-color: var(--carta-zucchero) !important; color: var(--carta-zucchero) !important; }
-        
-        .container {
-            max-width: 1100px;
-            width: 100%;
-            margin: 30px auto;
-            padding: 0 20px;
-            box-sizing: border-box;
-        }
-        .main-card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        h1, h2, h3, h4 { color: var(--scuro); margin-top: 0; text-align: center; }
-        
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-top: 25px;
-        }
-        @media(max-width: 768px) { .grid-layout { grid-template-columns: 1fr; } }
 
-        .form-section {
-            background: #fdfdfd;
-            border: 1px solid #eaeaea;
+        .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--carta-zucchero);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--primary-dark);
+            transition: all 0.2s ease;
         }
 
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
+        .nav-btn:hover { background: white; transform: translateY(-2px); }
+
+        .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+        .page-header { 
+            text-align: center; 
+            margin-bottom: 24px;
+            padding: 24px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
         }
-        
-        button.btn-azione {
+        .page-header h1 { 
+            font-size: 26px; 
+            font-weight: 700; 
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px; 
+        }
+        .page-header p { color: var(--text-light); font-size: 14px; }
+
+        /* COUNTER BAR */
+        .counter-bar {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 70px;
+            z-index: 90;
+        }
+
+        .counter-text { font-size: 15px; font-weight: 600; }
+        .counter-number { font-size: 24px; font-weight: 800; background: rgba(255,255,255,0.2); padding: 4px 16px; border-radius: 20px; }
+
+        /* PHOTO GRID */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .photo-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            aspect-ratio: 1 / 1;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+        }
+
+        .photo-item:hover { transform: scale(1.02); box-shadow: var(--shadow-hover); }
+
+        .photo-item img {
             width: 100%;
-            padding: 12px;
-            background-color: var(--carta-zucchero);
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-item.selected::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 28px;
+            height: 28px;
+            background: var(--heart-color);
+            border-radius: 50%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white' stroke='white' stroke-width='2'%3E%3Cpath d='M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z'/%3E%3C/svg%3E");
+            background-size: 18px;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: 0 2px 6px rgba(231, 76, 60, 0.4);
+        }
+
+        /* LIGHTBOX */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox.active { display: flex; }
+
+        .lightbox-img-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            overflow: hidden;
+            touch-action: pan-y;
+        }
+
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .lightbox-controls {
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .lightbox-counter { color: white; font-size: 14px; font-weight: 600; }
+
+        .heart-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .heart-btn:hover { transform: scale(1.1); background: rgba(255,255,255,0.2); }
+
+        .heart-btn svg {
+            width: 28px;
+            height: 28px;
+            stroke: white;
+            fill: transparent;
+            stroke-width: 2;
+            transition: all 0.3s ease;
+        }
+
+        .heart-btn.active svg {
+            fill: var(--heart-color);
+            stroke: var(--heart-color);
+            transform: scale(1.1);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            z-index: 1001;
+        }
+
+        .lightbox-nav:hover { background: rgba(255,255,255,0.25); }
+        .lightbox-prev { left: 16px; }
+        .lightbox-next { right: 16px; }
+
+        .lightbox-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* ACTION BUTTON */
+        .action-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px 24px;
+            background: white;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            z-index: 90;
+        }
+
+        .btn-submit {
+            background: var(--primary-gradient);
             color: white;
             border: none;
-            font-weight: bold;
-            border-radius: 6px;
+            padding: 14px 32px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(187, 143, 206, 0.4);
+            transition: all 0.2s ease;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(187, 143, 206, 0.5); }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        /* SUCCESS MODAL */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .success-modal.active { display: flex; }
+
+        .success-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 32px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .success-icon {
+            width: 72px;
+            height: 72px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .success-icon svg { width: 36px; height: 36px; stroke: white; stroke-width: 3; fill: none; }
+
+        .success-content h2 { color: var(--text-main); font-size: 22px; margin-bottom: 12px; }
+        .success-content p { color: var(--text-light); font-size: 15px; line-height: 1.6; margin-bottom: 24px; }
+
+        .btn-close-modal {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
         }
-        button.btn-azione:hover { opacity: 0.9; }
-        .btn-wa { background-color: #22c55e !important; }
-        .btn-del { background-color: var(--rosso-alert) !important; }
 
-        .monitor-box {
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 15px;
-            background: #fafafa;
-            max-height: 450px;
-            overflow-y: auto;
+        @media (max-width: 768px) {
+            .photo-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .lightbox-nav { width: 40px; height: 40px; font-size: 20px; }
+            .lightbox-prev { left: 8px; }
+            .lightbox-next { right: 8px; }
         }
-        .client-status-card {
-            background: white;
-            padding: 15px;
-            border-radius: 6px;
-            border-left: 5px solid var(--verde-salvia);
-            margin-bottom: 12px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-        }
-        .btn-small-group { display: flex; gap: 8px; margin-top: 10px; }
-        .btn-small-group button { flex: 1; padding: 6px; font-size: 12px; font-weight: bold; border-radius: 4px; border: none; cursor: pointer; color: white; }
-
-        /* BOX ASSISTENZA */
-        .assistenza-box {
-            margin-top: 40px;
-            padding: 20px;
-            background-color: #fcf8f2;
-            border: 1px solid var(--rosa-antico);
-            border-radius: 8px;
-        }
-        .assistenza-buttons { display: flex; gap: 15px; margin-top: 15px; }
-        .assistenza-buttons a { flex: 1; text-align: center; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold; color: white; }
-        .btn-anydesk { background-color: #ef4444; }
-        .btn-whatsapp { background-color: #22c55e; }
     </style>
 </head>
 <body>
-
-    <!-- BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA -->
-    <div class="navbar">
-        <div class="nav-links">
-            <button onclick="window.history.back()">← Indietro</button>
-            <button onclick="location.href='index.html'">🏠 Home</button>
+      <div class="top-bar">
+        <div class="nav-left">
+            <button class="nav-btn" onclick="window.history.back()">Indietro</button>
+            <button class="nav-btn" onclick="window.location.href='index.html'">Home</button>
         </div>
-        <div class="nav-links">
-            <button onclick="eseguiBackupSelezioni()">📥 Backup Globale</button>
-            <button onclick="eseguiRipristinoSelezioni()">📤 Ripristino Globale</button>
-            <button class="btn-sync" id="status-sync">Sync Cloud: OK</button>
-            <button style="background-color: var(--rosa-antico); color: white;" onclick="location.href='index.html'">Esci</button>
+        <div class="nav-right">
+            <div class="sync-status"><span class="sync-dot"></span> Sync Cloud: OK</div>
         </div>
     </div>
 
     <div class="container">
-        <div class="main-card">
-            <h1>📸 Cabina Regia: Selezione per Album</h1>
-            <p style="color: #666; margin-top: -10px; text-align: center;">Monitora le scelte dei clienti, genera collegamenti sicuri protetti a tempo e organizza le consegne dei ritocchi.</p>
-            
-            <div class="grid-layout">
-                
-                <!-- PARTE SINISTRA: GENERATORE CONTROLLO -->
-                <div>
-                    <div class="form-section">
-                        <h3>🔗 Genera Link Ordinazione da Casa</h3>
-                        <p style="font-size:12px; color:#666; margin-top:-5px;">Crea una chiave di accesso volatile valida esattamente 7 giorni per la selezione a distanza.</p>
-                        
-                        <div class="form-group">
-                            <label>ID Sposi / Cliente Permanente *</label>
-                            <input type="text" id="sel-cliente-id" placeholder="Es. rossi-2026">
-                        </div>
+        <div class="page-header">
+            <h1>Selezione Foto per il Tuo Album</h1>
+            <p>Tocca una foto per ingrandirla. Scorri a destra e sinistra per navigare. Tocca il cuore per selezionarla.</p>
+        </div>
 
-                        <div class="form-group">
-                            <label>Recapito WhatsApp Cliente (Per invio immediato)</label>
-                            <input type="text" id="sel-cliente-wa" placeholder="Es. 3330000000">
-                        </div>
+        <div class="counter-bar">
+            <div class="counter-text">Foto Selezionate</div>
+            <div class="counter-number" id="counterNumber">0</div>
+        </div>
 
-                        <button class="btn-azione" onclick="generaEInviaLinkCasaLive()">ATTIVA LINK & GENERA MESSAGGIO</button>
-                    </div>
-
-                    <div class="form-section" style="border-left-color: var(--rosa-antico);">
-                        <h3>✨ Consegna File Ritoccati Finali</h3>
-                        <p style="font-size:12px; color:#666; margin-top:-5px;">Carica gli scatti lavorati definitivi. Rimarranno visibili in galleria per 6 mesi.</p>
-                        
-                        <div class="form-group">
-                            <label>Seleziona File JPEG Elaborati *</label>
-                            <input type="file" id="ritocchi-file-input" multiple accept="image/jpeg">
-                        </div>
-                        <button class="btn-azione" style="background-color: var(--rosa-antico);" onclick="caricaFotoRitoccateR2()">CARICA RITOCCHI SU CLOUD</button>
-                        <div id="ritocchi-status" style="margin-top:10px; font-weight:bold; text-align:center; color:var(--carta-zucchero);"></div>
-                    </div>
-                </div>
-
-                <!-- PARTE DESTRA: MONITORAGGIO LIVE CLOUD -->
-                <div>
-                    <h3>👥 Stato Avanzamento Gallerie Sposi</h3>
-                    <div class="monitor-box" id="contenitore-monitor-selezioni">
-                        <p style="text-align:center; color:#999; margin-top:15px;">Caricamento flussi dal cloud server...</p>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- SEZIONE ASSISTENZA SUPREMA -->
-            <div class="assistenza-box">
-                <h3>🛠️ Centro Assistenza Suprema - Selezione & Scadenze</h3>
-                <p style="margin: 0; font-size: 14px; color: #555;">Se riscontri problematiche nella generazione delle chiavi temporanee o nel calcolo automatico dei 7 giorni, richiedi l'intervento immediato dell'amministratore.</p>
-                <div class="assistenza-buttons">
-                    <a href="https://anydesk.com" target="_blank" class="btn-anydesk">🖥️ Connettiti con AnyDesk</a>
-                    <a href="https://wa.me" target="_blank" class="btn-whatsapp">📅 Richiedi Appuntamento su WhatsApp</a>
-                </div>
-            </div>
-
+        <div class="photo-grid" id="photoGrid">
+            <!-- Le foto verranno caricate qui dinamicamente -->
         </div>
     </div>
 
-<script>
-const WORKER_URL = "https://workers.dev";
-const STUDIO_ID = window.currentStudioId || "studio-demo";
-let registroSelezioniCloud = [];
+    <div class="action-bar">
+        <button class="btn-submit" id="btnSubmit" onclick="inviaSelezione()">INVIA SELEZIONE ALLO STUDIO</button>
+    </div>
 
-document.addEventListener("DOMContentLoaded", () => {
-    caricaStatoSelezioniCloud();
-});
+    <!-- LIGHTBOX -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="chiudiLightbox()">✕</button>
+        <button class="lightbox-nav lightbox-prev" onclick="cambiaFoto(-1)">‹</button>
+        <button class="lightbox-nav lightbox-next" onclick="cambiaFoto(1)">›</button>
+        
+        <div class="lightbox-img-container" id="lightboxContainer">
+            <img src="" alt="Foto grande" class="lightbox-img" id="lightboxImg">
+        </div>
 
-function ottieniDataFormattataTraSetteGiorni() {
-    const dataScadenza = new Date();
-    dataScadenza.setDate(dataScadenza.getDate() + 7);
-    const g = String(dataScadenza.getDate()).padStart(2, '0');
-    const m = String(dataScadenza.getMonth() + 1).padStart(2, '0');
-    const a = dataScadenza.getFullYear();
-    return `${g}/${m}/${a}`;
-}
+        <div class="lightbox-controls">
+            <div class="lightbox-counter" id="lightboxCounter">1 / 10</div>
+            <button class="heart-btn" id="heartBtn" onclick="toggleSelezione()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
 
-async function caricaStatoSelezioniCloud() {
-    try {
-        const response = await fetch(`${WORKER_URL}/api/studio/selezioni-monitor?studioId=${encodeURIComponent(STUDIO_ID)}`);
-        if(response.ok) {
+    <!-- SUCCESS MODAL -->
+    <div class="success-modal" id="successModal">
+        <div class="success-content">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <h2>Selezione Inviata!</h2>
+            <p>Grazie per averci scelto!<br>Abbiamo ricevuto le tue foto preferite.<br>Contatta lo studio per il prossimo step.</p>
+            <button class="btn-close-modal" onclick="chiudiSuccessModal()">Chiudi</button>
+        </div>
+    </div>
+       <script>
+        // Dati di esempio (sostituibili con fetch dal Cloudflare Worker)
+        const fotoGalleria = [
+            { id: 1, url: 'https://picsum.photos/800/600?random=1' },
+            { id: 2, url: 'https://picsum.photos/800/600?random=2' },
+            { id: 3, url: 'https://picsum.photos/800/600?random=3' },
+            { id: 4, url: 'https://picsum.photos/800/600?random=4' },
+            { id: 5, url: 'https://picsum.photos/800/600?random=5' },
+            { id: 6, url: 'https://picsum.photos/800/600?random=6' },
+            { id: 7, url: 'https://picsum.photos/800/600?random=7' },
+            { id: 8, url: 'https://picsum.photos/800/600?random=8' },
+            { id: 9, url: 'https://picsum.photos/800/600?random=9' },
+            { id: 10, url: 'https://picsum.photos/800/600?random=10' },
+            { id: 11, url: 'https://picsum.photos/800/600?random=11' },
+            { id: 12, url: 'https://picsum.photos/800/600?random=12' }
+        ];
+
+        let fotoSelezionate = new Set();
+        let fotoCorrenteIndex = 0;
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', function() {
+            renderizzaGriglia();
+            setupSwipe();
+        });
+
+        function renderizzaGriglia() {
+            const grid = document.getElementById('photoGrid');
+            grid.innerHTML = fotoGalleria.map((foto, index) => `
+                <div class="photo-item ${fotoSelezionate.has(foto.id) ? 'selected' : ''}" 
+                     onclick="apriLightbox(${index})">
+                    <img src="${foto.url}" alt="Foto ${foto.id}" loading="lazy">
+                </div>
+            `).join('');
+        }
+
+        function apriLightbox(index) {
+            fotoCorrenteIndex = index;
+            aggiornaLightbox();
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function chiudiLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function cambiaFoto(direzione) {
+            fotoCorrenteIndex += direzione;
+            if (fotoCorrenteIndex < 0) fotoCorrenteIndex = fotoGalleria.length - 1;
+            if (fotoCorrenteIndex >= fotoGalleria.length) fotoCorrenteIndex = 0;
+            aggiornaLightbox();
+        }
+
+        function aggiornaLightbox() {
+            const foto = fotoGalleria[fotoCorrenteIndex];
+            document.getElementById('lightboxImg').src = foto.url;
+            document.getElementById('lightboxCounter').textContent = `${fotoCorrenteIndex + 1} / ${fotoGalleria.length}`;
+            
+            const heartBtn = document.getElementById('heartBtn');
+            if (fotoSelezionate.has(foto.id)) {
+                heartBtn.classList.add('active');
+            } else {
+                heartBtn.classList.remove('active');
+            }
+        }
+
+        function toggleSelezione() {
+            const foto = fotoGalleria[fotoCorrenteIndex];
+            
+            if (fotoSelezionate.has(foto.id)) {
+                fotoSelezionate.delete(foto.id);
+            } else {
+                fotoSelezionate.add(foto.id);
+            }
+
+            aggiornaLightbox();
+            aggiornaContatore();
+            renderizzaGriglia(); // Aggiorna i badge nella griglia
+        }
+
+        function aggiornaContatore() {
+            document.getElementById('counterNumber').textContent = fotoSelezionate.size;
+            document.getElementById('btnSubmit').disabled = fotoSelezionate.size === 0;
+        }
+
+        // Logica Swipe Touch
+        function setupSwipe() {
+            const container = document.getElementById('lightboxContainer');
+            let touchStartX = 0;
+            let touchEndX = 0;
+            const sogliaSwipe = 50;
+
+            container.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            container.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+
+            function handleSwipe() {
+                const diff = touchStartX - touchEndX;
+                if (Math.abs(diff) > sogliaSwipe) {
+                    if (diff > 0) cambiaFoto(1); // Swipe sinistra -> prossima
+                    else cambiaFoto(-1); // Swipe destra -> precedente
+                }
+            }
+        }
+
+        // Supporto tastiera per desktop
+        document.addEventListener('keydown', function(e) {
+            if (!document.getElementById('lightbox').classList.contains('active')) return;
+            if (e.key === 'ArrowLeft') cambiaFoto(-1);
+            if (e.key === 'ArrowRight') cambiaFoto(1);
+            if (e.key === 'Escape') chiudiLightbox();
+            if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggleSelezione(); }
+        });
+
+        function inviaSelezione() {
+            if (fotoSelezionate.size === 0) return;
+
+            // Qui invieresti i dati al Cloudflare Worker
+            console.log('Foto inviate:', Array.from(fotoSelezionate));
+
+            // Mostra messaggio di cortesia
+            document.getElementById('successModal').classList.add('active');
+        }
+
+        function chiudiSuccessModal() {
+            document.getElementById('successModal').classList.remove('active');
+            // Opzionale: reindirizzare o resettare
+        }
+
+        // Chiudi lightbox cliccando fuori dall'immagine
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target === this || e.target.classList.contains('lightbox-img-container')) {
+                chiudiLightbox();
+            }
+        });
+    </script>
+</body>
+</html> 
