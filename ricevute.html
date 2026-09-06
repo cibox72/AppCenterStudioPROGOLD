@@ -3,226 +3,527 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>08 Ricevute - AppCenterStudio Premium</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Ricevute & Cassa - AppCenterStudioPROGOLD</title>
     <style>
         :root {
-            --carta-zucchero: #7ea4b5;
-            --verde-salvia: #9caf88;
-            --rosa-antico: #dcaeaf;
-            --scuro: #2b3a42;
-            --chiaro: #f4f7f6;
-            --rosso-alert: #e07a7a;
+            --primary: #82e0aa;
+            --primary-dark: #1e8449;
+            --primary-light: #e8f8f5;
+            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --card-gradient: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e8e8e8;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --shadow: 0 4px 16px rgba(130, 224, 170, 0.08);
+            --shadow-hover: 0 8px 32px rgba(130, 224, 170, 0.15);
+            --radius: 14px;
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--chiaro);
-            color: var(--scuro);
-            margin: 0;
-            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
         }
-        /* BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA */
-        .navbar {
-            background-color: white;
-            padding: 12px 20px;
+
+        .top-bar {
+            background: var(--primary-gradient);
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-bottom: 3px solid var(--carta-zucchero);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(130, 224, 170, 0.2);
         }
-        .nav-links { display: flex; gap: 10px; }
-        .nav-links button {
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            background: white;
-            font-weight: bold;
-            cursor: pointer;
-            color: var(--scuro);
-            transition: all 0.2s;
-        }
-        .nav-links button:hover { background: var(--chiaro); }
-        .btn-sync { background-color: #e8f0fe !important; border-color: var(--carta-zucchero) !important; color: var(--carta-zucchero) !important; }
-        
-        .container {
-            max-width: 1100px;
-            width: 100%;
-            margin: 30px auto;
-            padding: 0 20px;
-            box-sizing: border-box;
-        }
-        .main-card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        h1, h2, h3, h4 { color: var(--scuro); margin-top: 0; text-align: center; }
-        
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-top: 25px;
-        }
-        @media(max-width: 768px) { .grid-layout { grid-template-columns: 1fr; } }
 
-        .form-section {
-            background: #fdfdfd;
-            border: 1px solid #eaeaea;
+        .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--carta-zucchero);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--primary-dark);
+            transition: all 0.2s ease;
         }
 
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
+        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(46, 204, 113, 0.6); }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
+
+        .page-header { 
+            text-align: center; 
+            margin-bottom: 32px;
+            padding: 24px;
+            background: var(--card-gradient);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+        .page-header h1 { 
+            font-size: 28px; 
+            font-weight: 700; 
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px; 
+        }
+        .page-header p { color: var(--text-light); font-size: 15px; }
+
+        .card {
+            background: var(--card-gradient);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover { box-shadow: var(--shadow-hover); }
+
+        .card-title { 
+            font-size: 18px; 
+            font-weight: 600; 
+            color: var(--primary-dark); 
+            margin-bottom: 6px; 
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 0.5px;
+            background: var(--primary-gradient);
+        }
+
+        .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
+
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 11px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
             font-family: inherit;
-        }
-        
-        .btn-panel { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-panel button { flex: 1; padding: 12px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; color: white; }
-        .btn-save { background-color: var(--verde-salvia); }
-        .btn-clear { background-color: #6c757d; }
-
-        .archivio-box {
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 15px;
-            background: #fafafa;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .ricevuta-item {
             background: white;
-            padding: 12px;
-            border-radius: 6px;
-            border-left: 5px solid var(--carta-zucchero);
-            margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.15); 
         }
 
-        /* BOX ASSISTENZA */
-        .assistenza-box {
-            margin-top: 40px;
-            padding: 20px;
-            background-color: #fcf8f2;
-            border: 1px solid var(--rosa-antico);
+        .btn {
+            padding: 12px 24px;
+            border: none;
             border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        .assistenza-buttons { display: flex; gap: 15px; margin-top: 15px; }
-        .assistenza-buttons a { flex: 1; text-align: center; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold; color: white; }
-        .btn-anydesk { background-color: #ef4444; }
-        .btn-whatsapp { background-color: #22c55e; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+
+        .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-color); background: white; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; vertical-align: middle; }
+        th { 
+            background: var(--primary-light); 
+            color: var(--primary-dark); 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+        tr:hover td { background: #fafafa; }
+
+        .footer-branding {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+        .footer-branding strong { color: var(--primary-dark); font-weight: 700; }
+
+        .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: flex; align-items: center; gap: 12px; min-width: 300px; animation: slideIn 0.3s ease; border-left: 4px solid var(--success);
+        }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast-icon { font-size: 20px; font-weight: bold; }
+        .toast-message { flex: 1; font-size: 14px; }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 768px) {
+            .top-bar { flex-direction: column; gap: 10px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-
-    <!-- BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA -->
-    <div class="navbar">
-        <div class="nav-links">
-            <button onclick="window.history.back()">← Indietro</button>
-            <button onclick="location.href='index.html'">🏠 Home</button>
+       <div class="top-bar">
+        <div class="nav-left">
+            <button class="nav-btn" onclick="window.history.back()">Indietro</button>
+            <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Plancia</button>
         </div>
-        <div class="nav-links">
-            <button onclick="eseguiBackupRicevute()">📥 Backup Globale</button>
-            <button onclick="eseguiRipristinoRicevute()">📤 Ripristino Globale</button>
-            <button class="btn-sync" id="status-sync">Sync Cloud: OK</button>
-            <button style="background-color: var(--rosa-antico); color: white;" onclick="location.href='index.html'">Esci</button>
+        <div class="nav-right">
+            <button class="nav-btn" onclick="eseguiBackupCloud()">Backup Cloud</button>
+            <button class="nav-btn" onclick="eseguiRipristinoCloud()">Ripristino Cloud</button>
+            <div class="sync-status"><span class="sync-dot"></span> Sync Cloud: OK</div>
         </div>
     </div>
 
     <div class="container">
-        <div class="main-card">
-            <h1>🧾 Gestione Cassa & Ricevute Live</h1>
-            <p style="color: #666; margin-top: -10px; text-align: center;">Emetti ricevute valide per servizi fotografici, stampe e video. Archiviazione immediata sul cloud multi-tenant.</p>
+        <div class="page-header">
+            <h1>Gestione Cassa & Ricevute</h1>
+            <p>Emetti ricevute valide per servizi fotografici, stampe e video. Archiviazione immediata sul cloud.</p>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span class="badge">NR</span> Nuova Ricevuta</div>
+            <div class="card-subtitle">Compila i dati per generare una nuova ricevuta di cassa.</div>
             
-            <div class="grid-layout">
-                
-                <!-- COMPOSIZIONE NUOVA RICEVUTA -->
-                <div>
-                    <div class="form-section">
-                        <h3>✍️ Nuova Ricevuta</h3>
-                        
-                        <div class="form-group">
-                            <label>Nome Cliente *</label>
-                            <input type="text" id="ric-cliente" placeholder="Es. Mario Rossi">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Tipo di Servizio *</label>
-                            <input type="text" id="ric-servizio" placeholder="Es. Servizio Fotografico Matrimoniale / Stampa Album">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Ricevo (€) *</label>
-                            <input type="number" id="ric-importo" placeholder="0.00" step="0.01">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Data Pagamento (GG/MM/AAAA) *</label>
-                            <input type="text" id="ric-data" placeholder="Es. 04/09/2026" onblur="validaDataFormato(this)">
-                        </div>
-
-                        <div class="form-group">
-                            <label>A titolo di acconto / saldo per...</label>
-                            <select id="ric-causale">
-                                <option value="Acconto">🧾 Acconto iniziale</option>
-                                <option value="Acconto Intermedio">🧾 Acconto intermedio</option>
-                                <option value="Saldo">💰 Saldo finale</option>
-                                <option value="Pagamento Intero">💶 Pagamento in un'unica soluzione</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Note aggiuntive (Facoltative)</label>
-                            <textarea id="ric-note" rows="2" placeholder="Es. Pagamento ricevuto tramite POS / Contanti..."></textarea>
-                        </div>
-
-                        <div class="btn-panel">
-                            <button class="btn-save" onclick="salvaRicevutaCloud()">Salva Ricevuta</button>
-                            <button class="btn-clear" onclick="pulisciFormRicevute()">Annulla / Nuova</button>
-                        </div>
-                    </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nome Cliente *</label>
+                    <input type="text" id="ricevNome" placeholder="es. Mario Rossi">
                 </div>
-
-                <!-- ARCHIVIO STORICO RICEVUTE -->
-                <div>
-                    <h3>📋 Archivio Storico Ricevute Emesse</h3>
-                    <div class="archivio-box" id="contenitore-ricevute-cloud">
-                        <p style="text-align:center; color:#999; margin-top:15px;">Nessuna ricevuta emessa in archivio.</p>
-                    </div>
-
-                    <!-- BLOCCO DETTAGLIO VISIVO -->
-                    <div id="dettaglio-ricevuta-box" style="display:none; margin-top:20px; padding:15px; background:white; border:1px solid var(--carta-zucchero); border-radius:6px;">
-                        <h4 style="margin-top:0; color:var(--carta-zucchero);">Dettaglio Documento di Cassa</h4>
-                        <p id="det-ric-testo" style="font-size:14px; line-height:1.6; background:#fafafa; padding:10px; border-radius:4px; white-space:pre-wrap;"></p>
-                        <button class="btn-clear" style="width:auto; padding:5px 15px;" onclick="document.getElementById('dettaglio-ricevuta-box').style.display='none'">Chiudi</button>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- SEZIONE ASSISTENZA SUPREMA -->
-            <div class="assistenza-box">
-                <h3>🛠️ Centro Assistenza Suprema - Gestione Cassa</h3>
-                <p style="margin: 0; font-size: 14px; color: #555;">Se riscontri anomalie nel salvataggio dei flussi finanziari o nell'indicizzazione cronologica, richiedi supporto.</p>
-                <div class="assistenza-buttons">
-                    <a href="https://anydesk.com" target="_blank" class="btn-anydesk">🖥️ Connettiti con AnyDesk</a>
-                    <a href="https://wa.me" target="_blank" class="btn-whatsapp">📅 Richiedi Appuntamento su WhatsApp</a>
+                <div class="form-group">
+                    <label>Tipo di Servizio *</label>
+                    <select id="ricevServizio">
+                        <option value="servizio-fotografico">Servizio Fotografico</option>
+                        <option value="stampe">Stampe</option>
+                        <option value="video">Video</option>
+                        <option value="album">Album</option>
+                        <option value="altro">Altro</option>
+                    </select>
                 </div>
             </div>
 
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Importo Ricevuto (€) *</label>
+                    <input type="number" id="ricevImporto" placeholder="0.00" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Data Pagamento *</label>
+                    <input type="date" id="ricevData">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Tipologia Pagamento *</label>
+                    <select id="ricevTipologia">
+                        <option value="acconto-iniziale">Acconto Iniziale</option>
+                        <option value="acconto-intermedio">Acconto Intermedio</option>
+                        <option value="saldo-finale">Saldo Finale</option>
+                        <option value="unica-soluzione">Pagamento in Unica Soluzione</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Metodo di Pagamento</label>
+                    <select id="ricevMetodo">
+                        <option value="contanti">Contanti</option>
+                        <option value="bonifico">Bonifico Bancario</option>
+                        <option value="carta">Carta di Credito/Debito</option>
+                        <option value="paypal">PayPal</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Note Aggiuntive (Facoltative)</label>
+                <textarea id="ricevNote" rows="3" placeholder="Dettagli specifici del pagamento..."></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="salvaRicevuta()">SALVA RICEVUTA</button>
+                <button class="btn btn-outline" onclick="pulisciForm()">ANNULLA / NUOVA</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span class="badge">AS</span> Archivio Storico Ricevute Emesse</div>
+            <div class="card-subtitle">Elenco cronologico di tutte le ricevute registrate.</div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Cliente</th>
+                            <th>Servizio</th>
+                            <th>Tipologia</th>
+                            <th>Importo</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="archivioTable">
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: var(--text-light); padding: 30px;">
+                                Nessuna ricevuta emessa in archivio.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span class="badge">CA</span> Centro Assistenza</div>
+            <div class="card-subtitle">Se riscontri anomalie nel salvataggio dei flussi finanziari, richiedi supporto immediato.</div>
+            
+            <div class="btn-group">
+                <a href="https://anydesk.com/it/downloads" target="_blank" class="btn btn-warning" style="text-decoration: none;">Connettiti con AnyDesk</a>
+                <a href="https://wa.me/393347507656" target="_blank" class="btn btn-success" style="text-decoration: none;">Richiedi Assistenza su WhatsApp</a>
+            </div>
+        </div>
+
+        <div class="footer-branding">
+            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong> - Tutti i diritti riservati
         </div>
     </div>
 
-<script>
-const WORKER_URL = "https://workers.dev";
+    <div class="toast-container" id="toastContainer"></div>
+        <script>
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        let studioId = localStorage.getItem('studioId') || 'studio-gold';
+        let ricevute = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('ricevData').valueAsDate = new Date();
+            caricaRicevute();
+        });
+
+        function caricaRicevute() {
+            const datiLocali = localStorage.getItem(`ricevute_${studioId}`);
+            if (datiLocali) {
+                ricevute = JSON.parse(datiLocali);
+                // Ordina per data decrescente
+                ricevute.sort((a, b) => new Date(b.data) - new Date(a.data));
+                renderizzaArchivio();
+            }
+        }
+
+        function salvaRicevuta() {
+            const nome = document.getElementById('ricevNome').value.trim();
+            const servizio = document.getElementById('ricevServizio').value;
+            const importo = parseFloat(document.getElementById('ricevImporto').value);
+            const data = document.getElementById('ricevData').value;
+            const tipologia = document.getElementById('ricevTipologia').value;
+            const metodo = document.getElementById('ricevMetodo').value;
+            const note = document.getElementById('ricevNote').value.trim();
+
+            if (!nome || isNaN(importo) || !data) {
+                mostraToast('Compila Nome, Importo e Data (campi obbligatori)', 'error');
+                return;
+            }
+
+            const nuovaRicevuta = {
+                id: Date.now().toString(),
+                nome,
+                servizio,
+                importo,
+                data,
+                tipologia,
+                metodo,
+                note,
+                studioId,
+                dataCreazione: new Date().toISOString()
+            };
+
+            ricevute.push(nuovaRicevuta);
+            ricevute.sort((a, b) => new Date(b.data) - new Date(a.data));
+            localStorage.setItem(`ricevute_${studioId}`, JSON.stringify(ricevute));
+
+            // Sync cloud
+            fetch(`${WORKER_URL}/api/studio/ricevute/salva`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(nuovaRicevuta)
+            }).catch(err => console.log('Sync cloud in background...', err));
+
+            mostraToast('Ricevuta salvata con successo!', 'success');
+            pulisciForm();
+            renderizzaArchivio();
+        }
+
+        function renderizzaArchivio() {
+            const tbody = document.getElementById('archivioTable');
+            
+            if (ricevute.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-light); padding: 30px;">Nessuna ricevuta emessa in archivio.</td></tr>';
+                return;
+            }
+
+            const tipologieMap = {
+                'acconto-iniziale': 'Acconto Iniziale',
+                'acconto-intermedio': 'Acconto Intermedio',
+                'saldo-finale': 'Saldo Finale',
+                'unica-soluzione': 'Unica Soluzione'
+            };
+
+            tbody.innerHTML = ricevute.map(ricevuta => `
+                <tr>
+                    <td>${new Date(ricevuta.data).toLocaleDateString('it-IT')}</td>
+                    <td><strong>${ricevuta.nome}</strong></td>
+                    <td>${ricevuta.servizio.replace('-', ' ').toUpperCase()}</td>
+                    <td>${tipologieMap[ricevuta.tipologia] || ricevuta.tipologia}</td>
+                    <td style="font-weight: 700; color: var(--primary-dark);">€ ${ricevuta.importo.toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 11px;" onclick="stampaRicevuta('${ricevuta.id}')">Stampa</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function stampaRicevuta(id) {
+            const ricevuta = ricevute.find(r => r.id === id);
+            if (!ricevuta) return;
+
+            const finestra = window.open('', '_blank');
+            finestra.document.write(`
+                <html>
+                <head>
+                    <title>Ricevuta ${ricevuta.id}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 40px; color: #333; }
+                        .header { text-align: center; border-bottom: 2px solid #1e8449; padding-bottom: 20px; margin-bottom: 30px; }
+                        .header h1 { color: #1e8449; margin: 0; }
+                        .row { display: flex; justify-content: space-between; margin-bottom: 15px; }
+                        .label { font-weight: bold; color: #555; }
+                        .total { font-size: 24px; font-weight: bold; color: #1e8449; margin-top: 30px; text-align: right; }
+                        .footer { margin-top: 50px; text-align: center; font-size: 12px; color: #777; border-top: 1px solid #ccc; padding-top: 20px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>RICEVUTA DI CASSE</h1>
+                        <p>AppCenterStudioPROGOLD</p>
+                    </div>
+                    <div class="row"><span class="label">Data:</span> <span>${new Date(ricevuta.data).toLocaleDateString('it-IT')}</span></div>
+                    <div class="row"><span class="label">Ricevuto da:</span> <span>${ricevuta.nome}</span></div>
+                    <div class="row"><span class="label">Servizio:</span> <span>${ricevuta.servizio.replace('-', ' ').toUpperCase()}</span></div>
+                    <div class="row"><span class="label">Tipologia:</span> <span>${ricevuta.tipologia.replace('-', ' ').toUpperCase()}</span></div>
+                    <div class="row"><span class="label">Metodo:</span> <span>${ricevuta.metodo.toUpperCase()}</span></div>
+                    ${ricevuta.note ? `<div class="row"><span class="label">Note:</span> <span>${ricevuta.note}</span></div>` : ''}
+                    <div class="total">IMPORTO: € ${ricevuta.importo.toFixed(2)}</div>
+                    <div class="footer">
+                        Documento generato digitalmente da AppCenterStudioPROGOLD.<br>
+                        Piattaforma sviluppata e gestita da AppCenterStudioPROGOLD - Tutti i diritti riservati.
+                    </div>
+                </body>
+                </html>
+            `);
+            finestra.document.close();
+            finestra.print();
+        }
+
+        function pulisciForm() {
+            document.getElementById('ricevNome').value = '';
+            document.getElementById('ricevServizio').value = 'servizio-fotografico';
+            document.getElementById('ricevImporto').value = '';
+            document.getElementById('ricevData').valueAsDate = new Date();
+            document.getElementById('ricevTipologia').value = 'acconto-iniziale';
+            document.getElementById('ricevMetodo').value = 'contanti';
+            document.getElementById('ricevNote').value = '';
+        }
+
+        async function eseguiBackupCloud() {
+            try {
+                await fetch(`${WORKER_URL}/api/studio/ricevute/backup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studioId, ricevute, timestamp: Date.now() })
+                });
+                mostraToast('Backup salvato su Cloud', 'success');
+            } catch (error) {
+                mostraToast('Errore backup Cloud', 'error');
+            }
+        }
+
+        async function eseguiRipristinoCloud() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/ricevute/backup?studioId=${studioId}`);
+                const data = await response.json();
+                
+                if (data.ricevute) {
+                    ricevute = data.ricevute;
+                    localStorage.setItem(`ricevute_${studioId}`, JSON.stringify(ricevute));
+                    renderizzaArchivio();
+                    mostraToast('Backup ripristinato con successo', 'success');
+                }
+            } catch (error) {
+                mostraToast('Errore ripristino Cloud', 'error');
+            }
+        }
+
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? 'OK' : '!'}</div><div class="toast-message">${msg}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+    </script>
+</body>
+</html>
