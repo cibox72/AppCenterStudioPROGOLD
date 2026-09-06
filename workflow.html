@@ -3,217 +3,785 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>02 Workflow Foto & Video - AppCenterStudio Premium</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Workflow Produzione - AppCenterStudioPROGOLD</title>
     <style>
         :root {
-            --carta-zucchero: #7ea4b5;
-            --verde-salvia: #9caf88;
-            --rosa-antico: #dcaeaf;
-            --scuro: #2b3a42;
-            --chiaro: #f4f7f6;
-            --rosso-alert: #e07a7a;
+            --primary: #f0b27a;
+            --primary-dark: #ca6f1e;
+            --primary-light: #fdebd0;
+            --primary-gradient: linear-gradient(135deg, #f5cba7 0%, #f0b27a 50%, #ca6f1e 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #f4ecf7 100%);
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --card-gradient: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e8e8e8;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --shadow: 0 4px 16px rgba(240, 178, 122, 0.08);
+            --shadow-hover: 0 8px 32px rgba(240, 178, 122, 0.15);
+            --radius: 14px;
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--chiaro);
-            color: var(--scuro);
-            margin: 0;
-            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
         }
-        /* BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA */
-        .navbar {
-            background-color: white;
-            padding: 12px 20px;
+
+        .top-bar {
+            background: var(--primary-gradient);
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-bottom: 3px solid var(--carta-zucchero);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(240, 178, 122, 0.2);
         }
-        .nav-links { display: flex; gap: 10px; }
-        .nav-links button {
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            background: white;
-            font-weight: bold;
-            cursor: pointer;
-            color: var(--scuro);
-            transition: all 0.2s;
-        }
-        .nav-links button:hover { background: var(--chiaro); }
-        .btn-sync { background-color: #e8f0fe !important; border-color: var(--carta-zucchero) !important; color: var(--carta-zucchero) !important; }
-        
-        .container {
-            max-width: 1200px;
-            width: 100%;
-            margin: 30px auto;
-            padding: 0 20px;
-            box-sizing: border-box;
-        }
-        .main-card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        h1, h2, h3, h4 { color: var(--scuro); margin-top: 0; text-align: center; }
-        
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-top: 25px;
-        }
-        @media(max-width: 992px) { .grid-layout { grid-template-columns: 1fr; } }
 
-        .form-section {
-            background: #fdfdfd;
-            border: 1px solid #eaeaea;
+        .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--carta-zucchero);
-        }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-        
-        button.btn-azione {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--verde-salvia);
-            color: white;
-            border: none;
-            font-weight: bold;
-            border-radius: 6px;
             cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--primary-dark);
+            transition: all 0.2s ease;
         }
-        button.btn-azione:hover { opacity: 0.9; }
 
-        .wf-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
+        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(46, 204, 113, 0.6); }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
+
+        .page-header { 
+            text-align: center; 
+            margin-bottom: 32px;
+            padding: 24px;
+            background: var(--card-gradient);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+        .page-header h1 { 
+            font-size: 28px; 
+            font-weight: 700; 
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px; 
+        }
+        .page-header p { color: var(--text-light); font-size: 15px; }
+
+        .card {
+            background: var(--card-gradient);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover { box-shadow: var(--shadow-hover); }
+
+        .card-title { 
+            font-size: 18px; 
+            font-weight: 600; 
+            color: var(--primary-dark); 
+            margin-bottom: 6px; 
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
             font-size: 12px;
-            font-weight: bold;
+            font-weight: 800;
             color: white;
+            letter-spacing: 0.5px;
+            background: var(--primary-gradient);
         }
-        .badge-attesa { background-color: #f39c12; }
-        .badge-lavoro { background-color: var(--carta-zucchero); }
-        .badge-pronto { background-color: var(--verde-salvia); }
 
-        /* TABELLE STRUTTURALI */
-        .table-wrapper { overflow-x: auto; margin-top: 15px; background: #fafafa; border: 1px solid #ddd; border-radius: 6px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
-        th, td { padding: 12px; border-bottom: 1px solid #eee; }
-        th { background: #f1f1f1; color: var(--scuro); font-weight: bold; }
+        .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
 
-        /* MODALE ADMIN CONFIG */
-        .modale-config {
-            background: #fff8f8;
-            border: 2px solid var(--rosa-antico);
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 11px 14px;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 20px;
-            margin-top: 25px;
+            font-size: 14px;
+            font-family: inherit;
+            background: white;
+            transition: all 0.2s ease;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(240, 178, 122, 0.15); 
         }
 
-        /* BOX ASSISTENZA */
-        .assistenza-box {
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+
+        .workflow-list { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
+
+        .workflow-item {
+            background: white;
+            border-left: 4px solid var(--primary);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.2s ease;
+        }
+
+        .workflow-item:hover { transform: translateX(4px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+        .workflow-item.stato-attesa { border-left-color: #95a5a6; }
+        .workflow-item.stato-lavorazione { border-left-color: #3498db; }
+        .workflow-item.stato-postproduzione { border-left-color: #9b59b6; }
+        .workflow-item.stato-pronto { border-left-color: #f39c12; }
+        .workflow-item.stato-concluso { border-left-color: #27ae60; }
+
+        .workflow-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .workflow-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .workflow-meta {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .workflow-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-attesa { background: #ecf0f1; color: #7f8c8d; }
+        .status-lavorazione { background: #ebf5fb; color: #2980b9; }
+        .status-postproduzione { background: #f4ecf7; color: #8e44ad; }
+        .status-pronto { background: #fef9e7; color: #d68910; }
+        .status-concluso { background: #eafaf1; color: #27ae60; }
+
+        .workflow-progress {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .progress-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-color); background: white; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; vertical-align: middle; }
+        th { 
+            background: var(--primary-light); 
+            color: var(--primary-dark); 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+        tr:hover td { background: #fafafa; }
+
+        .footer-branding {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 13px;
+            font-weight: 500;
             margin-top: 40px;
-            padding: 20px;
-            background-color: #fcf8f2;
-            border: 1px solid var(--rosa-antico);
-            border-radius: 8px;
+            border-top: 1px solid var(--border-color);
         }
-        .assistenza-buttons { display: flex; gap: 15px; margin-top: 15px; }
-        .assistenza-buttons a { flex: 1; text-align: center; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold; color: white; }
-        .btn-anydesk { background-color: #ef4444; }
-        .btn-whatsapp { background-color: #22c55e; }
+        .footer-branding strong { color: var(--primary-dark); font-weight: 700; }
+
+        .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: flex; align-items: center; gap: 12px; min-width: 300px; animation: slideIn 0.3s ease; border-left: 4px solid var(--success);
+        }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast-icon { font-size: 20px; font-weight: bold; }
+        .toast-message { flex: 1; font-size: 14px; }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 768px) {
+            .top-bar { flex-direction: column; gap: 10px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-
-    <!-- BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA -->
-    <div class="navbar">
-        <div class="nav-links">
-            <button onclick="window.history.back()">← Indietro</button>
-            <button onclick="location.href='index.html'">🏠 Home</button>
+       <div class="top-bar">
+        <div class="nav-left">
+            <button class="nav-btn" onclick="window.history.back()">Indietro</button>
+            <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Plancia</button>
         </div>
-        <div class="nav-links">
-            <button onclick="eseguiBackupWorkflow()">📥 Backup Globale</button>
-            <button onclick="eseguiRipristinoWorkflow()">📤 Ripristino Globale</button>
-            <button class="btn-sync" id="status-sync">Sync Cloud: OK</button>
-            <button style="background-color: var(--rosa-antico); color: white;" onclick="location.href='index.html'">Esci</button>
+        <div class="nav-right">
+            <button class="nav-btn" onclick="eseguiBackupCloud()">Backup Cloud</button>
+            <button class="nav-btn" onclick="eseguiRipristinoCloud()">Ripristino Cloud</button>
+            <div class="sync-status"><span class="sync-dot"></span> Sync Cloud: OK</div>
         </div>
     </div>
 
-    <!-- BLOCCO LICENZA BLOCCANTE (STATICO IN CASO DI SOSPESO LIVE) -->
-    <div id="errore-licenza-blocco" style="display:none; max-width:500px; margin:100px auto; text-align:center; padding:30px; background:white; border:2px solid var(--rosso-alert); border-radius:12px;">
-        <h2>⚠️ Licenza non attiva</h2>
-        <p>Questo studio non dispone di una licenza valida sul server centrale Cloudflare per usufruire del monitoraggio Workflow.</p>
-        <button class="btn-azione" style="background-color:var(--carta-zucchero);" onclick="location.href='index.html'">Torna alla Home</button>
-    </div>
+    <div class="container">
+        <div class="page-header">
+            <h1>Workflow Produzione Foto & Video</h1>
+            <p>Tracciamento cronologico dello stato di lavorazione, archiviazione dei provini e controllo delle scadenze di consegna</p>
+        </div>
 
-    <div class="container" id="contenuto-workflow-valido">
-        <div class="main-card">
-            <h1>⚙️ AppCenterStudio Premium Workflow Foto & Video</h1>
-            <p style="color: #666; margin-top: -10px; text-align: center;">Tracciamento cronologico dello stato di lavorazione, archiviazione dei provini e controllo delle scadenze di consegna.</p>
+        <div class="card">
+            <div class="card-title"><span class="badge">NS</span> Inserisci Nuovo Servizio in Lavorazione</div>
+            <div class="card-subtitle">Registra un nuovo progetto fotografico o video da monitorare</div>
             
-            <div class="grid-layout">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>ID Cliente o Nome Cliente *</label>
+                    <input type="text" id="wfCliente" placeholder="es. cliente-abc123 o Mario Rossi">
+                </div>
+                <div class="form-group">
+                    <label>Data dell'Evento *</label>
+                    <input type="date" id="wfDataEvento">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Tipo di Servizio *</label>
+                    <select id="wfTipoServizio">
+                        <option value="foto">Solo Foto</option>
+                        <option value="video">Solo Video</option>
+                        <option value="foto-video">Foto + Video</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Scadenza Consegna Prevista</label>
+                    <input type="date" id="wfScadenza">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Stato Avanzamento Foto</label>
+                    <select id="wfStatoFoto">
+                        <option value="attesa">In attesa dei file</option>
+                        <option value="selezione">In fase di selezione provini</option>
+                        <option value="postproduzione">In post-produzione cromatica</option>
+                        <option value="impaginazione">Pronto per impaginazione album</option>
+                        <option value="concluso">Lavorazione Conclusa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Stato Avanzamento Video</label>
+                    <select id="wfStatoVideo">
+                        <option value="attesa">In attesa delle clip</option>
+                        <option value="montaggio">In fase di montaggio e timeline</option>
+                        <option value="color">In color correction audio/video</option>
+                        <option value="export">Pronto per esportazione master</option>
+                        <option value="concluso">Lavorazione Conclusa</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Note Interne e Dettagli Consegna</label>
+                <textarea id="wfNote" rows="3" placeholder="Note specifiche sul progetto, richieste particolari del cliente, ecc."></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="salvaWorkflow()">SALVA STATO NEL WORKFLOW</button>
+                <button class="btn btn-outline" onclick="pulisciForm()">ANNULLA / NUOVO</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span class="badge">ML</span> Monitoraggio Lavorazioni in Corso</div>
+            <div class="card-subtitle">Elenco di tutti i servizi attivi con stato di avanzamento</div>
+            
+            <div class="workflow-list" id="workflowList">
+                <div style="text-align: center; color: var(--text-light); padding: 40px;">
+                    Nessun servizio in lavorazione. Aggiungi il primo progetto sopra.
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span class="badge">AS</span> Archivio Storico Lavorazioni</div>
+            <div class="card-subtitle">Elenco cronologico di tutti i servizi completati</div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data Evento</th>
+                            <th>Cliente</th>
+                            <th>Tipo</th>
+                            <th>Stato Foto</th>
+                            <th>Stato Video</th>
+                            <th>Scadenza</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="archivioTable">
+                        <tr>
+                            <td colspan="7" style="text-align: center; color: var(--text-light); padding: 30px;">
+                                Nessun servizio completato in archivio.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer-branding">
+            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong> - Tutti i diritti riservati
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+        <script>
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        let studioId = localStorage.getItem('studioId') || 'studio-gold';
+        let workflowAttivi = [];
+        let workflowArchivio = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            caricaWorkflow();
+        });
+
+        function caricaWorkflow() {
+            const datiAttivi = localStorage.getItem(`workflow_attivi_${studioId}`);
+            const datiArchivio = localStorage.getItem(`workflow_archivio_${studioId}`);
+            
+            if (datiAttivi) {
+                workflowAttivi = JSON.parse(datiAttivi);
+                renderizzaWorkflowAttivi();
+            }
+            
+            if (datiArchivio) {
+                workflowArchivio = JSON.parse(datiArchivio);
+                renderizzaArchivio();
+            }
+        }
+
+        function salvaWorkflow() {
+            const cliente = document.getElementById('wfCliente').value.trim();
+            const dataEvento = document.getElementById('wfDataEvento').value;
+            const tipoServizio = document.getElementById('wfTipoServizio').value;
+            const scadenza = document.getElementById('wfScadenza').value;
+            const statoFoto = document.getElementById('wfStatoFoto').value;
+            const statoVideo = document.getElementById('wfStatoVideo').value;
+            const note = document.getElementById('wfNote').value.trim();
+
+            if (!cliente || !dataEvento) {
+                mostraToast('Compila ID Cliente e Data Evento (campi obbligatori)', 'error');
+                return;
+            }
+
+            const nuovoWorkflow = {
+                id: Date.now().toString(),
+                cliente,
+                dataEvento,
+                tipoServizio,
+                scadenza,
+                statoFoto,
+                statoVideo,
+                note,
+                studioId,
+                dataCreazione: new Date().toISOString(),
+                ultimoAggiornamento: new Date().toISOString()
+            };
+
+            workflowAttivi.push(nuovoWorkflow);
+            localStorage.setItem(`workflow_attivi_${studioId}`, JSON.stringify(workflowAttivi));
+
+            // Sync cloud
+            fetch(`${WORKER_URL}/api/studio/workflow/salva`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(nuovoWorkflow)
+            }).catch(err => console.log('Sync cloud in background...', err));
+
+            mostraToast('Servizio registrato nel workflow!', 'success');
+            pulisciForm();
+            renderizzaWorkflowAttivi();
+        }
+
+        function renderizzaWorkflowAttivi() {
+            const container = document.getElementById('workflowList');
+            
+            if (workflowAttivi.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: var(--text-light); padding: 40px;">Nessun servizio in lavorazione. Aggiungi il primo progetto sopra.</div>';
+                return;
+            }
+
+            const statiFotoMap = {
+                'attesa': 'In attesa dei file',
+                'selezione': 'Selezione provini',
+                'postproduzione': 'Post-produzione',
+                'impaginazione': 'Impaginazione album',
+                'concluso': 'Concluso'
+            };
+
+            const statiVideoMap = {
+                'attesa': 'In attesa delle clip',
+                'montaggio': 'Montaggio timeline',
+                'color': 'Color correction',
+                'export': 'Esportazione master',
+                'concluso': 'Concluso'
+            };
+
+            const statoClassMap = {
+                'attesa': 'stato-attesa',
+                'selezione': 'stato-lavorazione',
+                'postproduzione': 'stato-postproduzione',
+                'impaginazione': 'stato-pronto',
+                'concluso': 'stato-concluso',
+                'montaggio': 'stato-lavorazione',
+                'color': 'stato-postproduzione',
+                'export': 'stato-pronto'
+            };
+
+            const statoBadgeMap = {
+                'attesa': 'status-attesa',
+                'selezione': 'status-lavorazione',
+                'postproduzione': 'status-postproduzione',
+                'impaginazione': 'status-pronto',
+                'concluso': 'status-concluso',
+                'montaggio': 'status-lavorazione',
+                'color': 'status-postproduzione',
+                'export': 'status-pronto'
+            };
+
+            container.innerHTML = workflowAttivi.map(wf => {
+                const statoPrincipale = wf.tipoServizio === 'video' ? wf.statoVideo : wf.statoFoto;
+                const statoClass = statoClassMap[statoPrincipale] || 'stato-attesa';
+                const statoBadge = statoBadgeMap[statoPrincipale] || 'status-attesa';
                 
-                <!-- SEZIONE COMPOSIZIONE E AGGIUNTA LAVORI -->
-                <div>
-                    <div class="form-section">
-                        <h3>➕ Inserisci Nuovo Servizio in Lavorazione</h3>
+                const progresso = calcolaProgresso(wf.statoFoto, wf.statoVideo, wf.tipoServizio);
+
+                return `
+                    <div class="workflow-item ${statoClass}">
+                        <div class="workflow-header">
+                            <div>
+                                <div class="workflow-title">${wf.cliente}</div>
+                                <div class="workflow-meta">
+                                    Evento: ${new Date(wf.dataEvento).toLocaleDateString('it-IT')} | 
+                                    Tipo: ${wf.tipoServizio.toUpperCase()}
+                                    ${wf.scadenza ? ` | Scadenza: ${new Date(wf.scadenza).toLocaleDateString('it-IT')}` : ''}
+                                </div>
+                            </div>
+                            <span class="workflow-status ${statoBadge}">${statiFotoMap[statoPrincipale] || statoPrincipale}</span>
+                        </div>
                         
-                        <div class="form-group">
-                            <label>ID Cliente Permanente o Nome *</label>
-                            <input type="text" id="wf-cliente-id" placeholder="Es. rossi-2026 o Mario Bianchi">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Data dell'Evento (GG/MM/AAAA) *</label>
-                            <input type="text" id="wf-data-evento" placeholder="Es. 15/06/2026" onblur="validaDataFormato(this)">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Stato Avanzamento Lavorazione FOTO</label>
-                            <select id="wf-stato-foto">
-                                <option value="In attesa dei file">⏳ In attesa dei file</option>
-                                <option value="In fase di selezione provini">🖥️ In fase di selezione provini</option>
-                                <option value="In post-produzione cromatica">🎨 In post-produzione cromatica</option>
-                                <option value="Pronto per impaginazione album">📖 Pronto per impaginazione album</option>
-                                <option value="Lavorazione Conclusa">✅ Lavorazione Conclusa</option>
-                            </select>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px;">
+                            ${wf.tipoServizio !== 'video' ? `
+                                <div>
+                                    <div class="progress-label">Stato Foto</div>
+                                    <div style="font-size: 13px; color: var(--text-main);">${statiFotoMap[wf.statoFoto]}</div>
+                                </div>
+                            ` : ''}
+                            ${wf.tipoServizio !== 'foto' ? `
+                                <div>
+                                    <div class="progress-label">Stato Video</div>
+                                    <div style="font-size: 13px; color: var(--text-main);">${statiVideoMap[wf.statoVideo]}</div>
+                                </div>
+                            ` : ''}
                         </div>
 
-                        <div class="form-group">
-                            <label>Stato Avanzamento Lavorazione VIDEO</label>
-                            <select id="wf-stato-video">
-                                <option value="In attesa delle clip">⏳ In attesa delle clip</option>
-                                <option value="In fase di montaggio e timeline">🎞️ In fase di montaggio e timeline</option>
-                                <option value="In color correction audio/video">🎼 In color correction audio/video</option>
-                                <option value="Pronto per esportazione master">🎬 Pronto per esportazione master</option>
-                                <option value="Lavorazione Conclusa">✅ Lavorazione Conclusa</option>
-                            </select>
+                        ${wf.note ? `<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color); font-size: 13px; color: var(--text-light);"><strong>Note:</strong> ${wf.note}</div>` : ''}
+
+                        <div class="workflow-progress">
+                            <div class="progress-label">Progresso Generale: ${progresso}%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progresso}%"></div>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label>Note Interne e Scadenze Consegna</label>
-                            <textarea id="wf-note" rows="2" placeholder="Inserisci accordi per la consegna dei provini..."></textarea>
+                        <div class="btn-group" style="margin-top: 16px;">
+                            <button class="btn btn-outline" style="padding: 8px 16px; font-size: 12px;" onclick="aggiornaStato('${wf.id}')">Aggiorna Stato</button>
+                            <button class="btn btn-success" style="padding: 8px 16px; font-size: 12px;" onclick="concludiWorkflow('${wf.id}')">Concludi</button>
+                            <button class="btn btn-danger" style="padding: 8px 16px; font-size: 12px;" onclick="eliminaWorkflow('${wf.id}')">Elimina</button>
                         </div>
-
-                        <button class="btn-azione" onclick="salvaNuovoServizioWorkflowCloud()">SALVA STATO NEL WORKFLOW</button>
                     </div>
+                `;
+            }).join('');
+        }
 
-                    <!-- MODALITÀ ADMIN CONFIGURAZIONE SEZIONI -->
-                    <div class="modale-config">
-                        <h4>🔧 Modalità ADMIN attiva: Configura Sezioni Personali</h4>
-                        <p style="font-size:12px; margin-top:-5px; color:#555;">Puoi estendere o modificare i raggruppamenti del workflow per adattarli ai servizi in studio.</p>
+        function calcolaProgresso(statoFoto, statoVideo, tipoServizio) {
+            const statiOrdine = ['attesa', 'selezione', 'postproduzione', 'impaginazione', 'concluso'];
+            
+            let progressoFoto = 0;
+            let progressoVideo = 0;
+
+            if (tipoServizio !== 'video') {
+                progressoFoto = (statiOrdine.indexOf(statoFoto) + 1) * 20;
+            }
+            
+            if (tipoServizio !== 'foto') {
+                const statiVideoOrdine = ['attesa', 'montaggio', 'color', 'export', 'concluso'];
+                progressoVideo = (statiVideoOrdine.indexOf(statoVideo) + 1) * 20;
+            }
+
+            if (tipoServizio === 'foto-video') {
+                return Math.round((progressoFoto + progressoVideo) / 2);
+            } else if (tipoServizio === 'foto') {
+                return progressoFoto;
+            } else {
+                return progressoVideo;
+            }
+        }
+
+        function aggiornaStato(id) {
+            const wf = workflowAttivi.find(w => w.id === id);
+            if (!wf) return;
+
+            const nuovoStatoFoto = prompt('Nuovo stato foto (attesa/selezione/postproduzione/impaginazione/concluso):', wf.statoFoto);
+            const nuovoStatoVideo = prompt('Nuovo stato video (attesa/montaggio/color/export/concluso):', wf.statoVideo);
+
+            if (nuovoStatoFoto) wf.statoFoto = nuovoStatoFoto;
+            if (nuovoStatoVideo) wf.statoVideo = nuovoStatoVideo;
+            wf.ultimoAggiornamento = new Date().toISOString();
+
+            localStorage.setItem(`workflow_attivi_${studioId}`, JSON.stringify(workflowAttivi));
+            renderizzaWorkflowAttivi();
+            mostraToast('Stato aggiornato con successo', 'success');
+        }
+
+        function concludiWorkflow(id) {
+            if (!confirm('Sei sicuro di voler concludere questo servizio? Verrà spostato in archivio.')) return;
+
+            const index = workflowAttivi.findIndex(w => w.id === id);
+            if (index === -1) return;
+
+            const wf = workflowAttivi[index];
+            wf.statoFoto = 'concluso';
+            wf.statoVideo = 'concluso';
+            wf.dataConclusione = new Date().toISOString();
+
+            workflowArchivio.push(wf);
+            workflowAttivi.splice(index, 1);
+
+            localStorage.setItem(`workflow_attivi_${studioId}`, JSON.stringify(workflowAttivi));
+            localStorage.setItem(`workflow_archivio_${studioId}`, JSON.stringify(workflowArchivio));
+
+            renderizzaWorkflowAttivi();
+            renderizzaArchivio();
+            mostraToast('Servizio concluso e archiviato', 'success');
+        }
+
+        function eliminaWorkflow(id) {
+            if (!confirm('Sei sicuro di voler eliminare questo servizio dal workflow?')) return;
+
+            workflowAttivi = workflowAttivi.filter(w => w.id !== id);
+            localStorage.setItem(`workflow_attivi_${studioId}`, JSON.stringify(workflowAttivi));
+            renderizzaWorkflowAttivi();
+            mostraToast('Servizio eliminato', 'success');
+        }
+
+        function renderizzaArchivio() {
+            const tbody = document.getElementById('archivioTable');
+            
+            if (workflowArchivio.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-light); padding: 30px;">Nessun servizio completato in archivio.</td></tr>';
+                return;
+            }
+
+            const statiMap = {
+                'attesa': 'In attesa',
+                'selezione': 'Selezione',
+                'postproduzione': 'Post-prod.',
+                'impaginazione': 'Impaginaz.',
+                'concluso': 'Concluso',
+                'montaggio': 'Montaggio',
+                'color': 'Color corr.',
+                'export': 'Export'
+            };
+
+            tbody.innerHTML = workflowArchivio.map(wf => `
+                <tr>
+                    <td>${new Date(wf.dataEvento).toLocaleDateString('it-IT')}</td>
+                    <td><strong>${wf.cliente}</strong></td>
+                    <td>${wf.tipoServizio.toUpperCase()}</td>
+                    <td>${statiMap[wf.statoFoto]}</td>
+                    <td>${statiMap[wf.statoVideo]}</td>
+                    <td>${wf.scadenza ? new Date(wf.scadenza).toLocaleDateString('it-IT') : 'N/D'}</td>
+                    <td>
+                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 11px;" onclick="ripristinaWorkflow('${wf.id}')">Ripristina</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function ripristinaWorkflow(id) {
+            if (!confirm('Ripristinare questo servizio in lavorazione?')) return;
+
+            const index = workflowArchivio.findIndex(w => w.id === id);
+            if (index === -1) return;
+
+            const wf = workflowArchivio[index];
+            delete wf.dataConclusione;
+            wf.statoFoto = 'attesa';
+            wf.statoVideo = 'attesa';
+
+            workflowAttivi.push(wf);
+            workflowArchivio.splice(index, 1);
+
+            localStorage.setItem(`workflow_attivi_${studioId}`, JSON.stringify(workflowAttivi));
+            localStorage.setItem(`workflow_archivio_${studioId}`, JSON.stringify(workflowArchivio));
+
+            renderizzaWorkflowAttivi();
+            renderizzaArchivio();
+            mostraToast('Servizio ripristinato in lavorazione', 'success');
+        }
+
+        function pulisciForm() {
+            document.getElementById('wfCliente').value = '';
+            document.getElementById('wfDataEvento').value = '';
+            document.getElementById('wfTipoServizio').value = 'foto';
+            document.getElementById('wfScadenza').value = '';
+            document.getElementById('wfStatoFoto').value = 'attesa';
+            document.getElementById('wfStatoVideo').value = 'attesa';
+            document.getElementById('wfNote').value = '';
+        }
+
+        async function eseguiBackupCloud() {
+            try {
+                await fetch(`${WORKER_URL}/api/studio/workflow/backup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        studioId, 
+                        attivi: workflowAttivi, 
+                        archivio: workflowArchivio,
+                        timestamp: Date.now() 
+                    })
+                });
+                mostraToast('Backup salvato su Cloud', 'success');
+            } catch (error) {
+                mostraToast('Errore backup Cloud', 'error');
+            }
+        }
+
+        async function eseguiRipristinoCloud() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/workflow/backup?studioId=${studioId}`);
+                const data = await response.json();
+                
+                if (data.attivi) {
+                    workflowAttivi = data.attivi;
+                    localStorage.setItem(`workflow_attivi_${studioId}`, JSON.stringify(workflowAttivi));
+                    renderizzaWorkflowAttivi();
+                    
+                    if (data.archivio) {
+                        workflowArchivio = data.archivio;
+                        localStorage.setItem(`workflow_archivio_${studioId}`, JSON.stringify(workflowArchivio));
+                        renderizzaArchivio();
+                    }
+                    
+                    mostraToast('Backup ripristinato con successo', 'success');
+                }
+            } catch (error) {
+                mostraToast('Errore ripristino Cloud', 'error');
+            }
+        }
+
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? 'OK' : '!'}</div><div class="toast-message">${msg}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+    </script>
+</body>
+</html>
