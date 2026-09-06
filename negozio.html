@@ -3,236 +3,650 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>06 Negozio Online - AppCenterStudio Premium</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Negozio & Ordini - AppCenterStudioPROGOLD</title>
     <style>
         :root {
-            --carta-zucchero: #7ea4b5;
-            --verde-salvia: #9caf88;
-            --rosa-antico: #dcaeaf;
-            --scuro: #2b3a42;
-            --chiaro: #f4f7f6;
-            --rosso-alert: #e07a7a;
+            --primary: #f1948a;
+            --primary-dark: #943126;
+            --primary-light: #fadbd8;
+            --primary-gradient: linear-gradient(135deg, #f5b7b1 0%, #f1948a 50%, #943126 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #f4ecf7 100%);
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --card-gradient: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e8e8e8;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --shadow: 0 4px 16px rgba(241, 148, 138, 0.08);
+            --shadow-hover: 0 8px 32px rgba(241, 148, 138, 0.15);
+            --radius: 14px;
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--chiaro);
-            color: var(--scuro);
-            margin: 0;
-            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
         }
-        /* BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA */
-        .navbar {
-            background-color: white;
-            padding: 12px 20px;
+
+        .top-bar {
+            background: var(--primary-gradient);
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-bottom: 3px solid var(--carta-zucchero);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(241, 148, 138, 0.2);
         }
-        .nav-links { display: flex; gap: 10px; }
-        .nav-links button {
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            background: white;
-            font-weight: bold;
-            cursor: pointer;
-            color: var(--scuro);
-            transition: all 0.2s;
-        }
-        .nav-links button:hover { background: var(--chiaro); }
-        .btn-sync { background-color: #e8f0fe !important; border-color: var(--carta-zucchero) !important; color: var(--carta-zucchero) !important; }
-        
-        .container {
-            max-width: 1200px;
-            width: 100%;
-            margin: 30px auto;
-            padding: 0 20px;
-            box-sizing: border-box;
-        }
-        .main-card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        h1, h2, h3, h4 { color: var(--scuro); margin-top: 0; }
-        
-        /* GRIGLIA LAYOUT INTERFACCIA */
-        .shop-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-top: 25px;
-        }
-        @media(max-width: 992px) { .shop-grid { grid-template-columns: 1fr; } }
 
-        .form-section {
-            background: #fdfdfd;
-            border: 1px solid #eaeaea;
+        .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--carta-zucchero);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--primary-dark);
+            transition: all 0.2s ease;
         }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; }
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
+
+        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(46, 204, 113, 0.6); }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
+
+        .page-header { 
+            text-align: center; 
+            margin-bottom: 32px;
+            padding: 24px;
+            background: var(--card-gradient);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
         }
-        
-        button.btn-azione {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--verde-salvia);
+        .page-header h1 { 
+            font-size: 28px; 
+            font-weight: 700; 
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px; 
+        }
+        .page-header p { color: var(--text-light); font-size: 15px; }
+
+        .card {
+            background: var(--card-gradient);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover { box-shadow: var(--shadow-hover); }
+
+        .card-title { 
+            font-size: 18px; 
+            font-weight: 600; 
+            color: var(--primary-dark); 
+            margin-bottom: 6px; 
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800;
             color: white;
-            border: none;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        button.btn-azione:hover { opacity: 0.9; }
-
-        .item-list {
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 15px;
-            background: #fafafa;
-            max-height: 350px;
-            overflow-y: auto;
-        }
-        .shop-item-card {
-            background: white;
-            padding: 12px;
-            border-radius: 6px;
-            border-left: 5px solid var(--carta-zucchero);
-            margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            letter-spacing: 0.5px;
+            background: var(--primary-gradient);
         }
 
-        /* VISTA CLIENTE / CARRELLO SIMULATO HARDWARE */
-        .cart-section {
-            background: #fff8f8;
-            border: 1px dashed var(--rosa-antico);
+        .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
+
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 11px 14px;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 20px;
+            font-size: 14px;
+            font-family: inherit;
+            background: white;
+            transition: all 0.2s ease;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(241, 148, 138, 0.15); 
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
             margin-top: 20px;
         }
 
-        /* BOX ASSISTENZA */
-        .assistenza-box {
-            margin-top: 40px;
+        .product-card {
+            background: white;
+            border-radius: 12px;
             padding: 20px;
-            background-color: #fcf8f2;
-            border: 1px solid var(--rosa-antico);
-            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
         }
-        .assistenza-buttons { display: flex; gap: 15px; margin-top: 15px; }
-        .assistenza-buttons a {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
+
+        .product-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .product-category {
+            display: inline-block;
+            padding: 4px 10px;
+            background: var(--primary-light);
+            color: var(--primary-dark);
             border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
         }
-        .btn-anydesk { background-color: #ef4444; }
-        .btn-whatsapp { background-color: #22c55e; }
+
+        .product-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin: 12px 0;
+        }
+
+        .product-description {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-color); background: white; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; }
+        th { 
+            background: var(--primary-light); 
+            color: var(--primary-dark); 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+        tr:hover td { background: #fafafa; }
+
+        .footer-branding {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+        .footer-branding strong { color: var(--primary-dark); font-weight: 700; }
+
+        .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: flex; align-items: center; gap: 12px; min-width: 300px; animation: slideIn 0.3s ease; border-left: 4px solid var(--success);
+        }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast-icon { font-size: 20px; font-weight: bold; }
+        .toast-message { flex: 1; font-size: 14px; }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 768px) {
+            .top-bar { flex-direction: column; gap: 10px; }
+            .form-row { grid-template-columns: 1fr; }
+            .products-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-
-    <!-- BARRA DI NAVIGAZIONE SUPERIORE UNIFICATA -->
-    <div class="navbar">
-        <div class="nav-links">
-            <button onclick="window.history.back()">← Indietro</button>
-            <button onclick="location.href='index.html'">🏠 Home</button>
+        <div class="top-bar">
+        <div class="nav-left">
+            <button class="nav-btn" onclick="window.history.back()">Indietro</button>
+            <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Plancia</button>
         </div>
-        <div class="nav-links">
-            <button onclick="eseguiBackupNegozio()">📥 Backup Globale</button>
-            <button onclick="eseguiRipristinoNegozio()">📤 Ripristino Globale</button>
-            <button class="btn-sync" id="status-sync">Sync Cloud: OK</button>
-            <button style="background-color: var(--rosa-antico); color: white;" onclick="location.href='index.html'">Esci</button>
+        <div class="nav-right">
+            <button class="nav-btn" onclick="eseguiBackupCloud()">Backup Cloud</button>
+            <button class="nav-btn" onclick="eseguiRipristinoCloud()">Ripristino Cloud</button>
+            <div class="sync-status"><span class="sync-dot"></span> Sync Cloud: OK</div>
         </div>
     </div>
 
     <div class="container">
-        <div class="main-card">
-            <h1 style="text-align: center; color: var(--scuro);">🛒 Pannello Negozio Online & Ordini</h1>
-            <p style="text-align: center; color: #666; margin-top: -10px;">Gestisci i tuoi prodotti fisici o digitali, configura la cassa PayPal dello studio e ricevi ordini live sul cloud.</p>
+        <div class="page-header">
+            <h1>Negozio Online & Ordini</h1>
+            <p>Gestisci i tuoi prodotti fisici o digitali, configura la cassa PayPal dello studio e ricevi ordini live sul cloud</p>
+        </div>
 
-            <div class="shop-grid">
-                
-                <!-- PANNELLO LATO SINISTRO: AMMINISTRAZIONE STUDIO -->
-                <div>
-                    <!-- 1. CREAZIONE PRODOTTI -->
-                    <div class="form-section">
-                        <h3>📦 Prodotti del Negozio</h3>
-                        <p style="font-size:12px; color:#666; margin-top:-5px;">Crea o modifica gli articoli che offri ai tuoi clienti finali.</p>
-                        
-                        <div class="form-group">
-                            <label>Nome Prodotto *</label>
-                            <input type="text" id="prod-nome" placeholder="Es. Stampa FineArt 20x30">
+        <div class="card">
+            <div class="card-title"><span class="badge">PR</span> Prodotti del Negozio</div>
+            <div class="card-subtitle">Crea o modifica gli articoli che offri ai tuoi clienti finali</div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nome Prodotto *</label>
+                    <input type="text" id="prodNome" placeholder="es. Stampa 20x30 cm">
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <select id="prodCategoria">
+                        <option value="stampe">📸 Stampe</option>
+                        <option value="tele">🖼️ Tele</option>
+                        <option value="forex">🪵 Forex</option>
+                        <option value="plexiglass">✨ Plexiglass</option>
+                        <option value="gadget"> Gadget</option>
+                        <option value="album">📔 Album</option>
+                        <option value="digitale"> File Digitale</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Prezzo (€) *</label>
+                    <input type="number" id="prodPrezzo" placeholder="0.00" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Misura / Formato</label>
+                    <input type="text" id="prodMisura" placeholder="es. 20x30 cm, A4, ecc.">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Descrizione Articolo</label>
+                <textarea id="prodDescrizione" rows="3" placeholder="Descrizione dettagliata del prodotto..."></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="salvaProdotto()">SALVA PRODOTTO NEL CATALOGO</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span class="badge">CF</span> Configura Cassa dello Studio</div>
+            <div class="card-subtitle">I pagamenti dei clienti verranno accreditati direttamente su questi conti dello studio</div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email PayPal dello Studio *</label>
+                    <input type="email" id="paypalEmail" placeholder="studio@paypal.com" value="appcenterstudiopremiun@gmail.com">
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp per Ricezione Ordini</label>
+                    <input type="tel" id="whatsappNumero" placeholder="+39 333 1234567">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Indirizzo dello Studio / Note Ritiro</label>
+                <textarea id="studioIndirizzo" rows="2" placeholder="Indirizzo completo per il ritiro prodotti..."></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-success" onclick="salvaConfigurazione()">SALVA CONFIGURAZIONE LIVE</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span class="badge">CT</span> Catalogo Articoli Attivi</div>
+            <div class="card-subtitle">Elenco prodotti disponibili nel tuo negozio online</div>
+            
+            <div class="products-grid" id="productsGrid">
+                <div style="grid-column: 1/-1; text-align: center; color: var(--text-light); padding: 40px;">
+                    Nessun articolo inserito nel catalogo cloud
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span class="badge">OR</span> Ordini Ricevuti</div>
+            <div class="card-subtitle">Storico ordini ricevuti dai clienti</div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data Ordine</th>
+                            <th>Cliente</th>
+                            <th>Prodotto</th>
+                            <th>Importo</th>
+                            <th>Stato</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordiniTable">
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: var(--text-light);">
+                                Nessun ordine ricevuto
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer-branding">
+            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong> - Tutti i diritti riservati
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+        <script>
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        let studioId = localStorage.getItem('studioId') || 'studio-gold';
+        let prodotti = [];
+        let ordini = [];
+        let configNegozio = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            caricaDatiStudio();
+            caricaProdotti();
+            caricaConfigurazione();
+        });
+
+        function caricaDatiStudio() {
+            const dati = localStorage.getItem(`studio_dati_${studioId}`);
+            if (dati) {
+                const studio = JSON.parse(dati);
+                if (studio.email) {
+                    document.getElementById('paypalEmail').value = studio.email;
+                }
+                if (studio.telefono) {
+                    document.getElementById('whatsappNumero').value = studio.telefono;
+                }
+                if (studio.indirizzo) {
+                    document.getElementById('studioIndirizzo').value = studio.indirizzo;
+                }
+            }
+        }
+
+        function caricaProdotti() {
+            const datiLocali = localStorage.getItem(`negozio_prodotti_${studioId}`);
+            if (datiLocali) {
+                prodotti = JSON.parse(datiLocali);
+                renderizzaProdotti();
+            }
+        }
+
+        function caricaConfigurazione() {
+            const config = localStorage.getItem(`negozio_config_${studioId}`);
+            if (config) {
+                configNegozio = JSON.parse(config);
+            }
+        }
+
+        function salvaProdotto() {
+            const nome = document.getElementById('prodNome').value.trim();
+            const categoria = document.getElementById('prodCategoria').value;
+            const prezzo = parseFloat(document.getElementById('prodPrezzo').value);
+            const misura = document.getElementById('prodMisura').value.trim();
+            const descrizione = document.getElementById('prodDescrizione').value.trim();
+
+            if (!nome || isNaN(prezzo)) {
+                mostraToast('Compila Nome Prodotto e Prezzo (campi obbligatori)', 'error');
+                return;
+            }
+
+            const prodotto = {
+                id: Date.now().toString(),
+                nome,
+                categoria,
+                prezzo,
+                misura,
+                descrizione,
+                dataCreazione: new Date().toISOString(),
+                studioId
+            };
+
+            prodotti.push(prodotto);
+            localStorage.setItem(`negozio_prodotti_${studioId}`, JSON.stringify(prodotti));
+            
+            // Sync cloud
+            fetch(`${WORKER_URL}/api/studio/negozio/prodotto/salva`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(prodotto)
+            }).catch(err => console.log('Sync cloud in background...', err));
+
+            mostraToast('Prodotto salvato nel catalogo', 'success');
+            pulisciFormProdotto();
+            renderizzaProdotti();
+        }
+
+        function renderizzaProdotti() {
+            const grid = document.getElementById('productsGrid');
+            
+            if (prodotti.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-light); padding: 40px;">Nessun articolo inserito nel catalogo cloud</div>';
+                return;
+            }
+
+            const categorieMap = {
+                'stampe': '📸 Stampe',
+                'tele': '🖼️ Tele',
+                'forex': ' Forex',
+                'plexiglass': '✨ Plexiglass',
+                'gadget': '🔑 Gadget',
+                'album': '📔 Album',
+                'digitale': '💾 File Digitale'
+            };
+
+            grid.innerHTML = prodotti.map(prod => `
+                <div class="product-card">
+                    <div class="product-header">
+                        <div>
+                            <div class="product-name">${prod.nome}</div>
+                            <span class="product-category">${categorieMap[prod.categoria] || prod.categoria}</span>
                         </div>
-                        <div class="form-group">
-                            <label>Categoria</label>
-                            <select id="prod-categoria">
-                                <option value="Stampe">📸 Stampe</option>
-                                <option value="Tele">🖼️ Tele</option>
-                                <option value="Forex">🪵 Forex</option>
-                                <option value="Gadget">🔑 Gadget</option>
-                                <option value="Plexiglass">✨ Plexiglass</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Prezzo (€) *</label>
-                            <input type="number" id="prod-prezzo" placeholder="0.00" step="0.01">
-                        </div>
-                        <div class="form-group">
-                            <label>Misura / Formato</label>
-                            <input type="text" id="prod-misura" placeholder="Es. 20x30 cm">
-                        </div>
-                        <div class="form-group">
-                            <label>Descrizione Articolo</label>
-                            <textarea id="prod-desc" rows="2" placeholder="Dettagli sulla carta o tipo di finitura..."></textarea>
-                        </div>
-                        <button class="btn-azione" onclick="salvaProdottoNegozioCloud()">SALVA PRODOTTO NEL CATALOGO</button>
                     </div>
-
-                    <!-- 2. CONFIGURAZIONE CASSA STUDIO -->
-                    <div class="form-section" style="border-left-color: var(--verde-salvia);">
-                        <h3>⚙️ Configura Cassa dello Studio (No Fornitore)</h3>
-                        <p style="font-size:12px; color:#666; margin-top:-5px;">I pagamenti dei clienti verranno accreditati direttamente su questi conti dello studio.</p>
-                        
-                        <div class="form-group">
-                            <label>Email PayPal dello Studio *</label>
-                            <input type="email" id="studio-paypal-addr" placeholder="pagamenti-studio@esempio.com">
-                        </div>
-                        <div class="form-group">
-                            <label>WhatsApp per Ricezione Ordini</label>
-                            <input type="text" id="studio-wa-ordini" placeholder="Es. 3330000000">
-                        </div>
-                        <div class="form-group">
-                            <label>Indirizzo dello Studio / Note Ritiro</label>
-                            <textarea id="studio-note-ritiro" rows="2" placeholder="Note per spedizioni o ritiro a mano in negozio..."></textarea>
-                        </div>
-                        <button class="btn-azione" style="background-color: var(--verde-salvia);" onclick="salvaConfigurazioneNegozioCloud()">SALVA CONFIGURAZIONE LIVE</button>
+                    ${prod.misura ? `<div style="font-size: 13px; color: var(--text-light); margin-bottom: 8px;">${prod.misura}</div>` : ''}
+                    <div class="product-price">€ ${prod.prezzo.toFixed(2)}</div>
+                    ${prod.descrizione ? `<div class="product-description">${prod.descrizione}</div>` : ''}
+                    <div class="product-actions">
+                        <button class="btn btn-outline" style="flex:1; padding: 8px;" onclick="eliminaProdotto('${prod.id}')">Elimina</button>
+                        <button class="btn btn-primary" style="flex:1; padding: 8px;" onclick="modificaProdotto('${prod.id}')">Modifica</button>
                     </div>
                 </div>
+            `).join('');
+        }
 
-                <!-- PANNELLO LATO DESTRO: CATALOGO, ORDINI E CARRELLO LIVE -->
-                <div>
-                    <h3>📋 Catalogo Articoli Attivi</h3>
-                    <div class="item-list" id="contenitore-catalogo-prodotti">
-                        <p style="text-align:center; color:#999; margin-top:15px;">Nessun articolo inserito nel catalogo cloud.</p>
-                    </div>
+        function eliminaProdotto(id) {
+            if (!confirm('Sei sicuro di voler eliminare questo prodotto?')) return;
+            
+            prodotti = prodotti.filter(p => p.id !== id);
+            localStorage.setItem(`negozio_prodotti_${studioId}`, JSON.stringify(prodotti));
+            renderizzaProdotti();
+            mostraToast('Prodotto eliminato', 'success');
+        }
 
+        function modificaProdotto(id) {
+            const prodotto = prodotti.find(p => p.id === id);
+            if (!prodotto) return;
+
+            document.getElementById('prodNome').value = prodotto.nome;
+            document.getElementById('prodCategoria').value = prodotto.categoria;
+            document.getElementById('prodPrezzo').value = prodotto.prezzo;
+            document.getElementById('prodMisura').value = prodotto.misura || '';
+            document.getElementById('prodDescrizione').value = prodotto.descrizione || '';
+
+            // Elimina il prodotto vecchio così quando salvi ne crei uno nuovo modificato
+            prodotti = prodotti.filter(p => p.id !== id);
+            localStorage.setItem(`negozio_prodotti_${studioId}`, JSON.stringify(prodotti));
+            
+            mostraToast('Modifica prodotto. Clicca SALVA per confermare', 'success');
+        }
+
+        function salvaConfigurazione() {
+            const paypalEmail = document.getElementById('paypalEmail').value.trim();
+            const whatsappNumero = document.getElementById('whatsappNumero').value.trim();
+            const studioIndirizzo = document.getElementById('studioIndirizzo').value.trim();
+
+            if (!paypalEmail) {
+                mostraToast('Inserisci l\'email PayPal dello studio', 'error');
+                return;
+            }
+
+            configNegozio = {
+                paypalEmail,
+                whatsappNumero,
+                studioIndirizzo,
+                dataAggiornamento: new Date().toISOString(),
+                studioId
+            };
+
+            localStorage.setItem(`negozio_config_${studioId}`, JSON.stringify(configNegozio));
+            
+            // Sync cloud
+            fetch(`${WORKER_URL}/api/studio/negozio/config/salva`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(configNegozio)
+            }).catch(err => console.log('Sync cloud in background...', err));
+
+            mostraToast('Configurazione negozio salvata', 'success');
+        }
+
+        async function eseguiBackupCloud() {
+            try {
+                await fetch(`${WORKER_URL}/api/studio/negozio/backup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        studioId, 
+                        prodotti, 
+                        config: configNegozio,
+                        timestamp: Date.now() 
+                    })
+                });
+                mostraToast('Backup salvato su Cloud', 'success');
+            } catch (error) {
+                mostraToast('Errore backup Cloud', 'error');
+            }
+        }
+
+        async function eseguiRipristinoCloud() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/negozio/backup?studioId=${studioId}`);
+                const data = await response.json();
+                
+                if (data.prodotti) {
+                    prodotti = data.prodotti;
+                    localStorage.setItem(`negozio_prodotti_${studioId}`, JSON.stringify(prodotti));
+                    renderizzaProdotti();
+                    
+                    if (data.config) {
+                        configNegozio = data.config;
+                        localStorage.setItem(`negozio_config_${studioId}`, JSON.stringify(configNegozio));
+                    }
+                    
+                    mostraToast('Backup ripristinato con successo', 'success');
+                }
+            } catch (error) {
+                mostraToast('Errore ripristino Cloud', 'error');
+            }
+        }
+
+        function pulisciFormProdotto() {
+            document.getElementById('prodNome').value = '';
+            document.getElementById('prodCategoria').value = 'stampe';
+            document.getElementById('prodPrezzo').value = '';
+            document.getElementById('prodMisura').value = '';
+            document.getElementById('prodDescrizione').value = '';
+        }
+
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? 'OK' : '!'}</div><div class="toast-message">${msg}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+    </script>
+</body>
+</html>
