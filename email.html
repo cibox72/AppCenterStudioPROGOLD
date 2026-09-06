@@ -21,9 +21,9 @@
             --border-color: #e8e8e8;
             --success: #27ae60;
             --danger: #e74c3c;
-            --shadow: 0 4px 16px rgba(244, 208, 63, 0.08);
-            --shadow-hover: 0 8px 32px rgba(244, 208, 63, 0.15);
-            --radius: 14px;
+            --shadow-3d: 0 10px 30px rgba(183, 149, 11, 0.12), 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-3d-hover: 0 20px 50px rgba(183, 149, 11, 0.2), 0 5px 15px rgba(0,0,0,0.08);
+            --radius: 16px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -47,7 +47,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 12px rgba(244, 208, 63, 0.2);
+            box-shadow: 0 4px 20px rgba(183, 149, 11, 0.15);
         }
 
         .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
@@ -55,16 +55,17 @@
         .nav-btn {
             background: rgba(255,255,255,0.95);
             border: 1px solid rgba(255,255,255,0.3);
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 10px 18px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--primary-dark);
             transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
-        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
 
         .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
         .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(46, 204, 113, 0.6); }
@@ -75,61 +76,77 @@
         .page-header { 
             text-align: center; 
             margin-bottom: 32px;
-            padding: 24px;
+            padding: 32px;
             background: var(--card-gradient);
             border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-3d);
             border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .page-header:hover { transform: translateY(-4px); box-shadow: var(--shadow-3d-hover); }
         .page-header h1 { 
-            font-size: 28px; 
-            font-weight: 700; 
+            font-size: 32px; 
+            font-weight: 800; 
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 8px; 
+            letter-spacing: -0.5px;
         }
         .page-header p { color: var(--text-light); font-size: 15px; }
 
-        .card {
+        .card-3d {
             background: var(--card-gradient);
             border-radius: var(--radius);
-            padding: 28px;
+            padding: 32px;
             margin-bottom: 24px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-3d);
             border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
         }
 
-        .card:hover { box-shadow: var(--shadow-hover); }
+        .card-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .card-3d:hover { transform: translateY(-6px); box-shadow: var(--shadow-3d-hover); }
 
         .card-title { 
-            font-size: 18px; 
-            font-weight: 600; 
+            font-size: 20px; 
+            font-weight: 700; 
             color: var(--primary-dark); 
-            margin-bottom: 6px; 
-            padding-bottom: 10px;
+            margin-bottom: 8px; 
+            padding-bottom: 12px;
             border-bottom: 2px solid var(--primary-light);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            font-size: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            font-size: 13px;
             font-weight: 800;
             color: white;
             letter-spacing: 0.5px;
             background: var(--primary-gradient);
+            box-shadow: 0 4px 12px rgba(183, 149, 11, 0.25);
         }
 
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
@@ -138,9 +155,9 @@
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
         .form-group input, .form-group select, .form-group textarea {
-            padding: 11px 14px;
+            padding: 12px 14px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 14px;
             font-family: inherit;
             background: white;
@@ -150,13 +167,14 @@
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
             outline: none; 
             border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(244, 208, 63, 0.15); 
+            box-shadow: 0 0 0 3px rgba(244, 208, 63, 0.2); 
+            transform: translateY(-1px);
         }
 
         .btn {
             padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
@@ -165,35 +183,37 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
         .btn-outline:hover { background: var(--primary-light); }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
 
-        .archive-list { display: flex; flex-direction: column; gap: 12px; }
+        .archive-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
         .archive-item {
             background: white;
             border-left: 4px solid var(--primary);
-            border-radius: 8px;
-            padding: 16px 20px;
+            border-radius: 10px;
+            padding: 18px 22px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
             transition: all 0.2s ease;
+            cursor: pointer;
         }
-        .archive-item:hover { transform: translateX(4px); }
+        .archive-item:hover { transform: translateX(6px); box-shadow: 0 4px 16px rgba(183, 149, 11, 0.15); }
         .archive-info { flex: 1; }
-        .archive-subject { font-weight: 600; font-size: 15px; color: var(--text-main); margin-bottom: 4px; }
+        .archive-subject { font-weight: 700; font-size: 15px; color: var(--text-main); margin-bottom: 4px; }
         .archive-meta { font-size: 12px; color: var(--text-light); }
-        .archive-date { font-weight: 700; color: var(--primary-dark); font-size: 13px; }
+        .archive-date { font-weight: 700; color: var(--primary-dark); font-size: 13px; white-space: nowrap; margin-left: 16px; }
 
         .footer-branding {
             text-align: center;
-            padding: 20px;
+            padding: 24px;
             color: var(--text-light);
             font-size: 13px;
             font-weight: 500;
@@ -212,11 +232,20 @@
         .toast-icon { font-size: 20px; font-weight: bold; }
         .toast-message { flex: 1; font-size: 14px; }
 
+        .loading { text-align: center; padding: 40px; color: var(--text-light); }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
+
         .hidden { display: none !important; }
 
         @media (max-width: 768px) {
             .top-bar { flex-direction: column; gap: 10px; }
             .form-row { grid-template-columns: 1fr; }
+            .page-header h1 { font-size: 24px; }
+            .archive-item { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .archive-date { margin-left: 0; }
         }
     </style>
 </head>
@@ -237,12 +266,13 @@
     <div class="container">
         <div class="page-header">
             <h1>Email & Modelli di Comunicazione</h1>
-            <p>Configura i tuoi indirizzi, utilizza modelli rapidi e archivia le comunicazioni inviate</p>
+            <p>Configura i tuoi indirizzi, utilizza modelli rapidi e archivia le comunicazioni inviate live sul cloud multi-tenant.</p>
         </div>
 
         <!-- MITTENTE -->
-        <div class="card">
+        <div class="card-3d">
             <div class="card-title"><span class="badge">MT</span> Mittente (Indirizzo dello Studio)</div>
+            <div class="card-subtitle">Configura gli indirizzi ufficiali dello studio. Questi dati verranno salvati sul cloud e saranno disponibili su tutti i dispositivi.</div>
             <div class="form-row">
                 <div class="form-group">
                     <label>Email dello Studio *</label>
@@ -254,13 +284,15 @@
                 </div>
             </div>
             <div class="btn-group">
-                <button class="btn btn-primary" onclick="salvaMittente()">Salva Mittente</button>
+                <button class="btn btn-primary" onclick="salvaMittente()">SALVA MITTENTE SUL CLOUD</button>
             </div>
         </div>
 
         <!-- NUOVA EMAIL -->
-        <div class="card">
+        <div class="card-3d">
             <div class="card-title"><span class="badge">EM</span> Nuova Email</div>
+            <div class="card-subtitle">Seleziona un modello rapido o componi liberamente. L'invio aprirà il tuo client email predefinito.</div>
+            
             <div class="form-row">
                 <div class="form-group" style="grid-column: 1 / -1;">
                     <label>Modello Rapido</label>
@@ -289,18 +321,27 @@
                 <textarea id="emailMessaggio" rows="6" placeholder="Scrivi qui il messaggio..."></textarea>
             </div>
             <div class="btn-group">
-                <button class="btn btn-success" onclick="inviaEmail()">Invia con App Email</button>
-                <button class="btn btn-outline" onclick="copiaTesto()">Copia Oggetto + Testo</button>
-                <button class="btn btn-primary" onclick="salvaInArchivio()">Salva in Archivio</button>
+                <button class="btn btn-success" onclick="inviaEmail()">INVIA CON APP EMAIL</button>
+                <button class="btn btn-outline" onclick="copiaTesto()">COPIA OGGETTO + TESTO</button>
+                <button class="btn btn-primary" onclick="salvaInArchivio()">SALVA IN ARCHIVIO CLOUD</button>
             </div>
         </div>
 
         <!-- ARCHIVIO -->
-        <div class="card">
+        <div class="card-3d">
             <div class="card-title"><span class="badge">AR</span> Archivio Comunicazioni Inviate</div>
-            <div class="archive-list" id="archiveList">
-                <div style="text-align: center; color: var(--text-light); padding: 30px;">Nessuna email salvata in archivio.</div>
+            <div class="card-subtitle">Elenco cronologico di tutte le email salvate sul cloud. Dati sincronizzati in tempo reale tra tutti i dispositivi dello studio.</div>
+            
+            <div id="loadingState" class="loading">
+                <div class="spinner"></div>
+                <div>Caricamento archivio dal cloud...</div>
             </div>
+
+            <div id="emptyState" class="empty-state hidden">
+                <div>Nessuna email salvata in archivio. Invia la prima comunicazione qui sopra.</div>
+            </div>
+
+            <div id="archiveList" class="archive-list"></div>
         </div>
 
         <div class="footer-branding">
@@ -314,12 +355,13 @@
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         let studioId = localStorage.getItem('studioId') || 'studio-gold';
         let archivioEmail = [];
+        let configMittente = {};
 
         const modelli = {
             'promemoria': { oggetto: 'Promemoria Appuntamento', testo: 'Gentile Cliente,\n\nle ricordiamo il suo appuntamento presso il nostro studio.\n\nCordiali saluti,' },
             'ordine': { oggetto: 'Il suo Album è pronto!', testo: 'Gentile Cliente,\n\nsiamo lieti di informarla che il suo ordine è pronto per la consegna.\n\nCordiali saluti,' },
             'sollecito': { oggetto: 'Sollecito Saldo', testo: 'Gentile Cliente,\n\nle inviamo un gentile promemoria per il saldo rimanente.\n\nCordiali saluti,' },
-            'ringraziamento': { oggetto: 'Grazie per averci scelto', testo: 'Gentile Cliente,\n\ngrazie per aver affidato a noi i vostri ricordi più belli.\n\nCordiali saluti,' },
+            'ringraziamento': { oggetto: 'Grazie per averci scelto', testo: 'Gentile Cliente,\n\ngrazie per aver affidato a noi i suoi ricordi più belli.\n\nCordiali saluti,' },
             'acconto': { oggetto: 'Conferma Ricevuta Acconto', testo: 'Gentile Cliente,\n\nconfermiamo la ricezione del suo acconto.\n\nCordiali saluti,' }
         };
 
@@ -328,19 +370,51 @@
             caricaArchivio();
         });
 
-        function caricaMittente() {
-            const config = JSON.parse(localStorage.getItem(`email_config_${studioId}`) || '{}');
-            if (config.email) document.getElementById('mittenteEmail').value = config.email;
-            if (config.pec) document.getElementById('mittentePec').value = config.pec;
+        async function caricaMittente() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/email-config?studioId=${studioId}`);
+                const data = await response.json();
+                
+                if (data.success && data.mittente) {
+                    configMittente = data.mittente;
+                    if (configMittente.email) document.getElementById('mittenteEmail').value = configMittente.email;
+                    if (configMittente.pec) document.getElementById('mittentePec').value = configMittente.pec;
+                }
+            } catch (error) {
+                console.error('Errore caricamento mittente:', error);
+            }
         }
 
-        function salvaMittente() {
+        async function salvaMittente() {
             const config = {
+                studio_id: studioId,
                 email: document.getElementById('mittenteEmail').value.trim(),
                 pec: document.getElementById('mittentePec').value.trim()
             };
-            localStorage.setItem(`email_config_${studioId}`, JSON.stringify(config));
-            mostraToast('Mittente salvato con successo', 'success');
+
+            if (!config.email) {
+                mostraToast('Inserisci almeno l\'email dello studio', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/email-config/salva`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config)
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    configMittente = config;
+                    mostraToast('Mittente salvato sul cloud con successo', 'success');
+                } else {
+                    mostraToast('Errore nel salvataggio', 'error');
+                }
+            } catch (error) {
+                console.error('Errore salvataggio mittente:', error);
+                mostraToast('Errore di connessione al cloud', 'error');
+            }
         }
 
         function applicaModello() {
@@ -377,7 +451,7 @@
             });
         }
 
-        function salvaInArchivio(auto = false) {
+        async function salvaInArchivio(auto = false) {
             const to = document.getElementById('emailDestinatario').value.trim();
             const subject = document.getElementById('emailOggetto').value.trim();
             const body = document.getElementById('emailMessaggio').value.trim();
@@ -388,71 +462,162 @@
             }
 
             const emailData = {
-                id: Date.now().toString(),
-                to, subject, body,
-                data: new Date().toISOString(),
-                studioId
+                id: 'email-' + Date.now(),
+                studio_id: studioId,
+                destinatario: to,
+                oggetto: subject,
+                corpo: body,
+                data_invio: new Date().toISOString()
             };
 
-            archivioEmail.unshift(emailData);
-            localStorage.setItem(`email_archivio_${studioId}`, JSON.stringify(archivioEmail));
-            
-            if (!auto) mostraToast('Email salvata in archivio', 'success');
-            renderizzaArchivio();
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/email-archivio`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(emailData)
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    archivioEmail.unshift(emailData);
+                    if (!auto) mostraToast('Email salvata in archivio cloud', 'success');
+                    renderizzaArchivio();
+                } else {
+                    mostraToast('Errore nel salvataggio', 'error');
+                }
+            } catch (error) {
+                console.error('Errore salvataggio archivio:', error);
+                mostraToast('Errore di connessione al cloud', 'error');
+            }
         }
 
-        function caricaArchivio() {
-            const dati = localStorage.getItem(`email_archivio_${studioId}`);
-            if (dati) {
-                archivioEmail = JSON.parse(dati);
-                renderizzaArchivio();
+        async function caricaArchivio() {
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('archiveList').innerHTML = '';
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/email-archivio?studioId=${studioId}`);
+                const data = await response.json();
+                
+                if (data.success && data.archivio) {
+                    archivioEmail = data.archivio;
+                } else {
+                    archivioEmail = [];
+                }
+            } catch (error) {
+                console.error('Errore caricamento archivio:', error);
+                archivioEmail = [];
             }
+
+            document.getElementById('loadingState').classList.add('hidden');
+            renderizzaArchivio();
         }
 
         function renderizzaArchivio() {
             const container = document.getElementById('archiveList');
+            const emptyState = document.getElementById('emptyState');
+            
             if (archivioEmail.length === 0) {
-                container.innerHTML = '<div style="text-align: center; color: var(--text-light); padding: 30px;">Nessuna email salvata in archivio.</div>';
+                emptyState.classList.remove('hidden');
+                container.innerHTML = '';
                 return;
             }
 
+            emptyState.classList.add('hidden');
             container.innerHTML = archivioEmail.map(email => `
-                <div class="archive-item">
+                <div class="archive-item" onclick="apriDettaglioEmail('${email.id}')">
                     <div class="archive-info">
-                        <div class="archive-subject">${email.subject}</div>
-                        <div class="archive-meta">A: ${email.to}</div>
+                        <div class="archive-subject">${email.oggetto}</div>
+                        <div class="archive-meta">A: ${email.destinatario}</div>
                     </div>
-                    <div class="archive-date">${new Date(email.data).toLocaleDateString('it-IT')}</div>
+                    <div class="archive-date">${new Date(email.data_invio).toLocaleDateString('it-IT')}</div>
                 </div>
             `).join('');
         }
 
+        function apriDettaglioEmail(id) {
+            const email = archivioEmail.find(e => e.id === id);
+            if (!email) return;
+
+            const html = `
+                <div style="margin-bottom: 16px;">
+                    <h3 style="color: var(--primary-dark); margin-bottom: 8px;">${email.oggetto}</h3>
+                    <p style="color: var(--text-light); font-size: 13px;">
+                        A: ${email.destinatario} | Data: ${new Date(email.data_invio).toLocaleString('it-IT')}
+                    </p>
+                </div>
+                <div style="background: #f8f9fa; padding: 16px; border-radius: 10px; white-space: pre-wrap; line-height: 1.6;">
+                    ${email.corpo}
+                </div>
+            `;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:3000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);';
+            modal.innerHTML = `
+                <div style="background:white;border-radius:16px;padding:32px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--primary-light);">
+                        <h3 style="color:var(--primary-dark);font-size:20px;">Dettaglio Email</h3>
+                        <button onclick="this.closest('div').parentElement.parentElement.remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:var(--text-light);">×</button>
+                    </div>
+                    ${html}
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+        }
+
         async function eseguiBackupCloud() {
             try {
-                await fetch(`${WORKER_URL}/api/studio/email/backup`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ studioId, archivio: archivioEmail, timestamp: Date.now() })
-                });
-                mostraToast('Backup salvato su Cloud', 'success');
+                const response = await fetch(`${WORKER_URL}/api/studio/email-archivio?studioId=${studioId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const blob = new Blob([JSON.stringify(data.archivio, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `backup-email-${studioId}-${Date.now()}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    mostraToast('Backup scaricato dal cloud', 'success');
+                }
             } catch (error) {
-                mostraToast('Errore backup Cloud', 'error');
+                mostraToast('Errore backup cloud', 'error');
             }
         }
 
         async function eseguiRipristinoCloud() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/email/backup?studioId=${studioId}`);
-                const data = await response.json();
-                if (data.archivio) {
-                    archivioEmail = data.archivio;
-                    localStorage.setItem(`email_archivio_${studioId}`, JSON.stringify(archivioEmail));
-                    renderizzaArchivio();
-                    mostraToast('Backup ripristinato con successo', 'success');
-                }
-            } catch (error) {
-                mostraToast('Errore ripristino Cloud', 'error');
-            }
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = async (ev) => {
+                    try {
+                        const dati = JSON.parse(ev.target.result);
+                        if (Array.isArray(dati)) {
+                            for (const email of dati) {
+                                email.studio_id = studioId;
+                                await fetch(`${WORKER_URL}/api/studio/email-archivio`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(email)
+                                });
+                            }
+                            mostraToast('Ripristino completato sul cloud', 'success');
+                            await caricaArchivio();
+                        }
+                    } catch (error) {
+                        mostraToast('Errore nel ripristino', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
         }
 
         function mostraToast(msg, tipo) {
