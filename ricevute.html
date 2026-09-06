@@ -22,9 +22,9 @@
             --success: #27ae60;
             --warning: #f39c12;
             --danger: #e74c3c;
-            --shadow: 0 4px 16px rgba(130, 224, 170, 0.08);
-            --shadow-hover: 0 8px 32px rgba(130, 224, 170, 0.15);
-            --radius: 14px;
+            --shadow-3d: 0 10px 30px rgba(30, 132, 73, 0.12), 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-3d-hover: 0 20px 50px rgba(30, 132, 73, 0.2), 0 5px 15px rgba(0,0,0,0.08);
+            --radius: 16px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -48,7 +48,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 12px rgba(130, 224, 170, 0.2);
+            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
         }
 
         .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
@@ -56,16 +56,17 @@
         .nav-btn {
             background: rgba(255,255,255,0.95);
             border: 1px solid rgba(255,255,255,0.3);
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 10px 18px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--primary-dark);
             transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
-        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
 
         .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
         .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(46, 204, 113, 0.6); }
@@ -76,61 +77,77 @@
         .page-header { 
             text-align: center; 
             margin-bottom: 32px;
-            padding: 24px;
+            padding: 32px;
             background: var(--card-gradient);
             border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-3d);
             border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .page-header:hover { transform: translateY(-4px); box-shadow: var(--shadow-3d-hover); }
         .page-header h1 { 
-            font-size: 28px; 
-            font-weight: 700; 
+            font-size: 32px; 
+            font-weight: 800; 
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 8px; 
+            letter-spacing: -0.5px;
         }
         .page-header p { color: var(--text-light); font-size: 15px; }
 
-        .card {
+        .card-3d {
             background: var(--card-gradient);
             border-radius: var(--radius);
-            padding: 28px;
+            padding: 32px;
             margin-bottom: 24px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-3d);
             border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
         }
 
-        .card:hover { box-shadow: var(--shadow-hover); }
+        .card-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .card-3d:hover { transform: translateY(-6px); box-shadow: var(--shadow-3d-hover); }
 
         .card-title { 
-            font-size: 18px; 
-            font-weight: 600; 
+            font-size: 20px; 
+            font-weight: 700; 
             color: var(--primary-dark); 
-            margin-bottom: 6px; 
-            padding-bottom: 10px;
+            margin-bottom: 8px; 
+            padding-bottom: 12px;
             border-bottom: 2px solid var(--primary-light);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            font-size: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            font-size: 13px;
             font-weight: 800;
             color: white;
             letter-spacing: 0.5px;
             background: var(--primary-gradient);
+            box-shadow: 0 4px 12px rgba(30, 132, 73, 0.25);
         }
 
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
@@ -139,9 +156,9 @@
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
         .form-group input, .form-group select, .form-group textarea {
-            padding: 11px 14px;
+            padding: 12px 14px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 14px;
             font-family: inherit;
             background: white;
@@ -150,13 +167,14 @@
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
             outline: none; 
             border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.15); 
+            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); 
+            transform: translateY(-1px);
         }
 
         .btn {
             padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
@@ -165,8 +183,9 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
         .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
@@ -175,22 +194,24 @@
         .btn-outline:hover { background: var(--primary-light); }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
 
-        .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-color); background: white; margin-top: 20px; }
+        .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); background: white; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
         table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; vertical-align: middle; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; vertical-align: middle; }
         th { 
             background: var(--primary-light); 
             color: var(--primary-dark); 
-            font-weight: 600; 
+            font-weight: 700; 
             text-transform: uppercase; 
             font-size: 11px;
             letter-spacing: 0.5px;
         }
-        tr:hover td { background: #fafafa; }
+        tr:hover td { background: #f8f9fa; }
+
+        .importo-cell { font-weight: 700; color: var(--primary-dark); font-size: 15px; }
 
         .footer-branding {
             text-align: center;
-            padding: 20px;
+            padding: 24px;
             color: var(--text-light);
             font-size: 13px;
             font-weight: 500;
@@ -209,16 +230,101 @@
         .toast-icon { font-size: 20px; font-weight: bold; }
         .toast-message { flex: 1; font-size: 14px; }
 
-        .hidden { display: none !important; }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active { display: flex; }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            padding: 32px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-light);
+            padding: 4px 8px;
+            line-height: 1;
+        }
+        .modal-close:hover { color: var(--danger); }
+
+        .scheda-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .scheda-row:last-child { border-bottom: none; }
+        .scheda-label { font-weight: 600; color: var(--text-light); font-size: 13px; }
+        .scheda-value { font-weight: 500; color: var(--text-main); text-align: right; }
+
+        .scheda-total {
+            background: var(--primary-light);
+            padding: 16px;
+            border-radius: 10px;
+            margin-top: 16px;
+            text-align: center;
+        }
+        .scheda-total-label { font-size: 12px; color: var(--text-light); text-transform: uppercase; font-weight: 600; }
+        .scheda-total-value { font-size: 28px; font-weight: 800; color: var(--primary-dark); margin-top: 4px; }
+
+        .loading { text-align: center; padding: 40px; color: var(--text-light); }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
+        .empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.3; }
+
+        @media print {
+            .top-bar, .btn, .modal-close, .footer-branding, .card-3d:not(#modalPrint) { display: none !important; }
+            .modal-overlay { position: static; background: white; padding: 0; }
+            .modal-content { box-shadow: none; max-height: none; padding: 0; }
+            body { background: white; }
+        }
 
         @media (max-width: 768px) {
             .top-bar { flex-direction: column; gap: 10px; }
             .form-row { grid-template-columns: 1fr; }
+            .page-header h1 { font-size: 24px; }
         }
     </style>
 </head>
 <body>
-       <div class="top-bar">
+
+    <div class="top-bar">
         <div class="nav-left">
             <button class="nav-btn" onclick="window.history.back()">Indietro</button>
             <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Plancia</button>
@@ -233,12 +339,12 @@
     <div class="container">
         <div class="page-header">
             <h1>Gestione Cassa & Ricevute</h1>
-            <p>Emetti ricevute valide per servizi fotografici, stampe e video. Archiviazione immediata sul cloud.</p>
+            <p>Emetti ricevute valide per servizi fotografici, stampe e video. Archiviazione immediata sul cloud multi-tenant.</p>
         </div>
 
-        <div class="card">
+        <div class="card-3d">
             <div class="card-title"><span class="badge">NR</span> Nuova Ricevuta</div>
-            <div class="card-subtitle">Compila i dati per generare una nuova ricevuta di cassa.</div>
+            <div class="card-subtitle">Compila i dati per generare una nuova ricevuta di cassa. I dati verranno salvati in tempo reale sul database Cloud.</div>
             
             <div class="form-row">
                 <div class="form-group">
@@ -295,16 +401,26 @@
             </div>
 
             <div class="btn-group">
-                <button class="btn btn-primary" onclick="salvaRicevuta()">SALVA RICEVUTA</button>
+                <button class="btn btn-primary" onclick="salvaRicevuta()">SALVA RICEVUTA SUL CLOUD</button>
                 <button class="btn btn-outline" onclick="pulisciForm()">ANNULLA / NUOVA</button>
             </div>
         </div>
 
-        <div class="card">
+        <div class="card-3d">
             <div class="card-title"><span class="badge">AS</span> Archivio Storico Ricevute Emesse</div>
-            <div class="card-subtitle">Elenco cronologico di tutte le ricevute registrate.</div>
+            <div class="card-subtitle">Elenco cronologico di tutte le ricevute registrate sul cloud. Dati sincronizzati in tempo reale tra tutti i dispositivi dello studio.</div>
             
-            <div class="table-container">
+            <div id="loadingState" class="loading">
+                <div class="spinner"></div>
+                <div>Caricamento ricevute dal cloud...</div>
+            </div>
+
+            <div id="emptyState" class="empty-state" style="display:none;">
+                <div class="empty-state-icon">📋</div>
+                <div>Nessuna ricevuta emessa in archivio. Crea la prima ricevuta qui sopra.</div>
+            </div>
+            
+            <div class="table-container" id="tableContainer" style="display:none;">
                 <table>
                     <thead>
                         <tr>
@@ -317,23 +433,8 @@
                         </tr>
                     </thead>
                     <tbody id="archivioTable">
-                        <tr>
-                            <td colspan="6" style="text-align: center; color: var(--text-light); padding: 30px;">
-                                Nessuna ricevuta emessa in archivio.
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-title"><span class="badge">CA</span> Centro Assistenza</div>
-            <div class="card-subtitle">Se riscontri anomalie nel salvataggio dei flussi finanziari, richiedi supporto immediato.</div>
-            
-            <div class="btn-group">
-                <a href="https://anydesk.com/it/downloads" target="_blank" class="btn btn-warning" style="text-decoration: none;">Connettiti con AnyDesk</a>
-                <a href="https://wa.me/393347507656" target="_blank" class="btn btn-success" style="text-decoration: none;">Richiedi Assistenza su WhatsApp</a>
             </div>
         </div>
 
@@ -342,8 +443,25 @@
         </div>
     </div>
 
+    <!-- MODAL DETTAGLIO RICEVUTA -->
+    <div class="modal-overlay" id="modalRicevuta">
+        <div class="modal-content" id="modalPrint">
+            <div class="modal-header">
+                <h3>Dettaglio Documento di Cassa</h3>
+                <button class="modal-close" onclick="chiudiModal()">×</button>
+            </div>
+            <div id="schedaContenuto">
+            </div>
+            <div class="btn-group" style="justify-content: center; margin-top: 24px;">
+                <button class="btn btn-primary" onclick="window.print()">STAMPA RICEVUTA</button>
+                <button class="btn btn-outline" onclick="chiudiModal()">CHIUDI</button>
+            </div>
+        </div>
+    </div>
+
     <div class="toast-container" id="toastContainer"></div>
-        <script>
+
+    <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         let studioId = localStorage.getItem('studioId') || 'studio-gold';
         let ricevute = [];
@@ -353,17 +471,31 @@
             caricaRicevute();
         });
 
-        function caricaRicevute() {
-            const datiLocali = localStorage.getItem(`ricevute_${studioId}`);
-            if (datiLocali) {
-                ricevute = JSON.parse(datiLocali);
-                // Ordina per data decrescente
-                ricevute.sort((a, b) => new Date(b.data) - new Date(a.data));
-                renderizzaArchivio();
+        async function caricaRicevute() {
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('tableContainer').style.display = 'none';
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/ricevute?studioId=${studioId}`);
+                const data = await response.json();
+                
+                if (data.success && data.ricevute) {
+                    ricevute = data.ricevute;
+                } else {
+                    ricevute = [];
+                }
+            } catch (error) {
+                console.error('Errore caricamento ricevute:', error);
+                mostraToast('Errore di connessione al cloud', 'error');
+                ricevute = [];
             }
+
+            document.getElementById('loadingState').style.display = 'none';
+            renderizzaArchivio();
         }
 
-        function salvaRicevuta() {
+        async function salvaRicevuta() {
             const nome = document.getElementById('ricevNome').value.trim();
             const servizio = document.getElementById('ricevServizio').value;
             const importo = parseFloat(document.getElementById('ricevImporto').value);
@@ -378,41 +510,53 @@
             }
 
             const nuovaRicevuta = {
-                id: Date.now().toString(),
-                nome,
-                servizio,
-                importo,
-                data,
-                tipologia,
-                metodo,
-                note,
-                studioId,
-                dataCreazione: new Date().toISOString()
+                id: 'rcv-' + Date.now(),
+                studio_id: studioId,
+                cliente_nome: nome,
+                servizio: servizio,
+                importo: importo,
+                data: data,
+                tipologia: tipologia,
+                metodo: metodo,
+                note: note,
+                data_creazione: new Date().toISOString()
             };
 
-            ricevute.push(nuovaRicevuta);
-            ricevute.sort((a, b) => new Date(b.data) - new Date(a.data));
-            localStorage.setItem(`ricevute_${studioId}`, JSON.stringify(ricevute));
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/ricevuta`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(nuovaRicevuta)
+                });
+                const result = await response.json();
 
-            // Sync cloud
-            fetch(`${WORKER_URL}/api/studio/ricevute/salva`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(nuovaRicevuta)
-            }).catch(err => console.log('Sync cloud in background...', err));
-
-            mostraToast('Ricevuta salvata con successo!', 'success');
-            pulisciForm();
-            renderizzaArchivio();
+                if (result.success) {
+                    ricevute.unshift(nuovaRicevuta);
+                    mostraToast('Ricevuta salvata sul cloud con successo!', 'success');
+                    pulisciForm();
+                    renderizzaArchivio();
+                } else {
+                    mostraToast('Errore nel salvataggio', 'error');
+                }
+            } catch (error) {
+                console.error('Errore salvataggio:', error);
+                mostraToast('Errore di connessione al cloud', 'error');
+            }
         }
 
         function renderizzaArchivio() {
             const tbody = document.getElementById('archivioTable');
+            const emptyState = document.getElementById('emptyState');
+            const tableContainer = document.getElementById('tableContainer');
             
             if (ricevute.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-light); padding: 30px;">Nessuna ricevuta emessa in archivio.</td></tr>';
+                emptyState.style.display = 'block';
+                tableContainer.style.display = 'none';
                 return;
             }
+
+            emptyState.style.display = 'none';
+            tableContainer.style.display = 'block';
 
             const tipologieMap = {
                 'acconto-iniziale': 'Acconto Iniziale',
@@ -421,60 +565,105 @@
                 'unica-soluzione': 'Unica Soluzione'
             };
 
+            const serviziMap = {
+                'servizio-fotografico': 'Servizio Fotografico',
+                'stampe': 'Stampe',
+                'video': 'Video',
+                'album': 'Album',
+                'altro': 'Altro'
+            };
+
             tbody.innerHTML = ricevute.map(ricevuta => `
                 <tr>
                     <td>${new Date(ricevuta.data).toLocaleDateString('it-IT')}</td>
-                    <td><strong>${ricevuta.nome}</strong></td>
-                    <td>${ricevuta.servizio.replace('-', ' ').toUpperCase()}</td>
+                    <td><strong>${ricevuta.cliente_nome}</strong></td>
+                    <td>${serviziMap[ricevuta.servizio] || ricevuta.servizio}</td>
                     <td>${tipologieMap[ricevuta.tipologia] || ricevuta.tipologia}</td>
-                    <td style="font-weight: 700; color: var(--primary-dark);">€ ${ricevuta.importo.toFixed(2)}</td>
+                    <td class="importo-cell">€ ${parseFloat(ricevuta.importo).toFixed(2)}</td>
                     <td>
-                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 11px;" onclick="stampaRicevuta('${ricevuta.id}')">Stampa</button>
+                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 11px;" onclick="apriDettaglio('${ricevuta.id}')">Dettaglio</button>
                     </td>
                 </tr>
             `).join('');
         }
 
-        function stampaRicevuta(id) {
+        function apriDettaglio(id) {
             const ricevuta = ricevute.find(r => r.id === id);
             if (!ricevuta) return;
 
-            const finestra = window.open('', '_blank');
-            finestra.document.write(`
-                <html>
-                <head>
-                    <title>Ricevuta ${ricevuta.id}</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; padding: 40px; color: #333; }
-                        .header { text-align: center; border-bottom: 2px solid #1e8449; padding-bottom: 20px; margin-bottom: 30px; }
-                        .header h1 { color: #1e8449; margin: 0; }
-                        .row { display: flex; justify-content: space-between; margin-bottom: 15px; }
-                        .label { font-weight: bold; color: #555; }
-                        .total { font-size: 24px; font-weight: bold; color: #1e8449; margin-top: 30px; text-align: right; }
-                        .footer { margin-top: 50px; text-align: center; font-size: 12px; color: #777; border-top: 1px solid #ccc; padding-top: 20px; }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>RICEVUTA DI CASSE</h1>
-                        <p>AppCenterStudioPROGOLD</p>
-                    </div>
-                    <div class="row"><span class="label">Data:</span> <span>${new Date(ricevuta.data).toLocaleDateString('it-IT')}</span></div>
-                    <div class="row"><span class="label">Ricevuto da:</span> <span>${ricevuta.nome}</span></div>
-                    <div class="row"><span class="label">Servizio:</span> <span>${ricevuta.servizio.replace('-', ' ').toUpperCase()}</span></div>
-                    <div class="row"><span class="label">Tipologia:</span> <span>${ricevuta.tipologia.replace('-', ' ').toUpperCase()}</span></div>
-                    <div class="row"><span class="label">Metodo:</span> <span>${ricevuta.metodo.toUpperCase()}</span></div>
-                    ${ricevuta.note ? `<div class="row"><span class="label">Note:</span> <span>${ricevuta.note}</span></div>` : ''}
-                    <div class="total">IMPORTO: € ${ricevuta.importo.toFixed(2)}</div>
-                    <div class="footer">
-                        Documento generato digitalmente da AppCenterStudioPROGOLD.<br>
-                        Piattaforma sviluppata e gestita da AppCenterStudioPROGOLD - Tutti i diritti riservati.
-                    </div>
-                </body>
-                </html>
-            `);
-            finestra.document.close();
-            finestra.print();
+            const serviziMap = {
+                'servizio-fotografico': 'Servizio Fotografico',
+                'stampe': 'Stampe',
+                'video': 'Video',
+                'album': 'Album',
+                'altro': 'Altro'
+            };
+
+            const tipologieMap = {
+                'acconto-iniziale': 'Acconto Iniziale',
+                'acconto-intermedio': 'Acconto Intermedio',
+                'saldo-finale': 'Saldo Finale',
+                'unica-soluzione': 'Pagamento in Unica Soluzione'
+            };
+
+            const metodiMap = {
+                'contanti': 'Contanti',
+                'bonifico': 'Bonifico Bancario',
+                'carta': 'Carta di Credito/Debito',
+                'paypal': 'PayPal'
+            };
+
+            const html = `
+                <div style="text-align:center; margin-bottom:24px;">
+                    <h2 style="color:var(--primary-dark); margin-bottom:8px;">RICEVUTA DI CASSE</h2>
+                    <p style="color:var(--text-light); font-size:14px;">AppCenterStudioPROGOLD</p>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Numero Documento</span>
+                    <span class="scheda-value">${ricevuta.id}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Data Emissione</span>
+                    <span class="scheda-value">${new Date(ricevuta.data).toLocaleDateString('it-IT')}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Ricevuto da</span>
+                    <span class="scheda-value">${ricevuta.cliente_nome}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Servizio</span>
+                    <span class="scheda-value">${serviziMap[ricevuta.servizio] || ricevuta.servizio}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Tipologia</span>
+                    <span class="scheda-value">${tipologieMap[ricevuta.tipologia] || ricevuta.tipologia}</span>
+                </div>
+                <div class="scheda-row">
+                    <span class="scheda-label">Metodo di Pagamento</span>
+                    <span class="scheda-value">${metodiMap[ricevuta.metodo] || ricevuta.metodo}</span>
+                </div>
+                ${ricevuta.note ? `
+                <div class="scheda-row">
+                    <span class="scheda-label">Note</span>
+                    <span class="scheda-value">${ricevuta.note}</span>
+                </div>
+                ` : ''}
+                <div class="scheda-total">
+                    <div class="scheda-total-label">Importo Totale</div>
+                    <div class="scheda-total-value">€ ${parseFloat(ricevuta.importo).toFixed(2)}</div>
+                </div>
+                <div style="margin-top:20px; padding:16px; background:#f8f9fa; border-radius:10px; font-size:12px; color:var(--text-light); text-align:center;">
+                    Documento generato digitalmente da AppCenterStudioPROGOLD.<br>
+                    Piattaforma sviluppata e gestita da AppCenterStudioPROGOLD - Tutti i diritti riservati.
+                </div>
+            `;
+
+            document.getElementById('schedaContenuto').innerHTML = html;
+            document.getElementById('modalRicevuta').classList.add('active');
+        }
+
+        function chiudiModal() {
+            document.getElementById('modalRicevuta').classList.remove('active');
         }
 
         function pulisciForm() {
@@ -489,31 +678,55 @@
 
         async function eseguiBackupCloud() {
             try {
-                await fetch(`${WORKER_URL}/api/studio/ricevute/backup`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ studioId, ricevute, timestamp: Date.now() })
-                });
-                mostraToast('Backup salvato su Cloud', 'success');
+                const response = await fetch(`${WORKER_URL}/api/studio/ricevute?studioId=${studioId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const blob = new Blob([JSON.stringify(data.ricevute, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `backup-ricevute-${studioId}-${Date.now()}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    mostraToast('Backup scaricato dal cloud', 'success');
+                }
             } catch (error) {
-                mostraToast('Errore backup Cloud', 'error');
+                mostraToast('Errore backup cloud', 'error');
             }
         }
 
         async function eseguiRipristinoCloud() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/ricevute/backup?studioId=${studioId}`);
-                const data = await response.json();
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
                 
-                if (data.ricevute) {
-                    ricevute = data.ricevute;
-                    localStorage.setItem(`ricevute_${studioId}`, JSON.stringify(ricevute));
-                    renderizzaArchivio();
-                    mostraToast('Backup ripristinato con successo', 'success');
-                }
-            } catch (error) {
-                mostraToast('Errore ripristino Cloud', 'error');
-            }
+                const reader = new FileReader();
+                reader.onload = async (ev) => {
+                    try {
+                        const dati = JSON.parse(ev.target.result);
+                        if (Array.isArray(dati)) {
+                            for (const ricevuta of dati) {
+                                ricevuta.studio_id = studioId;
+                                await fetch(`${WORKER_URL}/api/studio/ricevuta`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(ricevuta)
+                                });
+                            }
+                            mostraToast('Ripristino completato sul cloud', 'success');
+                            await caricaRicevute();
+                        }
+                    } catch (error) {
+                        mostraToast('Errore nel ripristino', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
         }
 
         function mostraToast(msg, tipo) {
@@ -524,6 +737,11 @@
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 4000);
         }
+
+        // Chiudi modal cliccando fuori
+        document.getElementById('modalRicevuta').addEventListener('click', function(e) {
+            if (e.target === this) chiudiModal();
+        });
     </script>
 </body>
 </html>
