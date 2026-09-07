@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>Dashboard Cliente - AppCenterStudioPROGOLD</title>
+    <style>
+        :root {
+            --primary: #5dade2;
+            --primary-dark: #2874a6;
+            --primary-light: #d6eaf8;
+            --primary-gradient: linear-gradient(135deg, #85c1e9 0%, #5dade2 50%, #2874a6 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #f4ecf7 100%);
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e8e8e8;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --radius: 16px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            background: var(--primary-gradient);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(40, 116, 166, 0.15);
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.95);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .user-info { color: white; font-size: 14px; font-weight: 600; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
+
+        .welcome-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(40, 116, 166, 0.12);
+            margin-bottom: 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+        }
+
+        .welcome-card h1 {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .welcome-card .subtitle {
+            font-size: 15px;
+            color: var(--text-light);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .service-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(40, 116, 166, 0.15);
+            border-color: var(--primary);
+        }
+
+        .service-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .service-card.disabled:hover {
+            transform: none;
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .service-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+
+        .service-description {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+
+        .service-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-active { background: #d5f4e6; color: #27ae60; }
+        .status-expired { background: #fadbd8; color: #e74c3c; }
+        .status-pending { background: #fef9e7; color: #f39c12; }
+
+        .countdown {
+            margin-top: 12px;
+            padding: 8px 12px;
+            background: var(--primary-light);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .countdown.urgent {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+
+        .footer-branding {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-light);
+            font-size: 13px;
+            margin-top: 40px;
+        }
+
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
+        .toast {
+            background: white;
+            border-radius: 10px;
+            padding: 14px 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
+            border-left: 4px solid var(--success);
+            animation: slideIn 0.3s ease;
+        }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+
+        .loading { text-align: center; padding: 40px; color: var(--text-light); }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--primary-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            .services-grid { grid-template-columns: 1fr; }
+            .welcome-card h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <button class="nav-btn" onclick="logout()">Logout</button>
+        <div class="user-info" id="userInfo">Caricamento...</div>
+    </div>
+
+    <div class="container">
+        <div class="welcome-card">
+            <h1>Benvenuto nella tua Area Personale</h1>
+            <div class="subtitle" id="welcomeText">Caricamento servizi...</div>
+        </div>
+
+        <div id="loadingServices" class="loading">
+            <div class="spinner"></div>
+            <div>Caricamento servizi...</div>
+        </div>
+
+        <div class="services-grid" id="servicesGrid"></div>
+
+        <div class="footer-branding">
+            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        let clienteId = localStorage.getItem('clienteId');
+        let clienteData = null;
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!clienteId) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            await caricaDashboard();
+        });
+
+        async function caricaDashboard() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/cliente/dashboard?clienteId=${clienteId}`);
+                const data = await response.json();
+
+                if (data.success && data.cliente) {
+                    clienteData = data.cliente;
+                    document.getElementById('userInfo').textContent = `${data.cliente.nome_a} ${data.cliente.cognome_a}`;
+                    document.getElementById('welcomeText').textContent = `Gestisci i tuoi servizi fotografici`;
+                    renderizzaServizi(data.cliente);
+                } else {
+                    mostraToast('Errore nel caricamento', 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+
+            document.getElementById('loadingServices').style.display = 'none';
+        }
+
+        function renderizzaServizi(cliente) {
+            const grid = document.getElementById('servicesGrid');
+            const oggi = new Date();
+            const dataCreazione = new Date(cliente.data_registrazione);
+
+            // Calcola scadenze
+            const scadenzaListaRegali = new Date(dataCreazione);
+            scadenzaListaRegali.setFullYear(scadenzaListaRegali.getFullYear() + 1);
+            const listaRegaliAttiva = oggi < scadenzaListaRegali;
+
+            const scadenzaSelezione = new Date(dataCreazione);
+            scadenzaSelezione.setDate(scadenzaSelezione.getDate() + 7);
+            const selezioneAttiva = oggi < scadenzaSelezione;
+
+            const giorniRimastiLista = Math.ceil((scadenzaListaRegali - oggi) / (1000 * 60 * 60 * 24));
+            const giorniRimastiSelezione = Math.ceil((scadenzaSelezione - oggi) / (1000 * 60 * 60 * 24));
+
+            const servizi = [
+                {
+                    id: 'lista-regali',
+                    icon: 'LR',
+                    title: 'Lista Regali',
+                    description: 'Condividi il link con i tuoi invitati per ricevere contributi e messaggi di auguri.',
+                    active: listaRegaliAttiva,
+                    countdown: giorniRimastiLista,
+                    countdownText: 'giorni rimanenti',
+                    url: `lista-regali-pubblica.html?id=${cliente.id}`
+                },
+                {
+                    id: 'selezione-foto',
+                    icon: 'SF',
+                    title: 'Selezione Foto',
+                    description: 'Seleziona le foto preferite per il tuo album. Hai 7 giorni dalla creazione.',
+                    active: selezioneAttiva,
+                    countdown: giorniRimastiSelezione,
+                    countdownText: 'giorni rimanenti',
+                    url: `selezione-album-cliente.html?id=${cliente.id}`
+                },
+                {
+                    id: 'negozio',
+                    icon: 'NZ',
+                    title: 'Negozio Online',
+                    description: 'Acquista stampe, album e prodotti fotografici dello studio.',
+                    active: true,
+                    countdown: null,
+                    url: 'negozio.html'
+                },
+                {
+                    id: 'contatta-studio',
+                    icon: 'CS',
+                    title: 'Contatta Studio',
+                    description: 'Invia un messaggio diretto allo studio per informazioni o supporto.',
+                    active: true,
+                    countdown: null,
+                    url: `mailto:${cliente.email_studio || 'studio@email.com'}?subject=Richiesta informazioni`
+                }
+            ];
+
+            grid.innerHTML = servizi.map(s => {
+                const statusClass = s.active ? 'status-active' : 'status-expired';
+                const statusText = s.active ? 'Attivo' : 'Scaduto';
+                const disabledClass = s.active ? '' : 'disabled';
+                const countdownHtml = s.countdown !== null ? `
+                    <div class="countdown ${s.countdown <= 2 ? 'urgent' : ''}">
+                        ${s.countdown} ${s.countdownText}
+                    </div>
+                ` : '';
+
+                return `
+                    <div class="service-card ${disabledClass}" onclick="${s.active ? `window.location.href='${s.url}'` : ''}">
+                        <div class="service-icon">${s.icon}</div>
+                        <div class="service-title">${s.title}</div>
+                        <div class="service-description">${s.description}</div>
+                        <span class="service-status ${statusClass}">${statusText}</span>
+                        ${countdownHtml}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function logout() {
+            localStorage.removeItem('clienteId');
+            localStorage.removeItem('clienteNome');
+            window.location.href = 'index.html';
+        }
+
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `<div>${msg}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+    </script>
+</body>
+</html>
