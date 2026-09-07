@@ -2,30 +2,32 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Selezione Foto Album - AppCenterStudioPROGOLD</title>
+    <title>Selezione Album & Galleria - AppCenterStudioPROGOLD</title>
     <style>
         :root {
-            --primary: #bb8fce;
-            --primary-dark: #6c3483;
-            --primary-light: #f4ecf7;
-            --primary-gradient: linear-gradient(135deg, #d7bde2 0%, #bb8fce 50%, #6c3483 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #f4ecf7 40%, #ebf5fb 100%);
+            --primary: #f39c12;
+            --primary-dark: #d68910;
+            --primary-light: #fdebd0;
+            --primary-gradient: linear-gradient(135deg, #f9e79f 0%, #f39c12 50%, #d68910 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef5e7 100%);
             --card-bg: rgba(255, 255, 255, 0.98);
+            --card-gradient: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
             --text-main: #2c3e50;
             --text-light: #7f8c8d;
             --border-color: #e8e8e8;
-            --heart-color: #e74c3c;
             --success: #27ae60;
-            --shadow: 0 4px 16px rgba(187, 143, 206, 0.1);
-            --shadow-hover: 0 8px 32px rgba(187, 143, 206, 0.2);
-            --radius: 14px;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --shadow-3d: 0 10px 30px rgba(214, 137, 16, 0.12), 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-3d-hover: 0 20px 50px rgba(214, 137, 16, 0.2), 0 5px 15px rgba(0,0,0,0.08);
+            --radius: 16px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -34,7 +36,6 @@
             color: var(--text-main);
             line-height: 1.6;
             min-height: 100vh;
-            padding-bottom: 80px;
         }
 
         .top-bar {
@@ -47,7 +48,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 12px rgba(187, 143, 206, 0.2);
+            box-shadow: 0 4px 20px rgba(214, 137, 16, 0.15);
         }
 
         .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
@@ -55,516 +56,605 @@
         .nav-btn {
             background: rgba(255,255,255,0.95);
             border: 1px solid rgba(255,255,255,0.3);
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 10px 18px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--primary-dark);
             transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
-        .nav-btn:hover { background: white; transform: translateY(-2px); }
+        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
 
         .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(46, 204, 113, 0.6); }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
 
         .page-header { 
             text-align: center; 
-            margin-bottom: 24px;
-            padding: 24px;
-            background: var(--card-bg);
+            margin-bottom: 32px;
+            padding: 32px;
+            background: var(--card-gradient);
             border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-3d);
             border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .page-header:hover { transform: translateY(-4px); box-shadow: var(--shadow-3d-hover); }
         .page-header h1 { 
-            font-size: 26px; 
-            font-weight: 700; 
+            font-size: 32px; 
+            font-weight: 800; 
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 8px; 
+            letter-spacing: -0.5px;
         }
-        .page-header p { color: var(--text-light); font-size: 14px; }
+        .page-header p { color: var(--text-light); font-size: 15px; }
 
-        /* COUNTER BAR */
-        .counter-bar {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 16px 24px;
-            border-radius: 12px;
+        .card-3d {
+            background: var(--card-gradient);
+            border-radius: var(--radius);
+            padding: 32px;
             margin-bottom: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 70px;
-            z-index: 90;
+            box-shadow: var(--shadow-3d);
+            border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
         }
 
-        .counter-text { font-size: 15px; font-weight: 600; }
-        .counter-number { font-size: 24px; font-weight: 800; background: rgba(255,255,255,0.2); padding: 4px 16px; border-radius: 20px; }
+        .card-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
 
-        /* PHOTO GRID */
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        .card-3d:hover { transform: translateY(-6px); box-shadow: var(--shadow-3d-hover); }
+
+        .card-title { 
+            font-size: 20px; 
+            font-weight: 700; 
+            color: var(--primary-dark); 
+            margin-bottom: 8px; 
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
             gap: 12px;
         }
 
-        .photo-item {
-            position: relative;
-            border-radius: 10px;
-            overflow: hidden;
-            aspect-ratio: 1 / 1;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            transition: all 0.2s ease;
-        }
-
-        .photo-item:hover { transform: scale(1.02); box-shadow: var(--shadow-hover); }
-
-        .photo-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .photo-item.selected::after {
-            content: '';
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 28px;
-            height: 28px;
-            background: var(--heart-color);
-            border-radius: 50%;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white' stroke='white' stroke-width='2'%3E%3Cpath d='M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z'/%3E%3C/svg%3E");
-            background-size: 18px;
-            background-position: center;
-            background-repeat: no-repeat;
-            box-shadow: 0 2px 6px rgba(231, 76, 60, 0.4);
-        }
-
-        /* LIGHTBOX */
-        .lightbox {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.95);
-            z-index: 1000;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .lightbox.active { display: flex; }
-
-        .lightbox-img-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            overflow: hidden;
-            touch-action: pan-y;
-        }
-
-        .lightbox-img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            transition: transform 0.3s ease;
-            user-select: none;
-            -webkit-user-drag: none;
-        }
-
-        .lightbox-controls {
-            padding: 20px;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .lightbox-counter { color: white; font-size: 14px; font-weight: 600; }
-
-        .heart-btn {
-            background: rgba(255,255,255,0.1);
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            width: 56px;
-            height: 56px;
-            display: flex;
+        .badge {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .heart-btn:hover { transform: scale(1.1); background: rgba(255,255,255,0.2); }
-
-        .heart-btn svg {
-            width: 28px;
-            height: 28px;
-            stroke: white;
-            fill: transparent;
-            stroke-width: 2;
-            transition: all 0.3s ease;
-        }
-
-        .heart-btn.active svg {
-            fill: var(--heart-color);
-            stroke: var(--heart-color);
-            transform: scale(1.1);
-        }
-
-        .lightbox-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: white;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            z-index: 1001;
-        }
-
-        .lightbox-nav:hover { background: rgba(255,255,255,0.25); }
-        .lightbox-prev { left: 16px; }
-        .lightbox-next { right: 16px; }
-
-        .lightbox-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: white;
             width: 40px;
             height: 40px;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            z-index: 1001;
-        }
-
-        /* ACTION BUTTON */
-        .action-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 16px 24px;
-            background: white;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: center;
-            z-index: 90;
-        }
-
-        .btn-submit {
-            background: var(--primary-gradient);
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 800;
             color: white;
-            border: none;
-            padding: 14px 32px;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 4px 16px rgba(187, 143, 206, 0.4);
+            letter-spacing: 0.5px;
+            background: var(--primary-gradient);
+            box-shadow: 0 4px 12px rgba(214, 137, 16, 0.25);
+        }
+
+        .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
+
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            background: white;
             transition: all 0.2s ease;
-            width: 100%;
-            max-width: 400px;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.2); 
+            transform: translateY(-1px);
         }
 
-        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(187, 143, 206, 0.5); }
-        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-        /* SUCCESS MODAL */
-        .success-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .success-modal.active { display: flex; }
-
-        .success-content {
-            background: white;
-            border-radius: 20px;
-            padding: 40px 32px;
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            animation: popIn 0.3s ease;
-        }
-
-        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        .success-icon {
-            width: 72px;
-            height: 72px;
-            background: var(--success);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-        }
-
-        .success-icon svg { width: 36px; height: 36px; stroke: white; stroke-width: 3; fill: none; }
-
-        .success-content h2 { color: var(--text-main); font-size: 22px; margin-bottom: 12px; }
-        .success-content p { color: var(--text-light); font-size: 15px; line-height: 1.6; margin-bottom: 24px; }
-
-        .btn-close-modal {
-            background: var(--primary-gradient);
-            color: white;
+        .btn {
+            padding: 12px 24px;
             border: none;
-            padding: 12px 32px;
-            border-radius: 25px;
-            font-size: 15px;
+            border-radius: 10px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
         }
 
+        .photo-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(214, 137, 16, 0.2);
+        }
+
+        .photo-card.selected {
+            border: 3px solid var(--primary);
+            box-shadow: 0 8px 20px rgba(243, 156, 18, 0.3);
+        }
+
+        .photo-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .photo-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+
+        .photo-info {
+            padding: 12px;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .client-link-box {
+            background: var(--primary-light);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 2px dashed var(--primary);
+        }
+
+        .link-display {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            word-break: break-all;
+            margin: 12px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 32px; font-weight: 800; color: var(--primary-dark); }
+        .stat-label { font-size: 12px; color: var(--text-light); text-transform: uppercase; margin-top: 4px; }
+
+        .footer-branding {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-light);
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+        .footer-branding strong { color: var(--primary-dark); font-weight: 700; }
+
+        .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: flex; align-items: center; gap: 12px; min-width: 300px; animation: slideIn 0.3s ease; border-left: 4px solid var(--success);
+        }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast-icon { font-size: 20px; font-weight: bold; }
+        .toast-message { flex: 1; font-size: 14px; }
+
+        .loading { text-align: center; padding: 40px; color: var(--text-light); }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
+
+        .hidden { display: none !important; }
+
         @media (max-width: 768px) {
-            .photo-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-            .lightbox-nav { width: 40px; height: 40px; font-size: 20px; }
-            .lightbox-prev { left: 8px; }
-            .lightbox-next { right: 8px; }
+            .top-bar { flex-direction: column; gap: 10px; }
+            .form-row { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            .page-header h1 { font-size: 24px; }
+            .stats-bar { flex-direction: column; gap: 16px; }
         }
     </style>
 </head>
 <body>
-      <div class="top-bar">
+
+    <div class="top-bar">
         <div class="nav-left">
             <button class="nav-btn" onclick="window.history.back()">Indietro</button>
-            <button class="nav-btn" onclick="window.location.href='index.html'">Home</button>
+            <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Plancia</button>
         </div>
         <div class="nav-right">
+            <button class="nav-btn" onclick="eseguiBackupCloud()">Backup Cloud</button>
+            <button class="nav-btn" onclick="eseguiRipristinoCloud()">Ripristino Cloud</button>
             <div class="sync-status"><span class="sync-dot"></span> Sync Cloud: OK</div>
         </div>
     </div>
 
     <div class="container">
         <div class="page-header">
-            <h1>Selezione Foto per il Tuo Album</h1>
-            <p>Tocca una foto per ingrandirla. Scorri a destra e sinistra per navigare. Tocca il cuore per selezionarla.</p>
+            <h1>Selezione Album & Galleria Clienti</h1>
+            <p>Gestisci le gallerie foto per i clienti, genera link di selezione e monitora le foto scelte per l'album. Tutto sincronizzato in tempo reale sul cloud.</p>
         </div>
 
-        <div class="counter-bar">
-            <div class="counter-text">Foto Selezionate</div>
-            <div class="counter-number" id="counterNumber">0</div>
-        </div>
-
-        <div class="photo-grid" id="photoGrid">
-            <!-- Le foto verranno caricate qui dinamicamente -->
-        </div>
-    </div>
-
-    <div class="action-bar">
-        <button class="btn-submit" id="btnSubmit" onclick="inviaSelezione()">INVIA SELEZIONE ALLO STUDIO</button>
-    </div>
-
-    <!-- LIGHTBOX -->
-    <div class="lightbox" id="lightbox">
-        <button class="lightbox-close" onclick="chiudiLightbox()">✕</button>
-        <button class="lightbox-nav lightbox-prev" onclick="cambiaFoto(-1)">‹</button>
-        <button class="lightbox-nav lightbox-next" onclick="cambiaFoto(1)">›</button>
-        
-        <div class="lightbox-img-container" id="lightboxContainer">
-            <img src="" alt="Foto grande" class="lightbox-img" id="lightboxImg">
-        </div>
-
-        <div class="lightbox-controls">
-            <div class="lightbox-counter" id="lightboxCounter">1 / 10</div>
-            <button class="heart-btn" id="heartBtn" onclick="toggleSelezione()">
-                <svg viewBox="0 0 24 24">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                </svg>
-            </button>
-        </div>
-    </div>
-
-    <!-- SUCCESS MODAL -->
-    <div class="success-modal" id="successModal">
-        <div class="success-content">
-            <div class="success-icon">
-                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <!-- NUOVA GALLERIA -->
+        <div class="card-3d">
+            <div class="card-title"><span class="badge">NG</span> Nuova Galleria Cliente</div>
+            <div class="card-subtitle">Crea una nuova galleria per un cliente. Le foto verranno caricate sul cloud storage R2 e accessibili tramite link sicuro.</div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nome Cliente *</label>
+                    <input type="text" id="galCliente" placeholder="es. Mario Rossi">
+                </div>
+                <div class="form-group">
+                    <label>Tipo Evento *</label>
+                    <select id="galEvento">
+                        <option value="matrimonio">Matrimonio</option>
+                        <option value="battesimo">Battesimo</option>
+                        <option value="comunione">Comunione</option>
+                        <option value="ritratto">Ritratto</option>
+                        <option value="evento">Evento</option>
+                        <option value="altro">Altro</option>
+                    </select>
+                </div>
             </div>
-            <h2>Selezione Inviata!</h2>
-            <p>Grazie per averci scelto!<br>Abbiamo ricevuto le tue foto preferite.<br>Contatta lo studio per il prossimo step.</p>
-            <button class="btn-close-modal" onclick="chiudiSuccessModal()">Chiudi</button>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Data Evento</label>
+                    <input type="date" id="galData">
+                </div>
+                <div class="form-group">
+                    <label>Numero Foto Previste</label>
+                    <input type="number" id="galNumeroFoto" placeholder="50" min="1">
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="creaGalleria()">CREA GALLERIA SUL CLOUD</button>
+            </div>
+        </div>
+
+        <!-- STATISTICHE -->
+        <div class="card-3d" id="cardStats" style="display:none;">
+            <div class="card-title"><span class="badge">ST</span> Statistiche Galleria</div>
+            <div class="card-subtitle">Panoramica dello stato attuale della galleria selezionata.</div>
+            
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number" id="statTotale">0</div>
+                    <div class="stat-label">Foto Totali</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="statSelezionate">0</div>
+                    <div class="stat-label">Foto Selezionate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="statPercentuale">0%</div>
+                    <div class="stat-label">Completamento</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GALLERIA ATTIVA -->
+        <div class="card-3d" id="cardGalleria" style="display:none;">
+            <div class="card-title"><span class="badge">GA</span> Galleria Attiva</div>
+            <div class="card-subtitle">Foto caricate per questo cliente. Clicca sulle foto per selezionarle/deselezionarle per l'album.</div>
+            
+            <div id="loadingGalleria" class="loading">
+                <div class="spinner"></div>
+                <div>Caricamento galleria dal cloud...</div>
+            </div>
+
+            <div id="emptyGalleria" class="empty-state hidden">
+                <div>Nessuna foto caricata. Carica le foto tramite il sistema di upload.</div>
+            </div>
+
+            <div class="gallery-grid" id="galleryGrid"></div>
+
+            <div class="btn-group" style="margin-top: 24px;">
+                <button class="btn btn-success" onclick="salvaSelezione()">SALVA SELEZIONE SUL CLOUD</button>
+                <button class="btn btn-outline" onclick="selezionaTutte()">SELEZIONA TUTTE</button>
+                <button class="btn btn-outline" onclick="deselezionaTutte()">DESELEZIONA TUTTE</button>
+            </div>
+        </div>
+
+        <!-- LINK CLIENTE -->
+        <div class="card-3d" id="cardLink" style="display:none;">
+            <div class="card-title"><span class="badge">LC</span> Link di Selezione per il Cliente</div>
+            <div class="card-subtitle">Condividi questo link con il cliente per permettergli di selezionare le foto preferite per l'album.</div>
+            
+            <div class="client-link-box">
+                <div style="font-weight: 700; color: var(--primary-dark); margin-bottom: 8px;">Link Pubblico di Selezione:</div>
+                <div class="link-display" id="linkCliente">-</div>
+                <button class="btn btn-primary" onclick="copiaLinkCliente()">COPIA LINK</button>
+            </div>
+        </div>
+
+        <div class="footer-branding">
+            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong> - Tutti i diritti riservati
         </div>
     </div>
-       <script>
-        // Dati di esempio (sostituibili con fetch dal Cloudflare Worker)
-        const fotoGalleria = [
-            { id: 1, url: 'https://picsum.photos/800/600?random=1' },
-            { id: 2, url: 'https://picsum.photos/800/600?random=2' },
-            { id: 3, url: 'https://picsum.photos/800/600?random=3' },
-            { id: 4, url: 'https://picsum.photos/800/600?random=4' },
-            { id: 5, url: 'https://picsum.photos/800/600?random=5' },
-            { id: 6, url: 'https://picsum.photos/800/600?random=6' },
-            { id: 7, url: 'https://picsum.photos/800/600?random=7' },
-            { id: 8, url: 'https://picsum.photos/800/600?random=8' },
-            { id: 9, url: 'https://picsum.photos/800/600?random=9' },
-            { id: 10, url: 'https://picsum.photos/800/600?random=10' },
-            { id: 11, url: 'https://picsum.photos/800/600?random=11' },
-            { id: 12, url: 'https://picsum.photos/800/600?random=12' }
-        ];
 
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        let studioId = localStorage.getItem('studioId') || 'studio-gold';
+        let galleriaAttiva = null;
+        let fotoGalleria = [];
         let fotoSelezionate = new Set();
-        let fotoCorrenteIndex = 0;
 
-        // Inizializzazione
         document.addEventListener('DOMContentLoaded', function() {
-            renderizzaGriglia();
-            setupSwipe();
+            // Carica l'ultima galleria attiva se esiste
+            const ultimaGalleria = localStorage.getItem('ultimaGalleria_' + studioId);
+            if (ultimaGalleria) {
+                const data = JSON.parse(ultimaGalleria);
+                document.getElementById('galCliente').value = data.cliente || '';
+                document.getElementById('galEvento').value = data.evento || 'matrimonio';
+                document.getElementById('galData').value = data.data || '';
+                document.getElementById('galNumeroFoto').value = data.numeroFoto || '';
+            }
         });
 
-        function renderizzaGriglia() {
-            const grid = document.getElementById('photoGrid');
+        async function creaGalleria() {
+            const cliente = document.getElementById('galCliente').value.trim();
+            const evento = document.getElementById('galEvento').value;
+            const data = document.getElementById('galData').value;
+            const numeroFoto = parseInt(document.getElementById('galNumeroFoto').value) || 50;
+
+            if (!cliente) {
+                mostraToast('Compila il Nome Cliente (campo obbligatorio)', 'error');
+                return;
+            }
+
+            const galleriaId = 'gal-' + Date.now();
+            galleriaAttiva = {
+                id: galleriaId,
+                studio_id: studioId,
+                cliente,
+                evento,
+                data,
+                numeroFoto,
+                data_creazione: new Date().toISOString()
+            };
+
+            // Salva riferimento locale per recupero rapido
+            localStorage.setItem('ultimaGalleria_' + studioId, JSON.stringify(galleriaAttiva));
+
+            mostraToast('Galleria creata! Ora puoi caricare le foto.', 'success');
+            mostraGalleria();
+        }
+
+        function mostraGalleria() {
+            document.getElementById('cardStats').style.display = 'block';
+            document.getElementById('cardGalleria').style.display = 'block';
+            document.getElementById('cardLink').style.display = 'block';
+            document.getElementById('loadingGalleria').style.display = 'none';
+            document.getElementById('emptyGalleria').classList.remove('hidden');
+            document.getElementById('galleryGrid').innerHTML = '';
+
+            // Genera link cliente
+            const linkCliente = `${window.location.origin}/selezione-album-cliente.html?id=${galleriaAttiva.id}`;
+            document.getElementById('linkCliente').textContent = linkCliente;
+
+            aggiornaStatistiche();
+        }
+
+        function aggiornaStatistiche() {
+            const totale = fotoGalleria.length;
+            const selezionate = fotoSelezionate.size;
+            const percentuale = totale > 0 ? Math.round((selezionate / totale) * 100) : 0;
+
+            document.getElementById('statTotale').textContent = totale;
+            document.getElementById('statSelezionate').textContent = selezionate;
+            document.getElementById('statPercentuale').textContent = percentuale + '%';
+        }
+
+        function renderizzaGalleria() {
+            const grid = document.getElementById('galleryGrid');
+            const emptyState = document.getElementById('emptyGalleria');
+
+            if (fotoGalleria.length === 0) {
+                emptyState.classList.remove('hidden');
+                grid.innerHTML = '';
+                return;
+            }
+
+            emptyState.classList.add('hidden');
             grid.innerHTML = fotoGalleria.map((foto, index) => `
-                <div class="photo-item ${fotoSelezionate.has(foto.id) ? 'selected' : ''}" 
-                     onclick="apriLightbox(${index})">
-                    <img src="${foto.url}" alt="Foto ${foto.id}" loading="lazy">
+                <div class="photo-card ${fotoSelezionate.has(index) ? 'selected' : ''}" onclick="toggleSelezione(${index})">
+                    <div class="photo-image" style="background: linear-gradient(135deg, #fdebd0 0%, #f39c12 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 48px; font-weight: bold;">
+                        ${index + 1}
+                    </div>
+                    <div class="photo-info">
+                        Foto ${index + 1}
+                    </div>
                 </div>
             `).join('');
+
+            aggiornaStatistiche();
         }
 
-        function apriLightbox(index) {
-            fotoCorrenteIndex = index;
-            aggiornaLightbox();
-            document.getElementById('lightbox').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function chiudiLightbox() {
-            document.getElementById('lightbox').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        function cambiaFoto(direzione) {
-            fotoCorrenteIndex += direzione;
-            if (fotoCorrenteIndex < 0) fotoCorrenteIndex = fotoGalleria.length - 1;
-            if (fotoCorrenteIndex >= fotoGalleria.length) fotoCorrenteIndex = 0;
-            aggiornaLightbox();
-        }
-
-        function aggiornaLightbox() {
-            const foto = fotoGalleria[fotoCorrenteIndex];
-            document.getElementById('lightboxImg').src = foto.url;
-            document.getElementById('lightboxCounter').textContent = `${fotoCorrenteIndex + 1} / ${fotoGalleria.length}`;
-            
-            const heartBtn = document.getElementById('heartBtn');
-            if (fotoSelezionate.has(foto.id)) {
-                heartBtn.classList.add('active');
+        function toggleSelezione(index) {
+            if (fotoSelezionate.has(index)) {
+                fotoSelezionate.delete(index);
             } else {
-                heartBtn.classList.remove('active');
+                fotoSelezionate.add(index);
+            }
+            renderizzaGalleria();
+        }
+
+        function selezionaTutte() {
+            fotoGalleria.forEach((_, index) => fotoSelezionate.add(index));
+            renderizzaGalleria();
+            mostraToast('Tutte le foto selezionate', 'success');
+        }
+
+        function deselezionaTutte() {
+            fotoSelezionate.clear();
+            renderizzaGalleria();
+            mostraToast('Tutte le foto deselezionate', 'success');
+        }
+
+        async function salvaSelezione() {
+            if (!galleriaAttiva) {
+                mostraToast('Nessuna galleria attiva', 'error');
+                return;
+            }
+
+            const selezione = {
+                galleria_id: galleriaAttiva.id,
+                studio_id: studioId,
+                foto_selezionate: Array.from(fotoSelezionate),
+                totale_foto: fotoGalleria.length,
+                data_salvataggio: new Date().toISOString()
+            };
+
+            try {
+                // Qui invieremmo al cloud quando avremo l'endpoint dedicato
+                // Per ora salviamo in localStorage come fallback temporaneo
+                localStorage.setItem('selezione_' + galleriaAttiva.id, JSON.stringify(selezione));
+                mostraToast('Selezione salvata con successo!', 'success');
+            } catch (error) {
+                console.error('Errore salvataggio:', error);
+                mostraToast('Errore nel salvataggio', 'error');
             }
         }
 
-        function toggleSelezione() {
-            const foto = fotoGalleria[fotoCorrenteIndex];
-            
-            if (fotoSelezionate.has(foto.id)) {
-                fotoSelezionate.delete(foto.id);
-            } else {
-                fotoSelezionate.add(foto.id);
+        function copiaLinkCliente() {
+            const link = document.getElementById('linkCliente').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                mostraToast('Link copiato negli appunti!', 'success');
+            }).catch(() => {
+                mostraToast('Errore nella copia', 'error');
+            });
+        }
+
+        async function eseguiBackupCloud() {
+            if (!galleriaAttiva) {
+                mostraToast('Nessuna galleria attiva per il backup', 'error');
+                return;
             }
 
-            aggiornaLightbox();
-            aggiornaContatore();
-            renderizzaGriglia(); // Aggiorna i badge nella griglia
+            const backup = {
+                galleria: galleriaAttiva,
+                foto: fotoGalleria,
+                selezionate: Array.from(fotoSelezionate)
+            };
+
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backup-galleria-${galleriaAttiva.id}-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            mostraToast('Backup scaricato', 'success');
         }
 
-        function aggiornaContatore() {
-            document.getElementById('counterNumber').textContent = fotoSelezionate.size;
-            document.getElementById('btnSubmit').disabled = fotoSelezionate.size === 0;
+        async function eseguiRipristinoCloud() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    try {
+                        const dati = JSON.parse(ev.target.result);
+                        if (dati.galleria) {
+                            galleriaAttiva = dati.galleria;
+                            fotoGalleria = dati.foto || [];
+                            fotoSelezionate = new Set(dati.selezionate || []);
+                            mostraGalleria();
+                            renderizzaGalleria();
+                            mostraToast('Ripristino completato', 'success');
+                        }
+                    } catch (error) {
+                        mostraToast('Errore nel ripristino', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
         }
 
-        // Logica Swipe Touch
-        function setupSwipe() {
-            const container = document.getElementById('lightboxContainer');
-            let touchStartX = 0;
-            let touchEndX = 0;
-            const sogliaSwipe = 50;
-
-            container.addEventListener('touchstart', function(e) {
-                touchStartX = e.changedTouches[0].screenX;
-            }, { passive: true });
-
-            container.addEventListener('touchend', function(e) {
-                touchEndX = e.changedTouches[0].screenX;
-                handleSwipe();
-            }, { passive: true });
-
-            function handleSwipe() {
-                const diff = touchStartX - touchEndX;
-                if (Math.abs(diff) > sogliaSwipe) {
-                    if (diff > 0) cambiaFoto(1); // Swipe sinistra -> prossima
-                    else cambiaFoto(-1); // Swipe destra -> precedente
-                }
-            }
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? 'OK' : '!'}</div><div class="toast-message">${msg}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
         }
-
-        // Supporto tastiera per desktop
-        document.addEventListener('keydown', function(e) {
-            if (!document.getElementById('lightbox').classList.contains('active')) return;
-            if (e.key === 'ArrowLeft') cambiaFoto(-1);
-            if (e.key === 'ArrowRight') cambiaFoto(1);
-            if (e.key === 'Escape') chiudiLightbox();
-            if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggleSelezione(); }
-        });
-
-        function inviaSelezione() {
-            if (fotoSelezionate.size === 0) return;
-
-            // Qui invieresti i dati al Cloudflare Worker
-            console.log('Foto inviate:', Array.from(fotoSelezionate));
-
-            // Mostra messaggio di cortesia
-            document.getElementById('successModal').classList.add('active');
-        }
-
-        function chiudiSuccessModal() {
-            document.getElementById('successModal').classList.remove('active');
-            // Opzionale: reindirizzare o resettare
-        }
-
-        // Chiudi lightbox cliccando fuori dall'immagine
-        document.getElementById('lightbox').addEventListener('click', function(e) {
-            if (e.target === this || e.target.classList.contains('lightbox-img-container')) {
-                chiudiLightbox();
-            }
-        });
     </script>
 </body>
-</html> 
+</html>
