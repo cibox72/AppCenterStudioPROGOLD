@@ -55,12 +55,41 @@
         }
         .logo-subtext { font-size: 13px; color: var(--text-light); }
         .login-title { text-align: center; font-size: 20px; font-weight: 700; margin-bottom: 24px; }
-        .form-group { display: flex; flex-direction: column; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 16px; position: relative; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-        .form-group input {
-            padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px;
+        .password-wrapper { position: relative; display: flex; align-items: center; }
+        .password-wrapper input {
+            padding: 12px 45px 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 14px;
+            flex: 1;
         }
-        .form-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text-light);
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .toggle-password:hover { color: var(--primary-dark); }
+        .form-group input[type="text"] {
+            padding: 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
+        }
         .btn {
             padding: 14px 24px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700;
             cursor: pointer; width: 100%; background: var(--primary-gradient); color: white; margin-top: 10px;
@@ -100,18 +129,45 @@
                 <button class="login-type-btn" onclick="switchLoginType('cliente')">Cliente</button>
             </div>
             <div class="login-form active" id="formStudio">
-                <div class="form-group"><label>ID Studio</label><input type="text" id="studioId"></div>
-                <div class="form-group"><label>Password</label><input type="password" id="studioPassword"></div>
+                <div class="form-group">
+                    <label>ID Studio</label>
+                    <input type="text" id="studioId" placeholder="es. studio-gold">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="studioPassword" placeholder="Inserisci la password">
+                        <button type="button" class="toggle-password" onclick="togglePassword('studioPassword', this)">👁️</button>
+                    </div>
+                </div>
                 <button class="btn" onclick="login('studio', 'studioId', 'studioPassword')">ACCEDI</button>
             </div>
             <div class="login-form" id="formAdmin">
-                <div class="form-group"><label>Username</label><input type="text" id="adminId" value="admin"></div>
-                <div class="form-group"><label>Password</label><input type="password" id="adminPassword"></div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="adminId" value="admin">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="adminPassword" placeholder="Password admin">
+                        <button type="button" class="toggle-password" onclick="togglePassword('adminPassword', this)">👁️</button>
+                    </div>
+                </div>
                 <button class="btn" onclick="login('admin', 'adminId', 'adminPassword')">ACCEDI</button>
             </div>
             <div class="login-form" id="formCliente">
-                <div class="form-group"><label>ID Cliente</label><input type="text" id="clienteId"></div>
-                <div class="form-group"><label>Password</label><input type="password" id="clientePassword"></div>
+                <div class="form-group">
+                    <label>ID Cliente</label>
+                    <input type="text" id="clienteId" placeholder="es. cliente-rossi">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="clientePassword" placeholder="Inserisci la password">
+                        <button type="button" class="toggle-password" onclick="togglePassword('clientePassword', this)">👁️</button>
+                    </div>
+                </div>
                 <button class="btn" onclick="login('cliente', 'clienteId', 'clientePassword')">ACCEDI</button>
             </div>
         </div>
@@ -120,6 +176,17 @@
 
     <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = '';
+            } else {
+                input.type = 'password';
+                btn.textContent = '👁️';
+            }
+        }
 
         function switchLoginType(type) {
             document.querySelectorAll('.login-type-btn').forEach(btn => btn.classList.remove('active'));
@@ -142,7 +209,6 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    // NIENTE LOCALSTORAGE. Il token viaggia nell'URL.
                     mostraToast('Accesso effettuato!', 'success');
                     setTimeout(() => {
                         if (tipo === 'admin') window.location.href = `admin.html?token=${data.token}`;
