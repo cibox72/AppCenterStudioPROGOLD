@@ -11,12 +11,10 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    // Helper: genera token
     function generaToken() {
       return 'tok-' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     }
 
-    // Helper: hash password con SHA-256
     async function hashPassword(password) {
       const encoder = new TextEncoder();
       const data = encoder.encode(password);
@@ -25,45 +23,21 @@ export default {
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // Helper: verifica sessione
     async function verificaSessione(token) {
       if (!token) return null;
-      const sess = await env.DB.prepare("SELECT * FROM sessioni WHERE token=? AND scadenza>?").bind(token, Date.now()).first();
-      return sess;
+      return await env.DB.prepare("SELECT * FROM sessioni WHERE token=? AND scadenza>?").bind(token, Date.now()).first();
+    }
+
+    async function creaNotifica(tipo, titolo, messaggio, dati) {
+      const id = 'not-' + Date.now();
+      await env.DB.prepare(
+        "INSERT INTO notifiche (id, tipo, titolo, messaggio, dati, letto, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?)"
+      ).bind(id, tipo, titolo, messaggio, JSON.stringify(dati), 0, new Date().toISOString()).run();
     }
 
     try {
       // ============================================
-      // 0. HASH PASSWORD (Utility per convertire password esistenti)
-      // ============================================
-      if (path === "/api/admin/hash-passwords" && request.method === "POST") {
-        const token = url.searchParams.get("token");
-        const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-
-        // Hasha tutte le password degli studi
-        const studi = await env.DB.prepare("SELECT id, password FROM studi").all();
-        for (const s of studi.results) {
-          if (!s.password.startsWith('hash:')) {
-            const hashed = await hashPassword(s.password);
-            await env.DB.prepare("UPDATE studi SET password=? WHERE id=?").bind('hash:' + hashed, s.id).run();
-          }
-        }
-
-        // Hasha tutte le password dei clienti
-        const clienti = await env.DB.prepare("SELECT id, password FROM clienti").all();
-        for (const c of clienti.results) {
-          if (!c.password.startsWith('hash:')) {
-            const hashed = await hashPassword(c.password);
-            await env.DB.prepare("UPDATE clienti SET password=? WHERE id=?").bind('hash:' + hashed, c.id).run();
-          }
-        }
-
-        return new Response(JSON.stringify({ success: true, message: "Password hashate con successo" }), { headers: corsHeaders });
-      }
-
-      // ============================================
-      // 1. LOGIN (Verifica hash)
+      // 1. LOGIN
       // ============================================
       if (path === "/api/auth/login" && request.method === "POST") {
         const { tipo, id, password } = await request.json();
@@ -73,19 +47,18 @@ export default {
         if (tipo === 'admin' && id === "admin" && password === "58879@Stella") {
           user = { id: 'admin', nome: 'Super Admin' };
         } else if (tipo === 'studio') {
-          // Prova sia con hash che senza (per compatibilità)
-          user = await env.DB.prepare("SELECT * FROM studi WHERE id=? AND (password=? OR password=?)").bind(id, 'hash:' + hashedPassword, password).first();
+          user = await env.DB.prepare("SELECT * FROM studi WHERE id=? AND (password=? OR password=?) AND attivo=1").bind(id, 'hash:' + hashedPassword, password).first();
         } else if (tipo === 'cliente') {
           user = await env.DB.prepare("SELECT * FROM clienti WHERE id=? AND (password=? OR password=?)").bind(id, 'hash:' + hashedPassword, password).first();
         }
 
         if (user) {
           const token = generaToken();
-          const scadenza = Date.now() + (8 * 60 * 60 * 1000); // 8 ore
+          const scadenza = Date.now() + (8 * 60 * 60 * 1000);
           await env.DB.prepare("INSERT OR REPLACE INTO sessioni (token, user_id, tipo, scadenza) VALUES (?, ?, ?, ?)").bind(token, user.id, tipo, scadenza).run();
           return new Response(JSON.stringify({ success: true, token, nome: user.nome || user.nome_a }), { headers: corsHeaders });
         }
-        return new Response(JSON.stringify({ error: "Credenziali non valide" }), { status: 401, headers: corsHeaders });
+        return new Response(JSON.stringify({ error: "Credenziali non valide o account disattivato" }), { status: 401, headers: corsHeaders });
       }
 
       // ============================================
@@ -113,35 +86,147 @@ export default {
       }
 
       // ============================================
-      // 4. ARCHIVIO CREDENZIALI
+      // 4. CRM - LISTA STUDI (Admin)
       // ============================================
-      if (path === "/api/admin/credenziali" && request.method === "GET") {
+      if (path === "/api/admin/crm/studi" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
 
-        const studi = await env.DB.prepare("SELECT id, nome, email, password FROM studi").all();
-        const clienti = await env.DB.prepare("SELECT id, nome_a, cognome_a, email, password FROM clienti").all();
-        return new Response(JSON.stringify({ success: true, studi: studi.results, clienti: clienti.results }), { headers: corsHeaders });
+        const result = await env.DB.prepare("SELECT * FROM studi ORDER BY data_registrazione DESC").all();
+        return new Response(JSON.stringify({ success: true, studi: result.results }), { headers: corsHeaders });
       }
 
-      if (path === "/api/admin/aggiorna-password" && request.method === "POST") {
+      // ============================================
+      // 5. CRM - AGGIORNA STUDIO (Admin)
+      // ============================================
+      if (path === "/api/admin/crm/studio" && request.method === "PUT") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
 
-        const { tipo, id, nuova_password } = await request.json();
-        const hashed = await hashPassword(nuova_password);
-        if (tipo === 'studio') {
-          await env.DB.prepare("UPDATE studi SET password=? WHERE id=?").bind('hash:' + hashed, id).run();
-        } else if (tipo === 'cliente') {
-          await env.DB.prepare("UPDATE clienti SET password=? WHERE id=?").bind('hash:' + hashed, id).run();
+        const d = await request.json();
+        const updates = [];
+        const params = [];
+
+        if (d.nome !== undefined) { updates.push("nome=?"); params.push(d.nome); }
+        if (d.email !== undefined) { updates.push("email=?"); params.push(d.email); }
+        if (d.telefono !== undefined) { updates.push("telefono=?"); params.push(d.telefono); }
+        if (d.piva !== undefined) { updates.push("piva=?"); params.push(d.piva); }
+        if (d.stato_abbonamento !== undefined) { updates.push("stato_abbonamento=?"); params.push(d.stato_abbonamento); }
+        if (d.scadenza !== undefined) { updates.push("scadenza=?"); params.push(d.scadenza); }
+        if (d.attivo !== undefined) { updates.push("attivo=?"); params.push(d.attivo ? 1 : 0); }
+        if (d.password !== undefined && d.password !== '') {
+          const hashed = await hashPassword(d.password);
+          updates.push("password=?");
+          params.push('hash:' + hashed);
         }
+
+        if (updates.length === 0) {
+          return new Response(JSON.stringify({ error: "Nessun campo da aggiornare" }), { status: 400, headers: corsHeaders });
+        }
+
+        params.push(d.id);
+        const sql = `UPDATE studi SET ${updates.join(', ')} WHERE id=?`;
+        await env.DB.prepare(sql).bind(...params).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
       // ============================================
-      // 5. DASHBOARD CLIENTE
+      // 6. CRM - ELIMINA STUDIO (Admin)
+      // ============================================
+      if (path === "/api/admin/crm/studio" && request.method === "DELETE") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const d = await request.json();
+        await env.DB.prepare("DELETE FROM studi WHERE id=?").bind(d.id).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 7. CRM - CREAZIONE STUDIO (Admin)
+      // ============================================
+      if (path === "/api/admin/crm/studio" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const d = await request.json();
+        const hashed = await hashPassword(d.password);
+        await env.DB.prepare(`INSERT INTO studi (id, password, nome, piva, email, telefono, indirizzo, citta, stato, data_registrazione, scadenza, licenza_attiva, attivo, stato_abbonamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, 'hash:' + hashed, d.nome, d.piva, d.email, d.telefono, d.indirizzo, d.citta, d.stato, d.data_registrazione || new Date().toISOString().split('T')[0], d.scadenza, 1, 1, 'attivo').run();
+        
+        await creaNotifica('nuovo_studio', 'Nuovo Studio Registrato', `Studio "${d.nome}" creato con ID: ${d.id}`, d);
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 8. CRM - LISTA CLIENTI (Admin)
+      // ============================================
+      if (path === "/api/admin/crm/clienti" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const result = await env.DB.prepare("SELECT * FROM clienti ORDER BY data_registrazione DESC").all();
+        return new Response(JSON.stringify({ success: true, clienti: result.results }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 9. NOTIFICHE - LISTA (Admin)
+      // ============================================
+      if (path === "/api/admin/notifiche" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const result = await env.DB.prepare("SELECT * FROM notifiche ORDER BY data_creazione DESC LIMIT 100").all();
+        const nonLette = await env.DB.prepare("SELECT COUNT(*) as count FROM notifiche WHERE letto=0").first();
+        return new Response(JSON.stringify({ success: true, notifiche: result.results, nonLette: nonLette.count }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 10. NOTIFICHE - SEGNALA LETTA
+      // ============================================
+      if (path === "/api/admin/notifica/letta" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const { id } = await request.json();
+        await env.DB.prepare("UPDATE notifiche SET letto=1 WHERE id=?").bind(id).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 11. NOTIFICHE - SEGNALA TUTTE LETTE
+      // ============================================
+      if (path === "/api/admin/notifiche/lette" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        await env.DB.prepare("UPDATE notifiche SET letto=1").run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 12. REGISTRAZIONE PUBBLICA STUDIO (da sito)
+      // ============================================
+      if (path === "/api/public/registra-studio" && request.method === "POST") {
+        const d = await request.json();
+        const hashed = await hashPassword(d.password);
+        const studioId = 'studio-' + Date.now();
+        
+        await env.DB.prepare(`INSERT INTO studi (id, password, nome, piva, email, telefono, indirizzo, citta, stato, data_registrazione, scadenza, licenza_attiva, attivo, stato_abbonamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(studioId, 'hash:' + hashed, d.nome, d.piva, d.email, d.telefono, d.indirizzo, d.citta, d.stato, new Date().toISOString().split('T')[0], d.scadenza, 0, 1, 'trial').run();
+        
+        await creaNotifica('registrazione', 'Nuova Richiesta di Registrazione', `Studio "${d.nome}" si è registrato. Email: ${d.email}`, { ...d, studioId });
+        return new Response(JSON.stringify({ success: true, studioId }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 13. DASHBOARD CLIENTE
       // ============================================
       if (path === "/api/cliente/dashboard" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -153,84 +238,7 @@ export default {
       }
 
       // ============================================
-      // 6. GESTIONE STUDI (con hashing password)
-      // ============================================
-      if (path === "/api/admin/studi" && request.method === "GET") {
-        const token = url.searchParams.get("token");
-        const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-
-        const result = await env.DB.prepare("SELECT * FROM studi ORDER BY data_registrazione DESC").all();
-        return new Response(JSON.stringify({ success: true, studi: result.results }), { headers: corsHeaders });
-      }
-
-      if (path === "/api/admin/studio" && request.method === "POST") {
-        const token = url.searchParams.get("token");
-        const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-
-        const d = await request.json();
-        const hashed = await hashPassword(d.password);
-        await env.DB.prepare(`INSERT INTO studi (id, password, nome, piva, email, telefono, indirizzo, citta, stato, data_registrazione, scadenza, licenza_attiva) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, 'hash:' + hashed, d.nome, d.piva, d.email, d.telefono, d.indirizzo, d.citta, d.stato, d.data_registrazione, d.scadenza, d.licenza_attiva || 0).run();
-        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-      }
-
-      if (path === "/api/admin/studio" && request.method === "PUT") {
-        const token = url.searchParams.get("token");
-        const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-
-        const d = await request.json();
-        await env.DB.prepare(`UPDATE studi SET nome=?, piva=?, email=?, telefono=?, indirizzo=?, citta=?, stato=?, scadenza=?, licenza_attiva=? WHERE id=?`).bind(d.nome, d.piva, d.email, d.telefono, d.indirizzo, d.citta, d.stato, d.scadenza, d.licenza_attiva, d.id).run();
-        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-      }
-
-      if (path === "/api/admin/studio" && request.method === "DELETE") {
-        const token = url.searchParams.get("token");
-        const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-
-        const d = await request.json();
-        await env.DB.prepare("DELETE FROM studi WHERE id=?").bind(d.id).run();
-        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-      }
-
-      // ============================================
-      // 7. GESTIONE CLIENTI (con hashing password)
-      // ============================================
-      if (path === "/api/studio/clienti" && request.method === "GET") {
-        const token = url.searchParams.get("token");
-        const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-
-        const studioId = url.searchParams.get("studioId");
-        const result = await env.DB.prepare("SELECT * FROM clienti WHERE studio_id=? ORDER BY data_registrazione DESC").bind(studioId).all();
-        return new Response(JSON.stringify({ success: true, clienti: result.results }), { headers: corsHeaders });
-      }
-
-      if (path === "/api/studio/cliente" && request.method === "POST") {
-        const token = url.searchParams.get("token");
-        const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-
-        const d = await request.json();
-        const hashed = await hashPassword(d.password);
-        await env.DB.prepare(`INSERT INTO clienti (id, password, studio_id, nome_a, cognome_a, nome_b, cognome_b, email, telefono, tipo_evento, data_evento, data_registrazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, 'hash:' + hashed, d.studio_id, d.nome_a, d.cognome_a, d.nome_b, d.cognome_b, d.email, d.telefono, d.tipo_evento, d.data_evento, d.data_registrazione).run();
-        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-      }
-
-      if (path === "/api/studio/cliente" && request.method === "PUT") {
-        const token = url.searchParams.get("token");
-        const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-
-        const d = await request.json();
-        await env.DB.prepare(`UPDATE clienti SET nome_a=?, cognome_a=?, nome_b=?, cognome_b=?, email=?, telefono=?, tipo_evento=?, data_evento=? WHERE id=?`).bind(d.nome_a, d.cognome_a, d.nome_b, d.cognome_b, d.email, d.telefono, d.tipo_evento, d.data_evento, d.id).run();
-        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-      }
-
-      // ============================================
-      // 8. GESTIONE PREVENTIVI
+      // 14. GESTIONE PREVENTIVI (Studio)
       // ============================================
       if (path === "/api/studio/preventivi" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -253,7 +261,7 @@ export default {
       }
 
       // ============================================
-      // 9. GESTIONE RICEVUTE
+      // 15. GESTIONE RICEVUTE (Studio)
       // ============================================
       if (path === "/api/studio/ricevute" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -276,7 +284,7 @@ export default {
       }
 
       // ============================================
-      // 10. GESTIONE WORKFLOW
+      // 16. GESTIONE WORKFLOW (Studio)
       // ============================================
       if (path === "/api/studio/workflow" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -309,7 +317,7 @@ export default {
       }
 
       // ============================================
-      // 11. GESTIONE AGENDA
+      // 17. GESTIONE AGENDA (Studio)
       // ============================================
       if (path === "/api/studio/agenda" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -332,7 +340,31 @@ export default {
       }
 
       // ============================================
-      // 12. GESTIONE EMAIL ARCHIVIO
+      // 18. GESTIONE CLIENTI (Studio)
+      // ============================================
+      if (path === "/api/studio/clienti" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const studioId = url.searchParams.get("studioId");
+        const result = await env.DB.prepare("SELECT * FROM clienti WHERE studio_id=? ORDER BY data_registrazione DESC").bind(studioId).all();
+        return new Response(JSON.stringify({ success: true, clienti: result.results }), { headers: corsHeaders });
+      }
+
+      if (path === "/api/studio/cliente" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const d = await request.json();
+        const hashed = await hashPassword(d.password);
+        await env.DB.prepare(`INSERT INTO clienti (id, password, studio_id, nome_a, cognome_a, nome_b, cognome_b, email, telefono, tipo_evento, data_evento, data_registrazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, 'hash:' + hashed, d.studio_id, d.nome_a, d.cognome_a, d.nome_b, d.cognome_b, d.email, d.telefono, d.tipo_evento, d.data_evento, d.data_registrazione).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 19. GESTIONE EMAIL ARCHIVIO (Studio)
       // ============================================
       if (path === "/api/studio/email-archivio" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -355,7 +387,7 @@ export default {
       }
 
       // ============================================
-      // 13. GESTIONE NEGOZIO
+      // 20. GESTIONE NEGOZIO (Studio)
       // ============================================
       if (path === "/api/studio/negozio/prodotti" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -403,7 +435,7 @@ export default {
       }
 
       // ============================================
-      // 14. GESTIONE LISTA REGALI
+      // 21. GESTIONE LISTA REGALI (Studio)
       // ============================================
       if (path === "/api/studio/lista-regali" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -425,6 +457,9 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // 22. LISTA REGALI PUBBLICA
+      // ============================================
       if (path === "/api/public/lista-regali" && request.method === "GET") {
         const listaId = url.searchParams.get("id");
         const result = await env.DB.prepare("SELECT * FROM lista_regali WHERE id=?").bind(listaId).first();
@@ -435,7 +470,6 @@ export default {
         const d = await request.json();
         await env.DB.prepare(`INSERT INTO messaggi_regali (lista_id, nome_donatore, messaggio, importo, data) VALUES (?, ?, ?, ?, ?)`).bind(d.lista_id, d.nome_donatore, d.messaggio, d.importo || 0, d.data).run();
         
-        // Aggiorna il raccolto
         const lista = await env.DB.prepare("SELECT * FROM lista_regali WHERE id=?").bind(d.lista_id).first();
         if (lista) {
           const nuovoRaccolto = (parseFloat(lista.raccolto_attuale || 0) + parseFloat(d.importo || 0));
@@ -451,7 +485,7 @@ export default {
       }
 
       // ============================================
-      // 15. UPLOAD FOTO (R2 BUCKET)
+      // 23. UPLOAD FOTO R2 (Studio)
       // ============================================
       if (path === "/api/studio/upload" && request.method === "POST") {
         const token = url.searchParams.get("token");
@@ -472,21 +506,7 @@ export default {
       }
 
       // ============================================
-      // 16. LEADS
-      // ============================================
-      if (path === "/api/admin/lead" && request.method === "POST") {
-        const d = await request.json();
-        await env.DB.prepare(`INSERT INTO leads (nome_studio, email, telefono, citta, data_richiesta, stato) VALUES (?, ?, ?, ?, ?, ?)`).bind(d.nome_studio, d.email, d.telefono, d.citta, d.data_richiesta, d.stato || 'da_contattare').run();
-        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-      }
-
-      if (path === "/api/admin/leads" && request.method === "GET") {
-        const result = await env.DB.prepare("SELECT * FROM leads ORDER BY data_richiesta DESC").all();
-        return new Response(JSON.stringify({ success: true, leads: result.results }), { headers: corsHeaders });
-      }
-
-      // ============================================
-      // 17. GESTIONE TEMI COLORI
+      // 24. GESTIONE TEMI (Studio)
       // ============================================
       if (path === "/api/studio/tema" && request.method === "GET") {
         const studioId = url.searchParams.get("studioId");
