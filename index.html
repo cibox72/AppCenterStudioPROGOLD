@@ -3,9 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
     <title>AppCenterStudioPROGOLD - Login</title>
     <style>
         :root {
@@ -17,15 +14,12 @@
             --text-main: #2c3e50;
             --text-light: #7f8c8d;
             --border-color: #e8e8e8;
-            --success: #27ae60;
             --danger: #e74c3c;
             --radius: 16px;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg-gradient);
             background-attachment: fixed;
             color: var(--text-main);
@@ -36,9 +30,7 @@
             justify-content: center;
             padding: 20px;
         }
-
         .login-container { width: 100%; max-width: 480px; }
-
         .login-card {
             background: white;
             border-radius: var(--radius);
@@ -48,216 +40,82 @@
             position: relative;
             overflow: hidden;
         }
-
         .login-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 5px;
-            background: var(--primary-gradient);
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient);
         }
-
         .logo-container { text-align: center; margin-bottom: 32px; }
-
         .logo {
-            width: 80px; height: 80px;
-            background: var(--primary-gradient);
-            border-radius: 20px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px; font-weight: 800;
-            color: white;
-            margin-bottom: 16px;
-            box-shadow: 0 8px 24px rgba(30, 132, 73, 0.3);
+            width: 80px; height: 80px; background: var(--primary-gradient); border-radius: 20px;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 32px; font-weight: 800; color: white; margin-bottom: 16px;
         }
-
         .logo-text {
-            font-size: 24px; font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 4px;
+            font-size: 24px; font-weight: 800; background: var(--primary-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 4px;
         }
-
         .logo-subtext { font-size: 13px; color: var(--text-light); }
-
-        .login-title {
-            text-align: center;
-            font-size: 20px; font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 24px;
-        }
-
+        .login-title { text-align: center; font-size: 20px; font-weight: 700; margin-bottom: 24px; }
         .form-group { display: flex; flex-direction: column; margin-bottom: 16px; }
-        .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
         .form-group input {
-            padding: 12px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: inherit;
-            background: white;
+            padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px;
         }
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
-        }
-
+        .form-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
         .btn {
-            padding: 14px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            width: 100%;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 14px 24px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700;
+            cursor: pointer; width: 100%; background: var(--primary-gradient); color: white; margin-top: 10px;
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .btn-primary { background: var(--primary-gradient); color: white; }
-
+        .btn:hover { transform: translateY(-2px); }
         .login-type-selector {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-            background: var(--primary-light);
-            padding: 4px;
-            border-radius: 10px;
+            display: flex; gap: 8px; margin-bottom: 24px; background: var(--primary-light); padding: 4px; border-radius: 10px;
         }
-
         .login-type-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            background: transparent;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-light);
-            transition: all 0.2s ease;
+            flex: 1; padding: 10px; border: none; background: transparent; border-radius: 8px;
+            cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-light);
         }
-
-        .login-type-btn.active {
-            background: white;
-            color: var(--primary-dark);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
+        .login-type-btn.active { background: white; color: var(--primary-dark); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
         .login-form { display: none; }
         .login-form.active { display: block; }
-
-        .footer-branding {
-            text-align: center;
-            padding: 24px;
-            color: var(--text-light);
-            font-size: 12px;
-            margin-top: 24px;
-        }
-        .footer-branding strong { color: var(--primary-dark); font-weight: 700; }
-
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast {
-            background: white;
-            border-radius: 10px;
-            padding: 14px 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            margin-bottom: 10px;
-            border-left: 4px solid var(--success);
-            animation: slideIn 0.3s ease;
-            min-width: 280px;
+            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 10px; border-left: 4px solid var(--primary); animation: slideIn 0.3s ease;
         }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
-
-        .demo-info {
-            background: var(--primary-light);
-            padding: 12px 16px;
-            border-radius: 10px;
-            margin-top: 16px;
-            font-size: 12px;
-            color: var(--text-light);
-            text-align: center;
-        }
-
-        @media (max-width: 480px) {
-            .login-card { padding: 32px 24px; }
-            .logo-text { font-size: 20px; }
-        }
     </style>
 </head>
 <body>
-
     <div class="login-container">
         <div class="login-card">
             <div class="logo-container">
                 <div class="logo">AC</div>
                 <div class="logo-text">AppCenterStudioPROGOLD</div>
-                <div class="logo-subtext">Piattaforma di gestione per studi fotografici</div>
+                <div class="logo-subtext">Piattaforma Cloud Multi-Dispositivo</div>
             </div>
-
             <div class="login-title">Accedi al tuo account</div>
-
             <div class="login-type-selector">
                 <button class="login-type-btn active" onclick="switchLoginType('studio')">Studio</button>
                 <button class="login-type-btn" onclick="switchLoginType('admin')">Admin</button>
                 <button class="login-type-btn" onclick="switchLoginType('cliente')">Cliente</button>
             </div>
-
-            <!-- LOGIN STUDIO -->
             <div class="login-form active" id="formStudio">
-                <div class="form-group">
-                    <label>ID Studio</label>
-                    <input type="text" id="studioId" placeholder="es. studio-gold">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="studioPassword" placeholder="Inserisci la password">
-                </div>
-                <button class="btn btn-primary" onclick="loginStudio()">ACCEDI COME STUDIO</button>
+                <div class="form-group"><label>ID Studio</label><input type="text" id="studioId"></div>
+                <div class="form-group"><label>Password</label><input type="password" id="studioPassword"></div>
+                <button class="btn" onclick="login('studio', 'studioId', 'studioPassword')">ACCEDI</button>
             </div>
-
-            <!-- LOGIN ADMIN -->
             <div class="login-form" id="formAdmin">
-                <div class="form-group">
-                    <label>Username Admin</label>
-                    <input type="text" id="adminId" placeholder="admin">
-                </div>
-                <div class="form-group">
-                    <label>Password Admin</label>
-                    <input type="password" id="adminPassword" placeholder="Password admin">
-                </div>
-                <button class="btn btn-primary" onclick="loginAdmin()">ACCEDI COME ADMIN</button>
+                <div class="form-group"><label>Username</label><input type="text" id="adminId" value="admin"></div>
+                <div class="form-group"><label>Password</label><input type="password" id="adminPassword"></div>
+                <button class="btn" onclick="login('admin', 'adminId', 'adminPassword')">ACCEDI</button>
             </div>
-
-            <!-- LOGIN CLIENTE -->
             <div class="login-form" id="formCliente">
-                <div class="form-group">
-                    <label>ID Cliente</label>
-                    <input type="text" id="clienteId" placeholder="es. cliente-123">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="clientePassword" placeholder="Inserisci la password">
-                </div>
-                <button class="btn btn-primary" onclick="loginCliente()">ACCEDI COME CLIENTE</button>
+                <div class="form-group"><label>ID Cliente</label><input type="text" id="clienteId"></div>
+                <div class="form-group"><label>Password</label><input type="password" id="clientePassword"></div>
+                <button class="btn" onclick="login('cliente', 'clienteId', 'clientePassword')">ACCEDI</button>
             </div>
-
-            <div class="demo-info">
-                Demo Studio: <strong>studio-gold</strong> / Password: <strong>demo123</strong>
-            </div>
-        </div>
-
-        <div class="footer-branding">
-            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong><br>
-            Tutti i diritti riservati
         </div>
     </div>
-
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
@@ -270,106 +128,32 @@
             document.getElementById('form' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('active');
         }
 
-        async function loginStudio() {
-            const studioId = document.getElementById('studioId').value.trim();
-            const password = document.getElementById('studioPassword').value;
-
-            if (!studioId || !password) {
-                mostraToast('Compila ID Studio e Password', 'error');
-                return;
-            }
+        async function login(tipo, idField, passField) {
+            const id = document.getElementById(idField).value.trim();
+            const password = document.getElementById(passField).value;
+            if (!id || !password) { mostraToast('Compila tutti i campi', 'error'); return; }
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/login`, {
+                const response = await fetch(`${WORKER_URL}/api/auth/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ studioId, password })
+                    body: JSON.stringify({ tipo, id, password })
                 });
                 const data = await response.json();
 
                 if (data.success) {
-                    // Salvo solo la sessione (non dati sensibili)
-                    localStorage.setItem('studioId', data.studioId);
-                    localStorage.setItem('studioNome', data.nome);
-                    localStorage.setItem('userRole', data.role);
+                    // NIENTE LOCALSTORAGE. Il token viaggia nell'URL.
                     mostraToast('Accesso effettuato!', 'success');
                     setTimeout(() => {
-                        window.location.href = 'plancia-studio.html';
-                    }, 800);
+                        if (tipo === 'admin') window.location.href = `admin.html?token=${data.token}`;
+                        else if (tipo === 'studio') window.location.href = `plancia-studio.html?token=${data.token}`;
+                        else if (tipo === 'cliente') window.location.href = `dashboard-cliente.html?token=${data.token}`;
+                    }, 500);
                 } else {
                     mostraToast(data.error || 'Credenziali non valide', 'error');
                 }
             } catch (error) {
-                console.error('Errore login:', error);
-                mostraToast('Errore di connessione al server', 'error');
-            }
-        }
-
-        async function loginAdmin() {
-            const userId = document.getElementById('adminId').value.trim();
-            const password = document.getElementById('adminPassword').value;
-
-            if (!userId || !password) {
-                mostraToast('Compila Username e Password', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${WORKER_URL}/api/admin/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId, password })
-                });
-                const data = await response.json();
-
-                if (data.success) {
-                    localStorage.setItem('studioId', 'admin');
-                    localStorage.setItem('userRole', data.role);
-                    mostraToast('Accesso Admin effettuato!', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'admin.html';
-                    }, 800);
-                } else {
-                    mostraToast(data.error || 'Credenziali non valide', 'error');
-                }
-            } catch (error) {
-                console.error('Errore login:', error);
-                mostraToast('Errore di connessione al server', 'error');
-            }
-        }
-
-        async function loginCliente() {
-            const clienteId = document.getElementById('clienteId').value.trim();
-            const password = document.getElementById('clientePassword').value;
-
-            if (!clienteId || !password) {
-                mostraToast('Compila ID Cliente e Password', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${WORKER_URL}/api/cliente/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ clienteId, password })
-                });
-                const data = await response.json();
-
-                if (data.success) {
-                    // Salvo solo la sessione cliente
-                    localStorage.setItem('clienteId', data.clienteId);
-                    localStorage.setItem('clienteNome', data.nomeEvento);
-                    localStorage.setItem('userRole', data.role);
-                    mostraToast('Accesso Cliente effettuato!', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'dashboard-cliente.html';
-                    }, 800);
-                } else {
-                    mostraToast(data.error || 'Credenziali non valide', 'error');
-                }
-            } catch (error) {
-                console.error('Errore login:', error);
-                mostraToast('Errore di connessione al server', 'error');
+                mostraToast('Errore di connessione', 'error');
             }
         }
 
@@ -379,7 +163,7 @@
             toast.className = `toast ${tipo}`;
             toast.innerHTML = `<div>${msg}</div>`;
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
+            setTimeout(() => toast.remove(), 3000);
         }
     </script>
 </body>
