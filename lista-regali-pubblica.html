@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Regali - AppCenterStudioPROGOLD</title>
+    <style>
+        :root {
+            --primary: #d4a5a5;
+            --primary-dark: #9b6b6b;
+            --primary-light: #f9ebea;
+            --primary-gradient: linear-gradient(135deg, #f5b7b1 0%, #d4a5a5 50%, #9b6b6b 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #f9ebea 40%, #fef9e7 100%);
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e8e8e8;
+            --success: #27ae60;
+            --radius: 16px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 24px; }
+
+        .header-card {
+            text-align: center;
+            padding: 50px 32px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 40px rgba(155, 107, 107, 0.15);
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-card::before {
+            content: '♥';
+            position: absolute;
+            top: 20px; left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .header-card h1 {
+            font-size: 42px;
+            font-weight: 400;
+            color: var(--primary-dark);
+            margin-top: 20px;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+
+        .header-card .sottotitolo {
+            font-size: 18px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .header-card .tipo-evento {
+            display: inline-block;
+            padding: 6px 20px;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 12px;
+        }
+
+        .progress-section {
+            background: white;
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .progress-label { font-size: 16px; font-weight: 600; color: var(--text-main); }
+        .progress-value { font-size: 24px; font-weight: 700; color: var(--primary-dark); }
+
+        .progress-bar-container {
+            background: var(--primary-light);
+            height: 24px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .stat-box {
+            background: var(--primary-light);
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        .stat-box .valore { font-size: 20px; font-weight: 700; color: var(--primary-dark); }
+        .stat-box .etichetta { font-size: 11px; color: var(--text-light); text-transform: uppercase; margin-top: 4px; }
+
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            margin-bottom: 32px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 400;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .card-subtitle { font-size: 14px; color: var(--text-light); margin-bottom: 24px; text-align: center; }
+
+        .form-group { display: flex; flex-direction: column; margin-bottom: 16px; }
+        .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+        .form-group input, .form-group textarea {
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            background: white;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(212, 165, 165, 0.2);
+        }
+
+        .btn {
+            padding: 16px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            background: var(--primary-gradient);
+            color: white;
+            margin-top: 10px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(155, 107, 107, 0.3); }
+
+        .messaggi-list { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
+        .messaggio-item {
+            background: var(--primary-light);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+        .messaggio-autore { font-size: 14px; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; }
+        .messaggio-testo { font-size: 15px; color: var(--text-main); font-style: italic; }
+        .messaggio-data { font-size: 11px; color: var(--text-light); margin-top: 8px; text-align: right; }
+
+        .footer-branding {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-light);
+            font-size: 12px;
+        }
+
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
+        .toast {
+            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+
+        .loading { text-align: center; padding: 40px; color: var(--text-light); }
+        .hidden { display: none !important; }
+
+        @media (max-width: 600px) {
+            .header-card h1 { font-size: 32px; }
+            .stats-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="loadingArea" class="loading">Caricamento lista regali...</div>
+
+        <div id="mainContent" class="hidden">
+            <div class="header-card">
+                <div class="sottotitolo">Lista Regali di</div>
+                <h1 id="nomiCoppia">Caricamento...</h1>
+                <div class="tipo-evento" id="tipoEvento">Evento</div>
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-header">
+                    <div class="progress-label">Obiettivo Raggiunto</div>
+                    <div class="progress-value" id="percentuale">0%</div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar" style="width: 0%;">0%</div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="valore" id="raccolto">€ 0</div>
+                        <div class="etichetta">Raccolto</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="valore" id="obiettivo">€ 0</div>
+                        <div class="etichetta">Obiettivo</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Lascia un Augurio</div>
+                <div class="card-subtitle">Scrivi un messaggio per gli sposi e contribuisci alla loro lista regali.</div>
+                
+                <div class="form-group">
+                    <label>Il tuo nome</label>
+                    <input type="text" id="msgNome" placeholder="es. Zia Maria">
+                </div>
+                <div class="form-group">
+                    <label>Il tuo messaggio</label>
+                    <textarea id="msgTesto" rows="4" placeholder="Scrivi qui i tuoi auguri..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Importo donazione (€) - Opzionale</label>
+                    <input type="number" id="msgImporto" placeholder="0.00" min="0" step="0.01">
+                </div>
+                <button class="btn" onclick="inviaMessaggio()">INVIA AUGURI E DONAZIONE</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Auguri Ricevuti</div>
+                <div class="card-subtitle">I messaggi lasciati dagli invitati</div>
+                <div class="messaggi-list" id="messaggiList"></div>
+            </div>
+        </div>
+
+        <div class="footer-branding">
+            Gestito da <strong>AppCenterStudioPROGOLD</strong>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        const urlParams = new URLSearchParams(window.location.search);
+        const clienteId = urlParams.get('clienteId');
+        let listaData = null;
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!clienteId) {
+                document.getElementById('loadingArea').textContent = 'Link non valido. Contatta lo studio.';
+                return;
+            }
+            await caricaListaRegali();
+        });
+
+        async function caricaListaRegali() {
+            try {
+                // Usa l'endpoint public del worker
+                const response = await fetch(`${WORKER_URL}/api/public/lista-regali?id=${clienteId}`);
+                const data = await response.json();
+
+                if (data.success && data.lista) {
+                    listaData = data.lista;
+                    renderizzaDati();
+                    await caricaMessaggi();
+                    document.getElementById('loadingArea').classList.add('hidden');
+                    document.getElementById('mainContent').classList.remove('hidden');
+                } else {
+                    document.getElementById('loadingArea').textContent = 'Lista regali non trovata o non più disponibile.';
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                document.getElementById('loadingArea').textContent = 'Errore di connessione al server.';
+            }
+        }
+
+        function renderizzaDati() {
+            document.getElementById('nomiCoppia').textContent = listaData.nomi || 'Gli Sposi';
+            document.getElementById('tipoEvento').textContent = listaData.evento || 'Lista Regali';
+            
+            const raccolto = parseFloat(listaData.raccolto_attuale || 0);
+            const obiettivo = parseFloat(listaData.costo_totale || 1000);
+            const percentuale = Math.min(100, Math.round((raccolto / obiettivo) * 100));
+
+            document.getElementById('raccolto').textContent = '€ ' + raccolto.toFixed(2);
+            document.getElementById('obiettivo').textContent = '€ ' + obiettivo.toFixed(2);
+            document.getElementById('percentuale').textContent = percentuale + '%';
+            
+            const bar = document.getElementById('progressBar');
+            bar.style.width = percentuale + '%';
+            bar.textContent = percentuale + '%';
+        }
+
+        async function caricaMessaggi() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/public/lista-regali/messaggi?listaId=${listaData.id}`);
+                const data = await response.json();
+                
+                const container = document.getElementById('messaggiList');
+                if (data.success && data.messaggi && data.messaggi.length > 0) {
+                    container.innerHTML = data.messaggi.map(m => `
+                        <div class="messaggio-item">
+                            <div class="messaggio-autore">${m.nome_donatore}</div>
+                            <div class="messaggio-testo">"${m.messaggio}"</div>
+                            <div class="messaggio-data">${new Date(m.data).toLocaleDateString('it-IT')}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<div style="text-align:center; color: var(--text-light); padding: 20px;">Nessun messaggio ancora. Sii il primo!</div>';
+                }
+            } catch (error) {
+                console.error('Errore messaggi:', error);
+            }
+        }
+
+        async function inviaMessaggio() {
+            const nome = document.getElementById('msgNome').value.trim();
+            const testo = document.getElementById('msgTesto').value.trim();
+            const importo = parseFloat(document.getElementById('msgImporto').value) || 0;
+
+            if (!nome || !testo) {
+                mostraToast('Inserisci nome e messaggio', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/public/lista-regali/messaggio`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        lista_id: listaData.id,
+                        nome_donatore: nome,
+                        messaggio: testo,
+                        importo: importo,
+                        data: new Date().toISOString()
+                    })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    mostraToast('Auguri inviati con successo!', 'success');
+                    document.getElementById('msgNome').value = '';
+                    document.getElementById('msgTesto').value = '';
+                    document.getElementById('msgImporto').value = '';
+                    
+                    // Ricarica messaggi e dati
+                    await caricaMessaggi();
+                    await caricaListaRegali();
+                } else {
+                    mostraToast('Errore nell\'invio', 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `<div>${msg}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
