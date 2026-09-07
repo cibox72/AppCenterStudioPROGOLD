@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preventivi - AppCenterStudioPROGOLD</title>
+    <title>Preventivi & WhatsApp - AppCenterStudioPROGOLD</title>
     <style>
         :root {
             --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
             --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
             --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
-            --success: #27ae60; --danger: #e74c3c; --radius: 16px;
+            --success: #27ae60; --danger: #e74c3c; --whatsapp: #25D366; --radius: 16px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -65,6 +65,8 @@
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
         .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); background: white; margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; }
@@ -109,7 +111,7 @@
     <div class="container">
         <div class="page-header">
             <h1>Gestione Preventivi</h1>
-            <p>Crea e gestisci preventivi per i tuoi clienti. Dati salvati sul cloud.</p>
+            <p>Crea preventivi e inviali direttamente ai clienti via WhatsApp.</p>
         </div>
 
         <div id="loadingArea" class="loading">
@@ -120,54 +122,33 @@
         <div id="mainContent" class="hidden">
             <div class="card-3d">
                 <div class="card-title">Nuovo Preventivo</div>
-                <div class="card-subtitle">Compila i dati per creare un nuovo preventivo.</div>
+                <div class="card-subtitle">Compila i dati. Il sistema genererà un messaggio WhatsApp pronto per l'invio.</div>
                 
                 <div class="form-row">
                     <div class="form-group"><label>Numero Preventivo *</label><input type="text" id="pvNumero"></div>
                     <div class="form-group"><label>Data Emissione *</label><input type="date" id="pvData"></div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group"><label>Validità (giorni)</label><input type="number" id="pvValidita" value="30" min="1"></div>
-                    <div class="form-group">
-                        <label>Stato</label>
-                        <select id="pvStato">
-                            <option value="bozza">Bozza</option>
-                            <option value="inviato">Inviato</option>
-                            <option value="accettato">Accettato</option>
-                            <option value="rifiutato">Rifiutato</option>
-                        </select>
-                    </div>
+                    <div class="form-group"><label>Nome Cliente *</label><input type="text" id="pvClienteNome"></div>
+                    <div class="form-group"><label>Telefono Cliente (per WhatsApp) *</label><input type="tel" id="pvClienteTelefono" placeholder="+39 333..."></div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group"><label>Nome Cliente A *</label><input type="text" id="pvClienteANome"></div>
-                    <div class="form-group"><label>Cognome Cliente A *</label><input type="text" id="pvClienteACognome"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Email Cliente A</label><input type="email" id="pvClienteAEmail"></div>
-                    <div class="form-group"><label>Telefono Cliente A</label><input type="tel" id="pvClienteATelefono"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Data Servizio</label><input type="date" id="pvServizioData"></div>
                     <div class="form-group">
                         <label>Tipo Servizio</label>
                         <select id="pvServizioTipo">
-                            <option value="matrimonio">Matrimonio</option>
-                            <option value="battesimo">Battesimo</option>
-                            <option value="comunione">Comunione</option>
-                            <option value="ritratto">Ritratto</option>
-                            <option value="evento-aziendale">Evento Aziendale</option>
-                            <option value="altro">Altro</option>
+                            <option value="Matrimonio">Matrimonio</option>
+                            <option value="Battesimo">Battesimo</option>
+                            <option value="Comunione">Comunione</option>
+                            <option value="Ritratto">Ritratto</option>
+                            <option value="Evento Aziendale">Evento Aziendale</option>
                         </select>
                     </div>
+                    <div class="form-group"><label>Totale (€) *</label><input type="number" id="pvTotale" min="0" step="0.01"></div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Totale Finale (€) *</label><input type="number" id="pvTotaleFinale" min="0" step="0.01"></div>
-                    <div class="form-group"><label>Acconto (€)</label><input type="number" id="pvAcconto" min="0" step="0.01"></div>
-                </div>
-                <div class="form-group"><label>Note</label><textarea id="pvNote" rows="3"></textarea></div>
+                <div class="form-group"><label>Note / Dettagli Pacchetto</label><textarea id="pvNote" rows="3" placeholder="Es. Copertura 8 ore, album 30x30..."></textarea></div>
                 
                 <div class="btn-group">
-                    <button class="btn btn-primary" onclick="salvaPreventivo()">SALVA PREVENTIVO</button>
+                    <button class="btn btn-primary" onclick="salvaPreventivo()">💾 SALVA PREVENTIVO</button>
                 </div>
             </div>
 
@@ -181,7 +162,7 @@
                 <div class="table-container hidden" id="tablePreventivi">
                     <table>
                         <thead>
-                            <tr><th>Numero</th><th>Data</th><th>Cliente</th><th>Totale</th><th>Stato</th></tr>
+                            <tr><th>Num.</th><th>Cliente</th><th>Servizio</th><th>Totale</th><th>Stato</th><th>Azioni</th></tr>
                         </thead>
                         <tbody id="preventiviTable"></tbody>
                     </table>
@@ -228,31 +209,24 @@
         async function salvaPreventivo() {
             const numero = document.getElementById('pvNumero').value.trim();
             const dataEmissione = document.getElementById('pvData').value;
-            const validita = parseInt(document.getElementById('pvValidita').value) || 30;
-            const stato = document.getElementById('pvStato').value;
-            const clienteANome = document.getElementById('pvClienteANome').value.trim();
-            const clienteACognome = document.getElementById('pvClienteACognome').value.trim();
-            const clienteAEmail = document.getElementById('pvClienteAEmail').value.trim();
-            const clienteATelefono = document.getElementById('pvClienteATelefono').value.trim();
-            const servizioData = document.getElementById('pvServizioData').value;
+            const clienteNome = document.getElementById('pvClienteNome').value.trim();
+            const clienteTelefono = document.getElementById('pvClienteTelefono').value.trim();
             const servizioTipo = document.getElementById('pvServizioTipo').value;
-            const totaleFinale = parseFloat(document.getElementById('pvTotaleFinale').value);
-            const acconto = parseFloat(document.getElementById('pvAcconto').value) || 0;
+            const totale = parseFloat(document.getElementById('pvTotale').value);
             const note = document.getElementById('pvNote').value.trim();
 
-            if (!numero || !dataEmissione || !clienteANome || !clienteACognome || isNaN(totaleFinale)) {
-                mostraToast('Compila i campi obbligatori', 'error');
+            if (!numero || !dataEmissione || !clienteNome || !clienteTelefono || isNaN(totale)) {
+                mostraToast('Compila tutti i campi obbligatori', 'error');
                 return;
             }
 
             const preventivo = {
                 id: 'pv-' + Date.now(),
                 studio_id: studioId,
-                numero, data_emissione: dataEmissione, validita, stato,
-                cliente_a_nome: clienteANome, cliente_a_cognome: clienteACognome,
-                cliente_a_email: clienteAEmail, cliente_a_telefono: clienteATelefono,
-                servizio_data: servizioData, servizio_tipo: servizioTipo,
-                totale_finale: totaleFinale, acconto, note,
+                numero, data_emissione: dataEmissione,
+                cliente_nome: clienteNome, cliente_telefono: clienteTelefono,
+                servizio_tipo: servizioTipo, totale_finale: totale, note,
+                stato: 'bozza',
                 data_creazione: new Date().toISOString()
             };
 
@@ -264,14 +238,11 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    mostraToast('Preventivo salvato sul cloud!', 'success');
+                    mostraToast('Preventivo salvato!', 'success');
                     pulisciForm();
                     await caricaPreventivi();
-                } else {
-                    mostraToast('Errore nel salvataggio', 'error');
                 }
             } catch (error) {
-                console.error('Errore:', error);
                 mostraToast('Errore di connessione', 'error');
             }
         }
@@ -290,7 +261,6 @@
                     preventivi = [];
                 }
             } catch (error) {
-                console.error('Errore:', error);
                 preventivi = [];
             }
 
@@ -312,32 +282,50 @@
             emptyState.classList.add('hidden');
             tableContainer.classList.remove('hidden');
 
-            const statiMap = { 'bozza': 'Bozza', 'inviato': 'Inviato', 'accettato': 'Accettato', 'rifiutato': 'Rifiutato' };
-
             tbody.innerHTML = preventivi.map(pv => `
                 <tr>
                     <td><strong>${pv.numero}</strong></td>
-                    <td>${new Date(pv.data_emissione).toLocaleDateString('it-IT')}</td>
-                    <td>${pv.cliente_a_nome} ${pv.cliente_a_cognome}</td>
+                    <td>${pv.cliente_nome}<br><small style="color:var(--text-light)">${pv.cliente_telefono || ''}</small></td>
+                    <td>${pv.servizio_tipo || '-'}</td>
                     <td style="font-weight: 700; color: var(--primary-dark);">€ ${parseFloat(pv.totale_finale).toFixed(2)}</td>
-                    <td><span class="status-badge status-${pv.stato}">${statiMap[pv.stato] || pv.stato}</span></td>
+                    <td><span class="status-badge status-${pv.stato || 'bozza'}">${pv.stato || 'Bozza'}</span></td>
+                    <td>
+                        <button class="btn btn-whatsapp" style="padding: 6px 12px; font-size: 11px;" onclick="inviaWhatsApp('${pv.id}')">
+                            📱 Invia WhatsApp
+                        </button>
+                    </td>
                 </tr>
             `).join('');
+        }
+
+        function inviaWhatsApp(id) {
+            const pv = preventivi.find(p => p.id === id);
+            if (!pv) return;
+
+            // Costruisci il messaggio
+            let messaggio = `Ciao ${pv.cliente_nome},\n\n`;
+            messaggio += `Ecco il preventivo #${pv.numero} per il servizio di ${pv.servizioTipo || 'fotografia'}.\n\n`;
+            messaggio += `💰 *Totale: € ${parseFloat(pv.totale_finale).toFixed(2)}*\n\n`;
+            if (pv.note) {
+                messaggio += `📝 *Dettagli:*\n${pv.note}\n\n`;
+            }
+            messaggio += `Resto a disposizione per qualsiasi dubbio.\nUn cordiale saluto!`;
+
+            // Pulisci il numero (togli +, spazi, -)
+            let numero = pv.cliente_telefono.replace(/[^0-9]/g, '');
+            if (numero.startsWith('00')) numero = numero.substring(2);
+            if (numero.startsWith('39') && numero.length === 12) numero = numero.substring(2); // Rimuovi prefisso IT se c'è già
+
+            const url = `https://wa.me/${numero}?text=${encodeURIComponent(messaggio)}`;
+            window.open(url, '_blank');
         }
 
         function pulisciForm() {
             document.getElementById('pvNumero').value = '';
             document.getElementById('pvData').value = '';
-            document.getElementById('pvValidita').value = '30';
-            document.getElementById('pvStato').value = 'bozza';
-            document.getElementById('pvClienteANome').value = '';
-            document.getElementById('pvClienteACognome').value = '';
-            document.getElementById('pvClienteAEmail').value = '';
-            document.getElementById('pvClienteATelefono').value = '';
-            document.getElementById('pvServizioData').value = '';
-            document.getElementById('pvServizioTipo').value = 'matrimonio';
-            document.getElementById('pvTotaleFinale').value = '';
-            document.getElementById('pvAcconto').value = '';
+            document.getElementById('pvClienteNome').value = '';
+            document.getElementById('pvClienteTelefono').value = '';
+            document.getElementById('pvTotale').value = '';
             document.getElementById('pvNote').value = '';
         }
 
