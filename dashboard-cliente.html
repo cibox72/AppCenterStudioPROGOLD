@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <title>Dashboard Cliente - AppCenterStudioPROGOLD</title>
     <style>
         :root {
@@ -24,7 +23,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg-gradient);
             background-attachment: fixed;
             color: var(--text-main);
@@ -39,6 +38,9 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 20px rgba(40, 116, 166, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .nav-btn {
@@ -126,10 +128,6 @@
         .service-card.disabled {
             opacity: 0.5;
             cursor: not-allowed;
-        }
-
-        .service-card.disabled:hover {
-            transform: none;
         }
 
         .service-icon {
@@ -235,12 +233,12 @@
     <div class="container">
         <div class="welcome-card">
             <h1>Benvenuto nella tua Area Personale</h1>
-            <div class="subtitle" id="welcomeText">Caricamento servizi...</div>
+            <div class="subtitle" id="welcomeText">Gestisci i tuoi servizi fotografici</div>
         </div>
 
         <div id="loadingServices" class="loading">
             <div class="spinner"></div>
-            <div>Caricamento servizi...</div>
+            <div>Caricamento servizi dal cloud...</div>
         </div>
 
         <div class="services-grid" id="servicesGrid"></div>
@@ -254,30 +252,48 @@
 
     <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
-        let clienteId = localStorage.getItem('clienteId');
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
         let clienteData = null;
 
         document.addEventListener('DOMContentLoaded', async function() {
-            if (!clienteId) {
+            if (!token) {
                 window.location.href = 'index.html';
                 return;
             }
 
-            await caricaDashboard();
+            await verificaSessione();
         });
+
+        async function verificaSessione() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+                const data = await response.json();
+
+                if (!data.success || data.tipo !== 'cliente') {
+                    mostraToast('Sessione non valida', 'error');
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                    return;
+                }
+
+                await caricaDashboard();
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione al cloud', 'error');
+            }
+        }
 
         async function caricaDashboard() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/cliente/dashboard?clienteId=${clienteId}`);
+                const response = await fetch(`${WORKER_URL}/api/cliente/dashboard?token=${token}`);
                 const data = await response.json();
 
                 if (data.success && data.cliente) {
                     clienteData = data.cliente;
                     document.getElementById('userInfo').textContent = `${data.cliente.nome_a} ${data.cliente.cognome_a}`;
-                    document.getElementById('welcomeText').textContent = `Gestisci i tuoi servizi fotografici`;
                     renderizzaServizi(data.cliente);
                 } else {
-                    mostraToast('Errore nel caricamento', 'error');
+                    mostraToast('Errore nel caricamento dati', 'error');
                 }
             } catch (error) {
                 console.error('Errore:', error);
@@ -309,11 +325,11 @@
                     id: 'lista-regali',
                     icon: 'LR',
                     title: 'Lista Regali',
-                    description: 'Condividi il link con i tuoi invitati per ricevere contributi e messaggi di auguri.',
+                    description: 'Condividi il link con i tuoi invitati per ricevere contributi e messaggi.',
                     active: listaRegaliAttiva,
                     countdown: giorniRimastiLista,
                     countdownText: 'giorni rimanenti',
-                    url: `lista-regali-pubblica.html?id=${cliente.id}`
+                    url: `lista-regali-pubblica.html?clienteId=${cliente.id}`
                 },
                 {
                     id: 'selezione-foto',
@@ -323,25 +339,16 @@
                     active: selezioneAttiva,
                     countdown: giorniRimastiSelezione,
                     countdownText: 'giorni rimanenti',
-                    url: `selezione-album-cliente.html?id=${cliente.id}`
-                },
-                {
-                    id: 'negozio',
-                    icon: 'NZ',
-                    title: 'Negozio Online',
-                    description: 'Acquista stampe, album e prodotti fotografici dello studio.',
-                    active: true,
-                    countdown: null,
-                    url: 'negozio.html'
+                    url: `selezione-album-cliente.html?token=${token}`
                 },
                 {
                     id: 'contatta-studio',
                     icon: 'CS',
                     title: 'Contatta Studio',
-                    description: 'Invia un messaggio diretto allo studio per informazioni o supporto.',
+                    description: 'Invia un messaggio diretto allo studio per informazioni.',
                     active: true,
                     countdown: null,
-                    url: `mailto:${cliente.email_studio || 'studio@email.com'}?subject=Richiesta informazioni`
+                    url: `mailto:${cliente.email || 'studio@email.com'}?subject=Richiesta informazioni`
                 }
             ];
 
@@ -367,9 +374,14 @@
             }).join('');
         }
 
-        function logout() {
-            localStorage.removeItem('clienteId');
-            localStorage.removeItem('clienteNome');
+        async function logout() {
+            try {
+                await fetch(`${WORKER_URL}/api/auth/logout`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+            } catch(e) {}
             window.location.href = 'index.html';
         }
 
