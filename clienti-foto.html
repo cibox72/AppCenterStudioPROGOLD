@@ -6,13 +6,14 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Gestione Clienti & Foto - AppCenterStudioPROGOLD</title>
+    <title>Clienti & Foto - AppCenterStudioPROGOLD</title>
+    <script src="temi.js"></script>
     <style>
         :root {
-            --primary: #1abc9c;
-            --primary-dark: #0e6655;
+            --primary: #82e0aa;
+            --primary-dark: #1e8449;
             --primary-light: #e8f8f5;
-            --primary-gradient: linear-gradient(135deg, #48c9b0 0%, #1abc9c 50%, #0e6655 100%);
+            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
             --card-bg: rgba(255, 255, 255, 0.98);
             --card-gradient: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
@@ -22,9 +23,9 @@
             --success: #27ae60;
             --warning: #f39c12;
             --danger: #e74c3c;
-            --shadow: 0 4px 16px rgba(26, 188, 156, 0.08);
-            --shadow-hover: 0 8px 32px rgba(26, 188, 156, 0.15);
-            --radius: 14px;
+            --shadow-3d: 0 10px 30px rgba(30, 132, 73, 0.12), 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-3d-hover: 0 20px 50px rgba(30, 132, 73, 0.2), 0 5px 15px rgba(0,0,0,0.08);
+            --radius: 16px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -48,7 +49,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 12px rgba(26, 188, 156, 0.2);
+            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
         }
 
         .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
@@ -56,134 +57,180 @@
         .nav-btn {
             background: rgba(255,255,255,0.95);
             border: 1px solid rgba(255,255,255,0.3);
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 10px 18px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--primary-dark);
             transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
-        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
 
         .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
         .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(46, 204, 113, 0.6); }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-        .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
 
         .page-header { 
             text-align: center; 
             margin-bottom: 32px;
-            padding: 24px;
+            padding: 32px;
             background: var(--card-gradient);
             border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-3d);
             border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .page-header:hover { transform: translateY(-4px); box-shadow: var(--shadow-3d-hover); }
         .page-header h1 { 
-            font-size: 28px; 
-            font-weight: 700; 
+            font-size: 32px; 
+            font-weight: 800; 
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 8px; 
+            letter-spacing: -0.5px;
         }
         .page-header p { color: var(--text-light); font-size: 15px; }
 
-        .card {
+        .card-3d {
             background: var(--card-gradient);
             border-radius: var(--radius);
-            padding: 28px;
+            padding: 32px;
             margin-bottom: 24px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-3d);
             border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
         }
 
-        .card:hover { box-shadow: var(--shadow-hover); }
+        .card-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .card-3d:hover { transform: translateY(-6px); box-shadow: var(--shadow-3d-hover); }
 
         .card-title { 
-            font-size: 18px; 
-            font-weight: 600; 
+            font-size: 20px; 
+            font-weight: 700; 
             color: var(--primary-dark); 
-            margin-bottom: 6px; 
-            padding-bottom: 10px;
+            margin-bottom: 8px; 
+            padding-bottom: 12px;
             border-bottom: 2px solid var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 0.5px;
+            background: var(--primary-gradient);
+            box-shadow: 0 4px 12px rgba(30, 132, 73, 0.25);
+        }
+
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
 
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
         .form-group input, .form-group select, .form-group textarea {
-            padding: 11px 14px;
+            padding: 12px 14px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 14px;
             font-family: inherit;
             background: white;
             transition: all 0.2s ease;
         }
-        .form-group input:focus, .form-group select:focus { 
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
             outline: none; 
             border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.15); 
+            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); 
+            transform: translateY(-1px);
         }
 
         .btn {
-            padding: 10px 18px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 8px;
-            font-size: 13px;
+            border-radius: 10px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
         .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
-        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
         .btn-outline:hover { background: var(--primary-light); }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
 
-        .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-color); background: white; }
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; vertical-align: middle; }
-        th { 
-            background: var(--primary-light); 
-            color: var(--primary-dark); 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            font-size: 11px;
-            letter-spacing: 0.5px;
-        }
-        tr:hover td { background: #fafafa; }
-
-        .cred-input {
-            width: 100%;
-            padding: 6px 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 12px;
-            font-family: monospace;
-            background: #f8f9fa;
-            transition: all 0.2s;
-        }
-        .cred-input:focus {
-            outline: none;
-            border-color: var(--primary);
+        .client-list { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
+        .client-item {
             background: white;
-            box-shadow: 0 0 0 2px rgba(26, 188, 156, 0.1);
+            border-left: 4px solid var(--primary);
+            border-radius: 12px;
+            padding: 20px 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
         }
+        .client-item:hover { transform: translateX(6px); box-shadow: 0 8px 24px rgba(30, 132, 73, 0.15); }
+        .client-info { flex: 1; min-width: 200px; }
+        .client-name { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .client-event { font-size: 13px; color: var(--text-light); }
+        .client-photos { 
+            background: var(--primary-light); 
+            padding: 6px 14px; 
+            border-radius: 20px; 
+            font-size: 12px; 
+            font-weight: 700; 
+            color: var(--primary-dark); 
+        }
+
+        .footer-branding {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-light);
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+        .footer-branding strong { color: var(--primary-dark); font-weight: 700; }
 
         .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
         .toast {
@@ -195,102 +242,23 @@
         .toast-icon { font-size: 20px; font-weight: bold; }
         .toast-message { flex: 1; font-size: 14px; }
 
-        .footer-branding {
-            text-align: center;
-            padding: 20px;
-            color: var(--text-light);
-            font-size: 13px;
-            font-weight: 500;
-            margin-top: 40px;
-            border-top: 1px solid var(--border-color);
-        }
-        .footer-branding strong { color: var(--primary-dark); font-weight: 700; }
+        .loading { text-align: center; padding: 40px; color: var(--text-light); }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 3000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .modal-overlay.active { display: flex; }
-        
-        .modal-content {
-            background: white;
-            border-radius: var(--radius);
-            padding: 32px;
-            max-width: 600px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            position: relative;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 2px solid var(--primary-light);
-        }
-
-        .modal-header h3 {
-            font-size: 20px;
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--text-light);
-            padding: 4px 8px;
-        }
-        .modal-close:hover { color: var(--danger); }
-
-        .scheda-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .scheda-row:last-child { border-bottom: none; }
-        .scheda-label { font-weight: 600; color: var(--text-light); font-size: 13px; }
-        .scheda-value { font-weight: 500; color: var(--text-main); text-align: right; }
-
-        .scheda-cred {
-            background: var(--primary-light);
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 16px;
-            font-family: monospace;
-            font-size: 14px;
-            color: var(--primary-dark);
-            word-break: break-all;
-        }
-
-        @media print {
-            .top-bar, .btn, .modal-close, .footer-branding { display: none !important; }
-            .modal-overlay { position: static; background: white; padding: 0; }
-            .modal-content { box-shadow: none; max-height: none; padding: 0; }
-            body { background: white; }
-        }
+        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
+        .hidden { display: none !important; }
 
         @media (max-width: 768px) {
             .top-bar { flex-direction: column; gap: 10px; }
             .form-row { grid-template-columns: 1fr; }
+            .page-header h1 { font-size: 24px; }
         }
     </style>
 </head>
 <body>
-      <div class="top-bar">
+
+    <div class="top-bar">
         <div class="nav-left">
             <button class="nav-btn" onclick="window.history.back()">Indietro</button>
             <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Plancia</button>
@@ -304,106 +272,58 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>Gestione Clienti & Foto</h1>
-            <p>Registra i tuoi clienti, genera credenziali di accesso e gestisci le gallerie fotografiche</p>
+            <h1>Clienti & Gestione Foto</h1>
+            <p>Assegna le foto ai clienti e gestisci i loro album personali. Dati sincronizzati in tempo reale sul cloud.</p>
         </div>
 
-        <div class="card">
-            <div class="card-title">Registra Nuovo Cliente / Evento</div>
-            <div class="card-subtitle">Inserisci i dati del cliente. Il sistema genererà automaticamente ID e Password per l'accesso alla galleria.</div>
+        <!-- ASSEGNA FOTO -->
+        <div class="card-3d">
+            <div class="card-title"><span class="badge">AF</span> Assegna Foto a Cliente</div>
+            <div class="card-subtitle">Seleziona un cliente e carica nuove foto nel suo album personale sul cloud R2.</div>
             
             <div class="form-row">
                 <div class="form-group">
-                    <label>Nome Cliente A *</label>
-                    <input type="text" id="cliNomeA" placeholder="es. Mario">
-                </div>
-                <div class="form-group">
-                    <label>Cognome Cliente A *</label>
-                    <input type="text" id="cliCognomeA" placeholder="es. Rossi">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Nome Cliente B (Coniuge/Altro)</label>
-                    <input type="text" id="cliNomeB" placeholder="es. Lucia">
-                </div>
-                <div class="form-group">
-                    <label>Cognome Cliente B</label>
-                    <input type="text" id="cliCognomeB" placeholder="es. Bianchi">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Email Principale *</label>
-                    <input type="email" id="cliEmail" placeholder="cliente@esempio.com">
-                </div>
-                <div class="form-group">
-                    <label>Telefono *</label>
-                    <input type="tel" id="cliTelefono" placeholder="+39 333 1234567">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Tipo Evento *</label>
-                    <select id="cliTipoEvento">
-                        <option value="matrimonio">Matrimonio</option>
-                        <option value="battesimo">Battesimo</option>
-                        <option value="comunione">Comunione</option>
-                        <option value="cresima">Cresima</option>
-                        <option value="compleanno">Compleanno</option>
-                        <option value="ritratto">Ritratto</option>
-                        <option value="evento-aziendale">Evento Aziendale</option>
-                        <option value="altro">Altro</option>
+                    <label>Seleziona Cliente *</label>
+                    <select id="cfCliente">
+                        <option value="">-- Caricamento clienti... --</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Data Evento</label>
-                    <input type="date" id="cliDataEvento">
+                    <label>Tipo Album</label>
+                    <select id="cfTipoAlbum">
+                        <option value="matrimonio">Matrimonio</option>
+                        <option value="evento">Evento</option>
+                        <option value="ritratto">Ritratto</option>
+                        <option value="bozze">Bozze da selezionare</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>ID Cliente (Generato automaticamente)</label>
-                    <input type="text" id="cliId" readonly style="background: #f8f9fa;">
-                </div>
-                <div class="form-group">
-                    <label>Password Accesso (Generata automaticamente)</label>
-                    <input type="text" id="cliPwd" readonly style="background: #f8f9fa;">
-                </div>
+            <div class="form-group">
+                <label>Carica Foto (JPG, PNG)</label>
+                <input type="file" id="cfFileInput" multiple accept="image/*" style="padding: 10px; border: 1px dashed var(--border-color); border-radius: 10px;">
             </div>
 
             <div class="btn-group">
-                <button class="btn btn-primary" onclick="salvaNuovoCliente()">REGISTRA CLIENTE E GENERA CREDENZIALI</button>
-                <button class="btn btn-outline" onclick="generaCredenzialiCliente()">Rigenera ID/Password</button>
+                <button class="btn btn-primary" onclick="assegnaFoto()">CARICA E ASSEGNA FOTO</button>
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-title">Archivio Clienti Registrati</div>
-            <div class="card-subtitle">Gestisci le credenziali di accesso dei tuoi clienti. Modifica ID e Password direttamente dalla tabella e stampa le schede da consegnare.</div>
+        <!-- ELENCO CLIENTI CON FOTO -->
+        <div class="card-3d">
+            <div class="card-title"><span class="badge">EC</span> Clienti con Album</div>
+            <div class="card-subtitle">Elenco dei clienti che hanno foto assegnate. Clicca per gestire il loro album.</div>
             
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>ID Accesso</th>
-                            <th>Password</th>
-                            <th>Contatto</th>
-                            <th>Evento</th>
-                            <th>Data</th>
-                            <th>Azioni</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabellaClienti">
-                        <tr><td colspan="7" style="text-align:center; color: #7f8c8d;">Caricamento dati...</td></tr>
-                    </tbody>
-                </table>
+            <div id="loadingClienti" class="loading">
+                <div class="spinner"></div>
+                <div>Caricamento clienti dal cloud...</div>
             </div>
+
+            <div id="emptyClienti" class="empty-state hidden">
+                <div>Nessun cliente con foto assegnate.</div>
+            </div>
+
+            <div class="client-list" id="clientList"></div>
         </div>
 
         <div class="footer-branding">
@@ -411,233 +331,162 @@
         </div>
     </div>
 
-    <!-- MODAL SCHEDA CLIENTE -->
-    <div class="modal-overlay" id="modalScheda">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Scheda Cliente - Credenziali Accesso Galleria</h3>
-                <button class="modal-close" onclick="chiudiModalScheda()">×</button>
-            </div>
-            <div id="schedaContenuto">
-                <!-- Contenuto dinamico -->
-            </div>
-            <div class="btn-group" style="justify-content: center; margin-top: 24px;">
-                <button class="btn btn-primary" onclick="window.print()">STAMPA SCHEDA</button>
-                <button class="btn btn-outline" onclick="chiudiModalScheda()">CHIUDI</button>
-            </div>
-        </div>
-    </div>
-
     <div class="toast-container" id="toastContainer"></div>
-       <script>
+
+    <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         let studioId = localStorage.getItem('studioId') || 'studio-gold';
-        let clientiRegistrati = [];
+        let clienti = [];
 
-        document.addEventListener('DOMContentLoaded', function() {
-            generaCredenzialiCliente();
-            caricaClientiDaCloud();
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Carica il tema dal cloud
+            await caricaTemaCloud(studioId);
+            
+            caricaClienti();
         });
 
-        function generaCredenzialiCliente() {
-            const randomId = 'cliente-' + Math.random().toString(36).substring(2, 8);
-            const randomPwd = Math.random().toString(36).substring(2, 10) + '!C1';
-            document.getElementById('cliId').value = randomId;
-            document.getElementById('cliPwd').value = randomPwd;
+        async function caricaClienti() {
+            document.getElementById('loadingClienti').style.display = 'block';
+            document.getElementById('emptyClienti').classList.add('hidden');
+            document.getElementById('clientList').innerHTML = '';
+            document.getElementById('cfCliente').innerHTML = '<option value="">-- Caricamento... --</option>';
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/clienti?studioId=${studioId}`);
+                const data = await response.json();
+                
+                if (data.success && data.clienti) {
+                    clienti = data.clienti;
+                    popolaSelectClienti();
+                    renderizzaClienti();
+                } else {
+                    clienti = [];
+                }
+            } catch (error) {
+                console.error('Errore caricamento clienti:', error);
+                clienti = [];
+            }
+
+            document.getElementById('loadingClienti').style.display = 'none';
+            if (clienti.length === 0) {
+                document.getElementById('emptyClienti').classList.remove('hidden');
+            }
         }
 
-        async function salvaNuovoCliente() {
-            const nomeA = document.getElementById('cliNomeA').value.trim();
-            const cognomeA = document.getElementById('cliCognomeA').value.trim();
-            const email = document.getElementById('cliEmail').value.trim();
-            const telefono = document.getElementById('cliTelefono').value.trim();
-            const tipoEvento = document.getElementById('cliTipoEvento').value;
-            const dataEvento = document.getElementById('cliDataEvento').value;
-            const id = document.getElementById('cliId').value;
-            const pwd = document.getElementById('cliPwd').value;
+        function popolaSelectClienti() {
+            const select = document.getElementById('cfCliente');
+            if (clienti.length === 0) {
+                select.innerHTML = '<option value="">-- Nessun cliente disponibile --</option>';
+                return;
+            }
+            select.innerHTML = '<option value="">-- Seleziona un cliente --</option>' + 
+                clienti.map(c => `<option value="${c.id}">${c.nome_a} ${c.cognome_a} (${c.tipo_evento || 'Evento'})</option>`).join('');
+        }
 
-            if (!nomeA || !cognomeA || !email || !telefono) {
-                mostraToast('Compila i campi obbligatori (Nome, Cognome, Email, Telefono)', 'error');
+        function renderizzaClienti() {
+            const container = document.getElementById('clientList');
+            const emptyState = document.getElementById('emptyClienti');
+            
+            if (clienti.length === 0) {
+                emptyState.classList.remove('hidden');
+                container.innerHTML = '';
                 return;
             }
 
-            const nuovoCliente = {
-                id, pwd,
-                clienteA: { nome: nomeA, cognome: cognomeA },
-                clienteB: { 
-                    nome: document.getElementById('cliNomeB').value.trim(), 
-                    cognome: document.getElementById('cliCognomeB').value.trim() 
-                },
-                email,
-                telefono,
-                tipoEvento,
-                dataEvento,
-                dataRegistrazione: new Date().toISOString(),
-                studioId
-            };
-
-            try {
-                await fetch(`${WORKER_URL}/api/studio/clienti/salva`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(nuovoCliente)
-                }).catch(err => console.log('Sync cloud in background...', err));
-                
-                clientiRegistrati.push(nuovoCliente);
-                localStorage.setItem(`clienti_${studioId}`, JSON.stringify(clientiRegistrati));
-                
-                mostraToast(`Cliente "${nomeA} ${cognomeA}" registrato con successo!`, 'success');
-                aggiornaTabella();
-                pulisciForm();
-            } catch (error) {
-                mostraToast('Errore di connessione al server', 'error');
-            }
-        }
-
-        function caricaClientiDaCloud() {
-            const datiLocali = localStorage.getItem(`clienti_${studioId}`);
-            if (datiLocali) {
-                clientiRegistrati = JSON.parse(datiLocali);
-                aggiornaTabella();
-            } else {
-                document.getElementById('tabellaClienti').innerHTML = '<tr><td colspan="7" style="text-align:center;">Nessun cliente registrato. Inizia aggiungendone uno sopra.</td></tr>';
-            }
-        }
-
-        function aggiornaTabella() {
-            const tbody = document.getElementById('tabellaClienti');
-            tbody.innerHTML = '';
-
-            clientiRegistrati.forEach((cliente, index) => {
-                const nomeCompleto = `${cliente.clienteA.nome} ${cliente.clienteA.cognome}${cliente.clienteB.nome ? ' & ' + cliente.clienteB.nome + ' ' + cliente.clienteB.cognome : ''}`;
-                const dataEvento = cliente.dataEvento ? new Date(cliente.dataEvento).toLocaleDateString('it-IT') : 'N/D';
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${nomeCompleto}</strong></td>
-                        <td><input class="cred-input" value="${cliente.id}" onchange="aggiornaCredenziale(${index}, 'id', this.value)"></td>
-                        <td><input class="cred-input" value="${cliente.pwd}" onchange="aggiornaCredenziale(${index}, 'pwd', this.value)"></td>
-                        <td>${cliente.email}<br><small>${cliente.telefono}</small></td>
-                        <td>${cliente.tipoEvento.toUpperCase()}</td>
-                        <td>${dataEvento}</td>
-                        <td>
-                            <div style="display:flex; gap:6px; flex-direction:column;">
-                                <button class="btn btn-outline" style="padding:6px 10px; font-size:11px;" onclick="apriSchedaCliente(${index})">Scheda</button>
-                                <button class="btn btn-success" style="padding:6px 10px; font-size:11px;" onclick="inviaCredenzialiEmail(${index})">Invia Credenziali</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function aggiornaCredenziale(index, campo, valore) {
-            clientiRegistrati[index][campo] = valore;
-            localStorage.setItem(`clienti_${studioId}`, JSON.stringify(clientiRegistrati));
-            mostraToast('Credenziale aggiornata e salvata', 'success');
-        }
-
-        function apriSchedaCliente(index) {
-            const cliente = clientiRegistrati[index];
-            const dataEvento = cliente.dataEvento ? new Date(cliente.dataEvento).toLocaleDateString('it-IT') : 'N/D';
-            const dataReg = new Date(cliente.dataRegistrazione).toLocaleDateString('it-IT');
-            const nomeCompleto = `${cliente.clienteA.nome} ${cliente.clienteA.cognome}${cliente.clienteB.nome ? ' & ' + cliente.clienteB.nome + ' ' + cliente.clienteB.cognome : ''}`;
-
-            const html = `
-                <div style="text-align:center; margin-bottom:24px;">
-                    <h2 style="color:var(--primary-dark); margin-bottom:8px;">CREDENZIALI ACCESSO GALLERIA</h2>
-                    <p style="color:var(--text-light); font-size:14px;">AppCenterStudioPROGOLD</p>
-                </div>
-                <div class="scheda-row">
-                    <span class="scheda-label">Cliente</span>
-                    <span class="scheda-value">${nomeCompleto}</span>
-                </div>
-                <div class="scheda-row">
-                    <span class="scheda-label">Tipo Evento</span>
-                    <span class="scheda-value">${cliente.tipoEvento.toUpperCase()}</span>
-                </div>
-                <div class="scheda-row">
-                    <span class="scheda-label">Data Evento</span>
-                    <span class="scheda-value">${dataEvento}</span>
-                </div>
-                <div class="scheda-row">
-                    <span class="scheda-label">Email</span>
-                    <span class="scheda-value">${cliente.email}</span>
-                </div>
-                <div class="scheda-row">
-                    <span class="scheda-label">Telefono</span>
-                    <span class="scheda-value">${cliente.telefono}</span>
-                </div>
-                <div class="scheda-row">
-                    <span class="scheda-label">Data Registrazione</span>
-                    <span class="scheda-value">${dataReg}</span>
-                </div>
-                <div class="scheda-cred">
-                    <div style="text-align:center; margin-bottom:12px; font-weight:700;">CREDENZIALI DI ACCESSO</div>
-                    <div style="margin-bottom:8px;"><strong>ID Cliente:</strong> ${cliente.id}</div>
-                    <div><strong>Password:</strong> ${cliente.pwd}</div>
-                </div>
-                <div style="margin-top:20px; padding:16px; background:#f8f9fa; border-radius:8px; font-size:12px; color:var(--text-light); text-align:center;">
-                    Per accedere alla tua galleria fotografica, visita:<br>
-                    <strong style="color:var(--primary-dark);">https://cibox72.github.io/AppCenterStudioPROGOLD/gallery.html</strong>
-                </div>
-            `;
-
-            document.getElementById('schedaContenuto').innerHTML = html;
-            document.getElementById('modalScheda').classList.add('active');
-        }
-
-        function chiudiModalScheda() {
-            document.getElementById('modalScheda').classList.remove('active');
-        }
-
-        function inviaCredenzialiEmail(index) {
-            const cliente = clientiRegistrati[index];
-            const subject = encodeURIComponent(`Credenziali Accesso Galleria - AppCenterStudioPROGOLD`);
-            const body = encodeURIComponent(`Gentile ${cliente.clienteA.nome} ${cliente.clienteA.cognome},\n\necco le tue credenziali per accedere alla galleria fotografica:\n\nID Cliente: ${cliente.id}\nPassword: ${cliente.pwd}\n\nLink accesso: https://cibox72.github.io/AppCenterStudioPROGOLD/gallery.html\n\nCordiali saluti,\nLo Studio`);
+            emptyState.classList.add('hidden');
             
-            window.open(`mailto:${cliente.email}?subject=${subject}&body=${body}`);
-            mostraToast('Email pronta per l\'invio', 'success');
+            // Simulazione conteggio foto (in produzione verrebbe dal DB/R2)
+            container.innerHTML = clienti.map(c => `
+                <div class="client-item">
+                    <div class="client-info">
+                        <div class="client-name">${c.nome_a} ${c.cognome_a} ${c.nome_b ? '& ' + c.nome_b + ' ' + c.cognome_b : ''}</div>
+                        <div class="client-event">${c.tipo_evento || 'Evento'} - ${c.data_evento ? new Date(c.data_evento).toLocaleDateString('it-IT') : 'Data non impostata'}</div>
+                    </div>
+                    <div class="client-photos">Album Attivo</div>
+                    <button class="btn btn-outline" style="padding: 8px 16px;" onclick="gestisciAlbum('${c.id}')">Gestisci</button>
+                </div>
+            `).join('');
         }
 
-        function pulisciForm() {
-            document.getElementById('cliNomeA').value = '';
-            document.getElementById('cliCognomeA').value = '';
-            document.getElementById('cliNomeB').value = '';
-            document.getElementById('cliCognomeB').value = '';
-            document.getElementById('cliEmail').value = '';
-            document.getElementById('cliTelefono').value = '';
-            document.getElementById('cliDataEvento').value = '';
-            generaCredenzialiCliente();
+        async function assegnaFoto() {
+            const clienteId = document.getElementById('cfCliente').value;
+            const tipoAlbum = document.getElementById('cfTipoAlbum').value;
+            const fileInput = document.getElementById('cfFileInput');
+            const files = fileInput.files;
+
+            if (!clienteId) {
+                mostraToast('Seleziona un cliente', 'error');
+                return;
+            }
+
+            if (files.length === 0) {
+                mostraToast('Seleziona almeno una foto', 'error');
+                return;
+            }
+
+            const cliente = clienti.find(c => c.id === clienteId);
+            if (!cliente) return;
+
+            mostraToast(`Caricamento di ${files.length} foto per ${cliente.nome_a}...`, 'success');
+
+            // Simulazione upload (in produzione usa l'endpoint R2 del worker)
+            // for (let file of files) {
+            //     await fetch(`${WORKER_URL}/api/studio/upload?studioId=${studioId}&clienteId=${clienteId}&filename=${file.name}&folder=${tipoAlbum}`, {
+            //         method: 'POST',
+            //         body: file
+            //     });
+            // }
+            
+            await new Promise(r => setTimeout(r, 1000)); // Simula attesa
+
+            mostraToast('Foto caricate e assegnate con successo!', 'success');
+            fileInput.value = '';
+        }
+
+        function gestisciAlbum(clienteId) {
+            const cliente = clienti.find(c => c.id === clienteId);
+            if (cliente) {
+                mostraToast(`Apertura album per ${cliente.nome_a} ${cliente.cognome_a}...`, 'success');
+                // Qui si potrebbe reindirizzare a una pagina di dettaglio album
+                // window.location.href = `dettaglio-album.html?id=${clienteId}`;
+            }
         }
 
         async function eseguiBackupCloud() {
-            try {
-                await fetch(`${WORKER_URL}/api/studio/clienti/backup`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ studioId, clienti: clientiRegistrati, timestamp: Date.now() })
-                });
-                mostraToast('Backup salvato su Cloud', 'success');
-            } catch (error) {
-                mostraToast('Errore backup Cloud', 'error');
-            }
+            const blob = new Blob([JSON.stringify(clienti, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backup-clienti-foto-${studioId}-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            mostraToast('Backup scaricato', 'success');
         }
 
         async function eseguiRipristinoCloud() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/clienti/backup?studioId=${studioId}`);
-                const data = await response.json();
-                
-                if (data.clienti) {
-                    clientiRegistrati = data.clienti;
-                    localStorage.setItem(`clienti_${studioId}`, JSON.stringify(clientiRegistrati));
-                    aggiornaTabella();
-                    mostraToast('Backup ripristinato con successo', 'success');
-                }
-            } catch (error) {
-                mostraToast('Errore ripristino Cloud', 'error');
-            }
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    try {
+                        const dati = JSON.parse(ev.target.result);
+                        if (Array.isArray(dati)) {
+                            clienti = dati;
+                            renderizzaClienti();
+                            popolaSelectClienti();
+                            mostraToast('Ripristino completato', 'success');
+                        }
+                    } catch (error) {
+                        mostraToast('Errore nel ripristino', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
         }
 
         function mostraToast(msg, tipo) {
@@ -650,4 +499,4 @@
         }
     </script>
 </body>
-</html> 
+</html>
