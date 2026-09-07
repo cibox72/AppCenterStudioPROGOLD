@@ -6,16 +6,16 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Agenda & Appuntamenti - AppCenterStudioPROGOLD</title>
+    <title>Agenda - AppCenterStudioPROGOLD</title>
+    <script src="temi.js"></script>
     <style>
         :root {
-            --primary: #48c9b0; /* Verde Menta */
-            --primary-dark: #117a65;
+            --primary: #82e0aa;
+            --primary-dark: #1e8449;
             --primary-light: #e8f8f5;
-            --primary-gradient: linear-gradient(135deg, #a3e4d7 0%, #48c9b0 50%, #117a65 100%);
-            --secondary: #5dade2;
+            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-bg: rgba(255, 255, 255, 0.98);
             --card-gradient: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
             --text-main: #2c3e50;
             --text-light: #7f8c8d;
@@ -23,9 +23,9 @@
             --success: #27ae60;
             --warning: #f39c12;
             --danger: #e74c3c;
-            --shadow: 0 4px 16px rgba(72, 201, 176, 0.08);
-            --shadow-hover: 0 8px 32px rgba(72, 201, 176, 0.15);
-            --radius: 14px;
+            --shadow-3d: 0 10px 30px rgba(30, 132, 73, 0.12), 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-3d-hover: 0 20px 50px rgba(30, 132, 73, 0.2), 0 5px 15px rgba(0,0,0,0.08);
+            --radius: 16px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -49,7 +49,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 12px rgba(72, 201, 176, 0.2);
+            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
         }
 
         .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
@@ -57,16 +57,17 @@
         .nav-btn {
             background: rgba(255,255,255,0.95);
             border: 1px solid rgba(255,255,255,0.3);
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 10px 18px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--primary-dark);
             transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
-        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
 
         .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
         .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(46, 204, 113, 0.6); }
@@ -77,54 +78,88 @@
         .page-header { 
             text-align: center; 
             margin-bottom: 32px;
-            padding: 24px;
+            padding: 32px;
             background: var(--card-gradient);
             border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-3d);
             border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .page-header:hover { transform: translateY(-4px); box-shadow: var(--shadow-3d-hover); }
         .page-header h1 { 
-            font-size: 28px; 
-            font-weight: 700; 
+            font-size: 32px; 
+            font-weight: 800; 
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 8px; 
+            letter-spacing: -0.5px;
         }
         .page-header p { color: var(--text-light); font-size: 15px; }
 
-        .card {
+        .card-3d {
             background: var(--card-gradient);
             border-radius: var(--radius);
-            padding: 28px;
+            padding: 32px;
             margin-bottom: 24px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-3d);
             border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
         }
 
-        .card:hover { box-shadow: var(--shadow-hover); }
+        .card-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .card-3d:hover { transform: translateY(-6px); box-shadow: var(--shadow-3d-hover); }
 
         .card-title { 
-            font-size: 18px; 
-            font-weight: 600; 
+            font-size: 20px; 
+            font-weight: 700; 
             color: var(--primary-dark); 
-            margin-bottom: 6px; 
-            padding-bottom: 10px;
+            margin-bottom: 8px; 
+            padding-bottom: 12px;
             border-bottom: 2px solid var(--primary-light);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 0.5px;
+            background: var(--primary-gradient);
+            box-shadow: 0 4px 12px rgba(30, 132, 73, 0.25);
+        }
+
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
 
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
         .form-group input, .form-group select, .form-group textarea {
-            padding: 11px 14px;
+            padding: 12px 14px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 14px;
             font-family: inherit;
             background: white;
@@ -133,13 +168,14 @@
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
             outline: none; 
             border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(72, 201, 176, 0.15); 
+            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); 
+            transform: translateY(-1px);
         }
 
         .btn {
             padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
@@ -148,43 +184,51 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
         .btn-outline:hover { background: var(--primary-light); }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
 
-        /* LISTA EVENTI */
-        .event-list { display: flex; flex-direction: column; gap: 12px; }
-        .event-item {
+        .agenda-list { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
+        .agenda-item {
             background: white;
             border-left: 4px solid var(--primary);
-            border-radius: 8px;
-            padding: 16px 20px;
+            border-radius: 12px;
+            padding: 20px 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            transition: all 0.2s ease;
+            flex-wrap: wrap;
+            gap: 12px;
         }
-        .event-item:hover { transform: translateX(4px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .event-item.tipo-servizio { border-left-color: #3498db; }
-        .event-item.tipo-appuntamento { border-left-color: #9b59b6; }
-        .event-item.tipo-consegna { border-left-color: #e67e22; }
+        .agenda-item:hover { transform: translateX(6px); box-shadow: 0 8px 24px rgba(30, 132, 73, 0.15); }
+        .agenda-info { flex: 1; min-width: 200px; }
+        .agenda-title { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .agenda-date { font-size: 13px; color: var(--text-light); }
+        .agenda-type {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+        .agenda-note { font-size: 13px; color: var(--text-light); margin-top: 8px; font-style: italic; }
 
-        .event-info { flex: 1; }
-        .event-title { font-weight: 600; font-size: 16px; color: var(--text-main); margin-bottom: 4px; }
-        .event-meta { font-size: 13px; color: var(--text-light); }
-        .event-date { font-weight: 700; color: var(--primary-dark); font-size: 14px; text-align: right; }
-        .event-type { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-light); margin-top: 4px; }
-
-        .empty-state { text-align: center; padding: 40px; color: var(--text-light); font-style: italic; }
-
-        /* FOOTER */
         .footer-branding {
             text-align: center;
-            padding: 20px;
+            padding: 24px;
             color: var(--text-light);
             font-size: 13px;
             font-weight: 500;
@@ -193,7 +237,6 @@
         }
         .footer-branding strong { color: var(--primary-dark); font-weight: 700; }
 
-        /* TOAST */
         .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
         .toast {
             background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
@@ -204,223 +247,285 @@
         .toast-icon { font-size: 20px; font-weight: bold; }
         .toast-message { flex: 1; font-size: 14px; }
 
+        .loading { text-align: center; padding: 40px; color: var(--text-light); }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
+
+        .hidden { display: none !important; }
+
         @media (max-width: 768px) {
             .top-bar { flex-direction: column; gap: 10px; }
             .form-row { grid-template-columns: 1fr; }
-            .event-item { flex-direction: column; align-items: flex-start; gap: 8px; }
-            .event-date { text-align: left; }
+            .page-header h1 { font-size: 24px; }
         }
     </style>
 </head>
 <body>
-    <!-- TOP BAR -->
+
     <div class="top-bar">
         <div class="nav-left">
             <button class="nav-btn" onclick="window.history.back()">Indietro</button>
-            <button class="nav-btn" onclick="window.location.href='index.html'">Home</button>
+            <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Plancia</button>
         </div>
         <div class="nav-right">
-            <button class="nav-btn" onclick="eseguiBackupGlobale()">Backup Globale</button>
-            <button class="nav-btn" onclick="eseguiRipristinoGlobale()">Ripristino Globale</button>
+            <button class="nav-btn" onclick="eseguiBackupCloud()">Backup Cloud</button>
+            <button class="nav-btn" onclick="eseguiRipristinoCloud()">Ripristino Cloud</button>
             <div class="sync-status"><span class="sync-dot"></span> Sync Cloud: OK</div>
         </div>
     </div>
 
     <div class="container">
         <div class="page-header">
-            <h1>Agenda Live Studio Condivisa</h1>
-            <p>Pianifica appuntamenti, scadenze e servizi fotografici in tempo reale su tutti i dispositivi dello studio.</p>
+            <h1>Agenda Eventi</h1>
+            <p>Gestisci gli appuntamenti e gli eventi dello studio. Tutti i dati vengono salvati in tempo reale sul cloud multi-tenant.</p>
         </div>
 
-        <!-- SEZIONE 1: AGGIUNGI IMPEGNO -->
-        <div class="card">
-            <div class="card-title">Aggiungi Impegno / Evento</div>
-            <div class="card-subtitle">Inserisci i dettagli dell'appuntamento. Verrà sincronizzato istantaneamente.</div>
+        <!-- NUOVO EVENTO -->
+        <div class="card-3d">
+            <div class="card-title"><span class="badge">NE</span> Nuovo Evento</div>
+            <div class="card-subtitle">Aggiungi un nuovo evento o appuntamento all'agenda dello studio.</div>
             
             <div class="form-row">
                 <div class="form-group">
                     <label>Titolo Evento *</label>
-                    <input type="text" id="eventoTitolo" placeholder="es. Shooting Matrimonio Rossi">
+                    <input type="text" id="evTitolo" placeholder="es. Shooting matrimonio Rossi">
                 </div>
                 <div class="form-group">
-                    <label>Data Evento *</label>
-                    <input type="date" id="eventoData">
+                    <label>Data *</label>
+                    <input type="date" id="evData">
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Tipologia Appuntamento</label>
-                    <select id="eventoTipo">
-                        <option value="servizio">Servizio Fotografico</option>
-                        <option value="appuntamento">Appuntamento in Studio</option>
-                        <option value="consegna">Consegna Materiali</option>
+                    <label>Tipo Evento</label>
+                    <select id="evTipo">
+                        <option value="matrimonio">Matrimonio</option>
+                        <option value="battesimo">Battesimo</option>
+                        <option value="comunione">Comunione</option>
+                        <option value="ritratto">Ritratto</option>
+                        <option value="evento-aziendale">Evento Aziendale</option>
+                        <option value="appuntamento">Appuntamento</option>
+                        <option value="riunione">Riunione</option>
+                        <option value="altro">Altro</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Note Interne / Dettagli</label>
-                    <input type="text" id="eventoNote" placeholder="Dettagli aggiuntivi (facoltativo)">
-                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Note</label>
+                <textarea id="evNote" rows="3" placeholder="Dettagli aggiuntivi sull'evento..."></textarea>
             </div>
 
             <div class="btn-group">
-                <button class="btn btn-primary" onclick="registraAppuntamento()">Registra Appuntamento</button>
+                <button class="btn btn-primary" onclick="creaEvento()">CREA EVENTO SUL CLOUD</button>
             </div>
         </div>
 
-        <!-- SEZIONE 2: ELENCO CRONOLOGICO -->
-        <div class="card">
-            <div class="card-title">Elenco Cronologico Scadenze</div>
-            <div class="card-subtitle">Visualizza tutti gli impegni registrati, ordinati per data.</div>
+        <!-- ELENCO EVENTI -->
+        <div class="card-3d">
+            <div class="card-title"><span class="badge">EE</span> Elenco Eventi</div>
+            <div class="card-subtitle">Tutti gli eventi in agenda, ordinati per data.</div>
             
-            <div class="event-list" id="eventList">
-                <div class="empty-state">Caricamento impegni dal cloud database...</div>
+            <div id="loadingEventi" class="loading">
+                <div class="spinner"></div>
+                <div>Caricamento eventi dal cloud...</div>
             </div>
+
+            <div id="emptyEventi" class="empty-state hidden">
+                <div>Nessun evento in agenda. Crea il primo evento qui sopra.</div>
+            </div>
+
+            <div class="agenda-list" id="agendaList"></div>
         </div>
 
-        <!-- FOOTER BRANDING -->
         <div class="footer-branding">
             Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong> - Tutti i diritti riservati
         </div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-       <script>
+
+    <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         let studioId = localStorage.getItem('studioId') || 'studio-gold';
         let eventi = [];
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Carica il tema dal cloud
+            await caricaTemaCloud(studioId);
+            
             caricaEventi();
         });
 
-        async function registraAppuntamento() {
-            const titolo = document.getElementById('eventoTitolo').value.trim();
-            const data = document.getElementById('eventoData').value;
-            const tipo = document.getElementById('eventoTipo').value;
-            const note = document.getElementById('eventoNote').value.trim();
+        async function creaEvento() {
+            const titolo = document.getElementById('evTitolo').value.trim();
+            const data = document.getElementById('evData').value;
+            const tipo = document.getElementById('evTipo').value;
+            const note = document.getElementById('evNote').value.trim();
 
             if (!titolo || !data) {
                 mostraToast('Compila Titolo e Data (campi obbligatori)', 'error');
                 return;
             }
 
-            const nuovoEvento = {
-                id: Date.now(),
+            const evento = {
+                id: 'ev-' + Date.now(),
+                studio_id: studioId,
                 titolo,
                 data,
                 tipo,
                 note,
-                studioId,
-                creatoIl: new Date().toISOString()
+                creato_il: new Date().toISOString()
             };
 
             try {
-                // Salvataggio locale immediato per reattività UI
-                eventi.push(nuovoEvento);
-                eventi.sort((a, b) => new Date(a.data) - new Date(b.data));
-                localStorage.setItem(`agenda_${studioId}`, JSON.stringify(eventi));
-                
-                // Tentativo di sync con Cloudflare (opzionale, non blocca se fallisce)
-                fetch(`${WORKER_URL}/api/studio/agenda/salva`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/agenda`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ studioId, eventi })
-                }).catch(err => console.log('Sync cloud in background...', err));
+                    body: JSON.stringify(evento)
+                });
+                const result = await response.json();
 
-                mostraToast('Appuntamento registrato con successo!', 'success');
-                pulisciForm();
-                renderizzaEventi();
+                if (result.success) {
+                    eventi.unshift(evento);
+                    mostraToast('Evento creato sul cloud con successo!', 'success');
+                    pulisciForm();
+                    renderizzaEventi();
+                } else {
+                    mostraToast('Errore nella creazione', 'error');
+                }
             } catch (error) {
-                mostraToast('Errore durante il salvataggio', 'error');
+                console.error('Errore creazione evento:', error);
+                mostraToast('Errore di connessione al cloud', 'error');
             }
         }
 
-        function caricaEventi() {
-            // Carica da localStorage per velocità, poi tenta sync cloud
-            const datiLocali = localStorage.getItem(`agenda_${studioId}`);
-            if (datiLocali) {
-                eventi = JSON.parse(datiLocali);
-                eventi.sort((a, b) => new Date(a.data) - new Date(b.data));
-                renderizzaEventi();
-            } else {
-                document.getElementById('eventList').innerHTML = '<div class="empty-state">Nessun impegno registrato. Aggiungi il primo evento sopra.</div>';
+        async function caricaEventi() {
+            document.getElementById('loadingEventi').style.display = 'block';
+            document.getElementById('emptyEventi').classList.add('hidden');
+            document.getElementById('agendaList').innerHTML = '';
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/agenda?studioId=${studioId}`);
+                const data = await response.json();
+                
+                if (data.success && data.eventi) {
+                    eventi = data.eventi;
+                } else {
+                    eventi = [];
+                }
+            } catch (error) {
+                console.error('Errore caricamento eventi:', error);
+                eventi = [];
             }
 
-            // Tentativo fetch da cloud
-            fetch(`${WORKER_URL}/api/studio/agenda?studioId=${studioId}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.eventi && data.eventi.length > 0) {
-                        eventi = data.eventi;
-                        localStorage.setItem(`agenda_${studioId}`, JSON.stringify(eventi));
-                        renderizzaEventi();
-                    }
-                })
-                .catch(err => console.log('Lettura cloud non disponibile, uso cache locale'));
+            document.getElementById('loadingEventi').style.display = 'none';
+            renderizzaEventi();
         }
 
         function renderizzaEventi() {
-            const container = document.getElementById('eventList');
+            const container = document.getElementById('agendaList');
+            const emptyState = document.getElementById('emptyEventi');
             
             if (eventi.length === 0) {
-                container.innerHTML = '<div class="empty-state">Nessun impegno registrato. Aggiungi il primo evento sopra.</div>';
+                emptyState.classList.remove('hidden');
+                container.innerHTML = '';
                 return;
             }
 
-            container.innerHTML = eventi.map(ev => {
-                const tipoClass = `tipo-${ev.tipo}`;
-                const tipoLabel = ev.tipo === 'servizio' ? 'Servizio Fotografico' : ev.tipo === 'appuntamento' ? 'Appuntamento Studio' : 'Consegna Materiali';
-                const dataFormattata = new Date(ev.data).toLocaleDateString('it-IT', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                
-                return `
-                    <div class="event-item ${tipoClass}">
-                        <div class="event-info">
-                            <div class="event-title">${ev.titolo}</div>
-                            <div class="event-meta">${ev.note || 'Nessuna nota aggiuntiva'}</div>
-                            <div class="event-type">${tipoLabel}</div>
-                        </div>
-                        <div class="event-date">${dataFormattata}</div>
+            emptyState.classList.add('hidden');
+
+            const tipiMap = {
+                'matrimonio': 'Matrimonio',
+                'battesimo': 'Battesimo',
+                'comunione': 'Comunione',
+                'ritratto': 'Ritratto',
+                'evento-aziendale': 'Evento Aziendale',
+                'appuntamento': 'Appuntamento',
+                'riunione': 'Riunione',
+                'altro': 'Altro'
+            };
+
+            container.innerHTML = eventi.map(ev => `
+                <div class="agenda-item">
+                    <div class="agenda-info">
+                        <div class="agenda-title">${ev.titolo}</div>
+                        <div class="agenda-date">${new Date(ev.data).toLocaleDateString('it-IT', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                        <span class="agenda-type">${tipiMap[ev.tipo] || ev.tipo}</span>
+                        ${ev.note ? `<div class="agenda-note">${ev.note}</div>` : ''}
                     </div>
-                `;
-            }).join('');
+                    <button class="btn btn-danger" onclick="eliminaEvento('${ev.id}')" style="padding: 8px 16px;">Elimina</button>
+                </div>
+            `).join('');
+        }
+
+        async function eliminaEvento(id) {
+            if (!confirm('Sei sicuro di voler eliminare questo evento?')) return;
+            
+            eventi = eventi.filter(e => e.id !== id);
+            renderizzaEventi();
+            mostraToast('Evento eliminato dalla vista', 'success');
         }
 
         function pulisciForm() {
-            document.getElementById('eventoTitolo').value = '';
-            document.getElementById('eventoData').value = '';
-            document.getElementById('eventoNote').value = '';
-            document.getElementById('eventoTipo').value = 'servizio';
+            document.getElementById('evTitolo').value = '';
+            document.getElementById('evData').value = '';
+            document.getElementById('evTipo').value = 'matrimonio';
+            document.getElementById('evNote').value = '';
         }
 
-        function eseguiBackupGlobale() {
-            const dati = { agenda: eventi, studioId, data: new Date().toISOString() };
-            const blob = new Blob([JSON.stringify(dati, null, 2)], { type: 'application/json' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `backup-agenda-${studioId}-${Date.now()}.json`;
-            a.click();
-            mostraToast('Backup agenda scaricato', 'success');
+        async function eseguiBackupCloud() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/agenda?studioId=${studioId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const blob = new Blob([JSON.stringify(data.eventi, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `backup-agenda-${studioId}-${Date.now()}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    mostraToast('Backup scaricato dal cloud', 'success');
+                }
+            } catch (error) {
+                mostraToast('Errore backup cloud', 'error');
+            }
         }
 
-        function eseguiRipristinoGlobale() {
+        async function eseguiRipristinoCloud() {
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = '.json';
-            input.onchange = e => {
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
                 const reader = new FileReader();
-                reader.onload = ev => {
+                reader.onload = async (ev) => {
                     try {
                         const dati = JSON.parse(ev.target.result);
-                        if (dati.agenda) {
-                            eventi = dati.agenda;
-                            localStorage.setItem(`agenda_${studioId}`, JSON.stringify(eventi));
-                            renderizzaEventi();
-                            mostraToast('Agenda ripristinata con successo', 'success');
+                        if (Array.isArray(dati)) {
+                            for (const ev of dati) {
+                                ev.studio_id = studioId;
+                                await fetch(`${WORKER_URL}/api/studio/agenda`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(ev)
+                                });
+                            }
+                            mostraToast('Ripristino completato sul cloud', 'success');
+                            await caricaEventi();
                         }
-                    } catch { mostraToast('File di backup non valido', 'error'); }
+                    } catch (error) {
+                        mostraToast('Errore nel ripristino', 'error');
+                    }
                 };
-                reader.readAsText(e.target.files[0]);
+                reader.readAsText(file);
             };
             input.click();
         }
@@ -435,4 +540,4 @@
         }
     </script>
 </body>
-</html> 
+</html>
