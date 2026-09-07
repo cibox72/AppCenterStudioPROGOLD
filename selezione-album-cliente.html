@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selezione Foto Album - AppCenterStudioPROGOLD</title>
+    <style>
+        :root {
+            --primary: #5dade2;
+            --primary-dark: #2874a6;
+            --primary-light: #d6eaf8;
+            --primary-gradient: linear-gradient(135deg, #85c1e9 0%, #5dade2 50%, #2874a6 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #ebf5fb 100%);
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e8e8e8;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --radius: 16px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            background: var(--primary-gradient);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(40, 116, 166, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.95);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .user-info { color: white; font-size: 14px; font-weight: 600; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
+
+        .timer-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(40, 116, 166, 0.12);
+            margin-bottom: 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timer-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+        }
+
+        .timer-card h1 {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .timer-card .subtitle {
+            font-size: 15px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .countdown-display {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .countdown-box {
+            background: var(--primary-light);
+            padding: 20px;
+            border-radius: 12px;
+            min-width: 80px;
+        }
+
+        .countdown-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        .countdown-label {
+            font-size: 11px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .countdown-box.urgent {
+            background: #fadbd8;
+        }
+
+        .countdown-box.urgent .countdown-value {
+            color: var(--danger);
+        }
+
+        .info-card {
+            background: var(--primary-light);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .info-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+        }
+
+        .info-card-text {
+            font-size: 14px;
+            color: var(--text-main);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .photo-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(40, 116, 166, 0.15);
+        }
+
+        .photo-card.selected {
+            border-color: var(--primary);
+            box-shadow: 0 8px 24px rgba(40, 116, 166, 0.25);
+        }
+
+        .photo-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .photo-placeholder {
+            height: 200px;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            font-weight: 800;
+        }
+
+        .photo-info {
+            padding: 16px;
+        }
+
+        .photo-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .selection-summary {
+            background: white;
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .selection-count {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover { transform: translateY(-2px); }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+        }
+
+        .footer-branding {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
+        .toast {
+            background: white;
+            border-radius: 10px;
+            padding: 14px 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
+            border-left: 4px solid var(--success);
+            animation: slideIn 0.3s ease;
+        }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+
+        .loading { text-align: center; padding: 40px; color: var(--text-light); }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--primary-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 768px) {
+            .gallery-grid { grid-template-columns: 1fr; }
+            .countdown-display { flex-wrap: wrap; }
+            .timer-card h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <button class="nav-btn" onclick="logout()">Logout</button>
+        <div class="user-info" id="userInfo">Caricamento...</div>
+    </div>
+
+    <div class="container">
+        <div id="loadingArea" class="loading">
+            <div class="spinner"></div>
+            <div>Verifica sessione e carica foto...</div>
+        </div>
+
+        <div id="expiredArea" class="hidden">
+            <div class="timer-card">
+                <h1>Selezione Scaduta</h1>
+                <div class="subtitle">Il periodo di 7 giorni per selezionare le foto è terminato.</div>
+                <div class="info-card" style="margin-top: 20px;">
+                    <div class="info-card-title">Cosa fare ora?</div>
+                    <div class="info-card-text">Contatta lo studio per richiedere un nuovo link di selezione. Le tue foto sono ancora al sicuro nel nostro archivio.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="mainContent" class="hidden">
+            <div class="timer-card">
+                <h1>Seleziona le Tue Foto Preferite</h1>
+                <div class="subtitle">Hai 7 giorni per scegliere le foto del tuo album. Clicca sulle foto per selezionarle.</div>
+                
+                <div class="countdown-display">
+                    <div class="countdown-box" id="daysBox">
+                        <div class="countdown-value" id="daysCount">0</div>
+                        <div class="countdown-label">Giorni</div>
+                    </div>
+                    <div class="countdown-box" id="hoursBox">
+                        <div class="countdown-value" id="hoursCount">0</div>
+                        <div class="countdown-label">Ore</div>
+                    </div>
+                    <div class="countdown-box" id="minutesBox">
+                        <div class="countdown-value" id="minutesCount">0</div>
+                        <div class="countdown-label">Minuti</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-title">ℹ️ Come funziona</div>
+                <div class="info-card-text">
+                    Clicca su una foto per selezionarla (apparirà un segno ✓). Puoi selezionare quante foto vuoi. 
+                    Quando hai finito, clicca "Invia Selezione" per confermare le tue scelte allo studio.
+                </div>
+            </div>
+
+            <div class="selection-summary">
+                <div class="selection-count">
+                    Foto selezionate: <strong id="selectedCount">0</strong>
+                </div>
+                <button class="btn btn-success" onclick="inviaSelezione()">INVIA SELEZIONE ALLO STUDIO</button>
+            </div>
+
+            <div class="gallery-grid" id="galleryGrid"></div>
+        </div>
+
+        <div class="footer-branding">
+            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        let clienteData = null;
+        let fotoSelezionate = new Set();
+        let countdownInterval = null;
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!token) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            await verificaSessione();
+        });
+
+        async function verificaSessione() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+                const data = await response.json();
+
+                if (!data.success || data.tipo !== 'cliente') {
+                    mostraToast('Sessione non valida', 'error');
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                    return;
+                }
+
+                await caricaDatiCliente(data.user);
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione al cloud', 'error');
+            }
+        }
+
+        async function caricaDatiCliente(user) {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/cliente/dashboard?token=${token}`);
+                const data = await response.json();
+
+                if (data.success && data.cliente) {
+                    clienteData = data.cliente;
+                    document.getElementById('userInfo').textContent = `${clienteData.nome_a} ${clienteData.cognome_a}`;
+                    
+                    // Verifica scadenza
+                    const dataCreazione = new Date(clienteData.data_registrazione);
+                    const scadenza = new Date(dataCreazione);
+                    scadenza.setDate(scadenza.getDate() + 7);
+                    const oggi = new Date();
+
+                    if (oggi > scadenza) {
+                        // Scaduto
+                        document.getElementById('loadingArea').classList.add('hidden');
+                        document.getElementById('expiredArea').classList.remove('hidden');
+                        return;
+                    }
+
+                    // Ancora valido
+                    await caricaFoto();
+                    avviaCountdown(scadenza);
+                    document.getElementById('loadingArea').classList.add('hidden');
+                    document.getElementById('mainContent').classList.remove('hidden');
+                } else {
+                    mostraToast('Errore nel caricamento dati', 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        async function caricaFoto() {
+            // Simulazione: in produzione le foto verrebbero dal cloud R2
+            // Per ora mostriamo placeholder
+            const foto = [
+                { id: 1, nome: 'Foto 1 - Cerimonia' },
+                { id: 2, nome: 'Foto 2 - Ritratto Coppia' },
+                { id: 3, nome: 'Foto 3 - Dettagli' },
+                { id: 4, nome: 'Foto 4 - Gruppo Famiglia' },
+                { id: 5, nome: 'Foto 5 - Ricevimento' },
+                { id: 6, nome: 'Foto 6 - Momenti Speciali' }
+            ];
+
+            const grid = document.getElementById('galleryGrid');
+            grid.innerHTML = foto.map(f => `
+                <div class="photo-card" onclick="toggleFoto(${f.id}, this)">
+                    <div class="photo-placeholder">${f.id}</div>
+                    <div class="photo-info">
+                        <div class="photo-name">${f.nome}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleFoto(id, element) {
+            if (fotoSelezionate.has(id)) {
+                fotoSelezionate.delete(id);
+                element.classList.remove('selected');
+            } else {
+                fotoSelezionate.add(id);
+                element.classList.add('selected');
+            }
+            document.getElementById('selectedCount').textContent = fotoSelezionate.size;
+        }
+
+        function avviaCountdown(scadenza) {
+            aggiornaCountdown(scadenza);
+            countdownInterval = setInterval(() => aggiornaCountdown(scadenza), 60000); // Aggiorna ogni minuto
+        }
+
+        function aggiornaCountdown(scadenza) {
+            const oggi = new Date();
+            const differenza = scadenza - oggi;
+
+            if (differenza <= 0) {
+                clearInterval(countdownInterval);
+                location.reload(); // Ricarica per mostrare scadenza
+                return;
+            }
+
+            const giorni = Math.floor(differenza / (1000 * 60 * 60 * 24));
+            const ore = Math.floor((differenza % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minuti = Math.floor((differenza % (1000 * 60 * 60)) / (1000 * 60));
+
+            document.getElementById('daysCount').textContent = giorni;
+            document.getElementById('hoursCount').textContent = ore;
+            document.getElementById('minutesCount').textContent = minuti;
+
+            // Stile urgente se mancano meno di 2 giorni
+            if (giorni <= 2) {
+                document.getElementById('daysBox').classList.add('urgent');
+                document.getElementById('hoursBox').classList.add('urgent');
+                document.getElementById('minutesBox').classList.add('urgent');
+            }
+        }
+
+        async function inviaSelezione() {
+            if (fotoSelezionate.size === 0) {
+                mostraToast('Seleziona almeno una foto', 'error');
+                return;
+            }
+
+            if (!confirm(`Confermi l'invio di ${fotoSelezionate.size} foto allo studio?`)) {
+                return;
+            }
+
+            try {
+                // In produzione: salva la selezione sul cloud D1
+                // await fetch(`${WORKER_URL}/api/cliente/selezione-foto`, {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify({
+                //         token,
+                //         foto_ids: Array.from(fotoSelezionate)
+                //     })
+                // });
+
+                mostraToast(`Selezione inviata con successo! ${fotoSelezionate.size} foto inviate allo studio.`, 'success');
+                
+                // Disabilita ulteriori modifiche
+                document.querySelectorAll('.photo-card').forEach(card => {
+                    card.style.pointerEvents = 'none';
+                });
+                document.querySelector('.btn-success').disabled = true;
+                document.querySelector('.btn-success').textContent = 'SELEZIONE INVIATA ✓';
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore nell\'invio', 'error');
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch(`${WORKER_URL}/api/auth/logout`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+            } catch(e) {}
+            window.location.href = 'index.html';
+        }
+
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `<div>${msg}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+    </script>
+</body>
+</html>
