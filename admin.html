@@ -3,11 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
     <title>Admin Panel - AppCenterStudioPROGOLD</title>
-    <script src="temi.js"></script>
     <style>
         :root {
             --primary: #82e0aa;
@@ -15,682 +11,264 @@
             --primary-light: #e8f8f5;
             --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --card-bg: rgba(255, 255, 255, 0.98);
-            --card-gradient: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
             --text-main: #2c3e50;
             --text-light: #7f8c8d;
             --border-color: #e8e8e8;
-            --success: #27ae60;
-            --warning: #f39c12;
             --danger: #e74c3c;
-            --shadow-3d: 0 10px 30px rgba(30, 132, 73, 0.12), 0 1px 3px rgba(0,0,0,0.05);
-            --shadow-3d-hover: 0 20px 50px rgba(30, 132, 73, 0.2), 0 5px 15px rgba(0,0,0,0.08);
             --radius: 16px;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg-gradient);
-            background-attachment: fixed;
             color: var(--text-main);
             line-height: 1.6;
             min-height: 100vh;
         }
-
         .top-bar {
             background: var(--primary-gradient);
             padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            position: sticky;
-            top: 0;
-            z-index: 100;
             box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
+            position: sticky; top: 0; z-index: 100;
         }
-
-        .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
-
         .nav-btn {
-            background: rgba(255,255,255,0.95);
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 10px 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--primary-dark);
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
+            cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark);
         }
-
-        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
-
-        .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(46, 204, 113, 0.6); }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
         .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
-
-        .page-header { 
-            text-align: center; 
-            margin-bottom: 32px;
-            padding: 32px;
-            background: var(--card-gradient);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-3d);
-            border: 1px solid var(--border-color);
+        .page-header {
+            text-align: center; padding: 32px; background: white; border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
         }
-        .page-header h1 { 
-            font-size: 32px; 
-            font-weight: 800; 
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px; 
+        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
+        .page-header h1 {
+            font-size: 32px; font-weight: 800; background: var(--primary-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px;
         }
-        .page-header p { color: var(--text-light); font-size: 15px; }
-
         .card-3d {
-            background: var(--card-gradient);
-            border-radius: var(--radius);
-            padding: 32px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-3d);
-            border: 1px solid var(--border-color);
-            position: relative;
-            overflow: hidden;
+            background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden;
         }
-
-        .card-3d::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--primary-gradient);
+        .card-3d::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
+        .card-title {
+            font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px;
+            padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
         }
-
-        .card-title { 
-            font-size: 20px; 
-            font-weight: 700; 
-            color: var(--primary-dark); 
-            margin-bottom: 8px; 
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--primary-light);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 800;
-            color: white;
-            background: var(--primary-gradient);
-            box-shadow: 0 4px 12px rgba(30, 132, 73, 0.25);
-        }
-
-        .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
-
-        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
-        .form-group input, .form-group select {
-            padding: 12px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: inherit;
-            background: white;
-        }
-        .form-group input:focus, .form-group select:focus { 
-            outline: none; 
-            border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); 
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .btn-primary { background: var(--primary-gradient); color: white; }
-        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
-        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
-        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
-        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
-        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-
         .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); background: white; margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; background: white; }
         th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; }
-        th { 
-            background: var(--primary-light); 
-            color: var(--primary-dark); 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            font-size: 11px;
-            letter-spacing: 0.5px;
-        }
+        th { background: var(--primary-light); color: var(--primary-dark); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
         tr:hover td { background: #fafafa; }
-
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
+        .btn {
+            padding: 8px 16px; border: none; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
         }
-        .status-attivo { background: #d5f4e6; color: #27ae60; }
-        .status-scaduto { background: #fadbd8; color: #e74c3c; }
-        .status-da_contattare { background: #fef9e7; color: #f39c12; }
-        .status-contattato { background: #d6eaf8; color: #1a5276; }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        .stat-card {
-            background: white;
-            padding: 24px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-            border: 1px solid var(--border-color);
-        }
-        .stat-value { font-size: 32px; font-weight: 800; color: var(--primary-dark); }
-        .stat-label { font-size: 12px; color: var(--text-light); text-transform: uppercase; margin-top: 4px; }
-
-        .footer-branding {
-            text-align: center;
-            padding: 24px;
-            color: var(--text-light);
-            font-size: 13px;
-            font-weight: 500;
-            margin-top: 40px;
-            border-top: 1px solid var(--border-color);
-        }
-        .footer-branding strong { color: var(--primary-dark); font-weight: 700; }
-
-        .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-warning:hover { transform: translateY(-2px); }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast {
             background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            display: flex; align-items: center; gap: 12px; min-width: 300px; animation: slideIn 0.3s ease; border-left: 4px solid var(--success);
+            margin-bottom: 10px; border-left: 4px solid var(--primary); animation: slideIn 0.3s ease;
         }
         .toast.error { border-left-color: var(--danger); }
-        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .toast-icon { font-size: 20px; font-weight: bold; }
-        .toast-message { flex: 1; font-size: 14px; }
-
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
         .loading { text-align: center; padding: 40px; color: var(--text-light); }
-        .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
         .hidden { display: none !important; }
-
-        @media (max-width: 768px) {
-            .top-bar { flex-direction: column; gap: 10px; }
-            .form-row { grid-template-columns: 1fr; }
-            .page-header h1 { font-size: 24px; }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center; z-index: 1000;
         }
+        .modal {
+            background: white; padding: 32px; border-radius: var(--radius); width: 90%; max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .modal h3 { margin-bottom: 20px; color: var(--primary-dark); }
+        .modal input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 16px; font-size: 14px; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; }
     </style>
 </head>
 <body>
-
     <div class="top-bar">
-        <div class="nav-left">
-            <button class="nav-btn" onclick="window.location.href='index.html'">Logout</button>
-            <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Plancia Studio</button>
-        </div>
-        <div class="nav-right">
-            <div class="sync-status"><span class="sync-dot"></span> Admin Panel</div>
-        </div>
+        <button class="nav-btn" onclick="logout()">Logout</button>
+        <div style="color: white; font-weight: 600;">Admin Panel - Cloud</div>
     </div>
 
     <div class="container">
         <div class="page-header">
-            <h1>Pannello di Amministrazione</h1>
-            <p>Gestisci tutti gli studi, i lead e le configurazioni della piattaforma AppCenterStudioPROGOLD.</p>
+            <h1>Archivio Credenziali Cloud</h1>
+            <p>Gestione centralizzata di tutti gli accessi Studio e Cliente</p>
         </div>
 
-        <!-- STATISTICHE -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value" id="statStudi">0</div>
-                <div class="stat-label">Studi Totali</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="statAttivi">0</div>
-                <div class="stat-label">Studi Attivi</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="statLeads">0</div>
-                <div class="stat-label">Lead Ricevuti</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="statDaContattare">0</div>
-                <div class="stat-label">Da Contattare</div>
-            </div>
-        </div>
+        <div id="loadingArea" class="loading">Verifica sessione cloud...</div>
 
-        <!-- NUOVO STUDIO -->
-        <div class="card-3d">
-            <div class="card-title"><span class="badge">NS</span> Nuovo Studio</div>
-            <div class="card-subtitle">Registra un nuovo studio fotografico sulla piattaforma.</div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label>ID Studio *</label>
-                    <input type="text" id="studioId" placeholder="es. studio-milano">
-                </div>
-                <div class="form-group">
-                    <label>Password *</label>
-                    <input type="text" id="studioPassword" placeholder="Password di accesso">
+        <div id="mainContent" class="hidden">
+            <!-- STUDI -->
+            <div class="card-3d">
+                <div class="card-title">Archivio Studi</div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>ID Studio</th><th>Nome</th><th>Email</th><th>Password</th><th>Azioni</th></tr>
+                        </thead>
+                        <tbody id="studiTable"></tbody>
+                    </table>
                 </div>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Nome Studio *</label>
-                    <input type="text" id="studioNome" placeholder="es. Studio Fotografico Milano">
-                </div>
-                <div class="form-group">
-                    <label>Partita IVA</label>
-                    <input type="text" id="studioPiva" placeholder="01234567890">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Email *</label>
-                    <input type="email" id="studioEmail" placeholder="studio@email.com">
-                </div>
-                <div class="form-group">
-                    <label>Telefono</label>
-                    <input type="tel" id="studioTelefono" placeholder="+39 02 1234567">
+            <!-- CLIENTI -->
+            <div class="card-3d">
+                <div class="card-title">Archivio Clienti</div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>ID Cliente</th><th>Nome</th><th>Email</th><th>Password</th><th>Azioni</th></tr>
+                        </thead>
+                        <tbody id="clientiTable"></tbody>
+                    </table>
                 </div>
             </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Città</label>
-                    <input type="text" id="studioCitta" placeholder="Milano">
-                </div>
-                <div class="form-group">
-                    <label>Stato</label>
-                    <input type="text" id="studioStato" placeholder="Italia" value="Italia">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Data Registrazione</label>
-                    <input type="date" id="studioDataReg">
-                </div>
-                <div class="form-group">
-                    <label>Scadenza Licenza</label>
-                    <input type="date" id="studioScadenza">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Indirizzo</label>
-                <input type="text" id="studioIndirizzo" placeholder="Via Roma 1, 20100 Milano">
-            </div>
-
-            <div class="btn-group">
-                <button class="btn btn-primary" onclick="creaStudio()">CREA STUDIO</button>
-            </div>
-        </div>
-
-        <!-- ELENCO STUDI -->
-        <div class="card-3d">
-            <div class="card-title"><span class="badge">ES</span> Elenco Studi Registrati</div>
-            <div class="card-subtitle">Tutti gli studi presenti sulla piattaforma.</div>
-            
-            <div id="loadingStudi" class="loading">
-                <div class="spinner"></div>
-                <div>Caricamento studi...</div>
-            </div>
-
-            <div id="emptyStudi" class="empty-state hidden">
-                <div>Nessuno studio registrato.</div>
-            </div>
-
-            <div class="table-container hidden" id="tableStudi">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Email</th>
-                            <th>Città</th>
-                            <th>Scadenza</th>
-                            <th>Licenza</th>
-                            <th>Azioni</th>
-                        </tr>
-                    </thead>
-                    <tbody id="studiTable"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- LEAD -->
-        <div class="card-3d">
-            <div class="card-title"><span class="badge">LD</span> Lead & Richieste Demo</div>
-            <div class="card-subtitle">Richieste di demo e contatti ricevuti dal sito.</div>
-            
-            <div id="loadingLeads" class="loading">
-                <div class="spinner"></div>
-                <div>Caricamento lead...</div>
-            </div>
-
-            <div id="emptyLeads" class="empty-state hidden">
-                <div>Nessun lead ricevuto.</div>
-            </div>
-
-            <div class="table-container hidden" id="tableLeads">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Studio</th>
-                            <th>Email</th>
-                            <th>Telefono</th>
-                            <th>Città</th>
-                            <th>Stato</th>
-                            <th>Azioni</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leadsTable"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="footer-branding">
-            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong> - Tutti i diritti riservati
         </div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
 
+    <!-- Modal Modifica Password -->
+    <div id="modalPassword" class="modal-overlay hidden">
+        <div class="modal">
+            <h3>Modifica Password Cloud</h3>
+            <p id="modalInfo" style="margin-bottom: 16px; font-size: 13px; color: var(--text-light);"></p>
+            <input type="text" id="nuovaPassword" placeholder="Nuova password">
+            <div class="modal-buttons">
+                <button class="btn btn-danger" onclick="chiudiModal()">Annulla</button>
+                <button class="btn btn-warning" onclick="salvaPassword()">Salva sul Cloud</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
-        let studi = [];
-        let leads = [];
+        let token = new URLSearchParams(window.location.search).get('token');
+        let datiArchivio = { studi: [], clienti: [] };
+        let utenteModifica = null;
 
         document.addEventListener('DOMContentLoaded', async function() {
-            // Carica il tema dal cloud
-            await caricaTemaCloud('admin');
-            
-            caricaStudi();
-            caricaLeads();
+            if (!token) { window.location.href = 'index.html'; return; }
+
+            // 1. Verifica sessione
+            try {
+                const res = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+                const data = await res.json();
+                if (!data.success || data.tipo !== 'admin') {
+                    mostraToast('Sessione non valida o non admin', 'error');
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                    return;
+                }
+                
+                // 2. Carica archivio
+                await caricaArchivio();
+            } catch (e) {
+                mostraToast('Errore connessione', 'error');
+            }
         });
 
-        async function creaStudio() {
-            const id = document.getElementById('studioId').value.trim();
-            const password = document.getElementById('studioPassword').value;
-            const nome = document.getElementById('studioNome').value.trim();
-            const piva = document.getElementById('studioPiva').value.trim();
-            const email = document.getElementById('studioEmail').value.trim();
-            const telefono = document.getElementById('studioTelefono').value.trim();
-            const citta = document.getElementById('studioCitta').value.trim();
-            const stato = document.getElementById('studioStato').value.trim();
-            const dataReg = document.getElementById('studioDataReg').value;
-            const scadenza = document.getElementById('studioScadenza').value;
-            const indirizzo = document.getElementById('studioIndirizzo').value.trim();
-
-            if (!id || !password || !nome || !email) {
-                mostraToast('Compila i campi obbligatori (ID, Password, Nome, Email)', 'error');
-                return;
-            }
-
-            const studio = {
-                id, password, nome, piva, email, telefono, citta, stato,
-                data_registrazione: dataReg || new Date().toISOString().split('T')[0],
-                scadenza,
-                indirizzo,
-                licenza_attiva: 1
-            };
-
+        async function caricaArchivio() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/admin/studio`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(studio)
-                });
-                const result = await response.json();
-
-                if (result.success) {
-                    mostraToast('Studio creato con successo!', 'success');
-                    pulisciFormStudio();
-                    await caricaStudi();
-                } else {
-                    mostraToast('Errore nella creazione', 'error');
+                const res = await fetch(`${WORKER_URL}/api/admin/credenziali?token=${token}`);
+                const data = await res.json();
+                if (data.success) {
+                    datiArchivio = data;
+                    renderizzaTabelle();
+                    document.getElementById('loadingArea').classList.add('hidden');
+                    document.getElementById('mainContent').classList.remove('hidden');
                 }
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
+            } catch (e) {
+                mostraToast('Errore caricamento archivio', 'error');
             }
         }
 
-        async function caricaStudi() {
-            document.getElementById('loadingStudi').style.display = 'block';
-            document.getElementById('emptyStudi').classList.add('hidden');
-            document.getElementById('tableStudi').classList.add('hidden');
+        function renderizzaTabelle() {
+            const tbodyStudi = document.getElementById('studiTable');
+            const tbodyClienti = document.getElementById('clientiTable');
 
-            try {
-                const response = await fetch(`${WORKER_URL}/api/admin/studi`);
-                const data = await response.json();
-                
-                if (data.success && data.studi) {
-                    studi = data.studi;
-                    aggiornaStatistiche();
-                    renderizzaStudi();
-                } else {
-                    studi = [];
-                }
-            } catch (error) {
-                console.error('Errore caricamento studi:', error);
-                studi = [];
-            }
-
-            document.getElementById('loadingStudi').style.display = 'none';
-            if (studi.length === 0) {
-                document.getElementById('emptyStudi').classList.remove('hidden');
-            }
-        }
-
-        function renderizzaStudi() {
-            const tbody = document.getElementById('studiTable');
-            const emptyState = document.getElementById('emptyStudi');
-            const tableContainer = document.getElementById('tableStudi');
-            
-            if (studi.length === 0) {
-                emptyState.classList.remove('hidden');
-                tableContainer.classList.add('hidden');
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-            tableContainer.classList.remove('hidden');
-
-            tbody.innerHTML = studi.map(s => {
-                const oggi = new Date();
-                const scadenza = new Date(s.scadenza);
-                const attivo = scadenza > oggi;
-                return `
-                    <tr>
-                        <td><strong>${s.id}</strong></td>
-                        <td>${s.nome}</td>
-                        <td>${s.email}</td>
-                        <td>${s.citta || '-'}</td>
-                        <td>${s.scadenza ? new Date(s.scadenza).toLocaleDateString('it-IT') : '-'}</td>
-                        <td><span class="status-badge ${attivo ? 'status-attivo' : 'status-scaduto'}">${attivo ? 'Attivo' : 'Scaduto'}</span></td>
-                        <td>
-                            <button class="btn btn-danger" style="padding: 6px 12px; font-size: 11px;" onclick="eliminaStudio('${s.id}')">Elimina</button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        async function eliminaStudio(id) {
-            if (!confirm('Sei sicuro di voler eliminare questo studio?')) return;
-            
-            try {
-                const response = await fetch(`${WORKER_URL}/api/admin/studio`, {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id })
-                });
-                const result = await response.json();
-
-                if (result.success) {
-                    mostraToast('Studio eliminato', 'success');
-                    await caricaStudi();
-                } else {
-                    mostraToast('Errore nell\'eliminazione', 'error');
-                }
-            } catch (error) {
-                mostraToast('Errore di connessione', 'error');
-            }
-        }
-
-        async function caricaLeads() {
-            document.getElementById('loadingLeads').style.display = 'block';
-            document.getElementById('emptyLeads').classList.add('hidden');
-            document.getElementById('tableLeads').classList.add('hidden');
-
-            try {
-                const response = await fetch(`${WORKER_URL}/api/admin/leads`);
-                const data = await response.json();
-                
-                if (data.success && data.leads) {
-                    leads = data.leads;
-                    aggiornaStatistiche();
-                    renderizzaLeads();
-                } else {
-                    leads = [];
-                }
-            } catch (error) {
-                console.error('Errore caricamento leads:', error);
-                leads = [];
-            }
-
-            document.getElementById('loadingLeads').style.display = 'none';
-            if (leads.length === 0) {
-                document.getElementById('emptyLeads').classList.remove('hidden');
-            }
-        }
-
-        function renderizzaLeads() {
-            const tbody = document.getElementById('leadsTable');
-            const emptyState = document.getElementById('emptyLeads');
-            const tableContainer = document.getElementById('tableLeads');
-            
-            if (leads.length === 0) {
-                emptyState.classList.remove('hidden');
-                tableContainer.classList.add('hidden');
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-            tableContainer.classList.remove('hidden');
-
-            tbody.innerHTML = leads.map(l => `
+            tbodyStudi.innerHTML = datiArchivio.studi.map(s => `
                 <tr>
-                    <td>${new Date(l.data_richiesta).toLocaleDateString('it-IT')}</td>
-                    <td><strong>${l.nome_studio}</strong></td>
-                    <td>${l.email}</td>
-                    <td>${l.telefono || '-'}</td>
-                    <td>${l.citta || '-'}</td>
-                    <td><span class="status-badge status-${l.stato || 'da_contattare'}">${l.stato || 'Da contattare'}</span></td>
-                    <td>
-                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 11px;" onclick="aggiornaStatoLead('${l.id}', 'contattato')">Contattato</button>
-                    </td>
+                    <td><strong>${s.id}</strong></td>
+                    <td>${s.nome}</td>
+                    <td>${s.email}</td>
+                    <td style="font-family: monospace; background: #f4f6f7; padding: 4px 8px; border-radius: 4px;">${s.password}</td>
+                    <td><button class="btn btn-warning" onclick="apriModal('studio', '${s.id}')">Modifica Password</button></td>
+                </tr>
+            `).join('');
+
+            tbodyClienti.innerHTML = datiArchivio.clienti.map(c => `
+                <tr>
+                    <td><strong>${c.id}</strong></td>
+                    <td>${c.nome_a} ${c.cognome_a}</td>
+                    <td>${c.email}</td>
+                    <td style="font-family: monospace; background: #f4f6f7; padding: 4px 8px; border-radius: 4px;">${c.password}</td>
+                    <td><button class="btn btn-warning" onclick="apriModal('cliente', '${c.id}')">Modifica Password</button></td>
                 </tr>
             `).join('');
         }
 
-        async function aggiornaStatoLead(id, stato) {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/admin/lead`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, stato })
-                });
-                const result = await response.json();
+        function apriModal(tipo, id) {
+            utenteModifica = { tipo, id };
+            document.getElementById('modalInfo').textContent = `Stai modificando la password per ${tipo} ID: ${id}`;
+            document.getElementById('nuovaPassword').value = '';
+            document.getElementById('modalPassword').classList.remove('hidden');
+        }
 
-                if (result.success) {
-                    mostraToast('Stato lead aggiornato', 'success');
-                    await caricaLeads();
+        function chiudiModal() {
+            document.getElementById('modalPassword').classList.add('hidden');
+            utenteModifica = null;
+        }
+
+        async function salvaPassword() {
+            const nuovaPwd = document.getElementById('nuovaPassword').value.trim();
+            if (!nuovaPwd) { mostraToast('Inserisci una password', 'error'); return; }
+
+            try {
+                const res = await fetch(`${WORKER_URL}/api/admin/aggiorna-password?token=${token}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tipo: utenteModifica.tipo, id: utenteModifica.id, nuova_password: nuovaPwd })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    mostraToast('Password aggiornata sul Cloud!', 'success');
+                    chiudiModal();
+                    await caricaArchivio();
+                } else {
+                    mostraToast('Errore aggiornamento', 'error');
                 }
-            } catch (error) {
-                mostraToast('Errore di connessione', 'error');
+            } catch (e) {
+                mostraToast('Errore connessione', 'error');
             }
         }
 
-        function aggiornaStatistiche() {
-            const oggi = new Date();
-            const attivi = studi.filter(s => new Date(s.scadenza) > oggi).length;
-            const daContattare = leads.filter(l => l.stato === 'da_contattare').length;
-
-            document.getElementById('statStudi').textContent = studi.length;
-            document.getElementById('statAttivi').textContent = attivi;
-            document.getElementById('statLeads').textContent = leads.length;
-            document.getElementById('statDaContattare').textContent = daContattare;
-        }
-
-        function pulisciFormStudio() {
-            document.getElementById('studioId').value = '';
-            document.getElementById('studioPassword').value = '';
-            document.getElementById('studioNome').value = '';
-            document.getElementById('studioPiva').value = '';
-            document.getElementById('studioEmail').value = '';
-            document.getElementById('studioTelefono').value = '';
-            document.getElementById('studioCitta').value = '';
-            document.getElementById('studioStato').value = 'Italia';
-            document.getElementById('studioDataReg').value = '';
-            document.getElementById('studioScadenza').value = '';
-            document.getElementById('studioIndirizzo').value = '';
+        async function logout() {
+            try {
+                await fetch(`${WORKER_URL}/api/auth/logout`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token })
+                });
+            } catch(e) {}
+            window.location.href = 'index.html';
         }
 
         function mostraToast(msg, tipo) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? 'OK' : '!'}</div><div class="toast-message">${msg}</div>`;
+            toast.innerHTML = `<div>${msg}</div>`;
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
+            setTimeout(() => toast.remove(), 3000);
         }
     </script>
 </body>
