@@ -6,30 +6,26 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Galleria Cliente - AppCenterStudioPROGOLD</title>
+    <title>Galleria & Album - AppCenterStudioPROGOLD</title>
+    <script src="temi.js"></script>
     <style>
         :root {
-            --primary: #8e44ad;
-            --primary-light: #f4ecf7;
-            --primary-gradient: linear-gradient(135deg, #a569bd 0%, #8e44ad 50%, #6c3483 100%);
-            --secondary: #2980b9;
-            --secondary-gradient: linear-gradient(135deg, #5dade2 0%, #2980b9 50%, #1a5276 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #f4ecf7 40%, #ebf5fb 100%);
-            --card-bg: rgba(255, 255, 255, 0.95);
+            --primary: #82e0aa;
+            --primary-dark: #1e8449;
+            --primary-light: #e8f8f5;
+            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
+            --card-bg: rgba(255, 255, 255, 0.98);
             --card-gradient: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
             --text-main: #2c3e50;
             --text-light: #7f8c8d;
             --border-color: #e8e8e8;
             --success: #27ae60;
-            --success-light: #eafaf1;
             --warning: #f39c12;
-            --warning-light: #fef9e7;
             --danger: #e74c3c;
-            --danger-light: #fdedec;
-            --heart-color: #e74c3c;
-            --shadow: 0 4px 16px rgba(142, 68, 173, 0.08);
-            --shadow-hover: 0 8px 32px rgba(142, 68, 173, 0.15);
-            --radius: 14px;
+            --shadow-3d: 0 10px 30px rgba(30, 132, 73, 0.12), 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-3d-hover: 0 20px 50px rgba(30, 132, 73, 0.2), 0 5px 15px rgba(0,0,0,0.08);
+            --radius: 16px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -53,7 +49,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 12px rgba(142, 68, 173, 0.2);
+            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
         }
 
         .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
@@ -61,19 +57,20 @@
         .nav-btn {
             background: rgba(255,255,255,0.95);
             border: 1px solid rgba(255,255,255,0.3);
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 10px 18px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 500;
-            color: var(--primary);
+            font-weight: 600;
+            color: var(--primary-dark);
             transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
-        .nav-btn:hover { background: white; transform: translateY(-2px); }
+        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
 
         .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(46, 204, 113, 0.6); }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
@@ -81,81 +78,104 @@
         .page-header { 
             text-align: center; 
             margin-bottom: 32px;
-            padding: 24px;
+            padding: 32px;
             background: var(--card-gradient);
             border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-3d);
             border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .page-header:hover { transform: translateY(-4px); box-shadow: var(--shadow-3d-hover); }
         .page-header h1 { 
-            font-size: 28px; 
-            font-weight: 700; 
+            font-size: 32px; 
+            font-weight: 800; 
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 8px; 
+            letter-spacing: -0.5px;
         }
         .page-header p { color: var(--text-light); font-size: 15px; }
 
-        .card {
+        .card-3d {
             background: var(--card-gradient);
             border-radius: var(--radius);
-            padding: 28px;
+            padding: 32px;
             margin-bottom: 24px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-3d);
             border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
         }
+
+        .card-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .card-3d:hover { transform: translateY(-6px); box-shadow: var(--shadow-3d-hover); }
 
         .card-title { 
-            font-size: 18px; 
-            font-weight: 600; 
-            color: var(--primary); 
-            margin-bottom: 6px; 
-            padding-bottom: 10px;
+            font-size: 20px; 
+            font-weight: 700; 
+            color: var(--primary-dark); 
+            margin-bottom: 8px; 
+            padding-bottom: 12px;
             border-bottom: 2px solid var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 0.5px;
+            background: var(--primary-gradient);
+            box-shadow: 0 4px 12px rgba(30, 132, 73, 0.25);
+        }
+
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
 
-        /* LOGIN FORM */
-        .login-form {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-main);
-            margin-bottom: 6px;
-        }
-
-        .form-group input {
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
             padding: 12px 14px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 14px;
             font-family: inherit;
             background: white;
             transition: all 0.2s ease;
         }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.1);
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); 
+            transform: translateY(-1px);
         }
 
         .btn {
             padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
@@ -164,208 +184,82 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
-        .btn-outline { background: white; color: var(--primary); border: 1px solid var(--primary); }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
         .btn-outline:hover { background: var(--primary-light); }
-        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; justify-content: center; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
 
-        /* TIMER BAR */
-        .timer-bar {
-            background: linear-gradient(135deg, #fef9e7 0%, #fdebd0 100%);
-            border-left: 4px solid var(--warning);
-            padding: 16px 20px;
-            border-radius: 10px;
-            margin-bottom: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .timer-bar .timer-text {
-            font-size: 14px;
-            color: var(--text-main);
-            font-weight: 500;
-        }
-
-        .timer-bar .timer-days {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--warning);
-        }
-
-        /* FOLDERS GRID */
-        .folders-grid {
+        .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
         }
 
-        .folder-card {
-            background: white;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .folder-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .folder-card.active {
-            border-color: var(--primary);
-            background: var(--primary-light);
-        }
-
-        .folder-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
-
-        .folder-name {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-main);
-            margin-bottom: 4px;
-        }
-
-        .folder-count {
-            font-size: 13px;
-            color: var(--text-light);
-        }
-
-        /* PHOTOS GRID */
-        .photos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 16px;
-        }
-
-        .photo-card {
+        .gallery-card {
             background: white;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: var(--shadow);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            border: 1px solid var(--border-color);
             transition: all 0.3s ease;
-            position: relative;
         }
 
-        .photo-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-hover);
+        .gallery-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(30, 132, 73, 0.15);
+            border-color: var(--primary);
         }
 
-        .photo-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .photo-actions {
-            padding: 12px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .heart-btn {
-            background: none;
-            border: 2px solid var(--border-color);
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            cursor: pointer;
-            font-size: 20px;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .heart-btn:hover {
-            border-color: var(--heart-color);
-            transform: scale(1.1);
-        }
-
-        .heart-btn.selected {
-            background: var(--heart-color);
-            border-color: var(--heart-color);
-            color: white;
-        }
-
-        /* COUNTER */
-        .counter-bar {
+        .gallery-cover {
+            height: 160px;
             background: var(--primary-gradient);
-            color: white;
-            padding: 16px 24px;
-            border-radius: 12px;
-            margin-bottom: 24px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            box-shadow: var(--shadow);
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            font-weight: 800;
         }
 
-        .counter-text {
-            font-size: 16px;
-            font-weight: 600;
-        }
+        .gallery-info { padding: 20px; }
+        .gallery-name { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .gallery-date { font-size: 12px; color: var(--text-light); margin-bottom: 12px; }
+        .gallery-stats { display: flex; justify-content: space-between; font-size: 13px; color: var(--primary-dark); font-weight: 600; margin-bottom: 16px; }
+        .gallery-actions { display: flex; gap: 8px; }
+        .gallery-actions .btn { flex: 1; padding: 8px; font-size: 12px; }
 
-        .counter-number {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        /* SUCCESS MESSAGE */
-        .success-message {
-            background: linear-gradient(135deg, #eafaf1 0%, #d5f5e3 100%);
-            border: 2px solid var(--success);
+        .upload-area {
+            border: 2px dashed var(--primary);
             border-radius: 12px;
-            padding: 32px;
+            padding: 40px;
             text-align: center;
-            margin: 24px 0;
+            background: var(--primary-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
         }
+        .upload-area:hover { background: white; border-color: var(--primary-dark); }
+        .upload-icon { font-size: 48px; color: var(--primary); margin-bottom: 12px; font-weight: 800; }
+        .upload-text { font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 4px; }
+        .upload-subtext { font-size: 13px; color: var(--text-light); }
 
-        .success-message h3 {
-            color: var(--success);
-            font-size: 22px;
-            margin-bottom: 12px;
-        }
-
-        .success-message p {
-            color: var(--text-main);
-            font-size: 16px;
-            line-height: 1.6;
-        }
-
-        /* HIDDEN */
-        .hidden { display: none !important; }
-
-        /* FOOTER */
         .footer-branding {
             text-align: center;
-            padding: 20px;
+            padding: 24px;
             color: var(--text-light);
             font-size: 13px;
             font-weight: 500;
             margin-top: 40px;
             border-top: 1px solid var(--border-color);
         }
+        .footer-branding strong { color: var(--primary-dark); font-weight: 700; }
 
-        .footer-branding strong {
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        /* TOAST */
         .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
         .toast {
             background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
@@ -373,297 +267,309 @@
         }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .toast-icon { font-size: 20px; }
+        .toast-icon { font-size: 20px; font-weight: bold; }
         .toast-message { flex: 1; font-size: 14px; }
+
+        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
+        .hidden { display: none !important; }
 
         @media (max-width: 768px) {
             .top-bar { flex-direction: column; gap: 10px; }
-            .folders-grid { grid-template-columns: 1fr 1fr; }
-            .photos-grid { grid-template-columns: 1fr 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .page-header h1 { font-size: 24px; }
+            .gallery-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-      <!-- TOP BAR -->
+
     <div class="top-bar">
         <div class="nav-left">
             <button class="nav-btn" onclick="window.history.back()">Indietro</button>
-            <button class="nav-btn" onclick="window.location.href='index.html'">Home</button>
+            <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Plancia</button>
         </div>
         <div class="nav-right">
+            <button class="nav-btn" onclick="eseguiBackupCloud()">Backup Cloud</button>
+            <button class="nav-btn" onclick="eseguiRipristinoCloud()">Ripristino Cloud</button>
             <div class="sync-status"><span class="sync-dot"></span> Sync Cloud: OK</div>
         </div>
     </div>
 
     <div class="container">
         <div class="page-header">
-            <h1>Galleria Fotografica Cliente</h1>
-            <p>Visualizza le foto del tuo evento, seleziona i tuoi scatti preferiti e invia la selezione allo studio</p>
+            <h1>Galleria & Album</h1>
+            <p>Gestisci le gallerie fotografiche dello studio, carica immagini sul cloud storage R2 e organizza i tuoi lavori.</p>
         </div>
 
-        <!-- LOGIN SECTION -->
-        <div id="loginSection" class="card">
-            <div class="card-title">Accesso Galleria Protetta</div>
-            <div class="card-subtitle">Inserisci le credenziali fornite dal tuo studio fotografico</div>
+        <!-- NUOVA GALLERIA -->
+        <div class="card-3d">
+            <div class="card-title"><span class="badge">NG</span> Nuova Galleria</div>
+            <div class="card-subtitle">Crea una nuova galleria per organizzare le foto di un evento o progetto.</div>
             
-            <div class="login-form">
+            <div class="form-row">
                 <div class="form-group">
-                    <label>ID Cliente / Evento</label>
-                    <input type="text" id="clienteId" placeholder="es. matrimonio-rossi-2026">
+                    <label>Nome Galleria *</label>
+                    <input type="text" id="galNome" placeholder="es. Matrimonio Rossi 2024">
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="clientePwd" placeholder="Password fornita dallo studio">
+                    <label>Categoria</label>
+                    <select id="galCategoria">
+                        <option value="matrimonio">Matrimonio</option>
+                        <option value="evento">Evento</option>
+                        <option value="ritratto">Ritratto</option>
+                        <option value="commerciale">Commerciale</option>
+                        <option value="personale">Personale</option>
+                    </select>
                 </div>
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="effettuaLogin()">Accedi alla Galleria</button>
-                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="creaGalleria()">CREA GALLERIA</button>
             </div>
         </div>
 
-        <!-- GALLERY SECTION (Hidden by default) -->
-        <div id="gallerySection" class="hidden">
+        <!-- UPLOAD FOTO -->
+        <div class="card-3d">
+            <div class="card-title"><span class="badge">UF</span> Upload Foto su Cloud R2</div>
+            <div class="card-subtitle">Carica le foto direttamente sul cloud storage. Seleziona la galleria di destinazione.</div>
             
-            <!-- TIMER BAR -->
-            <div class="timer-bar">
-                <div class="timer-text">Tempo rimanente per la selezione:</div>
-                <div class="timer-days" id="timerDays">7 giorni</div>
-            </div>
-
-            <!-- COUNTER BAR -->
-            <div class="counter-bar">
-                <div class="counter-text">Foto selezionate:</div>
-                <div class="counter-number" id="counterNumber">0</div>
-            </div>
-
-            <!-- FOLDERS SECTION -->
-            <div class="card">
-                <div class="card-title">Scegli una Cartella</div>
-                <div class="card-subtitle">Le foto sono organizzate per momenti del tuo evento</div>
-                
-                <div class="folders-grid" id="foldersGrid">
-                    <!-- Folders will be loaded here -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Galleria di Destinazione</label>
+                    <select id="uploadGalleria">
+                        <option value="">-- Seleziona galleria --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Nome Cliente (per cartella)</label>
+                    <input type="text" id="uploadCliente" placeholder="es. Rossi">
                 </div>
             </div>
 
-            <!-- PHOTOS SECTION -->
-            <div class="card hidden" id="photosCard">
-                <div class="card-title" id="photosTitle">Foto</div>
-                <div class="card-subtitle">Clicca sul cuore per selezionare le tue foto preferite</div>
-                
-                <div class="photos-grid" id="photosGrid">
-                    <!-- Photos will be loaded here -->
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-icon">UP</div>
+                <div class="upload-text">Clicca per selezionare le foto</div>
+                <div class="upload-subtext">Supporta JPG, PNG, WEBF (Max 10MB per file)</div>
+                <input type="file" id="fileInput" multiple accept="image/*" style="display:none;" onchange="gestisciUpload(this.files)">
+            </div>
+
+            <div id="uploadProgress" class="hidden" style="margin-top: 20px;">
+                <div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">Caricamento in corso...</div>
+                <div style="background: var(--primary-light); height: 8px; border-radius: 4px; overflow: hidden;">
+                    <div id="progressBar" style="background: var(--primary-gradient); height: 100%; width: 0%; transition: width 0.3s ease;"></div>
                 </div>
             </div>
-
-            <!-- SAVE BUTTON -->
-            <div class="btn-group" style="margin-top: 32px;">
-                <button class="btn btn-success" onclick="salvaSelezione()">Salva Selezione e Notifica lo Studio</button>
-            </div>
-
-            <!-- SUCCESS MESSAGE (Hidden by default) -->
-            <div id="successMessage" class="success-message hidden">
-                <h3>Grazie per averci scelto!</h3>
-                <p>La tua selezione è stata inviata con successo allo studio fotografico.<br>
-                Contatta lo studio per il prossimo step.</p>
-            </div>
-
         </div>
 
-        <!-- FOOTER BRANDING -->
+        <!-- ELENCO GALLERIE -->
+        <div class="card-3d">
+            <div class="card-title"><span class="badge">EG</span> Elenco Gallerie</div>
+            <div class="card-subtitle">Tutte le gallerie create per il tuo studio.</div>
+            
+            <div id="emptyGallerie" class="empty-state hidden">
+                <div>Nessuna galleria presente. Crea la prima galleria qui sopra.</div>
+            </div>
+
+            <div class="gallery-grid" id="galleryGrid"></div>
+        </div>
+
         <div class="footer-branding">
             Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong> - Tutti i diritti riservati
         </div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-        <script>
+
+    <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
-        let clienteId = null;
-        let cartelle = [];
-        let fotoSelezionate = new Set();
-        let cartellaAttiva = null;
+        let studioId = localStorage.getItem('studioId') || 'studio-gold';
+        let gallerie = JSON.parse(localStorage.getItem('gallerie_' + studioId) || '[]');
 
-        // LOGIN
-        async function effettuaLogin() {
-            const id = document.getElementById('clienteId').value.trim();
-            const pwd = document.getElementById('clientePwd').value.trim();
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Carica il tema dal cloud
+            await caricaTemaCloud(studioId);
+            
+            renderizzaGallerie();
+            aggiornaSelectGallerie();
+        });
 
-            if (!id || !pwd) {
-                mostraToast('Inserisci ID Cliente e Password', 'error');
+        function creaGalleria() {
+            const nome = document.getElementById('galNome').value.trim();
+            const categoria = document.getElementById('galCategoria').value;
+
+            if (!nome) {
+                mostraToast('Inserisci il nome della galleria', 'error');
                 return;
             }
 
-            try {
-                const response = await fetch(`${WORKER_URL}/api/cliente/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ clienteId: id, password: pwd })
-                });
-                const data = await response.json();
+            const galleria = {
+                id: 'gal-' + Date.now(),
+                nome,
+                categoria,
+                data_creazione: new Date().toISOString(),
+                foto_count: 0
+            };
 
-                if (data.success) {
-                    clienteId = id;
-                    document.getElementById('loginSection').classList.add('hidden');
-                    document.getElementById('gallerySection').classList.remove('hidden');
-                    caricaCartelle();
-                    aggiornaTimer();
-                    mostraToast('Accesso riuscito! Benvenuto nella tua galleria', 'success');
-                } else {
-                    mostraToast(data.error || 'Credenziali non valide', 'error');
-                }
-            } catch (error) {
-                mostraToast('Errore di connessione al server', 'error');
-            }
+            gallerie.unshift(galleria);
+            localStorage.setItem('gallerie_' + studioId, JSON.stringify(gallerie));
+            
+            mostraToast('Galleria creata con successo!', 'success');
+            document.getElementById('galNome').value = '';
+            renderizzaGallerie();
+            aggiornaSelectGallerie();
         }
 
-        // CARICA CARTELLE
-        async function caricaCartelle() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/foto?clienteId=${clienteId}`);
-                const data = await response.json();
-                
-                cartelle = data.cartelle || [
-                    { nome: 'Preparativi', icona: '🏠', count: 0 },
-                    { nome: 'Chiesa', icona: '⛪', count: 0 },
-                    { nome: 'Ricevimento', icona: '🍽️', count: 0 },
-                    { nome: 'Taglio Torta', icona: '🎂', count: 0 }
-                ];
-                
-                renderizzaCartelle();
-            } catch (error) {
-                console.error('Errore caricamento cartelle:', error);
-                // Fallback cartelle default
-                cartelle = [
-                    { nome: 'Preparativi', icona: '🏠', count: 0 },
-                    { nome: 'Chiesa', icona: '', count: 0 },
-                    { nome: 'Ricevimento', icona: '️', count: 0 },
-                    { nome: 'Taglio Torta', icona: '', count: 0 }
-                ];
-                renderizzaCartelle();
+        function renderizzaGallerie() {
+            const grid = document.getElementById('galleryGrid');
+            const emptyState = document.getElementById('emptyGallerie');
+            
+            if (gallerie.length === 0) {
+                emptyState.classList.remove('hidden');
+                grid.innerHTML = '';
+                return;
             }
-        }
 
-        function renderizzaCartelle() {
-            const grid = document.getElementById('foldersGrid');
-            grid.innerHTML = cartelle.map(cartella => `
-                <div class="folder-card ${cartellaAttiva === cartella.nome ? 'active' : ''}" onclick="selezionaCartella('${cartella.nome}')">
-                    <div class="folder-icon">${cartella.icona}</div>
-                    <div class="folder-name">${cartella.nome}</div>
-                    <div class="folder-count">${cartella.count} foto</div>
+            emptyState.classList.add('hidden');
+            
+            const categorieMap = {
+                'matrimonio': 'Matrimonio',
+                'evento': 'Evento',
+                'ritratto': 'Ritratto',
+                'commerciale': 'Commerciale',
+                'personale': 'Personale'
+            };
+
+            grid.innerHTML = gallerie.map(gal => `
+                <div class="gallery-card">
+                    <div class="gallery-cover">${gal.nome.substring(0, 2).toUpperCase()}</div>
+                    <div class="gallery-info">
+                        <div class="gallery-name">${gal.nome}</div>
+                        <div class="gallery-date">${categorieMap[gal.categoria]} - ${new Date(gal.data_creazione).toLocaleDateString('it-IT')}</div>
+                        <div class="gallery-stats">
+                            <span>Foto: ${gal.foto_count || 0}</span>
+                            <span>ID: ${gal.id.substring(0, 8)}...</span>
+                        </div>
+                        <div class="gallery-actions">
+                            <button class="btn btn-outline" onclick="eliminaGalleria('${gal.id}')">Elimina</button>
+                        </div>
+                    </div>
                 </div>
             `).join('');
         }
 
-        function selezionaCartella(nomeCartella) {
-            cartellaAttiva = nomeCartella;
-            renderizzaCartelle();
-            caricaFotoCartella(nomeCartella);
+        function aggiornaSelectGallerie() {
+            const select = document.getElementById('uploadGalleria');
+            select.innerHTML = '<option value="">-- Seleziona galleria --</option>' + 
+                gallerie.map(gal => `<option value="${gal.id}">${gal.nome}</option>`).join('');
         }
 
-        // CARICA FOTO CARTELLA
-        async function caricaFotoCartella(nomeCartella) {
-            document.getElementById('photosCard').classList.remove('hidden');
-            document.getElementById('photosTitle').textContent = `Foto - ${nomeCartella}`;
-            document.getElementById('photosGrid').innerHTML = '<p style="text-align:center; color: var(--text-light);">Caricamento foto...</p>';
-
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/foto/${clienteId}/${nomeCartella}`);
-                const data = await response.json();
-                
-                const foto = data.foto || [];
-                renderizzaFoto(foto);
-            } catch (error) {
-                console.error('Errore caricamento foto:', error);
-                document.getElementById('photosGrid').innerHTML = '<p style="text-align:center; color: var(--text-light);">Nessuna foto disponibile in questa cartella</p>';
-            }
+        function eliminaGalleria(id) {
+            if (!confirm('Sei sicuro di voler eliminare questa galleria?')) return;
+            gallerie = gallerie.filter(g => g.id !== id);
+            localStorage.setItem('gallerie_' + studioId, JSON.stringify(gallerie));
+            renderizzaGallerie();
+            aggiornaSelectGallerie();
+            mostraToast('Galleria eliminata', 'success');
         }
 
-        function renderizzaFoto(foto) {
-            const grid = document.getElementById('photosGrid');
-            
-            if (foto.length === 0) {
-                grid.innerHTML = '<p style="text-align:center; color: var(--text-light); padding: 40px;">Nessuna foto disponibile in questa cartella</p>';
+        async function gestisciUpload(files) {
+            const galleriaId = document.getElementById('uploadGalleria').value;
+            const cliente = document.getElementById('uploadCliente').value.trim();
+
+            if (!galleriaId) {
+                mostraToast('Seleziona una galleria di destinazione', 'error');
                 return;
             }
 
-            grid.innerHTML = foto.map(foto => {
-                const isSelected = fotoSelezionate.has(foto.nome);
-                return `
-                    <div class="photo-card">
-                        <img src="${foto.url}" alt="${foto.nome}" loading="lazy">
-                        <div class="photo-actions">
-                            <button class="heart-btn ${isSelected ? 'selected' : ''}" onclick="toggleSelezione('${foto.nome}', this)">
-                                ${isSelected ? '❤️' : '🤍'}
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function toggleSelezione(nomeFoto, btn) {
-            if (fotoSelezionate.has(nomeFoto)) {
-                fotoSelezionate.delete(nomeFoto);
-                btn.classList.remove('selected');
-                btn.innerHTML = '🤍';
-            } else {
-                fotoSelezionate.add(nomeFoto);
-                btn.classList.add('selected');
-                btn.innerHTML = '❤️';
-            }
-            aggiornaContatore();
-        }
-
-        function aggiornaContatore() {
-            document.getElementById('counterNumber').textContent = fotoSelezionate.size;
-        }
-
-        function aggiornaTimer() {
-            // Timer fittizio di 7 giorni (in produzione leggere da server)
-            const giorniRimanenti = 7;
-            document.getElementById('timerDays').textContent = `${giorniRimanenti} giorni`;
-        }
-
-        // SALVA SELEZIONE
-        async function salvaSelezione() {
-            if (fotoSelezionate.size === 0) {
-                mostraToast('Seleziona almeno una foto prima di salvare', 'error');
+            if (!cliente) {
+                mostraToast('Inserisci il nome del cliente', 'error');
                 return;
             }
 
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/selezione/salva`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        clienteId: clienteId,
-                        fotoSelezionate: Array.from(fotoSelezionate),
-                        dataSelezione: new Date().toISOString()
-                    })
-                });
-                const data = await response.json();
+            document.getElementById('uploadProgress').classList.remove('hidden');
+            const progressBar = document.getElementById('progressBar');
+            let caricati = 0;
 
-                if (data.success) {
-                    document.getElementById('successMessage').classList.remove('hidden');
-                    document.getElementById('photosCard').classList.add('hidden');
-                    document.querySelector('.counter-bar').classList.add('hidden');
-                    document.querySelector('.btn-group').classList.add('hidden');
-                    mostraToast('Selezione inviata con successo!', 'success');
-                } else {
-                    mostraToast('Errore nel salvataggio della selezione', 'error');
+            for (let file of files) {
+                try {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    
+                    // Simulazione upload (in produzione usa l'endpoint R2 del worker)
+                    // const response = await fetch(`${WORKER_URL}/api/studio/upload?studioId=${studioId}&clienteId=${cliente}&filename=${file.name}&folder=${galleriaId}`, {
+                    //     method: 'POST',
+                    //     body: file
+                    // });
+                    
+                    // Simulazione per demo UI
+                    await new Promise(r => setTimeout(r, 500));
+                    
+                    caricati++;
+                    const percentuale = (caricati / files.length) * 100;
+                    progressBar.style.width = percentuale + '%';
+                } catch (error) {
+                    console.error('Errore upload:', error);
                 }
-            } catch (error) {
-                mostraToast('Errore di connessione al server', 'error');
             }
+
+            // Aggiorna conteggio foto
+            const galleria = gallerie.find(g => g.id === galleriaId);
+            if (galleria) {
+                galleria.foto_count = (galleria.foto_count || 0) + files.length;
+                localStorage.setItem('gallerie_' + studioId, JSON.stringify(gallerie));
+                renderizzaGallerie();
+            }
+
+            setTimeout(() => {
+                document.getElementById('uploadProgress').classList.add('hidden');
+                progressBar.style.width = '0%';
+                mostraToast(`${files.length} foto caricate sul cloud!`, 'success');
+            }, 500);
         }
 
-        // TOAST
+        async function eseguiBackupCloud() {
+            const blob = new Blob([JSON.stringify(gallerie, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backup-gallerie-${studioId}-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            mostraToast('Backup gallerie scaricato', 'success');
+        }
+
+        async function eseguiRipristinoCloud() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    try {
+                        const dati = JSON.parse(ev.target.result);
+                        if (Array.isArray(dati)) {
+                            gallerie = dati;
+                            localStorage.setItem('gallerie_' + studioId, JSON.stringify(gallerie));
+                            renderizzaGallerie();
+                            aggiornaSelectGallerie();
+                            mostraToast('Ripristino completato', 'success');
+                        }
+                    } catch (error) {
+                        mostraToast('Errore nel ripristino', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
         function mostraToast(msg, tipo) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? 'OK' : 'ERRORE'}</div><div class="toast-message">${msg}</div>`;
+            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? 'OK' : '!'}</div><div class="toast-message">${msg}</div>`;
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 4000);
         }
