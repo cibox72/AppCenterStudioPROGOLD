@@ -3,412 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>Workflow & Stato Avanzamento - AppCenterStudioPROGOLD</title>
+    <title>Workflow - AppCenterStudioPROGOLD</title>
     <style>
         :root {
-            --primary: #5dade2;
-            --primary-dark: #2874a6;
-            --primary-light: #d6eaf8;
-            --primary-gradient: linear-gradient(135deg, #85c1e9 0%, #5dade2 50%, #2874a6 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #f4ecf7 100%);
-            --card-bg: rgba(255, 255, 255, 0.98);
-            --card-gradient: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
-            --text-main: #2c3e50;
-            --text-light: #7f8c8d;
-            --border-color: #e8e8e8;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --shadow-3d: 0 10px 30px rgba(40, 116, 166, 0.12), 0 1px 3px rgba(0,0,0,0.05);
-            --shadow-3d-hover: 0 20px 50px rgba(40, 116, 166, 0.2), 0 5px 15px rgba(0,0,0,0.08);
+            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
+            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
+            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
+            --success: #27ae60; --warning: #f39c12; --danger: #e74c3c; --info: #3498db;
             --radius: 16px;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: var(--bg-gradient);
-            background-attachment: fixed;
-            color: var(--text-main);
-            line-height: 1.6;
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
         }
-
         .top-bar {
-            background: var(--primary-gradient);
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 20px rgba(40, 116, 166, 0.15);
+            background: var(--primary-gradient); padding: 16px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100;
         }
-
-        .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
-
         .nav-btn {
-            background: rgba(255,255,255,0.95);
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 10px 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--primary-dark);
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
+            cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark);
         }
-
-        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
-
-        .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(46, 204, 113, 0.6); }
+        .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
         .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
-
-        .page-header { 
-            text-align: center; 
-            margin-bottom: 32px;
-            padding: 32px;
-            background: var(--card-gradient);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-3d);
-            border: 1px solid var(--border-color);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .page-header {
+            text-align: center; padding: 32px; background: white; border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
         }
-        .page-header:hover { transform: translateY(-4px); box-shadow: var(--shadow-3d-hover); }
-        .page-header h1 { 
-            font-size: 32px; 
-            font-weight: 800; 
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px; 
-            letter-spacing: -0.5px;
+        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
+        .page-header h1 {
+            font-size: 32px; font-weight: 800; background: var(--primary-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px;
         }
         .page-header p { color: var(--text-light); font-size: 15px; }
-
         .card-3d {
-            background: var(--card-gradient);
-            border-radius: var(--radius);
-            padding: 32px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-3d);
-            border: 1px solid var(--border-color);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
+            background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden;
         }
-
-        .card-3d::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--primary-gradient);
+        .card-3d::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
+        .card-title {
+            font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px;
+            padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
         }
-
-        .card-3d:hover { transform: translateY(-6px); box-shadow: var(--shadow-3d-hover); }
-
-        .card-title { 
-            font-size: 20px; 
-            font-weight: 700; 
-            color: var(--primary-dark); 
-            margin-bottom: 8px; 
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--primary-light);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 800;
-            color: white;
-            letter-spacing: 0.5px;
-            background: var(--primary-gradient);
-            box-shadow: 0 4px 12px rgba(40, 116, 166, 0.25);
-        }
-
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
-
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
         .form-group input, .form-group select, .form-group textarea {
-            padding: 12px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: inherit;
-            background: white;
-            transition: all 0.2s ease;
+            padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
         }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
-            outline: none; 
-            border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(93, 173, 226, 0.2); 
-            transform: translateY(-1px);
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
         }
-
         .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
-        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
         .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
-        .btn-outline:hover { background: var(--primary-light); }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-
         .workflow-list { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
         .workflow-item {
-            background: white;
-            border-left: 4px solid var(--primary);
-            border-radius: 12px;
-            padding: 20px 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-            transition: all 0.3s ease;
+            background: white; border-left: 4px solid var(--primary); border-radius: 12px;
+            padding: 20px 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); transition: all 0.3s ease;
         }
-        .workflow-item:hover { transform: translateX(6px); box-shadow: 0 8px 24px rgba(40, 116, 166, 0.15); }
-        .workflow-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .workflow-client { font-size: 18px; font-weight: 700; color: var(--text-main); }
-        .workflow-date { font-size: 13px; color: var(--text-light); }
-        .workflow-status { display: flex; gap: 12px; margin-top: 12px; }
-        .status-badge {
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .workflow-item:hover { transform: translateX(6px); box-shadow: 0 8px 24px rgba(30, 132, 73, 0.15); }
+        .workflow-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+        .workflow-cliente { font-size: 18px; font-weight: 700; color: var(--text-main); }
+        .workflow-data { font-size: 12px; color: var(--text-light); }
+        .workflow-info { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+        .workflow-tag {
+            display: inline-block; padding: 4px 12px; border-radius: 20px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
         }
-        .status-completed { background: #d5f4e6; color: #27ae60; }
-        .status-progress { background: #fef9e7; color: #f39c12; }
-        .status-pending { background: #fadbd8; color: #e74c3c; }
-
-        .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); background: white; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; vertical-align: middle; }
-        th { 
-            background: var(--primary-light); 
-            color: var(--primary-dark); 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            font-size: 11px;
-            letter-spacing: 0.5px;
-        }
-        tr:hover td { background: #fafafa; }
-
-        .footer-branding {
-            text-align: center;
-            padding: 24px;
-            color: var(--text-light);
-            font-size: 13px;
-            font-weight: 500;
-            margin-top: 40px;
-            border-top: 1px solid var(--border-color);
-        }
-        .footer-branding strong { color: var(--primary-dark); font-weight: 700; }
-
-        .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+        .tag-servizio { background: var(--primary-light); color: var(--primary-dark); }
+        .tag-scadenza { background: #fef9e7; color: var(--warning); }
+        .tag-scadenza.urgente { background: #fadbd8; color: var(--danger); }
+        .workflow-progress { margin: 16px 0; }
+        .progress-label { font-size: 12px; color: var(--text-light); margin-bottom: 6px; display: flex; justify-content: space-between; }
+        .progress-bar-container { background: var(--primary-light); height: 10px; border-radius: 5px; overflow: hidden; margin-bottom: 12px; }
+        .progress-bar { height: 100%; background: var(--primary-gradient); transition: width 0.4s ease; }
+        .workflow-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+        .workflow-actions .btn { padding: 8px 16px; font-size: 12px; }
+        .status-select { padding: 6px 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 12px; font-weight: 600; }
+        .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast {
             background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            display: flex; align-items: center; gap: 12px; min-width: 300px; animation: slideIn 0.3s ease; border-left: 4px solid var(--success);
+            margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease;
         }
         .toast.error { border-left-color: var(--danger); }
-        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .toast-icon { font-size: 20px; font-weight: bold; }
-        .toast-message { flex: 1; font-size: 14px; }
-
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
         .loading { text-align: center; padding: 40px; color: var(--text-light); }
-        .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
-
-        .hidden { display: none !important; }
-
-        @media (max-width: 768px) {
-            .top-bar { flex-direction: column; gap: 10px; }
-            .form-row { grid-template-columns: 1fr; }
-            .page-header h1 { font-size: 24px; }
+        .spinner {
+            width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary);
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
-
     <div class="top-bar">
-        <div class="nav-left">
-            <button class="nav-btn" onclick="window.history.back()">Indietro</button>
-            <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Plancia</button>
+        <div style="display: flex; gap: 10px;">
+            <button class="nav-btn" onclick="tornaPlancia()">Indietro</button>
+            <button class="nav-btn" onclick="tornaPlancia()">Plancia</button>
         </div>
-        <div class="nav-right">
-            <button class="nav-btn" onclick="eseguiBackupCloud()">Backup Cloud</button>
-            <button class="nav-btn" onclick="eseguiRipristinoCloud()">Ripristino Cloud</button>
-            <div class="sync-status"><span class="sync-dot"></span> Sync Cloud: OK</div>
-        </div>
+        <div class="sync-status"><span class="sync-dot"></span> Cloud Sync: OK</div>
     </div>
 
     <div class="container">
         <div class="page-header">
-            <h1>Workflow & Stato Avanzamento</h1>
-            <p>Monitora lo stato di avanzamento di foto e video per ogni cliente. Aggiornamenti in tempo reale sul cloud multi-tenant.</p>
+            <h1>Workflow Produzione</h1>
+            <p>Monitora lo stato avanzamento di foto e video per ogni cliente. Tutto sincronizzato sul cloud.</p>
         </div>
 
-        <!-- NUOVO WORKFLOW -->
-        <div class="card-3d">
-            <div class="card-title"><span class="badge">NW</span> Nuovo Workflow Cliente</div>
-            <div class="card-subtitle">Crea un nuovo workflow per tracciare lo stato di avanzamento foto e video. I dati vengono salvati in tempo reale sul cloud.</div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Nome Cliente *</label>
-                    <input type="text" id="wfCliente" placeholder="es. Mario Rossi e Giulia Bianchi">
-                </div>
-                <div class="form-group">
-                    <label>Data Evento *</label>
-                    <input type="date" id="wfDataEvento">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Tipo di Servizio *</label>
-                    <select id="wfTipoServizio">
-                        <option value="matrimonio">Matrimonio</option>
-                        <option value="battesimo">Battesimo</option>
-                        <option value="comunione">Comunione</option>
-                        <option value="ritratto">Ritratto</option>
-                        <option value="evento-aziendale">Evento Aziendale</option>
-                        <option value="altro">Altro</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Scadenza Prevista</label>
-                    <input type="date" id="wfScadenza">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Note Iniziali</label>
-                <textarea id="wfNote" rows="3" placeholder="Note specifiche sul progetto..."></textarea>
-            </div>
-
-            <div class="btn-group">
-                <button class="btn btn-primary" onclick="creaWorkflow()">CREA WORKFLOW SUL CLOUD</button>
-            </div>
+        <div id="loadingArea" class="loading">
+            <div class="spinner"></div>
+            <div>Verifica sessione cloud...</div>
         </div>
 
-        <!-- AGGIORNA STATO -->
-        <div class="card-3d">
-            <div class="card-title"><span class="badge">AS</span> Aggiorna Stato Avanzamento</div>
-            <div class="card-subtitle">Seleziona un workflow esistente e aggiorna lo stato di foto e video. Le modifiche sono visibili in tempo reale su tutti i dispositivi.</div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Seleziona Workflow</label>
-                    <select id="wfSeleziona">
-                        <option value="">-- Caricamento... --</option>
-                    </select>
+        <div id="mainContent" class="hidden">
+            <div class="card-3d">
+                <div class="card-title">Nuovo Workflow</div>
+                <div class="card-subtitle">Aggiungi un nuovo progetto di produzione per un cliente.</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Cliente *</label><input type="text" id="wfCliente" placeholder="es. Rossi"></div>
+                    <div class="form-group"><label>Data Evento *</label><input type="date" id="wfDataEvento"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tipo Servizio *</label>
+                        <select id="wfTipoServizio">
+                            <option value="matrimonio">Matrimonio</option>
+                            <option value="battesimo">Battesimo</option>
+                            <option value="comunione">Comunione</option>
+                            <option value="ritratto">Ritratto</option>
+                            <option value="evento-aziendale">Evento Aziendale</option>
+                            <option value="altro">Altro</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Scadenza Consegna *</label><input type="date" id="wfScadenza"></div>
+                </div>
+                <div class="form-group"><label>Note</label><textarea id="wfNote" rows="3" placeholder="Note sul progetto..."></textarea></div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="creaWorkflow()">CREA WORKFLOW</button>
                 </div>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Stato Foto</label>
-                    <select id="statoFoto">
-                        <option value="da_fare">Da fare</option>
-                        <option value="in_corso">In corso</option>
-                        <option value="revisione">In revisione</option>
-                        <option value="completato">Completato</option>
-                    </select>
+            <div class="card-3d">
+                <div class="card-title">Progetti in Produzione</div>
+                <div class="card-subtitle">Stato avanzamento di tutti i workflow attivi.</div>
+                <div id="loadingWorkflow" class="loading" style="padding: 20px;">
+                    <div class="spinner"></div>
+                    <div>Caricamento workflow...</div>
                 </div>
-                <div class="form-group">
-                    <label>Stato Video</label>
-                    <select id="statoVideo">
-                        <option value="da_fare">Da fare</option>
-                        <option value="in_corso">In corso</option>
-                        <option value="montaggio">In montaggio</option>
-                        <option value="completato">Completato</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Note Aggiornamento</label>
-                <textarea id="noteAggiornamento" rows="2" placeholder="Note sull'avanzamento..."></textarea>
-            </div>
-
-            <div class="btn-group">
-                <button class="btn btn-success" onclick="aggiornaWorkflow()">AGGIORNA STATO SUL CLOUD</button>
+                <div id="emptyWorkflow" class="empty-state hidden">Nessun workflow attivo.</div>
+                <div class="workflow-list" id="workflowList"></div>
             </div>
         </div>
 
-        <!-- WORKFLOW ATTIVI -->
-        <div class="card-3d">
-            <div class="card-title"><span class="badge">WA</span> Workflow Attivi</div>
-            <div class="card-subtitle">Elenco di tutti i workflow attivi con stato di avanzamento. Dati sincronizzati in tempo reale tra tutti i dispositivi dello studio.</div>
-            
-            <div id="loadingWorkflow" class="loading">
-                <div class="spinner"></div>
-                <div>Caricamento workflow dal cloud...</div>
-            </div>
-
-            <div id="emptyWorkflow" class="empty-state hidden">
-                <div>Nessun workflow attivo. Crea il primo workflow qui sopra.</div>
-            </div>
-
-            <div class="workflow-list" id="workflowList"></div>
-        </div>
-
-        <div class="footer-branding">
-            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong> - Tutti i diritti riservati
-        </div>
+        <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
-        let studioId = localStorage.getItem('studioId') || 'studio-gold';
-        let workflows = [];
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        let studioId = null;
+        let workflow = [];
 
-        document.addEventListener('DOMContentLoaded', function() {
-            caricaWorkflow();
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!token) { window.location.href = 'index.html'; return; }
+            await verificaSessione();
         });
+
+        async function verificaSessione() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+                const data = await response.json();
+                if (!data.success || data.tipo !== 'studio') {
+                    mostraToast('Sessione non valida', 'error');
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                    return;
+                }
+                studioId = data.user.id;
+                document.getElementById('loadingArea').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                await caricaWorkflow();
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
 
         async function creaWorkflow() {
             const cliente = document.getElementById('wfCliente').value.trim();
@@ -417,44 +215,42 @@
             const scadenza = document.getElementById('wfScadenza').value;
             const note = document.getElementById('wfNote').value.trim();
 
-            if (!cliente || !dataEvento) {
-                mostraToast('Compila Nome Cliente e Data Evento (campi obbligatori)', 'error');
+            if (!cliente || !dataEvento || !scadenza) {
+                mostraToast('Compila Cliente, Data Evento e Scadenza', 'error');
                 return;
             }
 
-            const workflow = {
+            const wf = {
                 id: 'wf-' + Date.now(),
                 studio_id: studioId,
                 cliente,
                 data_evento: dataEvento,
                 tipo_servizio: tipoServizio,
-                scadenza: scadenza || '',
+                scadenza,
                 stato_foto: 'da_fare',
                 stato_video: 'da_fare',
-                note: note,
+                note,
                 data_creazione: new Date().toISOString(),
                 ultimo_aggiornamento: new Date().toISOString()
             };
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/workflow`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/workflow?token=${token}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(workflow)
+                    body: JSON.stringify(wf)
                 });
                 const result = await response.json();
-
                 if (result.success) {
-                    workflows.unshift(workflow);
-                    mostraToast('Workflow creato sul cloud con successo!', 'success');
-                    pulisciFormWorkflow();
+                    mostraToast('Workflow creato sul cloud!', 'success');
+                    pulisciForm();
                     await caricaWorkflow();
                 } else {
                     mostraToast('Errore nella creazione', 'error');
                 }
             } catch (error) {
-                console.error('Errore creazione workflow:', error);
-                mostraToast('Errore di connessione al cloud', 'error');
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
             }
         }
 
@@ -464,40 +260,53 @@
             document.getElementById('workflowList').innerHTML = '';
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/workflow?studioId=${studioId}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/workflow?studioId=${studioId}&token=${token}`);
                 const data = await response.json();
-                
                 if (data.success && data.workflow) {
-                    workflows = data.workflow;
-                    popolaSelectWorkflow();
+                    workflow = data.workflow;
                 } else {
-                    workflows = [];
+                    workflow = [];
                 }
             } catch (error) {
-                console.error('Errore caricamento workflow:', error);
-                workflows = [];
+                console.error('Errore:', error);
+                workflow = [];
             }
 
             document.getElementById('loadingWorkflow').style.display = 'none';
             renderizzaWorkflow();
         }
 
-        function popolaSelectWorkflow() {
-            const select = document.getElementById('wfSeleziona');
-            if (workflows.length === 0) {
-                select.innerHTML = '<option value="">-- Nessun workflow --</option>';
-                return;
-            }
-            select.innerHTML = workflows.map(wf => 
-                `<option value="${wf.id}">${wf.cliente} - ${new Date(wf.data_evento).toLocaleDateString('it-IT')}</option>`
-            ).join('');
+        function calcolaProgress(statoFoto, statoVideo) {
+            const stati = ['da_fare', 'in_corso', 'completato'];
+            const valoreFoto = stati.indexOf(statoFoto);
+            const valoreVideo = stati.indexOf(statoVideo);
+            const totale = (valoreFoto + valoreVideo) / (stati.length - 1) / 2 * 100;
+            return Math.round(totale);
+        }
+
+        function getStatoLabel(stato) {
+            const labels = {
+                'da_fare': 'Da Fare',
+                'in_corso': 'In Corso',
+                'completato': 'Completato'
+            };
+            return labels[stato] || stato;
+        }
+
+        function getStatoColor(stato) {
+            const colors = {
+                'da_fare': '#eaeded',
+                'in_corso': '#d6eaf8',
+                'completato': '#d5f4e6'
+            };
+            return colors[stato] || '#eaeded';
         }
 
         function renderizzaWorkflow() {
             const container = document.getElementById('workflowList');
             const emptyState = document.getElementById('emptyWorkflow');
             
-            if (workflows.length === 0) {
+            if (workflow.length === 0) {
                 emptyState.classList.remove('hidden');
                 container.innerHTML = '';
                 return;
@@ -505,102 +314,120 @@
 
             emptyState.classList.add('hidden');
             
-            const statiFotoMap = {
-                'da_fare': 'Da fare',
-                'in_corso': 'In corso',
-                'revisione': 'In revisione',
-                'completato': 'Completato'
+            const oggi = new Date();
+            const tipiMap = {
+                'matrimonio': 'Matrimonio', 'battesimo': 'Battesimo', 'comunione': 'Comunione',
+                'ritratto': 'Ritratto', 'evento-aziendale': 'Evento Aziendale', 'altro': 'Altro'
             };
 
-            const statiVideoMap = {
-                'da_fare': 'Da fare',
-                'in_corso': 'In corso',
-                'montaggio': 'In montaggio',
-                'completato': 'Completato'
-            };
-
-            const tipiServizioMap = {
-                'matrimonio': 'Matrimonio',
-                'battesimo': 'Battesimo',
-                'comunione': 'Comunione',
-                'ritratto': 'Ritratto',
-                'evento-aziendale': 'Evento Aziendale',
-                'altro': 'Altro'
-            };
-
-            container.innerHTML = workflows.map(wf => {
-                const statoFotoClass = wf.stato_foto === 'completato' ? 'status-completed' : 
-                                       wf.stato_foto === 'da_fare' ? 'status-pending' : 'status-progress';
-                const statoVideoClass = wf.stato_video === 'completato' ? 'status-completed' : 
-                                        wf.stato_video === 'da_fare' ? 'status-pending' : 'status-progress';
+            container.innerHTML = workflow.map(wf => {
+                const progress = calcolaProgress(wf.stato_foto, wf.stato_video);
+                const scadenza = new Date(wf.scadenza);
+                const giorniRimasti = Math.ceil((scadenza - oggi) / (1000 * 60 * 60 * 24));
+                const urgente = giorniRimasti <= 7 && giorniRimasti >= 0;
+                const scaduto = giorniRimasti < 0;
 
                 return `
                     <div class="workflow-item">
                         <div class="workflow-header">
-                            <div class="workflow-client">${wf.cliente}</div>
-                            <div class="workflow-date">${new Date(wf.data_evento).toLocaleDateString('it-IT')}</div>
+                            <div>
+                                <div class="workflow-cliente">${wf.cliente}</div>
+                                <div class="workflow-data">Evento: ${new Date(wf.data_evento).toLocaleDateString('it-IT')}</div>
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-light);">
+                                Creato: ${new Date(wf.data_creazione).toLocaleDateString('it-IT')}
+                            </div>
                         </div>
-                        <div style="font-size: 13px; color: var(--text-light); margin-bottom: 8px;">
-                            ${tipiServizioMap[wf.tipo_servizio] || wf.tipo_servizio}
+
+                        <div class="workflow-info">
+                            <span class="workflow-tag tag-servizio">${tipiMap[wf.tipo_servizio] || wf.tipo_servizio}</span>
+                            <span class="workflow-tag tag-scadenza ${urgente ? 'urgente' : ''}">
+                                ${scaduto ? 'SCADUTO' : giorniRimasti + ' giorni'}
+                            </span>
                         </div>
-                        ${wf.note ? `<div style="font-size: 13px; color: var(--text-main); margin-bottom: 12px;">${wf.note}</div>` : ''}
-                        <div class="workflow-status">
-                            <span class="status-badge ${statoFotoClass}">Foto: ${statiFotoMap[wf.stato_foto]}</span>
-                            <span class="status-badge ${statoVideoClass}">Video: ${statiVideoMap[wf.stato_video]}</span>
+
+                        <div class="workflow-progress">
+                            <div class="progress-label">
+                                <span>Avanzamento Totale</span>
+                                <span><strong>${progress}%</strong></span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: ${progress}%;"></div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div>
+                                    <div class="progress-label"><span>Foto</span><span>${getStatoLabel(wf.stato_foto)}</span></div>
+                                    <select class="status-select" onchange="aggiornaStato('${wf.id}', 'foto', this.value)" style="width: 100%;">
+                                        <option value="da_fare" ${wf.stato_foto === 'da_fare' ? 'selected' : ''}>Da Fare</option>
+                                        <option value="in_corso" ${wf.stato_foto === 'in_corso' ? 'selected' : ''}>In Corso</option>
+                                        <option value="completato" ${wf.stato_foto === 'completato' ? 'selected' : ''}>Completato</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <div class="progress-label"><span>Video</span><span>${getStatoLabel(wf.stato_video)}</span></div>
+                                    <select class="status-select" onchange="aggiornaStato('${wf.id}', 'video', this.value)" style="width: 100%;">
+                                        <option value="da_fare" ${wf.stato_video === 'da_fare' ? 'selected' : ''}>Da Fare</option>
+                                        <option value="in_corso" ${wf.stato_video === 'in_corso' ? 'selected' : ''}>In Corso</option>
+                                        <option value="completato" ${wf.stato_video === 'completato' ? 'selected' : ''}>Completato</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        ${wf.scadenza ? `<div style="font-size: 12px; color: var(--text-light); margin-top: 8px;">Scadenza: ${new Date(wf.scadenza).toLocaleDateString('it-IT')}</div>` : ''}
+
+                        ${wf.note ? `<div style="font-size: 13px; color: var(--text-light); font-style: italic; margin-top: 12px;"> ${wf.note}</div>` : ''}
+
+                        <div class="workflow-actions">
+                            <button class="btn btn-danger" onclick="eliminaWorkflow('${wf.id}')">Elimina</button>
+                        </div>
                     </div>
                 `;
             }).join('');
         }
 
-        async function aggiornaWorkflow() {
-            const workflowId = document.getElementById('wfSeleziona').value;
-            if (!workflowId) {
-                mostraToast('Seleziona un workflow da aggiornare', 'error');
-                return;
-            }
+        async function aggiornaStato(id, tipo, nuovoStato) {
+            const wf = workflow.find(w => w.id === id);
+            if (!wf) return;
 
-            const statoFoto = document.getElementById('statoFoto').value;
-            const statoVideo = document.getElementById('statoVideo').value;
-            const note = document.getElementById('noteAggiornamento').value.trim();
-
-            const workflow = workflows.find(w => w.id === workflowId);
-            if (!workflow) {
-                mostraToast('Workflow non trovato', 'error');
-                return;
-            }
-
-            const aggiornamento = {
-                id: workflowId,
-                stato_foto: statoFoto,
-                stato_video: statoVideo,
-                note: note || workflow.note,
+            const update = {
+                id,
+                stato_foto: tipo === 'foto' ? nuovoStato : wf.stato_foto,
+                stato_video: tipo === 'video' ? nuovoStato : wf.stato_video,
                 ultimo_aggiornamento: new Date().toISOString()
             };
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/workflow`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/workflow?token=${token}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(aggiornamento)
+                    body: JSON.stringify(update)
                 });
                 const result = await response.json();
-
                 if (result.success) {
-                    mostraToast('Workflow aggiornato sul cloud con successo!', 'success');
-                    document.getElementById('noteAggiornamento').value = '';
+                    mostraToast(`Stato ${tipo} aggiornato!`, 'success');
                     await caricaWorkflow();
                 } else {
                     mostraToast('Errore nell\'aggiornamento', 'error');
                 }
             } catch (error) {
-                console.error('Errore aggiornamento workflow:', error);
-                mostraToast('Errore di connessione al cloud', 'error');
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
             }
         }
 
-        function pulisciFormWorkflow() {
+        async function eliminaWorkflow(id) {
+            if (!confirm('Eliminare questo workflow?')) return;
+            try {
+                // In produzione: chiamata DELETE al worker
+                workflow = workflow.filter(w => w.id !== id);
+                renderizzaWorkflow();
+                mostraToast('Workflow eliminato', 'success');
+            } catch (error) {
+                mostraToast('Errore nell\'eliminazione', 'error');
+            }
+        }
+
+        function pulisciForm() {
             document.getElementById('wfCliente').value = '';
             document.getElementById('wfDataEvento').value = '';
             document.getElementById('wfTipoServizio').value = 'matrimonio';
@@ -608,66 +435,17 @@
             document.getElementById('wfNote').value = '';
         }
 
-        async function eseguiBackupCloud() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/workflow?studioId=${studioId}`);
-                const data = await response.json();
-                
-                if (data.success) {
-                    const blob = new Blob([JSON.stringify(data.workflow, null, 2)], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `backup-workflow-${studioId}-${Date.now()}.json`;
-                    a.click();
-                    URL.revokeObjectURL(url);
-                    mostraToast('Backup scaricato dal cloud', 'success');
-                }
-            } catch (error) {
-                mostraToast('Errore backup cloud', 'error');
-            }
-        }
-
-        async function eseguiRipristinoCloud() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            input.onchange = async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                const reader = new FileReader();
-                reader.onload = async (ev) => {
-                    try {
-                        const dati = JSON.parse(ev.target.result);
-                        if (Array.isArray(dati)) {
-                            for (const wf of dati) {
-                                wf.studio_id = studioId;
-                                await fetch(`${WORKER_URL}/api/studio/workflow`, {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(wf)
-                                });
-                            }
-                            mostraToast('Ripristino completato sul cloud', 'success');
-                            await caricaWorkflow();
-                        }
-                    } catch (error) {
-                        mostraToast('Errore nel ripristino', 'error');
-                    }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
+        function tornaPlancia() {
+            window.location.href = `plancia-studio.html?token=${token}`;
         }
 
         function mostraToast(msg, tipo) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? 'OK' : '!'}</div><div class="toast-message">${msg}</div>`;
+            toast.innerHTML = `<div>${msg}</div>`;
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
+            setTimeout(() => toast.remove(), 3000);
         }
     </script>
 </body>
