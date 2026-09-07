@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - AppCenterStudioPROGOLD</title>
+    <title>Admin Panel - CRM & Notifiche - AppCenterStudioPROGOLD</title>
     <style>
         :root {
             --primary: #82e0aa;
@@ -14,6 +14,8 @@
             --text-main: #2c3e50;
             --text-light: #7f8c8d;
             --border-color: #e8e8e8;
+            --success: #27ae60;
+            --warning: #f39c12;
             --danger: #e74c3c;
             --radius: 16px;
         }
@@ -32,223 +34,775 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
-            position: sticky; top: 0; z-index: 100;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         .nav-btn {
-            background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
-            cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark);
+            background: rgba(255,255,255,0.95);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-left: 8px;
         }
+        .nav-btn:hover { transform: translateY(-2px); }
+        .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
         .page-header {
-            text-align: center; padding: 32px; background: white; border-radius: var(--radius);
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
+            text-align: center;
+            padding: 32px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
         }
-        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+        }
         .page-header h1 {
-            font-size: 32px; font-weight: 800; background: var(--primary-gradient);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px;
+            font-size: 32px;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
         }
+        .page-header p { color: var(--text-light); font-size: 15px; }
         .card-3d {
-            background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden;
+            background: white;
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
+            position: relative;
+            overflow: hidden;
         }
-        .card-3d::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
+        .card-3d::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
         .card-title {
-            font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px;
-            padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
+        .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border-color); }
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: all 0.2s ease;
+        }
+        .tab:hover { color: var(--primary-dark); }
+        .tab.active {
+            color: var(--primary-dark);
+            border-bottom-color: var(--primary);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+        .form-group input, .form-group select {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 13px;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
         .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); background: white; margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; }
         th { background: var(--primary-light); color: var(--primary-dark); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
         tr:hover td { background: #fafafa; }
-        .btn {
-            padding: 8px 16px; border: none; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
         }
-        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
-        .btn-warning:hover { transform: translateY(-2px); }
-        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .badge-attivo { background: #d5f4e6; color: #27ae60; }
+        .badge-inattivo { background: #fadbd8; color: #e74c3c; }
+        .badge-trial { background: #fef9e7; color: #f39c12; }
+        .badge-scaduto { background: #fadbd8; color: #e74c3c; }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(26px); }
+        .notification-item {
+            background: white;
+            border-left: 4px solid var(--primary);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+        }
+        .notification-item.unread {
+            border-left-color: var(--warning);
+            background: #fef9e7;
+        }
+        .notification-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        .notification-title { font-size: 15px; font-weight: 700; color: var(--text-main); }
+        .notification-time { font-size: 11px; color: var(--text-light); }
+        .notification-message { font-size: 13px; color: var(--text-light); margin-bottom: 8px; }
+        .notification-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+        .footer-branding {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-light);
+            font-size: 13px;
+            margin-top: 40px;
+        }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast {
-            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            margin-bottom: 10px; border-left: 4px solid var(--primary); animation: slideIn 0.3s ease;
+            background: white;
+            border-radius: 10px;
+            padding: 14px 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
+            border-left: 4px solid var(--success);
+            animation: slideIn 0.3s ease;
         }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
         .loading { text-align: center; padding: 40px; color: var(--text-light); }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--primary-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         .hidden { display: none !important; }
-        
-        /* Modal */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5);
-            display: flex; align-items: center; justify-content: center; z-index: 1000;
+        .edit-row { background: #f4f6f7; }
+        .password-wrapper { position: relative; display: flex; align-items: center; }
+        .password-wrapper input { flex: 1; }
+        .toggle-password {
+            position: absolute;
+            right: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--text-light);
+            padding: 4px;
         }
-        .modal {
-            background: white; padding: 32px; border-radius: var(--radius); width: 90%; max-width: 400px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-        .modal h3 { margin-bottom: 20px; color: var(--primary-dark); }
-        .modal input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 16px; font-size: 14px; }
-        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; }
     </style>
 </head>
 <body>
     <div class="top-bar">
-        <button class="nav-btn" onclick="logout()">Logout</button>
-        <div style="color: white; font-weight: 600;">Admin Panel - Cloud</div>
+        <div>
+            <button class="nav-btn" onclick="logout()">Logout</button>
+            <button class="nav-btn" onclick="location.reload()">🔄 Aggiorna</button>
+        </div>
+        <div class="sync-status">
+            <span class="sync-dot"></span>
+            Cloud Sync: OK
+        </div>
     </div>
 
     <div class="container">
         <div class="page-header">
-            <h1>Archivio Credenziali Cloud</h1>
-            <p>Gestione centralizzata di tutti gli accessi Studio e Cliente</p>
+            <h1>Admin Panel - CRM</h1>
+            <p>Gestione studi, clienti e notifiche in tempo reale</p>
         </div>
 
-        <div id="loadingArea" class="loading">Verifica sessione cloud...</div>
+        <div id="loadingArea" class="loading">
+            <div class="spinner"></div>
+            <div>Verifica sessione e carica dati...</div>
+        </div>
 
         <div id="mainContent" class="hidden">
-            <!-- STUDI -->
-            <div class="card-3d">
-                <div class="card-title">Archivio Studi</div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr><th>ID Studio</th><th>Nome</th><th>Email</th><th>Password</th><th>Azioni</th></tr>
-                        </thead>
-                        <tbody id="studiTable"></tbody>
-                    </table>
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('studi')">📊 Studi</button>
+                <button class="tab" onclick="switchTab('clienti')">👥 Clienti</button>
+                <button class="tab" onclick="switchTab('notifiche')"> Notifiche <span id="badgeNotifiche" class="notification-badge hidden">0</span></button>
+                <button class="tab" onclick="switchTab('creaStudio')">➕ Crea Studio</button>
+            </div>
+
+            <!-- TAB STUDI -->
+            <div id="tab-studi" class="tab-content active">
+                <div class="card-3d">
+                    <div class="card-title">Elenco Studi Registrati</div>
+                    <div class="card-subtitle">Gestisci credenziali, stato abbonamento e attivazione studi</div>
+                    <div id="loadingStudi" class="loading" style="padding: 20px;">
+                        <div class="spinner"></div>
+                        <div>Caricamento studi...</div>
+                    </div>
+                    <div class="table-container hidden" id="tableStudi">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID Studio</th>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Password</th>
+                                    <th>Abbonamento</th>
+                                    <th>Scadenza</th>
+                                    <th>Stato</th>
+                                    <th>Azioni</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studiTable"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- CLIENTI -->
-            <div class="card-3d">
-                <div class="card-title">Archivio Clienti</div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr><th>ID Cliente</th><th>Nome</th><th>Email</th><th>Password</th><th>Azioni</th></tr>
-                        </thead>
-                        <tbody id="clientiTable"></tbody>
-                    </table>
+            <!-- TAB CLIENTI -->
+            <div id="tab-clienti" class="tab-content">
+                <div class="card-3d">
+                    <div class="card-title">Elenco Clienti</div>
+                    <div class="card-subtitle">Tutti i clienti registrati dagli studi</div>
+                    <div id="loadingClienti" class="loading" style="padding: 20px;">
+                        <div class="spinner"></div>
+                        <div>Caricamento clienti...</div>
+                    </div>
+                    <div class="table-container hidden" id="tableClienti">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID Cliente</th>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Telefono</th>
+                                    <th>Tipo Evento</th>
+                                    <th>Data Evento</th>
+                                    <th>Studio</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clientiTable"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+
+            <!-- TAB NOTIFICHE -->
+            <div id="tab-notifiche" class="tab-content">
+                <div class="card-3d">
+                    <div class="card-title">Notifiche e Richieste</div>
+                    <div class="card-subtitle">Schede di registrazione e eventi del sistema</div>
+                    <div style="margin-bottom: 16px;">
+                        <button class="btn btn-success" onclick="segnaTutteLette()">✅ Segna tutte come lette</button>
+                    </div>
+                    <div id="loadingNotifiche" class="loading" style="padding: 20px;">
+                        <div class="spinner"></div>
+                        <div>Caricamento notifiche...</div>
+                    </div>
+                    <div id="emptyNotifiche" class="hidden" style="text-align: center; padding: 40px; color: var(--text-light);">
+                        Nessuna notifica presente
+                    </div>
+                    <div id="notificheList"></div>
+                </div>
+            </div>
+
+            <!-- TAB CREA STUDIO -->
+            <div id="tab-creaStudio" class="tab-content">
+                <div class="card-3d">
+                    <div class="card-title">Crea Nuovo Studio</div>
+                    <div class="card-subtitle">Registra un nuovo studio fotografico sulla piattaforma</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>ID Studio (unico) *</label>
+                            <input type="text" id="newStudioId" placeholder="es. studio-rossi">
+                        </div>
+                        <div class="form-group">
+                            <label>Password *</label>
+                            <div class="password-wrapper">
+                                <input type="password" id="newStudioPassword" placeholder="Password iniziale">
+                                <button type="button" class="toggle-password" onclick="togglePassword('newStudioPassword', this)">👁️</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nome Studio *</label>
+                            <input type="text" id="newStudioNome" placeholder="es. Rossi Fotografia">
+                        </div>
+                        <div class="form-group">
+                            <label>Partita IVA</label>
+                            <input type="text" id="newStudioPiva" placeholder="es. 12345678901">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" id="newStudioEmail" placeholder="es. studio@rossi.it">
+                        </div>
+                        <div class="form-group">
+                            <label>Telefono</label>
+                            <input type="tel" id="newStudioTelefono" placeholder="+39 333 1234567">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Indirizzo</label>
+                        <input type="text" id="newStudioIndirizzo" placeholder="Via Roma 1, Milano">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Città</label>
+                            <input type="text" id="newStudioCitta" placeholder="Milano">
+                        </div>
+                        <div class="form-group">
+                            <label>Stato/Provincia</label>
+                            <input type="text" id="newStudioStato" placeholder="MI">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Scadenza Abbonamento</label>
+                            <input type="date" id="newStudioScadenza">
+                        </div>
+                        <div class="form-group">
+                            <label>Stato Abbonamento</label>
+                            <select id="newStudioStatoAbbonamento">
+                                <option value="attivo">Attivo</option>
+                                <option value="trial">Trial</option>
+                                <option value="scaduto">Scaduto</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="btn-group" style="margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="creaStudio()">CREA STUDIO</button>
+                        <button class="btn btn-outline" onclick="pulisciFormStudio()">PULISCI</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-branding">
+            Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong>
         </div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- Modal Modifica Password -->
-    <div id="modalPassword" class="modal-overlay hidden">
-        <div class="modal">
-            <h3>Modifica Password Cloud</h3>
-            <p id="modalInfo" style="margin-bottom: 16px; font-size: 13px; color: var(--text-light);"></p>
-            <input type="text" id="nuovaPassword" placeholder="Nuova password">
-            <div class="modal-buttons">
-                <button class="btn btn-danger" onclick="chiudiModal()">Annulla</button>
-                <button class="btn btn-warning" onclick="salvaPassword()">Salva sul Cloud</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
-        let token = new URLSearchParams(window.location.search).get('token');
-        let datiArchivio = { studi: [], clienti: [] };
-        let utenteModifica = null;
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        let studi = [];
+        let clienti = [];
+        let notifiche = [];
 
         document.addEventListener('DOMContentLoaded', async function() {
-            if (!token) { window.location.href = 'index.html'; return; }
+            if (!token) {
+                window.location.href = 'index.html';
+                return;
+            }
+            await verificaSessione();
+        });
 
-            // 1. Verifica sessione
+        async function verificaSessione() {
             try {
-                const res = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
-                const data = await res.json();
+                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+                const data = await response.json();
                 if (!data.success || data.tipo !== 'admin') {
-                    mostraToast('Sessione non valida o non admin', 'error');
+                    mostraToast('Sessione non valida o non autorizzata', 'error');
                     setTimeout(() => window.location.href = 'index.html', 1500);
                     return;
                 }
-                
-                // 2. Carica archivio
-                await caricaArchivio();
-            } catch (e) {
-                mostraToast('Errore connessione', 'error');
-            }
-        });
-
-        async function caricaArchivio() {
-            try {
-                const res = await fetch(`${WORKER_URL}/api/admin/credenziali?token=${token}`);
-                const data = await res.json();
-                if (data.success) {
-                    datiArchivio = data;
-                    renderizzaTabelle();
-                    document.getElementById('loadingArea').classList.add('hidden');
-                    document.getElementById('mainContent').classList.remove('hidden');
-                }
-            } catch (e) {
-                mostraToast('Errore caricamento archivio', 'error');
+                document.getElementById('loadingArea').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                await caricaStudi();
+                await caricaClienti();
+                await caricaNotifiche();
+                // Aggiorna notifiche ogni 30 secondi
+                setInterval(caricaNotifiche, 30000);
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
             }
         }
 
-        function renderizzaTabelle() {
-            const tbodyStudi = document.getElementById('studiTable');
-            const tbodyClienti = document.getElementById('clientiTable');
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
 
-            tbodyStudi.innerHTML = datiArchivio.studi.map(s => `
-                <tr>
-                    <td><strong>${s.id}</strong></td>
-                    <td>${s.nome}</td>
-                    <td>${s.email}</td>
-                    <td style="font-family: monospace; background: #f4f6f7; padding: 4px 8px; border-radius: 4px;">${s.password}</td>
-                    <td><button class="btn btn-warning" onclick="apriModal('studio', '${s.id}')">Modifica Password</button></td>
+        async function caricaStudi() {
+            document.getElementById('loadingStudi').style.display = 'block';
+            document.getElementById('tableStudi').classList.add('hidden');
+            try {
+                const response = await fetch(`${WORKER_URL}/api/admin/crm/studi?token=${token}`);
+                const data = await response.json();
+                if (data.success) {
+                    studi = data.studi;
+                    renderizzaStudi();
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+            }
+            document.getElementById('loadingStudi').style.display = 'none';
+        }
+
+        function renderizzaStudi() {
+            const tbody = document.getElementById('studiTable');
+            const table = document.getElementById('tableStudi');
+            if (studi.length === 0) {
+                table.classList.add('hidden');
+                return;
+            }
+            table.classList.remove('hidden');
+            tbody.innerHTML = studi.map(studio => `
+                <tr class="${studio.attivo === 0 ? 'edit-row' : ''}">
+                    <td><strong>${studio.id}</strong></td>
+                    <td>${studio.nome}</td>
+                    <td>${studio.email || '-'}</td>
+                    <td>
+                        <div class="password-wrapper" style="max-width: 150px;">
+                            <input type="password" value="${studio.password}" id="pwd-${studio.id}" style="width: 100%; padding: 6px;">
+                            <button type="button" class="toggle-password" onclick="togglePasswordInline('pwd-${studio.id}', this)">👁️</button>
+                        </div>
+                    </td>
+                    <td>
+                        <select onchange="aggiornaStatoAbbonamento('${studio.id}', this.value)" style="padding: 4px; border-radius: 4px;">
+                            <option value="attivo" ${studio.stato_abbonamento === 'attivo' ? 'selected' : ''}>Attivo</option>
+                            <option value="trial" ${studio.stato_abbonamento === 'trial' ? 'selected' : ''}>Trial</option>
+                            <option value="scaduto" ${studio.stato_abbonamento === 'scaduto' ? 'selected' : ''}>Scaduto</option>
+                        </select>
+                    </td>
+                    <td>${studio.scadenza ? new Date(studio.scadenza).toLocaleDateString('it-IT') : '-'}</td>
+                    <td>
+                        <label class="toggle-switch">
+                            <input type="checkbox" ${studio.attivo === 1 ? 'checked' : ''} onchange="toggleAttivo('${studio.id}', this.checked)">
+                            <span class="slider"></span>
+                        </label>
+                        <span style="margin-left: 8px; font-size: 11px;">${studio.attivo === 1 ? 'Attivo' : 'Disattivato'}</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="salvaModificheStudio('${studio.id}')">💾 Salva</button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminaStudio('${studio.id}')">️</button>
+                    </td>
                 </tr>
             `).join('');
+        }
 
-            tbodyClienti.innerHTML = datiArchivio.clienti.map(c => `
+        async function caricaClienti() {
+            document.getElementById('loadingClienti').style.display = 'block';
+            document.getElementById('tableClienti').classList.add('hidden');
+            try {
+                const response = await fetch(`${WORKER_URL}/api/admin/crm/clienti?token=${token}`);
+                const data = await response.json();
+                if (data.success) {
+                    clienti = data.clienti;
+                    renderizzaClienti();
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+            }
+            document.getElementById('loadingClienti').style.display = 'none';
+        }
+
+        function renderizzaClienti() {
+            const tbody = document.getElementById('clientiTable');
+            const table = document.getElementById('tableClienti');
+            if (clienti.length === 0) {
+                table.classList.add('hidden');
+                return;
+            }
+            table.classList.remove('hidden');
+            tbody.innerHTML = clienti.map(c => `
                 <tr>
                     <td><strong>${c.id}</strong></td>
-                    <td>${c.nome_a} ${c.cognome_a}</td>
-                    <td>${c.email}</td>
-                    <td style="font-family: monospace; background: #f4f6f7; padding: 4px 8px; border-radius: 4px;">${c.password}</td>
-                    <td><button class="btn btn-warning" onclick="apriModal('cliente', '${c.id}')">Modifica Password</button></td>
+                    <td>${c.nome_a} ${c.cognome_a} ${c.nome_b ? '& ' + c.nome_b : ''}</td>
+                    <td>${c.email || '-'}</td>
+                    <td>${c.telefono || '-'}</td>
+                    <td>${c.tipo_evento || '-'}</td>
+                    <td>${c.data_evento ? new Date(c.data_evento).toLocaleDateString('it-IT') : '-'}</td>
+                    <td>${c.studio_id}</td>
                 </tr>
             `).join('');
         }
 
-        function apriModal(tipo, id) {
-            utenteModifica = { tipo, id };
-            document.getElementById('modalInfo').textContent = `Stai modificando la password per ${tipo} ID: ${id}`;
-            document.getElementById('nuovaPassword').value = '';
-            document.getElementById('modalPassword').classList.remove('hidden');
+        async function caricaNotifiche() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/admin/notifiche?token=${token}`);
+                const data = await response.json();
+                if (data.success) {
+                    notifiche = data.notifiche;
+                    renderizzaNotifiche();
+                    if (data.nonLette > 0) {
+                        document.getElementById('badgeNotifiche').textContent = data.nonLette;
+                        document.getElementById('badgeNotifiche').classList.remove('hidden');
+                    } else {
+                        document.getElementById('badgeNotifiche').classList.add('hidden');
+                    }
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+            }
         }
 
-        function chiudiModal() {
-            document.getElementById('modalPassword').classList.add('hidden');
-            utenteModifica = null;
+        function renderizzaNotifiche() {
+            const container = document.getElementById('notificheList');
+            const empty = document.getElementById('emptyNotifiche');
+            if (notifiche.length === 0) {
+                container.innerHTML = '';
+                empty.classList.remove('hidden');
+                return;
+            }
+            empty.classList.add('hidden');
+            container.innerHTML = notifiche.map(n => `
+                <div class="notification-item ${n.letto === 0 ? 'unread' : ''}" onclick="segnaComeLetta('${n.id}')">
+                    <div class="notification-header">
+                        <div class="notification-title">${n.titolo}</div>
+                        <div class="notification-time">${new Date(n.data_creazione).toLocaleString('it-IT')}</div>
+                    </div>
+                    <div class="notification-message">${n.messaggio}</div>
+                    <div style="font-size: 11px; color: var(--text-light);">Tipo: ${n.tipo}</div>
+                </div>
+            `).join('');
         }
 
-        async function salvaPassword() {
-            const nuovaPwd = document.getElementById('nuovaPassword').value.trim();
-            if (!nuovaPwd) { mostraToast('Inserisci una password', 'error'); return; }
+        async function toggleAttivo(studioId, attivo) {
+            try {
+                await fetch(`${WORKER_URL}/api/admin/crm/studio?token=${token}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: studioId, attivo: attivo ? 1 : 0 })
+                });
+                mostraToast(`Studio ${attivo ? 'attivato' : 'disattivato'}`, 'success');
+            } catch (error) {
+                mostraToast('Errore aggiornamento', 'error');
+            }
+        }
+
+        async function aggiornaStatoAbbonamento(studioId, stato) {
+            try {
+                await fetch(`${WORKER_URL}/api/admin/crm/studio?token=${token}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: studioId, stato_abbonamento: stato })
+                });
+                mostraToast('Stato abbonamento aggiornato', 'success');
+            } catch (error) {
+                mostraToast('Errore aggiornamento', 'error');
+            }
+        }
+
+        async function salvaModificheStudio(studioId) {
+            const passwordInput = document.getElementById(`pwd-${studioId}`);
+            const nuovaPassword = passwordInput.value;
+            const studio = studi.find(s => s.id === studioId);
+            try {
+                await fetch(`${WORKER_URL}/api/admin/crm/studio?token=${token}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id: studioId,
+                        password: nuovaPassword !== studio.password ? nuovaPassword : '',
+                        email: studio.email,
+                        telefono: studio.telefono
+                    })
+                });
+                mostraToast('Modifiche salvate', 'success');
+                await caricaStudi();
+            } catch (error) {
+                mostraToast('Errore salvataggio', 'error');
+            }
+        }
+
+        async function eliminaStudio(studioId) {
+            if (!confirm('Sei sicuro di voler eliminare questo studio?')) return;
+            try {
+                await fetch(`${WORKER_URL}/api/admin/crm/studio?token=${token}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: studioId })
+                });
+                mostraToast('Studio eliminato', 'success');
+                await caricaStudi();
+            } catch (error) {
+                mostraToast('Errore eliminazione', 'error');
+            }
+        }
+
+        async function creaStudio() {
+            const id = document.getElementById('newStudioId').value.trim();
+            const password = document.getElementById('newStudioPassword').value;
+            const nome = document.getElementById('newStudioNome').value.trim();
+            const piva = document.getElementById('newStudioPiva').value.trim();
+            const email = document.getElementById('newStudioEmail').value.trim();
+            const telefono = document.getElementById('newStudioTelefono').value.trim();
+            const indirizzo = document.getElementById('newStudioIndirizzo').value.trim();
+            const citta = document.getElementById('newStudioCitta').value.trim();
+            const stato = document.getElementById('newStudioStato').value.trim();
+            const scadenza = document.getElementById('newStudioScadenza').value;
+            const statoAbbonamento = document.getElementById('newStudioStatoAbbonamento').value;
+
+            if (!id || !password || !nome || !email) {
+                mostraToast('Compila i campi obbligatori (ID, Password, Nome, Email)', 'error');
+                return;
+            }
 
             try {
-                const res = await fetch(`${WORKER_URL}/api/admin/aggiorna-password?token=${token}`, {
+                await fetch(`${WORKER_URL}/api/admin/crm/studio?token=${token}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ tipo: utenteModifica.tipo, id: utenteModifica.id, nuova_password: nuovaPwd })
+                    body: JSON.stringify({
+                        id, password, nome, piva, email, telefono, indirizzo, citta, stato, scadenza, stato_abbonamento: statoAbbonamento
+                    })
                 });
-                const data = await res.json();
-                if (data.success) {
-                    mostraToast('Password aggiornata sul Cloud!', 'success');
-                    chiudiModal();
-                    await caricaArchivio();
-                } else {
-                    mostraToast('Errore aggiornamento', 'error');
-                }
-            } catch (e) {
-                mostraToast('Errore connessione', 'error');
+                mostraToast('Studio creato con successo!', 'success');
+                pulisciFormStudio();
+                await caricaStudi();
+                await caricaNotifiche();
+            } catch (error) {
+                mostraToast('Errore creazione studio', 'error');
             }
+        }
+
+        function pulisciFormStudio() {
+            document.getElementById('newStudioId').value = '';
+            document.getElementById('newStudioPassword').value = '';
+            document.getElementById('newStudioNome').value = '';
+            document.getElementById('newStudioPiva').value = '';
+            document.getElementById('newStudioEmail').value = '';
+            document.getElementById('newStudioTelefono').value = '';
+            document.getElementById('newStudioIndirizzo').value = '';
+            document.getElementById('newStudioCitta').value = '';
+            document.getElementById('newStudioStato').value = '';
+            document.getElementById('newStudioScadenza').value = '';
+        }
+
+        async function segnaComeLetta(id) {
+            try {
+                await fetch(`${WORKER_URL}/api/admin/notifica/letta?token=${token}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+                await caricaNotifiche();
+            } catch (error) {
+                console.error('Errore:', error);
+            }
+        }
+
+        async function segnaTutteLette() {
+            try {
+                await fetch(`${WORKER_URL}/api/admin/notifiche/lette?token=${token}`, {
+                    method: 'POST'
+                });
+                await caricaNotifiche();
+                mostraToast('Tutte le notifiche segnate come lette', 'success');
+            } catch (error) {
+                mostraToast('Errore aggiornamento', 'error');
+            }
+        }
+
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = '';
+            } else {
+                input.type = 'password';
+                btn.textContent = '👁️';
+            }
+        }
+
+        function togglePasswordInline(inputId, btn) {
+            togglePassword(inputId, btn);
         }
 
         async function logout() {
