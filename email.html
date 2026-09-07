@@ -6,23 +6,25 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Email & Modelli - AppCenterStudioPROGOLD</title>
+    <title>Email & Comunicazioni - AppCenterStudioPROGOLD</title>
+    <script src="temi.js"></script>
     <style>
         :root {
-            --primary: #f4d03f;
-            --primary-dark: #b7950b;
-            --primary-light: #fef9e7;
-            --primary-gradient: linear-gradient(135deg, #f9e79f 0%, #f4d03f 50%, #b7950b 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #fef9e7 40%, #f4ecf7 100%);
+            --primary: #82e0aa;
+            --primary-dark: #1e8449;
+            --primary-light: #e8f8f5;
+            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
             --card-bg: rgba(255, 255, 255, 0.98);
             --card-gradient: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
             --text-main: #2c3e50;
             --text-light: #7f8c8d;
             --border-color: #e8e8e8;
             --success: #27ae60;
+            --warning: #f39c12;
             --danger: #e74c3c;
-            --shadow-3d: 0 10px 30px rgba(183, 149, 11, 0.12), 0 1px 3px rgba(0,0,0,0.05);
-            --shadow-3d-hover: 0 20px 50px rgba(183, 149, 11, 0.2), 0 5px 15px rgba(0,0,0,0.08);
+            --shadow-3d: 0 10px 30px rgba(30, 132, 73, 0.12), 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-3d-hover: 0 20px 50px rgba(30, 132, 73, 0.2), 0 5px 15px rgba(0,0,0,0.08);
             --radius: 16px;
         }
 
@@ -47,7 +49,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 4px 20px rgba(183, 149, 11, 0.15);
+            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
         }
 
         .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
@@ -146,7 +148,7 @@
             color: white;
             letter-spacing: 0.5px;
             background: var(--primary-gradient);
-            box-shadow: 0 4px 12px rgba(183, 149, 11, 0.25);
+            box-shadow: 0 4px 12px rgba(30, 132, 73, 0.25);
         }
 
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
@@ -162,12 +164,11 @@
             font-family: inherit;
             background: white;
             transition: all 0.2s ease;
-            width: 100%;
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
             outline: none; 
             border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(244, 208, 63, 0.2); 
+            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); 
             transform: translateY(-1px);
         }
 
@@ -188,28 +189,52 @@
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
         .btn-outline:hover { background: var(--primary-light); }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
 
-        .archive-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
-        .archive-item {
+        .email-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .email-item {
             background: white;
             border-left: 4px solid var(--primary);
-            border-radius: 10px;
-            padding: 18px 22px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            transition: all 0.2s ease;
-            cursor: pointer;
+            border-radius: 12px;
+            padding: 20px 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
         }
-        .archive-item:hover { transform: translateX(6px); box-shadow: 0 4px 16px rgba(183, 149, 11, 0.15); }
-        .archive-info { flex: 1; }
-        .archive-subject { font-weight: 700; font-size: 15px; color: var(--text-main); margin-bottom: 4px; }
-        .archive-meta { font-size: 12px; color: var(--text-light); }
-        .archive-date { font-weight: 700; color: var(--primary-dark); font-size: 13px; white-space: nowrap; margin-left: 16px; }
+        .email-item:hover { transform: translateX(6px); box-shadow: 0 8px 24px rgba(30, 132, 73, 0.15); }
+        .email-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
+        .email-subject { font-size: 16px; font-weight: 700; color: var(--text-main); }
+        .email-date { font-size: 12px; color: var(--text-light); }
+        .email-to { font-size: 13px; color: var(--primary-dark); font-weight: 600; margin-bottom: 8px; }
+        .email-body { font-size: 13px; color: var(--text-main); line-height: 1.5; background: var(--primary-light); padding: 12px; border-radius: 8px; }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .template-card {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .template-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(30, 132, 73, 0.12);
+        }
+
+        .template-name { font-size: 15px; font-weight: 700; color: var(--primary-dark); margin-bottom: 6px; }
+        .template-desc { font-size: 12px; color: var(--text-light); }
 
         .footer-branding {
             text-align: center;
@@ -244,8 +269,7 @@
             .top-bar { flex-direction: column; gap: 10px; }
             .form-row { grid-template-columns: 1fr; }
             .page-header h1 { font-size: 24px; }
-            .archive-item { flex-direction: column; align-items: flex-start; gap: 8px; }
-            .archive-date { margin-left: 0; }
+            .template-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -265,83 +289,85 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>Email & Modelli di Comunicazione</h1>
-            <p>Configura i tuoi indirizzi, utilizza modelli rapidi e archivia le comunicazioni inviate live sul cloud multi-tenant.</p>
-        </div>
-
-        <!-- MITTENTE -->
-        <div class="card-3d">
-            <div class="card-title"><span class="badge">MT</span> Mittente (Indirizzo dello Studio)</div>
-            <div class="card-subtitle">Configura gli indirizzi ufficiali dello studio. Questi dati verranno salvati sul cloud e saranno disponibili su tutti i dispositivi.</div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Email dello Studio *</label>
-                    <input type="email" id="mittenteEmail" placeholder="studio@esempio.com">
-                </div>
-                <div class="form-group">
-                    <label>PEC dello Studio (Facoltativa)</label>
-                    <input type="email" id="mittentePec" placeholder="studio@pec.it">
-                </div>
-            </div>
-            <div class="btn-group">
-                <button class="btn btn-primary" onclick="salvaMittente()">SALVA MITTENTE SUL CLOUD</button>
-            </div>
+            <h1>Email & Comunicazioni</h1>
+            <p>Invia email ai clienti e gestisci l'archivio delle comunicazioni. Tutto salvato in tempo reale sul cloud multi-tenant.</p>
         </div>
 
         <!-- NUOVA EMAIL -->
         <div class="card-3d">
-            <div class="card-title"><span class="badge">EM</span> Nuova Email</div>
-            <div class="card-subtitle">Seleziona un modello rapido o componi liberamente. L'invio aprirà il tuo client email predefinito.</div>
+            <div class="card-title"><span class="badge">NE</span> Nuova Email</div>
+            <div class="card-subtitle">Compila i campi per inviare una nuova email al cliente. L'email verrà salvata nell'archivio cloud.</div>
             
             <div class="form-row">
-                <div class="form-group" style="grid-column: 1 / -1;">
-                    <label>Modello Rapido</label>
-                    <select id="modelloRapido" onchange="applicaModello()">
-                        <option value="">-- Testo libero --</option>
-                        <option value="promemoria">Promemoria appuntamento</option>
-                        <option value="ordine">Ordine / Album pronto per consegna</option>
-                        <option value="sollecito">Sollecito saldo</option>
-                        <option value="ringraziamento">Ringraziamento post servizio</option>
-                        <option value="acconto">Conferma ricevuta acconto</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-row">
                 <div class="form-group">
-                    <label>A: Email o PEC Destinatario *</label>
-                    <input type="email" id="emailDestinatario" placeholder="cliente@esempio.com">
+                    <label>Destinatario *</label>
+                    <input type="email" id="emDestinatario" placeholder="cliente@email.com">
                 </div>
                 <div class="form-group">
                     <label>Oggetto *</label>
-                    <input type="text" id="emailOggetto" placeholder="Oggetto dell'email">
+                    <input type="text" id="emOggetto" placeholder="es. Conferma appuntamento">
                 </div>
             </div>
+
             <div class="form-group">
-                <label>Messaggio</label>
-                <textarea id="emailMessaggio" rows="6" placeholder="Scrivi qui il messaggio..."></textarea>
+                <label>Corpo Email *</label>
+                <textarea id="emCorpo" rows="6" placeholder="Scrivi qui il contenuto dell'email..."></textarea>
             </div>
+
             <div class="btn-group">
-                <button class="btn btn-success" onclick="inviaEmail()">INVIA CON APP EMAIL</button>
-                <button class="btn btn-outline" onclick="copiaTesto()">COPIA OGGETTO + TESTO</button>
-                <button class="btn btn-primary" onclick="salvaInArchivio()">SALVA IN ARCHIVIO CLOUD</button>
+                <button class="btn btn-primary" onclick="inviaEmail()">INVIA EMAIL E SALVA</button>
+                <button class="btn btn-outline" onclick="mostraTemplate()">USA TEMPLATE</button>
             </div>
         </div>
 
-        <!-- ARCHIVIO -->
-        <div class="card-3d">
-            <div class="card-title"><span class="badge">AR</span> Archivio Comunicazioni Inviate</div>
-            <div class="card-subtitle">Elenco cronologico di tutte le email salvate sul cloud. Dati sincronizzati in tempo reale tra tutti i dispositivi dello studio.</div>
+        <!-- TEMPLATE -->
+        <div class="card-3d hidden" id="cardTemplate">
+            <div class="card-title"><span class="badge">TP</span> Template Email</div>
+            <div class="card-subtitle">Seleziona un template predefinito per velocizzare la scrittura.</div>
             
-            <div id="loadingState" class="loading">
+            <div class="template-grid">
+                <div class="template-card" onclick="usaTemplate('conferma')">
+                    <div class="template-name">Conferma Appuntamento</div>
+                    <div class="template-desc">Template per confermare un appuntamento con il cliente.</div>
+                </div>
+                <div class="template-card" onclick="usaTemplate('preventivo')">
+                    <div class="template-name">Invio Preventivo</div>
+                    <div class="template-desc">Template per inviare un preventivo al cliente.</div>
+                </div>
+                <div class="template-card" onclick="usaTemplate('richiesta_foto')">
+                    <div class="template-name">Richiesta Selezione Foto</div>
+                    <div class="template-desc">Template per chiedere al cliente di selezionare le foto.</div>
+                </div>
+                <div class="template-card" onclick="usaTemplate('consegna')">
+                    <div class="template-name">Consegna Lavori</div>
+                    <div class="template-desc">Template per comunicare la consegna dei lavori.</div>
+                </div>
+                <div class="template-card" onclick="usaTemplate('promemoria')">
+                    <div class="template-name">Promemoria Evento</div>
+                    <div class="template-desc">Template di promemoria prima dell'evento.</div>
+                </div>
+                <div class="template-card" onclick="usaTemplate('ringraziamento')">
+                    <div class="template-name">Ringraziamento</div>
+                    <div class="template-desc">Template di ringraziamento post-servizio.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ARCHIVIO EMAIL -->
+        <div class="card-3d">
+            <div class="card-title"><span class="badge">AE</span> Archivio Email</div>
+            <div class="card-subtitle">Storico di tutte le email inviate. Dati sincronizzati in tempo reale tra tutti i dispositivi.</div>
+            
+            <div id="loadingEmail" class="loading">
                 <div class="spinner"></div>
-                <div>Caricamento archivio dal cloud...</div>
+                <div>Caricamento archivio email dal cloud...</div>
             </div>
 
-            <div id="emptyState" class="empty-state hidden">
-                <div>Nessuna email salvata in archivio. Invia la prima comunicazione qui sopra.</div>
+            <div id="emptyEmail" class="empty-state hidden">
+                <div>Nessuna email nell'archivio. Invia la prima email qui sopra.</div>
             </div>
 
-            <div id="archiveList" class="archive-list"></div>
+            <div class="email-list" id="emailList"></div>
         </div>
 
         <div class="footer-branding">
@@ -355,118 +381,57 @@
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         let studioId = localStorage.getItem('studioId') || 'studio-gold';
         let archivioEmail = [];
-        let configMittente = {};
 
-        const modelli = {
-            'promemoria': { oggetto: 'Promemoria Appuntamento', testo: 'Gentile Cliente,\n\nle ricordiamo il suo appuntamento presso il nostro studio.\n\nCordiali saluti,' },
-            'ordine': { oggetto: 'Il suo Album è pronto!', testo: 'Gentile Cliente,\n\nsiamo lieti di informarla che il suo ordine è pronto per la consegna.\n\nCordiali saluti,' },
-            'sollecito': { oggetto: 'Sollecito Saldo', testo: 'Gentile Cliente,\n\nle inviamo un gentile promemoria per il saldo rimanente.\n\nCordiali saluti,' },
-            'ringraziamento': { oggetto: 'Grazie per averci scelto', testo: 'Gentile Cliente,\n\ngrazie per aver affidato a noi i suoi ricordi più belli.\n\nCordiali saluti,' },
-            'acconto': { oggetto: 'Conferma Ricevuta Acconto', testo: 'Gentile Cliente,\n\nconfermiamo la ricezione del suo acconto.\n\nCordiali saluti,' }
+        const TEMPLATE = {
+            'conferma': {
+                oggetto: 'Conferma Appuntamento',
+                corpo: 'Gentile Cliente,\n\ncon la presente confermiamo l\'appuntamento fissato per il giorno [DATA] alle ore [ORA].\n\nLa aspettiamo presso il nostro studio.\n\nCordiali saluti,\n[TUO NOME STUDIO]'
+            },
+            'preventivo': {
+                oggetto: 'Invio Preventivo Servizio Fotografico',
+                corpo: 'Gentile Cliente,\n\nin allegato/findrà il preventivo per il servizio fotografico richiesto.\n\nRestiamo a disposizione per qualsiasi chiarimento.\n\nCordiali saluti,\n[TUO NOME STUDIO]'
+            },
+            'richiesta_foto': {
+                oggetto: 'Selezione Foto - Il Tuo Servizio Fotografico',
+                corpo: 'Gentile Cliente,\n\nle foto del tuo servizio sono pronte! Puoi selezionarle tramite il link che ti abbiamo inviato.\n\nNon esitare a contattarci per qualsiasi domanda.\n\nCordiali saluti,\n[TUO NOME STUDIO]'
+            },
+            'consegna': {
+                oggetto: 'Consegna Lavori - Servizio Fotografico',
+                corpo: 'Gentile Cliente,\n\nsiamo lieti di comunicarti che i lavori del tuo servizio fotografico sono stati completati e sono pronti per la consegna/ritiro.\n\nContattaci per concordare le modalità.\n\nCordiali saluti,\n[TUO NOME STUDIO]'
+            },
+            'promemoria': {
+                oggetto: 'Promemoria - Il Tuo Evento Si Avvicina',
+                corpo: 'Gentile Cliente,\n\nvolevamo ricordarti che il tuo evento è previsto per il [DATA].\n\nSiamo a tua disposizione per qualsiasi necessità.\n\nCordiali saluti,\n[TUO NOME STUDIO]'
+            },
+            'ringraziamento': {
+                oggetto: 'Grazie per Averci Scelto',
+                corpo: 'Gentile Cliente,\n\ngrazie per averci affidato il tuo servizio fotografico. È stato un piacere lavorare con te.\n\nSperiamo di rivederti presto!\n\nCordiali saluti,\n[TUO NOME STUDIO]'
+            }
         };
 
-        document.addEventListener('DOMContentLoaded', function() {
-            caricaMittente();
-            caricaArchivio();
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Carica il tema dal cloud
+            await caricaTemaCloud(studioId);
+            
+            caricaArchivioEmail();
         });
 
-        async function caricaMittente() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/email-config?studioId=${studioId}`);
-                const data = await response.json();
-                
-                if (data.success && data.mittente) {
-                    configMittente = data.mittente;
-                    if (configMittente.email) document.getElementById('mittenteEmail').value = configMittente.email;
-                    if (configMittente.pec) document.getElementById('mittentePec').value = configMittente.pec;
-                }
-            } catch (error) {
-                console.error('Errore caricamento mittente:', error);
-            }
-        }
+        async function inviaEmail() {
+            const destinatario = document.getElementById('emDestinatario').value.trim();
+            const oggetto = document.getElementById('emOggetto').value.trim();
+            const corpo = document.getElementById('emCorpo').value.trim();
 
-        async function salvaMittente() {
-            const config = {
+            if (!destinatario || !oggetto || !corpo) {
+                mostraToast('Compila tutti i campi obbligatori', 'error');
+                return;
+            }
+
+            const email = {
+                id: 'em-' + Date.now(),
                 studio_id: studioId,
-                email: document.getElementById('mittenteEmail').value.trim(),
-                pec: document.getElementById('mittentePec').value.trim()
-            };
-
-            if (!config.email) {
-                mostraToast('Inserisci almeno l\'email dello studio', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/email-config/salva`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(config)
-                });
-                const result = await response.json();
-
-                if (result.success) {
-                    configMittente = config;
-                    mostraToast('Mittente salvato sul cloud con successo', 'success');
-                } else {
-                    mostraToast('Errore nel salvataggio', 'error');
-                }
-            } catch (error) {
-                console.error('Errore salvataggio mittente:', error);
-                mostraToast('Errore di connessione al cloud', 'error');
-            }
-        }
-
-        function applicaModello() {
-            const key = document.getElementById('modelloRapido').value;
-            if (modelli[key]) {
-                document.getElementById('emailOggetto').value = modelli[key].oggetto;
-                document.getElementById('emailMessaggio').value = modelli[key].testo;
-            }
-        }
-
-        function inviaEmail() {
-            const to = document.getElementById('emailDestinatario').value.trim();
-            const subject = document.getElementById('emailOggetto').value.trim();
-            const body = document.getElementById('emailMessaggio').value.trim();
-
-            if (!to || !subject) {
-                mostraToast('Compila Destinatario e Oggetto', 'error');
-                return;
-            }
-
-            window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            salvaInArchivio(true);
-        }
-
-        function copiaTesto() {
-            const subject = document.getElementById('emailOggetto').value.trim();
-            const body = document.getElementById('emailMessaggio').value.trim();
-            const textToCopy = `Oggetto: ${subject}\n\n${body}`;
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                mostraToast('Testo copiato negli appunti', 'success');
-            }).catch(() => {
-                mostraToast('Errore nella copia', 'error');
-            });
-        }
-
-        async function salvaInArchivio(auto = false) {
-            const to = document.getElementById('emailDestinatario').value.trim();
-            const subject = document.getElementById('emailOggetto').value.trim();
-            const body = document.getElementById('emailMessaggio').value.trim();
-
-            if (!to || !subject) {
-                if (!auto) mostraToast('Compila Destinatario e Oggetto', 'error');
-                return;
-            }
-
-            const emailData = {
-                id: 'email-' + Date.now(),
-                studio_id: studioId,
-                destinatario: to,
-                oggetto: subject,
-                corpo: body,
+                destinatario,
+                oggetto,
+                corpo,
                 data_invio: new Date().toISOString()
             };
 
@@ -474,27 +439,31 @@
                 const response = await fetch(`${WORKER_URL}/api/studio/email-archivio`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(emailData)
+                    body: JSON.stringify(email)
                 });
                 const result = await response.json();
 
                 if (result.success) {
-                    archivioEmail.unshift(emailData);
-                    if (!auto) mostraToast('Email salvata in archivio cloud', 'success');
+                    archivioEmail.unshift(email);
+                    mostraToast('Email inviata e salvata nell\'archivio!', 'success');
+                    pulisciForm();
                     renderizzaArchivio();
+                    
+                    // Apre il client email predefinito per l'invio reale
+                    window.location.href = `mailto:${destinatario}?subject=${encodeURIComponent(oggetto)}&body=${encodeURIComponent(corpo)}`;
                 } else {
                     mostraToast('Errore nel salvataggio', 'error');
                 }
             } catch (error) {
-                console.error('Errore salvataggio archivio:', error);
+                console.error('Errore invio email:', error);
                 mostraToast('Errore di connessione al cloud', 'error');
             }
         }
 
-        async function caricaArchivio() {
-            document.getElementById('loadingState').classList.remove('hidden');
-            document.getElementById('emptyState').classList.add('hidden');
-            document.getElementById('archiveList').innerHTML = '';
+        async function caricaArchivioEmail() {
+            document.getElementById('loadingEmail').style.display = 'block';
+            document.getElementById('emptyEmail').classList.add('hidden');
+            document.getElementById('emailList').innerHTML = '';
 
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/email-archivio?studioId=${studioId}`);
@@ -510,13 +479,13 @@
                 archivioEmail = [];
             }
 
-            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('loadingEmail').style.display = 'none';
             renderizzaArchivio();
         }
 
         function renderizzaArchivio() {
-            const container = document.getElementById('archiveList');
-            const emptyState = document.getElementById('emptyState');
+            const container = document.getElementById('emailList');
+            const emptyState = document.getElementById('emptyEmail');
             
             if (archivioEmail.length === 0) {
                 emptyState.classList.remove('hidden');
@@ -525,46 +494,41 @@
             }
 
             emptyState.classList.add('hidden');
-            container.innerHTML = archivioEmail.map(email => `
-                <div class="archive-item" onclick="apriDettaglioEmail('${email.id}')">
-                    <div class="archive-info">
-                        <div class="archive-subject">${email.oggetto}</div>
-                        <div class="archive-meta">A: ${email.destinatario}</div>
+            container.innerHTML = archivioEmail.map(em => `
+                <div class="email-item">
+                    <div class="email-header">
+                        <div class="email-subject">${em.oggetto}</div>
+                        <div class="email-date">${new Date(em.data_invio).toLocaleString('it-IT')}</div>
                     </div>
-                    <div class="archive-date">${new Date(email.data_invio).toLocaleDateString('it-IT')}</div>
+                    <div class="email-to">A: ${em.destinatario}</div>
+                    <div class="email-body">${em.corpo.replace(/\n/g, '<br>')}</div>
                 </div>
             `).join('');
         }
 
-        function apriDettaglioEmail(id) {
-            const email = archivioEmail.find(e => e.id === id);
-            if (!email) return;
+        function mostraTemplate() {
+            const card = document.getElementById('cardTemplate');
+            card.classList.toggle('hidden');
+            if (!card.classList.contains('hidden')) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
 
-            const html = `
-                <div style="margin-bottom: 16px;">
-                    <h3 style="color: var(--primary-dark); margin-bottom: 8px;">${email.oggetto}</h3>
-                    <p style="color: var(--text-light); font-size: 13px;">
-                        A: ${email.destinatario} | Data: ${new Date(email.data_invio).toLocaleString('it-IT')}
-                    </p>
-                </div>
-                <div style="background: #f8f9fa; padding: 16px; border-radius: 10px; white-space: pre-wrap; line-height: 1.6;">
-                    ${email.corpo}
-                </div>
-            `;
+        function usaTemplate(tipo) {
+            const template = TEMPLATE[tipo];
+            if (template) {
+                document.getElementById('emOggetto').value = template.oggetto;
+                document.getElementById('emCorpo').value = template.corpo;
+                mostraToast('Template caricato!', 'success');
+                document.getElementById('cardTemplate').classList.add('hidden');
+                document.getElementById('emDestinatario').focus();
+            }
+        }
 
-            const modal = document.createElement('div');
-            modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:3000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);';
-            modal.innerHTML = `
-                <div style="background:white;border-radius:16px;padding:32px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--primary-light);">
-                        <h3 style="color:var(--primary-dark);font-size:20px;">Dettaglio Email</h3>
-                        <button onclick="this.closest('div').parentElement.parentElement.remove()" style="background:none;border:none;font-size:28px;cursor:pointer;color:var(--text-light);">×</button>
-                    </div>
-                    ${html}
-                </div>
-            `;
-            document.body.appendChild(modal);
-            modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+        function pulisciForm() {
+            document.getElementById('emDestinatario').value = '';
+            document.getElementById('emOggetto').value = '';
+            document.getElementById('emCorpo').value = '';
         }
 
         async function eseguiBackupCloud() {
@@ -600,16 +564,16 @@
                     try {
                         const dati = JSON.parse(ev.target.result);
                         if (Array.isArray(dati)) {
-                            for (const email of dati) {
-                                email.studio_id = studioId;
+                            for (const em of dati) {
+                                em.studio_id = studioId;
                                 await fetch(`${WORKER_URL}/api/studio/email-archivio`, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(email)
+                                    body: JSON.stringify(em)
                                 });
                             }
                             mostraToast('Ripristino completato sul cloud', 'success');
-                            await caricaArchivio();
+                            await caricaArchivioEmail();
                         }
                     } catch (error) {
                         mostraToast('Errore nel ripristino', 'error');
