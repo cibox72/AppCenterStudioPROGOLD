@@ -131,12 +131,12 @@
             <div class="login-form active" id="formStudio">
                 <div class="form-group">
                     <label>ID Studio</label>
-                    <input type="text" id="studioId" placeholder="es. studio-gold">
+                    <input type="text" id="studioId" placeholder="es. studio-gold" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="studioPassword" placeholder="Inserisci la password">
+                        <input type="password" id="studioPassword" placeholder="Inserisci la password" autocomplete="off">
                         <button type="button" class="toggle-password" onclick="togglePassword('studioPassword', this)">👁️</button>
                     </div>
                 </div>
@@ -145,13 +145,13 @@
             <div class="login-form" id="formAdmin">
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" id="adminId" value="admin">
+                    <input type="text" id="adminId" placeholder="admin" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="adminPassword" placeholder="Password admin">
-                        <button type="button" class="toggle-password" onclick="togglePassword('adminPassword', this)">👁️</button>
+                        <input type="password" id="adminPassword" placeholder="Password admin" autocomplete="off">
+                        <button type="button" class="toggle-password" onclick="togglePassword('adminPassword', this)">️</button>
                     </div>
                 </div>
                 <button class="btn" onclick="login('admin', 'adminId', 'adminPassword')">ACCEDI</button>
@@ -159,12 +159,12 @@
             <div class="login-form" id="formCliente">
                 <div class="form-group">
                     <label>ID Cliente</label>
-                    <input type="text" id="clienteId" placeholder="es. cliente-rossi">
+                    <input type="text" id="clienteId" placeholder="es. cliente-rossi" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="clientePassword" placeholder="Inserisci la password">
+                        <input type="password" id="clientePassword" placeholder="Inserisci la password" autocomplete="off">
                         <button type="button" class="toggle-password" onclick="togglePassword('clientePassword', this)">👁️</button>
                     </div>
                 </div>
@@ -184,7 +184,7 @@
                 btn.textContent = '';
             } else {
                 input.type = 'password';
-                btn.textContent = '👁️';
+                btn.textContent = '️';
             }
         }
 
@@ -193,6 +193,11 @@
             event.target.classList.add('active');
             document.querySelectorAll('.login-form').forEach(form => form.classList.remove('active'));
             document.getElementById('form' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('active');
+            
+            // Pulisci tutti i campi quando cambi tab
+            document.querySelectorAll('input').forEach(input => {
+                input.value = '';
+            });
         }
 
         async function login(tipo, idField, passField) {
