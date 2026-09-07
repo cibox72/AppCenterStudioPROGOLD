@@ -62,6 +62,18 @@ export default {
       }
 
       // ============================================
+      // 17. DASHBOARD CLIENTE (NUOVO!)
+      // ============================================
+      if (path === "/api/cliente/dashboard" && request.method === "GET") {
+        const clienteId = url.searchParams.get("clienteId");
+        const result = await env.DB.prepare("SELECT * FROM clienti WHERE id=?").bind(clienteId).first();
+        if (result) {
+          return new Response(JSON.stringify({ success: true, cliente: result }), { headers: corsHeaders });
+        }
+        return new Response(JSON.stringify({ error: "Cliente non trovato" }), { status: 404, headers: corsHeaders });
+      }
+
+      // ============================================
       // 4. GESTIONE STUDI
       // ============================================
       if (path === "/api/admin/studi" && request.method === "GET") {
@@ -301,7 +313,7 @@ export default {
       }
 
       // ============================================
-      // 16. GESTIONE TEMI COLORI (NUOVO!)
+      // 16. GESTIONE TEMI COLORI
       // ============================================
       if (path === "/api/studio/tema" && request.method === "GET") {
         const studioId = url.searchParams.get("studioId");
