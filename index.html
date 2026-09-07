@@ -6,22 +6,25 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>AppCenterStudioPROGOLD - Accesso Suite Premium</title>
+    <title>AppCenterStudioPROGOLD - Login</title>
+    <script src="temi.js"></script>
     <style>
         :root {
-            --primary: #8e44ad;
-            --primary-dark: #6c3483;
-            --primary-light: #f4ecf7;
-            --primary-gradient: linear-gradient(135deg, #a569bd 0%, #8e44ad 50%, #6c3483 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #f4ecf7 40%, #ebf5fb 100%);
+            --primary: #82e0aa;
+            --primary-dark: #1e8449;
+            --primary-light: #e8f8f5;
+            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
             --card-bg: rgba(255, 255, 255, 0.98);
+            --card-gradient: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
             --text-main: #2c3e50;
             --text-light: #7f8c8d;
             --border-color: #e8e8e8;
             --success: #27ae60;
+            --warning: #f39c12;
             --danger: #e74c3c;
-            --lead-accent: #f39c12;
-            --shadow: 0 12px 40px rgba(142, 68, 173, 0.15);
+            --shadow-3d: 0 10px 30px rgba(30, 132, 73, 0.12), 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-3d-hover: 0 20px 50px rgba(30, 132, 73, 0.2), 0 5px 15px rgba(0,0,0,0.08);
             --radius: 16px;
         }
 
@@ -35,92 +38,77 @@
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
 
-        .main-container {
+        .login-container {
             width: 100%;
             max-width: 480px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
-        .brand-header {
+        .login-card {
+            background: var(--card-gradient);
+            border-radius: var(--radius);
+            padding: 40px 32px;
+            box-shadow: var(--shadow-3d);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+        }
+
+        .logo-container {
             text-align: center;
             margin-bottom: 32px;
         }
 
-        .brand-header img {
-            max-width: 140px;
-            height: auto;
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
             margin-bottom: 16px;
-            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(30, 132, 73, 0.3);
         }
 
-        .brand-header h1 {
-            font-size: 22px;
+        .logo-text {
+            font-size: 24px;
             font-weight: 800;
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: -0.5px;
             margin-bottom: 4px;
         }
 
-        .brand-header p {
-            color: var(--text-light);
+        .logo-subtext {
             font-size: 13px;
-            font-weight: 500;
+            color: var(--text-light);
         }
 
-        .login-card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 36px 32px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            width: 100%;
-            backdrop-filter: blur(20px);
-        }
-
-        .login-card h2 {
+        .login-title {
+            text-align: center;
             font-size: 20px;
             font-weight: 700;
             color: var(--text-main);
-            text-align: center;
             margin-bottom: 24px;
-        }
-
-        .role-selector {
-            display: flex;
-            background: #f0f0f0;
-            border-radius: 10px;
-            padding: 4px;
-            margin-bottom: 24px;
-        }
-
-        .role-btn {
-            flex: 1;
-            padding: 10px 0;
-            border: none;
-            background: transparent;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-light);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .role-btn.active {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         .form-group {
@@ -130,326 +118,356 @@
         }
 
         .form-group label {
-            font-size: 12px;
-            font-weight: 700;
+            font-size: 13px;
+            font-weight: 600;
             color: var(--text-main);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 6px;
         }
 
-        .form-group input {
-            padding: 14px 16px;
+        .form-group input, .form-group select {
+            padding: 12px 14px;
             border: 1px solid var(--border-color);
             border-radius: 10px;
-            font-size: 15px;
+            font-size: 14px;
             font-family: inherit;
             background: white;
             transition: all 0.2s ease;
-            width: 100%;
         }
 
-        .form-group input:focus {
+        .form-group input:focus, .form-group select:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(142, 68, 173, 0.1);
+            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
+            transform: translateY(-1px);
         }
 
-        .btn-login {
-            width: 100%;
-            padding: 14px;
+        .btn {
+            padding: 14px 24px;
             border: none;
             border-radius: 10px;
-            background: var(--primary-gradient);
-            color: white;
             font-size: 15px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
-            margin-top: 8px;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(142, 68, 173, 0.3);
-        }
-
-        .btn-login:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        .status-msg {
-            margin-top: 16px;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            text-align: center;
-            display: none;
-        }
-        .status-msg.success { display: block; background: #eafaf1; color: var(--success); border: 1px solid var(--success); }
-        .status-msg.error { display: block; background: #fdedec; color: var(--danger); border: 1px solid var(--danger); }
-
-        .lead-link-container {
-            margin-top: 24px;
-            text-align: center;
-        }
-
-        .lead-link {
-            color: var(--lead-accent);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            transition: color 0.2s;
-            cursor: pointer;
-        }
-
-        .lead-link:hover {
-            color: #d68910;
-            text-decoration: underline;
-        }
-
-        .lead-form-card {
-            display: none;
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 32px;
-            box-shadow: var(--shadow);
-            border: 2px solid var(--lead-accent);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             width: 100%;
-            margin-top: 20px;
         }
 
-        .lead-form-card.active { display: block; }
-        .lead-form-card h3 { color: var(--text-main); margin-bottom: 16px; text-align: center; font-size: 18px; }
-        .btn-lead { background: var(--lead-accent); color: white; width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
+
+        .login-type-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            background: var(--primary-light);
+            padding: 4px;
+            border-radius: 10px;
+        }
+
+        .login-type-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: all 0.2s ease;
+        }
+
+        .login-type-btn.active {
+            background: white;
+            color: var(--primary-dark);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .login-form { display: none; }
+        .login-form.active { display: block; }
 
         .footer-branding {
-            margin-top: 40px;
             text-align: center;
+            padding: 24px;
             color: var(--text-light);
             font-size: 12px;
             font-weight: 500;
+            margin-top: 24px;
         }
-        .footer-branding strong { color: var(--primary); }
+        .footer-branding strong { color: var(--primary-dark); font-weight: 700; }
 
-        .loading {
-            display: inline-block; width: 14px; height: 14px;
-            border: 2px solid rgba(255,255,255,0.3); border-top-color: white;
-            border-radius: 50%; animation: spin 0.8s linear infinite;
-            margin-right: 8px; vertical-align: middle;
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: flex; align-items: center; gap: 12px; min-width: 300px; animation: slideIn 0.3s ease; border-left: 4px solid var(--success);
         }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast-icon { font-size: 20px; font-weight: bold; }
+        .toast-message { flex: 1; font-size: 14px; }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        .demo-info {
+            background: var(--primary-light);
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: center;
+        }
+
         @media (max-width: 480px) {
-            .login-card { padding: 24px 20px; }
-            .role-btn { font-size: 12px; padding: 8px 0; }
+            .login-card { padding: 32px 24px; }
+            .logo-text { font-size: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-
-        <div class="brand-header">
-            <img src="logo.jpg" alt="AppCenterStudioPROGOLD">
-            <h1>AppCenterStudioPROGOLD</h1>
-            <p>Suite Premium per Studi Fotografici</p>
-        </div>
-
+    <div class="login-container">
         <div class="login-card">
-            <h2>Accedi alla tua Area</h2>
-            
-            <div class="role-selector">
-                <button class="role-btn active" onclick="selezionaRuolo('cliente', this)">Cliente</button>
-                <button class="role-btn" onclick="selezionaRuolo('studio', this)">Studio</button>
-                <button class="role-btn" onclick="selezionaRuolo('admin', this)">Fornitore</button>
+            <div class="logo-container">
+                <div class="logo">AC</div>
+                <div class="logo-text">AppCenterStudioPROGOLD</div>
+                <div class="logo-subtext">Piattaforma di gestione per studi fotografici</div>
             </div>
 
-            <div class="form-group">
-                <label id="label-id">ID Cliente / Evento</label>
-                <input type="text" id="user-id" placeholder="Inserisci il tuo ID univoco">
+            <div class="login-title">Accedi al tuo account</div>
+
+            <div class="login-type-selector">
+                <button class="login-type-btn active" onclick="switchLoginType('studio')">Studio</button>
+                <button class="login-type-btn" onclick="switchLoginType('admin')">Admin</button>
+                <button class="login-type-btn" onclick="switchLoginType('cliente')">Cliente</button>
             </div>
 
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="user-pwd" placeholder="Inserisci la tua password">
+            <!-- LOGIN STUDIO -->
+            <div class="login-form active" id="formStudio">
+                <div class="form-group">
+                    <label>ID Studio</label>
+                    <input type="text" id="studioId" placeholder="es. studio-gold">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="studioPassword" placeholder="Inserisci la password">
+                </div>
+                <button class="btn btn-primary" onclick="loginStudio()">
+                    <span>ACCEDI COME STUDIO</span>
+                    <div class="loading-spinner" id="spinnerStudio"></div>
+                </button>
             </div>
 
-            <button class="btn-login" id="btn-login" onclick="effettuaLogin()">ACCEDI</button>
-            
-            <div class="status-msg" id="status-msg"></div>
-        </div>
+            <!-- LOGIN ADMIN -->
+            <div class="login-form" id="formAdmin">
+                <div class="form-group">
+                    <label>Username Admin</label>
+                    <input type="text" id="adminId" placeholder="admin">
+                </div>
+                <div class="form-group">
+                    <label>Password Admin</label>
+                    <input type="password" id="adminPassword" placeholder="Password admin">
+                </div>
+                <button class="btn btn-primary" onclick="loginAdmin()">
+                    <span>ACCEDI COME ADMIN</span>
+                    <div class="loading-spinner" id="spinnerAdmin"></div>
+                </button>
+            </div>
 
-        <div class="lead-link-container" id="leadLinkContainer">
-            <span class="lead-link" onclick="mostraFormLead()">Sei uno Studio Fotografico? Richiedi una Demo Gratuita</span>
-        </div>
+            <!-- LOGIN CLIENTE -->
+            <div class="login-form" id="formCliente">
+                <div class="form-group">
+                    <label>ID Cliente</label>
+                    <input type="text" id="clienteId" placeholder="es. cliente-123">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="clientePassword" placeholder="Inserisci la password">
+                </div>
+                <button class="btn btn-primary" onclick="loginCliente()">
+                    <span>ACCEDI COME CLIENTE</span>
+                    <div class="loading-spinner" id="spinnerCliente"></div>
+                </button>
+            </div>
 
-        <div class="lead-form-card" id="leadFormCard">
-            <h3>Richiedi Demo Gratuita</h3>
-            <div class="form-group">
-                <label>Nome Studio</label>
-                <input type="text" id="lead-nome" placeholder="es. Studio Rossi">
+            <div class="demo-info">
+                Demo Studio: <strong>studio-gold</strong> / Password: <strong>demo123</strong>
             </div>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" id="lead-email" placeholder="studio@esempio.com">
-            </div>
-            <div class="form-group">
-                <label>Telefono</label>
-                <input type="tel" id="lead-tel" placeholder="+39 333...">
-            </div>
-            <button class="btn-lead" onclick="inviaLead()">INVIA RICHIESTA</button>
-            <button class="btn-login" style="background: #e0e0e0; color: #333; margin-top: 10px;" onclick="nascondiFormLead()">Annulla</button>
-            <div class="status-msg" id="status-lead"></div>
         </div>
 
         <div class="footer-branding">
-            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong>
+            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong><br>
+            Tutti i diritti riservati &copy; 2024
         </div>
-
     </div>
+
+    <div class="toast-container" id="toastContainer"></div>
 
     <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
-        let ruoloAttuale = 'cliente';
 
-        function selezionaRuolo(ruolo, btn) {
-            ruoloAttuale = ruolo;
-            document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Carica il tema dal cloud (usa studioId di default)
+            await caricaTemaCloud('studio-gold');
             
-            const labelId = document.getElementById('label-id');
-            const inputId = document.getElementById('user-id');
-            
-            if (ruolo === 'cliente') {
-                labelId.textContent = 'ID Cliente / Evento';
-                inputId.placeholder = 'es. matrimonio-rossi-2026';
-            } else if (ruolo === 'studio') {
-                labelId.textContent = 'ID Studio';
-                inputId.placeholder = 'es. studio-gold';
-            } else {
-                labelId.textContent = 'ID Utente';
-                inputId.placeholder = 'admin';
+            // Se già loggato, reindirizza
+            const savedStudioId = localStorage.getItem('studioId');
+            if (savedStudioId) {
+                // Opzionale: auto-login
             }
-            inputId.type = 'text';
+        });
+
+        function switchLoginType(type) {
+            // Aggiorna bottoni
+            document.querySelectorAll('.login-type-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Mostra form corretto
+            document.querySelectorAll('.login-form').forEach(form => form.classList.remove('active'));
+            document.getElementById('form' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('active');
         }
 
-        function mostraStato(idElemento, messaggio, tipo) {
-            const el = document.getElementById(idElemento);
-            el.textContent = messaggio;
-            el.className = 'status-msg ' + tipo;
-            setTimeout(() => { el.className = 'status-msg'; }, 5000);
-        }
+        async function loginStudio() {
+            const studioId = document.getElementById('studioId').value.trim();
+            const password = document.getElementById('studioPassword').value;
 
-        async function effettuaLogin() {
-            const id = document.getElementById('user-id').value.trim();
-            const pwd = document.getElementById('user-pwd').value.trim();
-            const btn = document.getElementById('btn-login');
-
-            if (!id || !pwd) {
-                mostraStato('status-msg', 'Compila ID e Password', 'error');
+            if (!studioId || !password) {
+                mostraToast('Compila ID Studio e Password', 'error');
                 return;
             }
 
-            btn.disabled = true;
-            btn.innerHTML = '<span class="loading"></span> Verifica in corso...';
+            const spinner = document.getElementById('spinnerStudio');
+            spinner.style.display = 'block';
 
             try {
-                let endpoint = '';
-                let body = {};
-
-                if (ruoloAttuale === 'admin') {
-                    endpoint = '/api/admin/login';
-                    body = { userId: id, password: pwd };
-                } else if (ruoloAttuale === 'studio') {
-                    endpoint = '/api/studio/login';
-                    body = { studioId: id, password: pwd };
-                } else {
-                    endpoint = '/api/cliente/login';
-                    body = { clienteId: id, password: pwd };
-                }
-
-                const response = await fetch(WORKER_URL + endpoint, {
+                const response = await fetch(`${WORKER_URL}/api/studio/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
+                    body: JSON.stringify({ studioId, password })
                 });
                 const data = await response.json();
 
                 if (data.success) {
-                    mostraStato('status-msg', 'Accesso riuscito. Reindirizzamento...', 'success');
+                    localStorage.setItem('studioId', data.studioId);
+                    localStorage.setItem('studioNome', data.nome);
+                    localStorage.setItem('userRole', data.role);
+                    mostraToast('Accesso effettuato!', 'success');
                     setTimeout(() => {
-                        if (ruoloAttuale === 'admin') window.location.href = 'admin.html';
-                        else if (ruoloAttuale === 'studio') {
-                            localStorage.setItem('studioId', data.studioId || id);
-                            window.location.href = 'plancia-studio.html';
-                        }
-                        else window.location.href = 'gallery.html?clienteId=' + encodeURIComponent(id);
-                    }, 1000);
+                        window.location.href = 'plancia-studio.html';
+                    }, 800);
                 } else {
-                    mostraStato('status-msg', data.error || 'Credenziali non valide', 'error');
+                    mostraToast(data.error || 'Credenziali non valide', 'error');
                 }
-            } catch (e) {
-                // Fallback per test locale
-                if (ruoloAttuale === 'admin' && id === 'admin' && pwd === '58879@Stella') {
-                    mostraStato('status-msg', 'Accesso Fornitore riuscito!', 'success');
-                    setTimeout(() => { window.location.href = 'admin.html'; }, 1000);
-                } else {
-                    mostraStato('status-msg', 'Errore di connessione o credenziali non valide', 'error');
-                }
+            } catch (error) {
+                console.error('Errore login:', error);
+                mostraToast('Errore di connessione al server', 'error');
             } finally {
-                btn.disabled = false;
-                btn.textContent = 'ACCEDI';
+                spinner.style.display = 'none';
             }
         }
 
-        function mostraFormLead() {
-            document.getElementById('leadLinkContainer').style.display = 'none';
-            document.getElementById('leadFormCard').classList.add('active');
-        }
+        async function loginAdmin() {
+            const userId = document.getElementById('adminId').value.trim();
+            const password = document.getElementById('adminPassword').value;
 
-        function nascondiFormLead() {
-            document.getElementById('leadLinkContainer').style.display = 'block';
-            document.getElementById('leadFormCard').classList.remove('active');
-        }
-
-        async function inviaLead() {
-            const nome = document.getElementById('lead-nome').value.trim();
-            const email = document.getElementById('lead-email').value.trim();
-            const tel = document.getElementById('lead-tel').value.trim();
-
-            if (!nome || !email || !tel) {
-                mostraStato('status-lead', 'Compila i campi obbligatori', 'error');
+            if (!userId || !password) {
+                mostraToast('Compila Username e Password', 'error');
                 return;
             }
 
-            const leadData = {
-                tipo: 'nuova_richiesta_demo',
-                nomeStudio: nome, email, telefono: tel,
-                dataRichiesta: new Date().toISOString(),
-                stato: 'da_contattare'
-            };
+            const spinner = document.getElementById('spinnerAdmin');
+            spinner.style.display = 'block';
 
-            const leads = JSON.parse(localStorage.getItem('leads_crm') || '[]');
-            leads.push(leadData);
-            localStorage.setItem('leads_crm', JSON.stringify(leads));
+            try {
+                const response = await fetch(`${WORKER_URL}/api/admin/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, password })
+                });
+                const data = await response.json();
 
-            fetch(WORKER_URL + '/api/admin/lead', {
-                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(leadData)
-            }).catch(() => {});
-
-            mostraStato('status-lead', 'Richiesta inviata! Ti contatteremo presto.', 'success');
-            setTimeout(nascondiFormLead, 3000);
+                if (data.success) {
+                    localStorage.setItem('studioId', 'admin');
+                    localStorage.setItem('userRole', data.role);
+                    mostraToast('Accesso Admin effettuato!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'admin.html';
+                    }, 800);
+                } else {
+                    mostraToast(data.error || 'Credenziali non valide', 'error');
+                }
+            } catch (error) {
+                console.error('Errore login:', error);
+                mostraToast('Errore di connessione al server', 'error');
+            } finally {
+                spinner.style.display = 'none';
+            }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('user-pwd').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') effettuaLogin();
-            });
-        });
+        async function loginCliente() {
+            const clienteId = document.getElementById('clienteId').value.trim();
+            const password = document.getElementById('clientePassword').value;
+
+            if (!clienteId || !password) {
+                mostraToast('Compila ID Cliente e Password', 'error');
+                return;
+            }
+
+            const spinner = document.getElementById('spinnerCliente');
+            spinner.style.display = 'block';
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/cliente/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ clienteId, password })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    localStorage.setItem('clienteId', data.clienteId);
+                    localStorage.setItem('clienteNome', data.nomeEvento);
+                    localStorage.setItem('userRole', data.role);
+                    mostraToast('Accesso Cliente effettuato!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'area-cliente.html';
+                    }, 800);
+                } else {
+                    mostraToast(data.error || 'Credenziali non valide', 'error');
+                }
+            } catch (error) {
+                console.error('Errore login:', error);
+                mostraToast('Errore di connessione al server', 'error');
+            } finally {
+                spinner.style.display = 'none';
+            }
+        }
+
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? 'OK' : '!'}</div><div class="toast-message">${msg}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
     </script>
 </body>
 </html>
