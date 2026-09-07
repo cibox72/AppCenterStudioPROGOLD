@@ -3,466 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
     <title>Preventivi - AppCenterStudioPROGOLD</title>
-    <script src="temi.js"></script>
     <style>
         :root {
-            --primary: #82e0aa;
-            --primary-dark: #1e8449;
-            --primary-light: #e8f8f5;
+            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
             --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --card-bg: rgba(255, 255, 255, 0.98);
-            --card-gradient: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
-            --text-main: #2c3e50;
-            --text-light: #7f8c8d;
-            --border-color: #e8e8e8;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --shadow-3d: 0 10px 30px rgba(30, 132, 73, 0.12), 0 1px 3px rgba(0,0,0,0.05);
-            --shadow-3d-hover: 0 20px 50px rgba(30, 132, 73, 0.2), 0 5px 15px rgba(0,0,0,0.08);
-            --radius: 16px;
+            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
+            --success: #27ae60; --danger: #e74c3c; --radius: 16px;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: var(--bg-gradient);
-            background-attachment: fixed;
-            color: var(--text-main);
-            line-height: 1.6;
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
         }
-
         .top-bar {
-            background: var(--primary-gradient);
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
+            background: var(--primary-gradient); padding: 16px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100;
         }
-
-        .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
-
         .nav-btn {
-            background: rgba(255,255,255,0.95);
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 10px 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--primary-dark);
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
+            cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark);
         }
-
-        .nav-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
-
-        .sync-status { font-size: 13px; color: white; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(46, 204, 113, 0.6); }
+        .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
         .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
-
-        .page-header { 
-            text-align: center; 
-            margin-bottom: 32px;
-            padding: 32px;
-            background: var(--card-gradient);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-3d);
-            border: 1px solid var(--border-color);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .page-header {
+            text-align: center; padding: 32px; background: white; border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
         }
-        .page-header:hover { transform: translateY(-4px); box-shadow: var(--shadow-3d-hover); }
-        .page-header h1 { 
-            font-size: 32px; 
-            font-weight: 800; 
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px; 
-            letter-spacing: -0.5px;
+        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
+        .page-header h1 {
+            font-size: 32px; font-weight: 800; background: var(--primary-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px;
         }
         .page-header p { color: var(--text-light); font-size: 15px; }
-
         .card-3d {
-            background: var(--card-gradient);
-            border-radius: var(--radius);
-            padding: 32px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-3d);
-            border: 1px solid var(--border-color);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
+            background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden;
         }
-
-        .card-3d::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--primary-gradient);
+        .card-3d::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
+        .card-title {
+            font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px;
+            padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
         }
-
-        .card-3d:hover { transform: translateY(-6px); box-shadow: var(--shadow-3d-hover); }
-
-        .card-title { 
-            font-size: 20px; 
-            font-weight: 700; 
-            color: var(--primary-dark); 
-            margin-bottom: 8px; 
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--primary-light);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 800;
-            color: white;
-            letter-spacing: 0.5px;
-            background: var(--primary-gradient);
-            box-shadow: 0 4px 12px rgba(30, 132, 73, 0.25);
-        }
-
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
-
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
         .form-group input, .form-group select, .form-group textarea {
-            padding: 12px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: inherit;
-            background: white;
-            transition: all 0.2s ease;
+            padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
         }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
-            outline: none; 
-            border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); 
-            transform: translateY(-1px);
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
         }
-
         .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
-        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
-        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
-        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
-        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
-        .btn-outline:hover { background: var(--primary-light); }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-
-        .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); background: white; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; vertical-align: middle; }
-        th { 
-            background: var(--primary-light); 
-            color: var(--primary-dark); 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            font-size: 11px;
-            letter-spacing: 0.5px;
-        }
+        .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); background: white; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; }
+        th { background: var(--primary-light); color: var(--primary-dark); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
         tr:hover td { background: #fafafa; }
-
         .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
+            display: inline-block; padding: 4px 12px; border-radius: 20px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
         }
         .status-bozza { background: #eaeded; color: #5d6d7e; }
         .status-inviato { background: #d6eaf8; color: #1a5276; }
         .status-accettato { background: #d5f4e6; color: #27ae60; }
         .status-rifiutato { background: #fadbd8; color: #e74c3c; }
-
-        .footer-branding {
-            text-align: center;
-            padding: 24px;
-            color: var(--text-light);
-            font-size: 13px;
-            font-weight: 500;
-            margin-top: 40px;
-            border-top: 1px solid var(--border-color);
-        }
-        .footer-branding strong { color: var(--primary-dark); font-weight: 700; }
-
-        .toast-container { position: fixed; top: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+        .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast {
             background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            display: flex; align-items: center; gap: 12px; min-width: 300px; animation: slideIn 0.3s ease; border-left: 4px solid var(--success);
+            margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease;
         }
         .toast.error { border-left-color: var(--danger); }
-        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .toast-icon { font-size: 20px; font-weight: bold; }
-        .toast-message { flex: 1; font-size: 14px; }
-
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
         .loading { text-align: center; padding: 40px; color: var(--text-light); }
-        .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
-
-        .hidden { display: none !important; }
-
-        @media (max-width: 768px) {
-            .top-bar { flex-direction: column; gap: 10px; }
-            .form-row { grid-template-columns: 1fr; }
-            .page-header h1 { font-size: 24px; }
+        .spinner {
+            width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary);
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
-
     <div class="top-bar">
-        <div class="nav-left">
-            <button class="nav-btn" onclick="window.history.back()">Indietro</button>
-            <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Plancia</button>
+        <div style="display: flex; gap: 10px;">
+            <button class="nav-btn" onclick="tornaPlancia()">Indietro</button>
+            <button class="nav-btn" onclick="tornaPlancia()">Plancia</button>
         </div>
-        <div class="nav-right">
-            <button class="nav-btn" onclick="eseguiBackupCloud()">Backup Cloud</button>
-            <button class="nav-btn" onclick="eseguiRipristinoCloud()">Ripristino Cloud</button>
-            <div class="sync-status"><span class="sync-dot"></span> Sync Cloud: OK</div>
-        </div>
+        <div class="sync-status"><span class="sync-dot"></span> Cloud Sync: OK</div>
     </div>
 
     <div class="container">
         <div class="page-header">
             <h1>Gestione Preventivi</h1>
-            <p>Crea e gestisci preventivi per i tuoi clienti. Tutti i dati vengono salvati in tempo reale sul cloud multi-tenant.</p>
+            <p>Crea e gestisci preventivi per i tuoi clienti. Dati salvati sul cloud.</p>
         </div>
 
-        <!-- NUOVO PREVENTIVO -->
-        <div class="card-3d">
-            <div class="card-title"><span class="badge">NP</span> Nuovo Preventivo</div>
-            <div class="card-subtitle">Compila i dati per creare un nuovo preventivo. I dati vengono salvati automaticamente sul database Cloud.</div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Numero Preventivo *</label>
-                    <input type="text" id="pvNumero" placeholder="es. PV-2024-001">
+        <div id="loadingArea" class="loading">
+            <div class="spinner"></div>
+            <div>Verifica sessione cloud...</div>
+        </div>
+
+        <div id="mainContent" class="hidden">
+            <div class="card-3d">
+                <div class="card-title">Nuovo Preventivo</div>
+                <div class="card-subtitle">Compila i dati per creare un nuovo preventivo.</div>
+                
+                <div class="form-row">
+                    <div class="form-group"><label>Numero Preventivo *</label><input type="text" id="pvNumero"></div>
+                    <div class="form-group"><label>Data Emissione *</label><input type="date" id="pvData"></div>
                 </div>
-                <div class="form-group">
-                    <label>Data Emissione *</label>
-                    <input type="date" id="pvData">
+                <div class="form-row">
+                    <div class="form-group"><label>Validità (giorni)</label><input type="number" id="pvValidita" value="30" min="1"></div>
+                    <div class="form-group">
+                        <label>Stato</label>
+                        <select id="pvStato">
+                            <option value="bozza">Bozza</option>
+                            <option value="inviato">Inviato</option>
+                            <option value="accettato">Accettato</option>
+                            <option value="rifiutato">Rifiutato</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Nome Cliente A *</label><input type="text" id="pvClienteANome"></div>
+                    <div class="form-group"><label>Cognome Cliente A *</label><input type="text" id="pvClienteACognome"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Email Cliente A</label><input type="email" id="pvClienteAEmail"></div>
+                    <div class="form-group"><label>Telefono Cliente A</label><input type="tel" id="pvClienteATelefono"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Data Servizio</label><input type="date" id="pvServizioData"></div>
+                    <div class="form-group">
+                        <label>Tipo Servizio</label>
+                        <select id="pvServizioTipo">
+                            <option value="matrimonio">Matrimonio</option>
+                            <option value="battesimo">Battesimo</option>
+                            <option value="comunione">Comunione</option>
+                            <option value="ritratto">Ritratto</option>
+                            <option value="evento-aziendale">Evento Aziendale</option>
+                            <option value="altro">Altro</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Totale Finale (€) *</label><input type="number" id="pvTotaleFinale" min="0" step="0.01"></div>
+                    <div class="form-group"><label>Acconto (€)</label><input type="number" id="pvAcconto" min="0" step="0.01"></div>
+                </div>
+                <div class="form-group"><label>Note</label><textarea id="pvNote" rows="3"></textarea></div>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="salvaPreventivo()">SALVA PREVENTIVO</button>
                 </div>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Validità (giorni)</label>
-                    <input type="number" id="pvValidita" placeholder="30" min="1">
+            <div class="card-3d">
+                <div class="card-title">Elenco Preventivi</div>
+                <div id="loadingPreventivi" class="loading" style="padding: 20px;">
+                    <div class="spinner"></div>
+                    <div>Caricamento preventivi...</div>
                 </div>
-                <div class="form-group">
-                    <label>Stato</label>
-                    <select id="pvStato">
-                        <option value="bozza">Bozza</option>
-                        <option value="inviato">Inviato</option>
-                        <option value="accettato">Accettato</option>
-                        <option value="rifiutato">Rifiutato</option>
-                    </select>
+                <div id="emptyPreventivi" class="empty-state hidden">Nessun preventivo presente.</div>
+                <div class="table-container hidden" id="tablePreventivi">
+                    <table>
+                        <thead>
+                            <tr><th>Numero</th><th>Data</th><th>Cliente</th><th>Totale</th><th>Stato</th></tr>
+                        </thead>
+                        <tbody id="preventiviTable"></tbody>
+                    </table>
                 </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Nome Cliente A *</label>
-                    <input type="text" id="pvClienteANome" placeholder="es. Mario">
-                </div>
-                <div class="form-group">
-                    <label>Cognome Cliente A *</label>
-                    <input type="text" id="pvClienteACognome" placeholder="es. Rossi">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Email Cliente A</label>
-                    <input type="email" id="pvClienteAEmail" placeholder="mario@email.com">
-                </div>
-                <div class="form-group">
-                    <label>Telefono Cliente A</label>
-                    <input type="tel" id="pvClienteATelefono" placeholder="+39 333 1234567">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Indirizzo Cliente A</label>
-                    <input type="text" id="pvClienteAIndirizzo" placeholder="Via Roma 1, Milano">
-                </div>
-                <div class="form-group">
-                    <label>Nome Cliente B</label>
-                    <input type="text" id="pvClienteBNome" placeholder="es. Giulia (secondo sposo)">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Cognome Cliente B</label>
-                    <input type="text" id="pvClienteBCognome" placeholder="es. Bianchi">
-                </div>
-                <div class="form-group">
-                    <label>Data Servizio</label>
-                    <input type="date" id="pvServizioData">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Tipo Servizio</label>
-                    <select id="pvServizioTipo">
-                        <option value="matrimonio">Matrimonio</option>
-                        <option value="battesimo">Battesimo</option>
-                        <option value="comunione">Comunione</option>
-                        <option value="ritratto">Ritratto</option>
-                        <option value="evento-aziendale">Evento Aziendale</option>
-                        <option value="altro">Altro</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Luogo Cerimonia</label>
-                    <input type="text" id="pvLuogoCerimonia" placeholder="Chiesa San Marco, Milano">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Luogo Ricevimento</label>
-                    <input type="text" id="pvLuogoRicevimento" placeholder="Villa Rossi, Monza">
-                </div>
-                <div class="form-group">
-                    <label>Totale Parziale (€)</label>
-                    <input type="number" id="pvTotaleParziale" placeholder="0.00" min="0" step="0.01">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Totale Finale (€) *</label>
-                    <input type="number" id="pvTotaleFinale" placeholder="0.00" min="0" step="0.01">
-                </div>
-                <div class="form-group">
-                    <label>Acconto (€)</label>
-                    <input type="number" id="pvAcconto" placeholder="0.00" min="0" step="0.01">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Saldo (€)</label>
-                    <input type="number" id="pvSaldo" placeholder="0.00" min="0" step="0.01">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Note</label>
-                <textarea id="pvNote" rows="3" placeholder="Note aggiuntive sul preventivo..."></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Condizioni</label>
-                <textarea id="pvCondizioni" rows="3" placeholder="Termini e condizioni del servizio..."></textarea>
-            </div>
-
-            <div class="btn-group">
-                <button class="btn btn-primary" onclick="salvaPreventivo()">SALVA PREVENTIVO SUL CLOUD</button>
             </div>
         </div>
 
-        <!-- ELENCO PREVENTIVI -->
-        <div class="card-3d">
-            <div class="card-title"><span class="badge">EP</span> Elenco Preventivi</div>
-            <div class="card-subtitle">Storico di tutti i preventivi emessi. Dati sincronizzati in tempo reale tra tutti i dispositivi.</div>
-            
-            <div id="loadingPreventivi" class="loading">
-                <div class="spinner"></div>
-                <div>Caricamento preventivi dal cloud...</div>
-            </div>
-
-            <div id="emptyPreventivi" class="empty-state hidden">
-                <div>Nessun preventivo presente. Crea il primo preventivo qui sopra.</div>
-            </div>
-
-            <div class="table-container hidden" id="tablePreventivi">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Numero</th>
-                            <th>Data</th>
-                            <th>Cliente</th>
-                            <th>Totale</th>
-                            <th>Stato</th>
-                        </tr>
-                    </thead>
-                    <tbody id="preventiviTable"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="footer-branding">
-            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong> - Tutti i diritti riservati
-        </div>
+        <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
-        let studioId = localStorage.getItem('studioId') || 'studio-gold';
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        let studioId = null;
         let preventivi = [];
 
         document.addEventListener('DOMContentLoaded', async function() {
-            // Carica il tema dal cloud
-            await caricaTemaCloud(studioId);
-            
-            caricaPreventivi();
+            if (!token) { window.location.href = 'index.html'; return; }
+            await verificaSessione();
         });
+
+        async function verificaSessione() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+                const data = await response.json();
+                if (!data.success || data.tipo !== 'studio') {
+                    mostraToast('Sessione non valida', 'error');
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                    return;
+                }
+                studioId = data.user.id;
+                document.getElementById('loadingArea').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                await caricaPreventivi();
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
 
         async function salvaPreventivo() {
             const numero = document.getElementById('pvNumero').value.trim();
@@ -473,71 +234,45 @@
             const clienteACognome = document.getElementById('pvClienteACognome').value.trim();
             const clienteAEmail = document.getElementById('pvClienteAEmail').value.trim();
             const clienteATelefono = document.getElementById('pvClienteATelefono').value.trim();
-            const clienteAIndirizzo = document.getElementById('pvClienteAIndirizzo').value.trim();
-            const clienteBNome = document.getElementById('pvClienteBNome').value.trim();
-            const clienteBCognome = document.getElementById('pvClienteBCognome').value.trim();
             const servizioData = document.getElementById('pvServizioData').value;
             const servizioTipo = document.getElementById('pvServizioTipo').value;
-            const luogoCerimonia = document.getElementById('pvLuogoCerimonia').value.trim();
-            const luogoRicevimento = document.getElementById('pvLuogoRicevimento').value.trim();
-            const totaleParziale = parseFloat(document.getElementById('pvTotaleParziale').value) || 0;
             const totaleFinale = parseFloat(document.getElementById('pvTotaleFinale').value);
             const acconto = parseFloat(document.getElementById('pvAcconto').value) || 0;
-            const saldo = parseFloat(document.getElementById('pvSaldo').value) || 0;
             const note = document.getElementById('pvNote').value.trim();
-            const condizioni = document.getElementById('pvCondizioni').value.trim();
 
             if (!numero || !dataEmissione || !clienteANome || !clienteACognome || isNaN(totaleFinale)) {
-                mostraToast('Compila i campi obbligatori (Numero, Data, Cliente, Totale)', 'error');
+                mostraToast('Compila i campi obbligatori', 'error');
                 return;
             }
 
             const preventivo = {
                 id: 'pv-' + Date.now(),
                 studio_id: studioId,
-                numero,
-                data_emissione: dataEmissione,
-                validita,
-                stato,
-                cliente_a_nome: clienteANome,
-                cliente_a_cognome: clienteACognome,
-                cliente_a_email: clienteAEmail,
-                cliente_a_telefono: clienteATelefono,
-                cliente_a_indirizzo: clienteAIndirizzo,
-                cliente_b_nome: clienteBNome,
-                cliente_b_cognome: clienteBCognome,
-                servizio_data: servizioData,
-                servizio_tipo: servizioTipo,
-                luogo_cerimonia: luogoCerimonia,
-                luogo_ricevimento: luogoRicevimento,
-                totale_parziale: totaleParziale,
-                totale_finale: totaleFinale,
-                acconto,
-                saldo,
-                note,
-                condizioni,
+                numero, data_emissione: dataEmissione, validita, stato,
+                cliente_a_nome: clienteANome, cliente_a_cognome: clienteACognome,
+                cliente_a_email: clienteAEmail, cliente_a_telefono: clienteATelefono,
+                servizio_data: servizioData, servizio_tipo: servizioTipo,
+                totale_finale: totaleFinale, acconto, note,
                 data_creazione: new Date().toISOString()
             };
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/preventivo`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/preventivo?token=${token}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(preventivo)
                 });
                 const result = await response.json();
-
                 if (result.success) {
-                    preventivi.unshift(preventivo);
-                    mostraToast('Preventivo salvato sul cloud con successo!', 'success');
+                    mostraToast('Preventivo salvato sul cloud!', 'success');
                     pulisciForm();
-                    renderizzaPreventivi();
+                    await caricaPreventivi();
                 } else {
                     mostraToast('Errore nel salvataggio', 'error');
                 }
             } catch (error) {
-                console.error('Errore salvataggio preventivo:', error);
-                mostraToast('Errore di connessione al cloud', 'error');
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
             }
         }
 
@@ -547,16 +282,15 @@
             document.getElementById('tablePreventivi').classList.add('hidden');
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/preventivi?studioId=${studioId}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/preventivi?studioId=${studioId}&token=${token}`);
                 const data = await response.json();
-                
                 if (data.success && data.preventivi) {
                     preventivi = data.preventivi;
                 } else {
                     preventivi = [];
                 }
             } catch (error) {
-                console.error('Errore caricamento preventivi:', error);
+                console.error('Errore:', error);
                 preventivi = [];
             }
 
@@ -578,12 +312,7 @@
             emptyState.classList.add('hidden');
             tableContainer.classList.remove('hidden');
 
-            const statiMap = {
-                'bozza': 'Bozza',
-                'inviato': 'Inviato',
-                'accettato': 'Accettato',
-                'rifiutato': 'Rifiutato'
-            };
+            const statiMap = { 'bozza': 'Bozza', 'inviato': 'Inviato', 'accettato': 'Accettato', 'rifiutato': 'Rifiutato' };
 
             tbody.innerHTML = preventivi.map(pv => `
                 <tr>
@@ -599,87 +328,30 @@
         function pulisciForm() {
             document.getElementById('pvNumero').value = '';
             document.getElementById('pvData').value = '';
-            document.getElementById('pvValidita').value = '';
+            document.getElementById('pvValidita').value = '30';
             document.getElementById('pvStato').value = 'bozza';
             document.getElementById('pvClienteANome').value = '';
             document.getElementById('pvClienteACognome').value = '';
             document.getElementById('pvClienteAEmail').value = '';
             document.getElementById('pvClienteATelefono').value = '';
-            document.getElementById('pvClienteAIndirizzo').value = '';
-            document.getElementById('pvClienteBNome').value = '';
-            document.getElementById('pvClienteBCognome').value = '';
             document.getElementById('pvServizioData').value = '';
             document.getElementById('pvServizioTipo').value = 'matrimonio';
-            document.getElementById('pvLuogoCerimonia').value = '';
-            document.getElementById('pvLuogoRicevimento').value = '';
-            document.getElementById('pvTotaleParziale').value = '';
             document.getElementById('pvTotaleFinale').value = '';
             document.getElementById('pvAcconto').value = '';
-            document.getElementById('pvSaldo').value = '';
             document.getElementById('pvNote').value = '';
-            document.getElementById('pvCondizioni').value = '';
         }
 
-        async function eseguiBackupCloud() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/preventivi?studioId=${studioId}`);
-                const data = await response.json();
-                
-                if (data.success) {
-                    const blob = new Blob([JSON.stringify(data.preventivi, null, 2)], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `backup-preventivi-${studioId}-${Date.now()}.json`;
-                    a.click();
-                    URL.revokeObjectURL(url);
-                    mostraToast('Backup scaricato dal cloud', 'success');
-                }
-            } catch (error) {
-                mostraToast('Errore backup cloud', 'error');
-            }
-        }
-
-        async function eseguiRipristinoCloud() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            input.onchange = async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                const reader = new FileReader();
-                reader.onload = async (ev) => {
-                    try {
-                        const dati = JSON.parse(ev.target.result);
-                        if (Array.isArray(dati)) {
-                            for (const pv of dati) {
-                                pv.studio_id = studioId;
-                                await fetch(`${WORKER_URL}/api/studio/preventivo`, {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(pv)
-                                });
-                            }
-                            mostraToast('Ripristino completato sul cloud', 'success');
-                            await caricaPreventivi();
-                        }
-                    } catch (error) {
-                        mostraToast('Errore nel ripristino', 'error');
-                    }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
+        function tornaPlancia() {
+            window.location.href = `plancia-studio.html?token=${token}`;
         }
 
         function mostraToast(msg, tipo) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div class="toast-icon">${tipo === 'success' ? 'OK' : '!'}</div><div class="toast-message">${msg}</div>`;
+            toast.innerHTML = `<div>${msg}</div>`;
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
+            setTimeout(() => toast.remove(), 3000);
         }
     </script>
 </body>
