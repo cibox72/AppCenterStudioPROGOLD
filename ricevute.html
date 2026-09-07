@@ -6,7 +6,8 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Ricevute & Cassa - AppCenterStudioPROGOLD</title>
+    <title>Ricevute - AppCenterStudioPROGOLD</title>
+    <script src="temi.js"></script>
     <style>
         :root {
             --primary: #82e0aa;
@@ -189,7 +190,6 @@
         .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
         .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
-        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
         .btn-outline:hover { background: var(--primary-light); }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
@@ -205,9 +205,7 @@
             font-size: 11px;
             letter-spacing: 0.5px;
         }
-        tr:hover td { background: #f8f9fa; }
-
-        .importo-cell { font-weight: 700; color: var(--primary-dark); font-size: 15px; }
+        tr:hover td { background: #fafafa; }
 
         .footer-branding {
             text-align: center;
@@ -230,90 +228,13 @@
         .toast-icon { font-size: 20px; font-weight: bold; }
         .toast-message { flex: 1; font-size: 14px; }
 
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 3000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            backdrop-filter: blur(4px);
-        }
-        .modal-overlay.active { display: flex; }
-        
-        .modal-content {
-            background: white;
-            border-radius: var(--radius);
-            padding: 32px;
-            max-width: 600px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            position: relative;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 2px solid var(--primary-light);
-        }
-
-        .modal-header h3 {
-            font-size: 20px;
-            color: var(--primary-dark);
-            font-weight: 700;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 28px;
-            cursor: pointer;
-            color: var(--text-light);
-            padding: 4px 8px;
-            line-height: 1;
-        }
-        .modal-close:hover { color: var(--danger); }
-
-        .scheda-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .scheda-row:last-child { border-bottom: none; }
-        .scheda-label { font-weight: 600; color: var(--text-light); font-size: 13px; }
-        .scheda-value { font-weight: 500; color: var(--text-main); text-align: right; }
-
-        .scheda-total {
-            background: var(--primary-light);
-            padding: 16px;
-            border-radius: 10px;
-            margin-top: 16px;
-            text-align: center;
-        }
-        .scheda-total-label { font-size: 12px; color: var(--text-light); text-transform: uppercase; font-weight: 600; }
-        .scheda-total-value { font-size: 28px; font-weight: 800; color: var(--primary-dark); margin-top: 4px; }
-
         .loading { text-align: center; padding: 40px; color: var(--text-light); }
         .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
         .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
-        .empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.3; }
 
-        @media print {
-            .top-bar, .btn, .modal-close, .footer-branding, .card-3d:not(#modalPrint) { display: none !important; }
-            .modal-overlay { position: static; background: white; padding: 0; }
-            .modal-content { box-shadow: none; max-height: none; padding: 0; }
-            body { background: white; }
-        }
+        .hidden { display: none !important; }
 
         @media (max-width: 768px) {
             .top-bar { flex-direction: column; gap: 10px; }
@@ -338,124 +259,101 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>Gestione Cassa & Ricevute</h1>
-            <p>Emetti ricevute valide per servizi fotografici, stampe e video. Archiviazione immediata sul cloud multi-tenant.</p>
+            <h1>Gestione Ricevute</h1>
+            <p>Crea e gestisci le ricevute fiscali per i tuoi clienti. Tutti i dati vengono salvati in tempo reale sul cloud multi-tenant.</p>
         </div>
 
+        <!-- NUOVA RICEVUTA -->
         <div class="card-3d">
             <div class="card-title"><span class="badge">NR</span> Nuova Ricevuta</div>
-            <div class="card-subtitle">Compila i dati per generare una nuova ricevuta di cassa. I dati verranno salvati in tempo reale sul database Cloud.</div>
+            <div class="card-subtitle">Compila i dati per creare una nuova ricevuta fiscale. I dati vengono salvati automaticamente sul database Cloud.</div>
             
             <div class="form-row">
                 <div class="form-group">
                     <label>Nome Cliente *</label>
-                    <input type="text" id="ricevNome" placeholder="es. Mario Rossi">
+                    <input type="text" id="ricCliente" placeholder="es. Mario Rossi">
                 </div>
                 <div class="form-group">
-                    <label>Tipo di Servizio *</label>
-                    <select id="ricevServizio">
-                        <option value="servizio-fotografico">Servizio Fotografico</option>
-                        <option value="stampe">Stampe</option>
-                        <option value="video">Video</option>
-                        <option value="album">Album</option>
+                    <label>Servizio *</label>
+                    <input type="text" id="ricServizio" placeholder="es. Servizio fotografico matrimonio">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Importo (€) *</label>
+                    <input type="number" id="ricImporto" placeholder="0.00" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Data *</label>
+                    <input type="date" id="ricData">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Tipologia</label>
+                    <select id="ricTipologia">
+                        <option value="acconto">Acconto</option>
+                        <option value="saldo">Saldo</option>
+                        <option value="unico">Pagamento Unico</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Metodo di Pagamento</label>
+                    <select id="ricMetodo">
+                        <option value="contanti">Contanti</option>
+                        <option value="bonifico">Bonifico Bancario</option>
+                        <option value="carta">Carta di Credito</option>
+                        <option value="paypal">PayPal</option>
                         <option value="altro">Altro</option>
                     </select>
                 </div>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Importo Ricevuto (€) *</label>
-                    <input type="number" id="ricevImporto" placeholder="0.00" min="0" step="0.01">
-                </div>
-                <div class="form-group">
-                    <label>Data Pagamento *</label>
-                    <input type="date" id="ricevData">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Tipologia Pagamento *</label>
-                    <select id="ricevTipologia">
-                        <option value="acconto-iniziale">Acconto Iniziale</option>
-                        <option value="acconto-intermedio">Acconto Intermedio</option>
-                        <option value="saldo-finale">Saldo Finale</option>
-                        <option value="unica-soluzione">Pagamento in Unica Soluzione</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Metodo di Pagamento</label>
-                    <select id="ricevMetodo">
-                        <option value="contanti">Contanti</option>
-                        <option value="bonifico">Bonifico Bancario</option>
-                        <option value="carta">Carta di Credito/Debito</option>
-                        <option value="paypal">PayPal</option>
-                    </select>
-                </div>
-            </div>
-
             <div class="form-group">
-                <label>Note Aggiuntive (Facoltative)</label>
-                <textarea id="ricevNote" rows="3" placeholder="Dettagli specifici del pagamento..."></textarea>
+                <label>Note</label>
+                <textarea id="ricNote" rows="3" placeholder="Note aggiuntive sulla ricevuta..."></textarea>
             </div>
 
             <div class="btn-group">
                 <button class="btn btn-primary" onclick="salvaRicevuta()">SALVA RICEVUTA SUL CLOUD</button>
-                <button class="btn btn-outline" onclick="pulisciForm()">ANNULLA / NUOVA</button>
             </div>
         </div>
 
+        <!-- ELENCO RICEVUTE -->
         <div class="card-3d">
-            <div class="card-title"><span class="badge">AS</span> Archivio Storico Ricevute Emesse</div>
-            <div class="card-subtitle">Elenco cronologico di tutte le ricevute registrate sul cloud. Dati sincronizzati in tempo reale tra tutti i dispositivi dello studio.</div>
+            <div class="card-title"><span class="badge">ER</span> Elenco Ricevute</div>
+            <div class="card-subtitle">Storico di tutte le ricevute emesse. Dati sincronizzati in tempo reale tra tutti i dispositivi.</div>
             
-            <div id="loadingState" class="loading">
+            <div id="loadingRicevute" class="loading">
                 <div class="spinner"></div>
                 <div>Caricamento ricevute dal cloud...</div>
             </div>
 
-            <div id="emptyState" class="empty-state" style="display:none;">
-                <div class="empty-state-icon">📋</div>
-                <div>Nessuna ricevuta emessa in archivio. Crea la prima ricevuta qui sopra.</div>
+            <div id="emptyRicevute" class="empty-state hidden">
+                <div>Nessuna ricevuta presente. Crea la prima ricevuta qui sopra.</div>
             </div>
-            
-            <div class="table-container" id="tableContainer" style="display:none;">
+
+            <div class="table-container hidden" id="tableRicevute">
                 <table>
                     <thead>
                         <tr>
                             <th>Data</th>
                             <th>Cliente</th>
                             <th>Servizio</th>
-                            <th>Tipologia</th>
                             <th>Importo</th>
-                            <th>Azioni</th>
+                            <th>Tipologia</th>
+                            <th>Metodo</th>
                         </tr>
                     </thead>
-                    <tbody id="archivioTable">
-                    </tbody>
+                    <tbody id="ricevuteTable"></tbody>
                 </table>
             </div>
         </div>
 
         <div class="footer-branding">
             Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong> - Tutti i diritti riservati
-        </div>
-    </div>
-
-    <!-- MODAL DETTAGLIO RICEVUTA -->
-    <div class="modal-overlay" id="modalRicevuta">
-        <div class="modal-content" id="modalPrint">
-            <div class="modal-header">
-                <h3>Dettaglio Documento di Cassa</h3>
-                <button class="modal-close" onclick="chiudiModal()">×</button>
-            </div>
-            <div id="schedaContenuto">
-            </div>
-            <div class="btn-group" style="justify-content: center; margin-top: 24px;">
-                <button class="btn btn-primary" onclick="window.print()">STAMPA RICEVUTA</button>
-                <button class="btn btn-outline" onclick="chiudiModal()">CHIUDI</button>
-            </div>
         </div>
     </div>
 
@@ -466,15 +364,66 @@
         let studioId = localStorage.getItem('studioId') || 'studio-gold';
         let ricevute = [];
 
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('ricevData').valueAsDate = new Date();
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Carica il tema dal cloud
+            await caricaTemaCloud(studioId);
+            
             caricaRicevute();
         });
 
+        async function salvaRicevuta() {
+            const cliente = document.getElementById('ricCliente').value.trim();
+            const servizio = document.getElementById('ricServizio').value.trim();
+            const importo = parseFloat(document.getElementById('ricImporto').value);
+            const data = document.getElementById('ricData').value;
+            const tipologia = document.getElementById('ricTipologia').value;
+            const metodo = document.getElementById('ricMetodo').value;
+            const note = document.getElementById('ricNote').value.trim();
+
+            if (!cliente || !servizio || isNaN(importo) || !data) {
+                mostraToast('Compila tutti i campi obbligatori (Cliente, Servizio, Importo, Data)', 'error');
+                return;
+            }
+
+            const ricevuta = {
+                id: 'ric-' + Date.now(),
+                studio_id: studioId,
+                cliente_nome: cliente,
+                servizio,
+                importo,
+                data,
+                tipologia,
+                metodo,
+                note,
+                data_creazione: new Date().toISOString()
+            };
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/ricevuta`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(ricevuta)
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    ricevute.unshift(ricevuta);
+                    mostraToast('Ricevuta salvata sul cloud con successo!', 'success');
+                    pulisciForm();
+                    renderizzaRicevute();
+                } else {
+                    mostraToast('Errore nel salvataggio', 'error');
+                }
+            } catch (error) {
+                console.error('Errore salvataggio ricevuta:', error);
+                mostraToast('Errore di connessione al cloud', 'error');
+            }
+        }
+
         async function caricaRicevute() {
-            document.getElementById('loadingState').style.display = 'block';
-            document.getElementById('emptyState').style.display = 'none';
-            document.getElementById('tableContainer').style.display = 'none';
+            document.getElementById('loadingRicevute').style.display = 'block';
+            document.getElementById('emptyRicevute').classList.add('hidden');
+            document.getElementById('tableRicevute').classList.add('hidden');
 
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/ricevute?studioId=${studioId}`);
@@ -487,193 +436,61 @@
                 }
             } catch (error) {
                 console.error('Errore caricamento ricevute:', error);
-                mostraToast('Errore di connessione al cloud', 'error');
                 ricevute = [];
             }
 
-            document.getElementById('loadingState').style.display = 'none';
-            renderizzaArchivio();
+            document.getElementById('loadingRicevute').style.display = 'none';
+            renderizzaRicevute();
         }
 
-        async function salvaRicevuta() {
-            const nome = document.getElementById('ricevNome').value.trim();
-            const servizio = document.getElementById('ricevServizio').value;
-            const importo = parseFloat(document.getElementById('ricevImporto').value);
-            const data = document.getElementById('ricevData').value;
-            const tipologia = document.getElementById('ricevTipologia').value;
-            const metodo = document.getElementById('ricevMetodo').value;
-            const note = document.getElementById('ricevNote').value.trim();
-
-            if (!nome || isNaN(importo) || !data) {
-                mostraToast('Compila Nome, Importo e Data (campi obbligatori)', 'error');
-                return;
-            }
-
-            const nuovaRicevuta = {
-                id: 'rcv-' + Date.now(),
-                studio_id: studioId,
-                cliente_nome: nome,
-                servizio: servizio,
-                importo: importo,
-                data: data,
-                tipologia: tipologia,
-                metodo: metodo,
-                note: note,
-                data_creazione: new Date().toISOString()
-            };
-
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/ricevuta`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(nuovaRicevuta)
-                });
-                const result = await response.json();
-
-                if (result.success) {
-                    ricevute.unshift(nuovaRicevuta);
-                    mostraToast('Ricevuta salvata sul cloud con successo!', 'success');
-                    pulisciForm();
-                    renderizzaArchivio();
-                } else {
-                    mostraToast('Errore nel salvataggio', 'error');
-                }
-            } catch (error) {
-                console.error('Errore salvataggio:', error);
-                mostraToast('Errore di connessione al cloud', 'error');
-            }
-        }
-
-        function renderizzaArchivio() {
-            const tbody = document.getElementById('archivioTable');
-            const emptyState = document.getElementById('emptyState');
-            const tableContainer = document.getElementById('tableContainer');
+        function renderizzaRicevute() {
+            const tbody = document.getElementById('ricevuteTable');
+            const emptyState = document.getElementById('emptyRicevute');
+            const tableContainer = document.getElementById('tableRicevute');
             
             if (ricevute.length === 0) {
-                emptyState.style.display = 'block';
-                tableContainer.style.display = 'none';
+                emptyState.classList.remove('hidden');
+                tableContainer.classList.add('hidden');
                 return;
             }
 
-            emptyState.style.display = 'none';
-            tableContainer.style.display = 'block';
+            emptyState.classList.add('hidden');
+            tableContainer.classList.remove('hidden');
 
             const tipologieMap = {
-                'acconto-iniziale': 'Acconto Iniziale',
-                'acconto-intermedio': 'Acconto Intermedio',
-                'saldo-finale': 'Saldo Finale',
-                'unica-soluzione': 'Unica Soluzione'
-            };
-
-            const serviziMap = {
-                'servizio-fotografico': 'Servizio Fotografico',
-                'stampe': 'Stampe',
-                'video': 'Video',
-                'album': 'Album',
-                'altro': 'Altro'
-            };
-
-            tbody.innerHTML = ricevute.map(ricevuta => `
-                <tr>
-                    <td>${new Date(ricevuta.data).toLocaleDateString('it-IT')}</td>
-                    <td><strong>${ricevuta.cliente_nome}</strong></td>
-                    <td>${serviziMap[ricevuta.servizio] || ricevuta.servizio}</td>
-                    <td>${tipologieMap[ricevuta.tipologia] || ricevuta.tipologia}</td>
-                    <td class="importo-cell">€ ${parseFloat(ricevuta.importo).toFixed(2)}</td>
-                    <td>
-                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 11px;" onclick="apriDettaglio('${ricevuta.id}')">Dettaglio</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function apriDettaglio(id) {
-            const ricevuta = ricevute.find(r => r.id === id);
-            if (!ricevuta) return;
-
-            const serviziMap = {
-                'servizio-fotografico': 'Servizio Fotografico',
-                'stampe': 'Stampe',
-                'video': 'Video',
-                'album': 'Album',
-                'altro': 'Altro'
-            };
-
-            const tipologieMap = {
-                'acconto-iniziale': 'Acconto Iniziale',
-                'acconto-intermedio': 'Acconto Intermedio',
-                'saldo-finale': 'Saldo Finale',
-                'unica-soluzione': 'Pagamento in Unica Soluzione'
+                'acconto': 'Acconto',
+                'saldo': 'Saldo',
+                'unico': 'Pagamento Unico'
             };
 
             const metodiMap = {
                 'contanti': 'Contanti',
-                'bonifico': 'Bonifico Bancario',
-                'carta': 'Carta di Credito/Debito',
-                'paypal': 'PayPal'
+                'bonifico': 'Bonifico',
+                'carta': 'Carta',
+                'paypal': 'PayPal',
+                'altro': 'Altro'
             };
 
-            const html = `
-                <div style="text-align:center; margin-bottom:24px;">
-                    <h2 style="color:var(--primary-dark); margin-bottom:8px;">RICEVUTA DI CASSE</h2>
-                    <p style="color:var(--text-light); font-size:14px;">AppCenterStudioPROGOLD</p>
-                </div>
-                <div class="scheda-row">
-                    <span class="scheda-label">Numero Documento</span>
-                    <span class="scheda-value">${ricevuta.id}</span>
-                </div>
-                <div class="scheda-row">
-                    <span class="scheda-label">Data Emissione</span>
-                    <span class="scheda-value">${new Date(ricevuta.data).toLocaleDateString('it-IT')}</span>
-                </div>
-                <div class="scheda-row">
-                    <span class="scheda-label">Ricevuto da</span>
-                    <span class="scheda-value">${ricevuta.cliente_nome}</span>
-                </div>
-                <div class="scheda-row">
-                    <span class="scheda-label">Servizio</span>
-                    <span class="scheda-value">${serviziMap[ricevuta.servizio] || ricevuta.servizio}</span>
-                </div>
-                <div class="scheda-row">
-                    <span class="scheda-label">Tipologia</span>
-                    <span class="scheda-value">${tipologieMap[ricevuta.tipologia] || ricevuta.tipologia}</span>
-                </div>
-                <div class="scheda-row">
-                    <span class="scheda-label">Metodo di Pagamento</span>
-                    <span class="scheda-value">${metodiMap[ricevuta.metodo] || ricevuta.metodo}</span>
-                </div>
-                ${ricevuta.note ? `
-                <div class="scheda-row">
-                    <span class="scheda-label">Note</span>
-                    <span class="scheda-value">${ricevuta.note}</span>
-                </div>
-                ` : ''}
-                <div class="scheda-total">
-                    <div class="scheda-total-label">Importo Totale</div>
-                    <div class="scheda-total-value">€ ${parseFloat(ricevuta.importo).toFixed(2)}</div>
-                </div>
-                <div style="margin-top:20px; padding:16px; background:#f8f9fa; border-radius:10px; font-size:12px; color:var(--text-light); text-align:center;">
-                    Documento generato digitalmente da AppCenterStudioPROGOLD.<br>
-                    Piattaforma sviluppata e gestita da AppCenterStudioPROGOLD - Tutti i diritti riservati.
-                </div>
-            `;
-
-            document.getElementById('schedaContenuto').innerHTML = html;
-            document.getElementById('modalRicevuta').classList.add('active');
-        }
-
-        function chiudiModal() {
-            document.getElementById('modalRicevuta').classList.remove('active');
+            tbody.innerHTML = ricevute.map(ric => `
+                <tr>
+                    <td>${new Date(ric.data).toLocaleDateString('it-IT')}</td>
+                    <td><strong>${ric.cliente_nome}</strong></td>
+                    <td>${ric.servizio}</td>
+                    <td style="font-weight: 700; color: var(--primary-dark);">€ ${parseFloat(ric.importo).toFixed(2)}</td>
+                    <td>${tipologieMap[ric.tipologia] || ric.tipologia}</td>
+                    <td>${metodiMap[ric.metodo] || ric.metodo}</td>
+                </tr>
+            `).join('');
         }
 
         function pulisciForm() {
-            document.getElementById('ricevNome').value = '';
-            document.getElementById('ricevServizio').value = 'servizio-fotografico';
-            document.getElementById('ricevImporto').value = '';
-            document.getElementById('ricevData').valueAsDate = new Date();
-            document.getElementById('ricevTipologia').value = 'acconto-iniziale';
-            document.getElementById('ricevMetodo').value = 'contanti';
-            document.getElementById('ricevNote').value = '';
+            document.getElementById('ricCliente').value = '';
+            document.getElementById('ricServizio').value = '';
+            document.getElementById('ricImporto').value = '';
+            document.getElementById('ricData').value = '';
+            document.getElementById('ricTipologia').value = 'acconto';
+            document.getElementById('ricMetodo').value = 'contanti';
+            document.getElementById('ricNote').value = '';
         }
 
         async function eseguiBackupCloud() {
@@ -709,12 +526,12 @@
                     try {
                         const dati = JSON.parse(ev.target.result);
                         if (Array.isArray(dati)) {
-                            for (const ricevuta of dati) {
-                                ricevuta.studio_id = studioId;
+                            for (const ric of dati) {
+                                ric.studio_id = studioId;
                                 await fetch(`${WORKER_URL}/api/studio/ricevuta`, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(ricevuta)
+                                    body: JSON.stringify(ric)
                                 });
                             }
                             mostraToast('Ripristino completato sul cloud', 'success');
@@ -737,11 +554,6 @@
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 4000);
         }
-
-        // Chiudi modal cliccando fuori
-        document.getElementById('modalRicevuta').addEventListener('click', function(e) {
-            if (e.target === this) chiudiModal();
-        });
     </script>
 </body>
 </html>
