@@ -13,6 +13,18 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
+    // TEMI DISPONIBILI
+    const TEMI_PRESET = {
+      'default': { nome: 'Default (Verde Salvia)', primary: '#82e0aa', primary_dark: '#1e8449', primary_light: '#e8f8f5' },
+      'natale': { nome: 'Natale (Rosso & Oro)', primary: '#e74c3c', primary_dark: '#922b21', primary_light: '#fadbd8' },
+      'carnevale': { nome: 'Carnevale (Viola & Fucsia)', primary: '#af7ac5', primary_dark: '#6c3483', primary_light: '#e8daef' },
+      'inverno': { nome: 'Inverno (Nero & Argento)', primary: '#5d6d7e', primary_dark: '#1c2833', primary_light: '#eaeded' },
+      'pasqua': { nome: 'Pasqua (Rosa & Giallo)', primary: '#f1948a', primary_dark: '#c0392b', primary_light: '#fadbd8' },
+      'estate': { nome: 'Estate (Azzurro & Giallo)', primary: '#5dade2', primary_dark: '#1a5276', primary_light: '#d6eaf8' },
+      'halloween': { nome: 'Halloween (Arancio & Nero)', primary: '#f39c12', primary_dark: '#7d6608', primary_light: '#fdebd0' },
+      'san_valentino': { nome: 'San Valentino (Rosa & Rosso)', primary: '#e91e63', primary_dark: '#880e4f', primary_light: '#fce4ec' }
+    };
+
     try {
       // ============================================
       // 1. LOGIN ADMIN
@@ -125,7 +137,8 @@ export default {
         await env.DB.prepare(`INSERT INTO ricevute (id, studio_id, cliente_nome, servizio, importo, data, tipologia, metodo, note, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, d.studio_id, d.cliente_nome, d.servizio, d.importo, d.data, d.tipologia, d.metodo, d.note, d.data_creazione).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-           // ============================================
+
+      // ============================================
       // 8. GESTIONE WORKFLOW
       // ============================================
       if (path === "/api/studio/workflow" && request.method === "GET") {
@@ -204,7 +217,7 @@ export default {
       }
 
       // ============================================
-      // 12. CONFIGURAZIONE NEGOZIO (PayPal, WhatsApp) - NUOVA!
+      // 12. CONFIGURAZIONE NEGOZIO (PayPal, WhatsApp)
       // ============================================
       if (path === "/api/studio/negozio-config" && request.method === "GET") {
         const studioId = url.searchParams.get("studioId");
@@ -221,8 +234,9 @@ export default {
           await env.DB.prepare(`INSERT INTO negozi_config (studio_id, paypal_email, whatsapp_numero, studio_indirizzo) VALUES (?, ?, ?, ?)`).bind(d.studio_id, d.paypal_email, d.whatsapp_numero, d.studio_indirizzo).run();
         }
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-      } 
-          // ============================================
+      }
+
+      // ============================================
       // 13. GESTIONE LISTA REGALI
       // ============================================
       if (path === "/api/studio/lista-regali" && request.method === "GET") {
@@ -284,6 +298,33 @@ export default {
       if (path === "/api/admin/leads" && request.method === "GET") {
         const result = await env.DB.prepare("SELECT * FROM leads ORDER BY data_richiesta DESC").all();
         return new Response(JSON.stringify({ success: true, leads: result.results }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 16. GESTIONE TEMI COLORI (NUOVO!)
+      // ============================================
+      if (path === "/api/studio/tema" && request.method === "GET") {
+        const studioId = url.searchParams.get("studioId");
+        const result = await env.DB.prepare("SELECT * FROM temi_colori WHERE studio_id=?").bind(studioId).first();
+        return new Response(JSON.stringify({ success: true, tema: result }), { headers: corsHeaders });
+      }
+
+      if (path === "/api/studio/tema" && request.method === "POST") {
+        const d = await request.json();
+        const existing = await env.DB.prepare("SELECT id FROM temi_colori WHERE studio_id=?").bind(d.studio_id).first();
+        if (existing) {
+          await env.DB.prepare(`UPDATE temi_colori SET tema_attivo=? WHERE studio_id=?`).bind(d.tema_attivo, d.studio_id).run();
+        } else {
+          await env.DB.prepare(`INSERT INTO temi_colori (studio_id, tema_attivo) VALUES (?, ?)`).bind(d.studio_id, d.tema_attivo).run();
+        }
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      if (path === "/api/admin/temi-lista" && request.method === "GET") {
+        return new Response(JSON.stringify({ 
+            success: true, 
+            temi: Object.keys(TEMI_PRESET).map(key => ({ id: key, nome: TEMI_PRESET[key].nome }))
+        }), { headers: corsHeaders });
       }
 
       // ============================================
