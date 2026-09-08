@@ -222,7 +222,7 @@
             <select id="themeSelector" class="nav-btn" onchange="cambiaTema(this.value)" style="cursor: pointer; appearance: none; padding-right: 30px; background-image: url('data:image/svg+xml;utf8,<svg fill=\"%231e8449\" height=\"24\" viewBox=\"0 0 24 24\" width=\"24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M7 10l5 5 5-5z\"/></svg>'); background-repeat: no-repeat; background-position: right 8px center;">
                 <option value="default">🎨 Default</option>
                 <option value="natale">🎄 Natale</option>
-                <option value="carnevale">🎭 Carnevale</option>
+                <option value="carnevale"> Carnevale</option>
                 <option value="inverno">❄️ Inverno</option>
                 <option value="pasqua">🐰 Pasqua</option>
                 <option value="estate">☀️ Estate</option>
@@ -415,6 +415,15 @@
                 document.getElementById('studioNome').textContent = data.user.nome || 'Studio';
                 document.getElementById('studioIdDisplay').textContent = 'ID: ' + currentStudioId;
                 
+                // CONTROLLO SCHEDA ANAGRAFICA: se mancano i dati fondamentali, reindirizza alla scheda
+                if (!data.user.email || !data.user.telefono || !data.user.indirizzo) {
+                    mostraToast('⚠️ Devi compilare la scheda anagrafica per continuare', 'error');
+                    setTimeout(() => {
+                        window.location.href = `scheda-anagrafica.html?token=${token}`;
+                    }, 1500);
+                    return;
+                }
+
                 // Carica il tema salvato per questo studio
                 await caricaTemaCloud(currentStudioId);
                 
