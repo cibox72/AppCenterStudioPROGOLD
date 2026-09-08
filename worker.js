@@ -159,7 +159,8 @@ export default {
         const hashed = await hashPassword(d.password);
         await env.DB.prepare(`INSERT INTO studi (id, password, password_plain, nome, piva, email, telefono, indirizzo, citta, stato, data_registrazione, scadenza, licenza_attiva, attivo, stato_abbonamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, 'hash:' + hashed, d.password, d.nome, d.piva, d.email, d.telefono, d.indirizzo, d.citta, d.stato, d.data_registrazione || new Date().toISOString().split('T')[0], d.scadenza, 1, 1, 'attivo').run();
         
-        await creaNotifica('nuovo_studio', 'Nuovo Studio Registrato', `Studio "${d.nome}" creato con ID: ${d.id}`, d);
+        // NOTA: Rimossa la chiamata a creaNotifica qui, perché la notifica deve arrivare solo quando lo studio compila la sua scheda.
+        
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
@@ -214,6 +215,19 @@ export default {
       }
 
       // ============================================
+      // 11.5 NOTIFICHE - ELIMINA NOTIFICA (Admin)
+      // ============================================
+      if (path.startsWith("/api/admin/notifica/") && request.method === "DELETE") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const id = path.split("/api/admin/notifica/")[1];
+        await env.DB.prepare("DELETE FROM notifiche WHERE id=?").bind(id).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
       // 12. REGISTRAZIONE PUBBLICA STUDIO (da sito)
       // ============================================
       if (path === "/api/public/registra-studio" && request.method === "POST") {
@@ -223,7 +237,7 @@ export default {
         
         await env.DB.prepare(`INSERT INTO studi (id, password, password_plain, nome, piva, email, telefono, indirizzo, citta, stato, data_registrazione, scadenza, licenza_attiva, attivo, stato_abbonamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(studioId, 'hash:' + hashed, d.password, d.nome, d.piva, d.email, d.telefono, d.indirizzo, d.citta, d.stato, new Date().toISOString().split('T')[0], d.scadenza, 0, 1, 'trial').run();
         
-        await creaNotifica('registrazione', 'Nuova Richiesta di Registrazione', `Studio "${d.nome}" si è registrato. Email: ${d.email}`, { ...d, studioId });
+        await creaNotifica('registrazione', 'Nuova Richiesta di Registrazione', `Studio "${d.nome}" ha richiesto la prova. Email: ${d.email}`, { ...d, studioId });
         return new Response(JSON.stringify({ success: true, studioId }), { headers: corsHeaders });
       }
 
@@ -527,6 +541,37 @@ export default {
           await env.DB.prepare(`UPDATE temi_colori SET tema_attivo=? WHERE studio_id=?`).bind(d.tema_attivo, d.studio_id).run();
         } else {
           await env.DB.prepare(`INSERT INTO temi_colori (studio_id, tema_attivo) VALUES (?, ?)`).bind(d.studio_id, d.tema_attivo).run();
+        }
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 25. AGGIORNAMENTO PROFILO STUDIO (con notifica all'admin)
+      // ============================================
+      if (path === "/api/studio/profilo" && request.method === "PUT") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const d = await request.json();
+        const updates = [];
+        const params = [];
+
+        if (d.nome !== undefined) { updates.push("nome=?"); params.push(d.nome); }
+        if (d.piva !== undefined) { updates.push("piva=?"); params.push(d.piva); }
+        if (d.email !== undefined) { updates.push("email=?"); params.push(d.email); }
+        if (d.telefono !== undefined) { updates.push("telefono=?"); params.push(d.telefono); }
+        if (d.indirizzo !== undefined) { updates.push("indirizzo=?"); params.push(d.indirizzo); }
+        if (d.citta !== undefined) { updates.push("citta=?"); params.push(d.citta); }
+        if (d.stato !== undefined) { updates.push("stato=?"); params.push(d.stato); }
+
+        if (updates.length > 0) {
+          params.push(sess.user_id);
+          const sql = `UPDATE studi SET ${updates.join(', ')} WHERE id=?`;
+          await env.DB.prepare(sql).bind(...params).run();
+          
+          // Crea notifica per l'admin SOLO quando lo studio compila/aggiorna la sua scheda
+          await creaNotifica('scheda_compilata', 'Scheda Anagrafica Compilata', `Lo studio "${d.nome || sess.user_id}" ha compilato/aggiornato la sua scheda anagrafica.`, d);
         }
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
