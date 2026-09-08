@@ -146,16 +146,6 @@
                         <input type="date" id="pvData">
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label> DATA DEL SERVIZIO (in evidenza)</label>
-                        <input type="date" id="pvDataServizio">
-                    </div>
-                    <div class="form-group">
-                        <label> TIPO DI SERVIZIO RICHIESTO (in evidenza)</label>
-                        <input type="text" id="pvTipoServizio" placeholder="Es. Matrimonio, Battesimo, Compleanno...">
-                    </div>
-                </div>
             </div>
 
             <!-- ANAGRAFICA CLIENTE A -->
@@ -200,6 +190,29 @@
                     <div class="form-group"><label>Provincia</label><input type="text" id="cB_prov"></div>
                 </div>
                 <button class="btn btn-outline btn-sm" onclick="apriMaps('B')">📍 Vedi luogo su Google Maps</button>
+            </div>
+
+            <!-- DETTAGLI EVENTO (NUOVA SEZIONE PROMINENTE) -->
+            <div class="card-3d" style="border-left: 5px solid var(--warning);">
+                <div class="card-title" style="color: var(--warning);">Dettagli Evento Richiesto</div>
+                <div class="form-row">
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label style="font-size: 15px;">Tipo di Servizio Richiesto *</label>
+                        <input type="text" id="pvTipoServizio" placeholder="Es. Matrimonio, Battesimo, Compleanno, Servizio Aziendale..." style="font-size: 16px; font-weight: 600; padding: 14px;">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label style="font-size: 15px;">Luogo Cerimonia (Chiesa / Location)</label>
+                        <input type="text" id="pvLuogoCerimonia" placeholder="Nome e indirizzo della chiesa o location" style="font-size: 15px;">
+                        <button class="btn btn-outline btn-sm" style="margin-top: 8px;" onclick="apriMaps('cerimonia')">📍 Vedi luogo su Google Maps</button>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size: 15px;">Luogo Ricevimento (Ristorante / Sala)</label>
+                        <input type="text" id="pvLuogoRicevimento" placeholder="Nome e indirizzo del ristorante o sala" style="font-size: 15px;">
+                        <button class="btn btn-outline btn-sm" style="margin-top: 8px;" onclick="apriMaps('ricevimento')">📍 Vedi luogo su Google Maps</button>
+                    </div>
+                </div>
             </div>
 
             <!-- SERVIZI & COSTI -->
@@ -252,7 +265,6 @@
             <div class="card-3d">
                 <div class="card-title">Piano di pagamento (importi inseriti dallo studio)</div>
                 <div id="pianoPagamentoList">
-                    <!-- Righe predefinite -->
                     <div class="service-row">
                         <input type="text" value="Caparra alla firma" style="flex:1; padding:8px;">
                         <input type="number" class="piano-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
@@ -313,7 +325,7 @@
 
             <!-- AZIONI FINALI -->
             <div class="btn-group" style="justify-content: center; margin-bottom: 40px;">
-                <button class="btn btn-dark" onclick="salvaInArchivio()"> Salva in archivio</button>
+                <button class="btn btn-dark" onclick="salvaInArchivio()">💾 Salva in archivio</button>
                 <button class="btn btn-dark" onclick="creaPDF()">📄 Crea PDF da inviare</button>
                 <button class="btn btn-dark" onclick="trasformaInContratto()">📝 Trasforma in Contratto</button>
             </div>
@@ -336,7 +348,6 @@
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) { window.location.href = 'index.html'; return; }
             
-            // Imposta data odierna
             document.getElementById('pvData').valueAsDate = new Date();
             
             await verificaSessione();
@@ -427,13 +438,11 @@
             const totaleSconto = valScontoPerc + scontoFisso;
             const importoTotale = Math.max(0, totaleServizi - totaleSconto);
 
-            // Acconti
             let totaleAcconti = 0;
             document.querySelectorAll('.acconto-importo').forEach(inp => {
                 totaleAcconti += (parseFloat(inp.value) || 0);
             });
 
-            // Piano di pagamento
             let pianoPianificato = 0;
             document.querySelectorAll('.piano-importo').forEach(inp => {
                 pianoPianificato += (parseFloat(inp.value) || 0);
@@ -441,7 +450,6 @@
 
             const saldoResiduo = importoTotale - totaleAcconti;
 
-            // Aggiorna UI
             document.getElementById('scontoPercVal').value = valScontoPerc.toFixed(2) + ' €';
             document.getElementById('totaleScontoDisplay').textContent = '-' + totaleSconto.toFixed(2) + ' €';
             
@@ -487,13 +495,22 @@
         }
 
         function apriMaps(tipo) {
-            const indirizzo = document.getElementById(`c${tipo}_indirizzo`).value;
-            const citta = document.getElementById(`c${tipo}_citta`).value;
-            if (indirizzo || citta) {
-                const query = encodeURIComponent(`${indirizzo}, ${citta}`);
+            let indirizzo = '';
+            if (tipo === 'A') {
+                indirizzo = document.getElementById('cA_indirizzo').value + ', ' + document.getElementById('cA_citta').value;
+            } else if (tipo === 'B') {
+                indirizzo = document.getElementById('cB_indirizzo').value + ', ' + document.getElementById('cB_citta').value;
+            } else if (tipo === 'cerimonia') {
+                indirizzo = document.getElementById('pvLuogoCerimonia').value;
+            } else if (tipo === 'ricevimento') {
+                indirizzo = document.getElementById('pvLuogoRicevimento').value;
+            }
+
+            if (indirizzo && indirizzo.trim() !== ', ' && indirizzo.trim() !== '') {
+                const query = encodeURIComponent(indirizzo);
                 window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
             } else {
-                mostraToast('Inserisci almeno un indirizzo o città', 'error');
+                mostraToast('Inserisci un indirizzo o un luogo prima di aprire Maps', 'error');
             }
         }
 
@@ -512,8 +529,9 @@
             return {
                 numero: document.getElementById('pvNumero').value,
                 data_emissione: document.getElementById('pvData').value,
-                data_servizio: document.getElementById('pvDataServizio').value,
                 tipo_servizio: document.getElementById('pvTipoServizio').value,
+                luogo_cerimonia: document.getElementById('pvLuogoCerimonia').value,
+                luogo_ricevimento: document.getElementById('pvLuogoRicevimento').value,
                 cliente_a: {
                     nome: document.getElementById('cA_nome').value, cognome: document.getElementById('cA_cognome').value,
                     telefono: document.getElementById('cA_tel').value, email: document.getElementById('cA_email').value,
@@ -563,7 +581,6 @@
         function gestisciAccettazione() {
             const accettato = document.getElementById('checkAccettazione').checked;
             if (accettato) {
-                // Invia notifica al CRM Admin
                 fetch(`${WORKER_URL}/api/studio/notifica-accettazione?token=${token}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -574,12 +591,11 @@
                 }).catch(e => console.error(e));
                 mostraToast('Preventivo segnato come ACCETTATO. Notifica inviata al CRM.', 'success');
             }
-            calcolaTotali(); // Aggiorna stato
+            calcolaTotali();
         }
 
         function creaPDF() {
             mostraToast('Generazione PDF in corso... (Funzionalità in sviluppo)', 'success');
-            // Qui in futuro integreremo la libreria jsPDF per generare il PDF reale
         }
 
         function trasformaInContratto() {
@@ -588,7 +604,6 @@
                 return;
             }
             mostraToast('Preventivo trasformato in Contratto ufficiale!', 'success');
-            // Logica per cambiare stato e generare documento contrattuale
         }
 
         function nuovoPreventivo() {
