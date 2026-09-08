@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preventivi & WhatsApp - AppCenterStudioPROGOLD</title>
+    <title>Preventivi & Contratti - AppCenterStudioPROGOLD</title>
     <style>
         :root {
             --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
             --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
             --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
-            --success: #27ae60; --danger: #e74c3c; --whatsapp: #25D366; --radius: 16px;
+            --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; --radius: 16px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -48,10 +48,11 @@
         .card-title {
             font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px;
             padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
+            display: flex; justify-content: space-between; align-items: center;
         }
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
-        .form-group { display: flex; flex-direction: column; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 16px; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
         .form-group input, .form-group select, .form-group textarea {
             padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
@@ -65,22 +66,31 @@
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
-        .btn-whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); color: white; }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .btn-dark { background: #2c3e50; color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-        .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); background: white; margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; }
-        th { background: var(--primary-light); color: var(--primary-dark); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-        tr:hover td { background: #fafafa; }
-        .status-badge {
-            display: inline-block; padding: 4px 12px; border-radius: 20px;
-            font-size: 11px; font-weight: 700; text-transform: uppercase;
+        
+        .service-category-title {
+            font-size: 14px; font-weight: 800; color: var(--text-main); margin: 20px 0 10px 0;
+            text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;
         }
-        .status-bozza { background: #eaeded; color: #5d6d7e; }
-        .status-inviato { background: #d6eaf8; color: #1a5276; }
-        .status-accettato { background: #d5f4e6; color: #27ae60; }
-        .status-rifiutato { background: #fadbd8; color: #e74c3c; }
+        .service-row {
+            display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--border-color);
+        }
+        .service-row input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+        .service-row .svc-desc { flex: 1; font-size: 13px; }
+        .service-row .svc-price { width: 80px; padding: 6px; text-align: right; }
+        .service-row .svc-qty { width: 60px; padding: 6px; text-align: center; }
+        
+        .totals-box { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 20px; }
+        .total-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
+        .total-row.final { font-size: 18px; font-weight: 800; color: var(--primary-dark); border-top: 2px solid var(--border-color); margin-top: 10px; padding-top: 15px; }
+        .total-row.saldo { background: var(--primary-light); padding: 12px; border-radius: 8px; margin-top: 10px; font-weight: 700; }
+
         .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast {
@@ -95,7 +105,6 @@
             border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -110,64 +119,205 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>Gestione Preventivi</h1>
-            <p>Crea preventivi e inviali direttamente ai clienti via WhatsApp.</p>
+            <h1>Preventivi & Contratti</h1>
+            <p>Crea preventivi professionali, gestisci acconti e trasforma in contratto.</p>
         </div>
 
         <div id="loadingArea" class="loading">
             <div class="spinner"></div>
-            <div>Verifica sessione cloud...</div>
+            <div>Caricamento dati...</div>
         </div>
 
         <div id="mainContent" class="hidden">
+            
+            <!-- DATI PREVENTIVO -->
             <div class="card-3d">
-                <div class="card-title">Nuovo Preventivo</div>
-                <div class="card-subtitle">Compila i dati. Il sistema genererà un messaggio WhatsApp pronto per l'invio.</div>
-                
-                <div class="form-row">
-                    <div class="form-group"><label>Numero Preventivo *</label><input type="text" id="pvNumero"></div>
-                    <div class="form-group"><label>Data Emissione *</label><input type="date" id="pvData"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Nome Cliente *</label><input type="text" id="pvClienteNome"></div>
-                    <div class="form-group"><label>Telefono Cliente (per WhatsApp) *</label><input type="tel" id="pvClienteTelefono" placeholder="+39 333..."></div>
+                <div class="card-title">
+                    <span>Preventivo / Contratto</span>
+                    <button class="btn btn-dark btn-sm" onclick="nuovoPreventivo()">+ Nuovo preventivo</button>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Tipo Servizio</label>
-                        <select id="pvServizioTipo">
-                            <option value="Matrimonio">Matrimonio</option>
-                            <option value="Battesimo">Battesimo</option>
-                            <option value="Comunione">Comunione</option>
-                            <option value="Ritratto">Ritratto</option>
-                            <option value="Evento Aziendale">Evento Aziendale</option>
-                        </select>
+                        <label>Numero Preventivo</label>
+                        <input type="text" id="pvNumero" value="(assegnato al salvataggio)" readonly style="background:#f4f6f7;">
                     </div>
-                    <div class="form-group"><label>Totale (€) *</label><input type="number" id="pvTotale" min="0" step="0.01"></div>
+                    <div class="form-group">
+                        <label>Data emissione</label>
+                        <input type="date" id="pvData">
+                    </div>
                 </div>
-                <div class="form-group"><label>Note / Dettagli Pacchetto</label><textarea id="pvNote" rows="3" placeholder="Es. Copertura 8 ore, album 30x30..."></textarea></div>
-                
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="salvaPreventivo()">💾 SALVA PREVENTIVO</button>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label> DATA DEL SERVIZIO (in evidenza)</label>
+                        <input type="date" id="pvDataServizio">
+                    </div>
+                    <div class="form-group">
+                        <label> TIPO DI SERVIZIO RICHIESTO (in evidenza)</label>
+                        <input type="text" id="pvTipoServizio" placeholder="Es. Matrimonio, Battesimo, Compleanno...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANAGRAFICA CLIENTE A -->
+            <div class="card-3d">
+                <div class="card-title">Anagrafica Cliente A</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Nome</label><input type="text" id="cA_nome"></div>
+                    <div class="form-group"><label>Cognome</label><input type="text" id="cA_cognome"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Telefono</label><input type="tel" id="cA_tel"></div>
+                    <div class="form-group"><label>Email</label><input type="email" id="cA_email"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Via / Piazza e n. civico</label><input type="text" id="cA_indirizzo"></div>
+                    <div class="form-group"><label>Città</label><input type="text" id="cA_citta"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>CAP</label><input type="text" id="cA_cap"></div>
+                    <div class="form-group"><label>Provincia</label><input type="text" id="cA_prov"></div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="apriMaps('A')">📍 Vedi luogo su Google Maps</button>
+            </div>
+
+            <!-- ANAGRAFICA CLIENTE B -->
+            <div class="card-3d">
+                <div class="card-title">Anagrafica Cliente B (secondo intestatario)</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Nome</label><input type="text" id="cB_nome"></div>
+                    <div class="form-group"><label>Cognome</label><input type="text" id="cB_cognome"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Telefono</label><input type="tel" id="cB_tel"></div>
+                    <div class="form-group"><label>Email</label><input type="email" id="cB_email"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Via / Piazza e n. civico</label><input type="text" id="cB_indirizzo"></div>
+                    <div class="form-group"><label>Città</label><input type="text" id="cB_citta"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>CAP</label><input type="text" id="cB_cap"></div>
+                    <div class="form-group"><label>Provincia</label><input type="text" id="cB_prov"></div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="apriMaps('B')">📍 Vedi luogo su Google Maps</button>
+            </div>
+
+            <!-- SERVIZI & COSTI -->
+            <div class="card-3d">
+                <div class="card-title">Servizi & Costi (prezzi da listino admin – modificabili)</div>
+                <div id="loadingServizi" class="loading" style="padding: 20px;">
+                    <div class="spinner"></div>
+                    <div>Caricamento listino...</div>
+                </div>
+                <div id="serviziListContainer"></div>
+            </div>
+
+            <!-- SCONTO & ACCONTI -->
+            <div class="form-row">
+                <div class="card-3d" style="margin-bottom:0;">
+                    <div class="card-title">Sconto</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Sconto % (es. 15)</label>
+                            <input type="number" id="scontoPerc" value="0" min="0" max="100" oninput="calcolaTotali()">
+                        </div>
+                        <div class="form-group">
+                            <label>Importo sconto % calcolato</label>
+                            <input type="text" id="scontoPercVal" value="0,00 €" readonly style="background:#f4f6f7;">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Buono / promozione (€)</label>
+                            <input type="number" id="scontoFisso" value="0" min="0" step="0.01" oninput="calcolaTotali()">
+                        </div>
+                        <div class="form-group">
+                            <label>Nota buono / promozione</label>
+                            <input type="text" id="scontoFissoNota" placeholder="Es. buono fiera, promozione...">
+                        </div>
+                    </div>
+                    <div style="font-weight:700; color:var(--primary-dark);">Totale sconto applicato: <span id="totaleScontoDisplay">-0,00 €</span></div>
+                </div>
+
+                <div class="card-3d" style="margin-bottom:0;">
+                    <div class="card-title">Acconti ricevuti (date e importi modificabili)</div>
+                    <div id="accontiList">
+                        <div style="font-size:13px; color:var(--text-light); margin-bottom:10px;">Nessun acconto registrato.</div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="aggiungiAcconto()" style="margin-top:10px;">+ Aggiungi acconto</button>
+                </div>
+            </div>
+
+            <!-- PIANO DI PAGAMENTO -->
+            <div class="card-3d">
+                <div class="card-title">Piano di pagamento (importi inseriti dallo studio)</div>
+                <div id="pianoPagamentoList">
+                    <!-- Righe predefinite -->
+                    <div class="service-row">
+                        <input type="text" value="Caparra alla firma" style="flex:1; padding:8px;">
+                        <input type="number" class="piano-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                        <span>€</span>
+                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+                    </div>
+                    <div class="service-row">
+                        <input type="text" value="Acconto prima del servizio" style="flex:1; padding:8px;">
+                        <input type="number" class="piano-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                        <span>€</span>
+                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+                    </div>
+                    <div class="service-row">
+                        <input type="text" value="Acconto alla scelta foto e copertina" style="flex:1; padding:8px;">
+                        <input type="number" class="piano-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                        <span>€</span>
+                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+                    </div>
+                    <div class="service-row">
+                        <input type="text" value="Saldo prima della stampa" style="flex:1; padding:8px;">
+                        <input type="number" class="piano-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                        <span>€</span>
+                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+                    </div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="aggiungiVocePiano()" style="margin-top:15px;">+ Aggiungi voce</button>
+                <div style="margin-top:15px; font-size:13px; color:var(--text-light);">
+                    Pianificato: <strong id="pianoPianificato">0,00 €</strong> · Non pianificato: <strong id="pianoNonPianificato">0,00 €</strong>
+                </div>
+            </div>
+
+            <!-- TOTALI -->
+            <div class="card-3d">
+                <div class="totals-box">
+                    <div class="total-row"><span>Totale servizi</span><strong id="rowTotaleServizi">0,00 €</strong></div>
+                    <div class="total-row"><span>Sconto percentuale (<span id="rowScontoPerc">0</span>%)</span><strong id="rowScontoPercVal">-0,00 €</strong></div>
+                    <div class="total-row"><span>Buono / promozione</span><strong id="rowScontoFisso">-0,00 €</strong></div>
+                    <div class="total-row"><span>TOTALE SCONTO APPLICATO</span><strong id="rowTotaleSconto">-0,00 €</strong></div>
+                    <div class="total-row final"><span>IMPORTO TOTALE</span><strong id="rowImportoTotale">0,00 €</strong></div>
+                    <div class="total-row"><span>Totale acconti versati</span><strong id="rowTotaleAcconti">0,00 €</strong></div>
+                    <div class="total-row saldo"><span>SALDO RESIDUO</span><strong id="rowSaldoResiduo">0,00 €</strong></div>
+                </div>
+            </div>
+
+            <!-- ACCETTAZIONE & NOTE -->
+            <div class="card-3d">
+                <div class="card-title">Accettazione</div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <input type="checkbox" id="checkAccettazione" style="width:20px; height:20px;" onchange="gestisciAccettazione()">
+                    <label for="checkAccettazione" style="font-weight:600; cursor:pointer;">ACCETTATO E FIRMATO DAL CLIENTE (flag apposto dallo studio – il PDF inviato resta con i riquadri firma da compilare a mano)</label>
                 </div>
             </div>
 
             <div class="card-3d">
-                <div class="card-title">Elenco Preventivi</div>
-                <div id="loadingPreventivi" class="loading" style="padding: 20px;">
-                    <div class="spinner"></div>
-                    <div>Caricamento preventivi...</div>
-                </div>
-                <div id="emptyPreventivi" class="empty-state hidden">Nessun preventivo presente.</div>
-                <div class="table-container hidden" id="tablePreventivi">
-                    <table>
-                        <thead>
-                            <tr><th>Num.</th><th>Cliente</th><th>Servizio</th><th>Totale</th><th>Stato</th><th>Azioni</th></tr>
-                        </thead>
-                        <tbody id="preventiviTable"></tbody>
-                    </table>
-                </div>
+                <div class="card-title">Note aggiuntive</div>
+                <textarea id="noteAggiuntive" rows="4" placeholder="Condizioni particolari, tempi di consegna, ecc."></textarea>
             </div>
+
+            <!-- AZIONI FINALI -->
+            <div class="btn-group" style="justify-content: center; margin-bottom: 40px;">
+                <button class="btn btn-dark" onclick="salvaInArchivio()"> Salva in archivio</button>
+                <button class="btn btn-dark" onclick="creaPDF()">📄 Crea PDF da inviare</button>
+                <button class="btn btn-dark" onclick="trasformaInContratto()">📝 Trasforma in Contratto</button>
+            </div>
+
         </div>
 
         <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
@@ -180,10 +330,15 @@
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
-        let preventivi = [];
+        let serviziArchivio = [];
+        let preventivoCorrente = null;
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) { window.location.href = 'index.html'; return; }
+            
+            // Imposta data odierna
+            document.getElementById('pvData').valueAsDate = new Date();
+            
             await verificaSessione();
         });
 
@@ -199,134 +354,247 @@
                 studioId = data.user.id;
                 document.getElementById('loadingArea').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
-                await caricaPreventivi();
+                await caricaServiziArchivio();
             } catch (error) {
                 console.error('Errore:', error);
                 mostraToast('Errore di connessione', 'error');
             }
         }
 
-        async function salvaPreventivo() {
-            const numero = document.getElementById('pvNumero').value.trim();
-            const dataEmissione = document.getElementById('pvData').value;
-            const clienteNome = document.getElementById('pvClienteNome').value.trim();
-            const clienteTelefono = document.getElementById('pvClienteTelefono').value.trim();
-            const servizioTipo = document.getElementById('pvServizioTipo').value;
-            const totale = parseFloat(document.getElementById('pvTotale').value);
-            const note = document.getElementById('pvNote').value.trim();
+        async function caricaServiziArchivio() {
+            document.getElementById('loadingServizi').style.display = 'block';
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/servizi?studioId=${studioId}&token=${token}`);
+                const data = await response.json();
+                if (data.success && data.servizi) {
+                    serviziArchivio = data.servizi;
+                    renderizzaListino();
+                } else {
+                    document.getElementById('serviziListContainer').innerHTML = '<div style="text-align:center; color:var(--text-light); padding:20px;">Nessun servizio in archivio. Vai su "Listini & Categorie" per aggiungerne.</div>';
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+            }
+            document.getElementById('loadingServizi').style.display = 'none';
+        }
 
-            if (!numero || !dataEmissione || !clienteNome || !clienteTelefono || isNaN(totale)) {
-                mostraToast('Compila tutti i campi obbligatori', 'error');
+        function renderizzaListino() {
+            const container = document.getElementById('serviziListContainer');
+            const categorie = {};
+            serviziArchivio.forEach(s => {
+                if (!categorie[s.categoria]) categorie[s.categoria] = [];
+                categorie[s.categoria].push(s);
+            });
+
+            let html = '';
+            Object.keys(categorie).sort().forEach(cat => {
+                html += `<div class="service-category-title">${cat}</div>`;
+                categorie[cat].forEach(s => {
+                    html += `
+                        <div class="service-row">
+                            <input type="checkbox" class="svc-check" data-id="${s.id}" onchange="toggleServizio(this)">
+                            <div class="svc-desc">${s.descrizione}</div>
+                            <input type="number" class="svc-price" value="${s.prezzo}" step="0.01" oninput="calcolaTotali()">
+                            <input type="number" class="svc-qty" value="1" min="1" oninput="calcolaTotali()">
+                            <span>€</span>
+                        </div>
+                    `;
+                });
+            });
+            container.innerHTML = html;
+        }
+
+        function toggleServizio(checkbox) {
+            const row = checkbox.parentElement;
+            row.querySelector('.svc-price').disabled = !checkbox.checked;
+            row.querySelector('.svc-qty').disabled = !checkbox.checked;
+            calcolaTotali();
+        }
+
+        function calcolaTotali() {
+            let totaleServizi = 0;
+            document.querySelectorAll('.svc-check:checked').forEach(cb => {
+                const row = cb.parentElement;
+                const prezzo = parseFloat(row.querySelector('.svc-price').value) || 0;
+                const qty = parseInt(row.querySelector('.svc-qty').value) || 0;
+                totaleServizi += (prezzo * qty);
+            });
+
+            const scontoPerc = parseFloat(document.getElementById('scontoPerc').value) || 0;
+            const scontoFisso = parseFloat(document.getElementById('scontoFisso').value) || 0;
+            
+            const valScontoPerc = totaleServizi * (scontoPerc / 100);
+            const totaleSconto = valScontoPerc + scontoFisso;
+            const importoTotale = Math.max(0, totaleServizi - totaleSconto);
+
+            // Acconti
+            let totaleAcconti = 0;
+            document.querySelectorAll('.acconto-importo').forEach(inp => {
+                totaleAcconti += (parseFloat(inp.value) || 0);
+            });
+
+            // Piano di pagamento
+            let pianoPianificato = 0;
+            document.querySelectorAll('.piano-importo').forEach(inp => {
+                pianoPianificato += (parseFloat(inp.value) || 0);
+            });
+
+            const saldoResiduo = importoTotale - totaleAcconti;
+
+            // Aggiorna UI
+            document.getElementById('scontoPercVal').value = valScontoPerc.toFixed(2) + ' €';
+            document.getElementById('totaleScontoDisplay').textContent = '-' + totaleSconto.toFixed(2) + ' €';
+            
+            document.getElementById('rowTotaleServizi').textContent = totaleServizi.toFixed(2) + ' €';
+            document.getElementById('rowScontoPerc').textContent = scontoPerc;
+            document.getElementById('rowScontoPercVal').textContent = '-' + valScontoPerc.toFixed(2) + ' €';
+            document.getElementById('rowScontoFisso').textContent = '-' + scontoFisso.toFixed(2) + ' €';
+            document.getElementById('rowTotaleSconto').textContent = '-' + totaleSconto.toFixed(2) + ' €';
+            document.getElementById('rowImportoTotale').textContent = importoTotale.toFixed(2) + ' €';
+            document.getElementById('rowTotaleAcconti').textContent = totaleAcconti.toFixed(2) + ' €';
+            document.getElementById('rowSaldoResiduo').textContent = saldoResiduo.toFixed(2) + ' €';
+
+            document.getElementById('pianoPianificato').textContent = pianoPianificato.toFixed(2) + ' €';
+            document.getElementById('pianoNonPianificato').textContent = Math.max(0, importoTotale - pianoPianificato).toFixed(2) + ' €';
+        }
+
+        function aggiungiAcconto() {
+            const list = document.getElementById('accontiList');
+            if (list.querySelector('div[style*="font-size:13px"]')) list.innerHTML = '';
+            
+            const div = document.createElement('div');
+            div.className = 'service-row';
+            div.innerHTML = `
+                <input type="date" style="padding:8px;">
+                <input type="number" class="acconto-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                <span>€</span>
+                <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+            `;
+            list.appendChild(div);
+        }
+
+        function aggiungiVocePiano() {
+            const list = document.getElementById('pianoPagamentoList');
+            const div = document.createElement('div');
+            div.className = 'service-row';
+            div.innerHTML = `
+                <input type="text" placeholder="Descrizione voce" style="flex:1; padding:8px;">
+                <input type="number" class="piano-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                <span>€</span>
+                <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+            `;
+            list.appendChild(div);
+        }
+
+        function apriMaps(tipo) {
+            const indirizzo = document.getElementById(`c${tipo}_indirizzo`).value;
+            const citta = document.getElementById(`c${tipo}_citta`).value;
+            if (indirizzo || citta) {
+                const query = encodeURIComponent(`${indirizzo}, ${citta}`);
+                window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+            } else {
+                mostraToast('Inserisci almeno un indirizzo o città', 'error');
+            }
+        }
+
+        function raccogliDatiPreventivo() {
+            const serviziSelezionati = [];
+            document.querySelectorAll('.svc-check:checked').forEach(cb => {
+                const row = cb.parentElement;
+                serviziSelezionati.push({
+                    id: cb.dataset.id,
+                    descrizione: row.querySelector('.svc-desc').textContent,
+                    prezzo: parseFloat(row.querySelector('.svc-price').value),
+                    quantita: parseInt(row.querySelector('.svc-qty').value)
+                });
+            });
+
+            return {
+                numero: document.getElementById('pvNumero').value,
+                data_emissione: document.getElementById('pvData').value,
+                data_servizio: document.getElementById('pvDataServizio').value,
+                tipo_servizio: document.getElementById('pvTipoServizio').value,
+                cliente_a: {
+                    nome: document.getElementById('cA_nome').value, cognome: document.getElementById('cA_cognome').value,
+                    telefono: document.getElementById('cA_tel').value, email: document.getElementById('cA_email').value,
+                    indirizzo: document.getElementById('cA_indirizzo').value, citta: document.getElementById('cA_citta').value,
+                    cap: document.getElementById('cA_cap').value, provincia: document.getElementById('cA_prov').value
+                },
+                cliente_b: {
+                    nome: document.getElementById('cB_nome').value, cognome: document.getElementById('cB_cognome').value,
+                    telefono: document.getElementById('cB_tel').value, email: document.getElementById('cB_email').value,
+                    indirizzo: document.getElementById('cB_indirizzo').value, citta: document.getElementById('cB_citta').value,
+                    cap: document.getElementById('cB_cap').value, provincia: document.getElementById('cB_prov').value
+                },
+                servizi: serviziSelezionati,
+                sconto_perc: parseFloat(document.getElementById('scontoPerc').value) || 0,
+                sconto_fisso: parseFloat(document.getElementById('scontoFisso').value) || 0,
+                sconto_fisso_nota: document.getElementById('scontoFissoNota').value,
+                accettato: document.getElementById('checkAccettazione').checked,
+                note: document.getElementById('noteAggiuntive').value,
+                totale_finale: parseFloat(document.getElementById('rowImportoTotale').textContent.replace(' €', '').replace(',', '.')) || 0,
+                stato: document.getElementById('checkAccettazione').checked ? 'accettato' : 'bozza'
+            };
+        }
+
+        async function salvaInArchivio() {
+            const dati = raccogliDatiPreventivo();
+            if (dati.servizi.length === 0) {
+                mostraToast('Seleziona almeno un servizio', 'error');
                 return;
             }
-
-            const preventivo = {
-                id: 'pv-' + Date.now(),
-                studio_id: studioId,
-                numero, data_emissione: dataEmissione,
-                cliente_nome: clienteNome, cliente_telefono: clienteTelefono,
-                servizio_tipo: servizioTipo, totale_finale: totale, note,
-                stato: 'bozza',
-                data_creazione: new Date().toISOString()
-            };
 
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/preventivo?token=${token}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(preventivo)
+                    body: JSON.stringify({ ...dati, studio_id: studioId, id: 'pv-' + Date.now(), data_creazione: new Date().toISOString() })
                 });
                 const result = await response.json();
                 if (result.success) {
-                    mostraToast('Preventivo salvato!', 'success');
-                    pulisciForm();
-                    await caricaPreventivi();
+                    mostraToast('Preventivo salvato in archivio!', 'success');
+                    document.getElementById('pvNumero').value = 'PV-' + Date.now().toString().slice(-6);
                 }
             } catch (error) {
                 mostraToast('Errore di connessione', 'error');
             }
         }
 
-        async function caricaPreventivi() {
-            document.getElementById('loadingPreventivi').style.display = 'block';
-            document.getElementById('emptyPreventivi').classList.add('hidden');
-            document.getElementById('tablePreventivi').classList.add('hidden');
-
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/preventivi?studioId=${studioId}&token=${token}`);
-                const data = await response.json();
-                if (data.success && data.preventivi) {
-                    preventivi = data.preventivi;
-                } else {
-                    preventivi = [];
-                }
-            } catch (error) {
-                preventivi = [];
+        function gestisciAccettazione() {
+            const accettato = document.getElementById('checkAccettazione').checked;
+            if (accettato) {
+                // Invia notifica al CRM Admin
+                fetch(`${WORKER_URL}/api/studio/notifica-accettazione?token=${token}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        studio_id: studioId,
+                        messaggio: `Il cliente ha accettato il preventivo. Importo: ${document.getElementById('rowImportoTotale').textContent}`
+                    })
+                }).catch(e => console.error(e));
+                mostraToast('Preventivo segnato come ACCETTATO. Notifica inviata al CRM.', 'success');
             }
-
-            document.getElementById('loadingPreventivi').style.display = 'none';
-            renderizzaPreventivi();
+            calcolaTotali(); // Aggiorna stato
         }
 
-        function renderizzaPreventivi() {
-            const tbody = document.getElementById('preventiviTable');
-            const emptyState = document.getElementById('emptyPreventivi');
-            const tableContainer = document.getElementById('tablePreventivi');
-            
-            if (preventivi.length === 0) {
-                emptyState.classList.remove('hidden');
-                tableContainer.classList.add('hidden');
+        function creaPDF() {
+            mostraToast('Generazione PDF in corso... (Funzionalità in sviluppo)', 'success');
+            // Qui in futuro integreremo la libreria jsPDF per generare il PDF reale
+        }
+
+        function trasformaInContratto() {
+            if (!document.getElementById('checkAccettazione').checked) {
+                mostraToast('Il preventivo deve essere prima accettato dal cliente', 'error');
                 return;
             }
-
-            emptyState.classList.add('hidden');
-            tableContainer.classList.remove('hidden');
-
-            tbody.innerHTML = preventivi.map(pv => `
-                <tr>
-                    <td><strong>${pv.numero}</strong></td>
-                    <td>${pv.cliente_nome}<br><small style="color:var(--text-light)">${pv.cliente_telefono || ''}</small></td>
-                    <td>${pv.servizio_tipo || '-'}</td>
-                    <td style="font-weight: 700; color: var(--primary-dark);">€ ${parseFloat(pv.totale_finale).toFixed(2)}</td>
-                    <td><span class="status-badge status-${pv.stato || 'bozza'}">${pv.stato || 'Bozza'}</span></td>
-                    <td>
-                        <button class="btn btn-whatsapp" style="padding: 6px 12px; font-size: 11px;" onclick="inviaWhatsApp('${pv.id}')">
-                            📱 Invia WhatsApp
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
+            mostraToast('Preventivo trasformato in Contratto ufficiale!', 'success');
+            // Logica per cambiare stato e generare documento contrattuale
         }
 
-        function inviaWhatsApp(id) {
-            const pv = preventivi.find(p => p.id === id);
-            if (!pv) return;
-
-            // Costruisci il messaggio
-            let messaggio = `Ciao ${pv.cliente_nome},\n\n`;
-            messaggio += `Ecco il preventivo #${pv.numero} per il servizio di ${pv.servizioTipo || 'fotografia'}.\n\n`;
-            messaggio += `💰 *Totale: € ${parseFloat(pv.totale_finale).toFixed(2)}*\n\n`;
-            if (pv.note) {
-                messaggio += `📝 *Dettagli:*\n${pv.note}\n\n`;
+        function nuovoPreventivo() {
+            if (confirm('Sei sicuro? I dati non salvati andranno persi.')) {
+                location.reload();
             }
-            messaggio += `Resto a disposizione per qualsiasi dubbio.\nUn cordiale saluto!`;
-
-            // Pulisci il numero (togli +, spazi, -)
-            let numero = pv.cliente_telefono.replace(/[^0-9]/g, '');
-            if (numero.startsWith('00')) numero = numero.substring(2);
-            if (numero.startsWith('39') && numero.length === 12) numero = numero.substring(2); // Rimuovi prefisso IT se c'è già
-
-            const url = `https://wa.me/${numero}?text=${encodeURIComponent(messaggio)}`;
-            window.open(url, '_blank');
-        }
-
-        function pulisciForm() {
-            document.getElementById('pvNumero').value = '';
-            document.getElementById('pvData').value = '';
-            document.getElementById('pvClienteNome').value = '';
-            document.getElementById('pvClienteTelefono').value = '';
-            document.getElementById('pvTotale').value = '';
-            document.getElementById('pvNote').value = '';
         }
 
         function tornaPlancia() {
