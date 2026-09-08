@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listini & Categorie - AppCenterStudioPROGOLD</title>
+    <style>
+        :root {
+            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
+            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
+            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
+            --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; --radius: 16px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
+        }
+        .top-bar {
+            background: var(--primary-gradient); padding: 16px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100;
+        }
+        .nav-btn {
+            background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
+            cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark);
+        }
+        .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
+        .page-header {
+            text-align: center; padding: 32px; background: white; border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
+        }
+        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
+        .page-header h1 {
+            font-size: 32px; font-weight: 800; background: var(--primary-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px;
+        }
+        .page-header p { color: var(--text-light); font-size: 15px; }
+        .card-3d {
+            background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden;
+        }
+        .card-3d::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
+        .card-title {
+            font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px;
+            padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
+        }
+        .btn {
+            padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+        .service-item {
+            background: white; border-left: 4px solid var(--primary); border-radius: 12px;
+            padding: 20px 24px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            transition: all 0.3s ease; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+        }
+        .service-item:hover { transform: translateX(6px); box-shadow: 0 8px 24px rgba(30, 132, 73, 0.15); }
+        .service-info { flex: 1; min-width: 200px; }
+        .service-name { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .service-category { font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
+        .service-price { 
+            background: var(--primary-light); padding: 8px 16px; border-radius: 20px;
+            font-size: 18px; font-weight: 700; color: var(--primary-dark);
+        }
+        .category-section { margin-bottom: 32px; }
+        .category-title {
+            font-size: 18px; font-weight: 700; color: var(--primary-dark);
+            margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border-color);
+        }
+        .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
+        .toast {
+            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease;
+        }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+        .loading { text-align: center; padding: 40px; color: var(--text-light); }
+        .spinner {
+            width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary);
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
+        .hidden { display: none !important; }
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 3000; align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: white; border-radius: var(--radius); padding: 32px;
+            max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .modal-title {
+            font-size: 24px; font-weight: 700; color: var(--primary-dark); margin-bottom: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div style="display: flex; gap: 10px;">
+            <button class="nav-btn" onclick="tornaPlancia()">Indietro</button>
+            <button class="nav-btn" onclick="tornaPlancia()">Plancia</button>
+        </div>
+        <div class="sync-status"><span class="sync-dot"></span> Cloud Sync: OK</div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Listini & Categorie Servizi</h1>
+            <p>Gestisci l'archivio dei tuoi servizi con prezzi. Questi appariranno nei preventivi.</p>
+        </div>
+
+        <div id="loadingArea" class="loading">
+            <div class="spinner"></div>
+            <div>Caricamento listini...</div>
+        </div>
+
+        <div id="mainContent" class="hidden">
+            <div class="card-3d">
+                <div class="card-title">Aggiungi Nuovo Servizio</div>
+                <div class="card-subtitle">Crea un servizio che potrai selezionare nei preventivi.</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Categoria *</label>
+                        <select id="svcCategoria">
+                            <option value="Matrimonio">Matrimonio</option>
+                            <option value="Battesimo">Battesimo</option>
+                            <option value="Comunione">Comunione</option>
+                            <option value="Compleanno">Compleanno</option>
+                            <option value="Ritratto">Ritratto</option>
+                            <option value="Evento Aziendale">Evento Aziendale</option>
+                            <option value="Video">Video</option>
+                            <option value="Altro">Altro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Prezzo Base (€) *</label>
+                        <input type="number" id="svcPrezzo" min="0" step="0.01" placeholder="0.00">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Descrizione Servizio *</label>
+                    <textarea id="svcDescrizione" rows="3" placeholder="Es. Matrimonio con album digitale 30x40 cm, 40 interni, 100 foto, Copertina inclusa e valigia"></textarea>
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="aggiungiServizio()">💾 SALVA SERVIZIO</button>
+                    <button class="btn btn-outline" onclick="pulisciFormServizio()">🔄 Pulisci</button>
+                </div>
+            </div>
+
+            <div class="card-3d">
+                <div class="card-title">Archivio Servizi</div>
+                <div class="card-subtitle">Modifica o elimina i servizi esistenti.</div>
+                <div id="loadingServizi" class="loading" style="padding: 20px;">
+                    <div class="spinner"></div>
+                    <div>Caricamento servizi...</div>
+                </div>
+                <div id="emptyServizi" class="empty-state hidden">Nessun servizio archiviato.</div>
+                <div id="serviziContainer"></div>
+            </div>
+        </div>
+
+        <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
+    </div>
+
+    <!-- MODAL MODIFICA SERVIZIO -->
+    <div id="modalModifica" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="modal-title">Modifica Servizio</h3>
+            <input type="hidden" id="modId">
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label>Categoria</label>
+                <select id="modCategoria">
+                    <option value="Matrimonio">Matrimonio</option>
+                    <option value="Battesimo">Battesimo</option>
+                    <option value="Comunione">Comunione</option>
+                    <option value="Compleanno">Compleanno</option>
+                    <option value="Ritratto">Ritratto</option>
+                    <option value="Evento Aziendale">Evento Aziendale</option>
+                    <option value="Video">Video</option>
+                    <option value="Altro">Altro</option>
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label>Prezzo (€)</label>
+                <input type="number" id="modPrezzo" min="0" step="0.01">
+            </div>
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label>Descrizione</label>
+                <textarea id="modDescrizione" rows="3"></textarea>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button class="btn btn-outline" onclick="chiudiModal()">Annulla</button>
+                <button class="btn btn-success" onclick="salvaModificaServizio()">💾 Salva Modifiche</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        let studioId = null;
+        let servizi = [];
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!token) { window.location.href = 'index.html'; return; }
+            await verificaSessione();
+        });
+
+        async function verificaSessione() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+                const data = await response.json();
+                if (!data.success || data.tipo !== 'studio') {
+                    mostraToast('Sessione non valida', 'error');
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                    return;
+                }
+                studioId = data.user.id;
+                document.getElementById('loadingArea').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                await caricaServizi();
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        async function caricaServizi() {
+            document.getElementById('loadingServizi').style.display = 'block';
+            document.getElementById('emptyServizi').classList.add('hidden');
+            document.getElementById('serviziContainer').innerHTML = '';
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/servizi?studioId=${studioId}&token=${token}`);
+                const data = await response.json();
+                if (data.success && data.servizi) {
+                    servizi = data.servizi;
+                } else {
+                    servizi = [];
+                }
+            } catch (error) {
+                servizi = [];
+            }
+
+            document.getElementById('loadingServizi').style.display = 'none';
+            renderizzaServizi();
+        }
+
+        function renderizzaServizi() {
+            const container = document.getElementById('serviziContainer');
+            const emptyState = document.getElementById('emptyServizi');
+            
+            if (servizi.length === 0) {
+                emptyState.classList.remove('hidden');
+                container.innerHTML = '';
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            
+            // Raggruppa per categoria
+            const categorie = {};
+            servizi.forEach(s => {
+                if (!categorie[s.categoria]) categorie[s.categoria] = [];
+                categorie[s.categoria].push(s);
+            });
+
+            let html = '';
+            Object.keys(categorie).forEach(cat => {
+                html += `<div class="category-section">
+                    <div class="category-title">${cat}</div>
+                    ${categorie[cat].map(s => `
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-name">${s.descrizione}</div>
+                                <div class="service-category">${s.categoria}</div>
+                            </div>
+                            <div class="service-price">€ ${parseFloat(s.prezzo).toFixed(2)}</div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-warning btn-sm" onclick="modificaServizio('${s.id}')">️</button>
+                                <button class="btn btn-danger btn-sm" onclick="eliminaServizio('${s.id}')">🗑️</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>`;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        async function aggiungiServizio() {
+            const categoria = document.getElementById('svcCategoria').value;
+            const prezzo = parseFloat(document.getElementById('svcPrezzo').value);
+            const descrizione = document.getElementById('svcDescrizione').value.trim();
+
+            if (!descrizione || isNaN(prezzo)) {
+                mostraToast('Compila tutti i campi obbligatori', 'error');
+                return;
+            }
+
+            const servizio = {
+                id: 'svc-' + Date.now(),
+                studio_id: studioId,
+                categoria, descrizione, prezzo,
+                data_creazione: new Date().toISOString()
+            };
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/servizio?token=${token}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(servizio)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Servizio salvato!', 'success');
+                    pulisciFormServizio();
+                    await caricaServizi();
+                }
+            } catch (error) {
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        function modificaServizio(id) {
+            const svc = servizi.find(s => s.id === id);
+            if (!svc) return;
+
+            document.getElementById('modId').value = svc.id;
+            document.getElementById('modCategoria').value = svc.categoria;
+            document.getElementById('modPrezzo').value = svc.prezzo;
+            document.getElementById('modDescrizione').value = svc.descrizione;
+            document.getElementById('modalModifica').style.display = 'flex';
+        }
+
+        async function salvaModificaServizio() {
+            const id = document.getElementById('modId').value;
+            const categoria = document.getElementById('modCategoria').value;
+            const prezzo = parseFloat(document.getElementById('modPrezzo').value);
+            const descrizione = document.getElementById('modDescrizione').value.trim();
+
+            if (!descrizione || isNaN(prezzo)) {
+                mostraToast('Compila tutti i campi', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/servizio/${id}?token=${token}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ categoria, descrizione, prezzo })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Servizio aggiornato!', 'success');
+                    chiudiModal();
+                    await caricaServizi();
+                }
+            } catch (error) {
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        async function eliminaServizio(id) {
+            if (!confirm('Sei sicuro di voler eliminare questo servizio?')) return;
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/servizio/${id}?token=${token}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Servizio eliminato', 'success');
+                    await caricaServizi();
+                }
+            } catch (error) {
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        function pulisciFormServizio() {
+            document.getElementById('svcCategoria').value = 'Matrimonio';
+            document.getElementById('svcPrezzo').value = '';
+            document.getElementById('svcDescrizione').value = '';
+        }
+
+        function chiudiModal() {
+            document.getElementById('modalModifica').style.display = 'none';
+        }
+
+        function tornaPlancia() {
+            window.location.href = `plancia-studio.html?token=${token}`;
+        }
+
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `<div>${msg}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
