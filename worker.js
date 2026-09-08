@@ -120,6 +120,8 @@ export default {
           const hashed = await hashPassword(d.password);
           updates.push("password=?");
           params.push('hash:' + hashed);
+          updates.push("password_plain=?");
+          params.push(d.password);
         }
 
         if (updates.length === 0) {
@@ -155,7 +157,7 @@ export default {
 
         const d = await request.json();
         const hashed = await hashPassword(d.password);
-        await env.DB.prepare(`INSERT INTO studi (id, password, nome, piva, email, telefono, indirizzo, citta, stato, data_registrazione, scadenza, licenza_attiva, attivo, stato_abbonamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, 'hash:' + hashed, d.nome, d.piva, d.email, d.telefono, d.indirizzo, d.citta, d.stato, d.data_registrazione || new Date().toISOString().split('T')[0], d.scadenza, 1, 1, 'attivo').run();
+        await env.DB.prepare(`INSERT INTO studi (id, password, password_plain, nome, piva, email, telefono, indirizzo, citta, stato, data_registrazione, scadenza, licenza_attiva, attivo, stato_abbonamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, 'hash:' + hashed, d.password, d.nome, d.piva, d.email, d.telefono, d.indirizzo, d.citta, d.stato, d.data_registrazione || new Date().toISOString().split('T')[0], d.scadenza, 1, 1, 'attivo').run();
         
         await creaNotifica('nuovo_studio', 'Nuovo Studio Registrato', `Studio "${d.nome}" creato con ID: ${d.id}`, d);
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
@@ -219,7 +221,7 @@ export default {
         const hashed = await hashPassword(d.password);
         const studioId = 'studio-' + Date.now();
         
-        await env.DB.prepare(`INSERT INTO studi (id, password, nome, piva, email, telefono, indirizzo, citta, stato, data_registrazione, scadenza, licenza_attiva, attivo, stato_abbonamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(studioId, 'hash:' + hashed, d.nome, d.piva, d.email, d.telefono, d.indirizzo, d.citta, d.stato, new Date().toISOString().split('T')[0], d.scadenza, 0, 1, 'trial').run();
+        await env.DB.prepare(`INSERT INTO studi (id, password, password_plain, nome, piva, email, telefono, indirizzo, citta, stato, data_registrazione, scadenza, licenza_attiva, attivo, stato_abbonamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(studioId, 'hash:' + hashed, d.password, d.nome, d.piva, d.email, d.telefono, d.indirizzo, d.citta, d.stato, new Date().toISOString().split('T')[0], d.scadenza, 0, 1, 'trial').run();
         
         await creaNotifica('registrazione', 'Nuova Richiesta di Registrazione', `Studio "${d.nome}" si è registrato. Email: ${d.email}`, { ...d, studioId });
         return new Response(JSON.stringify({ success: true, studioId }), { headers: corsHeaders });
@@ -359,7 +361,7 @@ export default {
 
         const d = await request.json();
         const hashed = await hashPassword(d.password);
-        await env.DB.prepare(`INSERT INTO clienti (id, password, studio_id, nome_a, cognome_a, nome_b, cognome_b, email, telefono, tipo_evento, data_evento, data_registrazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, 'hash:' + hashed, d.studio_id, d.nome_a, d.cognome_a, d.nome_b, d.cognome_b, d.email, d.telefono, d.tipo_evento, d.data_evento, d.data_registrazione).run();
+        await env.DB.prepare(`INSERT INTO clienti (id, password, password_plain, studio_id, nome_a, cognome_a, nome_b, cognome_b, email, telefono, tipo_evento, data_evento, data_registrazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, 'hash:' + hashed, d.password, d.studio_id, d.nome_a, d.cognome_a, d.nome_b, d.cognome_b, d.email, d.telefono, d.tipo_evento, d.data_evento, d.data_registrazione).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
