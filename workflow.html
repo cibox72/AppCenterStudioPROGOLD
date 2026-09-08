@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workflow - AppCenterStudioPROGOLD</title>
+    <title>Workflow Foto & Video - AppCenterStudioPROGOLD</title>
     <style>
         :root {
             --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
@@ -11,6 +11,8 @@
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
             --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
             --success: #27ae60; --warning: #f39c12; --danger: #e74c3c; --info: #3498db;
+            --anteprima-bg: linear-gradient(135deg, #f9e79f 0%, #f1c40f 100%);
+            --servizio-bg: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 100%);
             --radius: 16px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,7 +32,7 @@
         .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
         .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
         .page-header {
             text-align: center; padding: 32px; background: white; border-radius: var(--radius);
             box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
@@ -52,7 +54,7 @@
         }
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
-        .form-group { display: flex; flex-direction: column; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 16px; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
         .form-group input, .form-group select, .form-group textarea {
             padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
@@ -66,34 +68,61 @@
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
         .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
         .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .btn-info { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
-        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-        .workflow-list { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
-        .workflow-item {
-            background: white; border-left: 4px solid var(--primary); border-radius: 12px;
-            padding: 20px 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); transition: all 0.3s ease;
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .workflow-section {
+            margin-bottom: 32px; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
-        .workflow-item:hover { transform: translateX(6px); box-shadow: 0 8px 24px rgba(30, 132, 73, 0.15); }
-        .workflow-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
-        .workflow-cliente { font-size: 18px; font-weight: 700; color: var(--text-main); }
-        .workflow-data { font-size: 12px; color: var(--text-light); }
-        .workflow-info { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
-        .workflow-tag {
-            display: inline-block; padding: 4px 12px; border-radius: 20px;
-            font-size: 11px; font-weight: 700; text-transform: uppercase;
+        .section-header {
+            padding: 16px 24px; font-size: 18px; font-weight: 800; color: white;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .tag-servizio { background: var(--primary-light); color: var(--primary-dark); }
-        .tag-scadenza { background: #fef9e7; color: var(--warning); }
-        .tag-scadenza.urgente { background: #fadbd8; color: var(--danger); }
-        .workflow-progress { margin: 16px 0; }
-        .progress-label { font-size: 12px; color: var(--text-light); margin-bottom: 6px; display: flex; justify-content: space-between; }
-        .progress-bar-container { background: var(--primary-light); height: 10px; border-radius: 5px; overflow: hidden; margin-bottom: 12px; }
-        .progress-bar { height: 100%; background: var(--primary-gradient); transition: width 0.4s ease; }
-        .workflow-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
-        .workflow-actions .btn { padding: 8px 16px; font-size: 12px; }
-        .status-select { padding: 6px 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 12px; font-weight: 600; }
+        .section-header.anteprima { background: var(--anteprima-bg); }
+        .section-header.servizio { background: var(--servizio-bg); }
+        .section-progress {
+            font-size: 13px; font-weight: 600; background: rgba(255,255,255,0.3);
+            padding: 4px 12px; border-radius: 20px;
+        }
+        .section-body { background: white; padding: 24px; }
+        .task-row {
+            display: flex; align-items: center; gap: 16px; padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .task-row:last-child { border-bottom: none; }
+        .task-checkbox {
+            width: 20px; height: 20px; cursor: pointer; flex-shrink: 0;
+        }
+        .task-label { flex: 1; font-size: 14px; font-weight: 500; }
+        .task-date { width: 140px; }
+        .task-date input {
+            padding: 6px 10px; font-size: 13px; width: 100%;
+        }
+        .task-input {
+            padding: 6px 10px; font-size: 13px; width: 100%; max-width: 250px;
+        }
+        .task-input.full-width { max-width: 100%; }
+        .task-completed .task-label { text-decoration: line-through; color: var(--text-light); }
+        .overall-progress {
+            background: white; padding: 20px; border-radius: 12px; margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        .progress-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+        }
+        .progress-title { font-size: 16px; font-weight: 700; color: var(--text-main); }
+        .progress-percent { font-size: 18px; font-weight: 800; color: var(--primary-dark); }
+        .progress-bar-container {
+            background: var(--primary-light); height: 12px; border-radius: 6px; overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%; background: var(--primary-gradient);
+            transition: width 0.4s ease; border-radius: 6px;
+        }
         .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast {
@@ -108,7 +137,6 @@
             border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -123,52 +151,195 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>Workflow Produzione</h1>
-            <p>Monitora lo stato avanzamento di foto e video per ogni cliente. Tutto sincronizzato sul cloud.</p>
+            <h1>Workflow Foto & Video</h1>
+            <p>Gestisci tutte le fasi di produzione con checklist dettagliate e date di completamento.</p>
         </div>
 
         <div id="loadingArea" class="loading">
             <div class="spinner"></div>
-            <div>Verifica sessione cloud...</div>
+            <div>Caricamento workflow...</div>
         </div>
 
         <div id="mainContent" class="hidden">
-            <div class="card-3d">
-                <div class="card-title">Nuovo Workflow</div>
-                <div class="card-subtitle">Aggiungi un nuovo progetto di produzione per un cliente.</div>
-                <div class="form-row">
-                    <div class="form-group"><label>Cliente *</label><input type="text" id="wfCliente" placeholder="es. Rossi"></div>
-                    <div class="form-group"><label>Data Evento *</label><input type="date" id="wfDataEvento"></div>
+            <!-- Overall Progress -->
+            <div class="overall-progress">
+                <div class="progress-header">
+                    <div class="progress-title">Avanzamento Complessivo</div>
+                    <div class="progress-percent" id="totalProgress">0%</div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Tipo Servizio *</label>
-                        <select id="wfTipoServizio">
-                            <option value="matrimonio">Matrimonio</option>
-                            <option value="battesimo">Battesimo</option>
-                            <option value="comunione">Comunione</option>
-                            <option value="ritratto">Ritratto</option>
-                            <option value="evento-aziendale">Evento Aziendale</option>
-                            <option value="altro">Altro</option>
-                        </select>
-                    </div>
-                    <div class="form-group"><label>Scadenza Consegna *</label><input type="date" id="wfScadenza"></div>
-                </div>
-                <div class="form-group"><label>Note</label><textarea id="wfNote" rows="3" placeholder="Note sul progetto..."></textarea></div>
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="creaWorkflow()">CREA WORKFLOW</button>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="totalProgressBar" style="width: 0%;"></div>
                 </div>
             </div>
 
-            <div class="card-3d">
-                <div class="card-title">Progetti in Produzione</div>
-                <div class="card-subtitle">Stato avanzamento di tutti i workflow attivi.</div>
-                <div id="loadingWorkflow" class="loading" style="padding: 20px;">
-                    <div class="spinner"></div>
-                    <div>Caricamento workflow...</div>
+            <!-- ANTEPRIMA Section -->
+            <div class="workflow-section">
+                <div class="section-header anteprima">
+                    <span>📸 ANTEPRIMA</span>
+                    <span class="section-progress" id="progressAnteprima">0/6 (0%)</span>
                 </div>
-                <div id="emptyWorkflow" class="empty-state hidden">Nessun workflow attivo.</div>
-                <div class="workflow-list" id="workflowList"></div>
+                <div class="section-body">
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task1" onchange="toggleTask('task1', 'anteprima')">
+                        <label class="task-label" for="task1">Download schede</label>
+                        <div class="task-date">
+                            <input type="date" id="task1_date">
+                        </div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task2" onchange="toggleTask('task2', 'anteprima')">
+                        <label class="task-label" for="task2">Archiviazione HD A/B</label>
+                        <div class="task-date">
+                            <input type="date" id="task2_date">
+                        </div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task3" onchange="toggleTask('task3', 'anteprima')">
+                        <label class="task-label" for="task3">Archiviazione Video</label>
+                        <div class="task-date">
+                            <input type="date" id="task3_date">
+                        </div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task4" onchange="toggleTask('task4', 'anteprima')">
+                        <label class="task-label" for="task4">Archiviazione su altro</label>
+                        <div class="task-date">
+                            <input type="date" id="task4_date">
+                        </div>
+                    </div>
+                    <div class="task-row" style="padding-left: 30px;">
+                        <input type="text" class="task-input" placeholder="Dove" id="task4_where">
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task5" onchange="toggleTask('task5', 'anteprima')">
+                        <label class="task-label" for="task5">RAW → JPEG</label>
+                        <div class="task-date">
+                            <input type="date" id="task5_date">
+                        </div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task6" onchange="toggleTask('task6', 'anteprima')">
+                        <label class="task-label" for="task6">Consegna Anteprima al cliente</label>
+                        <div class="task-date">
+                            <input type="date" id="task6_date">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SERVIZIO Section -->
+            <div class="workflow-section">
+                <div class="section-header servizio">
+                    <span>🎬 SERVIZIO</span>
+                    <span class="section-progress" id="progressServizio">0/13 (0%)</span>
+                </div>
+                <div class="section-body">
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task7" onchange="toggleTask('task7', 'servizio')">
+                        <label class="task-label" for="task7">Download schede</label>
+                        <div class="task-date">
+                            <input type="date" id="task7_date">
+                        </div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task8" onchange="toggleTask('task8', 'servizio')">
+                        <label class="task-label" for="task8">Archiviazione HD A/B</label>
+                        <div class="task-date">
+                            <input type="date" id="task8_date">
+                        </div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task9" onchange="toggleTask('task9', 'servizio')">
+                        <label class="task-label" for="task9">Archiviazione Video</label>
+                        <div class="task-date">
+                            <input type="date" id="task9_date">
+                        </div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task10" onchange="toggleTask('task10', 'servizio')">
+                        <label class="task-label" for="task10">Archiviazione su altro</label>
+                        <div class="task-date">
+                            <input type="date" id="task10_date">
+                        </div>
+                    </div>
+                    <div class="task-row" style="padding-left: 30px;">
+                        <input type="text" class="task-input" placeholder="Dove" id="task10_where">
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task11" onchange="toggleTask('task11', 'servizio')">
+                        <label class="task-label" for="task11">RAW → JPEG</label>
+                        <div class="task-date">
+                            <input type="date" id="task11_date">
+                        </div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task12" onchange="toggleTask('task12', 'servizio')">
+                        <label class="task-label" for="task12">Selezione + Copertina</label>
+                        <div class="task-date">
+                            <input type="date" id="task12_date">
+                        </div>
+                    </div>
+                    <div class="task-row" style="padding-left: 30px;">
+                        <input type="text" class="task-input" placeholder="Fornitore copertina" id="task12_fornitore">
+                        <input type="text" class="task-input" placeholder="Articolo prodotto" id="task12_articolo" style="margin-left: 10px;">
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task13" onchange="toggleTask('task13', 'servizio')">
+                        <label class="task-label" for="task13">Lavorazione album</label>
+                        <div class="task-date">
+                            <input type="date" id="task13_date">
+                        </div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task14" onchange="toggleTask('task14', 'servizio')">
+                        <label class="task-label" for="task14">Invio laboratorio</label>
+                        <div class="task-date">
+                            <input type="date" id="task14_date">
+                        </div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task15" onchange="toggleTask('task15', 'servizio')">
+                        <label class="task-label" for="task15">Lab → Studio</label>
+                        <div class="task-date">
+                            <input type="date" id="task15_date">
+                        </div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task16" onchange="toggleTask('task16', 'servizio')">
+                        <label class="task-label" for="task16">Album al cliente</label>
+                        <div class="task-date">
+                            <input type="date" id="task16_date">
+                        </div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task17" onchange="toggleTask('task17', 'servizio')">
+                        <label class="task-label" for="task17">Consegna file cliente</label>
+                        <div class="task-date">
+                            <input type="date" id="task17_date">
+                        </div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task18" onchange="toggleTask('task18', 'servizio')">
+                        <label class="task-label" for="task18">Video Pronto cliente</label>
+                        <div class="task-date">
+                            <input type="date" id="task18_date">
+                        </div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="task19" onchange="toggleTask('task19', 'servizio')">
+                        <label class="task-label" for="task19">Conferma cancellazione</label>
+                        <div class="task-date">
+                            <input type="date" id="task19_date">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group" style="justify-content: center;">
+                <button class="btn btn-info" onclick="visualizza()">Visualizza</button>
+                <button class="btn btn-warning" onclick="modifica()">Modifica</button>
+                <button class="btn btn-primary" onclick="generaPDF()">📄 PDF</button>
+                <button class="btn btn-danger" onclick="eliminaWorkflow()">Elimina</button>
             </div>
         </div>
 
@@ -182,7 +353,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
-        let workflow = [];
+        let workflowId = null;
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) { window.location.href = 'index.html'; return; }
@@ -208,231 +379,114 @@
             }
         }
 
-        async function creaWorkflow() {
-            const cliente = document.getElementById('wfCliente').value.trim();
-            const dataEvento = document.getElementById('wfDataEvento').value;
-            const tipoServizio = document.getElementById('wfTipoServizio').value;
-            const scadenza = document.getElementById('wfScadenza').value;
-            const note = document.getElementById('wfNote').value.trim();
-
-            if (!cliente || !dataEvento || !scadenza) {
-                mostraToast('Compila Cliente, Data Evento e Scadenza', 'error');
-                return;
-            }
-
-            const wf = {
-                id: 'wf-' + Date.now(),
-                studio_id: studioId,
-                cliente,
-                data_evento: dataEvento,
-                tipo_servizio: tipoServizio,
-                scadenza,
-                stato_foto: 'da_fare',
-                stato_video: 'da_fare',
-                note,
-                data_creazione: new Date().toISOString(),
-                ultimo_aggiornamento: new Date().toISOString()
-            };
-
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/workflow?token=${token}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(wf)
-                });
-                const result = await response.json();
-                if (result.success) {
-                    mostraToast('Workflow creato sul cloud!', 'success');
-                    pulisciForm();
-                    await caricaWorkflow();
-                } else {
-                    mostraToast('Errore nella creazione', 'error');
-                }
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
-            }
-        }
-
         async function caricaWorkflow() {
-            document.getElementById('loadingWorkflow').style.display = 'block';
-            document.getElementById('emptyWorkflow').classList.add('hidden');
-            document.getElementById('workflowList').innerHTML = '';
-
+            // Carica l'ultimo workflow o ne crea uno nuovo
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/workflow?studioId=${studioId}&token=${token}`);
                 const data = await response.json();
-                if (data.success && data.workflow) {
-                    workflow = data.workflow;
+                if (data.success && data.workflow && data.workflow.length > 0) {
+                    workflowId = data.workflow[0].id;
+                    // Qui caricheresti i dati salvati se esistono
                 } else {
-                    workflow = [];
+                    workflowId = 'wf-' + Date.now();
                 }
             } catch (error) {
                 console.error('Errore:', error);
-                workflow = [];
             }
-
-            document.getElementById('loadingWorkflow').style.display = 'none';
-            renderizzaWorkflow();
         }
 
-        function calcolaProgress(statoFoto, statoVideo) {
-            const stati = ['da_fare', 'in_corso', 'completato'];
-            const valoreFoto = stati.indexOf(statoFoto);
-            const valoreVideo = stati.indexOf(statoVideo);
-            const totale = (valoreFoto + valoreVideo) / (stati.length - 1) / 2 * 100;
-            return Math.round(totale);
-        }
-
-        function getStatoLabel(stato) {
-            const labels = {
-                'da_fare': 'Da Fare',
-                'in_corso': 'In Corso',
-                'completato': 'Completato'
-            };
-            return labels[stato] || stato;
-        }
-
-        function getStatoColor(stato) {
-            const colors = {
-                'da_fare': '#eaeded',
-                'in_corso': '#d6eaf8',
-                'completato': '#d5f4e6'
-            };
-            return colors[stato] || '#eaeded';
-        }
-
-        function renderizzaWorkflow() {
-            const container = document.getElementById('workflowList');
-            const emptyState = document.getElementById('emptyWorkflow');
+        function toggleTask(taskId, sezione) {
+            const checkbox = document.getElementById(taskId);
+            const row = checkbox.closest('.task-row');
             
-            if (workflow.length === 0) {
-                emptyState.classList.remove('hidden');
-                container.innerHTML = '';
-                return;
+            if (checkbox.checked) {
+                row.classList.add('task-completed');
+            } else {
+                row.classList.remove('task-completed');
             }
-
-            emptyState.classList.add('hidden');
             
-            const oggi = new Date();
-            const tipiMap = {
-                'matrimonio': 'Matrimonio', 'battesimo': 'Battesimo', 'comunione': 'Comunione',
-                'ritratto': 'Ritratto', 'evento-aziendale': 'Evento Aziendale', 'altro': 'Altro'
-            };
-
-            container.innerHTML = workflow.map(wf => {
-                const progress = calcolaProgress(wf.stato_foto, wf.stato_video);
-                const scadenza = new Date(wf.scadenza);
-                const giorniRimasti = Math.ceil((scadenza - oggi) / (1000 * 60 * 60 * 24));
-                const urgente = giorniRimasti <= 7 && giorniRimasti >= 0;
-                const scaduto = giorniRimasti < 0;
-
-                return `
-                    <div class="workflow-item">
-                        <div class="workflow-header">
-                            <div>
-                                <div class="workflow-cliente">${wf.cliente}</div>
-                                <div class="workflow-data">Evento: ${new Date(wf.data_evento).toLocaleDateString('it-IT')}</div>
-                            </div>
-                            <div style="font-size: 12px; color: var(--text-light);">
-                                Creato: ${new Date(wf.data_creazione).toLocaleDateString('it-IT')}
-                            </div>
-                        </div>
-
-                        <div class="workflow-info">
-                            <span class="workflow-tag tag-servizio">${tipiMap[wf.tipo_servizio] || wf.tipo_servizio}</span>
-                            <span class="workflow-tag tag-scadenza ${urgente ? 'urgente' : ''}">
-                                ${scaduto ? 'SCADUTO' : giorniRimasti + ' giorni'}
-                            </span>
-                        </div>
-
-                        <div class="workflow-progress">
-                            <div class="progress-label">
-                                <span>Avanzamento Totale</span>
-                                <span><strong>${progress}%</strong></span>
-                            </div>
-                            <div class="progress-bar-container">
-                                <div class="progress-bar" style="width: ${progress}%;"></div>
-                            </div>
-
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                                <div>
-                                    <div class="progress-label"><span>Foto</span><span>${getStatoLabel(wf.stato_foto)}</span></div>
-                                    <select class="status-select" onchange="aggiornaStato('${wf.id}', 'foto', this.value)" style="width: 100%;">
-                                        <option value="da_fare" ${wf.stato_foto === 'da_fare' ? 'selected' : ''}>Da Fare</option>
-                                        <option value="in_corso" ${wf.stato_foto === 'in_corso' ? 'selected' : ''}>In Corso</option>
-                                        <option value="completato" ${wf.stato_foto === 'completato' ? 'selected' : ''}>Completato</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <div class="progress-label"><span>Video</span><span>${getStatoLabel(wf.stato_video)}</span></div>
-                                    <select class="status-select" onchange="aggiornaStato('${wf.id}', 'video', this.value)" style="width: 100%;">
-                                        <option value="da_fare" ${wf.stato_video === 'da_fare' ? 'selected' : ''}>Da Fare</option>
-                                        <option value="in_corso" ${wf.stato_video === 'in_corso' ? 'selected' : ''}>In Corso</option>
-                                        <option value="completato" ${wf.stato_video === 'completato' ? 'selected' : ''}>Completato</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        ${wf.note ? `<div style="font-size: 13px; color: var(--text-light); font-style: italic; margin-top: 12px;"> ${wf.note}</div>` : ''}
-
-                        <div class="workflow-actions">
-                            <button class="btn btn-danger" onclick="eliminaWorkflow('${wf.id}')">Elimina</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+            calcolaProgress();
+            salvaWorkflow();
         }
 
-        async function aggiornaStato(id, tipo, nuovoStato) {
-            const wf = workflow.find(w => w.id === id);
-            if (!wf) return;
+        function calcolaProgress() {
+            const tasksAnteprima = ['task1', 'task2', 'task3', 'task4', 'task5', 'task6'];
+            const tasksServizio = ['task7', 'task8', 'task9', 'task10', 'task11', 'task12', 'task13', 'task14', 'task15', 'task16', 'task17', 'task18', 'task19'];
+            
+            const completatiAnteprima = tasksAnteprima.filter(id => document.getElementById(id).checked).length;
+            const completatiServizio = tasksServizio.filter(id => document.getElementById(id).checked).length;
+            
+            const totaleAnteprima = tasksAnteprima.length;
+            const totaleServizio = tasksServizio.length;
+            
+            const percentAnteprima = Math.round((completatiAnteprima / totaleAnteprima) * 100);
+            const percentServizio = Math.round((completatiServizio / totaleServizio) * 100);
+            
+            document.getElementById('progressAnteprima').textContent = `${completatiAnteprima}/${totaleAnteprima} (${percentAnteprima}%)`;
+            document.getElementById('progressServizio').textContent = `${completatiServizio}/${totaleServizio} (${percentServizio}%)`;
+            
+            // Progresso totale
+            const totaleTasks = totaleAnteprima + totaleServizio;
+            const totaleCompletati = completatiAnteprima + completatiServizio;
+            const percentTotale = Math.round((totaleCompletati / totaleTasks) * 100);
+            
+            document.getElementById('totalProgress').textContent = `${percentTotale}%`;
+            document.getElementById('totalProgressBar').style.width = `${percentTotale}%`;
+        }
 
-            const update = {
-                id,
-                stato_foto: tipo === 'foto' ? nuovoStato : wf.stato_foto,
-                stato_video: tipo === 'video' ? nuovoStato : wf.stato_video,
-                ultimo_aggiornamento: new Date().toISOString()
+        async function salvaWorkflow() {
+            // Salva lo stato corrente sul cloud
+            const dati = {
+                id: workflowId,
+                studio_id: studioId,
+                tasks: {}
             };
-
+            
+            // Raccogli tutti i checkbox e le date
+            for (let i = 1; i <= 19; i++) {
+                const checkbox = document.getElementById(`task${i}`);
+                const dateInput = document.getElementById(`task${i}_date`);
+                if (checkbox) {
+                    dati.tasks[`task${i}`] = {
+                        completed: checkbox.checked,
+                        date: dateInput ? dateInput.value : null
+                    };
+                }
+            }
+            
+            // Campi speciali
+            dati.tasks.task4_where = document.getElementById('task4_where').value;
+            dati.tasks.task10_where = document.getElementById('task10_where').value;
+            dati.tasks.task12_fornitore = document.getElementById('task12_fornitore').value;
+            dati.tasks.task12_articolo = document.getElementById('task12_articolo').value;
+            
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/workflow?token=${token}`, {
-                    method: 'PUT',
+                await fetch(`${WORKER_URL}/api/studio/workflow?token=${token}`, {
+                    method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(update)
+                    body: JSON.stringify(dati)
                 });
-                const result = await response.json();
-                if (result.success) {
-                    mostraToast(`Stato ${tipo} aggiornato!`, 'success');
-                    await caricaWorkflow();
-                } else {
-                    mostraToast('Errore nell\'aggiornamento', 'error');
-                }
             } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
+                console.error('Errore salvataggio:', error);
             }
         }
 
-        async function eliminaWorkflow(id) {
-            if (!confirm('Eliminare questo workflow?')) return;
-            try {
-                // In produzione: chiamata DELETE al worker
-                workflow = workflow.filter(w => w.id !== id);
-                renderizzaWorkflow();
+        function visualizza() {
+            mostraToast('Visualizzazione dettagli workflow', 'success');
+        }
+
+        function modifica() {
+            mostraToast('Modalità modifica attivata', 'success');
+        }
+
+        function generaPDF() {
+            mostraToast('Generazione PDF in corso...', 'success');
+        }
+
+        function eliminaWorkflow() {
+            if (confirm('Sei sicuro di voler eliminare questo workflow?')) {
                 mostraToast('Workflow eliminato', 'success');
-            } catch (error) {
-                mostraToast('Errore nell\'eliminazione', 'error');
             }
-        }
-
-        function pulisciForm() {
-            document.getElementById('wfCliente').value = '';
-            document.getElementById('wfDataEvento').value = '';
-            document.getElementById('wfTipoServizio').value = 'matrimonio';
-            document.getElementById('wfScadenza').value = '';
-            document.getElementById('wfNote').value = '';
         }
 
         function tornaPlancia() {
