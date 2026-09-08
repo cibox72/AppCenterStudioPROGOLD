@@ -327,7 +327,6 @@ export default {
 
         const d = await request.json();
         
-        // Serializza i dati complessi come JSON
         const clienteA = JSON.stringify(d.cliente_a || {});
         const clienteB = JSON.stringify(d.cliente_b || {});
         const servizi = JSON.stringify(d.servizi || []);
@@ -366,7 +365,113 @@ export default {
       }
 
       // ============================================
-      // 21. RICEVUTE (Studio)
+      // 21. CLIENTE - LISTA CARTELLE FOTO
+      // ============================================
+      if (path === "/api/cliente/foto/cartelle" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const clienteId = url.searchParams.get("clienteId");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'cliente' || sess.user_id !== clienteId) return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const cliente = await env.DB.prepare("SELECT studio_id FROM clienti WHERE id=?").bind(clienteId).first();
+        const studioId = cliente.studio_id;
+        const bucket = env.appcenter_studio_foto;
+        if (!bucket) return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
+
+        const prefix = `gallerie/${studioId}/${clienteId}/`;
+        const objects = await bucket.list({ prefix });
+        
+        const cartelleSet = new Set();
+        for (const object of objects.objects) {
+            const key = object.key;
+            const parts = key.replace(prefix, '').split('/');
+            if (parts.length > 1 && parts[0] !== "") {
+                cartelleSet.add(parts[0]);
+            }
+        }
+        
+        return new Response(JSON.stringify({ success: true, cartelle: Array.from(cartelleSet) }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 22. CLIENTE - ELENCO FOTO IN CARTELLA
+      // ============================================
+      if (path === "/api/cliente/foto/elenco" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const clienteId = url.searchParams.get("clienteId");
+        const cartella = url.searchParams.get("cartella");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'cliente' || sess.user_id !== clienteId) return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const cliente = await env.DB.prepare("SELECT studio_id FROM clienti WHERE id=?").bind(clienteId).first();
+        const studioId = cliente.studio_id;
+        const bucket = env.appcenter_studio_foto;
+
+        const prefix = `gallerie/${studioId}/${clienteId}/${cartella}/`;
+        const objects = await bucket.list({ prefix });
+        
+        const foto = objects.objects.map(obj => ({
+            name: obj.key.split('/').pop(),
+            url: `https://appcenter-studio-foto.r2.dev/${obj.key}`
+        }));
+
+        return new Response(JSON.stringify({ success: true, foto }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 23. CLIENTE - INVIO SELEZIONE FOTO
+      // ============================================
+      if (path === "/api/cliente/selezione/invia" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const clienteId = url.searchParams.get("clienteId");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'cliente' || sess.user_id !== clienteId) return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const { selezionate } = await request.json();
+        const cliente = await env.DB.prepare("SELECT studio_id, nome_a, cognome_a FROM clienti WHERE id=?").bind(clienteId).first();
+        const studioId = cliente.studio_id;
+        const bucket = env.appcenter_studio_foto;
+
+        const prefix = `gallerie/${studioId}/${clienteId}/`;
+        const allObjects = await bucket.list({ prefix });
+        
+        let fileTestoContenuto = "FOTO SELEZIONATE DAL CLIENTE\n";
+        fileTestoContenuto += `Cliente: ${cliente.nome_a} ${cliente.cognome_a}\n`;
+        fileTestoContenuto += `Data: ${new Date().toLocaleString('it-IT')}\n`;
+        fileTestoContenuto += "----------------------------------------\n";
+
+        for (const obj of allObjects.objects) {
+            const filename = obj.key.split('/').pop();
+            if (filename.endsWith('.txt')) continue;
+
+            if (selezionate.includes(filename)) {
+                fileTestoContenuto += `${filename}\n`;
+            } else {
+                await bucket.delete(obj.key);
+            }
+        }
+
+        const txtKey = `${prefix}SELEZIONE_${Date.now()}.txt`;
+        await bucket.put(txtKey, fileTestoContenuto);
+
+        const idNotifica = 'not-' + Date.now();
+        await env.DB.prepare(
+            "INSERT INTO notifiche (id, tipo, titolo, messaggio, dati, letto, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?)"
+        ).bind(
+            idNotifica, 
+            'selezione_foto', 
+            'Nuova Selezione Foto Completata', 
+            `Il cliente ${cliente.nome_a} ${cliente.cognome_a} ha completato la selezione. File elenco generato nel cloud.`, 
+            JSON.stringify({ clienteId, studioId, file_txt: txtKey }), 
+            0, 
+            new Date().toISOString()
+        ).run();
+
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 24. RICEVUTE (Studio)
       // ============================================
       if (path === "/api/studio/ricevute" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -389,7 +494,7 @@ export default {
       }
 
       // ============================================
-      // 22. WORKFLOW (Studio)
+      // 25. WORKFLOW (Studio)
       // ============================================
       if (path === "/api/studio/workflow" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -422,7 +527,7 @@ export default {
       }
 
       // ============================================
-      // 23. AGENDA (Studio)
+      // 26. AGENDA (Studio)
       // ============================================
       if (path === "/api/studio/agenda" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -445,7 +550,7 @@ export default {
       }
 
       // ============================================
-      // 24. CLIENTI (Studio)
+      // 27. CLIENTI (Studio)
       // ============================================
       if (path === "/api/studio/clienti" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -469,7 +574,7 @@ export default {
       }
 
       // ============================================
-      // 25. EMAIL ARCHIVIO (Studio)
+      // 28. EMAIL ARCHIVIO (Studio)
       // ============================================
       if (path === "/api/studio/email-archivio" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -492,7 +597,7 @@ export default {
       }
 
       // ============================================
-      // 26. NEGOZIO (Studio)
+      // 29. NEGOZIO (Studio)
       // ============================================
       if (path === "/api/studio/negozio/prodotti" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -540,7 +645,7 @@ export default {
       }
 
       // ============================================
-      // 27. LISTA REGALI (Studio)
+      // 30. LISTA REGALI (Studio)
       // ============================================
       if (path === "/api/studio/lista-regali" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -563,7 +668,7 @@ export default {
       }
 
       // ============================================
-      // 28. LISTA REGALI PUBBLICA
+      // 31. LISTA REGALI PUBBLICA
       // ============================================
       if (path === "/api/public/lista-regali" && request.method === "GET") {
         const listaId = url.searchParams.get("id");
@@ -590,7 +695,7 @@ export default {
       }
 
       // ============================================
-      // 29. UPLOAD FOTO R2 (Studio)
+      // 32. UPLOAD FOTO R2 (Studio)
       // ============================================
       if (path === "/api/studio/upload" && request.method === "POST") {
         const token = url.searchParams.get("token");
@@ -599,8 +704,8 @@ export default {
 
         const studioId = url.searchParams.get("studioId");
         const clienteId = url.searchParams.get("clienteId");
-        const filename = url.searchParams.get("filename") || "foto.jpg";
         const folder = url.searchParams.get("folder") || "galleria";
+        const filename = url.searchParams.get("filename") || "foto.jpg";
         const body = await request.arrayBuffer();
         const bucket = env.appcenter_studio_foto;
         if (bucket) {
@@ -611,7 +716,7 @@ export default {
       }
 
       // ============================================
-      // 30. TEMI (Studio)
+      // 33. TEMI (Studio)
       // ============================================
       if (path === "/api/studio/tema" && request.method === "GET") {
         const studioId = url.searchParams.get("studioId");
@@ -635,7 +740,7 @@ export default {
       }
 
       // ============================================
-      // 31. PROFILO STUDIO (con notifica all'admin)
+      // 34. PROFILO STUDIO (con notifica all'admin)
       // ============================================
       if (path === "/api/studio/profilo" && request.method === "PUT") {
         const token = url.searchParams.get("token");
