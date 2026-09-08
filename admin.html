@@ -402,12 +402,12 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>ID Studio (unico) *</label>
-                            <input type="text" id="newStudioId" placeholder="es. studio-rossi">
+                            <input type="text" id="newStudioId">
                         </div>
                         <div class="form-group">
                             <label>Password *</label>
                             <div class="password-wrapper">
-                                <input type="password" id="newStudioPassword" placeholder="Password iniziale">
+                                <input type="password" id="newStudioPassword">
                                 <button type="button" class="toggle-password" onclick="togglePassword('newStudioPassword', this)">👁️</button>
                             </div>
                         </div>
@@ -415,35 +415,35 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Nome Studio *</label>
-                            <input type="text" id="newStudioNome" placeholder="es. Rossi Fotografia">
+                            <input type="text" id="newStudioNome">
                         </div>
                         <div class="form-group">
                             <label>Partita IVA</label>
-                            <input type="text" id="newStudioPiva" placeholder="es. 12345678901">
+                            <input type="text" id="newStudioPiva">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Email *</label>
-                            <input type="email" id="newStudioEmail" placeholder="es. studio@rossi.it">
+                            <input type="email" id="newStudioEmail">
                         </div>
                         <div class="form-group">
                             <label>Telefono</label>
-                            <input type="tel" id="newStudioTelefono" placeholder="+39 333 1234567">
+                            <input type="tel" id="newStudioTelefono">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Indirizzo</label>
-                        <input type="text" id="newStudioIndirizzo" placeholder="Via Roma 1, Milano">
+                        <input type="text" id="newStudioIndirizzo">
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Città</label>
-                            <input type="text" id="newStudioCitta" placeholder="Milano">
+                            <input type="text" id="newStudioCitta">
                         </div>
                         <div class="form-group">
                             <label>Stato/Provincia</label>
-                            <input type="text" id="newStudioStato" placeholder="MI">
+                            <input type="text" id="newStudioStato">
                         </div>
                     </div>
                     <div class="form-row">
@@ -470,6 +470,17 @@
 
         <div class="footer-branding">
             Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong>
+        </div>
+    </div>
+
+    <!-- MODALE DETTAGLI NOTIFICA -->
+    <div id="modalNotifica" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:3000; align-items:center; justify-content:center;">
+        <div style="background:white; border-radius:16px; padding:32px; max-width:600px; width:90%; max-height:90vh; overflow-y:auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+            <h3 style="color:var(--primary-dark); margin-bottom:16px; font-weight:700;">📄 Dettagli Notifica</h3>
+            <pre id="modalNotificaDati" style="background:#f4f6f7; padding:16px; border-radius:8px; font-size:13px; overflow-x:auto; white-space: pre-wrap; word-wrap: break-word; color: var(--text-main);"></pre>
+            <div style="margin-top:20px; text-align:right;">
+                <button class="btn btn-outline" onclick="chiudiModalNotifica()">Chiudi</button>
+            </div>
         </div>
     </div>
 
@@ -574,7 +585,7 @@
                     </td>
                     <td>
                         <button class="btn btn-sm btn-warning" onclick="salvaModificheStudio('${studio.id}')">💾 Salva</button>
-                        <button class="btn btn-sm btn-danger" onclick="eliminaStudio('${studio.id}')">️</button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminaStudio('${studio.id}')">🗑️</button>
                     </td>
                 </tr>
             `}).join('');
@@ -646,15 +657,64 @@
             }
             empty.classList.add('hidden');
             container.innerHTML = notifiche.map(n => `
-                <div class="notification-item ${n.letto === 0 ? 'unread' : ''}" onclick="segnaComeLetta('${n.id}')">
+                <div class="notification-item ${n.letto === 0 ? 'unread' : ''}">
                     <div class="notification-header">
                         <div class="notification-title">${n.titolo}</div>
                         <div class="notification-time">${new Date(n.data_creazione).toLocaleString('it-IT')}</div>
                     </div>
                     <div class="notification-message">${n.messaggio}</div>
-                    <div style="font-size: 11px; color: var(--text-light);">Tipo: ${n.tipo}</div>
+                    <div style="font-size: 11px; color: var(--text-light); margin-bottom: 12px;">Tipo: ${n.tipo}</div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn btn-sm btn-primary" onclick="visualizzaNotifica('${n.id}')">👁️ Visualizza</button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminaNotifica('${n.id}')">🗑️ Elimina</button>
+                        ${n.letto === 0 ? `<button class="btn btn-sm btn-success" onclick="segnaComeLetta('${n.id}')">✅ Segna letta</button>` : ''}
+                    </div>
                 </div>
             `).join('');
+        }
+
+        function visualizzaNotifica(id) {
+            const notif = notifiche.find(n => n.id === id);
+            if (!notif) return;
+            
+            let datiStr = "Nessun dato aggiuntivo disponibile.";
+            try {
+                if (notif.dati) {
+                    const parsed = typeof notif.dati === 'string' ? JSON.parse(notif.dati) : notif.dati;
+                    datiStr = JSON.stringify(parsed, null, 2);
+                }
+            } catch(e) {
+                datiStr = notif.dati;
+            }
+            
+            document.getElementById('modalNotificaDati').textContent = datiStr;
+            document.getElementById('modalNotifica').style.display = 'flex';
+            
+            // Segna automaticamente come letta quando si visualizza
+            if (notif.letto === 0) {
+                segnaComeLetta(id);
+            }
+        }
+
+        function chiudiModalNotifica() {
+            document.getElementById('modalNotifica').style.display = 'none';
+        }
+
+        async function eliminaNotifica(id) {
+            if (!confirm('Sei sicuro di voler eliminare definitivamente questa notifica?')) return;
+            try {
+                // Nota: questa chiamata richiederà l'endpoint DELETE nel worker.js che aggiungeremo al prossimo passo
+                const response = await fetch(`${WORKER_URL}/api/admin/notifica/${id}?token=${token}`, { method: 'DELETE' });
+                const result = await response.json();
+                if (result.success || response.ok) {
+                    mostraToast('Notifica eliminata', 'success');
+                    await caricaNotifiche();
+                } else {
+                    mostraToast('Errore eliminazione: ' + (result.error || 'Endpoint non pronto'), 'error');
+                }
+            } catch (error) {
+                mostraToast('Errore di connessione durante l\'eliminazione', 'error');
+            }
         }
 
         async function toggleAttivo(studioId, attivo) {
