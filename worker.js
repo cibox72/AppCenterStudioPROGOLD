@@ -480,7 +480,6 @@ export default {
         const studioId = url.searchParams.get("studioId");
         const result = await env.DB.prepare("SELECT * FROM workflow WHERE studio_id=? ORDER BY data_creazione DESC").bind(studioId).all();
         
-        // Parsing tasks JSON dalla colonna note per il frontend
         const workflowParsed = result.results.map(w => {
             let tasks = {};
             try { tasks = JSON.parse(w.note || '{}'); } catch(e) {}
@@ -501,7 +500,6 @@ export default {
         const d = await request.json();
         const tasksJson = JSON.stringify(d.tasks || {});
         
-        // Mappatura nuovi campi su schema esistente
         await env.DB.prepare(`INSERT INTO workflow (id, studio_id, cliente, data_evento, tipo_servizio, scadenza, stato_foto, stato_video, note, data_creazione, ultimo_aggiornamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
             d.id, d.studio_id, d.nome_cliente || '', d.data_servizio || null, d.tipo_servizio || '', null, 'da_fare', 'da_fare', tasksJson, d.data_creazione || new Date().toISOString(), new Date().toISOString()
         ).run();
@@ -509,7 +507,7 @@ export default {
       }
 
       // ============================================
-      // 26. WORKFLOW - AGGIORNA TASKS (Studio) - NUOVO
+      // 26. WORKFLOW - AGGIORNA TASKS (Studio)
       // ============================================
       if (path.startsWith("/api/studio/workflow/") && request.method === "PUT") {
         const token = url.searchParams.get("token");
@@ -525,7 +523,7 @@ export default {
       }
 
       // ============================================
-      // 27. WORKFLOW - ELIMINA (Studio) - NUOVO
+      // 27. WORKFLOW - ELIMINA (Studio)
       // ============================================
       if (path.startsWith("/api/studio/workflow/") && request.method === "DELETE") {
         const token = url.searchParams.get("token");
@@ -561,7 +559,7 @@ export default {
       }
 
       // ============================================
-      // 29. AGENDA (Studio)
+      // 29. AGENDA - LISTA (Studio)
       // ============================================
       if (path === "/api/studio/agenda" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -573,18 +571,70 @@ export default {
         return new Response(JSON.stringify({ success: true, eventi: result.results }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // 30. AGENDA - CREA (Studio)
+      // ============================================
       if (path === "/api/studio/agenda" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
 
         const d = await request.json();
-        await env.DB.prepare(`INSERT INTO agenda (id, studio_id, titolo, data, tipo, note, creato_il) VALUES (?, ?, ?, ?, ?, ?, ?)`).bind(d.id, d.studio_id, d.titolo, d.data, d.tipo, d.note, d.creato_il).run();
+        await env.DB.prepare(`INSERT INTO agenda (id, studio_id, titolo, data, ora_inizio, ora_fine, descrizione, luogo, tipo_servizio, squadra, cliente, note, creato_il) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+          d.id, d.studio_id, d.titolo, d.data, d.ora_inizio || null, d.ora_fine || null, d.descrizione || null, d.luogo || null, d.tipo_servizio || null, d.squadra || 'Squadra 1', d.cliente || null, d.note || null, d.data_creazione || new Date().toISOString()
+        ).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
       // ============================================
-      // 30. CLIENTI (Studio)
+      // 31. AGENDA - AGGIORNA (Studio)
+      // ============================================
+      if (path.startsWith("/api/studio/agenda/") && request.method === "PUT") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const id = path.split("/api/studio/agenda/")[1];
+        const d = await request.json();
+        const updates = [];
+        const params = [];
+
+        if (d.titolo !== undefined) { updates.push("titolo=?"); params.push(d.titolo); }
+        if (d.data !== undefined) { updates.push("data=?"); params.push(d.data); }
+        if (d.ora_inizio !== undefined) { updates.push("ora_inizio=?"); params.push(d.ora_inizio); }
+        if (d.ora_fine !== undefined) { updates.push("ora_fine=?"); params.push(d.ora_fine); }
+        if (d.descrizione !== undefined) { updates.push("descrizione=?"); params.push(d.descrizione); }
+        if (d.luogo !== undefined) { updates.push("luogo=?"); params.push(d.luogo); }
+        if (d.tipo_servizio !== undefined) { updates.push("tipo_servizio=?"); params.push(d.tipo_servizio); }
+        if (d.squadra !== undefined) { updates.push("squadra=?"); params.push(d.squadra); }
+        if (d.cliente !== undefined) { updates.push("cliente=?"); params.push(d.cliente); }
+        if (d.note !== undefined) { updates.push("note=?"); params.push(d.note); }
+
+        if (updates.length === 0) {
+          return new Response(JSON.stringify({ error: "Nessun campo da aggiornare" }), { status: 400, headers: corsHeaders });
+        }
+
+        params.push(id);
+        const sql = `UPDATE agenda SET ${updates.join(', ')} WHERE id=?`;
+        await env.DB.prepare(sql).bind(...params).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 32. AGENDA - ELIMINA (Studio)
+      // ============================================
+      if (path.startsWith("/api/studio/agenda/") && request.method === "DELETE") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const id = path.split("/api/studio/agenda/")[1];
+        await env.DB.prepare("DELETE FROM agenda WHERE id=?").bind(id).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 33. CLIENTI (Studio)
       // ============================================
       if (path === "/api/studio/clienti" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -608,7 +658,7 @@ export default {
       }
 
       // ============================================
-      // 31. EMAIL ARCHIVIO (Studio)
+      // 34. EMAIL ARCHIVIO (Studio)
       // ============================================
       if (path === "/api/studio/email-archivio" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -631,7 +681,7 @@ export default {
       }
 
       // ============================================
-      // 32. NEGOZIO (Studio)
+      // 35. NEGOZIO (Studio)
       // ============================================
       if (path === "/api/studio/negozio/prodotti" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -679,7 +729,7 @@ export default {
       }
 
       // ============================================
-      // 33. LISTA REGALI (Studio)
+      // 36. LISTA REGALI (Studio)
       // ============================================
       if (path === "/api/studio/lista-regali" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -702,7 +752,7 @@ export default {
       }
 
       // ============================================
-      // 34. LISTA REGALI PUBBLICA
+      // 37. LISTA REGALI PUBBLICA
       // ============================================
       if (path === "/api/public/lista-regali" && request.method === "GET") {
         const listaId = url.searchParams.get("id");
@@ -729,7 +779,7 @@ export default {
       }
 
       // ============================================
-      // 35. UPLOAD FOTO R2 (Studio)
+      // 38. UPLOAD FOTO R2 (Studio)
       // ============================================
       if (path === "/api/studio/upload" && request.method === "POST") {
         const token = url.searchParams.get("token");
@@ -750,7 +800,7 @@ export default {
       }
 
       // ============================================
-      // 36. TEMI (Studio)
+      // 39. TEMI (Studio)
       // ============================================
       if (path === "/api/studio/tema" && request.method === "GET") {
         const studioId = url.searchParams.get("studioId");
@@ -774,7 +824,7 @@ export default {
       }
 
       // ============================================
-      // 37. PROFILO STUDIO (con notifica all'admin)
+      // 40. PROFILO STUDIO (con notifica all'admin)
       // ============================================
       if (path === "/api/studio/profilo" && request.method === "PUT") {
         const token = url.searchParams.get("token");
