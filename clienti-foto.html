@@ -13,90 +13,45 @@
             --success: #27ae60; --danger: #e74c3c; --radius: 16px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
-        }
-        .top-bar {
-            background: var(--primary-gradient); padding: 16px 24px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100;
-        }
-        .nav-btn {
-            background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
-            cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark);
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh; }
+        .top-bar { background: var(--primary-gradient); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100; }
+        .nav-btn { background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark); }
         .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
         .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
-        .page-header {
-            text-align: center; padding: 32px; background: white; border-radius: var(--radius);
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
-        }
+        .page-header { text-align: center; padding: 32px; background: white; border-radius: var(--radius); box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden; }
         .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
-        .page-header h1 {
-            font-size: 32px; font-weight: 800; background: var(--primary-gradient);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px;
-        }
+        .page-header h1 { font-size: 32px; font-weight: 800; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
         .page-header p { color: var(--text-light); font-size: 15px; }
-        .card-3d {
-            background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden;
-        }
+        .card-3d { background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden; }
         .card-3d::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
-        .card-title {
-            font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px;
-            padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
-        }
+        .card-title { font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px; }
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-        .form-group input, .form-group select {
-            padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
-        }
-        .form-group input:focus, .form-group select:focus {
-            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
-        }
-        .btn {
-            padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
-            cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
+        .form-group input, .form-group select { padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
+        .btn { padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
-        .btn-outline:hover { background: var(--primary-light); }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
         .client-list { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
-        .client-item {
-            background: white; border-left: 4px solid var(--primary); border-radius: 12px;
-            padding: 20px 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); transition: all 0.3s ease;
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
-        }
+        .client-item { background: white; border-left: 4px solid var(--primary); border-radius: 12px; padding: 20px 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); transition: all 0.3s ease; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
         .client-item:hover { transform: translateX(6px); box-shadow: 0 8px 24px rgba(30, 132, 73, 0.15); }
         .client-info { flex: 1; min-width: 200px; }
         .client-name { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
         .client-event { font-size: 13px; color: var(--text-light); }
-        .client-photos {
-            background: var(--primary-light); padding: 6px 14px; border-radius: 20px;
-            font-size: 12px; font-weight: 700; color: var(--primary-dark);
-        }
         .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
-        .toast {
-            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease;
-        }
+        .toast { background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease; }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
         .loading { text-align: center; padding: 40px; color: var(--text-light); }
-        .spinner {
-            width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary);
-            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;
-        }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -111,8 +66,8 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>Clienti & Gestione Foto</h1>
-            <p>Assegna le foto ai clienti e gestisci i loro album personali. Tutto sul cloud.</p>
+            <h1>Caricamento Foto per Cartelle</h1>
+            <p>Carica blocchi di foto organizzati per momento (es. Casa Sposa, Ristorante).</p>
         </div>
 
         <div id="loadingArea" class="loading">
@@ -122,47 +77,39 @@
 
         <div id="mainContent" class="hidden">
             <div class="card-3d">
-                <div class="card-title">Assegna Foto a Cliente</div>
-                <div class="card-subtitle">Seleziona un cliente e carica nuove foto nel suo album sul cloud R2.</div>
+                <div class="card-title">Carica Nuova Cartella Foto</div>
+                <div class="card-subtitle">Seleziona il cliente, dai un nome al momento e carica le foto (bassa risoluzione).</div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Seleziona Cliente *</label>
                         <select id="cfCliente"><option value="">-- Caricamento... --</option></select>
                     </div>
                     <div class="form-group">
-                        <label>Tipo Album</label>
-                        <select id="cfTipoAlbum">
-                            <option value="matrimonio">Matrimonio</option>
-                            <option value="evento">Evento</option>
-                            <option value="ritratto">Ritratto</option>
-                            <option value="bozze">Bozze da selezionare</option>
-                        </select>
+                        <label>Nome Cartella / Momento *</label>
+                        <input type="text" id="cfNomeCartella" placeholder="Es. Casa Sposa, Ristorante, Esterni...">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Carica Foto (JPG, PNG)</label>
+                    <label>Seleziona Foto (puoi selezionarne più di una)</label>
                     <input type="file" id="cfFileInput" multiple accept="image/*" style="padding: 10px; border: 1px dashed var(--border-color); border-radius: 10px;">
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-primary" onclick="assegnaFoto()">CARICA E ASSEGNA FOTO</button>
+                    <button class="btn btn-primary" onclick="assegnaFoto()">📤 CARICA CARTELLA</button>
                 </div>
             </div>
 
             <div class="card-3d">
-                <div class="card-title">Clienti con Album</div>
-                <div class="card-subtitle">Elenco dei clienti che hanno foto assegnate.</div>
+                <div class="card-title">Clienti con Album Attivi</div>
                 <div id="loadingClienti" class="loading" style="padding: 20px;">
                     <div class="spinner"></div>
                     <div>Caricamento clienti...</div>
                 </div>
-                <div id="emptyClienti" class="empty-state hidden">Nessun cliente con foto assegnate.</div>
                 <div class="client-list" id="clientList"></div>
             </div>
         </div>
 
         <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
     </div>
-
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
@@ -198,7 +145,6 @@
 
         async function caricaClienti() {
             document.getElementById('loadingClienti').style.display = 'block';
-            document.getElementById('emptyClienti').classList.add('hidden');
             document.getElementById('clientList').innerHTML = '';
             document.getElementById('cfCliente').innerHTML = '<option value="">-- Caricamento... --</option>';
 
@@ -207,97 +153,53 @@
                 const data = await response.json();
                 if (data.success && data.clienti) {
                     clienti = data.clienti;
-                    popolaSelectClienti();
-                    renderizzaClienti();
-                } else {
-                    clienti = [];
+                    const select = document.getElementById('cfCliente');
+                    select.innerHTML = '<option value="">-- Seleziona un cliente --</option>' + 
+                        clienti.map(c => `<option value="${c.id}">${c.nome_a} ${c.cognome_a} (${c.tipo_evento || 'Evento'})</option>`).join('');
+                    
+                    document.getElementById('clientList').innerHTML = clienti.map(c => `
+                        <div class="client-item">
+                            <div class="client-info">
+                                <div class="client-name">${c.nome_a} ${c.cognome_a} ${c.nome_b ? '& ' + c.nome_b + ' ' + c.cognome_b : ''}</div>
+                                <div class="client-event">${c.tipo_evento || 'Evento'} - ${c.data_evento ? new Date(c.data_evento).toLocaleDateString('it-IT') : 'Data non impostata'}</div>
+                            </div>
+                            <button class="btn btn-outline" style="padding: 8px 16px;" onclick="window.location.href='selezione-album-cliente.html?token=${token}&clienteId=${c.id}'">Gestisci Selezione</button>
+                        </div>
+                    `).join('');
                 }
-            } catch (error) {
-                console.error('Errore:', error);
-                clienti = [];
-            }
-
+            } catch (error) { console.error('Errore:', error); }
             document.getElementById('loadingClienti').style.display = 'none';
-            if (clienti.length === 0) {
-                document.getElementById('emptyClienti').classList.remove('hidden');
-            }
-        }
-
-        function popolaSelectClienti() {
-            const select = document.getElementById('cfCliente');
-            if (clienti.length === 0) {
-                select.innerHTML = '<option value="">-- Nessun cliente disponibile --</option>';
-                return;
-            }
-            select.innerHTML = '<option value="">-- Seleziona un cliente --</option>' + 
-                clienti.map(c => `<option value="${c.id}">${c.nome_a} ${c.cognome_a} (${c.tipo_evento || 'Evento'})</option>`).join('');
-        }
-
-        function renderizzaClienti() {
-            const container = document.getElementById('clientList');
-            const emptyState = document.getElementById('emptyClienti');
-            
-            if (clienti.length === 0) {
-                emptyState.classList.remove('hidden');
-                container.innerHTML = '';
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-            container.innerHTML = clienti.map(c => `
-                <div class="client-item">
-                    <div class="client-info">
-                        <div class="client-name">${c.nome_a} ${c.cognome_a} ${c.nome_b ? '& ' + c.nome_b + ' ' + c.cognome_b : ''}</div>
-                        <div class="client-event">${c.tipo_evento || 'Evento'} - ${c.data_evento ? new Date(c.data_evento).toLocaleDateString('it-IT') : 'Data non impostata'}</div>
-                    </div>
-                    <div class="client-photos">Album Attivo</div>
-                    <button class="btn btn-outline" style="padding: 8px 16px;" onclick="gestisciAlbum('${c.id}')">Gestisci</button>
-                </div>
-            `).join('');
         }
 
         async function assegnaFoto() {
             const clienteId = document.getElementById('cfCliente').value;
-            const tipoAlbum = document.getElementById('cfTipoAlbum').value;
+            const nomeCartella = document.getElementById('cfNomeCartella').value.trim();
             const fileInput = document.getElementById('cfFileInput');
             const files = fileInput.files;
 
-            if (!clienteId) { mostraToast('Seleziona un cliente', 'error'); return; }
+            if (!clienteId || !nomeCartella) { mostraToast('Seleziona cliente e inserisci il nome della cartella', 'error'); return; }
             if (files.length === 0) { mostraToast('Seleziona almeno una foto', 'error'); return; }
 
             const cliente = clienti.find(c => c.id === clienteId);
-            if (!cliente) return;
-
-            mostraToast(`Caricamento di ${files.length} foto per ${cliente.nome_a}...`, 'success');
+            mostraToast(`Caricamento di ${files.length} foto in "${nomeCartella}"...`, 'success');
 
             let caricati = 0;
             for (let file of files) {
                 try {
-                    await fetch(`${WORKER_URL}/api/studio/upload?token=${token}&studioId=${studioId}&clienteId=${clienteId}&filename=${file.name}&folder=${tipoAlbum}`, {
+                    await fetch(`${WORKER_URL}/api/studio/upload?token=${token}&studioId=${studioId}&clienteId=${clienteId}&folder=${encodeURIComponent(nomeCartella)}&filename=${file.name}`, {
                         method: 'POST',
                         body: file
                     });
                     caricati++;
-                } catch (error) {
-                    console.error('Errore upload:', error);
-                }
+                } catch (error) { console.error('Errore upload:', error); }
             }
 
-            mostraToast(`${caricati} foto caricate sul cloud per ${cliente.nome_a}!`, 'success');
+            mostraToast(`${caricati} foto caricate con successo!`, 'success');
             fileInput.value = '';
+            document.getElementById('cfNomeCartella').value = '';
         }
 
-        function gestisciAlbum(clienteId) {
-            const cliente = clienti.find(c => c.id === clienteId);
-            if (cliente) {
-                mostraToast(`Apertura album per ${cliente.nome_a} ${cliente.cognome_a}...`, 'success');
-            }
-        }
-
-        function tornaPlancia() {
-            window.location.href = `plancia-studio.html?token=${token}`;
-        }
-
+        function tornaPlancia() { window.location.href = `plancia-studio.html?token=${token}`; }
         function mostraToast(msg, tipo) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
