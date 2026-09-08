@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRU - AppCenterStudioPROGOLD</title>
+    <title>GRU - Gestione Risorse & Utility</title>
     <style>
         :root {
             --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
             --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
             --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
-            --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; --radius: 16px;
+            --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; --info: #3498db; --radius: 16px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -29,7 +29,7 @@
         .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
         .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
         .page-header {
             text-align: center; padding: 32px; background: white; border-radius: var(--radius);
             box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
@@ -51,7 +51,7 @@
         }
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
-        .form-group { display: flex; flex-direction: column; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 16px; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
         .form-group input, .form-group select, .form-group textarea {
             padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
@@ -60,15 +60,112 @@
             outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
         }
         .btn {
-            padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
+            padding: 14px 28px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700;
             cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
-        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
-        .btn-outline:hover { background: var(--primary-light); }
-        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-info { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 2px solid var(--primary); }
+        .btn-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        
+        .browser-warning {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-left: 5px solid var(--warning);
+            padding: 24px; border-radius: 12px; margin-bottom: 32px;
+            display: flex; align-items: flex-start; gap: 16px;
+        }
+        .warning-icon { font-size: 32px; }
+        .warning-content h3 { color: #856404; margin-bottom: 8px; font-size: 18px; }
+        .warning-content p { color: #856404; margin-bottom: 12px; }
+        .browser-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+        .browser-badge {
+            background: white; padding: 8px 16px; border-radius: 20px;
+            font-size: 13px; font-weight: 700; color: var(--text-main);
+            border: 2px solid var(--warning);
+        }
+        
+        .guide-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 5px solid var(--info);
+            padding: 24px; border-radius: 12px; margin-bottom: 32px;
+        }
+        .guide-box h3 { color: #1976d2; margin-bottom: 16px; font-size: 18px; }
+        .guide-steps { display: flex; flex-direction: column; gap: 12px; }
+        .guide-step {
+            background: white; padding: 16px; border-radius: 10px;
+            display: flex; align-items: flex-start; gap: 12px;
+        }
+        .step-number {
+            background: var(--info); color: white; width: 28px; height: 28px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 14px; flex-shrink: 0;
+        }
+        .step-text { font-size: 14px; color: var(--text-main); line-height: 1.6; }
+        .step-text strong { color: var(--info); }
+        
+        .file-section {
+            background: #f8f9fa; padding: 24px; border-radius: 12px; margin-bottom: 24px;
+            border: 3px dashed var(--border-color); transition: all 0.3s ease;
+        }
+        .file-section.active { border-color: var(--primary); background: var(--primary-light); }
+        .file-section h3 {
+            font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 16px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .file-info {
+            background: white; padding: 16px; border-radius: 10px; margin: 12px 0;
+            font-size: 14px; display: flex; justify-content: space-between; align-items: center;
+            border: 2px solid var(--border-color);
+        }
+        .file-info.selected { border-color: var(--success); background: #d5f4e6; }
+        .file-name { font-weight: 700; color: var(--text-main); word-break: break-all; }
+        .file-count { 
+            background: var(--primary); color: white; padding: 6px 16px; 
+            border-radius: 20px; font-size: 13px; font-weight: 700; 
+        }
+        .file-status {
+            font-size: 12px; margin-top: 8px; padding: 8px 12px;
+            border-radius: 8px; background: white;
+        }
+        .file-status.success { color: var(--success); border-left: 3px solid var(--success); }
+        .file-status.error { color: var(--danger); border-left: 3px solid var(--danger); }
+        
+        .progress-container {
+            background: white; padding: 32px; border-radius: 12px; margin: 24px 0;
+            display: none;
+        }
+        .progress-container.active { display: block; }
+        .progress-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
+        }
+        .progress-title { font-size: 16px; font-weight: 700; color: var(--text-main); }
+        .progress-percent { font-size: 24px; font-weight: 800; color: var(--primary-dark); }
+        .progress-bar-bg {
+            background: var(--primary-light); height: 40px; border-radius: 20px; 
+            overflow: hidden; margin-bottom: 16px; border: 2px solid var(--border-color);
+        }
+        .progress-bar-fill {
+            height: 100%; background: var(--primary-gradient); 
+            transition: width 0.3s ease;
+            display: flex; align-items: center; justify-content: center; 
+            color: white; font-weight: 700; font-size: 14px;
+        }
+        .progress-details {
+            font-size: 13px; color: var(--text-light); text-align: center;
+        }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+        .stat-box {
+            background: white; padding: 20px; border-radius: 12px; text-align: center;
+            border: 2px solid var(--border-color); transition: all 0.3s ease;
+        }
+        .stat-box.active { border-color: var(--primary); background: var(--primary-light); }
+        .stat-value { font-size: 28px; font-weight: 800; color: var(--primary-dark); }
+        .stat-label { font-size: 12px; color: var(--text-light); margin-top: 6px; text-transform: uppercase; font-weight: 600; }
+        
         .utility-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
         .utility-card {
             background: white; border-radius: 12px; padding: 24px; border: 1px solid var(--border-color);
@@ -81,20 +178,29 @@
         }
         .utility-title { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
         .utility-description { font-size: 13px; color: var(--text-light); line-height: 1.5; }
+        
         .info-box {
             background: var(--primary-light); padding: 20px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--primary);
         }
         .info-box-title { font-size: 14px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; }
         .info-box-text { font-size: 13px; color: var(--text-main); line-height: 1.6; }
+        
         .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast {
-            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            background: white; border-radius: 10px; padding: 16px 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
             margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease;
+            min-width: 300px;
         }
         .toast.error { border-left-color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
         .hidden { display: none !important; }
+        
+        @media (max-width: 768px) {
+            .stats { grid-template-columns: 1fr; }
+            .browser-warning { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
@@ -108,8 +214,45 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>GRU - Gestione Risorse & Utility</h1>
-            <p>Strumenti e utility per la gestione dello studio. Tutto sincronizzato sul cloud.</p>
+            <h1>🤖 GRU - Gestione Risorse & Utility</h1>
+            <p>Strumenti professionali per la gestione dello studio. Tutto automatizzato!</p>
+        </div>
+
+        <!-- AVVISO BROWSER -->
+        <div class="browser-warning">
+            <div class="warning-icon">⚠️</div>
+            <div class="warning-content">
+                <h3>Importante: Usa Google Chrome o Microsoft Edge</h3>
+                <p>Per utilizzare la funzione di selezione foto, devi aprire questa pagina con <strong>Google Chrome</strong> o <strong>Microsoft Edge</strong>. Questi browser supportano l'accesso sicuro alle cartelle del tuo computer.</p>
+                <div class="browser-badges">
+                    <span class="browser-badge"> Google Chrome</span>
+                    <span class="browser-badge">🌐 Microsoft Edge</span>
+                    <span class="browser-badge">❌ Safari non supportato</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- GUIDA PASSO PASSO -->
+        <div class="guide-box">
+            <h3>📋 Come Funziona - Guida Rapida</h3>
+            <div class="guide-steps">
+                <div class="guide-step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Il cliente seleziona le foto online → Il cloud genera automaticamente un file <strong>.txt</strong> con l'elenco delle foto scelte</div>
+                </div>
+                <div class="guide-step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Scarica il file <strong>.txt</strong> dal tuo CRM (nella sezione Notifiche)</div>
+                </div>
+                <div class="guide-step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Qui nella GRU: seleziona il file <strong>.txt</strong>, la cartella ORIGINALI (dal tuo NAS/HD) e la cartella di DESTINAZIONE</div>
+                </div>
+                <div class="guide-step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">Clicca <strong>"🚀 AVVIA COPIA INTELLIGENTE"</strong> → La GRU copierà automaticamente SOLO le foto selezionate dal cliente!</div>
+                </div>
+            </div>
         </div>
 
         <div id="loadingArea" class="loading" style="text-align: center; padding: 40px; color: var(--text-light);">
@@ -118,45 +261,109 @@
         </div>
 
         <div id="mainContent" class="hidden">
+            <!-- SEZIONE PRINCIPALE: SELEZIONE FOTO -->
             <div class="card-3d">
-                <div class="card-title">Informazioni Studio</div>
-                <div class="card-subtitle">Dati principali dello studio fotografico.</div>
-                <div class="form-row">
-                    <div class="form-group"><label>Nome Studio</label><input type="text" id="gruNomeStudio"></div>
-                    <div class="form-group"><label>Partita IVA</label><input type="text" id="gruPiva"></div>
+                <div class="card-title">📸 Selezione Intelligente Foto</div>
+                <div class="card-subtitle">Copia automatica delle foto originali basate sulla selezione del cliente</div>
+                
+                <div class="file-section" id="sectionTxt">
+                    <h3> 1. File TXT Selezione (dal cloud)</h3>
+                    <div class="form-group">
+                        <button class="btn btn-outline" onclick="selezionaFileTXT()" style="width: 100%;">
+                            📂 Seleziona File TXT
+                        </button>
+                    </div>
+                    <div class="file-info hidden" id="txtInfo">
+                        <div class="file-name" id="txtNome">-</div>
+                        <div class="file-count" id="txtCount">0 foto</div>
+                    </div>
+                    <div class="file-status hidden" id="txtStatus"></div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Email</label><input type="email" id="gruEmail"></div>
-                    <div class="form-group"><label>Telefono</label><input type="tel" id="gruTelefono"></div>
+
+                <div class="file-section" id="sectionOrigini">
+                    <h3> 2. Cartella ORIGINALI (NAS/HD Esterno)</h3>
+                    <div class="form-group">
+                        <button class="btn btn-outline" onclick="selezionaCartellaOrigini()" style="width: 100%;">
+                            📂 Seleziona Cartella ORIGINALI
+                        </button>
+                    </div>
+                    <div class="file-info hidden" id="originiInfo">
+                        <div class="file-name" id="originiNome">-</div>
+                        <div class="file-count" id="originiCount">Cartella selezionata</div>
+                    </div>
+                    <div class="file-status hidden" id="originiStatus"></div>
                 </div>
-                <div class="form-group"><label>Indirizzo</label><input type="text" id="gruIndirizzo"></div>
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="salvaInfoStudio()">SALVA INFORMAZIONI</button>
+
+                <div class="file-section" id="sectionDestinazione">
+                    <h3>📤 3. Cartella DESTINAZIONE (Lavorazione)</h3>
+                    <div class="form-group">
+                        <button class="btn btn-outline" onclick="selezionaCartellaDestinazione()" style="width: 100%;">
+                            📂 Seleziona Cartella DESTINAZIONE
+                        </button>
+                    </div>
+                    <div class="file-info hidden" id="destinazioneInfo">
+                        <div class="file-name" id="destinazioneNome">-</div>
+                        <div class="file-count" id="destinazioneCount">Cartella selezionata</div>
+                    </div>
+                    <div class="file-status hidden" id="destinazioneStatus"></div>
+                </div>
+
+                <div class="btn-group" style="justify-content: center;">
+                    <button class="btn btn-success" id="btnCopia" onclick="avviaCopia()" disabled style="font-size: 18px; padding: 18px 36px;">
+                        🚀 AVVIAMENTO COPIA INTELLIGENTE
+                    </button>
+                </div>
+
+                <!-- PROGRESS BAR -->
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-header">
+                        <div class="progress-title">Copia in corso...</div>
+                        <div class="progress-percent" id="progressPercent">0%</div>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progressBar" style="width: 0%;">
+                            <span id="progressText">0 / 0 foto</span>
+                        </div>
+                    </div>
+                    <div class="progress-details" id="progressDetails">
+                        Elaborazione in corso...
+                    </div>
+                    <div class="stats">
+                        <div class="stat-box" id="statTotali">
+                            <div class="stat-value" id="statTotaliVal">0</div>
+                            <div class="stat-label">Foto Totali</div>
+                        </div>
+                        <div class="stat-box active" id="statCopiate">
+                            <div class="stat-value" id="statCopiateVal">0</div>
+                            <div class="stat-label">Foto Copiate</div>
+                        </div>
+                        <div class="stat-box" id="statMancanti">
+                            <div class="stat-value" id="statMancantiVal">0</div>
+                            <div class="stat-label">Non Trovate</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
+            <!-- UTILITY -->
             <div class="card-3d">
-                <div class="card-title">Utility Rapide</div>
-                <div class="card-subtitle">Strumenti utili per la gestione quotidiana.</div>
+                <div class="card-title">🛠️ Utility Rapide</div>
+                <div class="card-subtitle">Strumenti utili per la gestione quotidiana</div>
                 <div class="utility-grid">
                     <div class="utility-card" onclick="calcolaIVA()">
                         <div class="utility-icon">IV</div>
                         <div class="utility-title">Calcolatrice IVA</div>
                         <div class="utility-description">Calcola rapidamente l'IVA su importi netti o lordi.</div>
                     </div>
-                    <div class="utility-card" onclick="gestisciBackup()">
-                        <div class="utility-icon">BK</div>
-                        <div class="utility-title">Gestione Backup</div>
-                        <div class="utility-description">Backup e ripristino dei dati dello studio.</div>
-                    </div>
-                    <div class="utility-card" onclick="impostazioniStudio()">
-                        <div class="utility-icon">IM</div>
-                        <div class="utility-title">Impostazioni</div>
-                        <div class="utility-description">Configurazione avanzata dello studio.</div>
+                    <div class="utility-card" onclick="gestisciNote()">
+                        <div class="utility-icon">NT</div>
+                        <div class="utility-title">Note Rapide</div>
+                        <div class="utility-description">Appunti veloci salvati automaticamente sul cloud.</div>
                     </div>
                 </div>
             </div>
 
+            <!-- CALCOLATRICE IVA -->
             <div class="card-3d" id="cardCalcolatrice" style="display:none;">
                 <div class="card-title">Calcolatrice IVA</div>
                 <div class="form-row">
@@ -182,13 +389,14 @@
                 <div class="btn-group">
                     <button class="btn btn-primary" onclick="calcola()">CALCOLA</button>
                 </div>
-                <div class="info-box" id="calcRisultato" style="display:none;">
+                <div class="info-box" id="calcRisultato" style="display:none; margin-top: 16px;">
                     <div class="info-box-title">Risultato</div>
                     <div class="info-box-text" id="calcTesto"></div>
                 </div>
             </div>
 
-            <div class="card-3d">
+            <!-- NOTE RAPIDE -->
+            <div class="card-3d" id="cardNote" style="display:none;">
                 <div class="card-title">Note Rapide</div>
                 <div class="card-subtitle">Appunti veloci. Salvati automaticamente sul cloud.</div>
                 <div class="form-group">
@@ -215,8 +423,24 @@
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
+        
+        // Variabili per la GRU
+        let fileTXT = null;
+        let fotoSelezionate = [];
+        let cartellaOrigini = null;
+        let cartellaDestinazione = null;
+
+        // Verifica browser supportato
+        function verificaBrowser() {
+            const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+            const isEdge = /Edg/.test(navigator.userAgent);
+            if (!isChrome && !isEdge) {
+                mostraToast('⚠️ Usa Google Chrome o Microsoft Edge per questa funzione!', 'warning');
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', async function() {
+            verificaBrowser();
             if (!token) { window.location.href = 'index.html'; return; }
             await verificaSessione();
         });
@@ -233,7 +457,6 @@
                 studioId = data.user.id;
                 document.getElementById('loadingArea').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
-                await caricaInfoStudio();
                 await caricaNote();
             } catch (error) {
                 console.error('Errore:', error);
@@ -241,51 +464,211 @@
             }
         }
 
-        async function caricaInfoStudio() {
+        // ============================================
+        // FUNZIONI GRU - SELEZIONE FOTO
+        // ============================================
+
+        async function selezionaFileTXT() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/admin/studi?token=${token}`);
-                const data = await response.json();
-                if (data.success && data.studi) {
-                    const studio = data.studi.find(s => s.id === studioId);
-                    if (studio) {
-                        document.getElementById('gruNomeStudio').value = studio.nome || '';
-                        document.getElementById('gruPiva').value = studio.piva || '';
-                        document.getElementById('gruEmail').value = studio.email || '';
-                        document.getElementById('gruTelefono').value = studio.telefono || '';
-                        document.getElementById('gruIndirizzo').value = studio.indirizzo || '';
-                    }
+                if (!('showOpenFilePicker' in window)) {
+                    mostraToast('❌ Il tuo browser non supporta questa funzione. Usa Chrome o Edge!', 'error');
+                    return;
                 }
-            } catch (error) {
-                console.error('Errore:', error);
-            }
-        }
 
-        async function salvaInfoStudio() {
-            const nome = document.getElementById('gruNomeStudio').value.trim();
-            const piva = document.getElementById('gruPiva').value.trim();
-            const email = document.getElementById('gruEmail').value.trim();
-            const telefono = document.getElementById('gruTelefono').value.trim();
-            const indirizzo = document.getElementById('gruIndirizzo').value.trim();
-
-            if (!nome) { mostraToast('Inserisci almeno il nome dello studio', 'error'); return; }
-
-            try {
-                const response = await fetch(`${WORKER_URL}/api/admin/studio?token=${token}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: studioId, nome, piva, email, telefono, indirizzo })
+                const [fileHandle] = await window.showOpenFilePicker({
+                    types: [{
+                        description: 'File TXT',
+                        accept: { 'text/plain': ['.txt'] }
+                    }]
                 });
-                const result = await response.json();
-                if (result.success) {
-                    mostraToast('Informazioni studio salvate!', 'success');
-                } else {
-                    mostraToast('Errore nel salvataggio', 'error');
-                }
+
+                const file = await fileHandle.getFile();
+                fileTXT = file;
+                
+                // Leggi il contenuto
+                const contenuto = await file.text();
+                const righe = contenuto.split('\n').filter(riga => righa.trim() !== '');
+                
+                // Filtra solo le righe che sono nomi file (ignora intestazioni)
+                fotoSelezionate = righe.filter(riga => 
+                    !righe.includes('FOTO SELEZIONATE') && 
+                    !righe.includes('Cliente:') && 
+                    !righe.includes('Data:') &&
+                    !righe.includes('---') &&
+                    riga.trim().length > 0
+                );
+
+                // Aggiorna UI
+                document.getElementById('txtNome').textContent = file.name;
+                document.getElementById('txtCount').textContent = `${fotoSelezionate.length} foto`;
+                document.getElementById('txtInfo').classList.remove('hidden');
+                document.getElementById('txtStatus').classList.remove('hidden');
+                document.getElementById('txtStatus').innerHTML = `✅ File caricato correttamente! <strong>${fotoSelezionate.length}</strong> foto da copiare.`;
+                document.getElementById('txtStatus').className = 'file-status success';
+                document.getElementById('sectionTxt').classList.add('active');
+
+                verificaPronti();
+                mostraToast(`File TXT caricato: ${fotoSelezionate.length} foto`, 'success');
             } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
+                if (error.name !== 'AbortError') {
+                    console.error('Errore:', error);
+                    mostraToast('Errore nella selezione del file', 'error');
+                }
             }
         }
+
+        async function selezionaCartellaOrigini() {
+            try {
+                if (!('showDirectoryPicker' in window)) {
+                    mostraToast('❌ Il tuo browser non supporta questa funzione. Usa Chrome o Edge!', 'error');
+                    return;
+                }
+
+                cartellaOrigini = await window.showDirectoryPicker();
+                
+                document.getElementById('originiNome').textContent = cartellaOrigini.name;
+                document.getElementById('originiInfo').classList.remove('hidden');
+                document.getElementById('originiStatus').classList.remove('hidden');
+                document.getElementById('originiStatus').innerHTML = `✅ Cartella selezionata: <strong>${cartellaOrigini.name}</strong>`;
+                document.getElementById('originiStatus').className = 'file-status success';
+                document.getElementById('sectionOrigini').classList.add('active');
+
+                verificaPronti();
+                mostraToast('Cartella ORIGINALI selezionata', 'success');
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    console.error('Errore:', error);
+                    mostraToast('Errore nella selezione della cartella', 'error');
+                }
+            }
+        }
+
+        async function selezionaCartellaDestinazione() {
+            try {
+                if (!('showDirectoryPicker' in window)) {
+                    mostraToast('❌ Il tuo browser non supporta questa funzione. Usa Chrome o Edge!', 'error');
+                    return;
+                }
+
+                cartellaDestinazione = await window.showDirectoryPicker();
+                
+                document.getElementById('destinazioneNome').textContent = cartellaDestinazione.name;
+                document.getElementById('destinazioneInfo').classList.remove('hidden');
+                document.getElementById('destinazioneStatus').classList.remove('hidden');
+                document.getElementById('destinazioneStatus').innerHTML = `✅ Cartella selezionata: <strong>${cartellaDestinazione.name}</strong>`;
+                document.getElementById('destinazioneStatus').className = 'file-status success';
+                document.getElementById('sectionDestinazione').classList.add('active');
+
+                verificaPronti();
+                mostraToast('Cartella DESTINAZIONE selezionata', 'success');
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    console.error('Errore:', error);
+                    mostraToast('Errore nella selezione della cartella', 'error');
+                }
+            }
+        }
+
+        function verificaPronti() {
+            const btn = document.getElementById('btnCopia');
+            if (fileTXT && cartellaOrigini && cartellaDestinazione && fotoSelezionate.length > 0) {
+                btn.disabled = false;
+                btn.innerHTML = '🚀 AVVIAMENTO COPIA INTELLIGENTE';
+            } else {
+                btn.disabled = true;
+                btn.innerHTML = 'Completa tutti i passaggi sopra';
+            }
+        }
+
+        async function avviaCopia() {
+            if (!fileTXT || !cartellaOrigini || !cartellaDestinazione) {
+                mostraToast('Completa tutti i passaggi!', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btnCopia');
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Copia in corso...';
+
+            // Mostra progress bar
+            document.getElementById('progressContainer').classList.add('active');
+            
+            let copiate = 0;
+            let mancanti = 0;
+            const totale = fotoSelezionate.length;
+
+            // Aggiorna stats
+            document.getElementById('statTotaliVal').textContent = totale;
+            document.getElementById('statCopiateVal').textContent = '0';
+            document.getElementById('statMancantiVal').textContent = '0';
+
+            // Itera su ogni foto
+            for (let i = 0; i < fotoSelezionate.length; i++) {
+                const nomeFile = fotoSelezionate[i].trim();
+                
+                try {
+                    // Cerca il file nella cartella origini
+                    let fileTrovato = null;
+                    
+                    // Cerca in tutte le sottocartelle
+                    for await (const entry of cartellaOrigini.values()) {
+                        if (entry.kind === 'directory') {
+                            // Cerca nelle sottocartelle (Casa Sposa, Ristorante, ecc.)
+                            for await (const subEntry of entry.values()) {
+                                if (subEntry.kind === 'file' && subEntry.name === nomeFile) {
+                                    fileTrovato = subEntry;
+                                    break;
+                                }
+                            }
+                        } else if (entry.kind === 'file' && entry.name === nomeFile) {
+                            fileTrovato = entry;
+                        }
+                        
+                        if (fileTrovato) break;
+                    }
+
+                    if (fileTrovato) {
+                        // Copia il file nella destinazione
+                        const fileData = await fileTrovato.getFile();
+                        const newFileHandle = await cartellaDestinazione.getFileHandle(nomeFile, { create: true });
+                        const writable = await newFileHandle.createWritable();
+                        await writable.write(fileData);
+                        await writable.close();
+                        
+                        copiate++;
+                    } else {
+                        mancanti++;
+                        console.warn('File non trovato:', nomeFile);
+                    }
+                } catch (error) {
+                    mancanti++;
+                    console.error('Errore copia file:', nomeFile, error);
+                }
+
+                // Aggiorna progress bar
+                const percent = Math.round((copiate / totale) * 100);
+                document.getElementById('progressBar').style.width = percent + '%';
+                document.getElementById('progressPercent').textContent = percent + '%';
+                document.getElementById('progressText').textContent = `${copiate} / ${totale} foto`;
+                document.getElementById('statCopiateVal').textContent = copiate;
+                document.getElementById('statMancantiVal').textContent = mancanti;
+                document.getElementById('progressDetails').textContent = `Elaborazione: ${nomeFile}...`;
+
+                // Scroll automatico per vedere il progresso
+                document.getElementById('progressContainer').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            // Completato
+            btn.disabled = false;
+            btn.innerHTML = '🚀 AVVIAMENTO COPIA INTELLIGENTE';
+            document.getElementById('progressDetails').textContent = `✅ Completato! ${copiate} foto copiate, ${mancanti} non trovate.`;
+            
+            mostraToast(`✅ Copia completata! ${copiate} foto copiate, ${mancanti} non trovate.`, 'success');
+        }
+
+        // ============================================
+        // UTILITY
+        // ============================================
 
         function calcolaIVA() {
             const card = document.getElementById('cardCalcolatrice');
@@ -321,15 +704,18 @@
             document.getElementById('calcRisultato').style.display = 'block';
         }
 
+        function gestisciNote() {
+            const card = document.getElementById('cardNote');
+            card.style.display = card.style.display === 'none' ? 'block' : 'none';
+            if (card.style.display === 'block') {
+                card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
         async function salvaNote() {
             const note = document.getElementById('gruNote').value;
             try {
-                // In produzione: salva sul cloud D1
-                // await fetch(`${WORKER_URL}/api/studio/note?token=${token}`, {
-                //     method: 'POST',
-                //     headers: { 'Content-Type': 'application/json' },
-                //     body: JSON.stringify({ studio_id: studioId, note })
-                // });
+                // Salva su localStorage (in produzione: cloud)
                 localStorage.setItem('gru_note_' + studioId, note);
                 localStorage.setItem('gru_note_data_' + studioId, new Date().toLocaleString('it-IT'));
                 document.getElementById('ultimoSalvataggio').textContent = new Date().toLocaleString('it-IT');
@@ -340,7 +726,6 @@
         }
 
         async function caricaNote() {
-            // In produzione: carica dal cloud
             const note = localStorage.getItem('gru_note_' + studioId);
             const data = localStorage.getItem('gru_note_data_' + studioId);
             if (note) {
@@ -361,14 +746,6 @@
             }
         }
 
-        function gestisciBackup() {
-            mostraToast('Funzione backup in sviluppo', 'success');
-        }
-
-        function impostazioniStudio() {
-            window.location.href = `admin-temi.html?token=${token}`;
-        }
-
         function tornaPlancia() {
             window.location.href = `plancia-studio.html?token=${token}`;
         }
@@ -379,7 +756,7 @@
             toast.className = `toast ${tipo}`;
             toast.innerHTML = `<div>${msg}</div>`;
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            setTimeout(() => toast.remove(), 5000);
         }
     </script>
 </body>
