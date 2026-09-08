@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda - AppCenterStudioPROGOLD</title>
+    <title>Agenda Studio - AppCenterStudioPROGOLD</title>
     <style>
         :root {
             --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
             --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
             --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
-            --success: #27ae60; --danger: #e74c3c; --radius: 16px;
+            --success: #27ae60; --warning: #f39c12; --danger: #e74c3c; --info: #3498db;
+            --radius: 16px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -29,7 +30,7 @@
         .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
         .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
         .page-header {
             text-align: center; padding: 32px; background: white; border-radius: var(--radius);
             box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
@@ -49,9 +50,8 @@
             font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px;
             padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
         }
-        .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
-        .form-group { display: flex; flex-direction: column; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 16px; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
         .form-group input, .form-group select, .form-group textarea {
             padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
@@ -65,24 +65,77 @@
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
         .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .btn-info { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-sm { padding: 8px 16px; font-size: 12px; }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-        .agenda-list { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
-        .agenda-item {
+        
+        /* Calendario */
+        .calendar-container {
+            background: white; border-radius: var(--radius); padding: 32px;
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 24px;
+        }
+        .calendar-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+        }
+        .calendar-title { font-size: 24px; font-weight: 800; color: var(--primary-dark); }
+        .calendar-nav { display: flex; gap: 10px; align-items: center; }
+        .calendar-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+        }
+        .calendar-day-header {
+            text-align: center; font-weight: 700; color: var(--text-light);
+            font-size: 12px; text-transform: uppercase; padding: 8px;
+        }
+        .calendar-day {
+            aspect-ratio: 1; border: 2px solid var(--border-color); border-radius: 10px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s ease; position: relative;
+            background: white;
+        }
+        .calendar-day:hover { border-color: var(--primary); transform: scale(1.05); }
+        .calendar-day.today { background: var(--primary-light); border-color: var(--primary); }
+        .calendar-day.selected { background: var(--primary); color: white; }
+        .calendar-day.has-events::after {
+            content: ''; position: absolute; bottom: 6px; width: 6px; height: 6px;
+            background: var(--danger); border-radius: 50%;
+        }
+        .calendar-day-number { font-size: 18px; font-weight: 700; }
+        .calendar-day.other-month { opacity: 0.3; }
+        
+        /* Eventi del giorno */
+        .event-card {
             background: white; border-left: 4px solid var(--primary); border-radius: 12px;
-            padding: 20px 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); transition: all 0.3s ease;
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+            padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            position: relative;
         }
-        .agenda-item:hover { transform: translateX(6px); box-shadow: 0 8px 24px rgba(30, 132, 73, 0.15); }
-        .agenda-info { flex: 1; min-width: 200px; }
-        .agenda-title { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
-        .agenda-date { font-size: 13px; color: var(--text-light); }
-        .agenda-type {
-            display: inline-block; padding: 4px 12px; background: var(--primary-light);
-            color: var(--primary-dark); border-radius: 20px; font-size: 11px; font-weight: 700;
-            text-transform: uppercase; margin-top: 8px;
+        .event-card.conflict { border-left-color: var(--danger); background: #fff5f5; }
+        .event-header {
+            display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;
         }
-        .agenda-note { font-size: 13px; color: var(--text-light); margin-top: 8px; font-style: italic; }
+        .event-title { font-size: 18px; font-weight: 700; color: var(--text-main); }
+        .event-time { font-size: 14px; color: var(--primary-dark); font-weight: 600; }
+        .event-description { font-size: 13px; color: var(--text-light); margin-bottom: 12px; }
+        .event-meta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--text-light); }
+        .event-badge {
+            display: inline-block; padding: 4px 10px; border-radius: 12px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+        }
+        .badge-conflict { background: #fadbd8; color: var(--danger); }
+        .badge-team { background: var(--primary-light); color: var(--primary-dark); }
+        .event-actions { display: flex; gap: 8px; margin-top: 12px; }
+        
+        .warning-box {
+            background: #fef9e7; border-left: 4px solid var(--warning);
+            padding: 16px; border-radius: 10px; margin-bottom: 16px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .warning-icon { font-size: 24px; }
+        .warning-text { font-size: 14px; color: var(--text-main); }
+        
         .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast {
@@ -97,8 +150,8 @@
             border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
         .hidden { display: none !important; }
+        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
     </style>
 </head>
 <body>
@@ -112,56 +165,108 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>Agenda Eventi</h1>
-            <p>Gestisci appuntamenti ed eventi. Dati sincronizzati in tempo reale sul cloud.</p>
+            <h1>Agenda Studio</h1>
+            <p>Gestisci i tuoi appuntamenti e servizi. Naviga per data e visualizza gli impegni.</p>
         </div>
 
         <div id="loadingArea" class="loading">
             <div class="spinner"></div>
-            <div>Verifica sessione cloud...</div>
+            <div>Caricamento agenda...</div>
         </div>
 
         <div id="mainContent" class="hidden">
-            <div class="card-3d">
-                <div class="card-title">Nuovo Evento</div>
-                <div class="card-subtitle">Aggiungi un nuovo evento o appuntamento all'agenda.</div>
-                <div class="form-row">
-                    <div class="form-group"><label>Titolo Evento *</label><input type="text" id="evTitolo"></div>
-                    <div class="form-group"><label>Data *</label><input type="date" id="evData"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Tipo Evento</label>
-                        <select id="evTipo">
-                            <option value="matrimonio">Matrimonio</option>
-                            <option value="battesimo">Battesimo</option>
-                            <option value="comunione">Comunione</option>
-                            <option value="ritratto">Ritratto</option>
-                            <option value="evento-aziendale">Evento Aziendale</option>
-                            <option value="appuntamento">Appuntamento</option>
-                            <option value="riunione">Riunione</option>
-                            <option value="altro">Altro</option>
-                        </select>
+            <!-- Calendario -->
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button class="btn btn-outline btn-sm" onclick="cambiaMese(-1)">← Mese Prec.</button>
+                    <div class="calendar-title" id="calendarTitle">Settembre 2026</div>
+                    <div class="calendar-nav">
+                        <button class="btn btn-outline btn-sm" onclick="cambiaMese(1)">Mese Succ. →</button>
+                        <input type="date" id="jumpToDate" style="margin-left: 10px;">
+                        <button class="btn btn-primary btn-sm" onclick="vaiAllaData()">Vai</button>
                     </div>
                 </div>
-                <div class="form-group"><label>Note</label><textarea id="evNote" rows="3"></textarea></div>
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="creaEvento()">CREA EVENTO</button>
-                </div>
+                <div class="calendar-grid" id="calendarGrid"></div>
             </div>
 
+            <!-- Eventi del Giorno Selezionato -->
             <div class="card-3d">
-                <div class="card-title">Elenco Eventi</div>
-                <div id="loadingEventi" class="loading" style="padding: 20px;">
-                    <div class="spinner"></div>
-                    <div>Caricamento eventi...</div>
+                <div class="card-title">
+                    <span id="selectedDateTitle">Eventi del Giorno</span>
+                    <button class="btn btn-success btn-sm" onclick="aggiungiEvento()">+ Nuovo Evento</button>
                 </div>
-                <div id="emptyEventi" class="empty-state hidden">Nessun evento in agenda.</div>
-                <div class="agenda-list" id="agendaList"></div>
+                
+                <div id="warningContainer"></div>
+                
+                <div id="eventiList"></div>
             </div>
         </div>
 
         <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
+    </div>
+
+    <!-- MODAL NUOVO EVENTO -->
+    <div id="modalEvento" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:3000; align-items:center; justify-content:center;">
+        <div style="background:white; border-radius:16px; padding:32px; max-width:600px; width:90%; max-height:90vh; overflow-y:auto;">
+            <h3 style="color:var(--primary-dark); margin-bottom:24px;">Nuovo Evento / Servizio</h3>
+            <div class="form-group">
+                <label>Titolo Evento *</label>
+                <input type="text" id="evTitolo" placeholder="Es. Matrimonio Rossi, Battesimo Bianchi...">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Data *</label>
+                    <input type="date" id="evData">
+                </div>
+                <div class="form-group">
+                    <label>Ora Inizio *</label>
+                    <input type="time" id="evOraInizio">
+                </div>
+                <div class="form-group">
+                    <label>Ora Fine</label>
+                    <input type="time" id="evOraFine">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Descrizione / Dettagli</label>
+                <textarea id="evDescrizione" rows="4" placeholder="Dettagli del servizio, note, ecc."></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Luogo</label>
+                    <input type="text" id="evLuogo" placeholder="Indirizzo o location">
+                </div>
+                <div class="form-group">
+                    <label>Tipo Servizio</label>
+                    <select id="evTipoServizio">
+                        <option value="Matrimonio">Matrimonio</option>
+                        <option value="Battesimo">Battesimo</option>
+                        <option value="Comunione">Comunione</option>
+                        <option value="Ritratto">Ritratto</option>
+                        <option value="Evento">Evento Aziendale</option>
+                        <option value="Altro">Altro</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Squadra Assegnata</label>
+                    <select id="evSquadra">
+                        <option value="Squadra 1">Squadra 1</option>
+                        <option value="Squadra 2">Squadra 2</option>
+                        <option value="Squadra 3">Squadra 3</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Cliente</label>
+                    <input type="text" id="evCliente" placeholder="Nome cliente">
+                </div>
+            </div>
+            <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:24px;">
+                <button class="btn btn-outline" onclick="chiudiModalEvento()">Annulla</button>
+                <button class="btn btn-success" onclick="salvaEvento()">💾 Salva Evento</button>
+            </div>
+        </div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
@@ -171,6 +276,8 @@
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
+        let currentDate = new Date();
+        let selectedDate = new Date();
         let eventi = [];
 
         document.addEventListener('DOMContentLoaded', async function() {
@@ -191,44 +298,7 @@
                 document.getElementById('loadingArea').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
                 await caricaEventi();
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
-            }
-        }
-
-        async function creaEvento() {
-            const titolo = document.getElementById('evTitolo').value.trim();
-            const data = document.getElementById('evData').value;
-            const tipo = document.getElementById('evTipo').value;
-            const note = document.getElementById('evNote').value.trim();
-
-            if (!titolo || !data) {
-                mostraToast('Compila Titolo e Data', 'error');
-                return;
-            }
-
-            const evento = {
-                id: 'ev-' + Date.now(),
-                studio_id: studioId,
-                titolo, data, tipo, note,
-                creato_il: new Date().toISOString()
-            };
-
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/agenda?token=${token}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(evento)
-                });
-                const result = await response.json();
-                if (result.success) {
-                    mostraToast('Evento creato sul cloud!', 'success');
-                    pulisciForm();
-                    await caricaEventi();
-                } else {
-                    mostraToast('Errore nella creazione', 'error');
-                }
+                renderCalendario();
             } catch (error) {
                 console.error('Errore:', error);
                 mostraToast('Errore di connessione', 'error');
@@ -236,10 +306,6 @@
         }
 
         async function caricaEventi() {
-            document.getElementById('loadingEventi').style.display = 'block';
-            document.getElementById('emptyEventi').classList.add('hidden');
-            document.getElementById('agendaList').innerHTML = '';
-
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/agenda?studioId=${studioId}&token=${token}`);
                 const data = await response.json();
@@ -252,55 +318,244 @@
                 console.error('Errore:', error);
                 eventi = [];
             }
-
-            document.getElementById('loadingEventi').style.display = 'none';
-            renderizzaEventi();
         }
 
-        function renderizzaEventi() {
-            const container = document.getElementById('agendaList');
-            const emptyState = document.getElementById('emptyEventi');
-            if (eventi.length === 0) {
-                emptyState.classList.remove('hidden');
-                container.innerHTML = '';
+        function renderCalendario() {
+            const anno = currentDate.getFullYear();
+            const mese = currentDate.getMonth();
+            const nomiMesi = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+            document.getElementById('calendarTitle').textContent = `${nomiMesi[mese]} ${anno}`;
+
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+
+            // Header giorni
+            const giorniSettimana = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
+            giorniSettimana.forEach(g => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day-header';
+                header.textContent = g;
+                grid.appendChild(header);
+            });
+
+            const primoGiorno = new Date(anno, mese, 1);
+            const ultimoGiorno = new Date(anno, mese + 1, 0);
+            const giornoInizio = primoGiorno.getDay();
+            const giorniNelMese = ultimoGiorno.getDate();
+
+            // Giorni del mese precedente
+            for (let i = 0; i < giornoInizio; i++) {
+                const giorno = document.createElement('div');
+                giorno.className = 'calendar-day other-month';
+                const dataPrec = new Date(anno, mese, -giornoInizio + i + 1);
+                giorno.innerHTML = `<div class="calendar-day-number">${dataPrec.getDate()}</div>`;
+                grid.appendChild(giorno);
+            }
+
+            // Giorni del mese corrente
+            const oggi = new Date();
+            for (let i = 1; i <= giorniNelMese; i++) {
+                const dataGiorno = new Date(anno, mese, i);
+                const giorno = document.createElement('div');
+                giorno.className = 'calendar-day';
+                
+                if (dataGiorno.toDateString() === oggi.toDateString()) {
+                    giorno.classList.add('today');
+                }
+                if (dataGiorno.toDateString() === selectedDate.toDateString()) {
+                    giorno.classList.add('selected');
+                }
+
+                // Controlla se ci sono eventi
+                const dataStr = dataGiorno.toISOString().split('T')[0];
+                const eventiGiorno = eventi.filter(e => e.data === dataStr);
+                if (eventiGiorno.length > 0) {
+                    giorno.classList.add('has-events');
+                }
+
+                giorno.innerHTML = `<div class="calendar-day-number">${i}</div>`;
+                giorno.onclick = () => selezionaGiorno(dataGiorno);
+                grid.appendChild(giorno);
+            }
+
+            // Giorni del mese successivo
+            const totaleCelle = giornoInizio + giorniNelMese;
+            const celleRimanenti = 42 - totaleCelle;
+            for (let i = 1; i <= celleRimanenti; i++) {
+                const giorno = document.createElement('div');
+                giorno.className = 'calendar-day other-month';
+                giorno.innerHTML = `<div class="calendar-day-number">${i}</div>`;
+                grid.appendChild(giorno);
+            }
+        }
+
+        function cambiaMese(direzione) {
+            currentDate.setMonth(currentDate.getMonth() + direzione);
+            renderCalendario();
+        }
+
+        function selezionaGiorno(data) {
+            selectedDate = data;
+            renderCalendario();
+            mostraEventiGiorno();
+        }
+
+        function vaiAllaData() {
+            const dataInput = document.getElementById('jumpToDate').value;
+            if (!dataInput) {
+                mostraToast('Seleziona una data', 'error');
                 return;
             }
-            emptyState.classList.add('hidden');
-            const tipiMap = {
-                'matrimonio': 'Matrimonio', 'battesimo': 'Battesimo', 'comunione': 'Comunione',
-                'ritratto': 'Ritratto', 'evento-aziendale': 'Evento Aziendale',
-                'appuntamento': 'Appuntamento', 'riunione': 'Riunione', 'altro': 'Altro'
-            };
-            container.innerHTML = eventi.map(ev => `
-                <div class="agenda-item">
-                    <div class="agenda-info">
-                        <div class="agenda-title">${ev.titolo}</div>
-                        <div class="agenda-date">${new Date(ev.data).toLocaleDateString('it-IT', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
-                        <span class="agenda-type">${tipiMap[ev.tipo] || ev.tipo}</span>
-                        ${ev.note ? `<div class="agenda-note">${ev.note}</div>` : ''}
+            const data = new Date(dataInput);
+            currentDate = new Date(data.getFullYear(), data.getMonth(), 1);
+            selectedDate = data;
+            renderCalendario();
+            mostraEventiGiorno();
+        }
+
+        function mostraEventiGiorno() {
+            const dataStr = selectedDate.toISOString().split('T')[0];
+            const eventiGiorno = eventi.filter(e => e.data === dataStr);
+            const container = document.getElementById('eventiList');
+            const warningContainer = document.getElementById('warningContainer');
+            
+            const nomiMesi = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+            document.getElementById('selectedDateTitle').textContent = `Eventi del ${selectedDate.getDate()} ${nomiMesi[selectedDate.getMonth()]} ${selectedDate.getFullYear()}`;
+
+            // Avviso se ci sono già eventi
+            if (eventiGiorno.length > 0) {
+                warningContainer.innerHTML = `
+                    <div class="warning-box">
+                        <div class="warning-icon">⚠️</div>
+                        <div class="warning-text">
+                            <strong>Attenzione:</strong> Ci sono già ${eventiGiorno.length} evento/i in questa data. 
+                            Puoi comunque aggiungere nuovi eventi assegnando una squadra diversa (doppia/tripla squadra).
+                        </div>
                     </div>
-                    <button class="btn btn-danger" style="padding: 8px 16px;" onclick="eliminaEvento('${ev.id}')">Elimina</button>
-                </div>
-            `).join('');
+                `;
+            } else {
+                warningContainer.innerHTML = '';
+            }
+
+            if (eventiGiorno.length === 0) {
+                container.innerHTML = '<div class="empty-state">Nessun evento per questo giorno. Clicca "Nuovo Evento" per aggiungerne uno.</div>';
+                return;
+            }
+
+            container.innerHTML = eventiGiorno.map(ev => {
+                const conflict = eventiGiorno.filter(e => e.id !== ev.id && e.squadra === ev.squadra).length > 0;
+                return `
+                    <div class="event-card ${conflict ? 'conflict' : ''}">
+                        <div class="event-header">
+                            <div>
+                                <div class="event-title">${ev.titolo}</div>
+                                <div class="event-time">${ev.ora_inizio || '-'} ${ev.ora_fine ? '- ' + ev.ora_fine : ''}</div>
+                            </div>
+                            ${conflict ? '<span class="event-badge badge-conflict">Conflitto Squadra</span>' : ''}
+                            <span class="event-badge badge-team">${ev.squadra || 'Squadra 1'}</span>
+                        </div>
+                        ${ev.descrizione ? `<div class="event-description">${ev.descrizione}</div>` : ''}
+                        <div class="event-meta">
+                            ${ev.luogo ? `<span>📍 ${ev.luogo}</span>` : ''}
+                            ${ev.tipo_servizio ? `<span>🎯 ${ev.tipo_servizio}</span>` : ''}
+                            ${ev.cliente ? `<span>👤 ${ev.cliente}</span>` : ''}
+                        </div>
+                        <div class="event-actions">
+                            <button class="btn btn-warning btn-sm" onclick="modificaEvento('${ev.id}')">Modifica</button>
+                            <button class="btn btn-danger btn-sm" onclick="eliminaEvento('${ev.id}')">Elimina</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function aggiungiEvento() {
+            const dataStr = selectedDate.toISOString().split('T')[0];
+            document.getElementById('evData').value = dataStr;
+            document.getElementById('modalEvento').style.display = 'flex';
+        }
+
+        function chiudiModalEvento() {
+            document.getElementById('modalEvento').style.display = 'none';
+            pulisciFormEvento();
+        }
+
+        function pulisciFormEvento() {
+            document.getElementById('evTitolo').value = '';
+            document.getElementById('evOraInizio').value = '';
+            document.getElementById('evOraFine').value = '';
+            document.getElementById('evDescrizione').value = '';
+            document.getElementById('evLuogo').value = '';
+            document.getElementById('evCliente').value = '';
+        }
+
+        async function salvaEvento() {
+            const titolo = document.getElementById('evTitolo').value.trim();
+            const data = document.getElementById('evData').value;
+            const oraInizio = document.getElementById('evOraInizio').value;
+            const oraFine = document.getElementById('evOraFine').value;
+            const descrizione = document.getElementById('evDescrizione').value.trim();
+            const luogo = document.getElementById('evLuogo').value.trim();
+            const tipoServizio = document.getElementById('evTipoServizio').value;
+            const squadra = document.getElementById('evSquadra').value;
+            const cliente = document.getElementById('evCliente').value.trim();
+
+            if (!titolo || !data || !oraInizio) {
+                mostraToast('Compila i campi obbligatori (Titolo, Data, Ora Inizio)', 'error');
+                return;
+            }
+
+            const evento = {
+                id: 'ev-' + Date.now(),
+                studio_id: studioId,
+                titolo, data, ora_inizio: oraInizio, ora_fine: oraFine,
+                descrizione, luogo, tipo_servizio: tipoServizio,
+                squadra, cliente,
+                data_creazione: new Date().toISOString()
+            };
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/agenda?token=${token}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(evento)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Evento salvato!', 'success');
+                    chiudiModalEvento();
+                    await caricaEventi();
+                    renderCalendario();
+                    mostraEventiGiorno();
+                } else {
+                    mostraToast('Errore nel salvataggio', 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        function modificaEvento(id) {
+            mostraToast('Funzione di modifica in sviluppo', 'success');
         }
 
         async function eliminaEvento(id) {
-            if (!confirm('Eliminare questo evento?')) return;
+            if (!confirm('Sei sicuro di voler eliminare questo evento?')) return;
             try {
-                // In produzione: chiamata DELETE al worker
-                eventi = eventi.filter(e => e.id !== id);
-                renderizzaEventi();
-                mostraToast('Evento eliminato', 'success');
+                const response = await fetch(`${WORKER_URL}/api/studio/agenda/${id}?token=${token}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Evento eliminato', 'success');
+                    await caricaEventi();
+                    renderCalendario();
+                    mostraEventiGiorno();
+                }
             } catch (error) {
-                mostraToast('Errore nell\'eliminazione', 'error');
+                mostraToast('Errore di connessione', 'error');
             }
-        }
-
-        function pulisciForm() {
-            document.getElementById('evTitolo').value = '';
-            document.getElementById('evData').value = '';
-            document.getElementById('evTipo').value = 'matrimonio';
-            document.getElementById('evNote').value = '';
         }
 
         function tornaPlancia() {
