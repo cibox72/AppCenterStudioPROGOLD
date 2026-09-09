@@ -155,12 +155,12 @@
             <div class="login-form active" id="formStudio">
                 <div class="form-group">
                     <label>ID Studio</label>
-                    <input type="text" id="studioId" autocomplete="off">
+                    <input type="text" id="studioId" autocomplete="off" spellcheck="false">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="studioPassword" autocomplete="off">
+                        <input type="password" id="studioPassword" autocomplete="new-password">
                         <button type="button" class="toggle-password" onclick="togglePassword('studioPassword', this)">👁️</button>
                     </div>
                 </div>
@@ -169,13 +169,13 @@
             <div class="login-form" id="formAdmin">
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" id="adminId" autocomplete="off">
+                    <input type="text" id="adminId" autocomplete="off" spellcheck="false">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="adminPassword" autocomplete="off">
-                        <button type="button" class="toggle-password" onclick="togglePassword('adminPassword', this)"></button>
+                        <input type="password" id="adminPassword" autocomplete="new-password">
+                        <button type="button" class="toggle-password" onclick="togglePassword('adminPassword', this)">👁️</button>
                     </div>
                 </div>
                 <button class="btn" onclick="login('admin', 'adminId', 'adminPassword')">ACCEDI</button>
@@ -183,12 +183,12 @@
             <div class="login-form" id="formCliente">
                 <div class="form-group">
                     <label>ID Cliente</label>
-                    <input type="text" id="clienteId" autocomplete="off">
+                    <input type="text" id="clienteId" autocomplete="off" spellcheck="false">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="clientePassword" autocomplete="off">
+                        <input type="password" id="clientePassword" autocomplete="new-password">
                         <button type="button" class="toggle-password" onclick="togglePassword('clientePassword', this)">👁️</button>
                     </div>
                 </div>
@@ -208,37 +208,37 @@
             
             <div class="form-group">
                 <label>Nome Studio *</label>
-                <input type="text" id="regNome">
+                <input type="text" id="regNome" autocomplete="off">
             </div>
             <div class="form-group">
                 <label>Partita IVA</label>
-                <input type="text" id="regPiva">
+                <input type="text" id="regPiva" autocomplete="off">
             </div>
             <div class="form-group">
                 <label>Email *</label>
-                <input type="email" id="regEmail">
+                <input type="email" id="regEmail" autocomplete="off">
             </div>
             <div class="form-group">
                 <label>Telefono</label>
-                <input type="tel" id="regTelefono">
+                <input type="tel" id="regTelefono" autocomplete="off">
             </div>
             <div class="form-group">
                 <label>Indirizzo</label>
-                <input type="text" id="regIndirizzo">
+                <input type="text" id="regIndirizzo" autocomplete="off">
             </div>
             <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
                 <div class="form-group">
                     <label>Città</label>
-                    <input type="text" id="regCitta">
+                    <input type="text" id="regCitta" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label>Stato/Provincia</label>
-                    <input type="text" id="regStato">
+                    <input type="text" id="regStato" autocomplete="off">
                 </div>
             </div>
             <div class="form-group">
                 <label>Password provvisoria *</label>
-                <input type="password" id="regPassword">
+                <input type="password" id="regPassword" autocomplete="new-password">
             </div>
             
             <div style="display:flex; gap:12px; margin-top:24px;">
