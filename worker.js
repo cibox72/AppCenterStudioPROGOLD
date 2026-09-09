@@ -854,6 +854,45 @@ export default {
       }
 
       // ============================================
+      // 41. LINK UTILI - LISTA (Studio) - NUOVO
+      // ============================================
+      if (path === "/api/studio/link-utili" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const result = await env.DB.prepare("SELECT * FROM link_utili WHERE studio_id=? ORDER BY data_creazione DESC").bind(sess.user_id).all();
+        return new Response(JSON.stringify({ success: true, links: result.results }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 42. LINK UTILI - AGGIUNGI (Studio) - NUOVO
+      // ============================================
+      if (path === "/api/studio/link-utili" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const d = await request.json();
+        const linkId = 'link-' + Date.now();
+        await env.DB.prepare(`INSERT INTO link_utili (id, studio_id, descrizione, url, data_creazione) VALUES (?, ?, ?, ?, ?)`).bind(linkId, sess.user_id, d.descrizione, d.url, new Date().toISOString()).run();
+        return new Response(JSON.stringify({ success: true, id: linkId }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 43. LINK UTILI - ELIMINA (Studio) - NUOVO
+      // ============================================
+      if (path.startsWith("/api/studio/link-utili/") && request.method === "DELETE") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const id = path.split("/api/studio/link-utili/")[1];
+        await env.DB.prepare("DELETE FROM link_utili WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
       // ROUTE NON TROVATA
       // ============================================
       return new Response(JSON.stringify({ error: "Endpoint non trovato", path: path }), { status: 404, headers: corsHeaders });
