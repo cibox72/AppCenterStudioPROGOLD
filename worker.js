@@ -854,7 +854,7 @@ export default {
       }
 
       // ============================================
-      // 41. LINK UTILI - LISTA (Studio) - NUOVO
+      // 41. LINK UTILI - LISTA (Studio)
       // ============================================
       if (path === "/api/studio/link-utili" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -866,7 +866,7 @@ export default {
       }
 
       // ============================================
-      // 42. LINK UTILI - AGGIUNGI (Studio) - NUOVO
+      // 42. LINK UTILI - AGGIUNGI (Studio)
       // ============================================
       if (path === "/api/studio/link-utili" && request.method === "POST") {
         const token = url.searchParams.get("token");
@@ -880,7 +880,7 @@ export default {
       }
 
       // ============================================
-      // 43. LINK UTILI - ELIMINA (Studio) - NUOVO
+      // 43. LINK UTILI - ELIMINA (Studio)
       // ============================================
       if (path.startsWith("/api/studio/link-utili/") && request.method === "DELETE") {
         const token = url.searchParams.get("token");
@@ -889,6 +889,41 @@ export default {
 
         const id = path.split("/api/studio/link-utili/")[1];
         await env.DB.prepare("DELETE FROM link_utili WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 44. TEMI - GET (Admin) - NUOVO
+      // ============================================
+      if (path === "/api/admin/tema" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const result = await env.DB.prepare("SELECT tema_attivo FROM temi_colori WHERE studio_id=?").bind('global').first();
+        const temaAttivo = result ? result.tema_attivo : 'default';
+        
+        return new Response(JSON.stringify({ success: true, tema: { tema_attivo: temaAttivo } }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 45. TEMI - POST (Admin) - NUOVO
+      // ============================================
+      if (path === "/api/admin/tema" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const d = await request.json();
+        
+        const existing = await env.DB.prepare("SELECT id FROM temi_colori WHERE studio_id=?").bind('global').first();
+        
+        if (existing) {
+          await env.DB.prepare(`UPDATE temi_colori SET tema_attivo=?, data_aggiornamento=? WHERE studio_id=?`).bind(d.tema_attivo, new Date().toISOString(), 'global').run();
+        } else {
+          await env.DB.prepare(`INSERT INTO temi_colori (studio_id, tema_attivo, data_aggiornamento) VALUES (?, ?, ?)`).bind('global', d.tema_attivo, new Date().toISOString()).run();
+        }
+        
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
