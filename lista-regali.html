@@ -3,112 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista Regali - AppCenterStudioPROGOLD</title>
+    <title>Gestione Lista Regali - AppCenterStudioPROGOLD</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
+            --primary: #82e0aa;
+            --primary-dark: #1e8449;
+            --primary-light: #e8f8f5;
             --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
-            --success: #27ae60; --danger: #e74c3c; --radius: 16px;
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e8e8e8;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --radius: 16px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
         }
         .top-bar {
-            background: var(--primary-gradient); padding: 16px 24px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100;
+            background: var(--primary-gradient);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         .nav-btn {
-            background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
-            cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark);
+            background: rgba(255,255,255,0.95);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            transition: all 0.2s ease;
         }
+        .nav-btn:hover { transform: translateY(-2px); }
         .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
         .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
         .page-header {
-            text-align: center; padding: 32px; background: white; border-radius: var(--radius);
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
+            text-align: center;
+            padding: 32px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
         }
-        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+        }
         .page-header h1 {
-            font-size: 32px; font-weight: 800; background: var(--primary-gradient);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px;
+            font-size: 32px;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
         }
         .page-header p { color: var(--text-light); font-size: 15px; }
         .card-3d {
-            background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden;
+            background: white;
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
+            position: relative;
+            overflow: hidden;
         }
-        .card-3d::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
+        .card-3d::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
         .card-title {
-            font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px;
-            padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
         .form-group input, .form-group select, .form-group textarea {
-            padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
+            padding: 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
         }
         .btn {
-            padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
-            cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
-        .btn-outline:hover { background: var(--primary-light); }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+        
         .lista-card {
-            background: white; border-radius: 12px; padding: 24px; border: 1px solid var(--border-color);
-            margin-bottom: 16px; transition: all 0.3s ease;
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
         }
         .lista-card:hover { box-shadow: 0 8px 24px rgba(30, 132, 73, 0.12); border-color: var(--primary); }
         .lista-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
         .lista-nomi { font-size: 20px; font-weight: 700; color: var(--text-main); }
         .lista-evento { font-size: 13px; color: var(--primary-dark); font-weight: 600; margin-top: 4px; }
+        
+        .progress-bar-container {
+            background: #ecf0f1;
+            height: 16px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 16px 0;
+            position: relative;
+        }
+        .progress-bar {
+            height: 100%;
+            transition: width 0.6s ease, background-color 0.6s ease;
+        }
+        .progress-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            line-height: 16px;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        
         .lista-stats { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
-        .lista-stat { background: var(--primary-light); padding: 12px 16px; border-radius: 8px; }
+        .lista-stat { background: var(--primary-light); padding: 12px 16px; border-radius: 8px; flex: 1; min-width: 120px; }
         .lista-stat-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; }
         .lista-stat-value { font-size: 18px; font-weight: 700; color: var(--primary-dark); margin-top: 4px; }
+        
+        .lista-status-text { font-size: 14px; font-weight: 600; margin-top: 8px; text-align: center; }
+        
         .lista-link {
-            background: #f4f6f7; padding: 12px; border-radius: 8px; font-size: 13px;
-            word-break: break-all; margin: 12px 0; font-family: monospace;
+            background: #f4f6f7;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            word-break: break-all;
+            margin: 12px 0;
+            font-family: monospace;
+            color: var(--text-main);
         }
         .lista-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
         .lista-actions .btn { padding: 8px 16px; font-size: 12px; }
-        .progress-bar-container {
-            background: var(--primary-light); height: 12px; border-radius: 6px; overflow: hidden; margin: 12px 0;
-        }
-        .progress-bar {
-            height: 100%; background: var(--primary-gradient); transition: width 0.6s ease;
-        }
+        
         .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast {
-            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease;
+            background: white;
+            border-radius: 10px;
+            padding: 14px 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
+            border-left: 4px solid var(--success);
+            animation: slideIn 0.3s ease;
         }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
         .loading { text-align: center; padding: 40px; color: var(--text-light); }
         .spinner {
-            width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary);
-            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;
+            width: 40px; height: 40px;
+            border: 3px solid var(--primary-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
         .hidden { display: none !important; }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            padding: 32px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        #qrcode { margin: 20px auto; display: flex; justify-content: center; }
+        #qrcode img { border: 8px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -134,13 +267,13 @@
         <div id="mainContent" class="hidden">
             <div class="card-3d">
                 <div class="card-title">Nuova Lista Regali</div>
-                <div class="card-subtitle">Crea una lista regali per un cliente. Verrà generato un link pubblico da condividere.</div>
+                <div class="card-subtitle">Crea una lista regali per un cliente. Verra generato un link pubblico da condividere.</div>
                 <div class="form-row">
-                    <div class="form-group"><label>Nomi Coppia/Evento *</label><input type="text" id="lrNomi" placeholder="es. Mario & Giulia Rossi"></div>
+                    <div class="form-group"><label>Nomi Coppia/Evento *</label><input type="text" id="lrNomi" placeholder="es. Mario e Giulia Rossi"></div>
                     <div class="form-group"><label>Tipo Evento *</label><input type="text" id="lrEvento" placeholder="es. Matrimonio"></div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group"><label>Costo Totale Obiettivo (€)</label><input type="number" id="lrCosto" min="0" step="0.01" placeholder="5000"></div>
+                    <div class="form-group"><label>Costo Totale Obiettivo (EUR)</label><input type="number" id="lrCosto" min="0" step="0.01" placeholder="5000"></div>
                     <div class="form-group"><label>Link Pagamento (PayPal/Bancomat)</label><input type="url" id="lrLinkPagamento" placeholder="https://paypal.me/..."></div>
                 </div>
                 <div class="form-group"><label>Numero WhatsApp Clienti</label><input type="tel" id="lrWhatsapp" placeholder="+39 333 1234567"></div>
@@ -151,7 +284,7 @@
 
             <div class="card-3d">
                 <div class="card-title">Liste Regali Attive</div>
-                <div class="card-subtitle">Elenco di tutte le liste regali create.</div>
+                <div class="card-subtitle">Elenco di tutte le liste regali create con monitoraggio a scalare.</div>
                 <div id="loadingListe" class="loading" style="padding: 20px;">
                     <div class="spinner"></div>
                     <div>Caricamento liste...</div>
@@ -161,7 +294,20 @@
             </div>
         </div>
 
-        <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
+        <div class="footer-branding">Piattaforma sviluppata da AppCenterStudioPROGOLD</div>
+    </div>
+
+    <div class="modal-overlay" id="qrModal">
+        <div class="modal-content">
+            <h3 style="color: var(--primary-dark); margin-bottom: 16px;">Locandina QR Code</h3>
+            <p style="font-size: 14px; color: var(--text-light); margin-bottom: 16px;">Inquadra per accedere alla lista regali</p>
+            <div id="qrcode"></div>
+            <p id="qrLinkText" style="font-size: 12px; word-break: break-all; margin-top: 16px; color: var(--text-main);"></p>
+            <div class="btn-group" style="justify-content: center; margin-top: 24px;">
+                <button class="btn btn-outline" onclick="chiudiQR()">Chiudi</button>
+                <button class="btn btn-primary" onclick="stampaQR()">Stampa Locandina</button>
+            </div>
+        </div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
@@ -225,7 +371,7 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    mostraToast('Lista regali creata sul cloud!', 'success');
+                    mostraToast('Lista regali creata sul cloud', 'success');
                     pulisciForm();
                     await caricaListe();
                 } else {
@@ -246,7 +392,6 @@
                 const response = await fetch(`${WORKER_URL}/api/studio/lista-regali?studioId=${studioId}&token=${token}`);
                 const data = await response.json();
                 if (data.success && data.lista) {
-                    // Se è un singolo oggetto, lo metto in array
                     listeRegali = Array.isArray(data.lista) ? data.lista : [data.lista];
                 } else {
                     listeRegali = [];
@@ -276,7 +421,19 @@
                 const raccolto = parseFloat(lr.raccolto_attuale || 0);
                 const obiettivo = parseFloat(lr.costo_totale || 1);
                 const percentuale = Math.min(100, Math.round((raccolto / obiettivo) * 100));
-                const linkPubblico = `https://cibox72.github.io/AppCenterStudioPROGOLD/lista-regali-pubblica.html?clienteId=${lr.id}`;
+                
+                let barColor = '#e74c3c'; // Rosso < 50%
+                let statusText = `Mancano: EUR ${(obiettivo - raccolto).toFixed(2)}`;
+                
+                if (percentuale >= 50 && percentuale < 100) {
+                    barColor = '#f39c12'; // Giallo 50-99%
+                    statusText = `Obiettivo quasi raggiunto. Mancano: EUR ${(obiettivo - raccolto).toFixed(2)}`;
+                } else if (percentuale >= 100) {
+                    barColor = '#27ae60'; // Verde >= 100%
+                    statusText = `COPERTO. Eccedenza: EUR ${(raccolto - obiettivo).toFixed(2)}`;
+                }
+
+                const linkPubblico = `${window.location.origin}/lista-regali-pubblica.html?clienteId=${lr.id}`;
                 
                 return `
                     <div class="lista-card">
@@ -291,21 +448,19 @@
                         </div>
                         
                         <div class="progress-bar-container">
-                            <div class="progress-bar" style="width: ${percentuale}%;"></div>
+                            <div class="progress-bar" style="width: ${percentuale}%; background-color: ${barColor};"></div>
+                            <div class="progress-text">${percentuale}%</div>
                         </div>
+                        <div class="lista-status-text" style="color: ${barColor};">${statusText}</div>
                         
                         <div class="lista-stats">
                             <div class="lista-stat">
                                 <div class="lista-stat-label">Raccolto</div>
-                                <div class="lista-stat-value">€ ${raccolto.toFixed(2)}</div>
+                                <div class="lista-stat-value">EUR ${raccolto.toFixed(2)}</div>
                             </div>
                             <div class="lista-stat">
                                 <div class="lista-stat-label">Obiettivo</div>
-                                <div class="lista-stat-value">€ ${obiettivo.toFixed(2)}</div>
-                            </div>
-                            <div class="lista-stat">
-                                <div class="lista-stat-label">Progresso</div>
-                                <div class="lista-stat-value">${percentuale}%</div>
+                                <div class="lista-stat-value">EUR ${obiettivo.toFixed(2)}</div>
                             </div>
                         </div>
                         
@@ -313,9 +468,10 @@
                         <div class="lista-link">${linkPubblico}</div>
                         
                         <div class="lista-actions">
-                            <button class="btn btn-success" onclick="copiaLink('${linkPubblico}')">📋 Copia Link</button>
-                            <button class="btn btn-outline" onclick="condividiWhatsApp('${lr.whatsapp_clienti}', '${linkPubblico}', '${lr.nomi}')">📱 Invia WhatsApp</button>
-                            <button class="btn btn-outline" onclick="apriLinkPubblico('${linkPubblico}')">👁️ Anteprima</button>
+                            <button class="btn btn-success" onclick="copiaLink('${linkPubblico}')">Copia Link</button>
+                            <button class="btn btn-outline" onclick="generaQR('${linkPubblico}', '${lr.nomi}')">Genera QR Locandina</button>
+                            <button class="btn btn-outline" onclick="condividiWhatsApp('${lr.whatsapp_clienti}', '${linkPubblico}', '${lr.nomi}')">Invia WhatsApp</button>
+                            <button class="btn btn-outline" onclick="apriLinkPubblico('${linkPubblico}')">Anteprima</button>
                         </div>
                     </div>
                 `;
@@ -324,27 +480,61 @@
 
         function copiaLink(link) {
             navigator.clipboard.writeText(link).then(() => {
-                mostraToast('Link copiato negli appunti!', 'success');
+                mostraToast('Link copiato negli appunti', 'success');
             }).catch(() => {
-                // Fallback
                 const input = document.createElement('input');
                 input.value = link;
                 document.body.appendChild(input);
                 input.select();
                 document.execCommand('copy');
                 document.body.removeChild(input);
-                mostraToast('Link copiato!', 'success');
+                mostraToast('Link copiato', 'success');
             });
         }
 
         function condividiWhatsApp(numero, link, nomi) {
-            const messaggio = `Ciao! Ecco il link per la lista regali di ${nomi}: ${link}`;
+            const messaggio = `Ciao. Ecco il link per la lista regali di ${nomi}: ${link}`;
             const url = `https://wa.me/${numero.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(messaggio)}`;
             window.open(url, '_blank');
         }
 
         function apriLinkPubblico(link) {
             window.open(link, '_blank');
+        }
+
+        function generaQR(link, nomi) {
+            document.getElementById('qrcode').innerHTML = '';
+            document.getElementById('qrLinkText').textContent = link;
+            new QRCode(document.getElementById("qrcode"), {
+                text: link,
+                width: 200,
+                height: 200,
+                colorDark : "#2c3e50",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+            document.getElementById('qrModal').classList.add('active');
+        }
+
+        function chiudiQR() {
+            document.getElementById('qrModal').classList.remove('active');
+        }
+
+        function stampaQR() {
+            const printWindow = window.open('', '', 'height=600,width=800');
+            const qrContent = document.getElementById('qrcode').innerHTML;
+            const linkText = document.getElementById('qrLinkText').textContent;
+            printWindow.document.write('<html><head><title>Locandina Lista Regali</title>');
+            printWindow.document.write('<style>body{font-family: sans-serif; text-align: center; padding: 40px;} h1{color: #1e8449;} p{color: #7f8c8d; margin-bottom: 30px;} .qr-box{border: 2px solid #e8e8e8; display: inline-block; padding: 20px; border-radius: 16px;}</style>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write('<h1>Lista Regali</h1>');
+            printWindow.document.write('<p>Inquadra il codice QR con il tuo smartphone per accedere alla lista e lasciare un augurio.</p>');
+            printWindow.document.write('<div class="qr-box">' + qrContent + '</div>');
+            printWindow.document.write('<p style="margin-top: 20px; font-size: 12px; word-break: break-all;">' + linkText + '</p>');
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => { printWindow.print(); }, 500);
         }
 
         function pulisciForm() {
