@@ -224,6 +224,20 @@
         }
         .btn-copy-link:hover { background: var(--primary-dark); }
 
+        .galleria-preview {
+            margin-top: 16px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+        .galleria-preview .gal-stat {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
         .footer-branding {
             text-align: center;
             padding: 24px;
@@ -295,6 +309,7 @@
         const token = urlParams.get('token');
         let clienteData = null;
         let listaRegaliData = null;
+        let galleriaData = null;
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) {
@@ -334,6 +349,9 @@
                     // Carica anche i dati della lista regali se esiste
                     await caricaListaRegaliCliente();
                     
+                    // Carica anche i dati della galleria se esiste (cerca per email)
+                    await caricaGalleriaCliente();
+                    
                     renderizzaServizi(data.cliente);
                 } else {
                     mostraToast('Errore nel caricamento dati', 'error');
@@ -356,6 +374,19 @@
                 }
             } catch (error) {
                 console.error('Errore caricamento lista regali:', error);
+            }
+        }
+
+        async function caricaGalleriaCliente() {
+            try {
+                // Cerca la galleria associata a questo cliente tramite email
+                const response = await fetch(`${WORKER_URL}/api/public/galleria-by-email?email=${encodeURIComponent(clienteData.email)}`);
+                const data = await response.json();
+                if (data.success && data.galleria) {
+                    galleriaData = data.galleria;
+                }
+            } catch (error) {
+                console.error('Errore caricamento galleria:', error);
             }
         }
 
@@ -396,7 +427,35 @@
                 `;
             }
 
+            let galleriaExtraHtml = '';
+            if (galleriaData) {
+                const statoGalleria = galleriaData.stato === 'pronta' ? 'Disponibile' : 'In preparazione';
+                const statoClass = galleriaData.stato === 'pronta' ? 'status-active' : 'status-pending';
+                
+                galleriaExtraHtml = `
+                    <div class="galleria-preview">
+                        <div class="gal-stat">
+                            <span>Stato:</span>
+                            <span class="service-status ${statoClass}">${statoGalleria}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const galleriaAttiva = galleriaData && galleriaData.stato === 'pronta';
+            const galleriaUrl = galleriaData ? `galleria-cliente.html?id=${galleriaData.id}` : '#';
+
             const servizi = [
+                {
+                    id: 'galleria-foto',
+                    icon: 'GF',
+                    title: 'Galleria Foto',
+                    description: 'Visualizza e scarica le foto del tuo servizio a bassa risoluzione.',
+                    active: galleriaAttiva,
+                    countdown: null,
+                    url: galleriaUrl,
+                    extraHtml: galleriaExtraHtml
+                },
                 {
                     id: 'lista-regali',
                     icon: 'LR',
