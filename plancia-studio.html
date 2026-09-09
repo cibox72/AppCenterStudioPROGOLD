@@ -172,6 +172,19 @@
             line-height: 1.5;
         }
 
+        .module-badge {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: var(--danger);
+            color: white;
+            align-self: flex-start;
+        }
+
         .footer-branding {
             text-align: center;
             padding: 24px;
@@ -338,12 +351,19 @@
                     <div class="module-description">Gestione risorse e utility dello studio.</div>
                 </a>
 
-                <!-- NUOVA CARD LINK UTILI -->
                 <div class="module-card" onclick="apriLinkUtili()">
-                    <div class="module-icon">🔗</div>
+                    <div class="module-icon">LN</div>
                     <div class="module-title">Link Utili</div>
                     <div class="module-description">Archivio personale di link, fornitori e risorse rapide.</div>
                 </div>
+
+                <!-- NUOVA CARD GALLERIE CLIENTI -->
+                <a href="#" class="module-card" onclick="navigaConToken('gallerie.html')">
+                    <div class="module-icon">GC</div>
+                    <div class="module-title">Gallerie Clienti</div>
+                    <div class="module-description">Crea gallerie esterne MEGA con link brandizzati per i clienti.</div>
+                    <span class="module-badge">NUOVO</span>
+                </a>
             </div>
         </div>
 
@@ -356,8 +376,8 @@
     <div class="modal-overlay" id="modalLinkUtili">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>🔗 Archivio Link Utili</h2>
-                <button class="close-modal" onclick="chiudiLinkUtili()">✕</button>
+                <h2>Archivio Link Utili</h2>
+                <button class="close-modal" onclick="chiudiLinkUtili()">X</button>
             </div>
             
             <div style="background: var(--primary-light); padding: 20px; border-radius: 10px; margin-bottom: 24px;">
@@ -369,7 +389,7 @@
                     <label>URL del Link (https://...)</label>
                     <input type="url" id="linkUrl" placeholder="https://www.esempio.com">
                 </div>
-                <button class="nav-btn" style="width: 100%; background: var(--primary-gradient); color: white; font-weight: 700;" onclick="aggiungiLink()">💾 Salva nell'Archivio</button>
+                <button class="nav-btn" style="width: 100%; background: var(--primary-gradient); color: white; font-weight: 700;" onclick="aggiungiLink()">Salva nell'Archivio</button>
             </div>
 
             <h3 style="font-size: 16px; margin-bottom: 12px; color: var(--text-main);">I tuoi link salvati:</h3>
@@ -411,7 +431,7 @@
                 document.getElementById('studioIdDisplay').textContent = 'ID: ' + currentStudioId;
                 
                 if (!data.user.email || !data.user.telefono || !data.user.indirizzo) {
-                    mostraToast('⚠️ Devi compilare la scheda anagrafica per continuare', 'error');
+                    mostraToast('Devi compilare la scheda anagrafica per continuare', 'error');
                     setTimeout(() => {
                         window.location.href = `scheda-anagrafica.html?token=${token}`;
                     }, 1500);
@@ -481,7 +501,7 @@
                             </div>
                             <div class="link-actions">
                                 <a href="${link.url}" target="_blank" class="nav-btn" style="text-decoration:none; font-size:12px; padding:6px 12px; background:var(--primary); color:white;">Vai</a>
-                                <button class="nav-btn" style="background:var(--danger); color:white; font-size:12px; padding:6px 12px;" onclick="eliminaLink('${link.id}')">🗑️</button>
+                                <button class="nav-btn" style="background:var(--danger); color:white; font-size:12px; padding:6px 12px;" onclick="eliminaLink('${link.id}')">Elimina</button>
                             </div>
                         </div>
                     `).join('');
