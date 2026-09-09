@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galleria Foto - AppCenterStudioPROGOLD</title>
+    <style>
+        :root {
+            --primary: #d4a5a5; --primary-dark: #9b6b6b; --primary-light: #f9ebea;
+            --primary-gradient: linear-gradient(135deg, #f5b7b1 0%, #d4a5a5 50%, #9b6b6b 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #f9ebea 40%, #fef9e7 100%);
+            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
+            --radius: 16px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Georgia', serif; background: var(--bg-gradient); background-attachment: fixed; color: var(--text-main); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 24px; flex: 1; }
+        .header-card { text-align: center; padding: 50px 32px; background: white; border-radius: var(--radius); box-shadow: 0 10px 40px rgba(155, 107, 107, 0.15); margin-bottom: 32px; position: relative; overflow: hidden; }
+        .header-card::before { content: ''; position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 40px; height: 2px; background: var(--primary); }
+        .header-card h1 { font-size: 42px; font-weight: 400; color: var(--primary-dark); margin-top: 20px; margin-bottom: 16px; font-style: italic; }
+        .header-card .sottotitolo { font-size: 12px; color: var(--text-light); margin-bottom: 8px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; text-transform: uppercase; letter-spacing: 2px; }
+        .header-card .tipo-evento { display: inline-block; padding: 6px 20px; background: var(--primary-light); color: var(--primary-dark); border-radius: 30px; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 12px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        
+        .message-card { background: white; border-radius: var(--radius); padding: 40px 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 32px; text-align: center; }
+        .message-card p { font-size: 18px; color: var(--text-main); font-style: italic; line-height: 1.8; margin-bottom: 32px; }
+        
+        .btn-access {
+            display: inline-block; padding: 18px 40px; background: var(--primary-gradient); color: white;
+            text-decoration: none; border-radius: 10px; font-size: 18px; font-weight: 700;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(155, 107, 107, 0.3);
+        }
+        .btn-access:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(155, 107, 107, 0.4); }
+        
+        .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .loading { text-align: center; padding: 60px; color: var(--text-light); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .hidden { display: none !important; }
+        @media (max-width: 600px) { .header-card h1 { font-size: 32px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="loadingArea" class="loading">Caricamento galleria in corso...</div>
+
+        <div id="mainContent" class="hidden">
+            <div class="header-card">
+                <div class="sottotitolo">Galleria Fotografica di</div>
+                <h1 id="nomiCliente">Caricamento...</h1>
+                <div class="tipo-evento" id="tipoEvento">Evento</div>
+            </div>
+
+            <div class="message-card">
+                <p id="messaggioBenvenuto">Caricamento messaggio...</p>
+                <a id="btnMegaLink" href="#" target="_blank" class="btn-access">Accedi e Scarica le Foto del Servizio</a>
+                <p style="font-size: 14px; color: var(--text-light); margin-top: 24px; font-style: normal; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                    Verrai reindirizzato al nostro archivio cloud sicuro per la visione e il download del materiale.
+                </p>
+            </div>
+        </div>
+
+        <div class="footer-branding">
+            Gestito professionalmente da AppCenterStudioPROGOLD
+        </div.
+    </div>
+
+    <script>
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        const urlParams = new URLSearchParams(window.location.search);
+        const galleriaId = urlParams.get('id');
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!galleriaId) {
+                document.getElementById('loadingArea').textContent = 'Link non valido. Contatta lo studio.';
+                return;
+            }
+            await caricaGalleria();
+        });
+
+        async function caricaGalleria() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/public/galleria?id=${galleriaId}`);
+                const data = await response.json();
+
+                if (data.success && data.galleria) {
+                    const gal = data.galleria;
+                    document.getElementById('nomiCliente').textContent = gal.cliente_nome || 'I Clienti';
+                    document.getElementById('tipoEvento').textContent = gal.tipo_evento || 'Servizio Fotografico';
+                    document.getElementById('messaggioBenvenuto').textContent = gal.messaggio_benvenuto || 'Benvenuti nella vostra galleria privata.';
+                    
+                    const btn = document.getElementById('btnMegaLink');
+                    if (gal.mega_link && gal.mega_link.startsWith('http')) {
+                        btn.href = gal.mega_link;
+                    } else {
+                        btn.textContent = 'Galleria in fase di preparazione. Torna presto.';
+                        btn.style.background = '#ccc';
+                        btn.style.pointerEvents = 'none';
+                    }
+
+                    document.getElementById('loadingArea').classList.add('hidden');
+                    document.getElementById('mainContent').classList.remove('hidden');
+                } else {
+                    document.getElementById('loadingArea').textContent = 'Galleria non trovata o non piu disponibile.';
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                document.getElementById('loadingArea').textContent = 'Errore di connessione al server.';
+            }
+        }
+    </script>
+</body>
+</html>
