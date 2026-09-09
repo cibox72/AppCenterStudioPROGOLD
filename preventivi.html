@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Preventivi & Contratti - AppCenterStudioPROGOLD</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
@@ -29,7 +30,7 @@
         .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
         .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
         .page-header {
             text-align: center; padding: 32px; background: white; border-radius: var(--radius);
             box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
@@ -51,6 +52,15 @@
             display: flex; justify-content: space-between; align-items: center;
         }
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border-color); }
+        .tab {
+            padding: 12px 24px; background: none; border: none; border-bottom: 3px solid transparent;
+            cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-light); transition: all 0.2s ease;
+        }
+        .tab:hover { color: var(--primary-dark); }
+        .tab.active { color: var(--primary-dark); border-bottom-color: var(--primary); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; margin-bottom: 16px; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
@@ -91,6 +101,15 @@
         .total-row.final { font-size: 18px; font-weight: 800; color: var(--primary-dark); border-top: 2px solid var(--border-color); margin-top: 10px; padding-top: 15px; }
         .total-row.saldo { background: var(--primary-light); padding: 12px; border-radius: 8px; margin-top: 10px; font-weight: 700; }
 
+        .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); background: white; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; }
+        th { background: var(--primary-light); color: var(--primary-dark); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        tr:hover td { background: #fafafa; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .badge-preventivo { background: #fef9e7; color: #f39c12; }
+        .badge-contratto { background: #d5f4e6; color: #27ae60; }
+
         .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast {
@@ -106,6 +125,34 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         .hidden { display: none !important; }
+
+        /* Stili per il template PDF nascosto */
+        #pdf-template {
+            display: none;
+            font-family: 'Georgia', serif;
+            color: #000;
+            background: #fff;
+            padding: 40px;
+            width: 800px;
+        }
+        .pdf-header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 20px; }
+        .pdf-header h1 { margin: 0; font-size: 24px; text-transform: uppercase; }
+        .pdf-header p { margin: 5px 0; font-size: 12px; color: #333; }
+        .pdf-title { text-align: center; text-transform: uppercase; margin-bottom: 30px; font-size: 20px; font-weight: bold; }
+        .pdf-section { margin-bottom: 30px; }
+        .pdf-section h3 { border-bottom: 1px solid #ccc; padding-bottom: 5px; font-size: 16px; margin-bottom: 10px; }
+        .pdf-row { display: flex; justify-content: space-between; margin-bottom: 30px; }
+        .pdf-col { width: 48%; font-size: 13px; line-height: 1.6; }
+        .pdf-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .pdf-table th, .pdf-table td { border: 1px solid #ccc; padding: 8px; }
+        .pdf-table th { background: #f0f0f0; text-align: left; }
+        .pdf-totals { text-align: right; margin-bottom: 30px; font-size: 14px; }
+        .pdf-totals .final { font-size: 18px; font-weight: bold; border-top: 2px solid #000; padding-top: 10px; margin-top: 10px; }
+        .pdf-totals .saldo { color: #d32f2f; font-size: 16px; font-weight: bold; }
+        .pdf-signatures { display: flex; justify-content: space-between; margin-top: 60px; page-break-inside: avoid; }
+        .pdf-sign-box { width: 45%; text-align: center; }
+        .pdf-sign-box p { border-top: 1px solid #000; padding-top: 10px; font-size: 12px; }
+        .pdf-sign-space { height: 60px; }
     </style>
 </head>
 <body>
@@ -120,7 +167,7 @@
     <div class="container">
         <div class="page-header">
             <h1>Preventivi & Contratti</h1>
-            <p>Crea preventivi professionali, gestisci acconti e trasforma in contratto.</p>
+            <p>Crea preventivi, inviali via WhatsApp, converti in contratti e gestisci pagamenti.</p>
         </div>
 
         <div id="loadingArea" class="loading">
@@ -129,6 +176,16 @@
         </div>
 
         <div id="mainContent" class="hidden">
+            
+            <!-- TABS -->
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('crea')">Crea Preventivo</button>
+                <button class="tab" onclick="switchTab('archivio')">Archivio Preventivi</button>
+                <button class="tab" onclick="switchTab('contratti')">Archivio Contratti</button>
+            </div>
+
+            <!-- TAB CREA PREVENTIVO -->
+            <div id="tab-crea" class="tab-content active">
             
             <!-- DATI PREVENTIVO -->
             <div class="card-3d">
@@ -150,13 +207,13 @@
 
             <!-- ANAGRAFICA CLIENTE A -->
             <div class="card-3d">
-                <div class="card-title">Anagrafica Cliente A</div>
+                <div class="card-title">Anagrafica Cliente A (Intestatario Principale)</div>
                 <div class="form-row">
                     <div class="form-group"><label>Nome</label><input type="text" id="cA_nome"></div>
                     <div class="form-group"><label>Cognome</label><input type="text" id="cA_cognome"></div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group"><label>Telefono</label><input type="tel" id="cA_tel"></div>
+                    <div class="form-group"><label>Telefono *</label><input type="tel" id="cA_tel"></div>
                     <div class="form-group"><label>Email</label><input type="email" id="cA_email"></div>
                 </div>
                 <div class="form-row">
@@ -192,7 +249,7 @@
                 <button class="btn btn-outline btn-sm" onclick="apriMaps('B')">📍 Vedi luogo su Google Maps</button>
             </div>
 
-            <!-- DETTAGLI EVENTO (NUOVA SEZIONE PROMINENTE) -->
+            <!-- DETTAGLI EVENTO -->
             <div class="card-3d" style="border-left: 5px solid var(--warning);">
                 <div class="card-title" style="color: var(--warning);">Dettagli Evento Richiesto</div>
                 <div class="form-row">
@@ -205,7 +262,7 @@
                     <div class="form-group">
                         <label style="font-size: 15px;">Luogo Cerimonia (Chiesa / Location)</label>
                         <input type="text" id="pvLuogoCerimonia" placeholder="Nome e indirizzo della chiesa o location" style="font-size: 15px;">
-                        <button class="btn btn-outline btn-sm" style="margin-top: 8px;" onclick="apriMaps('cerimonia')">📍 Vedi luogo su Google Maps</button>
+                        <button class="btn btn-outline btn-sm" style="margin-top: 8px;" onclick="apriMaps('cerimonia')"> Vedi luogo su Google Maps</button>
                     </div>
                     <div class="form-group">
                         <label style="font-size: 15px;">Luogo Ricevimento (Ristorante / Sala)</label>
@@ -325,14 +382,133 @@
 
             <!-- AZIONI FINALI -->
             <div class="btn-group" style="justify-content: center; margin-bottom: 40px;">
-                <button class="btn btn-dark" onclick="salvaInArchivio()">💾 Salva in archivio</button>
-                <button class="btn btn-dark" onclick="creaPDF()">📄 Crea PDF da inviare</button>
-                <button class="btn btn-dark" onclick="trasformaInContratto()">📝 Trasforma in Contratto</button>
+                <button class="btn btn-dark" onclick="salvaInArchivio('preventivo')">💾 Salva Preventivo</button>
+                <button class="btn btn-success" onclick="inviaWhatsApp()">📱 Invia WhatsApp</button>
+                <button class="btn btn-dark" onclick="creaPDF()">📄 Crea PDF</button>
+                <button class="btn btn-primary" onclick="trasformaInContratto()">📝 Converti in Contratto</button>
             </div>
 
-        </div>
+            </div> <!-- FINE TAB CREA -->
+
+            <!-- TAB ARCHIVIO PREVENTIVI -->
+            <div id="tab-archivio" class="tab-content">
+                <div class="card-3d">
+                    <div class="card-title">Archivio Preventivi</div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>N.</th>
+                                    <th>Cliente</th>
+                                    <th>Data</th>
+                                    <th>Tipo Servizio</th>
+                                    <th>Totale</th>
+                                    <th>Stato</th>
+                                    <th>Azioni</th>
+                                </tr>
+                            </thead>
+                            <tbody id="archivioPreventiviTable"></tbody>
+                        </table>
+                    </div>
+                    <div id="emptyArchivio" class="hidden" style="text-align: center; padding: 40px; color: var(--text-light);">Nessun preventivo in archivio.</div>
+                </div>
+            </div>
+
+            <!-- TAB ARCHIVIO CONTRATTI -->
+            <div id="tab-contratti" class="tab-content">
+                <div class="card-3d">
+                    <div class="card-title">Archivio Contratti Attivi</div>
+                    <div class="card-subtitle">Contratti firmati con monitoraggio pagamenti e acconti</div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>N. Contratto</th>
+                                    <th>Cliente</th>
+                                    <th>Data</th>
+                                    <th>Servizio</th>
+                                    <th>Totale</th>
+                                    <th>Pagato</th>
+                                    <th>Saldo</th>
+                                    <th>Azioni</th>
+                                </tr>
+                            </thead>
+                            <tbody id="archivioContrattiTable"></tbody>
+                        </table>
+                    </div>
+                    <div id="emptyContratti" class="hidden" style="text-align: center; padding: 40px; color: var(--text-light);">Nessun contratto attivo.</div>
+                </div>
+            </div>
+
+        </div> <!-- FINE MAIN CONTENT -->
 
         <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
+    </div>
+
+    <!-- TEMPLATE PDF NASCOSTO -->
+    <div id="pdf-template">
+        <div class="pdf-header">
+            <h1 id="pdf-nome-studio">NOME STUDIO</h1>
+            <p id="pdf-indirizzo-studio">Indirizzo Studio</p>
+            <p id="pdf-contatti-studio">Tel: - Email: - P.IVA: </p>
+        </div>
+        <div class="pdf-title" id="pdf-tipo-doc">PREVENTIVO N. <span id="pdf-numero"></span></div>
+        
+        <div class="pdf-row">
+            <div class="pdf-col">
+                <h3>Cliente A</h3>
+                <p id="pdf-cliente-a-nome"></p>
+                <p id="pdf-cliente-a-indirizzo"></p>
+                <p id="pdf-cliente-a-contatti"></p>
+            </div>
+            <div class="pdf-col">
+                <h3>Cliente B</h3>
+                <p id="pdf-cliente-b-nome"></p>
+                <p id="pdf-cliente-b-indirizzo"></p>
+                <p id="pdf-cliente-b-contatti"></p>
+            </div>
+        </div>
+
+        <div class="pdf-section">
+            <h3>Dettagli Evento</h3>
+            <p><strong>Tipo:</strong> <span id="pdf-tipo-servizio"></span></p>
+            <p><strong>Luogo Cerimonia:</strong> <span id="pdf-luogo-cerimonia"></span></p>
+            <p><strong>Luogo Ricevimento:</strong> <span id="pdf-luogo-ricevimento"></span></p>
+        </div>
+
+        <div class="pdf-section">
+            <h3>Servizi Richiesti</h3>
+            <table class="pdf-table">
+                <thead>
+                    <tr><th>Descrizione</th><th>Prezzo</th><th>Q.tà</th><th>Totale</th></tr>
+                </thead>
+                <tbody id="pdf-servizi-body"></tbody>
+            </table>
+        </div>
+
+        <div class="pdf-totals">
+            <div>Totale servizi: <strong id="pdf-totale-servizi">0,00 €</strong></div>
+            <div>Sconto (<span id="pdf-sconto-perc">0</span>% + fisso): <strong id="pdf-totale-sconto">-0,00 €</strong></div>
+            <div class="final">TOTALE: <strong id="pdf-totale">0,00 €</strong></div>
+            <div>Acconti versati: <strong id="pdf-totale-acconti">0,00 €</strong></div>
+            <div class="saldo">SALDO RESIDUO: <strong id="pdf-saldo">0,00 €</strong></div>
+        </div>
+
+        <div class="pdf-section">
+            <h3>Note</h3>
+            <p id="pdf-note"></p>
+        </div>
+
+        <div class="pdf-signatures">
+            <div class="pdf-sign-box">
+                <div class="pdf-sign-space"></div>
+                <p>Firma Cliente A</p>
+            </div>
+            <div class="pdf-sign-box">
+                <div class="pdf-sign-space"></div>
+                <p>Firma Cliente B</p>
+            </div>
+        </div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
@@ -344,12 +520,12 @@
         let studioId = null;
         let serviziArchivio = [];
         let preventivoCorrente = null;
+        let archivioPreventivi = [];
+        let archivioContratti = [];
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) { window.location.href = 'index.html'; return; }
-            
             document.getElementById('pvData').valueAsDate = new Date();
-            
             await verificaSessione();
         });
 
@@ -366,13 +542,21 @@
                 document.getElementById('loadingArea').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
                 await caricaServiziArchivio();
+                await caricaArchivioPreventivi();
+                await caricaArchivioContratti();
             } catch (error) {
                 console.error('Errore:', error);
                 mostraToast('Errore di connessione', 'error');
             }
         }
 
-        async function caricaServiziArchivio() {
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+                async function caricaServiziArchivio() {
             document.getElementById('loadingServizi').style.display = 'block';
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/servizi?studioId=${studioId}&token=${token}`);
@@ -526,6 +710,14 @@
                 });
             });
 
+            const acconti = [];
+            document.querySelectorAll('#accontiList .service-row').forEach(row => {
+                acconti.push({
+                    data: row.querySelector('input[type="date"]').value,
+                    importo: parseFloat(row.querySelector('.acconto-importo').value) || 0
+                });
+            });
+
             return {
                 numero: document.getElementById('pvNumero').value,
                 data_emissione: document.getElementById('pvData').value,
@@ -545,6 +737,7 @@
                     cap: document.getElementById('cB_cap').value, provincia: document.getElementById('cB_prov').value
                 },
                 servizi: serviziSelezionati,
+                acconti: acconti,
                 sconto_perc: parseFloat(document.getElementById('scontoPerc').value) || 0,
                 sconto_fisso: parseFloat(document.getElementById('scontoFisso').value) || 0,
                 sconto_fisso_nota: document.getElementById('scontoFissoNota').value,
@@ -555,27 +748,52 @@
             };
         }
 
-        async function salvaInArchivio() {
+        async function salvaInArchivio(tipo) {
             const dati = raccogliDatiPreventivo();
             if (dati.servizi.length === 0) {
                 mostraToast('Seleziona almeno un servizio', 'error');
                 return;
             }
 
+            const id = tipo === 'contratto' ? 'ctr-' + Date.now() : 'pv-' + Date.now();
+            const tabella = tipo === 'contratto' ? 'contratti' : 'preventivi';
+
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/preventivo?token=${token}`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/${tabella}?token=${token}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ...dati, studio_id: studioId, id: 'pv-' + Date.now(), data_creazione: new Date().toISOString() })
+                    body: JSON.stringify({ ...dati, studio_id: studioId, id: id, data_creazione: new Date().toISOString() })
                 });
                 const result = await response.json();
                 if (result.success) {
-                    mostraToast('Preventivo salvato in archivio!', 'success');
-                    document.getElementById('pvNumero').value = 'PV-' + Date.now().toString().slice(-6);
+                    mostraToast(tipo === 'contratto' ? 'Contratto salvato!' : 'Preventivo salvato in archivio!', 'success');
+                    document.getElementById('pvNumero').value = (tipo === 'contratto' ? 'CTR-' : 'PV-') + Date.now().toString().slice(-6);
+                    if (tipo === 'contratto') {
+                        await caricaArchivioContratti();
+                    } else {
+                        await caricaArchivioPreventivi();
+                    }
                 }
             } catch (error) {
                 mostraToast('Errore di connessione', 'error');
             }
+        }
+
+        async function inviaWhatsApp() {
+            const dati = raccogliDatiPreventivo();
+            const telefono = dati.cliente_a.telefono.replace(/[^0-9]/g, '');
+            
+            if (!telefono) {
+                mostraToast('Inserisci il numero di telefono del Cliente A', 'error');
+                return;
+            }
+
+            const messaggio = `Ciao ${dati.cliente_a.nome} ${dati.cliente_a.cognome},\n\nti invio il preventivo per il servizio: ${dati.tipo_servizio}\n\nImporto totale: € ${dati.totale_finale.toFixed(2)}\n\nPuoi visualizzarlo e firmarlo. Resto a disposizione!\n\nAppCenterStudioPROGOLD`;
+            
+            const url = `https://wa.me/${telefono}?text=${encodeURIComponent(messaggio)}`;
+            window.open(url, '_blank');
+            
+            mostraToast('WhatsApp aperto! Il preventivo è pronto per essere inviato.', 'success');
         }
 
         function gestisciAccettazione() {
@@ -594,16 +812,234 @@
             calcolaTotali();
         }
 
-        function creaPDF() {
-            mostraToast('Generazione PDF in corso... (Funzionalità in sviluppo)', 'success');
-        }
-
-        function trasformaInContratto() {
+        async function trasformaInContratto() {
             if (!document.getElementById('checkAccettazione').checked) {
-                mostraToast('Il preventivo deve essere prima accettato dal cliente', 'error');
+                mostraToast('Il preventivo deve essere prima accettato dal cliente (flag "ACCETTATO E FIRMATO")', 'error');
                 return;
             }
-            mostraToast('Preventivo trasformato in Contratto ufficiale!', 'success');
+
+            if (!confirm('Sei sicuro di voler trasformare questo preventivo in CONTRATTO? Il documento verrà spostato nell\'archivio contratti e comincerà a tracciare gli acconti.')) {
+                return;
+            }
+
+            const dati = raccogliDatiPreventivo();
+            dati.id = 'ctr-' + Date.now();
+            dati.numero_contratto = 'CTR-' + Date.now().toString().slice(-6);
+            dati.data_contratto = new Date().toISOString().split('T')[0];
+            
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/contratti?token=${token}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...dati, studio_id: studioId, stato: 'attivo', data_creazione: new Date().toISOString() })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Preventivo convertito in CONTRATTO! Ora è nell\'archivio contratti.', 'success');
+                    await caricaArchivioContratti();
+                    nuovoPreventivo();
+                }
+            } catch (error) {
+                mostraToast('Errore nella conversione', 'error');
+            }
+        }
+
+        async function caricaArchivioPreventivi() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/preventivi?studioId=${studioId}&token=${token}`);
+                const data = await response.json();
+                if (data.success && data.preventivi) {
+                    archivioPreventivi = data.preventivi;
+                    renderizzaArchivioPreventivi();
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+            }
+        }
+
+        function renderizzaArchivioPreventivi() {
+            const tbody = document.getElementById('archivioPreventiviTable');
+            const emptyState = document.getElementById('emptyArchivio');
+            
+            if (archivioPreventivi.length === 0) {
+                emptyState.classList.remove('hidden');
+                tbody.innerHTML = '';
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            
+            tbody.innerHTML = archivioPreventivi.map(pv => {
+                const statoClass = pv.stato === 'accettato' ? 'badge-preventivo' : '';
+                const statoText = pv.stato === 'accettato' ? 'Accettato' : 'Bozza';
+                
+                return `
+                    <tr>
+                        <td>${pv.numero || 'N.D.'}</td>
+                        <td>${pv.cliente_a.nome} ${pv.cliente_a.cognome}</td>
+                        <td>${new Date(pv.data_emissione).toLocaleDateString('it-IT')}</td>
+                        <td>${pv.tipo_servizio}</td>
+                        <td>€ ${parseFloat(pv.totale_finale).toFixed(2)}</td>
+                        <td><span class="badge ${statoClass}">${statoText}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline" onclick="apriPreventivo('${pv.id}')">Apri</button>
+                            <button class="btn btn-sm btn-success" onclick="stampaPreventivo('${pv.id}')">PDF</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function caricaArchivioContratti() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/contratti?studioId=${studioId}&token=${token}`);
+                const data = await response.json();
+                if (data.success && data.contratti) {
+                    archivioContratti = data.contratti;
+                    renderizzaArchivioContratti();
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+            }
+        }
+
+        function renderizzaArchivioContratti() {
+            const tbody = document.getElementById('archivioContrattiTable');
+            const emptyState = document.getElementById('emptyContratti');
+            
+            if (archivioContratti.length === 0) {
+                emptyState.classList.remove('hidden');
+                tbody.innerHTML = '';
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            
+            tbody.innerHTML = archivioContratti.map(ctr => {
+                let totaleAcconti = 0;
+                if (ctr.acconti && Array.isArray(ctr.acconti)) {
+                    totaleAcconti = ctr.acconti.reduce((sum, acc) => sum + (acc.importo || 0), 0);
+                }
+                const saldo = parseFloat(ctr.totale_finale) - totaleAcconti;
+                
+                return `
+                    <tr>
+                        <td>${ctr.numero_contratto || ctr.numero || 'N.D.'}</td>
+                        <td>${ctr.cliente_a.nome} ${ctr.cliente_a.cognome}</td>
+                        <td>${new Date(ctr.data_contratto || ctr.data_emissione).toLocaleDateString('it-IT')}</td>
+                        <td>${ctr.tipo_servizio}</td>
+                        <td>€ ${parseFloat(ctr.totale_finale).toFixed(2)}</td>
+                        <td style="color: var(--success); font-weight: 600;">€ ${totaleAcconti.toFixed(2)}</td>
+                        <td style="color: ${saldo > 0 ? 'var(--danger)' : 'var(--success)'}; font-weight: 700;">€ ${saldo.toFixed(2)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline" onclick="apriContratto('${ctr.id}')">Apri</button>
+                            <button class="btn btn-sm btn-success" onclick="stampaContratto('${ctr.id}')">PDF</button>
+                            <button class="btn btn-sm btn-primary" onclick="aggiungiAccontoContratto('${ctr.id}')">+ Acconto</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function apriPreventivo(id) {
+            const pv = archivioPreventivi.find(p => p.id === id);
+            if (!pv) return;
+
+            // Popola i campi con i dati del preventivo
+            document.getElementById('pvNumero').value = pv.numero || '';
+            document.getElementById('pvData').value = pv.data_emissione || '';
+            document.getElementById('pvTipoServizio').value = pv.tipo_servizio || '';
+            document.getElementById('pvLuogoCerimonia').value = pv.luogo_cerimonia || '';
+            document.getElementById('pvLuogoRicevimento').value = pv.luogo_ricevimento || '';
+            
+            // Cliente A
+            if (pv.cliente_a) {
+                document.getElementById('cA_nome').value = pv.cliente_a.nome || '';
+                document.getElementById('cA_cognome').value = pv.cliente_a.cognome || '';
+                document.getElementById('cA_tel').value = pv.cliente_a.telefono || '';
+                document.getElementById('cA_email').value = pv.cliente_a.email || '';
+                document.getElementById('cA_indirizzo').value = pv.cliente_a.indirizzo || '';
+                document.getElementById('cA_citta').value = pv.cliente_a.citta || '';
+                document.getElementById('cA_cap').value = pv.cliente_a.cap || '';
+                document.getElementById('cA_prov').value = pv.cliente_a.provincia || '';
+            }
+
+            // Cliente B
+            if (pv.cliente_b) {
+                document.getElementById('cB_nome').value = pv.cliente_b.nome || '';
+                document.getElementById('cB_cognome').value = pv.cliente_b.cognome || '';
+                document.getElementById('cB_tel').value = pv.cliente_b.telefono || '';
+                document.getElementById('cB_email').value = pv.cliente_b.email || '';
+                document.getElementById('cB_indirizzo').value = pv.cliente_b.indirizzo || '';
+                document.getElementById('cB_citta').value = pv.cliente_b.citta || '';
+                document.getElementById('cB_cap').value = pv.cliente_b.cap || '';
+                document.getElementById('cB_prov').value = pv.cliente_b.provincia || '';
+            }
+
+            document.getElementById('scontoPerc').value = pv.sconto_perc || 0;
+            document.getElementById('scontoFisso').value = pv.sconto_fisso || 0;
+            document.getElementById('scontoFissoNota').value = pv.sconto_fisso_nota || '';
+            document.getElementById('checkAccettazione').checked = pv.accettato || false;
+            document.getElementById('noteAggiuntive').value = pv.note || '';
+
+            // Ricarica servizi e calcola totali
+            await caricaServiziArchivio();
+            calcolaTotali();
+            
+            // Torna al tab crea
+            switchTab('crea');
+            mostraToast('Preventivo caricato per modifica', 'success');
+        }
+
+        async function apriContratto(id) {
+            const ctr = archivioContratti.find(c => c.id === id);
+            if (!ctr) return;
+            
+            // Stessa logica di apriPreventivo ma per contratti
+            await apriPreventivo(id);
+            mostraToast('Contratto caricato. Puoi aggiungere acconti.', 'success');
+        }
+
+        async function aggiungiAccontoContratto(id) {
+            const ctr = archivioContratti.find(c => c.id === id);
+            if (!ctr) return;
+
+            const data = prompt('Data acconto (YYYY-MM-DD):', new Date().toISOString().split('T')[0]);
+            if (!data) return;
+            
+            const importo = prompt('Importo acconto (€):');
+            if (!importo || isNaN(parseFloat(importo))) return;
+
+            // Aggiungi acconto al contratto
+            if (!ctr.acconti) ctr.acconti = [];
+            ctr.acconti.push({ data: data, importo: parseFloat(importo) });
+
+            try {
+                await fetch(`${WORKER_URL}/api/studio/contratti/${id}?token=${token}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ acconti: ctr.acconti })
+                });
+                mostraToast('Acconto aggiunto!', 'success');
+                await caricaArchivioContratti();
+            } catch (error) {
+                mostraToast('Errore nell\'aggiunta acconto', 'error');
+            }
+        }
+
+        function creaPDF() {
+            mostraToast('Generazione PDF in corso...', 'success');
+            // Implementazione nella Parte 3
+        }
+
+        function stampaPreventivo(id) {
+            const pv = archivioPreventivi.find(p => p.id === id);
+            if (pv) generaPDF(pv, 'preventivo');
+        }
+
+        function stampaContratto(id) {
+            const ctr = archivioContratti.find(c => c.id === id);
+            if (ctr) generaPDF(ctr, 'contratto');
         }
 
         function nuovoPreventivo() {
@@ -624,6 +1060,133 @@
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
+                async function generaPDF(dati, tipo) {
+            // Carica dati studio per intestazione
+            let datiStudio = { nome: 'Studio Fotografico', indirizzo: '', telefono: '', email: '', piva: '' };
+            try {
+                const res = await fetch(`${WORKER_URL}/api/studio/profilo?studioId=${studioId}&token=${token}`);
+                const data = await res.json();
+                if (data.success && data.studio) {
+                    datiStudio = data.studio;
+                }
+            } catch (error) {
+                console.error('Errore caricamento studio:', error);
+            }
+
+            // Popola template PDF
+            document.getElementById('pdf-nome-studio').textContent = datiStudio.nome || 'Studio Fotografico';
+            document.getElementById('pdf-indirizzo-studio').textContent = datiStudio.indirizzo || '';
+            document.getElementById('pdf-contatti-studio').textContent = 
+                `Tel: ${datiStudio.telefono || '-'} | Email: ${datiStudio.email || '-'} | P.IVA: ${datiStudio.piva || '-'}`;
+            
+            const titoloDoc = tipo === 'contratto' ? 'CONTRATTO' : 'PREVENTIVO';
+            const numeroDoc = tipo === 'contratto' ? (dati.numero_contratto || dati.numero) : dati.numero;
+            document.getElementById('pdf-tipo-doc').innerHTML = `${titoloDoc} N. <span id="pdf-numero">${numeroDoc || 'N.D.'}</span>`;
+
+            // Cliente A
+            const ca = dati.cliente_a || {};
+            document.getElementById('pdf-cliente-a-nome').textContent = `${ca.nome || ''} ${ca.cognome || ''}`;
+            document.getElementById('pdf-cliente-a-indirizzo').textContent = 
+                `${ca.indirizzo || ''}, ${ca.cap || ''} ${ca.citta || ''} (${ca.provincia || ''})`;
+            document.getElementById('pdf-cliente-a-contatti').textContent = 
+                `Tel: ${ca.telefono || '-'} | Email: ${ca.email || '-'}`;
+
+            // Cliente B
+            const cb = dati.cliente_b || {};
+            document.getElementById('pdf-cliente-b-nome').textContent = `${cb.nome || ''} ${cb.cognome || ''}`;
+            document.getElementById('pdf-cliente-b-indirizzo').textContent = 
+                `${cb.indirizzo || ''}, ${cb.cap || ''} ${cb.citta || ''} (${cb.provincia || ''})`;
+            document.getElementById('pdf-cliente-b-contatti').textContent = 
+                `Tel: ${cb.telefono || '-'} | Email: ${cb.email || '-'}`;
+
+            // Dettagli evento
+            document.getElementById('pdf-tipo-servizio').textContent = dati.tipo_servizio || '-';
+            document.getElementById('pdf-luogo-cerimonia').textContent = dati.luogo_cerimonia || '-';
+            document.getElementById('pdf-luogo-ricevimento').textContent = dati.luogo_ricevimento || '-';
+
+            // Servizi
+            const tbody = document.getElementById('pdf-servizi-body');
+            tbody.innerHTML = '';
+            let totaleServizi = 0;
+            (dati.servizi || []).forEach(s => {
+                const totaleRiga = (s.prezzo || 0) * (s.quantita || 1);
+                totaleServizi += totaleRiga;
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${s.descrizione || ''}</td>
+                        <td>€ ${(s.prezzo || 0).toFixed(2)}</td>
+                        <td>${s.quantita || 1}</td>
+                        <td>€ ${totaleRiga.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            // Totali
+            const scontoPerc = parseFloat(dati.sconto_perc) || 0;
+            const scontoFisso = parseFloat(dati.sconto_fisso) || 0;
+            const valScontoPerc = totaleServizi * (scontoPerc / 100);
+            const totaleSconto = valScontoPerc + scontoFisso;
+            const importoTotale = Math.max(0, totaleServizi - totaleSconto);
+
+            let totaleAcconti = 0;
+            if (dati.acconti && Array.isArray(dati.acconti)) {
+                totaleAcconti = dati.acconti.reduce((sum, acc) => sum + (parseFloat(acc.importo) || 0), 0);
+            }
+            const saldo = importoTotale - totaleAcconti;
+
+            document.getElementById('pdf-totale-servizi').textContent = totaleServizi.toFixed(2) + ' €';
+            document.getElementById('pdf-sconto-perc').textContent = scontoPerc + '% + ' + scontoFisso.toFixed(2) + ' €';
+            document.getElementById('pdf-totale-sconto').textContent = '-' + totaleSconto.toFixed(2) + ' €';
+            document.getElementById('pdf-totale').textContent = importoTotale.toFixed(2) + ' €';
+            document.getElementById('pdf-totale-acconti').textContent = totaleAcconti.toFixed(2) + ' €';
+            document.getElementById('pdf-saldo').textContent = saldo.toFixed(2) + ' €';
+            document.getElementById('pdf-note').textContent = dati.note || 'Nessuna nota aggiuntiva.';
+
+            // Mostra temporaneamente il template per la cattura
+            const template = document.getElementById('pdf-template');
+            template.style.display = 'block';
+
+            // Configurazione html2pdf
+            const opt = {
+                margin: 15,
+                filename: `${tipo === 'contratto' ? 'Contratto' : 'Preventivo'}_${numeroDoc || 'N.D.'}_${(ca.cognome || 'cliente')}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Genera e scarica PDF
+            html2pdf().set(opt).from(template).save().then(() => {
+                template.style.display = 'none';
+                mostraToast('PDF generato e scaricato con successo!', 'success');
+            }).catch(err => {
+                template.style.display = 'none';
+                console.error('Errore PDF:', err);
+                mostraToast('Errore nella generazione PDF', 'error');
+            });
+        }
+
+        // Override delle funzioni creaPDF, stampaPreventivo, stampaContratto per usare generaPDF
+        function creaPDF() {
+            const dati = raccogliDatiPreventivo();
+            if (dati.servizi.length === 0) {
+                mostraToast('Seleziona almeno un servizio prima di generare il PDF', 'error');
+                return;
+            }
+            const tipo = document.getElementById('checkAccettazione').checked ? 'contratto' : 'preventivo';
+            generaPDF(dati, tipo);
+        }
+
+        function stampaPreventivo(id) {
+            const pv = archivioPreventivi.find(p => p.id === id);
+            if (pv) generaPDF(pv, 'preventivo');
+        }
+
+        function stampaContratto(id) {
+            const ctr = archivioContratti.find(c => c.id === id);
+            if (ctr) generaPDF(ctr, 'contratto');
+        }
+
     </script>
 </body>
 </html>
