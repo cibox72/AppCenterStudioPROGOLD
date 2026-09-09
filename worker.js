@@ -356,7 +356,8 @@ export default {
 
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-            // ============================================
+
+      // ============================================
       // 17. LISTINI SERVIZI - LISTA (Studio)
       // ============================================
       if (path === "/api/studio/servizi" && request.method === "GET") {
@@ -631,8 +632,7 @@ export default {
         await env.DB.prepare("DELETE FROM agenda WHERE id=?").bind(id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-
-      // ============================================
+            // ============================================
       // 33. CLIENTI (Studio)
       // ============================================
       if (path === "/api/studio/clienti" && request.method === "GET") {
@@ -823,7 +823,7 @@ export default {
       }
 
       // ============================================
-      // 40. PROFILO STUDIO (con notifica all'admin)
+      // 40. PROFILO STUDIO - PUT (AGGIORNATO con nuovi campi)
       // ============================================
       if (path === "/api/studio/profilo" && request.method === "PUT") {
         const token = url.searchParams.get("token");
@@ -841,6 +841,14 @@ export default {
         if (d.indirizzo !== undefined) { updates.push("indirizzo=?"); params.push(d.indirizzo); }
         if (d.citta !== undefined) { updates.push("citta=?"); params.push(d.citta); }
         if (d.stato !== undefined) { updates.push("stato=?"); params.push(d.stato); }
+        if (d.website !== undefined) { updates.push("website=?"); params.push(d.website); }
+        if (d.msg_benvenuto !== undefined) { updates.push("msg_benvenuto=?"); params.push(d.msg_benvenuto); }
+        if (d.msg_ringraziamento !== undefined) { updates.push("msg_ringraziamento=?"); params.push(d.msg_ringraziamento); }
+        if (d.link_facebook !== undefined) { updates.push("link_facebook=?"); params.push(d.link_facebook); }
+        if (d.link_instagram !== undefined) { updates.push("link_instagram=?"); params.push(d.link_instagram); }
+        if (d.link_portfolio !== undefined) { updates.push("link_portfolio=?"); params.push(d.link_portfolio); }
+        if (d.link_qr !== undefined) { updates.push("link_qr=?"); params.push(d.link_qr); }
+        if (d.logo_url !== undefined) { updates.push("logo_url=?"); params.push(d.logo_url); }
 
         if (updates.length > 0) {
           params.push(sess.user_id);
@@ -850,6 +858,37 @@ export default {
           await creaNotifica('scheda_compilata', 'Scheda Anagrafica Compilata', `Lo studio "${d.nome || sess.user_id}" ha compilato/aggiornato la sua scheda anagrafica.`, d);
         }
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 40.5 PROFILO STUDIO - GET (NUOVO)
+      // ============================================
+      if (path === "/api/studio/profilo" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const studioId = url.searchParams.get("studioId") || sess.user_id;
+        const result = await env.DB.prepare("SELECT * FROM studi WHERE id=?").bind(studioId).first();
+        return new Response(JSON.stringify({ success: true, studio: result }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 40.6 UPLOAD LOGO STUDIO (NUOVO)
+      // ============================================
+      if (path === "/api/studio/upload-logo" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const studioId = url.searchParams.get("studioId");
+        const filename = url.searchParams.get("filename") || "logo.png";
+        const body = await request.arrayBuffer();
+        const bucket = env.appcenter_studio_foto;
+        if (bucket) {
+          const key = `loghi/${studioId}/${filename}`;
+          await bucket.put(key, body);
+          return new Response(JSON.stringify({ success: true, url: `https://appcenter-studio-foto.r2.dev/${key}` }), { headers: corsHeaders });
+        }
+        return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
       }
 
       // ============================================
@@ -992,8 +1031,9 @@ export default {
         }
         return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
       }
-            // ============================================
-      // 49. GALLERIE - LISTA (Studio) - NUOVO
+
+      // ============================================
+      // 49. GALLERIE - LISTA (Studio)
       // ============================================
       if (path === "/api/studio/gallerie" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -1005,7 +1045,7 @@ export default {
       }
 
       // ============================================
-      // 50. GALLERIE - CREA (Studio) - NUOVO
+      // 50. GALLERIE - CREA (Studio)
       // ============================================
       if (path === "/api/studio/galleria" && request.method === "POST") {
         const token = url.searchParams.get("token");
@@ -1022,7 +1062,7 @@ export default {
       }
 
       // ============================================
-      // 51. GALLERIE - AGGIORNA (Studio) - NUOVO
+      // 51. GALLERIE - AGGIORNA (Studio)
       // ============================================
       if (path.startsWith("/api/studio/galleria/") && request.method === "PUT") {
         const token = url.searchParams.get("token");
@@ -1057,7 +1097,7 @@ export default {
       }
 
       // ============================================
-      // 52. GALLERIE - ELIMINA (Studio) - NUOVO
+      // 52. GALLERIE - ELIMINA (Studio)
       // ============================================
       if (path.startsWith("/api/studio/galleria/") && request.method === "DELETE") {
         const token = url.searchParams.get("token");
@@ -1070,13 +1110,70 @@ export default {
       }
 
       // ============================================
-      // 53. GALLERIA PUBBLICA (Cliente) - NUOVO
+      // 53. GALLERIA PUBBLICA (Cliente)
       // ============================================
       if (path === "/api/public/galleria" && request.method === "GET") {
         const id = url.searchParams.get("id");
         const result = await env.DB.prepare("SELECT * FROM gallerie WHERE id=?").bind(id).first();
         if (!result) return new Response(JSON.stringify({ error: "Galleria non trovata" }), { status: 404, headers: corsHeaders });
         return new Response(JSON.stringify({ success: true, galleria: result }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 54. CONTRATTI - LISTA (Studio) - NUOVO
+      // ============================================
+      if (path === "/api/studio/contratti" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const studioId = url.searchParams.get("studioId");
+        const result = await env.DB.prepare("SELECT * FROM contratti WHERE studio_id=? ORDER BY data_creazione DESC").bind(studioId).all();
+        return new Response(JSON.stringify({ success: true, contratti: result.results }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 55. CONTRATTI - CREA (Studio) - NUOVO
+      // ============================================
+      if (path === "/api/studio/contratti" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const d = await request.json();
+        const clienteA = JSON.stringify(d.cliente_a || {});
+        const clienteB = JSON.stringify(d.cliente_b || {});
+        const servizi = JSON.stringify(d.servizi || []);
+        const acconti = JSON.stringify(d.acconti || []);
+        
+        await env.DB.prepare(`INSERT INTO contratti (id, studio_id, numero_contratto, numero, data_contratto, data_emissione, tipo_servizio, luogo_cerimonia, luogo_ricevimento, cliente_a, cliente_b, servizi, acconti, sconto_perc, sconto_fisso, sconto_fisso_nota, accettato, note, totale_finale, stato, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+          d.id, d.studio_id, d.numero_contratto || d.numero, d.numero, d.data_contratto || new Date().toISOString().split('T')[0], d.data_emissione, d.tipo_servizio || null, d.luogo_cerimonia || null, d.luogo_ricevimento || null,
+          clienteA, clienteB, servizi, acconti,
+          d.sconto_perc || 0, d.sconto_fisso || 0, d.sconto_fisso_nota || null,
+          d.accettato ? 1 : 0, d.note || null, d.totale_finale || 0, d.stato || 'attivo',
+          d.data_creazione || new Date().toISOString()
+        ).run();
+        
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 56. CONTRATTI - AGGIORNA (Studio) - NUOVO (per aggiungere acconti)
+      // ============================================
+      if (path.startsWith("/api/studio/contratti/") && request.method === "PUT") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const id = path.split("/api/studio/contratti/")[1];
+        const d = await request.json();
+        
+        // Se vengono passati gli acconti, li aggiorniamo come JSON string
+        if (d.acconti !== undefined) {
+          await env.DB.prepare(`UPDATE contratti SET acconti=? WHERE id=?`).bind(JSON.stringify(d.acconti), id).run();
+        }
+        
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
       // ============================================
