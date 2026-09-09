@@ -33,7 +33,7 @@
         }
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
         }
         .card {
             background: white;
@@ -116,7 +116,8 @@
             color: var(--danger);
         }
         .form-group input,
-        .form-group select {
+        .form-group select,
+        .form-group textarea {
             padding: 14px 16px;
             border: 2px solid var(--border-color);
             border-radius: 12px;
@@ -125,7 +126,8 @@
             transition: all 0.3s ease;
         }
         .form-group input:focus,
-        .form-group select:focus {
+        .form-group select:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(130, 224, 170, 0.2);
@@ -134,6 +136,66 @@
             color: var(--text-light);
             opacity: 0.6;
         }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        /* Logo Upload Styles */
+        .logo-upload-section {
+            background: var(--primary-light);
+            border: 2px dashed var(--primary);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .logo-upload-area {
+            cursor: pointer;
+            padding: 20px;
+        }
+        .logo-upload-area:hover {
+            background: rgba(130, 224, 170, 0.1);
+        }
+        .logo-preview {
+            max-width: 200px;
+            max-height: 200px;
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .logo-placeholder {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+        .logo-text {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        
+        .info-box {
+            background: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin-bottom: 32px;
+            font-size: 14px;
+            color: var(--text-main);
+        }
+        .info-box strong {
+            color: var(--primary-dark);
+        }
+        
         .btn-submit {
             width: 100%;
             padding: 18px 32px;
@@ -202,18 +264,6 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        .info-box {
-            background: var(--primary-light);
-            border-left: 4px solid var(--primary);
-            padding: 16px 20px;
-            border-radius: 10px;
-            margin-bottom: 32px;
-            font-size: 14px;
-            color: var(--text-main);
-        }
-        .info-box strong {
-            color: var(--primary-dark);
-        }
         @media (max-width: 768px) {
             .card {
                 padding: 32px 24px;
@@ -232,18 +282,34 @@
         <div class="card">
             <div class="welcome-header">
                 <div class="welcome-icon">🎉</div>
-                <h1 class="welcome-title">Benvenuto nel tuo Studio!</h1>
-                <p class="welcome-subtitle">Compila la scheda anagrafica per attivare tutti i servizi</p>
+                <h1 class="welcome-title">Scheda Anagrafica Studio</h1>
+                <p class="welcome-subtitle">Compila tutti i dati del tuo studio per personalizzare documenti e comunicazioni</p>
                 <div class="welcome-note">
-                    ️ Tutti i dati saranno sincronizzati automaticamente sul cloud
+                    ☁️ Tutti i dati saranno sincronizzati automaticamente sul cloud
                 </div>
             </div>
 
             <div class="info-box">
-                <strong>📋 Importante:</strong> Compilando questa scheda, invierai i dati del tuo studio al fornitore. Riceverai una notifica di conferma e potrai iniziare a utilizzare immediatamente tutte le funzionalità della piattaforma.
+                <strong>📋 Importante:</strong> Questi dati appariranno su tutti i documenti (contratti, preventivi, ricevute) e verranno usati per i messaggi automatici inviati ai clienti.
             </div>
 
             <form id="schedaForm" onsubmit="inviaScheda(event)">
+                <!-- SEZIONE LOGO -->
+                <div class="section-title">Logo dello Studio</div>
+                <div class="logo-upload-section">
+                    <div class="logo-upload-area" onclick="document.getElementById('logoInput').click()">
+                        <div id="logoPlaceholder">
+                            <div class="logo-placeholder"></div>
+                            <div class="logo-text">Clicca per caricare il logo (JPG, PNG, max 2MB)</div>
+                        </div>
+                        <img id="logoPreview" class="logo-preview hidden" alt="Logo Studio">
+                        <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="previewLogo(this)">
+                    </div>
+                    <div id="logoStatus" style="margin-top: 12px; font-size: 12px; color: var(--text-light);"></div>
+                </div>
+
+                <!-- SEZIONE DATI PRINCIPALI -->
+                <div class="section-title">Dati Principali dello Studio</div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Nome Studio <span class="required">*</span></label>
@@ -281,9 +347,52 @@
                         <input type="text" id="stato" required placeholder="es. MI o Italia">
                     </div>
                 </div>
+                
+                <div class="form-group">
+                    <label>Sito Web</label>
+                    <input type="url" id="website" placeholder="es. https://www.rossifotografia.it">
+                </div>
+                                <!-- SEZIONE MESSAGGI AUTOMATICI -->
+                <div class="section-title">Messaggi Automatici</div>
+                <div class="info-box" style="font-size: 13px;">
+                    Questi messaggi verranno utilizzati per le comunicazioni automatiche con i clienti.
+                </div>
+                <div class="form-group">
+                    <label>Messaggio di Benvenuto (dopo la registrazione cliente)</label>
+                    <textarea id="msgBenvenuto" placeholder="Gentile Cliente, benvenuto nel nostro studio! Siamo lieti di averti con noi..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Messaggio di Ringraziamento (dopo il servizio)</label>
+                    <textarea id="msgRingraziamento" placeholder="Grazie per aver scelto il nostro studio per il tuo evento speciale..."></textarea>
+                </div>
+
+                <!-- SEZIONE LINK SOCIAL E QR -->
+                <div class="section-title">Link Social e QR Code</div>
+                <div class="info-box" style="font-size: 13px;">
+                    Questi link appariranno nei documenti e il QR code verrà generato automaticamente.
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Pagina Facebook</label>
+                        <input type="url" id="linkFacebook" placeholder="https://facebook.com/tuostudio">
+                    </div>
+                    <div class="form-group">
+                        <label>Pagina Instagram</label>
+                        <input type="url" id="linkInstagram" placeholder="https://instagram.com/tuostudio">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Link Portfolio / Sito Web</label>
+                    <input type="url" id="linkPortfolio" placeholder="https://www.tuostudio.it/portfolio">
+                </div>
+                <div class="form-group">
+                    <label>Link per QR Code (opzionale)</label>
+                    <input type="url" id="linkQR" placeholder="https://www.tuostudio.it">
+                    <div style="font-size: 12px; color: var(--text-light); margin-top: 4px;">Questo link verrà convertito in QR code e inserito nei documenti PDF</div>
+                </div>
 
                 <button type="submit" class="btn-submit" id="btnSubmit">
-                    📤 INVIA DATI AL FORNITORE
+                    💾 SALVA E AGGIORNA SCHEDA
                 </button>
             </form>
         </div>
@@ -296,6 +405,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
+        let logoUrl = null;
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) {
@@ -318,16 +428,70 @@
 
                 studioId = data.user.id;
                 
-                // Se lo studio ha già compilato i dati, reindirizza alla plancia
-                if (data.user.email && data.user.telefono && data.user.indirizzo) {
-                    mostraToast('Scheda già compilata. Reindirizzamento alla plancia...', 'success');
-                    setTimeout(() => {
-                        window.location.href = `plancia-studio.html?token=${token}`;
-                    }, 1500);
-                }
+                // Carica i dati esistenti se presenti
+                await caricaDatiEsistenti();
             } catch (error) {
                 console.error('Errore:', error);
                 mostraToast('Errore di connessione al cloud', 'error');
+            }
+        }
+
+        async function caricaDatiEsistenti() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/profilo?studioId=${studioId}&token=${token}`);
+                const data = await response.json();
+                
+                if (data.success && data.studio) {
+                    const s = data.studio;
+                    // Popola i campi con i dati esistenti
+                    document.getElementById('nomeStudio').value = s.nome || '';
+                    document.getElementById('piva').value = s.piva || '';
+                    document.getElementById('email').value = s.email || '';
+                    document.getElementById('telefono').value = s.telefono || '';
+                    document.getElementById('indirizzo').value = s.indirizzo || '';
+                    document.getElementById('citta').value = s.citta || '';
+                    document.getElementById('stato').value = s.stato || '';
+                    document.getElementById('website').value = s.website || '';
+                    document.getElementById('msgBenvenuto').value = s.msg_benvenuto || '';
+                    document.getElementById('msgRingraziamento').value = s.msg_ringraziamento || '';
+                    document.getElementById('linkFacebook').value = s.link_facebook || '';
+                    document.getElementById('linkInstagram').value = s.link_instagram || '';
+                    document.getElementById('linkPortfolio').value = s.link_portfolio || '';
+                    document.getElementById('linkQR').value = s.link_qr || '';
+                    
+                    // Carica logo se esiste
+                    if (s.logo_url) {
+                        logoUrl = s.logo_url;
+                        document.getElementById('logoPreview').src = logoUrl;
+                        document.getElementById('logoPreview').classList.remove('hidden');
+                        document.getElementById('logoPlaceholder').classList.add('hidden');
+                        document.getElementById('logoStatus').textContent = 'Logo caricato: ' + logoUrl;
+                    }
+                }
+            } catch (error) {
+                console.error('Errore caricamento dati:', error);
+            }
+        }
+
+        function previewLogo(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                
+                // Validazione dimensione (max 2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    mostraToast('Il logo deve essere massimo 2MB', 'error');
+                    input.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('logoPreview').src = e.target.result;
+                    document.getElementById('logoPreview').classList.remove('hidden');
+                    document.getElementById('logoPlaceholder').classList.add('hidden');
+                    document.getElementById('logoStatus').textContent = 'Logo selezionato: ' + file.name + ' (sarà caricato al salvataggio)';
+                };
+                reader.readAsDataURL(file);
             }
         }
 
@@ -341,6 +505,13 @@
             const indirizzo = document.getElementById('indirizzo').value.trim();
             const citta = document.getElementById('citta').value.trim();
             const stato = document.getElementById('stato').value.trim();
+            const website = document.getElementById('website').value.trim();
+            const msgBenvenuto = document.getElementById('msgBenvenuto').value.trim();
+            const msgRingraziamento = document.getElementById('msgRingraziamento').value.trim();
+            const linkFacebook = document.getElementById('linkFacebook').value.trim();
+            const linkInstagram = document.getElementById('linkInstagram').value.trim();
+            const linkPortfolio = document.getElementById('linkPortfolio').value.trim();
+            const linkQR = document.getElementById('linkQR').value.trim();
 
             if (!nomeStudio || !email || !telefono || !indirizzo || !citta || !stato) {
                 mostraToast('Compila tutti i campi obbligatori (contrassegnati con *)', 'error');
@@ -349,32 +520,58 @@
 
             const btnSubmit = document.getElementById('btnSubmit');
             const originalText = btnSubmit.innerHTML;
-            btnSubmit.innerHTML = '<span class="loading-spinner"></span> Invio in corso...';
+            btnSubmit.innerHTML = '<span class="loading-spinner"></span> Salvataggio in corso...';
             btnSubmit.classList.add('loading');
             btnSubmit.disabled = true;
 
             try {
+                // 1. Upload logo se presente e nuovo
+                const logoFile = document.getElementById('logoInput').files[0];
+                if (logoFile) {
+                    const uploadResponse = await fetch(`${WORKER_URL}/api/studio/upload-logo?token=${token}&studioId=${studioId}&filename=logo_${studioId}.png`, {
+                        method: 'POST',
+                        body: logoFile
+                    });
+                    const uploadData = await uploadResponse.json();
+                    if (uploadData.success) {
+                        logoUrl = uploadData.url;
+                    } else {
+                        console.warn('Upload logo fallito, procedo senza');
+                    }
+                }
+
+                // 2. Salvataggio dati anagrafici completi
+                const datiStudio = {
+                    nome: nomeStudio,
+                    piva: piva,
+                    email: email,
+                    telefono: telefono,
+                    indirizzo: indirizzo,
+                    citta: citta,
+                    stato: stato,
+                    website: website,
+                    msg_benvenuto: msgBenvenuto,
+                    msg_ringraziamento: msgRingraziamento,
+                    link_facebook: linkFacebook,
+                    link_instagram: linkInstagram,
+                    link_portfolio: linkPortfolio,
+                    link_qr: linkQR,
+                    logo_url: logoUrl
+                };
+
                 const response = await fetch(`${WORKER_URL}/api/studio/profilo?token=${token}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        nome: nomeStudio,
-                        piva: piva,
-                        email: email,
-                        telefono: telefono,
-                        indirizzo: indirizzo,
-                        citta: citta,
-                        stato: stato
-                    })
+                    body: JSON.stringify(datiStudio)
                 });
 
                 const result = await response.json();
 
                 if (result.success) {
-                    mostraToast('✅ Scheda inviata con successo! Il fornitore ha ricevuto i tuoi dati.', 'success');
+                    mostraToast('✅ Scheda salvata con successo! Tutti i dati sono stati sincronizzati sul cloud.', 'success');
                     
                     setTimeout(() => {
-                        mostraToast('🔄 Reindirizzamento alla plancia di controllo...', 'success');
+                        mostraToast(' Reindirizzamento alla plancia di controllo...', 'success');
                     }, 1500);
 
                     setTimeout(() => {
