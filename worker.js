@@ -699,7 +699,8 @@ export default {
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
 
         const d = await request.json();
-        await env.DB.prepare(`INSERT INTO prodotti_negozio (id, studio_id, nome, categoria, prezzo, misura, descrizione, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, d.studio_id, d.nome, d.categoria, d.prezzo, d.misura, d.descrizione, d.data_creazione).run();
+        // AGGIORNATO: Aggiunti campi colori, misure e immagine
+        await env.DB.prepare(`INSERT INTO prodotti_negozio (id, studio_id, nome, categoria, prezzo, misura, descrizione, colori, misure, immagine, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, d.studio_id, d.nome, d.categoria, d.prezzo, d.misura, d.descrizione, d.colori || '', d.misure || '', d.immagine || '', d.data_creazione).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
@@ -721,9 +722,11 @@ export default {
         const d = await request.json();
         const existing = await env.DB.prepare("SELECT id FROM negozi_config WHERE studio_id=?").bind(d.studio_id).first();
         if (existing) {
-          await env.DB.prepare(`UPDATE negozi_config SET paypal_email=?, whatsapp_numero=?, studio_indirizzo=? WHERE studio_id=?`).bind(d.paypal_email, d.whatsapp_numero, d.studio_indirizzo, d.studio_id).run();
+          // AGGIORNATO: Aggiunti campi msg_benvenuto e msg_ritiro
+          await env.DB.prepare(`UPDATE negozi_config SET paypal_email=?, whatsapp_numero=?, studio_indirizzo=?, msg_benvenuto=?, msg_ritiro=? WHERE studio_id=?`).bind(d.paypal_email, d.whatsapp_numero, d.studio_indirizzo, d.msg_benvenuto || '', d.msg_ritiro || '', d.studio_id).run();
         } else {
-          await env.DB.prepare(`INSERT INTO negozi_config (studio_id, paypal_email, whatsapp_numero, studio_indirizzo) VALUES (?, ?, ?, ?)`).bind(d.studio_id, d.paypal_email, d.whatsapp_numero, d.studio_indirizzo).run();
+          // AGGIORNATO: Aggiunti campi msg_benvenuto e msg_ritiro
+          await env.DB.prepare(`INSERT INTO negozi_config (studio_id, paypal_email, whatsapp_numero, studio_indirizzo, msg_benvenuto, msg_ritiro) VALUES (?, ?, ?, ?, ?, ?)`).bind(d.studio_id, d.paypal_email, d.whatsapp_numero, d.studio_indirizzo, d.msg_benvenuto || '', d.msg_ritiro || '').run();
         }
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
@@ -893,7 +896,7 @@ export default {
       }
 
       // ============================================
-      // 44. TEMI - GET (Admin) - NUOVO
+      // 44. TEMI - GET (Admin)
       // ============================================
       if (path === "/api/admin/tema" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -907,7 +910,7 @@ export default {
       }
 
       // ============================================
-      // 45. TEMI - POST (Admin) - NUOVO
+      // 45. TEMI - POST (Admin)
       // ============================================
       if (path === "/api/admin/tema" && request.method === "POST") {
         const token = url.searchParams.get("token");
@@ -925,6 +928,73 @@ export default {
         }
         
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 46. NEGOZIO - ORDINI (Studio & Pubblico) - NUOVO
+      // ============================================
+      if (path === "/api/studio/negozio/ordini" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const studioId = url.searchParams.get("studioId");
+        const result = await env.DB.prepare("SELECT * FROM ordini_negozio WHERE studio_id=? ORDER BY data_creazione DESC").bind(studioId).all();
+        return new Response(JSON.stringify({ success: true, ordini: result.results }), { headers: corsHeaders });
+      }
+
+      if (path === "/api/studio/negozio/ordine" && request.method === "POST") {
+        const d = await request.json();
+        const studioId = d.studio_id || url.searchParams.get("studioId");
+        if (!studioId) return new Response(JSON.stringify({ error: "Studio ID mancante" }), { status: 400, headers: corsHeaders });
+        const orderId = 'ord-' + Date.now();
+        await env.DB.prepare(`INSERT INTO ordini_negozio (id, studio_id, codice_ordine, cliente_nome, cliente_telefono, cliente_email, prodotti, totale, stato, file_url, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(orderId, studioId, d.codice_ordine, d.cliente_nome, d.cliente_telefono, d.cliente_email, d.prodotti, d.totale, d.stato || 'in_attesa', d.file_url || null, d.data_creazione || new Date().toISOString()).run();
+        return new Response(JSON.stringify({ success: true, id: orderId }), { headers: corsHeaders });
+      }
+
+      if (path.startsWith("/api/studio/negozio/ordine/") && request.method === "PUT") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const id = path.split("/api/studio/negozio/ordine/")[1];
+        const d = await request.json();
+        await env.DB.prepare(`UPDATE ordini_negozio SET stato=? WHERE id=?`).bind(d.stato, id).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 47. UPLOAD IMMAGINE PRODOTTO (Negozio) - NUOVO
+      // ============================================
+      if (path === "/api/studio/upload-prodotto" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const studioId = url.searchParams.get("studioId");
+        const filename = url.searchParams.get("filename") || "immagine.jpg";
+        const body = await request.arrayBuffer();
+        const bucket = env.appcenter_studio_foto;
+        if (bucket) {
+          const key = `gallerie/${studioId}/prodotti/${Date.now()}_${filename}`;
+          await bucket.put(key, body);
+          return new Response(JSON.stringify({ success: true, url: `https://appcenter-studio-foto.r2.dev/${key}` }), { headers: corsHeaders });
+        }
+        return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
+      }
+
+      // ============================================
+      // 48. UPLOAD FILE ORDINE (Pubblico/Cliente) - NUOVO
+      // ============================================
+      if (path === "/api/studio/upload-ordine" && request.method === "POST") {
+        const studioId = url.searchParams.get("studioId");
+        if (!studioId) return new Response(JSON.stringify({ error: "Studio ID mancante" }), { status: 400, headers: corsHeaders });
+        const filename = url.searchParams.get("filename") || "file.jpg";
+        const body = await request.arrayBuffer();
+        const bucket = env.appcenter_studio_foto;
+        if (bucket) {
+          const key = `gallerie/${studioId}/ordini/${Date.now()}_${filename}`;
+          await bucket.put(key, body);
+          return new Response(JSON.stringify({ success: true, url: `https://appcenter-studio-foto.r2.dev/${key}` }), { headers: corsHeaders });
+        }
+        return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
       }
 
       // ============================================
