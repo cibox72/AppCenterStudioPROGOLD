@@ -209,6 +209,35 @@
             .dashboard-grid { grid-template-columns: 1fr; }
             .page-header h1 { font-size: 24px; }
         }
+
+        /* --- STILI MODALE LINK UTILI --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 3000; align-items: center; justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white; border-radius: var(--radius); padding: 32px; width: 90%; max-width: 600px;
+            max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .modal-header h2 { font-size: 22px; color: var(--primary-dark); }
+        .close-modal { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-light); }
+        .link-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px;
+            border-left: 3px solid var(--primary);
+        }
+        .link-info { flex: 1; margin-right: 12px; }
+        .link-desc { font-weight: 600; font-size: 14px; color: var(--text-main); margin-bottom: 4px; }
+        .link-url { font-size: 12px; color: var(--text-light); word-break: break-all; }
+        .link-url a { color: var(--primary-dark); text-decoration: none; }
+        .link-url a:hover { text-decoration: underline; }
+        .link-actions { display: flex; gap: 8px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; }
+        .form-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
     </style>
 </head>
 <body>
@@ -308,11 +337,45 @@
                     <div class="module-title">GRU</div>
                     <div class="module-description">Gestione risorse e utility dello studio.</div>
                 </a>
+
+                <!-- NUOVA CARD LINK UTILI -->
+                <div class="module-card" onclick="apriLinkUtili()">
+                    <div class="module-icon">🔗</div>
+                    <div class="module-title">Link Utili</div>
+                    <div class="module-description">Archivio personale di link, fornitori e risorse rapide.</div>
+                </div>
             </div>
         </div>
 
         <div class="footer-branding">
             Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong>
+        </div>
+    </div>
+
+    <!-- MODALE LINK UTILI -->
+    <div class="modal-overlay" id="modalLinkUtili">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔗 Archivio Link Utili</h2>
+                <button class="close-modal" onclick="chiudiLinkUtili()">✕</button>
+            </div>
+            
+            <div style="background: var(--primary-light); padding: 20px; border-radius: 10px; margin-bottom: 24px;">
+                <div class="form-group">
+                    <label>Descrizione (es. Rivenditore Carta Fotografica)</label>
+                    <input type="text" id="linkDescrizione" placeholder="Inserisci una descrizione chiara...">
+                </div>
+                <div class="form-group">
+                    <label>URL del Link (https://...)</label>
+                    <input type="url" id="linkUrl" placeholder="https://www.esempio.com">
+                </div>
+                <button class="nav-btn" style="width: 100%; background: var(--primary-gradient); color: white; font-weight: 700;" onclick="aggiungiLink()">💾 Salva nell'Archivio</button>
+            </div>
+
+            <h3 style="font-size: 16px; margin-bottom: 12px; color: var(--text-main);">I tuoi link salvati:</h3>
+            <div id="listaLinkContainer">
+                <div class="loading" style="padding: 20px;"><div class="spinner" style="width: 30px; height: 30px;"></div></div>
+            </div>
         </div>
     </div>
 
@@ -347,7 +410,6 @@
                 document.getElementById('studioNome').textContent = data.user.nome || 'Studio';
                 document.getElementById('studioIdDisplay').textContent = 'ID: ' + currentStudioId;
                 
-                // CONTROLLO SCHEDA ANAGRAFICA: se mancano i dati fondamentali, reindirizza alla scheda
                 if (!data.user.email || !data.user.telefono || !data.user.indirizzo) {
                     mostraToast('⚠️ Devi compilare la scheda anagrafica per continuare', 'error');
                     setTimeout(() => {
@@ -386,6 +448,99 @@
             toast.innerHTML = `<div>${msg}</div>`;
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
+        }
+
+        // ==========================================
+        // FUNZIONI LINK UTILI
+        // ==========================================
+        function apriLinkUtili() {
+            document.getElementById('modalLinkUtili').classList.add('active');
+            caricaLinkUtili();
+        }
+
+        function chiudiLinkUtili() {
+            document.getElementById('modalLinkUtili').classList.remove('active');
+        }
+
+        async function caricaLinkUtili() {
+            const container = document.getElementById('listaLinkContainer');
+            container.innerHTML = '<div class="loading" style="padding: 20px;"><div class="spinner" style="width: 30px; height: 30px;"></div><div>Caricamento...</div></div>';
+            try {
+                const res = await fetch(`${WORKER_URL}/api/studio/link-utili?token=${token}`);
+                const data = await res.json();
+                if (data.success) {
+                    if (data.links.length === 0) {
+                        container.innerHTML = '<p style="text-align:center; color:var(--text-light); padding:20px;">Nessun link salvato. Aggiungi il tuo primo link sopra!</p>';
+                        return;
+                    }
+                    container.innerHTML = data.links.map(link => `
+                        <div class="link-item">
+                            <div class="link-info">
+                                <div class="link-desc">${link.descrizione}</div>
+                                <div class="link-url"><a href="${link.url}" target="_blank">${link.url}</a></div>
+                            </div>
+                            <div class="link-actions">
+                                <a href="${link.url}" target="_blank" class="nav-btn" style="text-decoration:none; font-size:12px; padding:6px 12px; background:var(--primary); color:white;">Vai</a>
+                                <button class="nav-btn" style="background:var(--danger); color:white; font-size:12px; padding:6px 12px;" onclick="eliminaLink('${link.id}')">🗑️</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p style="text-align:center; color:var(--danger); padding:20px;">Errore nel caricamento.</p>';
+                }
+            } catch (e) {
+                console.error(e);
+                container.innerHTML = '<p style="text-align:center; color:var(--danger); padding:20px;">Errore di connessione.</p>';
+            }
+        }
+
+        async function aggiungiLink() {
+            const desc = document.getElementById('linkDescrizione').value.trim();
+            const url = document.getElementById('linkUrl').value.trim();
+            
+            if (!desc || !url) {
+                mostraToast('Compila sia la descrizione che l\'URL', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${WORKER_URL}/api/studio/link-utili?token=${token}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ descrizione: desc, url: url })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    mostraToast('Link salvato con successo!', 'success');
+                    document.getElementById('linkDescrizione').value = '';
+                    document.getElementById('linkUrl').value = '';
+                    await caricaLinkUtili();
+                } else {
+                    mostraToast('Errore nel salvataggio', 'error');
+                }
+            } catch (e) {
+                console.error(e);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        async function eliminaLink(id) {
+            if (!confirm('Sei sicuro di voler eliminare questo link dall\'archivio?')) return;
+            try {
+                const res = await fetch(`${WORKER_URL}/api/studio/link-utili/${id}?token=${token}`, {
+                    method: 'DELETE'
+                });
+                const data = await res.json();
+                if (data.success) {
+                    mostraToast('Link eliminato', 'success');
+                    await caricaLinkUtili();
+                } else {
+                    mostraToast('Errore nell\'eliminazione', 'error');
+                }
+            } catch (e) {
+                console.error(e);
+                mostraToast('Errore di connessione', 'error');
+            }
         }
     </script>
 </body>
