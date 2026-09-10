@@ -252,17 +252,18 @@
                 <!-- SEZIONE LOGO -->
                 <div class="card-3d">
                     <div class="card-title">Logo dello Studio</div>
-                    <div class="card-subtitle">Carica il logo del tuo studio. Verra ridimensionato automaticamente.</div>
+                    <div class="card-subtitle">Carica il logo del tuo studio. Verrà ridimensionato automaticamente a 200x200px.</div>
+                    
                     <div class="logo-upload-area" id="logoUploadArea" onclick="document.getElementById('logoInput').click()">
                         <div id="logoPlaceholder">
                             <div class="logo-placeholder-icon">+</div>
                             <div class="logo-upload-text">Clicca per caricare il logo</div>
-                            <div class="logo-upload-hint">Formati: JPG, PNG - Max 2MB - Verra ridimensionato a 200x200px</div>
+                            <div class="logo-upload-hint">Formati: JPG, PNG - Max 2MB</div>
                         </div>
                         <img id="logoPreview" class="logo-preview hidden" alt="Logo Studio">
                         <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="previewLogo(this)">
                     </div>
-                    <div id="logoStatus" style="font-size: 12px; color: var(--text-light); text-align: center;"></div>
+                    <div id="logoStatus" style="margin-top: 12px; font-size: 13px; color: var(--text-light); text-align: center;"></div>
                 </div>
 
                 <!-- DATI AZIENDALI -->
@@ -304,7 +305,7 @@
                 <!-- INDIRIZZO -->
                 <div class="card-3d">
                     <div class="card-title">Indirizzo Sede Legale</div>
-                    <div class="card-subtitle">Indirizzo completo che apparira sui documenti.</div>
+                    <div class="card-subtitle">Indirizzo completo che apparirà sui documenti.</div>
                     <div class="form-group">
                         <label>Via / Piazza e Numero Civico <span class="required">*</span></label>
                         <input type="text" id="studioIndirizzo" required placeholder="Via Roma 123">
@@ -315,7 +316,7 @@
                             <input type="text" id="studioCap" required placeholder="20100" maxlength="5">
                         </div>
                         <div class="form-group">
-                            <label>Citta <span class="required">*</span></label>
+                            <label>Città <span class="required">*</span></label>
                             <input type="text" id="studioCitta" required placeholder="Milano">
                         </div>
                         <div class="form-group">
@@ -397,7 +398,7 @@
                         <div class="form-group">
                             <label>Portfolio / Link QR Code</label>
                             <input type="url" id="linkPortfolio" placeholder="https://www.studiorossi.it/portfolio">
-                            <div style="font-size: 12px; color: var(--text-light); margin-top: 4px;">Questo link verra convertito in QR code sui documenti</div>
+                            <div style="font-size: 12px; color: var(--text-light); margin-top: 4px;">Questo link verrà convertito in QR code sui documenti</div>
                         </div>
                     </div>
                 </div>
@@ -416,8 +417,7 @@
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-
-    <script>
+        <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
@@ -526,7 +526,8 @@
                         document.getElementById('logoPreview').classList.remove('hidden');
                         document.getElementById('logoPlaceholder').classList.add('hidden');
                         document.getElementById('logoUploadArea').classList.add('has-logo');
-                        document.getElementById('logoStatus').textContent = 'Logo caricato';
+                        document.getElementById('logoStatus').textContent = 'Logo già caricato';
+                        document.getElementById('logoStatus').style.color = 'var(--success)';
                     }
                 }
             } catch (error) {
@@ -535,23 +536,57 @@
         }
 
         function previewLogo(input) {
+            const statusDiv = document.getElementById('logoStatus');
+            
             if (input.files && input.files[0]) {
                 const file = input.files[0];
                 
+                // Validazione dimensione
                 if (file.size > 2 * 1024 * 1024) {
                     mostraToast('Il logo deve essere massimo 2MB', 'error');
+                    statusDiv.textContent = 'File troppo grande (max 2MB)';
+                    statusDiv.style.color = 'var(--danger)';
+                    input.value = '';
+                    return;
+                }
+                
+                // Validazione tipo file
+                if (!file.type.match('image.*')) {
+                    mostraToast('Seleziona un file immagine (JPG o PNG)', 'error');
+                    statusDiv.textContent = 'Formato non valido';
+                    statusDiv.style.color = 'var(--danger)';
                     input.value = '';
                     return;
                 }
                 
                 logoFile = file;
+                statusDiv.textContent = 'Caricamento in corso...';
+                statusDiv.style.color = 'var(--warning)';
+                
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('logoPreview').src = e.target.result;
-                    document.getElementById('logoPreview').classList.remove('hidden');
-                    document.getElementById('logoPlaceholder').classList.add('hidden');
-                    document.getElementById('logoUploadArea').classList.add('has-logo');
-                    document.getElementById('logoStatus').textContent = 'Logo selezionato: ' + file.name + ' (verra ridimensionato al salvataggio)';
+                    try {
+                        const img = document.getElementById('logoPreview');
+                        img.src = e.target.result;
+                        img.classList.remove('hidden');
+                        document.getElementById('logoPlaceholder').classList.add('hidden');
+                        document.getElementById('logoUploadArea').classList.add('has-logo');
+                        
+                        statusDiv.innerHTML = 'Logo caricato: <strong>' + file.name + '</strong> (' + (file.size/1024).toFixed(1) + ' KB) - Verrà ridimensionato al salvataggio';
+                        statusDiv.style.color = 'var(--success)';
+                        
+                        mostraToast('Logo selezionato con successo!', 'success');
+                    } catch (err) {
+                        console.error('Errore preview:', err);
+                        statusDiv.textContent = 'Errore nel caricamento';
+                        statusDiv.style.color = 'var(--danger)';
+                        mostraToast('Errore nel caricamento del logo', 'error');
+                    }
+                };
+                reader.onerror = function() {
+                    statusDiv.textContent = 'Errore nella lettura del file';
+                    statusDiv.style.color = 'var(--danger)';
+                    mostraToast('Errore nella lettura del file', 'error');
                 };
                 reader.readAsDataURL(file);
             }
