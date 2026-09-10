@@ -148,7 +148,7 @@ export default {
       }
 
       // ============================================
-      // 7. CRM - CREAZIONE STUDIO (Admin)
+      // 7. CRM - CREAZIONE STUDIO (Admin) - MODIFICATO con scheda_completata=0
       // ============================================
       if (path === "/api/admin/crm/studio" && request.method === "POST") {
         const token = url.searchParams.get("token");
@@ -157,7 +157,7 @@ export default {
 
         const d = await request.json();
         const hashed = await hashPassword(d.password);
-        await env.DB.prepare(`INSERT INTO studi (id, password, password_plain, nome, piva, email, telefono, indirizzo, citta, stato, data_registrazione, scadenza, licenza_attiva, attivo, stato_abbonamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, 'hash:' + hashed, d.password, d.nome, d.piva, d.email, d.telefono, d.indirizzo, d.citta, d.stato, d.data_registrazione || new Date().toISOString().split('T')[0], d.scadenza, 1, 1, 'attivo').run();
+        await env.DB.prepare(`INSERT INTO studi (id, password, password_plain, nome, piva, email, telefono, indirizzo, citta, stato, data_registrazione, scadenza, licenza_attiva, attivo, stato_abbonamento, scheda_completata) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, 'hash:' + hashed, d.password, d.nome, d.piva, d.email, d.telefono, d.indirizzo, d.citta, d.stato, d.data_registrazione || new Date().toISOString().split('T')[0], d.scadenza, 1, 1, 'attivo', 0).run();
         
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
@@ -233,7 +233,7 @@ export default {
         const hashed = await hashPassword(d.password);
         const studioId = 'studio-' + Date.now();
         
-        await env.DB.prepare(`INSERT INTO studi (id, password, password_plain, nome, piva, email, telefono, indirizzo, citta, stato, data_registrazione, scadenza, licenza_attiva, attivo, stato_abbonamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(studioId, 'hash:' + hashed, d.password, d.nome, d.piva, d.email, d.telefono, d.indirizzo, d.citta, d.stato, new Date().toISOString().split('T')[0], d.scadenza, 0, 1, 'trial').run();
+        await env.DB.prepare(`INSERT INTO studi (id, password, password_plain, nome, piva, email, telefono, indirizzo, citta, stato, data_registrazione, scadenza, licenza_attiva, attivo, stato_abbonamento, scheda_completata) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(studioId, 'hash:' + hashed, d.password, d.nome, d.piva, d.email, d.telefono, d.indirizzo, d.citta, d.stato, new Date().toISOString().split('T')[0], d.scadenza, 0, 1, 'trial', 0).run();
         
         await creaNotifica('registrazione', 'Nuova Richiesta di Registrazione', `Studio "${d.nome}" ha richiesto la prova. Email: ${d.email}`, { ...d, studioId });
         return new Response(JSON.stringify({ success: true, studioId }), { headers: corsHeaders });
@@ -823,7 +823,7 @@ export default {
       }
 
       // ============================================
-      // 40. PROFILO STUDIO - PUT (AGGIORNATO con nuovi campi + notifica fornitore)
+      // 40. PROFILO STUDIO - PUT (AGGIORNATO con scheda_completata=1)
       // ============================================
       if (path === "/api/studio/profilo" && request.method === "PUT") {
         const token = url.searchParams.get("token");
@@ -862,6 +862,9 @@ export default {
           const sql = `UPDATE studi SET ${updates.join(', ')} WHERE id=?`;
           await env.DB.prepare(sql).bind(...params).run();
           
+          // Segna la scheda come completata
+          await env.DB.prepare("UPDATE studi SET scheda_completata=1 WHERE id=?").bind(sess.user_id).run();
+          
           // Notifica al fornitore (admin)
           await creaNotifica(
             'scheda_studio_aggiornata',
@@ -886,7 +889,7 @@ export default {
       }
 
       // ============================================
-      // 40.6 UPLOAD LOGO STUDIO (con ridimensionamento)
+      // 40.6 UPLOAD LOGO STUDIO
       // ============================================
       if (path === "/api/studio/upload-logo" && request.method === "POST") {
         const token = url.searchParams.get("token");
