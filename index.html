@@ -29,6 +29,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            transition: background 0.3s ease, color 0.3s ease;
         }
         .login-container { width: 100%; max-width: 480px; }
         .login-card {
@@ -59,7 +60,7 @@
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
         .password-wrapper { position: relative; display: flex; align-items: center; }
         .password-wrapper input {
-            padding: 12px 45px 12px 14px;
+            padding: 12px 80px 12px 14px;
             border: 1px solid var(--border-color);
             border-radius: 10px;
             font-size: 14px;
@@ -69,16 +70,18 @@
             position: absolute;
             right: 12px;
             background: none;
-            border: none;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 18px;
-            color: var(--text-light);
-            padding: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            padding: 4px 8px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .toggle-password:hover { color: var(--primary-dark); }
+        .toggle-password:hover { background: var(--primary-light); }
         .form-group input[type="text"],
         .form-group input[type="email"],
         .form-group input[type="tel"],
@@ -96,8 +99,9 @@
         .btn {
             padding: 14px 24px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700;
             cursor: pointer; width: 100%; background: var(--primary-gradient); color: white; margin-top: 10px;
+            transition: all 0.2s ease;
         }
-        .btn:hover { transform: translateY(-2px); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .btn-outline {
             background: white;
             color: var(--primary-dark);
@@ -109,6 +113,7 @@
         .login-type-btn {
             flex: 1; padding: 10px; border: none; background: transparent; border-radius: 8px;
             cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-light);
+            transition: all 0.2s ease;
         }
         .login-type-btn.active { background: white; color: var(--primary-dark); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
         .login-form { display: none; }
@@ -161,7 +166,7 @@
                     <label>Password</label>
                     <div class="password-wrapper">
                         <input type="password" id="studioPassword" autocomplete="new-password">
-                        <button type="button" class="toggle-password" onclick="togglePassword('studioPassword', this)">👁️</button>
+                        <button type="button" class="toggle-password" onclick="togglePassword('studioPassword', this)">Mostra</button>
                     </div>
                 </div>
                 <button class="btn" onclick="login('studio', 'studioId', 'studioPassword')">ACCEDI</button>
@@ -175,7 +180,7 @@
                     <label>Password</label>
                     <div class="password-wrapper">
                         <input type="password" id="adminPassword" autocomplete="new-password">
-                        <button type="button" class="toggle-password" onclick="togglePassword('adminPassword', this)">👁️</button>
+                        <button type="button" class="toggle-password" onclick="togglePassword('adminPassword', this)">Mostra</button>
                     </div>
                 </div>
                 <button class="btn" onclick="login('admin', 'adminId', 'adminPassword')">ACCEDI</button>
@@ -189,13 +194,13 @@
                     <label>Password</label>
                     <div class="password-wrapper">
                         <input type="password" id="clientePassword" autocomplete="new-password">
-                        <button type="button" class="toggle-password" onclick="togglePassword('clientePassword', this)">👁️</button>
+                        <button type="button" class="toggle-password" onclick="togglePassword('clientePassword', this)">Mostra</button>
                     </div>
                 </div>
                 <button class="btn" onclick="login('cliente', 'clienteId', 'clientePassword')">ACCEDI</button>
             </div>
             <div class="register-link">
-                <button onclick="showRegistration()">📸 Registra il tuo studio - Prova 30 giorni</button>
+                <button onclick="showRegistration()">Registra il tuo studio - Prova 30 giorni</button>
             </div>
         </div>
     </div>
@@ -253,14 +258,48 @@
     <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
 
+        // 1. CARICAMENTO TEMA GLOBALE ANCHE IN LOGIN
+        async function caricaTemaLogin() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/public/tema-globale`);
+                const data = await response.json();
+                if (data.success && data.tema_attivo) {
+                    const temaId = data.tema_attivo;
+                    const temi = {
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
+                    };
+                    const t = temi[temaId] || temi['default'];
+                    const root = document.documentElement;
+                    root.style.setProperty('--primary', t.p);
+                    root.style.setProperty('--primary-dark', t.pd);
+                    root.style.setProperty('--primary-light', t.pl);
+                    root.style.setProperty('--primary-gradient', t.pg);
+                    root.style.setProperty('--bg-gradient', t.bg);
+                }
+            } catch (error) {
+                console.error('Errore caricamento tema login:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            caricaTemaLogin();
+        });
+
         function togglePassword(inputId, btn) {
             const input = document.getElementById(inputId);
             if (input.type === 'password') {
                 input.type = 'text';
-                btn.textContent = '🙈';
+                btn.textContent = 'Nascondi';
             } else {
                 input.type = 'password';
-                btn.textContent = '👁️';
+                btn.textContent = 'Mostra';
             }
         }
 
@@ -281,7 +320,6 @@
 
         function chiudiRegistrazione() {
             document.getElementById('modalRegistrazione').style.display = 'none';
-            // Pulisci campi
             document.getElementById('regNome').value = '';
             document.getElementById('regPiva').value = '';
             document.getElementById('regEmail').value = '';
@@ -337,10 +375,26 @@
 
                 if (data.success) {
                     mostraToast('Accesso effettuato!', 'success');
-                    setTimeout(() => {
-                        if (tipo === 'admin') window.location.href = `admin.html?token=${data.token}`;
-                        else if (tipo === 'studio') window.location.href = `plancia-studio.html?token=${data.token}`;
-                        else if (tipo === 'cliente') window.location.href = `dashboard-cliente.html?token=${data.token}`;
+                    setTimeout(async () => {
+                        if (tipo === 'admin') {
+                            window.location.href = `admin.html?token=${data.token}`;
+                        } else if (tipo === 'studio') {
+                            // 2. CONTROLLO SCHEDA COMPLETATA PRIMA DI REINDIRIZZARE
+                            try {
+                                const verificaRes = await fetch(`${WORKER_URL}/api/auth/verifica?token=${data.token}`);
+                                const verificaData = await verificaRes.json();
+                                if (verificaData.success && verificaData.user && verificaData.user.scheda_completata !== 1) {
+                                    window.location.href = `scheda-anagrafica.html?token=${data.token}`;
+                                } else {
+                                    window.location.href = `plancia-studio.html?token=${data.token}`;
+                                }
+                            } catch (e) {
+                                // Fallback in caso di errore di rete momentaneo
+                                window.location.href = `plancia-studio.html?token=${data.token}`;
+                            }
+                        } else if (tipo === 'cliente') {
+                            window.location.href = `dashboard-cliente.html?token=${data.token}`;
+                        }
                     }, 500);
                 } else {
                     mostraToast(data.error || 'Credenziali non valide', 'error');
