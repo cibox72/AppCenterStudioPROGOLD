@@ -223,7 +223,6 @@
             .page-header h1 { font-size: 24px; }
         }
 
-        /* --- STILI MODALE LINK UTILI --- */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); z-index: 3000; align-items: center; justify-content: center;
@@ -268,7 +267,7 @@
     <div class="container">
         <div class="page-header">
             <h1>Plancia di Controllo Studio</h1>
-            <p>Gestisci tutte le funzionalità del tuo studio fotografico. Dati sincronizzati in tempo reale sul cloud.</p>
+            <p>Gestisci tutte le funzionalita del tuo studio fotografico. Dati sincronizzati in tempo reale sul cloud.</p>
         </div>
 
         <div id="loadingArea" class="loading">
@@ -376,7 +375,6 @@
         </div>
     </div>
 
-    <!-- MODALE LINK UTILI -->
     <div class="modal-overlay" id="modalLinkUtili">
         <div class="modal-content">
             <div class="modal-header">
@@ -431,22 +429,58 @@
                 }
 
                 currentStudioId = data.user.id;
-                document.getElementById('studioNome').textContent = data.user.nome || 'Studio';
-                document.getElementById('studioIdDisplay').textContent = 'ID: ' + currentStudioId;
                 
-                if (!data.user.email || !data.user.telefono || !data.user.indirizzo) {
-                    mostraToast('Devi compilare la scheda anagrafica per continuare', 'error');
+                // CARICAMENTO TEMA GLOBALE
+                await caricaTemaGlobale();
+
+                // CONTROLLO SCHEDA COMPLETATA - se non completata, reindirizza
+                if (data.user.scheda_completata !== 1) {
+                    mostraToast('Completa la scheda anagrafica per accedere', 'error');
                     setTimeout(() => {
                         window.location.href = `scheda-anagrafica.html?token=${token}`;
-                    }, 1500);
+                    }, 1000);
                     return;
                 }
+
+                document.getElementById('studioNome').textContent = data.user.nome || 'Studio';
+                document.getElementById('studioIdDisplay').textContent = 'ID: ' + currentStudioId;
                 
                 document.getElementById('loadingArea').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
             } catch (error) {
                 console.error('Errore:', error);
                 mostraToast('Errore di connessione al cloud', 'error');
+            }
+        }
+
+        // FUNZIONE TEMA GLOBALE
+        async function caricaTemaGlobale() {
+            if (!currentStudioId) return;
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${currentStudioId}&token=${token}`);
+                const data = await response.json();
+                if (data.success && data.tema && data.tema.tema_attivo) {
+                    const temaId = data.tema.tema_attivo;
+                    const temi = {
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
+                    };
+                    const t = temi[temaId] || temi['default'];
+                    const root = document.documentElement;
+                    root.style.setProperty('--primary', t.p);
+                    root.style.setProperty('--primary-dark', t.pd);
+                    root.style.setProperty('--primary-light', t.pl);
+                    root.style.setProperty('--primary-gradient', t.pg);
+                    root.style.setProperty('--bg-gradient', t.bg);
+                }
+            } catch (error) {
+                console.error('Errore caricamento tema:', error);
             }
         }
 
@@ -474,9 +508,6 @@
             setTimeout(() => toast.remove(), 3000);
         }
 
-        // ==========================================
-        // FUNZIONI LINK UTILI
-        // ==========================================
         function apriLinkUtili() {
             document.getElementById('modalLinkUtili').classList.add('active');
             caricaLinkUtili();
