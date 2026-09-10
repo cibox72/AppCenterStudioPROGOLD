@@ -112,6 +112,7 @@
             color: var(--primary-dark);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             overflow: hidden;
+            flex-shrink: 0;
         }
         .studio-logo img {
             max-width: 100%;
@@ -238,11 +239,140 @@
         }
         .error-box h3 { margin-bottom: 16px; font-size: 20px; }
         .error-box p { margin-bottom: 20px; }
-        @media print {
-            .top-bar, .action-buttons { display: none; }
-            .studio-card { box-shadow: none; border: 1px solid #ddd; }
-        }
         .hidden { display: none !important; }
+
+        /* ============================================ */
+        /* STILI OTTIMIZZATI PER STAMPA (1 PAGINA A4) */
+        /* ============================================ */
+        @media print {
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+            
+            body {
+                background: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .top-bar, .action-buttons, .toast-container { 
+                display: none !important; 
+            }
+            
+            .container {
+                padding: 0;
+                max-width: 100%;
+            }
+            
+            .page-header {
+                padding: 12px;
+                margin-bottom: 12px;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+            
+            .page-header h1 {
+                font-size: 22px;
+                margin-bottom: 4px;
+            }
+            
+            .page-header p {
+                font-size: 11px;
+            }
+            
+            .studio-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                margin-bottom: 0;
+            }
+            
+            .studio-header {
+                padding: 16px 20px;
+                gap: 16px;
+            }
+            
+            .studio-logo {
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
+            }
+            
+            .studio-header-info h2 {
+                font-size: 20px;
+                margin-bottom: 4px;
+            }
+            
+            .studio-header-info p {
+                font-size: 11px;
+                margin-bottom: 2px;
+            }
+            
+            .studio-body {
+                padding: 16px 20px;
+            }
+            
+            .section-title {
+                font-size: 13px;
+                margin-bottom: 10px;
+                padding-bottom: 6px;
+                gap: 8px;
+            }
+            
+            .section-icon {
+                width: 22px;
+                height: 22px;
+                font-size: 11px;
+            }
+            
+            .info-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+                margin-bottom: 14px;
+            }
+            
+            .info-item {
+                padding: 10px 12px;
+                border-left-width: 3px;
+            }
+            
+            .info-label {
+                font-size: 9px;
+                margin-bottom: 3px;
+            }
+            
+            .info-value {
+                font-size: 12px;
+            }
+            
+            .info-value.mono {
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+            
+            /* Nascondi sezioni vuote in stampa */
+            .info-item:empty {
+                display: none;
+            }
+            
+            /* Compatta i messaggi lunghi */
+            .info-value[style*="white-space: pre-wrap"] {
+                font-size: 10px !important;
+                max-height: 50px;
+                overflow: hidden;
+            }
+            
+            .info-item[style*="grid-column: 1 / -1"] {
+                grid-column: span 2 !important;
+            }
+            
+            /* Evita page break dentro le card */
+            .studio-card, .section-title, .info-item {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
     </style>
 </head>
 <body>
@@ -266,7 +396,7 @@
         </div>
 
         <div id="errorArea" class="error-box hidden">
-            <h3>⚠️ Errore nel caricamento</h3>
+            <h3>️ Errore nel caricamento</h3>
             <p id="errorMessage">Impossibile caricare i dati dello studio</p>
             <button class="btn btn-primary" onclick="location.reload()">Riprova</button>
         </div>
@@ -301,14 +431,10 @@
                 return;
             }
             
-            // 1. Carica prima il tema globale
             await caricaTemaGlobale();
-            
-            // 2. Poi carica i dati dello studio
             await caricaSchedaStudio();
         });
 
-        // FUNZIONE TEMA GLOBALE
         async function caricaTemaGlobale() {
             try {
                 const response = await fetch(`${WORKER_URL}/api/admin/tema?token=${encodeURIComponent(token)}`);
@@ -339,21 +465,14 @@
             }
         }
 
-        // FUNZIONE PER CONVERTIRE URL R2 IN URL SICURO
         function convertiUrlLogoSicuro(logoUrl, studioId) {
             if (!logoUrl) return null;
-            
-            // Se è un URL R2 diretto, convertilo in URL sicuro tramite Worker
             if (logoUrl.includes('r2.dev') || logoUrl.includes('appcenter-studio-foto')) {
                 return `${WORKER_URL}/api/studio/logo?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`;
             }
-            
-            // Se è già un URL sicuro del Worker, usalo direttamente
             if (logoUrl.includes('workers.dev/api/studio/logo')) {
                 return logoUrl;
             }
-            
-            // Altrimenti restituisci l'URL originale
             return logoUrl;
         }
 
@@ -366,9 +485,9 @@
                 
                 if (!response.ok) {
                     if (response.status === 404) {
-                        throw new Error('Studio non trovato nel database. Assicurati che lo studio abbia completato la scheda anagrafica.');
+                        throw new Error('Studio non trovato nel database.');
                     } else if (response.status === 403) {
-                        throw new Error('Non autorizzato. Sessione scaduta o invalida.');
+                        throw new Error('Non autorizzato. Sessione scaduta.');
                     } else {
                         throw new Error(`Errore server: ${response.status}`);
                     }
@@ -382,7 +501,7 @@
                     document.getElementById('loadingArea').classList.add('hidden');
                     document.getElementById('mainContent').classList.remove('hidden');
                 } else {
-                    throw new Error(data.error || 'Nessun dato ricevuto dal server');
+                    throw new Error(data.error || 'Nessun dato ricevuto');
                 }
             } catch (error) {
                 console.error('[SCHEDA ADMIN] Errore:', error);
@@ -400,13 +519,11 @@
         function renderizzaScheda(studio) {
             const card = document.getElementById('studioCard');
             
-            // Gestione logo: converti URL R2 in URL sicuro
             let logoHtml = '<span style="font-size: 48px;">🏢</span>';
             if (studio.logo_url) {
                 const logoUrlSicuro = convertiUrlLogoSicuro(studio.logo_url, studio.id);
-                console.log('[SCHEDA ADMIN] URL logo originale:', studio.logo_url);
                 console.log('[SCHEDA ADMIN] URL logo sicuro:', logoUrlSicuro);
-                logoHtml = `<img src="${logoUrlSicuro}" alt="Logo" onerror="console.error('Errore caricamento logo'); this.style.display='none'; this.parentElement.innerHTML='<span style=\\'font-size: 48px;\\'>🏢</span>';">`;
+                logoHtml = `<img src="${logoUrlSicuro}" alt="Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'font-size: 48px;\\'>🏢</span>';">`;
             }
             
             card.innerHTML = `
@@ -414,8 +531,7 @@
                     <div class="studio-logo">${logoHtml}</div>
                     <div class="studio-header-info">
                         <h2>${studio.nome || 'Studio'}</h2>
-                        <p>P.IVA: <span class="mono">${studio.piva || 'N/D'}</span></p>
-                        <p>ID Studio: <span class="mono">${studio.id}</span></p>
+                        <p>P.IVA: ${studio.piva || 'N/D'} | ID: ${studio.id}</p>
                     </div>
                 </div>
                 
@@ -430,7 +546,7 @@
                             <div class="info-value">${studio.nome || 'N/D'}</div>
                         </div>
                         <div class="info-item">
-                            <div class="info-label">Partita IVA / Codice Fiscale</div>
+                            <div class="info-label">P.IVA / CF</div>
                             <div class="info-value mono">${studio.piva || 'N/D'}</div>
                         </div>
                         <div class="info-item">
@@ -519,32 +635,32 @@
                     ` : ''}
 
                     <div class="section-title">
-                        <div class="section-icon">🔗</div>
+                        <div class="section-icon"></div>
                         Link e Social
                     </div>
                     <div class="info-grid">
                         ${studio.website ? `
                         <div class="info-item">
                             <div class="info-label">Sito Web</div>
-                            <div class="info-value"><a href="${studio.website}" target="_blank" style="color: var(--primary-dark);">${studio.website}</a></div>
+                            <div class="info-value">${studio.website}</div>
                         </div>
                         ` : ''}
                         ${studio.link_facebook ? `
                         <div class="info-item">
                             <div class="info-label">Facebook</div>
-                            <div class="info-value"><a href="${studio.link_facebook}" target="_blank" style="color: var(--primary-dark);">Pagina Facebook</a></div>
+                            <div class="info-value">${studio.link_facebook}</div>
                         </div>
                         ` : ''}
                         ${studio.link_instagram ? `
                         <div class="info-item">
                             <div class="info-label">Instagram</div>
-                            <div class="info-value"><a href="${studio.link_instagram}" target="_blank" style="color: var(--primary-dark);">Profilo Instagram</a></div>
+                            <div class="info-value">${studio.link_instagram}</div>
                         </div>
                         ` : ''}
                         ${studio.link_portfolio ? `
                         <div class="info-item">
-                            <div class="info-label">Portfolio / QR Code</div>
-                            <div class="info-value"><a href="${studio.link_portfolio}" target="_blank" style="color: var(--primary-dark);">Link Portfolio</a></div>
+                            <div class="info-label">Portfolio</div>
+                            <div class="info-value">${studio.link_portfolio}</div>
                         </div>
                         ` : ''}
                     </div>
