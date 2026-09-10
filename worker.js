@@ -134,7 +134,7 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
-            // ============================================
+      // ============================================
       // 6. CRM - ELIMINA STUDIO (Admin) - PULIZIA COMPLETA
       // ============================================
       if (path === "/api/admin/crm/studio" && request.method === "DELETE") {
@@ -155,7 +155,6 @@ export default {
               do {
                 const listed = await bucket.list({ prefix, cursor });
                 if (listed.objects.length > 0) {
-                  // Elimina tutti gli oggetti trovati in questo batch
                   await bucket.delete(listed.objects.map(obj => obj.key));
                 }
                 cursor = listed.truncated ? listed.cursor : undefined;
@@ -163,14 +162,10 @@ export default {
             }
           }
 
-          // 2. ELIMINA RECORD CORRELATI DAL DATABASE D1 (in ordine per evitare conflitti)
-          // Elimina messaggi regali collegati alle liste regali di questo studio
+          // 2. ELIMINA RECORD CORRELATI DAL DATABASE D1
           await env.DB.prepare("DELETE FROM messaggi_regali WHERE lista_id IN (SELECT id FROM lista_regali WHERE studio_id=?)").bind(studioId).run();
-          
-          // Elimina sessioni attive dello studio
           await env.DB.prepare("DELETE FROM sessioni WHERE user_id=? AND tipo='studio'").bind(studioId).run();
 
-          // Lista di tutte le tabelle che contengono studio_id
           const tablesToClean = [
             'clienti', 'servizi', 'preventivi', 'contratti', 'workflow', 
             'ricevute', 'agenda', 'email_archivio', 'prodotti_negozio', 
@@ -197,7 +192,7 @@ export default {
       }
 
       // ============================================
-      // 7. CRM - CREAZIONE STUDIO (Admin) - MODIFICATO con scheda_completata=0
+      // 7. CRM - CREAZIONE STUDIO (Admin)
       // ============================================
       if (path === "/api/admin/crm/studio" && request.method === "POST") {
         const token = url.searchParams.get("token");
@@ -224,15 +219,16 @@ export default {
       }
 
       // ============================================
-      // 9. NOTIFICHE - LISTA (Admin)
+      // 9. NOTIFICHE - LISTA (Admin) - MODIFICATO per escludere archiviate
       // ============================================
       if (path === "/api/admin/notifiche" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
 
-        const result = await env.DB.prepare("SELECT * FROM notifiche ORDER BY data_creazione DESC LIMIT 100").all();
-        const nonLette = await env.DB.prepare("SELECT COUNT(*) as count FROM notifiche WHERE letto=0").first();
+        // Mostra solo notifiche non archiviate
+        const result = await env.DB.prepare("SELECT * FROM notifiche WHERE (archiviata IS NULL OR archiviata=0) ORDER BY data_creazione DESC LIMIT 100").all();
+        const nonLette = await env.DB.prepare("SELECT COUNT(*) as count FROM notifiche WHERE letto=0 AND (archiviata IS NULL OR archiviata=0)").first();
         return new Response(JSON.stringify({ success: true, notifiche: result.results, nonLette: nonLette.count }), { headers: corsHeaders });
       }
 
@@ -257,7 +253,7 @@ export default {
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
 
-        await env.DB.prepare("UPDATE notifiche SET letto=1").run();
+        await env.DB.prepare("UPDATE notifiche SET letto=1 WHERE (archiviata IS NULL OR archiviata=0)").run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
@@ -847,17 +843,12 @@ export default {
         return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
       }
 
-            // ============================================
-      // 39. TEMI (Studio) - con fallback al tema globale
+      // ============================================
+      // 39. TEMI (Studio)
       // ============================================
       if (path === "/api/studio/tema" && request.method === "GET") {
         const studioId = url.searchParams.get("studioId");
-        // Cerca prima il tema specifico dello studio
-        let result = await env.DB.prepare("SELECT * FROM temi_colori WHERE studio_id=?").bind(studioId).first();
-        // Se non trovato, fallback al tema globale impostato dall'admin
-        if (!result) {
-          result = await env.DB.prepare("SELECT * FROM temi_colori WHERE studio_id=?").bind('global').first();
-        }
+        const result = await env.DB.prepare("SELECT * FROM temi_colori WHERE studio_id=?").bind(studioId).first();
         return new Response(JSON.stringify({ success: true, tema: result }), { headers: corsHeaders });
       }
 
@@ -943,25 +934,6 @@ export default {
       }
 
       // ============================================
-      // 40.6 UPLOAD LOGO STUDIO
-      // ============================================
-      if (path === "/api/studio/upload-logo" && request.method === "POST") {
-        const token = url.searchParams.get("token");
-        const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const studioId = url.searchParams.get("studioId");
-        const filename = url.searchParams.get("filename") || "logo.png";
-        const body = await request.arrayBuffer();
-        const bucket = env.appcenter_studio_foto;
-        if (bucket) {
-          const key = `loghi/${studioId}/${filename}`;
-          await bucket.put(key, body);
-          return new Response(JSON.stringify({ success: true, url: `https://appcenter-studio-foto.r2.dev/${key}` }), { headers: corsHeaders });
-        }
-        return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
-      }
-
-            // ============================================
       // 40.6 UPLOAD LOGO STUDIO (URL SICURO)
       // ============================================
       if (path === "/api/studio/upload-logo" && request.method === "POST") {
@@ -980,6 +952,62 @@ export default {
           return new Response(JSON.stringify({ success: true, url: logoUrl }), { headers: corsHeaders });
         }
         return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
+      }
+
+      // ============================================
+      // 40.7 SCHEDA STUDIO - GET (per admin/fornitore)
+      // ============================================
+      if (path === "/api/admin/scheda-studio" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const studioId = url.searchParams.get("studioId");
+        if (!studioId) return new Response(JSON.stringify({ error: "Studio ID mancante" }), { status: 400, headers: corsHeaders });
+        const result = await env.DB.prepare("SELECT * FROM studi WHERE id=?").bind(studioId).first();
+        if (!result) return new Response(JSON.stringify({ error: "Studio non trovato" }), { status: 404, headers: corsHeaders });
+        return new Response(JSON.stringify({ success: true, studio: result }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 40.8 LOGO SICURO - Serve logo da R2 con autenticazione
+      // ============================================
+      if (path === "/api/studio/logo" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const studioId = url.searchParams.get("studioId");
+        
+        if (!token || !studioId) {
+          return new Response(JSON.stringify({ error: "Parametri mancanti" }), { status: 400, headers: corsHeaders });
+        }
+
+        const sess = await verificaSessione(token);
+        if (!sess) {
+          return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        }
+
+        const bucket = env.appcenter_studio_foto;
+        if (!bucket) {
+          return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
+        }
+
+        try {
+          const key = `loghi/${studioId}/logo.png`;
+          const object = await bucket.get(key);
+          
+          if (!object) {
+            return new Response(JSON.stringify({ error: "Logo non trovato" }), { status: 404, headers: corsHeaders });
+          }
+
+          const headers = new Headers({
+            "Content-Type": object.httpMetadata?.contentType || "image/png",
+            "Cache-Control": "public, max-age=86400",
+            "Access-Control-Allow-Origin": "*",
+          });
+
+          return new Response(object.body, { headers });
+        } catch (error) {
+          console.error("Errore recupero logo:", error);
+          return new Response(JSON.stringify({ error: "Errore interno" }), { status: 500, headers: corsHeaders });
+        }
       }
 
       // ============================================
@@ -1326,55 +1354,32 @@ export default {
         if (!result) return new Response(JSON.stringify({ success: true, galleria: null }), { headers: corsHeaders });
         return new Response(JSON.stringify({ success: true, galleria: result }), { headers: corsHeaders });
       }
+
       // ============================================
-      // TEMA GLOBALE PUBBLICO (per pagina di login)
+      // 62. ARCHIVIA NOTIFICA (Admin) - Sposta in archivio
       // ============================================
-      if (path === "/api/public/tema-globale" && request.method === "GET") {
-        const result = await env.DB.prepare("SELECT tema_attivo FROM temi_colori WHERE studio_id=?").bind('global').first();
-        const temaAttivo = result ? result.tema_attivo : 'default';
-        return new Response(JSON.stringify({ success: true, tema_attivo: temaAttivo }), { headers: corsHeaders });
-      }
-            // ============================================
-      // LOGO SICURO - Serve logo da R2 con autenticazione
-      // ============================================
-      if (path === "/api/studio/logo" && request.method === "GET") {
+      if (path === "/api/admin/archivia-notifica" && request.method === "POST") {
         const token = url.searchParams.get("token");
-        const studioId = url.searchParams.get("studioId");
-        
-        if (!token || !studioId) {
-          return new Response(JSON.stringify({ error: "Parametri mancanti" }), { status: 400, headers: corsHeaders });
-        }
-
         const sess = await verificaSessione(token);
-        if (!sess) {
-          return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        }
+        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
 
-        const bucket = env.appcenter_studio_foto;
-        if (!bucket) {
-          return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
-        }
-
-        try {
-          const key = `loghi/${studioId}/logo.png`;
-          const object = await bucket.get(key);
-          
-          if (!object) {
-            return new Response(JSON.stringify({ error: "Logo non trovato" }), { status: 404, headers: corsHeaders });
-          }
-
-          const headers = new Headers({
-            "Content-Type": object.httpMetadata?.contentType || "image/png",
-            "Cache-Control": "public, max-age=86400",
-            "Access-Control-Allow-Origin": "*",
-          });
-
-          return new Response(object.body, { headers });
-        } catch (error) {
-          console.error("Errore recupero logo:", error);
-          return new Response(JSON.stringify({ error: "Errore interno" }), { status: 500, headers: corsHeaders });
-        }
+        const d = await request.json();
+        await env.DB.prepare("UPDATE notifiche SET letto=1, archiviata=1 WHERE id=?").bind(d.notifica_id).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
+      // ============================================
+      // 63. ARCHIVIO STUDI - LISTA (Admin) - Solo studi con scheda completata
+      // ============================================
+      if (path === "/api/admin/archivio-studi" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const result = await env.DB.prepare("SELECT * FROM studi WHERE scheda_completata=1 ORDER BY data_registrazione DESC").all();
+        return new Response(JSON.stringify({ success: true, studi: result.results }), { headers: corsHeaders });
+      }
+
       // ============================================
       // ROUTE NON TROVATA
       // ============================================
