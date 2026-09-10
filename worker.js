@@ -134,8 +134,8 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
-      // ============================================
-      // 6. CRM - ELIMINA STUDIO (Admin)
+            // ============================================
+      // 6. CRM - ELIMINA STUDIO (Admin) - PULIZIA COMPLETA
       // ============================================
       if (path === "/api/admin/crm/studio" && request.method === "DELETE") {
         const token = url.searchParams.get("token");
@@ -143,8 +143,57 @@ export default {
         if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
 
         const d = await request.json();
-        await env.DB.prepare("DELETE FROM studi WHERE id=?").bind(d.id).run();
-        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+        const studioId = d.id;
+
+        try {
+          // 1. ELIMINA FILE DA CLOUDFLARE R2 (Logo e Gallerie)
+          const bucket = env.appcenter_studio_foto;
+          if (bucket) {
+            const prefixes = [`loghi/${studioId}/`, `gallerie/${studioId}/`];
+            for (const prefix of prefixes) {
+              let cursor = undefined;
+              do {
+                const listed = await bucket.list({ prefix, cursor });
+                if (listed.objects.length > 0) {
+                  // Elimina tutti gli oggetti trovati in questo batch
+                  await bucket.delete(listed.objects.map(obj => obj.key));
+                }
+                cursor = listed.truncated ? listed.cursor : undefined;
+              } while (cursor);
+            }
+          }
+
+          // 2. ELIMINA RECORD CORRELATI DAL DATABASE D1 (in ordine per evitare conflitti)
+          // Elimina messaggi regali collegati alle liste regali di questo studio
+          await env.DB.prepare("DELETE FROM messaggi_regali WHERE lista_id IN (SELECT id FROM lista_regali WHERE studio_id=?)").bind(studioId).run();
+          
+          // Elimina sessioni attive dello studio
+          await env.DB.prepare("DELETE FROM sessioni WHERE user_id=? AND tipo='studio'").bind(studioId).run();
+
+          // Lista di tutte le tabelle che contengono studio_id
+          const tablesToClean = [
+            'clienti', 'servizi', 'preventivi', 'contratti', 'workflow', 
+            'ricevute', 'agenda', 'email_archivio', 'prodotti_negozio', 
+            'negozi_config', 'ordini_negozio', 'lista_regali', 'link_utili', 
+            'gallerie', 'temi_colori', 'email_config'
+          ];
+
+          for (const table of tablesToClean) {
+            await env.DB.prepare(`DELETE FROM ${table} WHERE studio_id=?`).bind(studioId).run();
+          }
+
+          // 3. ELIMINA LO STUDIO STESSO
+          await env.DB.prepare("DELETE FROM studi WHERE id=?").bind(studioId).run();
+
+          return new Response(JSON.stringify({ 
+            success: true, 
+            message: "Studio e tutti i dati/file associati eliminati con successo dal cloud." 
+          }), { headers: corsHeaders });
+
+        } catch (error) {
+          console.error("Errore durante l'eliminazione completa dello studio:", error);
+          return new Response(JSON.stringify({ error: "Errore interno durante l'eliminazione: " + error.message }), { status: 500, headers: corsHeaders });
+        }
       }
 
       // ============================================
