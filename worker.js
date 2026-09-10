@@ -847,12 +847,17 @@ export default {
         return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
       }
 
-      // ============================================
-      // 39. TEMI (Studio)
+            // ============================================
+      // 39. TEMI (Studio) - con fallback al tema globale
       // ============================================
       if (path === "/api/studio/tema" && request.method === "GET") {
         const studioId = url.searchParams.get("studioId");
-        const result = await env.DB.prepare("SELECT * FROM temi_colori WHERE studio_id=?").bind(studioId).first();
+        // Cerca prima il tema specifico dello studio
+        let result = await env.DB.prepare("SELECT * FROM temi_colori WHERE studio_id=?").bind(studioId).first();
+        // Se non trovato, fallback al tema globale impostato dall'admin
+        if (!result) {
+          result = await env.DB.prepare("SELECT * FROM temi_colori WHERE studio_id=?").bind('global').first();
+        }
         return new Response(JSON.stringify({ success: true, tema: result }), { headers: corsHeaders });
       }
 
