@@ -16,11 +16,13 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease;
         }
         .top-bar {
             background: var(--primary-gradient); padding: 16px 24px;
             display: flex; justify-content: space-between; align-items: center;
             box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100;
+            transition: background 0.3s ease;
         }
         .nav-btn {
             background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
@@ -170,8 +172,8 @@
                 </div>
                 
                 <div class="btn-group">
-                    <button class="btn btn-primary" onclick="aggiungiServizio()">💾 SALVA SERVIZIO</button>
-                    <button class="btn btn-outline" onclick="pulisciFormServizio()">🔄 Pulisci</button>
+                    <button class="btn btn-primary" onclick="aggiungiServizio()">SALVA SERVIZIO</button>
+                    <button class="btn btn-outline" onclick="pulisciFormServizio()">Pulisci</button>
                 </div>
             </div>
 
@@ -218,14 +220,13 @@
             </div>
             <div style="display: flex; gap: 12px; justify-content: flex-end;">
                 <button class="btn btn-outline" onclick="chiudiModal()">Annulla</button>
-                <button class="btn btn-success" onclick="salvaModificaServizio()">💾 Salva Modifiche</button>
+                <button class="btn btn-success" onclick="salvaModificaServizio()">Salva Modifiche</button>
             </div>
         </div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-
-    <script>
+        <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
@@ -239,7 +240,7 @@
 
         async function verificaSessione() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 if (!data.success || data.tipo !== 'studio') {
                     mostraToast('Sessione non valida', 'error');
@@ -247,6 +248,10 @@
                     return;
                 }
                 studioId = data.user.id;
+                
+                // Carica tema globale
+                await caricaTemaGlobale();
+                
                 document.getElementById('loadingArea').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
                 await caricaServizi();
@@ -256,13 +261,44 @@
             }
         }
 
+        // FUNZIONE TEMA GLOBALE
+        async function caricaTemaGlobale() {
+            if (!studioId) return;
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
+                const data = await response.json();
+                if (data.success && data.tema && data.tema.tema_attivo) {
+                    const temaId = data.tema.tema_attivo;
+                    const temi = {
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
+                    };
+                    const t = temi[temaId] || temi['default'];
+                    const root = document.documentElement;
+                    root.style.setProperty('--primary', t.p);
+                    root.style.setProperty('--primary-dark', t.pd);
+                    root.style.setProperty('--primary-light', t.pl);
+                    root.style.setProperty('--primary-gradient', t.pg);
+                    root.style.setProperty('--bg-gradient', t.bg);
+                }
+            } catch (error) {
+                console.error('Errore caricamento tema:', error);
+            }
+        }
+
         async function caricaServizi() {
             document.getElementById('loadingServizi').style.display = 'block';
             document.getElementById('emptyServizi').classList.add('hidden');
             document.getElementById('serviziContainer').innerHTML = '';
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/servizi?studioId=${studioId}&token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/servizi?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 if (data.success && data.servizi) {
                     servizi = data.servizi;
@@ -270,6 +306,7 @@
                     servizi = [];
                 }
             } catch (error) {
+                console.error('Errore caricamento servizi:', error);
                 servizi = [];
             }
 
@@ -297,7 +334,7 @@
             });
 
             let html = '';
-            Object.keys(categorie).forEach(cat => {
+            Object.keys(categorie).sort().forEach(cat => {
                 html += `<div class="category-section">
                     <div class="category-title">${cat}</div>
                     ${categorie[cat].map(s => `
@@ -308,8 +345,8 @@
                             </div>
                             <div class="service-price">€ ${parseFloat(s.prezzo).toFixed(2)}</div>
                             <div style="display: flex; gap: 8px;">
-                                <button class="btn btn-warning btn-sm" onclick="modificaServizio('${s.id}')">️</button>
-                                <button class="btn btn-danger btn-sm" onclick="eliminaServizio('${s.id}')">🗑️</button>
+                                <button class="btn btn-warning btn-sm" onclick="modificaServizio('${s.id}')">Modifica</button>
+                                <button class="btn btn-danger btn-sm" onclick="eliminaServizio('${s.id}')">Elimina</button>
                             </div>
                         </div>
                     `).join('')}
@@ -337,18 +374,21 @@
             };
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/servizio?token=${token}`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/servizio?token=${encodeURIComponent(token)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(servizio)
                 });
                 const result = await response.json();
                 if (result.success) {
-                    mostraToast('Servizio salvato!', 'success');
+                    mostraToast('Servizio salvato nell\'archivio!', 'success');
                     pulisciFormServizio();
                     await caricaServizi();
+                } else {
+                    mostraToast('Errore: ' + (result.error || 'Riprova'), 'error');
                 }
             } catch (error) {
+                console.error('Errore:', error);
                 mostraToast('Errore di connessione', 'error');
             }
         }
@@ -376,7 +416,7 @@
             }
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/servizio/${id}?token=${token}`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/servizio/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ categoria, descrizione, prezzo })
@@ -386,25 +426,31 @@
                     mostraToast('Servizio aggiornato!', 'success');
                     chiudiModal();
                     await caricaServizi();
+                } else {
+                    mostraToast('Errore: ' + (result.error || 'Riprova'), 'error');
                 }
             } catch (error) {
+                console.error('Errore:', error);
                 mostraToast('Errore di connessione', 'error');
             }
         }
 
         async function eliminaServizio(id) {
-            if (!confirm('Sei sicuro di voler eliminare questo servizio?')) return;
+            if (!confirm('Sei sicuro di voler eliminare questo servizio dall\'archivio?')) return;
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/servizio/${id}?token=${token}`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/servizio/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, {
                     method: 'DELETE'
                 });
                 const result = await response.json();
                 if (result.success) {
                     mostraToast('Servizio eliminato', 'success');
                     await caricaServizi();
+                } else {
+                    mostraToast('Errore: ' + (result.error || 'Riprova'), 'error');
                 }
             } catch (error) {
+                console.error('Errore:', error);
                 mostraToast('Errore di connessione', 'error');
             }
         }
@@ -420,7 +466,7 @@
         }
 
         function tornaPlancia() {
-            window.location.href = `plancia-studio.html?token=${token}`;
+            window.location.href = `plancia-studio.html?token=${encodeURIComponent(token)}`;
         }
 
         function mostraToast(msg, tipo) {
