@@ -426,6 +426,7 @@
         let logoFile = null;
 
         document.addEventListener('DOMContentLoaded', async function() {
+            console.log('[SCHEDA] Pagina caricata, token:', token ? 'presente' : 'assente');
             if (!token) {
                 window.location.href = 'index.html';
                 return;
@@ -434,9 +435,11 @@
         });
 
         async function verificaSessione() {
+            console.log('[SCHEDA] Inizio verifica sessione...');
             try {
                 const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
                 const data = await response.json();
+                console.log('[SCHEDA] Risposta verifica:', data);
                 
                 if (!data.success || data.tipo !== 'studio') {
                     mostraToast('Sessione non valida o non autorizzata', 'error');
@@ -445,6 +448,7 @@
                 }
 
                 studioId = data.user.id;
+                console.log('[SCHEDA] Studio ID impostato:', studioId);
                 
                 // Carica tema globale
                 await caricaTemaGlobale();
@@ -453,9 +457,10 @@
                 document.getElementById('mainContent').classList.remove('hidden');
                 
                 // Carica dati esistenti se presenti
+                console.log('[SCHEDA] Chiamo caricaDatiEsistenti...');
                 await caricaDatiEsistenti();
             } catch (error) {
-                console.error('Errore:', error);
+                console.error('[SCHEDA] Errore in verificaSessione:', error);
                 mostraToast('Errore di connessione al cloud', 'error');
             }
         }
@@ -487,51 +492,65 @@
                     root.style.setProperty('--bg-gradient', t.bg);
                 }
             } catch (error) {
-                console.error('Errore caricamento tema:', error);
+                console.error('[SCHEDA] Errore caricamento tema:', error);
             }
         }
 
         async function caricaDatiEsistenti() {
+            console.log('[SCHEDA] Caricamento dati esistenti per studio:', studioId);
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/profilo?studioId=${studioId}&token=${token}`);
                 const data = await response.json();
+                console.log('[SCHEDA] Dati ricevuti dal server:', data);
                 
                 if (data.success && data.studio) {
                     const s = data.studio;
-                    document.getElementById('studioNome').value = s.nome || '';
-                    document.getElementById('studioPiva').value = s.piva || '';
-                    document.getElementById('studioEmail').value = s.email || '';
-                    document.getElementById('studioTelefono').value = s.telefono || '';
-                    document.getElementById('studioPec').value = s.pec || '';
-                    document.getElementById('studioSdi').value = s.sdi || '';
-                    document.getElementById('studioIndirizzo').value = s.indirizzo || '';
-                    document.getElementById('studioCap').value = s.cap || '';
-                    document.getElementById('studioCitta').value = s.citta || '';
-                    document.getElementById('studioProvincia').value = s.provincia || '';
-                    document.getElementById('studioStato').value = s.stato || 'Italia';
-                    document.getElementById('studioLegale').value = s.legale || '';
-                    document.getElementById('studioCfLegale').value = s.cf_legale || '';
-                    document.getElementById('studioIban').value = s.iban || '';
-                    document.getElementById('studioIbanIntestato').value = s.iban_intestato || '';
-                    document.getElementById('msgBenvenuto').value = s.msg_benvenuto || '';
-                    document.getElementById('msgRingraziamento').value = s.msg_ringraziamento || '';
-                    document.getElementById('studioWebsite').value = s.website || '';
-                    document.getElementById('linkFacebook').value = s.link_facebook || '';
-                    document.getElementById('linkInstagram').value = s.link_instagram || '';
-                    document.getElementById('linkPortfolio').value = s.link_portfolio || '';
                     
+                    // Compila tutti i campi
+                    if (s.nome) document.getElementById('studioNome').value = s.nome;
+                    if (s.piva) document.getElementById('studioPiva').value = s.piva;
+                    if (s.email) document.getElementById('studioEmail').value = s.email;
+                    if (s.telefono) document.getElementById('studioTelefono').value = s.telefono;
+                    if (s.pec) document.getElementById('studioPec').value = s.pec;
+                    if (s.sdi) document.getElementById('studioSdi').value = s.sdi;
+                    if (s.indirizzo) document.getElementById('studioIndirizzo').value = s.indirizzo;
+                    if (s.cap) document.getElementById('studioCap').value = s.cap;
+                    if (s.citta) document.getElementById('studioCitta').value = s.citta;
+                    if (s.provincia) document.getElementById('studioProvincia').value = s.provincia;
+                    if (s.stato) document.getElementById('studioStato').value = s.stato;
+                    if (s.legale) document.getElementById('studioLegale').value = s.legale;
+                    if (s.cf_legale) document.getElementById('studioCfLegale').value = s.cf_legale;
+                    if (s.iban) document.getElementById('studioIban').value = s.iban;
+                    if (s.iban_intestato) document.getElementById('studioIbanIntestato').value = s.iban_intestato;
+                    if (s.msg_benvenuto) document.getElementById('msgBenvenuto').value = s.msg_benvenuto;
+                    if (s.msg_ringraziamento) document.getElementById('msgRingraziamento').value = s.msg_ringraziamento;
+                    if (s.website) document.getElementById('studioWebsite').value = s.website;
+                    if (s.link_facebook) document.getElementById('linkFacebook').value = s.link_facebook;
+                    if (s.link_instagram) document.getElementById('linkInstagram').value = s.link_instagram;
+                    if (s.link_portfolio) document.getElementById('linkPortfolio').value = s.link_portfolio;
+                    
+                    // Gestisci logo
                     if (s.logo_url) {
                         logoUrl = s.logo_url;
-                        document.getElementById('logoPreview').src = logoUrl;
-                        document.getElementById('logoPreview').classList.remove('hidden');
+                        const img = document.getElementById('logoPreview');
+                        img.src = logoUrl;
+                        img.classList.remove('hidden');
                         document.getElementById('logoPlaceholder').classList.add('hidden');
                         document.getElementById('logoUploadArea').classList.add('has-logo');
-                        document.getElementById('logoStatus').textContent = 'Logo già caricato';
-                        document.getElementById('logoStatus').style.color = 'var(--success)';
+                        
+                        const statusDiv = document.getElementById('logoStatus');
+                        statusDiv.innerHTML = 'Logo già caricato: <a href="' + logoUrl + '" target="_blank" style="color: var(--primary-dark); font-weight: 600;">Visualizza</a>';
+                        statusDiv.style.color = 'var(--success)';
                     }
+                    
+                    console.log('[SCHEDA] Dati caricati con successo');
+                    mostraToast('Dati precedentemente salvati caricati', 'success');
+                } else {
+                    console.log('[SCHEDA] Nessun dato esistente trovato');
                 }
             } catch (error) {
-                console.error('Errore caricamento dati:', error);
+                console.error('[SCHEDA] Errore caricamento dati:', error);
+                mostraToast('Errore nel caricamento dati esistenti', 'error');
             }
         }
 
@@ -577,7 +596,7 @@
                         
                         mostraToast('Logo selezionato con successo!', 'success');
                     } catch (err) {
-                        console.error('Errore preview:', err);
+                        console.error('[SCHEDA] Errore preview:', err);
                         statusDiv.textContent = 'Errore nel caricamento';
                         statusDiv.style.color = 'var(--danger)';
                         mostraToast('Errore nel caricamento del logo', 'error');
@@ -682,7 +701,7 @@
                             logoUrl = uploadData.url;
                         }
                     } catch (err) {
-                        console.warn('Upload logo fallito:', err);
+                        console.warn('[SCHEDA] Upload logo fallito:', err);
                     }
                 }
 
@@ -719,7 +738,7 @@
                     btnSubmit.textContent = 'SALVA E INVIA AL FORNITORE';
                 }
             } catch (error) {
-                console.error('Errore:', error);
+                console.error('[SCHEDA] Errore:', error);
                 mostraToast('Errore di connessione', 'error');
                 btnSubmit.classList.remove('loading-btn');
                 btnSubmit.disabled = false;
