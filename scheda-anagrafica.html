@@ -155,16 +155,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             display: block;
         }
-        .logo-preview-error {
-            max-width: 180px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #fee;
-            border: 1px solid var(--danger);
-            border-radius: 8px;
-            color: var(--danger);
-            font-size: 13px;
-        }
         .logo-placeholder-icon {
             font-size: 48px;
             color: var(--primary);
@@ -198,8 +188,6 @@
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-sm { padding: 8px 16px; font-size: 13px; }
         .btn-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; justify-content: center; }
         
         .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
@@ -272,17 +260,10 @@
                             <div class="logo-upload-text">Clicca per caricare il logo</div>
                             <div class="logo-upload-hint">Formati: JPG, PNG - Max 2MB</div>
                         </div>
-                        <img id="logoPreview" class="logo-preview hidden" alt="Logo Studio" onerror="gestisciErroreLogo()">
-                        <div id="logoErrorBox" class="logo-preview-error hidden">
-                            Logo non disponibile. Clicca per ricaricare.
-                        </div>
+                        <img id="logoPreview" class="logo-preview hidden" alt="Logo Studio">
                         <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="previewLogo(this)">
                     </div>
                     <div id="logoStatus" style="margin-top: 12px; font-size: 13px; color: var(--text-light); text-align: center;"></div>
-                    <div id="logoActions" style="margin-top: 12px; text-align: center; display: none;">
-                        <button type="button" class="btn btn-outline btn-sm" onclick="event.stopPropagation(); document.getElementById('logoInput').click()">Cambia Logo</button>
-                        <button type="button" class="btn btn-danger btn-sm" onclick="event.stopPropagation(); rimuoviLogo()" style="margin-left: 8px;">Rimuovi Logo</button>
-                    </div>
                 </div>
 
                 <!-- DATI AZIENDALI -->
@@ -443,7 +424,6 @@
         let studioId = null;
         let logoUrl = null;
         let logoFile = null;
-        let logoDaRicaricare = false;
 
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('[SCHEDA] Pagina caricata, token:', token ? 'presente' : 'assente');
@@ -549,28 +529,32 @@
                     if (s.link_instagram) document.getElementById('linkInstagram').value = s.link_instagram;
                     if (s.link_portfolio) document.getElementById('linkPortfolio').value = s.link_portfolio;
                     
-                    // Gestisci logo
+                    // Gestisci logo - COSTRUISCI URL SICURO
                     if (s.logo_url) {
-                        logoUrl = s.logo_url;
-                        console.log('[SCHEDA] Logo URL dal server:', logoUrl);
+                        // Se l'URL è un URL R2 diretto, convertilo in URL sicuro
+                        if (s.logo_url.includes('r2.dev')) {
+                            // Costruisci URL sicuro tramite endpoint Worker
+                            logoUrl = `${WORKER_URL}/api/studio/logo?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`;
+                            console.log('[SCHEDA] URL logo convertito in URL sicuro:', logoUrl);
+                        } else {
+                            logoUrl = s.logo_url;
+                        }
                         
                         const img = document.getElementById('logoPreview');
                         img.src = logoUrl;
                         img.classList.remove('hidden');
                         document.getElementById('logoPlaceholder').classList.add('hidden');
                         document.getElementById('logoUploadArea').classList.add('has-logo');
-                        document.getElementById('logoActions').style.display = 'block';
                         
                         const statusDiv = document.getElementById('logoStatus');
-                        statusDiv.innerHTML = 'Logo presente nel sistema. Se non si visualizza, clicca "Cambia Logo" per ricaricarlo.';
+                        statusDiv.innerHTML = 'Logo già caricato';
                         statusDiv.style.color = 'var(--success)';
                         
-                        mostraToast('Dati precedentemente salvati caricati', 'success');
-                    } else {
-                        console.log('[SCHEDA] Nessun logo salvato');
+                        console.log('[SCHEDA] Logo impostato con URL sicuro');
                     }
                     
                     console.log('[SCHEDA] Dati caricati con successo');
+                    mostraToast('Dati precedentemente salvati caricati', 'success');
                 } else {
                     console.log('[SCHEDA] Nessun dato esistente trovato');
                 }
@@ -578,31 +562,6 @@
                 console.error('[SCHEDA] Errore caricamento dati:', error);
                 mostraToast('Errore nel caricamento dati esistenti', 'error');
             }
-        }
-
-        function gestisciErroreLogo() {
-            console.log('[SCHEDA] Errore caricamento logo, URL:', logoUrl);
-            document.getElementById('logoPreview').classList.add('hidden');
-            document.getElementById('logoErrorBox').classList.remove('hidden');
-            document.getElementById('logoStatus').innerHTML = 'Il logo non è disponibile. Clicca sull\'area per caricarne uno nuovo.';
-            document.getElementById('logoStatus').style.color = 'var(--warning)';
-            logoDaRicaricare = true;
-        }
-
-        function rimuoviLogo() {
-            logoUrl = null;
-            logoFile = null;
-            logoDaRicaricare = true;
-            document.getElementById('logoPreview').classList.add('hidden');
-            document.getElementById('logoPreview').src = '';
-            document.getElementById('logoErrorBox').classList.add('hidden');
-            document.getElementById('logoPlaceholder').classList.remove('hidden');
-            document.getElementById('logoUploadArea').classList.remove('has-logo');
-            document.getElementById('logoActions').style.display = 'none';
-            document.getElementById('logoStatus').textContent = 'Logo rimosso. Carica un nuovo logo.';
-            document.getElementById('logoStatus').style.color = 'var(--text-light)';
-            document.getElementById('logoInput').value = '';
-            mostraToast('Logo rimosso. Ricorda di salvare per confermare.', 'success');
         }
 
         function previewLogo(input) {
@@ -630,7 +589,6 @@
                 }
                 
                 logoFile = file;
-                logoDaRicaricare = true;
                 statusDiv.textContent = 'Caricamento in corso...';
                 statusDiv.style.color = 'var(--warning)';
                 
@@ -641,9 +599,7 @@
                         img.src = e.target.result;
                         img.classList.remove('hidden');
                         document.getElementById('logoPlaceholder').classList.add('hidden');
-                        document.getElementById('logoErrorBox').classList.add('hidden');
                         document.getElementById('logoUploadArea').classList.add('has-logo');
-                        document.getElementById('logoActions').style.display = 'block';
                         
                         statusDiv.innerHTML = 'Logo caricato: <strong>' + file.name + '</strong> (' + (file.size/1024).toFixed(1) + ' KB) - Verrà ridimensionato al salvataggio';
                         statusDiv.style.color = 'var(--success)';
@@ -742,33 +698,25 @@
             btnSubmit.textContent = 'Salvataggio in corso...';
 
             try {
-                // 1. Upload logo se presente o da ricaricare
-                if (logoFile || logoDaRicaricare) {
-                    if (logoFile) {
-                        try {
-                            console.log('[SCHEDA] Upload logo in corso...');
-                            const logoRidimensionato = await ridimensionaLogo(logoFile);
-                            const uploadResponse = await fetch(`${WORKER_URL}/api/studio/upload-logo?token=${encodeURIComponent(token)}&studioId=${encodeURIComponent(studioId)}&filename=logo.png`, {
-                                method: 'POST',
-                                body: logoRidimensionato
-                            });
-                            const uploadData = await uploadResponse.json();
-                            console.log('[SCHEDA] Risposta upload logo:', uploadData);
-                            if (uploadData.success) {
-                                logoUrl = uploadData.url;
-                                logoDaRicaricare = false;
-                                console.log('[SCHEDA] Logo caricato su R2:', logoUrl);
-                            } else {
-                                console.warn('[SCHEDA] Upload logo fallito:', uploadData.error);
-                            }
-                        } catch (err) {
-                            console.warn('[SCHEDA] Upload logo fallito:', err);
+                // 1. Upload logo se presente
+                if (logoFile) {
+                    try {
+                        console.log('[SCHEDA] Upload logo in corso...');
+                        const logoRidimensionato = await ridimensionaLogo(logoFile);
+                        const uploadResponse = await fetch(`${WORKER_URL}/api/studio/upload-logo?token=${encodeURIComponent(token)}&studioId=${encodeURIComponent(studioId)}&filename=logo.png`, {
+                            method: 'POST',
+                            body: logoRidimensionato
+                        });
+                        const uploadData = await uploadResponse.json();
+                        console.log('[SCHEDA] Risposta upload logo:', uploadData);
+                        if (uploadData.success) {
+                            logoUrl = uploadData.url; // Questo ora è l'URL sicuro del Worker
+                            console.log('[SCHEDA] Logo URL sicuro ricevuto:', logoUrl);
+                        } else {
+                            console.warn('[SCHEDA] Upload logo fallito:', uploadData.error);
                         }
-                    } else if (logoDaRicaricare && !logoFile) {
-                        // Logo rimosso dall'utente
-                        logoUrl = null;
-                        logoDaRicaricare = false;
-                        console.log('[SCHEDA] Logo rimosso dall\'utente');
+                    } catch (err) {
+                        console.warn('[SCHEDA] Upload logo fallito:', err);
                     }
                 }
 
