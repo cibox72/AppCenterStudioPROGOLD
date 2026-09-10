@@ -1265,7 +1265,14 @@ export default {
         if (!result) return new Response(JSON.stringify({ success: true, galleria: null }), { headers: corsHeaders });
         return new Response(JSON.stringify({ success: true, galleria: result }), { headers: corsHeaders });
       }
-
+      // ============================================
+      // TEMA GLOBALE PUBBLICO (per pagina di login)
+      // ============================================
+      if (path === "/api/public/tema-globale" && request.method === "GET") {
+        const result = await env.DB.prepare("SELECT tema_attivo FROM temi_colori WHERE studio_id=?").bind('global').first();
+        const temaAttivo = result ? result.tema_attivo : 'default';
+        return new Response(JSON.stringify({ success: true, tema_attivo: temaAttivo }), { headers: corsHeaders });
+      }
       // ============================================
       // ROUTE NON TROVATA
       // ============================================
