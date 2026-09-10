@@ -310,19 +310,19 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label style="font-size: 15px;">Luogo Cerimonia (Chiesa / Location)</label>
+                        <label style="font-size: 15px;">Luogo Cerimonia (Chiesa / Location) <span style="color:var(--text-light); font-weight:400; font-size:12px;">(opzionale)</span></label>
                         <input type="text" id="pvLuogoCerimonia" placeholder="Nome e indirizzo della chiesa o location" style="font-size: 15px;">
-                        <button class="btn btn-outline btn-sm" style="margin-top: 8px;" onclick="apriMaps('cerimonia')"> Vedi luogo su Google Maps</button>
+                        <button class="btn btn-outline btn-sm" style="margin-top: 8px;" onclick="apriMaps('cerimonia')">📍 Vedi luogo su Google Maps</button>
                     </div>
                     <div class="form-group">
-                        <label style="font-size: 15px;">Luogo Ricevimento (Ristorante / Sala)</label>
+                        <label style="font-size: 15px;">Luogo Ricevimento (Ristorante / Sala) <span style="color:var(--text-light); font-weight:400; font-size:12px;">(opzionale)</span></label>
                         <input type="text" id="pvLuogoRicevimento" placeholder="Nome e indirizzo del ristorante o sala" style="font-size: 15px;">
                         <button class="btn btn-outline btn-sm" style="margin-top: 8px;" onclick="apriMaps('ricevimento')">📍 Vedi luogo su Google Maps</button>
                     </div>
                 </div>
             </div>
 
-            <!-- SERVIZI & COSTI - MODIFICATO CON TASTO ARCHIVIO -->
+            <!-- SERVIZI & COSTI -->
             <div class="card-3d">
                 <div class="card-title">
                     <span>Servizi & Costi</span>
@@ -441,7 +441,7 @@
             <div class="btn-group" style="justify-content: center; margin-bottom: 40px;">
                 <button class="btn btn-dark" onclick="salvaInArchivio('preventivo')">💾 Salva Preventivo</button>
                 <button class="btn btn-success" onclick="inviaWhatsApp()">📱 Invia WhatsApp</button>
-                <button class="btn btn-dark" onclick="creaPDF()"> Crea PDF</button>
+                <button class="btn btn-dark" onclick="creaPDF()">📄 Crea PDF</button>
                 <button class="btn btn-primary" onclick="trasformaInContratto()">📝 Converti in Contratto</button>
             </div>
 
@@ -589,13 +589,13 @@
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-        <script>
+       <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
         let serviziArchivio = [];
-        let serviziSelezionati = []; // Array dei servizi selezionati per questo preventivo
+        let serviziSelezionati = [];
         let preventivoCorrente = null;
         let archivioPreventivi = [];
         let archivioContratti = [];
@@ -617,7 +617,6 @@
                 }
                 studioId = data.user.id;
                 
-                // Carica tema globale
                 await caricaTemaGlobale();
                 
                 document.getElementById('loadingArea').classList.add('hidden');
@@ -630,7 +629,6 @@
             }
         }
 
-        // FUNZIONE TEMA GLOBALE
         async function caricaTemaGlobale() {
             if (!studioId) return;
             try {
@@ -668,7 +666,6 @@
             document.getElementById('tab-' + tabName).classList.add('active');
         }
 
-        // === FUNZIONI MODAL SERVIZI ===
         async function apriModalServizi() {
             const modal = document.getElementById('modalServizi');
             const content = document.getElementById('modalServiziContent');
@@ -736,14 +733,8 @@
             const index = serviziSelezionati.findIndex(s => s.id === servizioId);
             
             if (index === -1) {
-                // Aggiungi servizio
-                serviziSelezionati.push({
-                    ...servizio,
-                    quantita: 1,
-                    prezzo: parseFloat(servizio.prezzo)
-                });
+                serviziSelezionati.push({ ...servizio, quantita: 1, prezzo: parseFloat(servizio.prezzo) });
             } else {
-                // Rimuovi servizio
                 serviziSelezionati.splice(index, 1);
             }
             
@@ -943,11 +934,7 @@
                     cap: document.getElementById('cB_cap').value, provincia: document.getElementById('cB_prov').value
                 },
                 servizi: serviziSelezionati.map(s => ({
-                    id: s.id,
-                    descrizione: s.descrizione,
-                    prezzo: s.prezzo,
-                    quantita: s.quantita,
-                    categoria: s.categoria
+                    id: s.id, descrizione: s.descrizione, prezzo: s.prezzo, quantita: s.quantita, categoria: s.categoria
                 })),
                 acconti: acconti,
                 sconto_perc: parseFloat(document.getElementById('scontoPerc').value) || 0,
@@ -968,10 +955,11 @@
             }
 
             const id = tipo === 'contratto' ? 'ctr-' + Date.now() : 'pv-' + Date.now();
-            const tabella = tipo === 'contratto' ? 'contratti' : 'preventivi';
+            // CORREZIONE: l'endpoint nel worker è 'preventivo' (singolare), non 'preventivi'
+            const endpoint = tipo === 'contratto' ? 'contratti' : 'preventivo';
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/${tabella}?token=${encodeURIComponent(token)}`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/${endpoint}?token=${encodeURIComponent(token)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ...dati, studio_id: studioId, id: id, data_creazione: new Date().toISOString() })
@@ -985,8 +973,11 @@
                     } else {
                         await caricaArchivioPreventivi();
                     }
+                } else {
+                    mostraToast('Errore: ' + (result.error || 'Riprova'), 'error');
                 }
             } catch (error) {
+                console.error('Errore salvataggio:', error);
                 mostraToast('Errore di connessione', 'error');
             }
         }
@@ -1191,7 +1182,6 @@
             document.getElementById('checkAccettazione').checked = pv.accettato || false;
             document.getElementById('noteAggiuntive').value = pv.note || '';
 
-            // Carica servizi dal preventivo
             if (pv.servizi && Array.isArray(pv.servizi)) {
                 serviziSelezionati = pv.servizi.map(s => ({
                     ...s,
@@ -1378,4 +1368,4 @@
         }
     </script>
 </body>
-</html>
+</html> 
