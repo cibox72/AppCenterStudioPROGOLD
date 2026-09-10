@@ -277,7 +277,7 @@
             </div>
 
             <div class="action-buttons">
-                <button class="btn btn-success" onclick="window.print()"> Stampa PDF</button>
+                <button class="btn btn-success" onclick="window.print()">📄 Stampa PDF</button>
                 <button class="btn btn-outline" onclick="tornaAdmin()">Chiudi</button>
             </div>
         </div>
@@ -339,6 +339,24 @@
             }
         }
 
+        // FUNZIONE PER CONVERTIRE URL R2 IN URL SICURO
+        function convertiUrlLogoSicuro(logoUrl, studioId) {
+            if (!logoUrl) return null;
+            
+            // Se è un URL R2 diretto, convertilo in URL sicuro tramite Worker
+            if (logoUrl.includes('r2.dev') || logoUrl.includes('appcenter-studio-foto')) {
+                return `${WORKER_URL}/api/studio/logo?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`;
+            }
+            
+            // Se è già un URL sicuro del Worker, usalo direttamente
+            if (logoUrl.includes('workers.dev/api/studio/logo')) {
+                return logoUrl;
+            }
+            
+            // Altrimenti restituisci l'URL originale
+            return logoUrl;
+        }
+
         async function caricaSchedaStudio() {
             try {
                 console.log('[SCHEDA ADMIN] Chiamo API per studio:', studioId);
@@ -382,15 +400,13 @@
         function renderizzaScheda(studio) {
             const card = document.getElementById('studioCard');
             
-            // Gestione logo
+            // Gestione logo: converti URL R2 in URL sicuro
             let logoHtml = '<span style="font-size: 48px;">🏢</span>';
             if (studio.logo_url) {
-                // Se l'URL è un URL R2 diretto, mantienilo, altrimenti usa l'endpoint sicuro
-                if (studio.logo_url.includes('r2.dev') || studio.logo_url.includes('workers.dev')) {
-                    logoHtml = `<img src="${studio.logo_url}" alt="Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'font-size: 48px;\\'>🏢</span>';">`;
-                } else {
-                    logoHtml = `<img src="${studio.logo_url}" alt="Logo">`;
-                }
+                const logoUrlSicuro = convertiUrlLogoSicuro(studio.logo_url, studio.id);
+                console.log('[SCHEDA ADMIN] URL logo originale:', studio.logo_url);
+                console.log('[SCHEDA ADMIN] URL logo sicuro:', logoUrlSicuro);
+                logoHtml = `<img src="${logoUrlSicuro}" alt="Logo" onerror="console.error('Errore caricamento logo'); this.style.display='none'; this.parentElement.innerHTML='<span style=\\'font-size: 48px;\\'>🏢</span>';">`;
             }
             
             card.innerHTML = `
@@ -440,7 +456,7 @@
                     </div>
 
                     <div class="section-title">
-                        <div class="section-icon"></div>
+                        <div class="section-icon">📍</div>
                         Indirizzo Sede Legale
                     </div>
                     <div class="info-grid">
@@ -467,7 +483,7 @@
                     </div>
 
                     <div class="section-title">
-                        <div class="section-icon">👤</div>
+                        <div class="section-icon"></div>
                         Rappresentante Legale
                     </div>
                     <div class="info-grid">
