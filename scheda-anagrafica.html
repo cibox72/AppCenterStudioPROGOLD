@@ -415,9 +415,7 @@
             Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong>
         </div>
     </div>
-
-    <div class="toast-container" id="toastContainer"></div>
-        <script>
+    <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
@@ -437,7 +435,7 @@
         async function verificaSessione() {
             console.log('[SCHEDA] Inizio verifica sessione...');
             try {
-                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 console.log('[SCHEDA] Risposta verifica:', data);
                 
@@ -469,7 +467,7 @@
         async function caricaTemaGlobale() {
             if (!studioId) return;
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${studioId}&token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 if (data.success && data.tema && data.tema.tema_attivo) {
                     const temaId = data.tema.tema_attivo;
@@ -499,7 +497,8 @@
         async function caricaDatiEsistenti() {
             console.log('[SCHEDA] Caricamento dati esistenti per studio:', studioId);
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/profilo?studioId=${studioId}&token=${token}`);
+                // CORREZIONE: uso encodeURIComponent per codificare correttamente l'ID con caratteri speciali come &
+                const response = await fetch(`${WORKER_URL}/api/studio/profilo?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 console.log('[SCHEDA] Dati ricevuti dal server:', data);
                 
@@ -692,7 +691,7 @@
                 if (logoFile) {
                     try {
                         const logoRidimensionato = await ridimensionaLogo(logoFile);
-                        const uploadResponse = await fetch(`${WORKER_URL}/api/studio/upload-logo?token=${token}&studioId=${studioId}&filename=logo.png`, {
+                        const uploadResponse = await fetch(`${WORKER_URL}/api/studio/upload-logo?token=${encodeURIComponent(token)}&studioId=${encodeURIComponent(studioId)}&filename=logo.png`, {
                             method: 'POST',
                             body: logoRidimensionato
                         });
@@ -719,7 +718,7 @@
                     logo_url: logoUrl
                 };
 
-                const response = await fetch(`${WORKER_URL}/api/studio/profilo?token=${token}`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/profilo?token=${encodeURIComponent(token)}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(datiStudio)
@@ -747,7 +746,7 @@
         }
 
         function tornaPlancia() {
-            window.location.href = `plancia-studio.html?token=${token}`;
+            window.location.href = `plancia-studio.html?token=${encodeURIComponent(token)}`;
         }
 
         function mostraToast(msg, tipo) {
@@ -761,3 +760,4 @@
     </script>
 </body>
 </html>
+    <div class="toast-container" id="toastContainer"></div>
