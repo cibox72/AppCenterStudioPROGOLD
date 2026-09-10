@@ -242,19 +242,24 @@
         .hidden { display: none !important; }
 
         /* ============================================ */
-        /* STILI OTTIMIZZATI PER STAMPA (1 PAGINA A4) */
+        /* LAYOUT STAMPA OTTIMIZZATO - 1 PAGINA A4    */
         /* ============================================ */
         @media print {
             @page {
-                size: A4;
-                margin: 15mm;
+                size: A4 portrait;
+                margin: 10mm;
+            }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
             }
             
             body {
                 background: white !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                color-adjust: exact;
+                font-size: 10px;
+                line-height: 1.3;
             }
             
             .top-bar, .action-buttons, .toast-container { 
@@ -267,19 +272,19 @@
             }
             
             .page-header {
-                padding: 12px;
-                margin-bottom: 12px;
+                padding: 10px 15px;
+                margin-bottom: 10px;
                 box-shadow: none;
                 border: 1px solid #ddd;
             }
             
             .page-header h1 {
-                font-size: 22px;
-                margin-bottom: 4px;
+                font-size: 18px;
+                margin-bottom: 2px;
             }
             
             .page-header p {
-                font-size: 11px;
+                font-size: 9px;
             }
             
             .studio-card {
@@ -289,85 +294,78 @@
             }
             
             .studio-header {
-                padding: 16px 20px;
-                gap: 16px;
+                padding: 12px 15px;
+                gap: 12px;
             }
             
             .studio-logo {
-                width: 70px;
-                height: 70px;
-                font-size: 28px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
             }
             
             .studio-header-info h2 {
-                font-size: 20px;
-                margin-bottom: 4px;
-            }
-            
-            .studio-header-info p {
-                font-size: 11px;
+                font-size: 16px;
                 margin-bottom: 2px;
             }
             
+            .studio-header-info p {
+                font-size: 9px;
+                margin-bottom: 1px;
+            }
+            
             .studio-body {
-                padding: 16px 20px;
+                padding: 12px 15px;
             }
             
             .section-title {
-                font-size: 13px;
-                margin-bottom: 10px;
-                padding-bottom: 6px;
-                gap: 8px;
+                font-size: 11px;
+                margin-bottom: 6px;
+                padding-bottom: 4px;
+                gap: 6px;
             }
             
             .section-icon {
-                width: 22px;
-                height: 22px;
-                font-size: 11px;
+                width: 18px;
+                height: 18px;
+                font-size: 9px;
             }
             
             .info-grid {
                 grid-template-columns: repeat(4, 1fr);
-                gap: 10px;
-                margin-bottom: 14px;
+                gap: 6px;
+                margin-bottom: 10px;
             }
             
             .info-item {
-                padding: 10px 12px;
-                border-left-width: 3px;
+                padding: 6px 8px;
+                border-left-width: 2px;
             }
             
             .info-label {
-                font-size: 9px;
-                margin-bottom: 3px;
+                font-size: 7px;
+                margin-bottom: 2px;
             }
             
             .info-value {
-                font-size: 12px;
+                font-size: 10px;
             }
             
             .info-value.mono {
-                padding: 4px 8px;
-                font-size: 11px;
-            }
-            
-            /* Nascondi sezioni vuote in stampa */
-            .info-item:empty {
-                display: none;
-            }
-            
-            /* Compatta i messaggi lunghi */
-            .info-value[style*="white-space: pre-wrap"] {
-                font-size: 10px !important;
-                max-height: 50px;
-                overflow: hidden;
+                padding: 3px 6px;
+                font-size: 9px;
             }
             
             .info-item[style*="grid-column: 1 / -1"] {
                 grid-column: span 2 !important;
             }
             
-            /* Evita page break dentro le card */
+            .info-value[style*="white-space: pre-wrap"] {
+                font-size: 8px !important;
+                max-height: 35px;
+                overflow: hidden;
+            }
+            
             .studio-card, .section-title, .info-item {
                 page-break-inside: avoid;
                 break-inside: avoid;
@@ -396,7 +394,7 @@
         </div>
 
         <div id="errorArea" class="error-box hidden">
-            <h3>️ Errore nel caricamento</h3>
+            <h3>⚠️ Errore nel caricamento</h3>
             <p id="errorMessage">Impossibile caricare i dati dello studio</p>
             <button class="btn btn-primary" onclick="location.reload()">Riprova</button>
         </div>
@@ -407,300 +405,10 @@
             </div>
 
             <div class="action-buttons">
-                <button class="btn btn-success" onclick="window.print()">📄 Stampa PDF</button>
+                <button class="btn btn-success" onclick="stampaPDF()">📄 Stampa PDF</button>
                 <button class="btn btn-outline" onclick="tornaAdmin()">Chiudi</button>
             </div>
         </div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-
-    <script>
-        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        const studioId = urlParams.get('studioId');
-
-        document.addEventListener('DOMContentLoaded', async function() {
-            console.log('[SCHEDA ADMIN] Pagina caricata');
-            console.log('[SCHEDA ADMIN] Token:', token ? 'presente' : 'assente');
-            console.log('[SCHEDA ADMIN] Studio ID:', studioId);
-            
-            if (!token || !studioId) {
-                mostraErrore('Parametri mancanti (token o studioId)');
-                return;
-            }
-            
-            await caricaTemaGlobale();
-            await caricaSchedaStudio();
-        });
-
-        async function caricaTemaGlobale() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/admin/tema?token=${encodeURIComponent(token)}`);
-                const data = await response.json();
-                if (data.success && data.tema && data.tema.tema_attivo) {
-                    const temaId = data.tema.tema_attivo;
-                    const temi = {
-                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
-                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
-                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
-                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
-                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
-                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
-                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
-                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
-                    };
-                    const t = temi[temaId] || temi['default'];
-                    const root = document.documentElement;
-                    root.style.setProperty('--primary', t.p);
-                    root.style.setProperty('--primary-dark', t.pd);
-                    root.style.setProperty('--primary-light', t.pl);
-                    root.style.setProperty('--primary-gradient', t.pg);
-                    root.style.setProperty('--bg-gradient', t.bg);
-                    console.log('[SCHEDA ADMIN] Tema applicato:', temaId);
-                }
-            } catch (error) {
-                console.error('[SCHEDA ADMIN] Errore caricamento tema:', error);
-            }
-        }
-
-        function convertiUrlLogoSicuro(logoUrl, studioId) {
-            if (!logoUrl) return null;
-            if (logoUrl.includes('r2.dev') || logoUrl.includes('appcenter-studio-foto')) {
-                return `${WORKER_URL}/api/studio/logo?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`;
-            }
-            if (logoUrl.includes('workers.dev/api/studio/logo')) {
-                return logoUrl;
-            }
-            return logoUrl;
-        }
-
-        async function caricaSchedaStudio() {
-            try {
-                console.log('[SCHEDA ADMIN] Chiamo API per studio:', studioId);
-                const response = await fetch(`${WORKER_URL}/api/admin/scheda-studio?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
-                
-                console.log('[SCHEDA ADMIN] Status response:', response.status);
-                
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        throw new Error('Studio non trovato nel database.');
-                    } else if (response.status === 403) {
-                        throw new Error('Non autorizzato. Sessione scaduta.');
-                    } else {
-                        throw new Error(`Errore server: ${response.status}`);
-                    }
-                }
-                
-                const data = await response.json();
-                console.log('[SCHEDA ADMIN] Dati ricevuti:', data);
-                
-                if (data.success && data.studio) {
-                    renderizzaScheda(data.studio);
-                    document.getElementById('loadingArea').classList.add('hidden');
-                    document.getElementById('mainContent').classList.remove('hidden');
-                } else {
-                    throw new Error(data.error || 'Nessun dato ricevuto');
-                }
-            } catch (error) {
-                console.error('[SCHEDA ADMIN] Errore:', error);
-                mostraErrore(error.message);
-            }
-        }
-
-        function mostraErrore(messaggio) {
-            document.getElementById('loadingArea').classList.add('hidden');
-            document.getElementById('errorArea').classList.remove('hidden');
-            document.getElementById('errorMessage').textContent = messaggio;
-            mostraToast(messaggio, 'error');
-        }
-
-        function renderizzaScheda(studio) {
-            const card = document.getElementById('studioCard');
-            
-            let logoHtml = '<span style="font-size: 48px;">🏢</span>';
-            if (studio.logo_url) {
-                const logoUrlSicuro = convertiUrlLogoSicuro(studio.logo_url, studio.id);
-                console.log('[SCHEDA ADMIN] URL logo sicuro:', logoUrlSicuro);
-                logoHtml = `<img src="${logoUrlSicuro}" alt="Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'font-size: 48px;\\'>🏢</span>';">`;
-            }
-            
-            card.innerHTML = `
-                <div class="studio-header">
-                    <div class="studio-logo">${logoHtml}</div>
-                    <div class="studio-header-info">
-                        <h2>${studio.nome || 'Studio'}</h2>
-                        <p>P.IVA: ${studio.piva || 'N/D'} | ID: ${studio.id}</p>
-                    </div>
-                </div>
-                
-                <div class="studio-body">
-                    <div class="section-title">
-                        <div class="section-icon">📋</div>
-                        Dati Aziendali
-                    </div>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="info-label">Ragione Sociale</div>
-                            <div class="info-value">${studio.nome || 'N/D'}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">P.IVA / CF</div>
-                            <div class="info-value mono">${studio.piva || 'N/D'}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Email</div>
-                            <div class="info-value">${studio.email || 'N/D'}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Telefono</div>
-                            <div class="info-value">${studio.telefono || 'N/D'}</div>
-                        </div>
-                        ${studio.pec ? `
-                        <div class="info-item">
-                            <div class="info-label">PEC</div>
-                            <div class="info-value">${studio.pec}</div>
-                        </div>
-                        ` : ''}
-                        ${studio.sdi ? `
-                        <div class="info-item">
-                            <div class="info-label">Codice SDI</div>
-                            <div class="info-value mono">${studio.sdi}</div>
-                        </div>
-                        ` : ''}
-                    </div>
-
-                    <div class="section-title">
-                        <div class="section-icon">📍</div>
-                        Indirizzo Sede Legale
-                    </div>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="info-label">Indirizzo</div>
-                            <div class="info-value">${studio.indirizzo || 'N/D'}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">CAP</div>
-                            <div class="info-value mono">${studio.cap || 'N/D'}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Città</div>
-                            <div class="info-value">${studio.citta || 'N/D'}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Provincia</div>
-                            <div class="info-value">${studio.provincia || 'N/D'}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Stato</div>
-                            <div class="info-value">${studio.stato || 'Italia'}</div>
-                        </div>
-                    </div>
-
-                    <div class="section-title">
-                        <div class="section-icon"></div>
-                        Rappresentante Legale
-                    </div>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="info-label">Nome e Cognome</div>
-                            <div class="info-value">${studio.legale || 'N/D'}</div>
-                        </div>
-                        ${studio.cf_legale ? `
-                        <div class="info-item">
-                            <div class="info-label">Codice Fiscale</div>
-                            <div class="info-value mono">${studio.cf_legale}</div>
-                        </div>
-                        ` : ''}
-                    </div>
-
-                    ${studio.iban ? `
-                    <div class="section-title">
-                        <div class="section-icon">🏦</div>
-                        Dati Bancari
-                    </div>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="info-label">IBAN</div>
-                            <div class="info-value mono">${studio.iban}</div>
-                        </div>
-                        ${studio.iban_intestato ? `
-                        <div class="info-item">
-                            <div class="info-label">Intestato a</div>
-                            <div class="info-value">${studio.iban_intestato}</div>
-                        </div>
-                        ` : ''}
-                    </div>
-                    ` : ''}
-
-                    <div class="section-title">
-                        <div class="section-icon"></div>
-                        Link e Social
-                    </div>
-                    <div class="info-grid">
-                        ${studio.website ? `
-                        <div class="info-item">
-                            <div class="info-label">Sito Web</div>
-                            <div class="info-value">${studio.website}</div>
-                        </div>
-                        ` : ''}
-                        ${studio.link_facebook ? `
-                        <div class="info-item">
-                            <div class="info-label">Facebook</div>
-                            <div class="info-value">${studio.link_facebook}</div>
-                        </div>
-                        ` : ''}
-                        ${studio.link_instagram ? `
-                        <div class="info-item">
-                            <div class="info-label">Instagram</div>
-                            <div class="info-value">${studio.link_instagram}</div>
-                        </div>
-                        ` : ''}
-                        ${studio.link_portfolio ? `
-                        <div class="info-item">
-                            <div class="info-label">Portfolio</div>
-                            <div class="info-value">${studio.link_portfolio}</div>
-                        </div>
-                        ` : ''}
-                    </div>
-
-                    ${(studio.msg_benvenuto || studio.msg_ringraziamento) ? `
-                    <div class="section-title">
-                        <div class="section-icon">💬</div>
-                        Messaggi Automatici
-                    </div>
-                    <div class="info-grid">
-                        ${studio.msg_benvenuto ? `
-                        <div class="info-item" style="grid-column: 1 / -1;">
-                            <div class="info-label">Messaggio di Benvenuto</div>
-                            <div class="info-value" style="white-space: pre-wrap; font-size: 14px;">${studio.msg_benvenuto}</div>
-                        </div>
-                        ` : ''}
-                        ${studio.msg_ringraziamento ? `
-                        <div class="info-item" style="grid-column: 1 / -1;">
-                            <div class="info-label">Messaggio di Ringraziamento</div>
-                            <div class="info-value" style="white-space: pre-wrap; font-size: 14px;">${studio.msg_ringraziamento}</div>
-                        </div>
-                        ` : ''}
-                    </div>
-                    ` : ''}
-                </div>
-            `;
-        }
-
-        function tornaAdmin() {
-            window.location.href = `admin.html?token=${encodeURIComponent(token)}`;
-        }
-
-        function mostraToast(msg, tipo) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div>${msg}</div>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-    </script>
-</body>
-</html>
