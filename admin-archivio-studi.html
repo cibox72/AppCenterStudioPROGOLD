@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archivio Studi - AppCenterStudioPROGOLD</title>
+    <style>
+        :root {
+            --primary: #82e0aa;
+            --primary-dark: #1e8449;
+            --primary-light: #e8f8f5;
+            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e8e8e8;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --radius: 16px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .top-bar {
+            background: var(--primary-gradient);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background 0.3s ease;
+        }
+        .nav-btn {
+            background: rgba(255,255,255,0.95);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover { transform: translateY(-2px); }
+        .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
+        .page-header {
+            text-align: center;
+            padding: 32px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+        }
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        .page-header p { color: var(--text-light); font-size: 15px; }
+        
+        .studi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+        
+        .studio-card {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .studio-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(30, 132, 73, 0.2);
+        }
+        
+        .studio-card-header {
+            background: var(--primary-gradient);
+            padding: 24px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .studio-logo-small {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .studio-logo-small img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .studio-card-header-info h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .studio-card-header-info p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        .studio-card-body {
+            padding: 24px;
+        }
+        .studio-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+        .studio-info-row:last-child {
+            border-bottom: none;
+        }
+        .studio-info-label {
+            color: var(--text-light);
+            font-weight: 600;
+        }
+        .studio-info-value {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+        
+        .studio-card-actions {
+            padding: 16px 24px;
+            background: var(--primary-light);
+            display: flex;
+            gap: 12px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        
+        .loading { text-align: center; padding: 40px; color: var(--text-light); }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--primary-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
+        .toast {
+            background: white;
+            border-radius: 10px;
+            padding: 14px 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
+            border-left: 4px solid var(--success);
+            animation: slideIn 0.3s ease;
+        }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div style="display: flex; gap: 10px;">
+            <button class="nav-btn" onclick="tornaAdmin()">Indietro</button>
+            <button class="nav-btn" onclick="window.location.href='admin.html'">Plancia Admin</button>
+        </div>
+        <div class="sync-status"><span class="sync-dot"></span> Cloud Sync: OK</div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Archivio Studi Fotografici</h1>
+            <p>Visualizza e gestisci tutte le schede studio archiviate</p>
+        </div>
+
+        <div id="loadingArea" class="loading">
+            <div class="spinner"></div>
+            <div>Caricamento archivio studi...</div>
+        </div>
+
+        <div id="mainContent" style="display: none;">
+            <div id="studiContainer" class="studi-grid"></div>
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-state-icon"></div>
+                <h3>Nessuno studio archiviato</h3>
+                <p>Le schede studio completate appariranno qui</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!token) {
+                window.location.href = 'index.html';
+                return;
+            }
+            await caricaArchivioStudi();
+        });
+
+        async function caricaArchivioStudi() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/admin/archivio-studi?token=${encodeURIComponent(token)}`);
+                const data = await response.json();
+                
+                if (data.success && data.studi && data.studi.length > 0) {
+                    renderizzaStudi(data.studi);
+                    document.getElementById('loadingArea').classList.add('hidden');
+                    document.getElementById('mainContent').style.display = 'block';
+                } else {
+                    document.getElementById('loadingArea').classList.add('hidden');
+                    document.getElementById('mainContent').style.display = 'block';
+                    document.getElementById('emptyState').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore nel caricamento archivio', 'error');
+            }
+        }
+
+        function renderizzaStudi(studi) {
+            const container = document.getElementById('studiContainer');
+            container.innerHTML = studi.map(studio => {
+                const logoHtml = studio.logo_url 
+                    ? `<img src="${studio.logo_url}" alt="Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'font-size: 32px;\\'>🏢</span>';">`
+                    : `<span style="font-size: 32px;"></span>`;
+                
+                return `
+                    <div class="studio-card" onclick="visualizzaScheda('${studio.id}')">
+                        <div class="studio-card-header">
+                            <div class="studio-logo-small">${logoHtml}</div>
+                            <div class="studio-card-header-info">
+                                <h3>${studio.nome || 'Studio'}</h3>
+                                <p>P.IVA: ${studio.piva || 'N/D'}</p>
+                                <p>${studio.citta || ''}, ${studio.provincia || ''}</p>
+                            </div>
+                        </div>
+                        <div class="studio-card-body">
+                            <div class="studio-info-row">
+                                <span class="studio-info-label">Email</span>
+                                <span class="studio-info-value">${studio.email || 'N/D'}</span>
+                            </div>
+                            <div class="studio-info-row">
+                                <span class="studio-info-label">Telefono</span>
+                                <span class="studio-info-value">${studio.telefono || 'N/D'}</span>
+                            </div>
+                            <div class="studio-info-row">
+                                <span class="studio-info-label">Legale</span>
+                                <span class="studio-info-value">${studio.legale || 'N/D'}</span>
+                            </div>
+                            <div class="studio-info-row">
+                                <span class="studio-info-label">Stato</span>
+                                <span class="studio-info-value" style="color: var(--success); font-weight: 700;">Attivo</span>
+                            </div>
+                        </div>
+                        <div class="studio-card-actions">
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); visualizzaScheda('${studio.id}')">Visualizza Scheda</button>
+                            <button class="btn btn-outline" onclick="event.stopPropagation(); stampaScheda('${studio.id}')">Stampa PDF</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function visualizzaScheda(studioId) {
+            window.location.href = `admin-scheda-studio.html?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`;
+        }
+
+        function stampaScheda(studioId) {
+            window.open(`admin-scheda-studio.html?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}&print=1`, '_blank');
+        }
+
+        function tornaAdmin() {
+            window.location.href = 'admin.html';
+        }
+
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `<div>${msg}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
