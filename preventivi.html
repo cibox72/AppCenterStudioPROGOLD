@@ -84,6 +84,7 @@
         .btn-dark { background: #2c3e50; color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
         .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .btn-lg { padding: 14px 28px; font-size: 15px; }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
         
         .service-category-title {
@@ -127,6 +128,53 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         .hidden { display: none !important; }
+
+        /* Modal Selezione Servizi */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 3000; align-items: center; justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white; border-radius: var(--radius); padding: 32px;
+            max-width: 800px; width: 90%; max-height: 80vh; overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border-color);
+        }
+        .modal-header h2 { font-size: 24px; color: var(--primary-dark); }
+        .close-modal {
+            background: none; border: none; font-size: 28px; cursor: pointer;
+            color: var(--text-light); width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; transition: all 0.2s ease;
+        }
+        .close-modal:hover { background: var(--primary-light); color: var(--primary-dark); }
+        
+        .service-select-item {
+            background: white; border: 2px solid var(--border-color); border-radius: 10px;
+            padding: 16px; margin-bottom: 12px; cursor: pointer;
+            transition: all 0.2s ease; display: flex; align-items: center; gap: 16px;
+        }
+        .service-select-item:hover {
+            border-color: var(--primary); background: var(--primary-light);
+            transform: translateX(4px);
+        }
+        .service-select-item.selected {
+            border-color: var(--success); background: #e8f8f5;
+        }
+        .service-select-item input[type="checkbox"] {
+            width: 22px; height: 22px; cursor: pointer;
+        }
+        .service-select-info { flex: 1; }
+        .service-select-name { font-size: 15px; font-weight: 600; color: var(--text-main); margin-bottom: 4px; }
+        .service-select-category { font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
+        .service-select-price {
+            background: var(--primary); color: white; padding: 8px 16px;
+            border-radius: 20px; font-size: 16px; font-weight: 700;
+        }
 
         /* Stili per il template PDF nascosto */
         #pdf-template {
@@ -274,14 +322,21 @@
                 </div>
             </div>
 
-            <!-- SERVIZI & COSTI -->
+            <!-- SERVIZI & COSTI - MODIFICATO CON TASTO ARCHIVIO -->
             <div class="card-3d">
-                <div class="card-title">Servizi & Costi (prezzi da listino admin – modificabili)</div>
-                <div id="loadingServizi" class="loading" style="padding: 20px;">
-                    <div class="spinner"></div>
-                    <div>Caricamento listino...</div>
+                <div class="card-title">
+                    <span>Servizi & Costi</span>
+                    <button class="btn btn-primary btn-lg" onclick="apriModalServizi()">📚 Vai a Listini & Categorie</button>
                 </div>
-                <div id="serviziListContainer"></div>
+                <div class="card-subtitle">Clicca sul tasto per selezionare servizi dall'archivio. Puoi modificarne prezzi e quantità.</div>
+                
+                <div id="serviziSelezionatiContainer">
+                    <div style="text-align: center; padding: 40px; color: var(--text-light); border: 2px dashed var(--border-color); border-radius: 10px;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
+                        <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Nessun servizio selezionato</div>
+                        <div style="font-size: 13px;">Clicca su "Vai a Listini & Categorie" per aggiungere servizi dal tuo archivio</div>
+                    </div>
+                </div>
             </div>
 
             <!-- SCONTO & ACCONTI -->
@@ -386,7 +441,7 @@
             <div class="btn-group" style="justify-content: center; margin-bottom: 40px;">
                 <button class="btn btn-dark" onclick="salvaInArchivio('preventivo')">💾 Salva Preventivo</button>
                 <button class="btn btn-success" onclick="inviaWhatsApp()">📱 Invia WhatsApp</button>
-                <button class="btn btn-dark" onclick="creaPDF()">📄 Crea PDF</button>
+                <button class="btn btn-dark" onclick="creaPDF()"> Crea PDF</button>
                 <button class="btn btn-primary" onclick="trasformaInContratto()">📝 Converti in Contratto</button>
             </div>
 
@@ -445,6 +500,26 @@
         </div> <!-- FINE MAIN CONTENT -->
 
         <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
+    </div>
+
+    <!-- MODAL SELEZIONE SERVIZI DA ARCHIVIO -->
+    <div id="modalServizi" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📚 Seleziona Servizi dall'Archivio</h2>
+                <button class="close-modal" onclick="chiudiModalServizi()">×</button>
+            </div>
+            <div id="modalServiziContent">
+                <div class="loading" style="padding: 40px;">
+                    <div class="spinner"></div>
+                    <div>Caricamento archivio servizi...</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 24px; justify-content: flex-end;">
+                <button class="btn btn-outline" onclick="chiudiModalServizi()">Annulla</button>
+                <button class="btn btn-primary" onclick="confermaSelezioneServizi()">✅ Conferma Selezione</button>
+            </div>
+        </div>
     </div>
 
     <!-- TEMPLATE PDF NASCOSTO -->
@@ -520,6 +595,7 @@
         const token = urlParams.get('token');
         let studioId = null;
         let serviziArchivio = [];
+        let serviziSelezionati = []; // Array dei servizi selezionati per questo preventivo
         let preventivoCorrente = null;
         let archivioPreventivi = [];
         let archivioContratti = [];
@@ -546,7 +622,6 @@
                 
                 document.getElementById('loadingArea').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
-                await caricaServiziArchivio();
                 await caricaArchivioPreventivi();
                 await caricaArchivioContratti();
             } catch (error) {
@@ -593,26 +668,41 @@
             document.getElementById('tab-' + tabName).classList.add('active');
         }
 
-        async function caricaServiziArchivio() {
-            document.getElementById('loadingServizi').style.display = 'block';
+        // === FUNZIONI MODAL SERVIZI ===
+        async function apriModalServizi() {
+            const modal = document.getElementById('modalServizi');
+            const content = document.getElementById('modalServiziContent');
+            
+            modal.classList.add('active');
+            content.innerHTML = '<div class="loading" style="padding: 40px;"><div class="spinner"></div><div>Caricamento archivio servizi...</div></div>';
+            
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/servizi?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
                 const data = await response.json();
-                if (data.success && data.servizi) {
+                
+                if (data.success && data.servizi && data.servizi.length > 0) {
                     serviziArchivio = data.servizi;
-                    renderizzaListino();
+                    renderizzaModalServizi();
                 } else {
-                    document.getElementById('serviziListContainer').innerHTML = '<div style="text-align:center; color:var(--text-light); padding:20px;">Nessun servizio in archivio. Vai su "Listini & Categorie" per aggiungerne.</div>';
+                    content.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: var(--text-light);">
+                            <div style="font-size: 48px; margin-bottom: 16px;">📭</div>
+                            <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Nessun servizio in archivio</div>
+                            <div style="font-size: 13px; margin-bottom: 20px;">Vai su "Listini & Categorie" per creare i tuoi servizi</div>
+                            <button class="btn btn-primary" onclick="window.location.href='listini-categorie.html?token=${encodeURIComponent(token)}'">Vai a Listini & Categorie</button>
+                        </div>
+                    `;
                 }
             } catch (error) {
                 console.error('Errore:', error);
+                content.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--danger);">Errore nel caricamento dell\'archivio servizi</div>';
             }
-            document.getElementById('loadingServizi').style.display = 'none';
         }
 
-        function renderizzaListino() {
-            const container = document.getElementById('serviziListContainer');
+        function renderizzaModalServizi() {
+            const content = document.getElementById('modalServiziContent');
             const categorie = {};
+            
             serviziArchivio.forEach(s => {
                 if (!categorie[s.categoria]) categorie[s.categoria] = [];
                 categorie[s.categoria].push(s);
@@ -622,34 +712,124 @@
             Object.keys(categorie).sort().forEach(cat => {
                 html += `<div class="service-category-title">${cat}</div>`;
                 categorie[cat].forEach(s => {
+                    const isSelected = serviziSelezionati.some(sv => sv.id === s.id);
                     html += `
-                        <div class="service-row">
-                            <input type="checkbox" class="svc-check" data-id="${s.id}" onchange="toggleServizio(this)">
-                            <div class="svc-desc">${s.descrizione}</div>
-                            <input type="number" class="svc-price" value="${s.prezzo}" step="0.01" oninput="calcolaTotali()">
-                            <input type="number" class="svc-qty" value="1" min="1" oninput="calcolaTotali()">
-                            <span>€</span>
+                        <div class="service-select-item ${isSelected ? 'selected' : ''}" onclick="toggleServizioModal('${s.id}')">
+                            <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="event.stopPropagation(); toggleServizioModal('${s.id}')">
+                            <div class="service-select-info">
+                                <div class="service-select-name">${s.descrizione}</div>
+                                <div class="service-select-category">${s.categoria}</div>
+                            </div>
+                            <div class="service-select-price">€ ${parseFloat(s.prezzo).toFixed(2)}</div>
                         </div>
                     `;
                 });
             });
+            
+            content.innerHTML = html;
+        }
+
+        function toggleServizioModal(servizioId) {
+            const servizio = serviziArchivio.find(s => s.id === servizioId);
+            if (!servizio) return;
+
+            const index = serviziSelezionati.findIndex(s => s.id === servizioId);
+            
+            if (index === -1) {
+                // Aggiungi servizio
+                serviziSelezionati.push({
+                    ...servizio,
+                    quantita: 1,
+                    prezzo: parseFloat(servizio.prezzo)
+                });
+            } else {
+                // Rimuovi servizio
+                serviziSelezionati.splice(index, 1);
+            }
+            
+            renderizzaModalServizi();
+            renderizzaServiziSelezionati();
+        }
+
+        function confermaSelezioneServizi() {
+            chiudiModalServizi();
+            renderizzaServiziSelezionati();
+            calcolaTotali();
+            mostraToast(`${serviziSelezionati.length} servizio/i selezionato/i`, 'success');
+        }
+
+        function chiudiModalServizi() {
+            document.getElementById('modalServizi').classList.remove('active');
+        }
+
+        function renderizzaServiziSelezionati() {
+            const container = document.getElementById('serviziSelezionatiContainer');
+            
+            if (serviziSelezionati.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-light); border: 2px dashed var(--border-color); border-radius: 10px;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
+                        <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Nessun servizio selezionato</div>
+                        <div style="font-size: 13px;">Clicca su "Vai a Listini & Categorie" per aggiungere servizi dal tuo archivio</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            const categorie = {};
+            serviziSelezionati.forEach(s => {
+                if (!categorie[s.categoria]) categorie[s.categoria] = [];
+                categorie[s.categoria].push(s);
+            });
+
+            Object.keys(categorie).sort().forEach(cat => {
+                html += `<div class="service-category-title">${cat}</div>`;
+                categorie[cat].forEach(s => {
+                    html += `
+                        <div class="service-row">
+                            <div class="svc-desc" style="font-weight: 600;">${s.descrizione}</div>
+                            <input type="number" class="svc-price" value="${s.prezzo}" step="0.01" oninput="aggiornaPrezzoServizio('${s.id}', this.value)">
+                            <input type="number" class="svc-qty" value="${s.quantita}" min="1" oninput="aggiornaQuantitaServizio('${s.id}', this.value)">
+                            <span>€</span>
+                            <button class="btn btn-danger btn-sm" onclick="rimuoviServizio('${s.id}')">✕</button>
+                        </div>
+                    `;
+                });
+            });
+            
             container.innerHTML = html;
         }
 
-        function toggleServizio(checkbox) {
-            const row = checkbox.parentElement;
-            row.querySelector('.svc-price').disabled = !checkbox.checked;
-            row.querySelector('.svc-qty').disabled = !checkbox.checked;
-            calcolaTotali();
+        function aggiornaPrezzoServizio(id, prezzo) {
+            const servizio = serviziSelezionati.find(s => s.id === id);
+            if (servizio) {
+                servizio.prezzo = parseFloat(prezzo) || 0;
+                calcolaTotali();
+            }
+        }
+
+        function aggiornaQuantitaServizio(id, quantita) {
+            const servizio = serviziSelezionati.find(s => s.id === id);
+            if (servizio) {
+                servizio.quantita = parseInt(quantita) || 1;
+                calcolaTotali();
+            }
+        }
+
+        function rimuoviServizio(id) {
+            const index = serviziSelezionati.findIndex(s => s.id === id);
+            if (index !== -1) {
+                serviziSelezionati.splice(index, 1);
+                renderizzaServiziSelezionati();
+                calcolaTotali();
+            }
         }
 
         function calcolaTotali() {
             let totaleServizi = 0;
-            document.querySelectorAll('.svc-check:checked').forEach(cb => {
-                const row = cb.parentElement;
-                const prezzo = parseFloat(row.querySelector('.svc-price').value) || 0;
-                const qty = parseInt(row.querySelector('.svc-qty').value) || 0;
-                totaleServizi += (prezzo * qty);
+            serviziSelezionati.forEach(s => {
+                totaleServizi += (s.prezzo * s.quantita);
             });
 
             const scontoPerc = parseFloat(document.getElementById('scontoPerc').value) || 0;
@@ -736,17 +916,6 @@
         }
 
         function raccogliDatiPreventivo() {
-            const serviziSelezionati = [];
-            document.querySelectorAll('.svc-check:checked').forEach(cb => {
-                const row = cb.parentElement;
-                serviziSelezionati.push({
-                    id: cb.dataset.id,
-                    descrizione: row.querySelector('.svc-desc').textContent,
-                    prezzo: parseFloat(row.querySelector('.svc-price').value),
-                    quantita: parseInt(row.querySelector('.svc-qty').value)
-                });
-            });
-
             const acconti = [];
             document.querySelectorAll('#accontiList .service-row').forEach(row => {
                 acconti.push({
@@ -773,7 +942,13 @@
                     indirizzo: document.getElementById('cB_indirizzo').value, citta: document.getElementById('cB_citta').value,
                     cap: document.getElementById('cB_cap').value, provincia: document.getElementById('cB_prov').value
                 },
-                servizi: serviziSelezionati,
+                servizi: serviziSelezionati.map(s => ({
+                    id: s.id,
+                    descrizione: s.descrizione,
+                    prezzo: s.prezzo,
+                    quantita: s.quantita,
+                    categoria: s.categoria
+                })),
                 acconti: acconti,
                 sconto_perc: parseFloat(document.getElementById('scontoPerc').value) || 0,
                 sconto_fisso: parseFloat(document.getElementById('scontoFisso').value) || 0,
@@ -1016,7 +1191,18 @@
             document.getElementById('checkAccettazione').checked = pv.accettato || false;
             document.getElementById('noteAggiuntive').value = pv.note || '';
 
-            await caricaServiziArchivio();
+            // Carica servizi dal preventivo
+            if (pv.servizi && Array.isArray(pv.servizi)) {
+                serviziSelezionati = pv.servizi.map(s => ({
+                    ...s,
+                    prezzo: parseFloat(s.prezzo),
+                    quantita: parseInt(s.quantita) || 1
+                }));
+            } else {
+                serviziSelezionati = [];
+            }
+
+            renderizzaServiziSelezionati();
             calcolaTotali();
             
             switchTab('crea');
