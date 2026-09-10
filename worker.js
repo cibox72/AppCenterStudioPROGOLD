@@ -956,18 +956,25 @@ export default {
         return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
       }
 
+            // ============================================
+      // 40.6 UPLOAD LOGO STUDIO (URL SICURO)
       // ============================================
-      // 40.7 SCHEDA STUDIO - GET (per admin/fornitore)
-      // ============================================
-      if (path === "/api/admin/scheda-studio" && request.method === "GET") {
+      if (path === "/api/studio/upload-logo" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
         const studioId = url.searchParams.get("studioId");
-        if (!studioId) return new Response(JSON.stringify({ error: "Studio ID mancante" }), { status: 400, headers: corsHeaders });
-        const result = await env.DB.prepare("SELECT * FROM studi WHERE id=?").bind(studioId).first();
-        if (!result) return new Response(JSON.stringify({ error: "Studio non trovato" }), { status: 404, headers: corsHeaders });
-        return new Response(JSON.stringify({ success: true, studio: result }), { headers: corsHeaders });
+        const filename = url.searchParams.get("filename") || "logo.png";
+        const body = await request.arrayBuffer();
+        const bucket = env.appcenter_studio_foto;
+        if (bucket) {
+          const key = `loghi/${studioId}/${filename}`;
+          await bucket.put(key, body);
+          // Restituisce URL sicuro tramite endpoint autenticato invece dell'URL diretto R2
+          const logoUrl = `${WORKER_URL.replace(/\/$/, '')}/api/studio/logo?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`;
+          return new Response(JSON.stringify({ success: true, url: logoUrl }), { headers: corsHeaders });
+        }
+        return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
       }
 
       // ============================================
