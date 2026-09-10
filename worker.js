@@ -1322,6 +1322,47 @@ export default {
         const temaAttivo = result ? result.tema_attivo : 'default';
         return new Response(JSON.stringify({ success: true, tema_attivo: temaAttivo }), { headers: corsHeaders });
       }
+            // ============================================
+      // LOGO SICURO - Serve logo da R2 con autenticazione
+      // ============================================
+      if (path === "/api/studio/logo" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const studioId = url.searchParams.get("studioId");
+        
+        if (!token || !studioId) {
+          return new Response(JSON.stringify({ error: "Parametri mancanti" }), { status: 400, headers: corsHeaders });
+        }
+
+        const sess = await verificaSessione(token);
+        if (!sess) {
+          return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        }
+
+        const bucket = env.appcenter_studio_foto;
+        if (!bucket) {
+          return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
+        }
+
+        try {
+          const key = `loghi/${studioId}/logo.png`;
+          const object = await bucket.get(key);
+          
+          if (!object) {
+            return new Response(JSON.stringify({ error: "Logo non trovato" }), { status: 404, headers: corsHeaders });
+          }
+
+          const headers = new Headers({
+            "Content-Type": object.httpMetadata?.contentType || "image/png",
+            "Cache-Control": "public, max-age=86400",
+            "Access-Control-Allow-Origin": "*",
+          });
+
+          return new Response(object.body, { headers });
+        } catch (error) {
+          console.error("Errore recupero logo:", error);
+          return new Response(JSON.stringify({ error: "Errore interno" }), { status: 500, headers: corsHeaders });
+        }
+      }
       // ============================================
       // ROUTE NON TROVATA
       // ============================================
