@@ -214,13 +214,14 @@
             margin-bottom: 16px;
             opacity: 0.3;
         }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
     <div class="top-bar">
         <div style="display: flex; gap: 10px;">
             <button class="nav-btn" onclick="tornaAdmin()">Indietro</button>
-            <button class="nav-btn" onclick="window.location.href='admin.html'">Plancia Admin</button>
+            <button class="nav-btn" onclick="window.location.href='admin.html?token=' + encodeURIComponent(token)">Plancia Admin</button>
         </div>
         <div class="sync-status"><span class="sync-dot"></span> Cloud Sync: OK</div>
     </div>
@@ -236,10 +237,10 @@
             <div>Caricamento archivio studi...</div>
         </div>
 
-        <div id="mainContent" style="display: none;">
+        <div id="mainContent" class="hidden">
             <div id="studiContainer" class="studi-grid"></div>
-            <div id="emptyState" class="empty-state" style="display: none;">
-                <div class="empty-state-icon"></div>
+            <div id="emptyState" class="empty-state hidden">
+                <div class="empty-state-icon">📁</div>
                 <h3>Nessuno studio archiviato</h3>
                 <p>Le schede studio completate appariranno qui</p>
             </div>
@@ -258,8 +259,41 @@
                 window.location.href = 'index.html';
                 return;
             }
+            // 1. Carica prima il tema globale
+            await caricaTemaGlobale();
+            // 2. Poi carica i dati
             await caricaArchivioStudi();
         });
+
+        // FUNZIONE TEMA GLOBALE (Aggiunta per allineare i colori)
+        async function caricaTemaGlobale() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/admin/tema?token=${encodeURIComponent(token)}`);
+                const data = await response.json();
+                if (data.success && data.tema && data.tema.tema_attivo) {
+                    const temaId = data.tema.tema_attivo;
+                    const temi = {
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
+                    };
+                    const t = temi[temaId] || temi['default'];
+                    const root = document.documentElement;
+                    root.style.setProperty('--primary', t.p);
+                    root.style.setProperty('--primary-dark', t.pd);
+                    root.style.setProperty('--primary-light', t.pl);
+                    root.style.setProperty('--primary-gradient', t.pg);
+                    root.style.setProperty('--bg-gradient', t.bg);
+                }
+            } catch (error) {
+                console.error('Errore caricamento tema:', error);
+            }
+        }
 
         async function caricaArchivioStudi() {
             try {
@@ -269,11 +303,11 @@
                 if (data.success && data.studi && data.studi.length > 0) {
                     renderizzaStudi(data.studi);
                     document.getElementById('loadingArea').classList.add('hidden');
-                    document.getElementById('mainContent').style.display = 'block';
+                    document.getElementById('mainContent').classList.remove('hidden');
                 } else {
                     document.getElementById('loadingArea').classList.add('hidden');
-                    document.getElementById('mainContent').style.display = 'block';
-                    document.getElementById('emptyState').style.display = 'block';
+                    document.getElementById('mainContent').classList.remove('hidden');
+                    document.getElementById('emptyState').classList.remove('hidden');
                 }
             } catch (error) {
                 console.error('Errore:', error);
@@ -284,9 +318,10 @@
         function renderizzaStudi(studi) {
             const container = document.getElementById('studiContainer');
             container.innerHTML = studi.map(studio => {
+                // Gestione sicura del logo (usa l'endpoint sicuro se necessario, o l'URL diretto se già corretto)
                 const logoHtml = studio.logo_url 
                     ? `<img src="${studio.logo_url}" alt="Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'font-size: 32px;\\'>🏢</span>';">`
-                    : `<span style="font-size: 32px;"></span>`;
+                    : `<span style="font-size: 32px;">🏢</span>`;
                 
                 return `
                     <div class="studio-card" onclick="visualizzaScheda('${studio.id}')">
@@ -313,7 +348,7 @@
                             </div>
                             <div class="studio-info-row">
                                 <span class="studio-info-label">Stato</span>
-                                <span class="studio-info-value" style="color: var(--success); font-weight: 700;">Attivo</span>
+                                <span class="studio-info-value" style="color: var(--success); font-weight: 700;">Completato</span>
                             </div>
                         </div>
                         <div class="studio-card-actions">
@@ -334,7 +369,7 @@
         }
 
         function tornaAdmin() {
-            window.location.href = 'admin.html';
+            window.location.href = `admin.html?token=${encodeURIComponent(token)}`;
         }
 
         function mostraToast(msg, tipo) {
