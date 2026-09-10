@@ -111,11 +111,12 @@
             font-weight: 800;
             color: var(--primary-dark);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
         .studio-logo img {
             max-width: 100%;
             max-height: 100%;
-            border-radius: 12px;
+            object-fit: cover;
         }
         .studio-header-info h2 {
             font-size: 32px;
@@ -227,17 +228,28 @@
         }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+        .error-box {
+            background: #fee;
+            border: 2px solid var(--danger);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            color: var(--danger);
+        }
+        .error-box h3 { margin-bottom: 16px; font-size: 20px; }
+        .error-box p { margin-bottom: 20px; }
         @media print {
             .top-bar, .action-buttons { display: none; }
             .studio-card { box-shadow: none; border: 1px solid #ddd; }
         }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
     <div class="top-bar">
         <div style="display: flex; gap: 10px;">
             <button class="nav-btn" onclick="tornaAdmin()">Indietro</button>
-            <button class="nav-btn" onclick="window.location.href='admin.html'">Plancia Admin</button>
+            <button class="nav-btn" onclick="window.location.href='admin.html?token=' + encodeURIComponent(token)">Plancia Admin</button>
         </div>
         <div class="sync-status"><span class="sync-dot"></span> Cloud Sync: OK</div>
     </div>
@@ -253,13 +265,19 @@
             <div>Caricamento dati studio...</div>
         </div>
 
-        <div id="mainContent" style="display: none;">
+        <div id="errorArea" class="error-box hidden">
+            <h3>⚠️ Errore nel caricamento</h3>
+            <p id="errorMessage">Impossibile caricare i dati dello studio</p>
+            <button class="btn btn-primary" onclick="location.reload()">Riprova</button>
+        </div>
+
+        <div id="mainContent" class="hidden">
             <div class="studio-card" id="studioCard">
                 <!-- Contenuto dinamico -->
             </div>
 
             <div class="action-buttons">
-                <button class="btn btn-success" onclick="stampaPDF()">📄 Stampa PDF</button>
+                <button class="btn btn-success" onclick="window.print()"> Stampa PDF</button>
                 <button class="btn btn-outline" onclick="tornaAdmin()">Chiudi</button>
             </div>
         </div>
@@ -274,37 +292,106 @@
         const studioId = urlParams.get('studioId');
 
         document.addEventListener('DOMContentLoaded', async function() {
+            console.log('[SCHEDA ADMIN] Pagina caricata');
+            console.log('[SCHEDA ADMIN] Token:', token ? 'presente' : 'assente');
+            console.log('[SCHEDA ADMIN] Studio ID:', studioId);
+            
             if (!token || !studioId) {
-                mostraToast('Parametri mancanti', 'error');
-                setTimeout(() => window.location.href = 'admin.html', 1500);
+                mostraErrore('Parametri mancanti (token o studioId)');
                 return;
             }
+            
+            // 1. Carica prima il tema globale
+            await caricaTemaGlobale();
+            
+            // 2. Poi carica i dati dello studio
             await caricaSchedaStudio();
         });
 
+        // FUNZIONE TEMA GLOBALE
+        async function caricaTemaGlobale() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/admin/tema?token=${encodeURIComponent(token)}`);
+                const data = await response.json();
+                if (data.success && data.tema && data.tema.tema_attivo) {
+                    const temaId = data.tema.tema_attivo;
+                    const temi = {
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
+                    };
+                    const t = temi[temaId] || temi['default'];
+                    const root = document.documentElement;
+                    root.style.setProperty('--primary', t.p);
+                    root.style.setProperty('--primary-dark', t.pd);
+                    root.style.setProperty('--primary-light', t.pl);
+                    root.style.setProperty('--primary-gradient', t.pg);
+                    root.style.setProperty('--bg-gradient', t.bg);
+                    console.log('[SCHEDA ADMIN] Tema applicato:', temaId);
+                }
+            } catch (error) {
+                console.error('[SCHEDA ADMIN] Errore caricamento tema:', error);
+            }
+        }
+
         async function caricaSchedaStudio() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/admin/scheda-studio?studioId=${studioId}&token=${token}`);
+                console.log('[SCHEDA ADMIN] Chiamo API per studio:', studioId);
+                const response = await fetch(`${WORKER_URL}/api/admin/scheda-studio?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
+                
+                console.log('[SCHEDA ADMIN] Status response:', response.status);
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error('Studio non trovato nel database. Assicurati che lo studio abbia completato la scheda anagrafica.');
+                    } else if (response.status === 403) {
+                        throw new Error('Non autorizzato. Sessione scaduta o invalida.');
+                    } else {
+                        throw new Error(`Errore server: ${response.status}`);
+                    }
+                }
+                
                 const data = await response.json();
+                console.log('[SCHEDA ADMIN] Dati ricevuti:', data);
                 
                 if (data.success && data.studio) {
                     renderizzaScheda(data.studio);
                     document.getElementById('loadingArea').classList.add('hidden');
-                    document.getElementById('mainContent').style.display = 'block';
+                    document.getElementById('mainContent').classList.remove('hidden');
                 } else {
-                    mostraToast('Errore nel caricamento della scheda', 'error');
+                    throw new Error(data.error || 'Nessun dato ricevuto dal server');
                 }
             } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
+                console.error('[SCHEDA ADMIN] Errore:', error);
+                mostraErrore(error.message);
             }
+        }
+
+        function mostraErrore(messaggio) {
+            document.getElementById('loadingArea').classList.add('hidden');
+            document.getElementById('errorArea').classList.remove('hidden');
+            document.getElementById('errorMessage').textContent = messaggio;
+            mostraToast(messaggio, 'error');
         }
 
         function renderizzaScheda(studio) {
             const card = document.getElementById('studioCard');
-            const logoHtml = studio.logo_url 
-                ? `<img src="${studio.logo_url}" alt="Logo">`
-                : `<span style="font-size: 48px;">🏢</span>`;
+            
+            // Gestione logo
+            let logoHtml = '<span style="font-size: 48px;">🏢</span>';
+            if (studio.logo_url) {
+                // Se l'URL è un URL R2 diretto, mantienilo, altrimenti usa l'endpoint sicuro
+                if (studio.logo_url.includes('r2.dev') || studio.logo_url.includes('workers.dev')) {
+                    logoHtml = `<img src="${studio.logo_url}" alt="Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'font-size: 48px;\\'>🏢</span>';">`;
+                } else {
+                    logoHtml = `<img src="${studio.logo_url}" alt="Logo">`;
+                }
+            }
             
             card.innerHTML = `
                 <div class="studio-header">
@@ -353,7 +440,7 @@
                     </div>
 
                     <div class="section-title">
-                        <div class="section-icon">📍</div>
+                        <div class="section-icon"></div>
                         Indirizzo Sede Legale
                     </div>
                     <div class="info-grid">
@@ -380,7 +467,7 @@
                     </div>
 
                     <div class="section-title">
-                        <div class="section-icon"></div>
+                        <div class="section-icon">👤</div>
                         Rappresentante Legale
                     </div>
                     <div class="info-grid">
@@ -416,7 +503,7 @@
                     ` : ''}
 
                     <div class="section-title">
-                        <div class="section-icon"></div>
+                        <div class="section-icon">🔗</div>
                         Link e Social
                     </div>
                     <div class="info-grid">
@@ -470,12 +557,8 @@
             `;
         }
 
-        function stampaPDF() {
-            window.print();
-        }
-
         function tornaAdmin() {
-            window.location.href = 'admin.html';
+            window.location.href = `admin.html?token=${encodeURIComponent(token)}`;
         }
 
         function mostraToast(msg, tipo) {
