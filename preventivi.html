@@ -17,11 +17,13 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease;
         }
         .top-bar {
             background: var(--primary-gradient); padding: 16px 24px;
             display: flex; justify-content: space-between; align-items: center;
             box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100;
+            transition: background 0.3s ease;
         }
         .nav-btn {
             background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
@@ -512,8 +514,7 @@
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-
-    <script>
+        <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
@@ -531,7 +532,7 @@
 
         async function verificaSessione() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 if (!data.success || data.tipo !== 'studio') {
                     mostraToast('Sessione non valida', 'error');
@@ -539,6 +540,10 @@
                     return;
                 }
                 studioId = data.user.id;
+                
+                // Carica tema globale
+                await caricaTemaGlobale();
+                
                 document.getElementById('loadingArea').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
                 await caricaServiziArchivio();
@@ -550,16 +555,48 @@
             }
         }
 
+        // FUNZIONE TEMA GLOBALE
+        async function caricaTemaGlobale() {
+            if (!studioId) return;
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
+                const data = await response.json();
+                if (data.success && data.tema && data.tema.tema_attivo) {
+                    const temaId = data.tema.tema_attivo;
+                    const temi = {
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
+                    };
+                    const t = temi[temaId] || temi['default'];
+                    const root = document.documentElement;
+                    root.style.setProperty('--primary', t.p);
+                    root.style.setProperty('--primary-dark', t.pd);
+                    root.style.setProperty('--primary-light', t.pl);
+                    root.style.setProperty('--primary-gradient', t.pg);
+                    root.style.setProperty('--bg-gradient', t.bg);
+                }
+            } catch (error) {
+                console.error('Errore caricamento tema:', error);
+            }
+        }
+
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             event.target.classList.add('active');
             document.getElementById('tab-' + tabName).classList.add('active');
         }
-                async function caricaServiziArchivio() {
+
+        async function caricaServiziArchivio() {
             document.getElementById('loadingServizi').style.display = 'block';
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/servizi?studioId=${studioId}&token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/servizi?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 if (data.success && data.servizi) {
                     serviziArchivio = data.servizi;
@@ -759,7 +796,7 @@
             const tabella = tipo === 'contratto' ? 'contratti' : 'preventivi';
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/${tabella}?token=${token}`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/${tabella}?token=${encodeURIComponent(token)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ...dati, studio_id: studioId, id: id, data_creazione: new Date().toISOString() })
@@ -799,7 +836,7 @@
         function gestisciAccettazione() {
             const accettato = document.getElementById('checkAccettazione').checked;
             if (accettato) {
-                fetch(`${WORKER_URL}/api/studio/notifica-accettazione?token=${token}`, {
+                fetch(`${WORKER_URL}/api/studio/notifica-accettazione?token=${encodeURIComponent(token)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -828,7 +865,7 @@
             dati.data_contratto = new Date().toISOString().split('T')[0];
             
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/contratti?token=${token}`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/contratti?token=${encodeURIComponent(token)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ...dati, studio_id: studioId, stato: 'attivo', data_creazione: new Date().toISOString() })
@@ -846,7 +883,7 @@
 
         async function caricaArchivioPreventivi() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/preventivi?studioId=${studioId}&token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/preventivi?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 if (data.success && data.preventivi) {
                     archivioPreventivi = data.preventivi;
@@ -892,7 +929,7 @@
 
         async function caricaArchivioContratti() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/contratti?studioId=${studioId}&token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/contratti?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 if (data.success && data.contratti) {
                     archivioContratti = data.contratti;
@@ -945,14 +982,12 @@
             const pv = archivioPreventivi.find(p => p.id === id);
             if (!pv) return;
 
-            // Popola i campi con i dati del preventivo
             document.getElementById('pvNumero').value = pv.numero || '';
             document.getElementById('pvData').value = pv.data_emissione || '';
             document.getElementById('pvTipoServizio').value = pv.tipo_servizio || '';
             document.getElementById('pvLuogoCerimonia').value = pv.luogo_cerimonia || '';
             document.getElementById('pvLuogoRicevimento').value = pv.luogo_ricevimento || '';
             
-            // Cliente A
             if (pv.cliente_a) {
                 document.getElementById('cA_nome').value = pv.cliente_a.nome || '';
                 document.getElementById('cA_cognome').value = pv.cliente_a.cognome || '';
@@ -964,7 +999,6 @@
                 document.getElementById('cA_prov').value = pv.cliente_a.provincia || '';
             }
 
-            // Cliente B
             if (pv.cliente_b) {
                 document.getElementById('cB_nome').value = pv.cliente_b.nome || '';
                 document.getElementById('cB_cognome').value = pv.cliente_b.cognome || '';
@@ -982,11 +1016,9 @@
             document.getElementById('checkAccettazione').checked = pv.accettato || false;
             document.getElementById('noteAggiuntive').value = pv.note || '';
 
-            // Ricarica servizi e calcola totali
             await caricaServiziArchivio();
             calcolaTotali();
             
-            // Torna al tab crea
             switchTab('crea');
             mostraToast('Preventivo caricato per modifica', 'success');
         }
@@ -994,8 +1026,6 @@
         async function apriContratto(id) {
             const ctr = archivioContratti.find(c => c.id === id);
             if (!ctr) return;
-            
-            // Stessa logica di apriPreventivo ma per contratti
             await apriPreventivo(id);
             mostraToast('Contratto caricato. Puoi aggiungere acconti.', 'success');
         }
@@ -1010,12 +1040,11 @@
             const importo = prompt('Importo acconto (€):');
             if (!importo || isNaN(parseFloat(importo))) return;
 
-            // Aggiungi acconto al contratto
             if (!ctr.acconti) ctr.acconti = [];
             ctr.acconti.push({ data: data, importo: parseFloat(importo) });
 
             try {
-                await fetch(`${WORKER_URL}/api/studio/contratti/${id}?token=${token}`, {
+                await fetch(`${WORKER_URL}/api/studio/contratti/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ acconti: ctr.acconti })
@@ -1027,146 +1056,6 @@
             }
         }
 
-        function creaPDF() {
-            mostraToast('Generazione PDF in corso...', 'success');
-            // Implementazione nella Parte 3
-        }
-
-        function stampaPreventivo(id) {
-            const pv = archivioPreventivi.find(p => p.id === id);
-            if (pv) generaPDF(pv, 'preventivo');
-        }
-
-        function stampaContratto(id) {
-            const ctr = archivioContratti.find(c => c.id === id);
-            if (ctr) generaPDF(ctr, 'contratto');
-        }
-
-        function nuovoPreventivo() {
-            if (confirm('Sei sicuro? I dati non salvati andranno persi.')) {
-                location.reload();
-            }
-        }
-
-        function tornaPlancia() {
-            window.location.href = `plancia-studio.html?token=${token}`;
-        }
-
-        function mostraToast(msg, tipo) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div>${msg}</div>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-                async function generaPDF(dati, tipo) {
-            // Carica dati studio per intestazione
-            let datiStudio = { nome: 'Studio Fotografico', indirizzo: '', telefono: '', email: '', piva: '' };
-            try {
-                const res = await fetch(`${WORKER_URL}/api/studio/profilo?studioId=${studioId}&token=${token}`);
-                const data = await res.json();
-                if (data.success && data.studio) {
-                    datiStudio = data.studio;
-                }
-            } catch (error) {
-                console.error('Errore caricamento studio:', error);
-            }
-
-            // Popola template PDF
-            document.getElementById('pdf-nome-studio').textContent = datiStudio.nome || 'Studio Fotografico';
-            document.getElementById('pdf-indirizzo-studio').textContent = datiStudio.indirizzo || '';
-            document.getElementById('pdf-contatti-studio').textContent = 
-                `Tel: ${datiStudio.telefono || '-'} | Email: ${datiStudio.email || '-'} | P.IVA: ${datiStudio.piva || '-'}`;
-            
-            const titoloDoc = tipo === 'contratto' ? 'CONTRATTO' : 'PREVENTIVO';
-            const numeroDoc = tipo === 'contratto' ? (dati.numero_contratto || dati.numero) : dati.numero;
-            document.getElementById('pdf-tipo-doc').innerHTML = `${titoloDoc} N. <span id="pdf-numero">${numeroDoc || 'N.D.'}</span>`;
-
-            // Cliente A
-            const ca = dati.cliente_a || {};
-            document.getElementById('pdf-cliente-a-nome').textContent = `${ca.nome || ''} ${ca.cognome || ''}`;
-            document.getElementById('pdf-cliente-a-indirizzo').textContent = 
-                `${ca.indirizzo || ''}, ${ca.cap || ''} ${ca.citta || ''} (${ca.provincia || ''})`;
-            document.getElementById('pdf-cliente-a-contatti').textContent = 
-                `Tel: ${ca.telefono || '-'} | Email: ${ca.email || '-'}`;
-
-            // Cliente B
-            const cb = dati.cliente_b || {};
-            document.getElementById('pdf-cliente-b-nome').textContent = `${cb.nome || ''} ${cb.cognome || ''}`;
-            document.getElementById('pdf-cliente-b-indirizzo').textContent = 
-                `${cb.indirizzo || ''}, ${cb.cap || ''} ${cb.citta || ''} (${cb.provincia || ''})`;
-            document.getElementById('pdf-cliente-b-contatti').textContent = 
-                `Tel: ${cb.telefono || '-'} | Email: ${cb.email || '-'}`;
-
-            // Dettagli evento
-            document.getElementById('pdf-tipo-servizio').textContent = dati.tipo_servizio || '-';
-            document.getElementById('pdf-luogo-cerimonia').textContent = dati.luogo_cerimonia || '-';
-            document.getElementById('pdf-luogo-ricevimento').textContent = dati.luogo_ricevimento || '-';
-
-            // Servizi
-            const tbody = document.getElementById('pdf-servizi-body');
-            tbody.innerHTML = '';
-            let totaleServizi = 0;
-            (dati.servizi || []).forEach(s => {
-                const totaleRiga = (s.prezzo || 0) * (s.quantita || 1);
-                totaleServizi += totaleRiga;
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${s.descrizione || ''}</td>
-                        <td>€ ${(s.prezzo || 0).toFixed(2)}</td>
-                        <td>${s.quantita || 1}</td>
-                        <td>€ ${totaleRiga.toFixed(2)}</td>
-                    </tr>
-                `;
-            });
-
-            // Totali
-            const scontoPerc = parseFloat(dati.sconto_perc) || 0;
-            const scontoFisso = parseFloat(dati.sconto_fisso) || 0;
-            const valScontoPerc = totaleServizi * (scontoPerc / 100);
-            const totaleSconto = valScontoPerc + scontoFisso;
-            const importoTotale = Math.max(0, totaleServizi - totaleSconto);
-
-            let totaleAcconti = 0;
-            if (dati.acconti && Array.isArray(dati.acconti)) {
-                totaleAcconti = dati.acconti.reduce((sum, acc) => sum + (parseFloat(acc.importo) || 0), 0);
-            }
-            const saldo = importoTotale - totaleAcconti;
-
-            document.getElementById('pdf-totale-servizi').textContent = totaleServizi.toFixed(2) + ' €';
-            document.getElementById('pdf-sconto-perc').textContent = scontoPerc + '% + ' + scontoFisso.toFixed(2) + ' €';
-            document.getElementById('pdf-totale-sconto').textContent = '-' + totaleSconto.toFixed(2) + ' €';
-            document.getElementById('pdf-totale').textContent = importoTotale.toFixed(2) + ' €';
-            document.getElementById('pdf-totale-acconti').textContent = totaleAcconti.toFixed(2) + ' €';
-            document.getElementById('pdf-saldo').textContent = saldo.toFixed(2) + ' €';
-            document.getElementById('pdf-note').textContent = dati.note || 'Nessuna nota aggiuntiva.';
-
-            // Mostra temporaneamente il template per la cattura
-            const template = document.getElementById('pdf-template');
-            template.style.display = 'block';
-
-            // Configurazione html2pdf
-            const opt = {
-                margin: 15,
-                filename: `${tipo === 'contratto' ? 'Contratto' : 'Preventivo'}_${numeroDoc || 'N.D.'}_${(ca.cognome || 'cliente')}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-
-            // Genera e scarica PDF
-            html2pdf().set(opt).from(template).save().then(() => {
-                template.style.display = 'none';
-                mostraToast('PDF generato e scaricato con successo!', 'success');
-            }).catch(err => {
-                template.style.display = 'none';
-                console.error('Errore PDF:', err);
-                mostraToast('Errore nella generazione PDF', 'error');
-            });
-        }
-
-        // Override delle funzioni creaPDF, stampaPreventivo, stampaContratto per usare generaPDF
         function creaPDF() {
             const dati = raccogliDatiPreventivo();
             if (dati.servizi.length === 0) {
@@ -1187,6 +1076,120 @@
             if (ctr) generaPDF(ctr, 'contratto');
         }
 
+        function nuovoPreventivo() {
+            if (confirm('Sei sicuro? I dati non salvati andranno persi.')) {
+                location.reload();
+            }
+        }
+
+        function tornaPlancia() {
+            window.location.href = `plancia-studio.html?token=${encodeURIComponent(token)}`;
+        }
+
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `<div>${msg}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        async function generaPDF(dati, tipo) {
+            let datiStudio = { nome: 'Studio Fotografico', indirizzo: '', telefono: '', email: '', piva: '' };
+            try {
+                const res = await fetch(`${WORKER_URL}/api/studio/profilo?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
+                const data = await res.json();
+                if (data.success && data.studio) {
+                    datiStudio = data.studio;
+                }
+            } catch (error) {
+                console.error('Errore caricamento studio:', error);
+            }
+
+            document.getElementById('pdf-nome-studio').textContent = datiStudio.nome || 'Studio Fotografico';
+            document.getElementById('pdf-indirizzo-studio').textContent = datiStudio.indirizzo || '';
+            document.getElementById('pdf-contatti-studio').textContent = 
+                `Tel: ${datiStudio.telefono || '-'} | Email: ${datiStudio.email || '-'} | P.IVA: ${datiStudio.piva || '-'}`;
+            
+            const titoloDoc = tipo === 'contratto' ? 'CONTRATTO' : 'PREVENTIVO';
+            const numeroDoc = tipo === 'contratto' ? (dati.numero_contratto || dati.numero) : dati.numero;
+            document.getElementById('pdf-tipo-doc').innerHTML = `${titoloDoc} N. <span id="pdf-numero">${numeroDoc || 'N.D.'}</span>`;
+
+            const ca = dati.cliente_a || {};
+            document.getElementById('pdf-cliente-a-nome').textContent = `${ca.nome || ''} ${ca.cognome || ''}`;
+            document.getElementById('pdf-cliente-a-indirizzo').textContent = 
+                `${ca.indirizzo || ''}, ${ca.cap || ''} ${ca.citta || ''} (${ca.provincia || ''})`;
+            document.getElementById('pdf-cliente-a-contatti').textContent = 
+                `Tel: ${ca.telefono || '-'} | Email: ${ca.email || '-'}`;
+
+            const cb = dati.cliente_b || {};
+            document.getElementById('pdf-cliente-b-nome').textContent = `${cb.nome || ''} ${cb.cognome || ''}`;
+            document.getElementById('pdf-cliente-b-indirizzo').textContent = 
+                `${cb.indirizzo || ''}, ${cb.cap || ''} ${cb.citta || ''} (${cb.provincia || ''})`;
+            document.getElementById('pdf-cliente-b-contatti').textContent = 
+                `Tel: ${cb.telefono || '-'} | Email: ${cb.email || '-'}`;
+
+            document.getElementById('pdf-tipo-servizio').textContent = dati.tipo_servizio || '-';
+            document.getElementById('pdf-luogo-cerimonia').textContent = dati.luogo_cerimonia || '-';
+            document.getElementById('pdf-luogo-ricevimento').textContent = dati.luogo_ricevimento || '-';
+
+            const tbody = document.getElementById('pdf-servizi-body');
+            tbody.innerHTML = '';
+            let totaleServizi = 0;
+            (dati.servizi || []).forEach(s => {
+                const totaleRiga = (s.prezzo || 0) * (s.quantita || 1);
+                totaleServizi += totaleRiga;
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${s.descrizione || ''}</td>
+                        <td>€ ${(s.prezzo || 0).toFixed(2)}</td>
+                        <td>${s.quantita || 1}</td>
+                        <td>€ ${totaleRiga.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            const scontoPerc = parseFloat(dati.sconto_perc) || 0;
+            const scontoFisso = parseFloat(dati.sconto_fisso) || 0;
+            const valScontoPerc = totaleServizi * (scontoPerc / 100);
+            const totaleSconto = valScontoPerc + scontoFisso;
+            const importoTotale = Math.max(0, totaleServizi - totaleSconto);
+
+            let totaleAcconti = 0;
+            if (dati.acconti && Array.isArray(dati.acconti)) {
+                totaleAcconti = dati.acconti.reduce((sum, acc) => sum + (parseFloat(acc.importo) || 0), 0);
+            }
+            const saldo = importoTotale - totaleAcconti;
+
+            document.getElementById('pdf-totale-servizi').textContent = totaleServizi.toFixed(2) + ' €';
+            document.getElementById('pdf-sconto-perc').textContent = scontoPerc + '% + ' + scontoFisso.toFixed(2) + ' €';
+            document.getElementById('pdf-totale-sconto').textContent = '-' + totaleSconto.toFixed(2) + ' €';
+            document.getElementById('pdf-totale').textContent = importoTotale.toFixed(2) + ' €';
+            document.getElementById('pdf-totale-acconti').textContent = totaleAcconti.toFixed(2) + ' €';
+            document.getElementById('pdf-saldo').textContent = saldo.toFixed(2) + ' €';
+            document.getElementById('pdf-note').textContent = dati.note || 'Nessuna nota aggiuntiva.';
+
+            const template = document.getElementById('pdf-template');
+            template.style.display = 'block';
+
+            const opt = {
+                margin: 15,
+                filename: `${tipo === 'contratto' ? 'Contratto' : 'Preventivo'}_${numeroDoc || 'N.D.'}_${(ca.cognome || 'cliente')}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(template).save().then(() => {
+                template.style.display = 'none';
+                mostraToast('PDF generato e scaricato con successo!', 'success');
+            }).catch(err => {
+                template.style.display = 'none';
+                console.error('Errore PDF:', err);
+                mostraToast('Errore nella generazione PDF', 'error');
+            });
+        }
     </script>
 </body>
 </html>
