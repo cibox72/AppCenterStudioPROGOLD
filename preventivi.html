@@ -274,7 +274,7 @@
                     <div class="form-group"><label>CAP</label><input type="text" id="cA_cap"></div>
                     <div class="form-group"><label>Provincia</label><input type="text" id="cA_prov"></div>
                 </div>
-                <button class="btn btn-outline btn-sm" onclick="apriMaps('A')">📍 Vedi luogo su Google Maps</button>
+                <button class="btn btn-outline btn-sm" onclick="apriMaps('A')"> Vedi luogo su Google Maps</button>
             </div>
 
             <!-- ANAGRAFICA CLIENTE B -->
@@ -441,7 +441,7 @@
             <div class="btn-group" style="justify-content: center; margin-bottom: 40px;">
                 <button class="btn btn-dark" onclick="salvaInArchivio('preventivo')">💾 Salva Preventivo</button>
                 <button class="btn btn-success" onclick="inviaWhatsApp()"> Invia WhatsApp</button>
-                <button class="btn btn-dark" onclick="creaPDF()">📄 Crea PDF</button>
+                <button class="btn btn-dark" onclick="creaPDF()"> Crea PDF</button>
                 <button class="btn btn-primary" onclick="trasformaInContratto()">📝 Converti in Contratto</button>
             </div>
 
@@ -506,7 +506,7 @@
     <div id="modalServizi" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h2> Seleziona Servizi dall'Archivio</h2>
+                <h2>📚 Seleziona Servizi dall'Archivio</h2>
                 <button class="close-modal" onclick="chiudiModalServizi()">×</button>
             </div>
             <div id="modalServiziContent">
@@ -683,7 +683,7 @@
                 } else {
                     content.innerHTML = `
                         <div style="text-align: center; padding: 40px; color: var(--text-light);">
-                            <div style="font-size: 48px; margin-bottom: 16px;"></div>
+                            <div style="font-size: 48px; margin-bottom: 16px;">📭</div>
                             <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Nessun servizio in archivio</div>
                             <div style="font-size: 13px; margin-bottom: 20px;">Vai su "Listini & Categorie" per creare i tuoi servizi</div>
                             <button class="btn btn-primary" onclick="window.location.href='listini-categorie.html?token=${encodeURIComponent(token)}'">Vai a Listini & Categorie</button>
@@ -1166,7 +1166,6 @@
 
         async function apriPreventivo(id) {
             console.log('[DEBUG] ID preventivo:', id);
-            console.log('[DEBUG] Archivio:', archivioPreventivi);
             
             const pv = archivioPreventivi.find(p => p.id === id);
             if (!pv) {
@@ -1175,8 +1174,8 @@
             }
 
             console.log('[DEBUG] Preventivo trovato:', pv);
-            console.log('[DEBUG] Cliente A:', pv.cliente_a);
-            console.log('[DEBUG] Servizi:', pv.servizi);
+            console.log('[DEBUG] Tipo di pv.servizi:', typeof pv.servizi);
+            console.log('[DEBUG] pv.servizi:', pv.servizi);
 
             document.getElementById('pvNumero').value = pv.numero || '';
             document.getElementById('pvData').value = pv.data_emissione || '';
@@ -1212,16 +1211,37 @@
             document.getElementById('checkAccettazione').checked = pv.accettato || false;
             document.getElementById('noteAggiuntive').value = pv.note || '';
 
-            if (pv.servizi && Array.isArray(pv.servizi) && pv.servizi.length > 0) {
-                serviziSelezionati = pv.servizi.map(s => ({
+            console.log('[DEBUG] Servizi raw:', pv.servizi);
+            let serviziDaCaricare = [];
+            
+            if (pv.servizi) {
+                if (typeof pv.servizi === 'string') {
+                    try {
+                        serviziDaCaricare = JSON.parse(pv.servizi);
+                        console.log('[DEBUG] Servizi parsati da stringa:', serviziDaCaricare);
+                    } catch (e) {
+                        console.error('[DEBUG] Errore nel parsing JSON servizi:', e);
+                        serviziDaCaricare = [];
+                    }
+                } else if (Array.isArray(pv.servizi)) {
+                    serviziDaCaricare = pv.servizi;
+                    console.log('[DEBUG] Servizi già array:', serviziDaCaricare);
+                } else {
+                    console.log('[DEBUG] pv.servizi non è né stringa né array:', typeof pv.servizi);
+                    serviziDaCaricare = [];
+                }
+            }
+            
+            if (serviziDaCaricare.length > 0) {
+                serviziSelezionati = serviziDaCaricare.map(s => ({
                     ...s,
                     prezzo: parseFloat(s.prezzo) || 0,
                     quantita: parseInt(s.quantita) || 1
                 }));
-                console.log('[DEBUG] Servizi caricati:', serviziSelezionati);
+                console.log('[DEBUG] Servizi caricati e mappati:', serviziSelezionati);
             } else {
                 serviziSelezionati = [];
-                console.log('[DEBUG] Nessun servizio nel preventivo');
+                console.log('[DEBUG] Nessun servizio da caricare');
             }
 
             const accontiList = document.getElementById('accontiList');
