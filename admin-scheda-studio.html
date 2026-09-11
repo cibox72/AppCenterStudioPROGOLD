@@ -83,7 +83,6 @@
             margin-bottom: 8px;
         }
         .page-header p { color: var(--text-light); font-size: 15px; }
-        
         .studio-card {
             background: white;
             border-radius: var(--radius);
@@ -95,39 +94,22 @@
             background: var(--primary-gradient);
             padding: 40px;
             color: white;
-            display: flex;
-            align-items: center;
-            gap: 32px;
+            text-align: center;
         }
-        .studio-logo {
-            width: 120px;
-            height: 120px;
-            background: white;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            font-weight: 800;
-            color: var(--primary-dark);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-        .studio-logo img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: cover;
-        }
-        .studio-header-info h2 {
-            font-size: 32px;
+        .studio-header h2 {
+            font-size: 36px;
             font-weight: 800;
             margin-bottom: 8px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .studio-header-info p {
-            font-size: 15px;
+        .studio-header .subtitle {
+            font-size: 18px;
             opacity: 0.95;
+            margin-bottom: 8px;
+        }
+        .studio-header .piva {
+            font-size: 14px;
+            opacity: 0.9;
         }
         .studio-body {
             padding: 40px;
@@ -240,136 +222,25 @@
         .error-box h3 { margin-bottom: 16px; font-size: 20px; }
         .error-box p { margin-bottom: 20px; }
         .hidden { display: none !important; }
-
-        /* ============================================ */
-        /* LAYOUT STAMPA OTTIMIZZATO - 1 PAGINA A4    */
-        /* ============================================ */
+        
         @media print {
-            @page {
-                size: A4 portrait;
-                margin: 10mm;
-            }
-            
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-            
-            body {
-                background: white !important;
-                font-size: 10px;
-                line-height: 1.3;
-            }
-            
-            .top-bar, .action-buttons, .toast-container { 
-                display: none !important; 
-            }
-            
-            .container {
-                padding: 0;
-                max-width: 100%;
-            }
-            
-            .page-header {
-                padding: 10px 15px;
-                margin-bottom: 10px;
-                box-shadow: none;
-                border: 1px solid #ddd;
-            }
-            
-            .page-header h1 {
-                font-size: 18px;
-                margin-bottom: 2px;
-            }
-            
-            .page-header p {
-                font-size: 9px;
-            }
-            
-            .studio-card {
-                box-shadow: none;
-                border: 1px solid #ddd;
-                margin-bottom: 0;
-            }
-            
-            .studio-header {
-                padding: 12px 15px;
-                gap: 12px;
-            }
-            
-            .studio-logo {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
-            }
-            
-            .studio-header-info h2 {
-                font-size: 16px;
-                margin-bottom: 2px;
-            }
-            
-            .studio-header-info p {
-                font-size: 9px;
-                margin-bottom: 1px;
-            }
-            
-            .studio-body {
-                padding: 12px 15px;
-            }
-            
-            .section-title {
-                font-size: 11px;
-                margin-bottom: 6px;
-                padding-bottom: 4px;
-                gap: 6px;
-            }
-            
-            .section-icon {
-                width: 18px;
-                height: 18px;
-                font-size: 9px;
-            }
-            
-            .info-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 6px;
-                margin-bottom: 10px;
-            }
-            
-            .info-item {
-                padding: 6px 8px;
-                border-left-width: 2px;
-            }
-            
-            .info-label {
-                font-size: 7px;
-                margin-bottom: 2px;
-            }
-            
-            .info-value {
-                font-size: 10px;
-            }
-            
-            .info-value.mono {
-                padding: 3px 6px;
-                font-size: 9px;
-            }
-            
-            .info-item[style*="grid-column: 1 / -1"] {
-                grid-column: span 2 !important;
-            }
-            
-            .info-value[style*="white-space: pre-wrap"] {
-                font-size: 8px !important;
-                max-height: 35px;
-                overflow: hidden;
-            }
-            
-            .studio-card, .section-title, .info-item {
-                page-break-inside: avoid;
-                break-inside: avoid;
-            }
+            @page { size: A4 portrait; margin: 10mm; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            body { background: white !important; font-size: 10px; }
+            .top-bar, .action-buttons, .toast-container { display: none !important; }
+            .container { padding: 0; }
+            .page-header { padding: 10px 15px; margin-bottom: 10px; box-shadow: none; border: 1px solid #ddd; }
+            .page-header h1 { font-size: 18px; }
+            .studio-card { box-shadow: none; border: 1px solid #ddd; }
+            .studio-header { padding: 20px 15px; }
+            .studio-header h2 { font-size: 24px; }
+            .studio-header .subtitle { font-size: 14px; }
+            .studio-body { padding: 12px 15px; }
+            .section-title { font-size: 11px; margin-bottom: 6px; }
+            .info-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+            .info-item { padding: 6px 8px; }
+            .info-label { font-size: 7px; }
+            .info-value { font-size: 10px; }
         }
     </style>
 </head>
@@ -377,7 +248,7 @@
     <div class="top-bar">
         <div style="display: flex; gap: 10px;">
             <button class="nav-btn" onclick="tornaAdmin()">Indietro</button>
-            <button class="nav-btn" onclick="window.location.href='admin.html?token=' + encodeURIComponent(token)">Plancia Admin</button>
+            <button class="nav-btn" onclick="tornaPlanciaAdmin()">Plancia Admin</button>
         </div>
         <div class="sync-status"><span class="sync-dot"></span> Cloud Sync: OK</div>
     </div>
@@ -394,21 +265,195 @@
         </div>
 
         <div id="errorArea" class="error-box hidden">
-            <h3>⚠️ Errore nel caricamento</h3>
+            <h3>️ Errore nel caricamento</h3>
             <p id="errorMessage">Impossibile caricare i dati dello studio</p>
             <button class="btn btn-primary" onclick="location.reload()">Riprova</button>
         </div>
 
         <div id="mainContent" class="hidden">
-            <div class="studio-card" id="studioCard">
-                <!-- Contenuto dinamico -->
-            </div>
-
+            <div class="studio-card" id="studioCard"></div>
             <div class="action-buttons">
-                <button class="btn btn-success" onclick="stampaPDF()">📄 Stampa PDF</button>
+                <button class="btn btn-success" onclick="window.print()">📄 Stampa PDF</button>
                 <button class="btn btn-outline" onclick="tornaAdmin()">Chiudi</button>
             </div>
         </div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        var WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        var urlParams = new URLSearchParams(window.location.search);
+        var token = urlParams.get('token');
+        var studioId = urlParams.get('studioId');
+
+        function tornaAdmin() {
+            window.location.href = 'admin.html?token=' + encodeURIComponent(token);
+        }
+
+        function tornaPlanciaAdmin() {
+            window.location.href = 'admin.html?token=' + encodeURIComponent(token);
+        }
+
+        function mostraToast(msg, tipo) {
+            var container = document.getElementById('toastContainer');
+            var toast = document.createElement('div');
+            toast.className = 'toast ' + tipo;
+            toast.innerHTML = '<div>' + msg + '</div>';
+            container.appendChild(toast);
+            setTimeout(function() { toast.remove(); }, 3000);
+        }
+
+        function mostraErrore(msg) {
+            document.getElementById('loadingArea').classList.add('hidden');
+            document.getElementById('errorArea').classList.remove('hidden');
+            document.getElementById('errorMessage').textContent = msg;
+            mostraToast(msg, 'error');
+        }
+
+        async function caricaTemaGlobale() {
+            try {
+                var response = await fetch(WORKER_URL + '/api/admin/tema?token=' + encodeURIComponent(token));
+                var data = await response.json();
+                if (data.success && data.tema && data.tema.tema_attivo) {
+                    var temi = {
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
+                    };
+                    var t = temi[data.tema.tema_attivo] || temi['default'];
+                    document.documentElement.style.setProperty('--primary', t.p);
+                    document.documentElement.style.setProperty('--primary-dark', t.pd);
+                    document.documentElement.style.setProperty('--primary-light', t.pl);
+                    document.documentElement.style.setProperty('--primary-gradient', t.pg);
+                    document.documentElement.style.setProperty('--bg-gradient', t.bg);
+                    console.log('[SCHEDA] Tema applicato:', data.tema.tema_attivo);
+                }
+            } catch (e) {
+                console.error('[SCHEDA] Errore tema:', e);
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function renderizzaScheda(studio) {
+            var card = document.getElementById('studioCard');
+            
+            // Header con solo testo - NIENTE LOGO
+            var html = '';
+            html += '<div class="studio-header">';
+            html += '<h2>' + escapeHtml(studio.nome || 'Studio Fotografico') + '</h2>';
+            html += '<div class="subtitle">Studio Fotografico</div>';
+            html += '<div class="piva">P.IVA: ' + escapeHtml(studio.piva || 'N/D') + ' | ID: ' + escapeHtml(studio.id) + '</div>';
+            html += '</div>';
+            html += '<div class="studio-body">';
+
+            // Dati Aziendali
+            html += '<div class="section-title"><div class="section-icon">&#128203;</div>Dati Aziendali</div>';
+            html += '<div class="info-grid">';
+            html += '<div class="info-item"><div class="info-label">Ragione Sociale</div><div class="info-value">' + escapeHtml(studio.nome || 'N/D') + '</div></div>';
+            html += '<div class="info-item"><div class="info-label">P.IVA / CF</div><div class="info-value mono">' + escapeHtml(studio.piva || 'N/D') + '</div></div>';
+            html += '<div class="info-item"><div class="info-label">Email</div><div class="info-value">' + escapeHtml(studio.email || 'N/D') + '</div></div>';
+            html += '<div class="info-item"><div class="info-label">Telefono</div><div class="info-value">' + escapeHtml(studio.telefono || 'N/D') + '</div></div>';
+            if (studio.pec) html += '<div class="info-item"><div class="info-label">PEC</div><div class="info-value">' + escapeHtml(studio.pec) + '</div></div>';
+            if (studio.sdi) html += '<div class="info-item"><div class="info-label">Codice SDI</div><div class="info-value mono">' + escapeHtml(studio.sdi) + '</div></div>';
+            html += '</div>';
+
+            // Indirizzo
+            html += '<div class="section-title"><div class="section-icon">&#128205;</div>Indirizzo Sede Legale</div>';
+            html += '<div class="info-grid">';
+            html += '<div class="info-item"><div class="info-label">Indirizzo</div><div class="info-value">' + escapeHtml(studio.indirizzo || 'N/D') + '</div></div>';
+            html += '<div class="info-item"><div class="info-label">CAP</div><div class="info-value mono">' + escapeHtml(studio.cap || 'N/D') + '</div></div>';
+            html += '<div class="info-item"><div class="info-label">Città</div><div class="info-value">' + escapeHtml(studio.citta || 'N/D') + '</div></div>';
+            html += '<div class="info-item"><div class="info-label">Provincia</div><div class="info-value">' + escapeHtml(studio.provincia || 'N/D') + '</div></div>';
+            html += '<div class="info-item"><div class="info-label">Stato</div><div class="info-value">' + escapeHtml(studio.stato || 'Italia') + '</div></div>';
+            html += '</div>';
+
+            // Legale
+            html += '<div class="section-title"><div class="section-icon">&#128100;</div>Rappresentante Legale</div>';
+            html += '<div class="info-grid">';
+            html += '<div class="info-item"><div class="info-label">Nome e Cognome</div><div class="info-value">' + escapeHtml(studio.legale || 'N/D') + '</div></div>';
+            if (studio.cf_legale) html += '<div class="info-item"><div class="info-label">Codice Fiscale</div><div class="info-value mono">' + escapeHtml(studio.cf_legale) + '</div></div>';
+            html += '</div>';
+
+            // IBAN
+            if (studio.iban) {
+                html += '<div class="section-title"><div class="section-icon">&#127974;</div>Dati Bancari</div>';
+                html += '<div class="info-grid">';
+                html += '<div class="info-item"><div class="info-label">IBAN</div><div class="info-value mono">' + escapeHtml(studio.iban) + '</div></div>';
+                if (studio.iban_intestato) html += '<div class="info-item"><div class="info-label">Intestato a</div><div class="info-value">' + escapeHtml(studio.iban_intestato) + '</div></div>';
+                html += '</div>';
+            }
+
+            // Link
+            html += '<div class="section-title"><div class="section-icon">&#128279;</div>Link e Social</div>';
+            html += '<div class="info-grid">';
+            if (studio.website) html += '<div class="info-item"><div class="info-label">Sito Web</div><div class="info-value"><a href="' + escapeHtml(studio.website) + '" target="_blank" style="color:var(--primary-dark);">' + escapeHtml(studio.website) + '</a></div></div>';
+            if (studio.link_facebook) html += '<div class="info-item"><div class="info-label">Facebook</div><div class="info-value"><a href="' + escapeHtml(studio.link_facebook) + '" target="_blank" style="color:var(--primary-dark);">' + escapeHtml(studio.link_facebook) + '</a></div></div>';
+            if (studio.link_instagram) html += '<div class="info-item"><div class="info-label">Instagram</div><div class="info-value"><a href="' + escapeHtml(studio.link_instagram) + '" target="_blank" style="color:var(--primary-dark);">' + escapeHtml(studio.link_instagram) + '</a></div></div>';
+            if (studio.link_portfolio) html += '<div class="info-item"><div class="info-label">Portfolio</div><div class="info-value"><a href="' + escapeHtml(studio.link_portfolio) + '" target="_blank" style="color:var(--primary-dark);">' + escapeHtml(studio.link_portfolio) + '</a></div></div>';
+            html += '</div>';
+
+            // Messaggi
+            if (studio.msg_benvenuto || studio.msg_ringraziamento) {
+                html += '<div class="section-title"><div class="section-icon">&#128172;</div>Messaggi Automatici</div>';
+                html += '<div class="info-grid">';
+                if (studio.msg_benvenuto) html += '<div class="info-item" style="grid-column:1/-1;"><div class="info-label">Messaggio di Benvenuto</div><div class="info-value" style="white-space:pre-wrap;font-size:14px;">' + escapeHtml(studio.msg_benvenuto) + '</div></div>';
+                if (studio.msg_ringraziamento) html += '<div class="info-item" style="grid-column:1/-1;"><div class="info-label">Messaggio di Ringraziamento</div><div class="info-value" style="white-space:pre-wrap;font-size:14px;">' + escapeHtml(studio.msg_ringraziamento) + '</div></div>';
+                html += '</div>';
+            }
+
+            html += '</div>';
+            card.innerHTML = html;
+        }
+
+        async function caricaSchedaStudio() {
+            try {
+                console.log('[SCHEDA] Caricamento per studio:', studioId);
+                var response = await fetch(WORKER_URL + '/api/admin/scheda-studio?studioId=' + encodeURIComponent(studioId) + '&token=' + encodeURIComponent(token));
+                console.log('[SCHEDA] Status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error('Errore server: ' + response.status);
+                }
+                
+                var data = await response.json();
+                console.log('[SCHEDA] Dati:', data);
+                
+                if (data.success && data.studio) {
+                    renderizzaScheda(data.studio);
+                    document.getElementById('loadingArea').classList.add('hidden');
+                    document.getElementById('mainContent').classList.remove('hidden');
+                } else {
+                    throw new Error(data.error || 'Nessun dato ricevuto');
+                }
+            } catch (error) {
+                console.error('[SCHEDA] Errore:', error);
+                mostraErrore(error.message);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('[SCHEDA] Pagina caricata');
+            console.log('[SCHEDA] Token:', token ? 'presente' : 'ASSENTE');
+            console.log('[SCHEDA] Studio ID:', studioId || 'ASSENTE');
+            
+            if (!token || !studioId) {
+                mostraErrore('Parametri mancanti (token o studioId)');
+                return;
+            }
+            
+            await caricaTemaGlobale();
+            await caricaSchedaStudio();
+        });
+    </script>
+</body>
+</html>
