@@ -350,7 +350,7 @@
     <div class="container">
         <div class="page-header">
             <h1>Admin Panel - CRM</h1>
-            <p>Gestione studi, clienti, notifiche e personalizzazione globale</p>
+            <p>Gestione studi, notifiche e personalizzazione globale</p>
         </div>
 
         <div id="loadingArea" class="loading">
@@ -361,7 +361,6 @@
         <div id="mainContent" class="hidden">
             <div class="tabs">
                 <button class="tab active" onclick="switchTab('studi')">📊 Studi</button>
-                <button class="tab" onclick="switchTab('clienti')">👥 Clienti</button>
                 <button class="tab" onclick="switchTab('notifiche')">🔔 Notifiche <span id="badgeNotifiche" class="notification-badge hidden">0</span></button>
                 <button class="tab" onclick="window.location.href='admin-archivio-studi.html?token=' + token">📁 Archivio Studi</button>
                 <button class="tab" onclick="switchTab('temi')">🎨 Temi Colori</button>
@@ -392,34 +391,6 @@
                                 </tr>
                             </thead>
                             <tbody id="studiTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB CLIENTI -->
-            <div id="tab-clienti" class="tab-content">
-                <div class="card-3d">
-                    <div class="card-title">Elenco Clienti</div>
-                    <div class="card-subtitle">Tutti i clienti registrati dagli studi</div>
-                    <div id="loadingClienti" class="loading" style="padding: 20px;">
-                        <div class="spinner"></div>
-                        <div>Caricamento clienti...</div>
-                    </div>
-                    <div class="table-container hidden" id="tableClienti">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID Cliente</th>
-                                    <th>Nome</th>
-                                    <th>Email</th>
-                                    <th>Telefono</th>
-                                    <th>Tipo Evento</th>
-                                    <th>Data Evento</th>
-                                    <th>Studio</th>
-                                </tr>
-                            </thead>
-                            <tbody id="clientiTable"></tbody>
                         </table>
                     </div>
                 </div>
@@ -544,7 +515,6 @@
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studi = [];
-        let clienti = [];
         let notifiche = [];
         let temaAttivoGlobale = 'default';
 
@@ -647,7 +617,6 @@
                 
                 await caricaTemaAttuale();
                 await caricaStudi();
-                await caricaClienti();
                 await caricaNotifiche();
                 setInterval(caricaNotifiche, 30000);
             } catch (error) {
@@ -723,43 +692,6 @@
             `}).join('');
         }
 
-        async function caricaClienti() {
-            document.getElementById('loadingClienti').style.display = 'block';
-            document.getElementById('tableClienti').classList.add('hidden');
-            try {
-                const response = await fetch(`${WORKER_URL}/api/admin/crm/clienti?token=${encodeURIComponent(token)}`);
-                const data = await response.json();
-                if (data.success) {
-                    clienti = data.clienti;
-                    renderizzaClienti();
-                }
-            } catch (error) {
-                console.error('Errore:', error);
-            }
-            document.getElementById('loadingClienti').style.display = 'none';
-        }
-
-        function renderizzaClienti() {
-            const tbody = document.getElementById('clientiTable');
-            const table = document.getElementById('tableClienti');
-            if (clienti.length === 0) {
-                table.classList.add('hidden');
-                return;
-            }
-            table.classList.remove('hidden');
-            tbody.innerHTML = clienti.map(c => `
-                <tr>
-                    <td><strong>${c.id}</strong></td>
-                    <td>${c.nome_a} ${c.cognome_a} ${c.nome_b ? '& ' + c.nome_b : ''}</td>
-                    <td>${c.email || '-'}</td>
-                    <td>${c.telefono || '-'}</td>
-                    <td>${c.tipo_evento || '-'}</td>
-                    <td>${c.data_evento ? new Date(c.data_evento).toLocaleDateString('it-IT') : '-'}</td>
-                    <td>${c.studio_id}</td>
-                </tr>
-            `).join('');
-        }
-
         async function caricaNotifiche() {
             try {
                 const response = await fetch(`${WORKER_URL}/api/admin/notifiche?token=${encodeURIComponent(token)}`);
@@ -793,7 +725,6 @@
                 let datiHtml = '';
                 let studioId = null;
                 
-                // Parsing dei dati per visualizzazione professionale
                 try {
                     const parsed = typeof n.dati === 'string' ? JSON.parse(n.dati) : n.dati;
                     if (n.tipo === 'scheda_studio_aggiornata' || n.tipo === 'registrazione') {
@@ -859,7 +790,6 @@
                 if (result.success) {
                     mostraToast('Scheda salvata in archivio!', 'success');
                     await caricaNotifiche();
-                    // Reindirizza alla visualizzazione professionale della scheda
                     setTimeout(() => {
                         window.location.href = `admin-scheda-studio.html?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`;
                     }, 500);
@@ -886,7 +816,6 @@
                 datiStr = notif.dati;
             }
             
-            // Creiamo un modale dinamico per i dettagli
             const modal = document.createElement('div');
             modal.style.cssText = 'display:flex; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:3000; align-items:center; justify-content:center;';
             modal.innerHTML = `
@@ -894,7 +823,7 @@
                     <h3 style="color:var(--primary-dark); margin-bottom:16px; font-weight:700;">Dettagli Notifica</h3>
                     <pre style="background:#f4f6f7; padding:16px; border-radius:8px; font-size:13px; overflow-x:auto; white-space: pre-wrap; word-wrap: break-word; color: var(--text-main);">${datiStr}</pre>
                     <div style="margin-top:20px; text-align:right;">
-                        <button class="btn btn-outline" onclick="this.closest('div[style*=\'position:fixed\']').remove()">Chiudi</button>
+                        <button class="btn btn-outline" onclick="this.closest('div[style*=\\'position:fixed\\']').remove()">Chiudi</button>
                     </div>
                 </div>
             `;
