@@ -309,7 +309,7 @@
                     <div class="form-group">
                         <label style="font-size: 15px;">Luogo Ricevimento (Ristorante / Sala) <span style="color:var(--text-light); font-weight:400; font-size:12px;">(opzionale)</span></label>
                         <input type="text" id="pvLuogoRicevimento" placeholder="Nome e indirizzo del ristorante o sala" style="font-size: 15px;">
-                        <button class="btn btn-outline btn-sm" style="margin-top: 8px;" onclick="apriMaps('ricevimento')"> Vedi luogo su Google Maps</button>
+                        <button class="btn btn-outline btn-sm" style="margin-top: 8px;" onclick="apriMaps('ricevimento')">📍 Vedi luogo su Google Maps</button>
                     </div>
                 </div>
             </div>
@@ -384,7 +384,7 @@
                         <input type="text" value="Acconto alla scelta foto e copertina" style="flex:1; padding:8px;">
                         <input type="number" class="piano-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
                         <span>€</span>
-                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()"></button>
                     </div>
                     <div class="service-row">
                         <input type="text" value="Saldo prima della stampa" style="flex:1; padding:8px;">
@@ -489,7 +489,7 @@
     <div id="modalServizi" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>📚 Seleziona Servizi dall'Archivio</h2>
+                <h2> Seleziona Servizi dall'Archivio</h2>
                 <button class="close-modal" onclick="chiudiModalServizi()">×</button>
             </div>
             <div id="modalServiziContent">
@@ -889,70 +889,69 @@
         }
 
         function raccogliDatiPreventivo() {
-    const acconti = [];
-    document.querySelectorAll('#accontiList .service-row').forEach(row => {
-        acconti.push({
-            data: row.querySelector('input[type="date"]').value,
-            importo: parseFloat(row.querySelector('.acconto-importo').value) || 0
-        });
-    });
-
-    // Raccogli il piano di pagamento
-    const pianoPagamento = [];
-    document.querySelectorAll('#pianoPagamentoList .service-row').forEach(row => {
-        const inputs = row.querySelectorAll('input');
-        if (inputs.length >= 2) {
-            pianoPagamento.push({
-                descrizione: inputs[0].value || '',
-                importo: parseFloat(inputs[1].value) || 0
+            const acconti = [];
+            document.querySelectorAll('#accontiList .service-row').forEach(row => {
+                acconti.push({
+                    data: row.querySelector('input[type="date"]').value,
+                    importo: parseFloat(row.querySelector('.acconto-importo').value) || 0
+                });
             });
-        }
-    });
 
-    return {
-        numero: document.getElementById('pvNumero').value,
-        data_emissione: document.getElementById('pvData').value,
-        tipo_servizio: document.getElementById('pvTipoServizio').value,
-        luogo_cerimonia: document.getElementById('pvLuogoCerimonia').value,
-        luogo_ricevimento: document.getElementById('pvLuogoRicevimento').value,
-        cliente_a: {
-            nome: document.getElementById('cA_nome').value || '',
-            cognome: document.getElementById('cA_cognome').value || '',
-            telefono: document.getElementById('cA_tel').value || '',
-            email: document.getElementById('cA_email').value || '',
-            indirizzo: document.getElementById('cA_indirizzo').value || '',
-            citta: document.getElementById('cA_citta').value || '',
-            cap: document.getElementById('cA_cap').value || '',
-            provincia: document.getElementById('cA_prov').value || ''
-        },
-        cliente_b: {
-            nome: document.getElementById('cB_nome').value || '',
-            cognome: document.getElementById('cB_cognome').value || '',
-            telefono: document.getElementById('cB_tel').value || '',
-            email: document.getElementById('cB_email').value || '',
-            indirizzo: document.getElementById('cB_indirizzo').value || '',
-            citta: document.getElementById('cB_citta').value || '',
-            cap: document.getElementById('cB_cap').value || '',
-            provincia: document.getElementById('cB_prov').value || ''
-        },
-        servizi: serviziSelezionati.map(s => ({
-            id: s.id,
-            descrizione: s.descrizione,
-            prezzo: s.prezzo,
-            quantita: s.quantita,
-            categoria: s.categoria
-        })),
-        acconti: acconti,
-        piano_pagamento: pianoPagamento,
-        sconto_perc: parseFloat(document.getElementById('scontoPerc').value) || 0,
-        sconto_fisso: parseFloat(document.getElementById('scontoFisso').value) || 0,
-        sconto_fisso_nota: document.getElementById('scontoFissoNota').value,
-        accettato: document.getElementById('checkAccettazione').checked,
-        note: document.getElementById('noteAggiuntive').value,
-        totale_finale: parseFloat(document.getElementById('rowImportoTotale').textContent.replace(' €', '').replace(',', '.')) || 0,
-        stato: document.getElementById('checkAccettazione').checked ? 'accettato' : 'bozza'
-    };
-}
+            const pianoPagamento = [];
+            document.querySelectorAll('#pianoPagamentoList .service-row').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs.length >= 2) {
+                    pianoPagamento.push({
+                        descrizione: inputs[0].value || '',
+                        importo: parseFloat(inputs[1].value) || 0
+                    });
+                }
+            });
+
+            return {
+                numero: document.getElementById('pvNumero').value,
+                data_emissione: document.getElementById('pvData').value,
+                tipo_servizio: document.getElementById('pvTipoServizio').value,
+                luogo_cerimonia: document.getElementById('pvLuogoCerimonia').value,
+                luogo_ricevimento: document.getElementById('pvLuogoRicevimento').value,
+                cliente_a: {
+                    nome: document.getElementById('cA_nome').value || '',
+                    cognome: document.getElementById('cA_cognome').value || '',
+                    telefono: document.getElementById('cA_tel').value || '',
+                    email: document.getElementById('cA_email').value || '',
+                    indirizzo: document.getElementById('cA_indirizzo').value || '',
+                    citta: document.getElementById('cA_citta').value || '',
+                    cap: document.getElementById('cA_cap').value || '',
+                    provincia: document.getElementById('cA_prov').value || ''
+                },
+                cliente_b: {
+                    nome: document.getElementById('cB_nome').value || '',
+                    cognome: document.getElementById('cB_cognome').value || '',
+                    telefono: document.getElementById('cB_tel').value || '',
+                    email: document.getElementById('cB_email').value || '',
+                    indirizzo: document.getElementById('cB_indirizzo').value || '',
+                    citta: document.getElementById('cB_citta').value || '',
+                    cap: document.getElementById('cB_cap').value || '',
+                    provincia: document.getElementById('cB_prov').value || ''
+                },
+                servizi: serviziSelezionati.map(s => ({
+                    id: s.id,
+                    descrizione: s.descrizione,
+                    prezzo: s.prezzo,
+                    quantita: s.quantita,
+                    categoria: s.categoria
+                })),
+                acconti: acconti,
+                piano_pagamento: pianoPagamento,
+                sconto_perc: parseFloat(document.getElementById('scontoPerc').value) || 0,
+                sconto_fisso: parseFloat(document.getElementById('scontoFisso').value) || 0,
+                sconto_fisso_nota: document.getElementById('scontoFissoNota').value,
+                accettato: document.getElementById('checkAccettazione').checked,
+                note: document.getElementById('noteAggiuntive').value,
+                totale_finale: parseFloat(document.getElementById('rowImportoTotale').textContent.replace(' €', '').replace(',', '.')) || 0,
+                stato: document.getElementById('checkAccettazione').checked ? 'accettato' : 'bozza'
+            };
+        }
 
         async function salvaInArchivio(tipo) {
             console.log('=== SALVATAGGIO ===');
@@ -1087,7 +1086,6 @@
                 const statoClass = pv.stato === 'accettato' ? 'badge-preventivo' : '';
                 const statoText = pv.stato === 'accettato' ? 'Accettato' : 'Bozza';
                 
-                // Parsa cliente_a se è stringa JSON
                 let clienteA = pv.cliente_a;
                 if (typeof clienteA === 'string') {
                     try { clienteA = JSON.parse(clienteA); } catch(e) { clienteA = {}; }
@@ -1170,7 +1168,6 @@
             }).join('');
         }
 
-        // FUNZIONE CORRETTA - Parsa cliente_a e cliente_b se sono stringhe JSON
         async function apriPreventivo(id) {
             console.log('[DEBUG] ID preventivo:', id);
             
@@ -1188,7 +1185,6 @@
             document.getElementById('pvLuogoCerimonia').value = pv.luogo_cerimonia || '';
             document.getElementById('pvLuogoRicevimento').value = pv.luogo_ricevimento || '';
             
-            // Parsa cliente_a se è stringa JSON
             let clienteA = pv.cliente_a;
             if (typeof clienteA === 'string') {
                 try { 
@@ -1211,7 +1207,6 @@
                 document.getElementById('cA_prov').value = clienteA.provincia || '';
             }
             
-            // Parsa cliente_b se è stringa JSON
             let clienteB = pv.cliente_b;
             if (typeof clienteB === 'string') {
                 try { 
@@ -1240,7 +1235,6 @@
             document.getElementById('checkAccettazione').checked = pv.accettato || false;
             document.getElementById('noteAggiuntive').value = pv.note || '';
 
-            // Parsa servizi se è stringa JSON
             let serviziDaCaricare = [];
             if (pv.servizi) {
                 if (typeof pv.servizi === 'string') {
@@ -1267,7 +1261,6 @@
                 serviziSelezionati = [];
             }
 
-                       // Carica acconti
             const accontiList = document.getElementById('accontiList');
             accontiList.innerHTML = '';
             if (pv.acconti && Array.isArray(pv.acconti) && pv.acconti.length > 0) {
@@ -1286,7 +1279,6 @@
                 accontiList.innerHTML = '<div style="font-size:13px; color:var(--text-light); margin-bottom:10px;">Nessun acconto registrato.</div>';
             }
 
-            // CARICA PIANO DI PAGAMENTO
             const pianoList = document.getElementById('pianoPagamentoList');
             pianoList.innerHTML = '';
             let pianoPagamento = pv.piano_pagamento;
@@ -1307,7 +1299,6 @@
                     pianoList.appendChild(div);
                 });
             } else {
-                // Piano di pagamento di default
                 const vociDefault = ['Caparra alla firma', 'Acconto prima del servizio', 'Acconto alla scelta foto e copertina', 'Saldo prima della stampa'];
                 vociDefault.forEach(voce => {
                     const div = document.createElement('div');
@@ -1429,7 +1420,6 @@
             const numeroDoc = tipo === 'contratto' ? (dati.numero_contratto || dati.numero) : dati.numero;
             document.getElementById('pdf-tipo-doc').innerHTML = `${titoloDoc} N. <span id="pdf-numero">${numeroDoc || 'N.D.'}</span>`;
 
-            // Parsa cliente_a se è stringa JSON
             let ca = dati.cliente_a || {};
             if (typeof ca === 'string') {
                 try { ca = JSON.parse(ca); } catch(e) { ca = {}; }
@@ -1441,7 +1431,6 @@
             document.getElementById('pdf-cliente-a-contatti').textContent = 
                 `Tel: ${ca.telefono || '-'} | Email: ${ca.email || '-'}`;
 
-            // Parsa cliente_b se è stringa JSON
             let cb = dati.cliente_b || {};
             if (typeof cb === 'string') {
                 try { cb = JSON.parse(cb); } catch(e) { cb = {}; }
