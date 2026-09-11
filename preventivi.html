@@ -1075,37 +1075,42 @@
         }
 
         function renderizzaArchivioPreventivi() {
-            const tbody = document.getElementById('archivioPreventiviTable');
-            const emptyState = document.getElementById('emptyArchivio');
-            
-            if (archivioPreventivi.length === 0) {
-                emptyState.classList.remove('hidden');
-                tbody.innerHTML = '';
-                return;
-            }
+    const tbody = document.getElementById('archivioPreventiviTable');
+    const emptyState = document.getElementById('emptyArchivio');
+    
+    if (archivioPreventivi.length === 0) {
+        emptyState.classList.remove('hidden');
+        tbody.innerHTML = '';
+        return;
+    }
 
-            emptyState.classList.add('hidden');
-            
-            tbody.innerHTML = archivioPreventivi.map(pv => {
-                const statoClass = pv.stato === 'accettato' ? 'badge-preventivo' : '';
-                const statoText = pv.stato === 'accettato' ? 'Accettato' : 'Bozza';
-                
-                return `
-                    <tr>
-                        <td>${pv.numero || 'N.D.'}</td>
-                        <td>${pv.cliente_a.nome} ${pv.cliente_a.cognome}</td>
-                        <td>${new Date(pv.data_emissione).toLocaleDateString('it-IT')}</td>
-                        <td>${pv.tipo_servizio}</td>
-                        <td>€ ${parseFloat(pv.totale_finale).toFixed(2)}</td>
-                        <td><span class="badge ${statoClass}">${statoText}</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-outline" onclick="apriPreventivo('${pv.id}')">Apri</button>
-                            <button class="btn btn-sm btn-success" onclick="stampaPreventivo('${pv.id}')">PDF</button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
+    emptyState.classList.add('hidden');
+    
+    tbody.innerHTML = archivioPreventivi.map(pv => {
+        const statoClass = pv.stato === 'accettato' ? 'badge-preventivo' : '';
+        const statoText = pv.stato === 'accettato' ? 'Accettato' : 'Bozza';
+        
+        // Gestione sicura dei nomi cliente
+        const nomeClienteA = pv.cliente_a ? (pv.cliente_a.nome || '') : '';
+        const cognomeClienteA = pv.cliente_a ? (pv.cliente_a.cognome || '') : '';
+        const nomeCompleto = nomeClienteA + ' ' + cognomeClienteA;
+        
+        return `
+            <tr>
+                <td>${pv.numero || 'N.D.'}</td>
+                <td>${nomeCompleto.trim() || 'N/D'}</td>
+                <td>${new Date(pv.data_emissione).toLocaleDateString('it-IT')}</td>
+                <td>${pv.tipo_servizio || 'N/D'}</td>
+                <td>€ ${parseFloat(pv.totale_finale || 0).toFixed(2)}</td>
+                <td><span class="badge ${statoClass}">${statoText}</span></td>
+                <td>
+                    <button class="btn btn-sm btn-outline" onclick="apriPreventivo('${pv.id}')">Apri</button>
+                    <button class="btn btn-sm btn-success" onclick="stampaPreventivo('${pv.id}')">PDF</button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
 
         async function caricaArchivioContratti() {
             try {
