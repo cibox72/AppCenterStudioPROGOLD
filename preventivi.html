@@ -1267,7 +1267,7 @@
                 serviziSelezionati = [];
             }
 
-            // Carica acconti
+                       // Carica acconti
             const accontiList = document.getElementById('accontiList');
             accontiList.innerHTML = '';
             if (pv.acconti && Array.isArray(pv.acconti) && pv.acconti.length > 0) {
@@ -1284,6 +1284,42 @@
                 });
             } else {
                 accontiList.innerHTML = '<div style="font-size:13px; color:var(--text-light); margin-bottom:10px;">Nessun acconto registrato.</div>';
+            }
+
+            // CARICA PIANO DI PAGAMENTO
+            const pianoList = document.getElementById('pianoPagamentoList');
+            pianoList.innerHTML = '';
+            let pianoPagamento = pv.piano_pagamento;
+            if (typeof pianoPagamento === 'string') {
+                try { pianoPagamento = JSON.parse(pianoPagamento); } catch(e) { pianoPagamento = []; }
+            }
+            
+            if (pianoPagamento && Array.isArray(pianoPagamento) && pianoPagamento.length > 0) {
+                pianoPagamento.forEach(voce => {
+                    const div = document.createElement('div');
+                    div.className = 'service-row';
+                    div.innerHTML = `
+                        <input type="text" value="${voce.descrizione || ''}" style="flex:1; padding:8px;">
+                        <input type="number" class="piano-importo" value="${voce.importo || 0}" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                        <span>€</span>
+                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+                    `;
+                    pianoList.appendChild(div);
+                });
+            } else {
+                // Piano di pagamento di default
+                const vociDefault = ['Caparra alla firma', 'Acconto prima del servizio', 'Acconto alla scelta foto e copertina', 'Saldo prima della stampa'];
+                vociDefault.forEach(voce => {
+                    const div = document.createElement('div');
+                    div.className = 'service-row';
+                    div.innerHTML = `
+                        <input type="text" value="${voce}" style="flex:1; padding:8px;">
+                        <input type="number" class="piano-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                        <span>€</span>
+                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+                    `;
+                    pianoList.appendChild(div);
+                });
             }
 
             renderizzaServiziSelezionati();
