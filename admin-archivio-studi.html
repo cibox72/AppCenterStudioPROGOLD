@@ -125,6 +125,7 @@
             color: var(--primary-dark);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             overflow: hidden;
+            flex-shrink: 0;
         }
         .studio-logo-small img {
             width: 100%;
@@ -237,10 +238,17 @@
             <div>Caricamento archivio studi...</div>
         </div>
 
+        <div id="errorArea" class="empty-state hidden">
+            <div class="empty-state-icon">️</div>
+            <h3>Errore nel caricamento</h3>
+            <p id="errorMessage">Impossibile caricare l'archivio studi</p>
+            <button class="btn btn-primary" onclick="location.reload()" style="margin-top: 20px;">Riprova</button>
+        </div>
+
         <div id="mainContent" class="hidden">
             <div id="studiContainer" class="studi-grid"></div>
             <div id="emptyState" class="empty-state hidden">
-                <div class="empty-state-icon">📁</div>
+                <div class="empty-state-icon"></div>
                 <h3>Nessuno studio archiviato</h3>
                 <p>Le schede studio completate appariranno qui</p>
             </div>
@@ -255,17 +263,24 @@
         const token = urlParams.get('token');
 
         document.addEventListener('DOMContentLoaded', async function() {
+            console.log('[ARCHIVIO] Pagina caricata');
+            console.log('[ARCHIVIO] Token:', token ? 'presente' : 'ASSENTE!');
+            
             if (!token) {
-                window.location.href = 'index.html';
+                mostraErrore('Token di accesso mancante. Effettua nuovamente il login.');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 3000);
                 return;
             }
-            // 1. Carica prima il tema globale
+            
+            // Carica prima il tema globale
             await caricaTemaGlobale();
-            // 2. Poi carica i dati
+            
+            // Poi carica i dati
             await caricaArchivioStudi();
         });
 
-        // FUNZIONE TEMA GLOBALE (Aggiunta per allineare i colori)
         async function caricaTemaGlobale() {
             try {
                 const response = await fetch(`${WORKER_URL}/api/admin/tema?token=${encodeURIComponent(token)}`);
@@ -289,16 +304,25 @@
                     root.style.setProperty('--primary-light', t.pl);
                     root.style.setProperty('--primary-gradient', t.pg);
                     root.style.setProperty('--bg-gradient', t.bg);
+                    console.log('[ARCHIVIO] Tema applicato:', temaId);
                 }
             } catch (error) {
-                console.error('Errore caricamento tema:', error);
+                console.error('[ARCHIVIO] Errore caricamento tema:', error);
             }
         }
 
         async function caricaArchivioStudi() {
             try {
+                console.log('[ARCHIVIO] Chiamo API archivio studi...');
                 const response = await fetch(`${WORKER_URL}/api/admin/archivio-studi?token=${encodeURIComponent(token)}`);
+                console.log('[ARCHIVIO] Status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`Errore server: ${response.status}`);
+                }
+                
                 const data = await response.json();
+                console.log('[ARCHIVIO] Dati ricevuti:', data);
                 
                 if (data.success && data.studi && data.studi.length > 0) {
                     renderizzaStudi(data.studi);
@@ -310,23 +334,30 @@
                     document.getElementById('emptyState').classList.remove('hidden');
                 }
             } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore nel caricamento archivio', 'error');
+                console.error('[ARCHIVIO] Errore:', error);
+                mostraErrore(error.message || 'Errore di connessione al server');
             }
+        }
+
+        function mostraErrore(messaggio) {
+            document.getElementById('loadingArea').classList.add('hidden');
+            document.getElementById('errorArea').classList.remove('hidden');
+            document.getElementById('errorMessage').textContent = messaggio;
+            mostraToast(messaggio, 'error');
         }
 
         function renderizzaStudi(studi) {
             const container = document.getElementById('studiContainer');
             container.innerHTML = studi.map(studio => {
-                // Gestione sicura del logo (usa l'endpoint sicuro se necessario, o l'URL diretto se già corretto)
-                const logoHtml = studio.logo_url 
-                    ? `<img src="${studio.logo_url}" alt="Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'font-size: 32px;\\'>🏢</span>';">`
-                    : `<span style="font-size: 32px;">🏢</span>`;
+                // Usa sempre l'endpoint sicuro per il logo
+                const logoUrl = `${WORKER_URL}/api/studio/logo?studioId=${encodeURIComponent(studio.id)}&token=${encodeURIComponent(token)}`;
                 
                 return `
                     <div class="studio-card" onclick="visualizzaScheda('${studio.id}')">
                         <div class="studio-card-header">
-                            <div class="studio-logo-small">${logoHtml}</div>
+                            <div class="studio-logo-small">
+                                <img src="${logoUrl}" alt="Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'font-size: 32px;\\'>🏢</span>';">
+                            </div>
                             <div class="studio-card-header-info">
                                 <h3>${studio.nome || 'Studio'}</h3>
                                 <p>P.IVA: ${studio.piva || 'N/D'}</p>
@@ -361,11 +392,16 @@
         }
 
         function visualizzaScheda(studioId) {
-            window.location.href = `admin-scheda-studio.html?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`;
+            console.log('[ARCHIVIO] Apro scheda studio:', studioId);
+            const url = `admin-scheda-studio.html?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`;
+            console.log('[ARCHIVIO] URL:', url);
+            window.location.href = url;
         }
 
         function stampaScheda(studioId) {
-            window.open(`admin-scheda-studio.html?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}&print=1`, '_blank');
+            console.log('[ARCHIVIO] Stampa scheda studio:', studioId);
+            const url = `admin-scheda-studio.html?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}&print=1`;
+            window.open(url, '_blank');
         }
 
         function tornaAdmin() {
