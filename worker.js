@@ -468,7 +468,7 @@ export default {
         return new Response(JSON.stringify({ success: true, preventivi: result.results }), { headers: corsHeaders });
       }
 
-      // ============================================
+           // ============================================
       // 22. PREVENTIVI - CREA (Studio)
       // ============================================
       if (path === "/api/studio/preventivo" && request.method === "POST") {
@@ -480,10 +480,12 @@ export default {
         const clienteA = JSON.stringify(d.cliente_a || {});
         const clienteB = JSON.stringify(d.cliente_b || {});
         const servizi = JSON.stringify(d.servizi || []);
+        const acconti = JSON.stringify(d.acconti || []);
+        const pianoPagamento = JSON.stringify(d.piano_pagamento || []);
         
-        await env.DB.prepare(`INSERT INTO preventivi (id, studio_id, numero, data_emissione, data_servizio, tipo_servizio, luogo_cerimonia, luogo_ricevimento, cliente_a, cliente_b, servizi, sconto_perc, sconto_fisso, sconto_fisso_nota, accettato, note, totale_finale, stato, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+        await env.DB.prepare(`INSERT INTO preventivi (id, studio_id, numero, data_emissione, data_servizio, tipo_servizio, luogo_cerimonia, luogo_ricevimento, cliente_a, cliente_b, servizi, acconti, piano_pagamento, sconto_perc, sconto_fisso, sconto_fisso_nota, accettato, note, totale_finale, stato, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
           d.id, d.studio_id, d.numero, d.data_emissione, d.data_servizio || null, d.tipo_servizio || null, d.luogo_cerimonia || null, d.luogo_ricevimento || null,
-          clienteA, clienteB, servizi,
+          clienteA, clienteB, servizi, acconti, pianoPagamento,
           d.sconto_perc || 0, d.sconto_fisso || 0, d.sconto_fisso_nota || null,
           d.accettato ? 1 : 0, d.note || null, d.totale_finale || 0, d.stato || 'bozza',
           d.data_creazione || new Date().toISOString()
@@ -491,7 +493,6 @@ export default {
         
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-
       // ============================================
       // 23. NOTIFICA ACCETTAZIONE PREVENTIVO
       // ============================================
