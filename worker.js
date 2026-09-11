@@ -1268,7 +1268,7 @@ export default {
         return new Response(JSON.stringify({ success: true, contratti: result.results }), { headers: corsHeaders });
       }
 
-      // ============================================
+            // ============================================
       // 55. CONTRATTI - CREA (Studio)
       // ============================================
       if (path === "/api/studio/contratti" && request.method === "POST") {
@@ -1281,10 +1281,11 @@ export default {
         const clienteB = JSON.stringify(d.cliente_b || {});
         const servizi = JSON.stringify(d.servizi || []);
         const acconti = JSON.stringify(d.acconti || []);
+        const pianoPagamento = JSON.stringify(d.piano_pagamento || []); // AGGIUNTO
         
-        await env.DB.prepare(`INSERT INTO contratti (id, studio_id, numero_contratto, numero, data_contratto, data_emissione, tipo_servizio, luogo_cerimonia, luogo_ricevimento, cliente_a, cliente_b, servizi, acconti, sconto_perc, sconto_fisso, sconto_fisso_nota, accettato, note, totale_finale, stato, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+        await env.DB.prepare(`INSERT INTO contratti (id, studio_id, numero_contratto, numero, data_contratto, data_emissione, tipo_servizio, luogo_cerimonia, luogo_ricevimento, cliente_a, cliente_b, servizi, acconti, piano_pagamento, sconto_perc, sconto_fisso, sconto_fisso_nota, accettato, note, totale_finale, stato, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
           d.id, d.studio_id, d.numero_contratto || d.numero, d.numero, d.data_contratto || new Date().toISOString().split('T')[0], d.data_emissione, d.tipo_servizio || null, d.luogo_cerimonia || null, d.luogo_ricevimento || null,
-          clienteA, clienteB, servizi, acconti,
+          clienteA, clienteB, servizi, acconti, pianoPagamento, // AGGIUNTO pianoPagamento
           d.sconto_perc || 0, d.sconto_fisso || 0, d.sconto_fisso_nota || null,
           d.accettato ? 1 : 0, d.note || null, d.totale_finale || 0, d.stato || 'attivo',
           d.data_creazione || new Date().toISOString()
