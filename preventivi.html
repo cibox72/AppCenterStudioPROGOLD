@@ -268,7 +268,7 @@
                     <div class="form-group"><label>CAP</label><input type="text" id="cA_cap"></div>
                     <div class="form-group"><label>Provincia</label><input type="text" id="cA_prov"></div>
                 </div>
-                <button class="btn btn-outline btn-sm" onclick="apriMaps('A')">📍 Vedi luogo su Google Maps</button>
+                <button class="btn btn-outline btn-sm" onclick="apriMaps('A')"> Vedi luogo su Google Maps</button>
             </div>
 
             <div class="card-3d">
@@ -384,7 +384,7 @@
                         <input type="text" value="Acconto alla scelta foto e copertina" style="flex:1; padding:8px;">
                         <input type="number" class="piano-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
                         <span>€</span>
-                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()"></button>
+                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
                     </div>
                     <div class="service-row">
                         <input type="text" value="Saldo prima della stampa" style="flex:1; padding:8px;">
@@ -426,8 +426,8 @@
 
             <div class="btn-group" style="justify-content: center; margin-bottom: 40px;">
                 <button class="btn btn-dark" onclick="salvaInArchivio('preventivo')">💾 Salva Preventivo</button>
-                <button class="btn btn-success" onclick="inviaWhatsApp()">📱 Invia WhatsApp</button>
-                <button class="btn btn-dark" onclick="creaPDF()">📄 Crea PDF</button>
+                <button class="btn btn-success" onclick="inviaWhatsApp()"> Invia WhatsApp</button>
+                <button class="btn btn-dark" onclick="creaPDF()"> Crea PDF</button>
                 <button class="btn btn-primary" onclick="trasformaInContratto()">📝 Converti in Contratto</button>
             </div>
 
@@ -489,7 +489,7 @@
     <div id="modalServizi" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h2> Seleziona Servizi dall'Archivio</h2>
+                <h2>📚 Seleziona Servizi dall'Archivio</h2>
                 <button class="close-modal" onclick="chiudiModalServizi()">×</button>
             </div>
             <div id="modalServiziContent">
@@ -1106,6 +1106,7 @@
                         <td>
                             <button class="btn btn-sm btn-outline" onclick="apriPreventivo('${pv.id}')">Apri</button>
                             <button class="btn btn-sm btn-success" onclick="stampaPreventivo('${pv.id}')">PDF</button>
+                            <button class="btn btn-sm btn-danger" onclick="eliminaPreventivo('${pv.id}')">Elimina</button>
                         </td>
                     </tr>
                 `;
@@ -1162,6 +1163,7 @@
                             <button class="btn btn-sm btn-outline" onclick="apriContratto('${ctr.id}')">Apri</button>
                             <button class="btn btn-sm btn-success" onclick="stampaContratto('${ctr.id}')">PDF</button>
                             <button class="btn btn-sm btn-primary" onclick="aggiungiAccontoContratto('${ctr.id}')">+ Acconto</button>
+                            <button class="btn btn-sm btn-danger" onclick="eliminaContratto('${ctr.id}')">Elimina</button>
                         </td>
                     </tr>
                 `;
@@ -1321,10 +1323,155 @@
         }
 
         async function apriContratto(id) {
+            console.log('[DEBUG] ID contratto:', id);
+            
             const ctr = archivioContratti.find(c => c.id === id);
-            if (!ctr) return;
-            await apriPreventivo(id);
-            mostraToast('Contratto caricato. Puoi aggiungere acconti.', 'success');
+            if (!ctr) {
+                mostraToast('Contratto non trovato', 'error');
+                return;
+            }
+
+            console.log('[DEBUG] Contratto trovato:', ctr);
+
+            let clienteA = ctr.cliente_a;
+            if (typeof clienteA === 'string') {
+                try { 
+                    clienteA = JSON.parse(clienteA); 
+                    console.log('[DEBUG] cliente_a parsato:', clienteA);
+                } catch(e) { 
+                    console.error('[DEBUG] Errore parsing cliente_a:', e);
+                    clienteA = {}; 
+                }
+            }
+            
+            let clienteB = ctr.cliente_b;
+            if (typeof clienteB === 'string') {
+                try { 
+                    clienteB = JSON.parse(clienteB); 
+                    console.log('[DEBUG] cliente_b parsato:', clienteB);
+                } catch(e) { 
+                    console.error('[DEBUG] Errore parsing cliente_b:', e);
+                    clienteB = {}; 
+                }
+            }
+
+            document.getElementById('pvNumero').value = ctr.numero_contratto || ctr.numero || '';
+            document.getElementById('pvData').value = ctr.data_contratto || ctr.data_emissione || '';
+            document.getElementById('pvTipoServizio').value = ctr.tipo_servizio || '';
+            document.getElementById('pvLuogoCerimonia').value = ctr.luogo_cerimonia || '';
+            document.getElementById('pvLuogoRicevimento').value = ctr.luogo_ricevimento || '';
+            
+            if (clienteA) {
+                document.getElementById('cA_nome').value = clienteA.nome || '';
+                document.getElementById('cA_cognome').value = clienteA.cognome || '';
+                document.getElementById('cA_tel').value = clienteA.telefono || '';
+                document.getElementById('cA_email').value = clienteA.email || '';
+                document.getElementById('cA_indirizzo').value = clienteA.indirizzo || '';
+                document.getElementById('cA_citta').value = clienteA.citta || '';
+                document.getElementById('cA_cap').value = clienteA.cap || '';
+                document.getElementById('cA_prov').value = clienteA.provincia || '';
+            }
+            
+            if (clienteB) {
+                document.getElementById('cB_nome').value = clienteB.nome || '';
+                document.getElementById('cB_cognome').value = clienteB.cognome || '';
+                document.getElementById('cB_tel').value = clienteB.telefono || '';
+                document.getElementById('cB_email').value = clienteB.email || '';
+                document.getElementById('cB_indirizzo').value = clienteB.indirizzo || '';
+                document.getElementById('cB_citta').value = clienteB.citta || '';
+                document.getElementById('cB_cap').value = clienteB.cap || '';
+                document.getElementById('cB_prov').value = clienteB.provincia || '';
+            }
+
+            document.getElementById('scontoPerc').value = ctr.sconto_perc || 0;
+            document.getElementById('scontoFisso').value = ctr.sconto_fisso || 0;
+            document.getElementById('scontoFissoNota').value = ctr.sconto_fisso_nota || '';
+            document.getElementById('checkAccettazione').checked = ctr.accettato || false;
+            document.getElementById('noteAggiuntive').value = ctr.note || '';
+
+            let serviziDaCaricare = [];
+            if (ctr.servizi) {
+                if (typeof ctr.servizi === 'string') {
+                    try {
+                        serviziDaCaricare = JSON.parse(ctr.servizi);
+                        console.log('[DEBUG] Servizi parsati da stringa:', serviziDaCaricare);
+                    } catch (e) {
+                        console.error('[DEBUG] Errore parsing servizi:', e);
+                        serviziDaCaricare = [];
+                    }
+                } else if (Array.isArray(ctr.servizi)) {
+                    serviziDaCaricare = ctr.servizi;
+                }
+            }
+            
+            if (serviziDaCaricare.length > 0) {
+                serviziSelezionati = serviziDaCaricare.map(s => ({
+                    ...s,
+                    prezzo: parseFloat(s.prezzo) || 0,
+                    quantita: parseInt(s.quantita) || 1
+                }));
+                console.log('[DEBUG] Servizi caricati:', serviziSelezionati);
+            } else {
+                serviziSelezionati = [];
+            }
+
+            const accontiList = document.getElementById('accontiList');
+            accontiList.innerHTML = '';
+            if (ctr.acconti && Array.isArray(ctr.acconti) && ctr.acconti.length > 0) {
+                ctr.acconti.forEach(acc => {
+                    const div = document.createElement('div');
+                    div.className = 'service-row';
+                    div.innerHTML = `
+                        <input type="date" value="${acc.data || ''}" style="padding:8px;">
+                        <input type="number" class="acconto-importo" value="${acc.importo || 0}" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                        <span>€</span>
+                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+                    `;
+                    accontiList.appendChild(div);
+                });
+            } else {
+                accontiList.innerHTML = '<div style="font-size:13px; color:var(--text-light); margin-bottom:10px;">Nessun acconto registrato.</div>';
+            }
+
+            const pianoList = document.getElementById('pianoPagamentoList');
+            pianoList.innerHTML = '';
+            let pianoPagamento = ctr.piano_pagamento;
+            if (typeof pianoPagamento === 'string') {
+                try { pianoPagamento = JSON.parse(pianoPagamento); } catch(e) { pianoPagamento = []; }
+            }
+            
+            if (pianoPagamento && Array.isArray(pianoPagamento) && pianoPagamento.length > 0) {
+                pianoPagamento.forEach(voce => {
+                    const div = document.createElement('div');
+                    div.className = 'service-row';
+                    div.innerHTML = `
+                        <input type="text" value="${voce.descrizione || ''}" style="flex:1; padding:8px;">
+                        <input type="number" class="piano-importo" value="${voce.importo || 0}" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                        <span>€</span>
+                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+                    `;
+                    pianoList.appendChild(div);
+                });
+            } else {
+                const vociDefault = ['Caparra alla firma', 'Acconto prima del servizio', 'Acconto alla scelta foto e copertina', 'Saldo prima della stampa'];
+                vociDefault.forEach(voce => {
+                    const div = document.createElement('div');
+                    div.className = 'service-row';
+                    div.innerHTML = `
+                        <input type="text" value="${voce}" style="flex:1; padding:8px;">
+                        <input type="number" class="piano-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                        <span>€</span>
+                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+                    `;
+                    pianoList.appendChild(div);
+                });
+            }
+
+            renderizzaServiziSelezionati();
+            calcolaTotali();
+            
+            switchTab('crea');
+            mostraToast('Contratto caricato', 'success');
         }
 
         async function aggiungiAccontoContratto(id) {
@@ -1350,6 +1497,46 @@
                 await caricaArchivioContratti();
             } catch (error) {
                 mostraToast('Errore nell\'aggiunta acconto', 'error');
+            }
+        }
+
+        async function eliminaPreventivo(id) {
+            if (!confirm('Sei sicuro di voler eliminare definitivamente questo preventivo?')) return;
+            
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/preventivo/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Preventivo eliminato', 'success');
+                    await caricaArchivioPreventivi();
+                } else {
+                    mostraToast('Errore: ' + (result.error || 'Impossibile eliminare'), 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        async function eliminaContratto(id) {
+            if (!confirm('Sei sicuro di voler eliminare definitivamente questo contratto?')) return;
+            
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/contratti/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Contratto eliminato', 'success');
+                    await caricaArchivioContratti();
+                } else {
+                    mostraToast('Errore: ' + (result.error || 'Impossibile eliminare'), 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
             }
         }
 
