@@ -269,7 +269,7 @@
                     <div class="form-group"><label>CAP</label><input type="text" id="cA_cap"></div>
                     <div class="form-group"><label>Provincia</label><input type="text" id="cA_prov"></div>
                 </div>
-                <button class="btn btn-outline btn-sm" onclick="apriMaps('A')">📍 Vedi luogo su Google Maps</button>
+                <button class="btn btn-outline btn-sm" onclick="apriMaps('A')"> Vedi luogo su Google Maps</button>
             </div>
 
             <div class="card-3d">
@@ -318,7 +318,7 @@
             <div class="card-3d">
                 <div class="card-title">
                     <span>Servizi & Costi</span>
-                    <button class="btn btn-primary btn-lg" onclick="apriModalServizi()"> Vai a Listini & Categorie</button>
+                    <button class="btn btn-primary btn-lg" onclick="apriModalServizi()">📚 Vai a Listini & Categorie</button>
                 </div>
                 <div class="card-subtitle">Clicca sul tasto per selezionare servizi dall'archivio. Puoi modificarne prezzi e quantità.</div>
                 
@@ -429,7 +429,7 @@
                 <button class="btn btn-dark" onclick="salvaInArchivio('preventivo')">💾 Salva Preventivo</button>
                 <button class="btn btn-success" onclick="inviaWhatsApp()">📱 Invia WhatsApp</button>
                 <button class="btn btn-dark" onclick="creaPDF()">📄 Crea PDF</button>
-                <button class="btn btn-primary" onclick="trasformaInContratto()"> Converti in Contratto</button>
+                <button class="btn btn-primary" onclick="trasformaInContratto()">📝 Converti in Contratto</button>
             </div>
 
             </div>
@@ -570,8 +570,6 @@
             </div>
         </div>
     </div>
-
-    <div class="toast-container" id="toastContainer"></div>
         <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         const urlParams = new URLSearchParams(window.location.search);
@@ -1286,36 +1284,54 @@
         }
 
         async function generaPDF(dati, tipo) {
+            console.log('[PDF] Generazione PDF per:', tipo);
+            console.log('[PDF] Dati ricevuti:', dati);
+            
             if (typeof html2pdf === 'undefined') {
                 mostraToast('Libreria PDF non caricata. Riprova.', 'error');
                 return;
             }
-            let datiStudio = { nome: 'Studio Fotografico', indirizzo: '', telefono: '', email: '', piva: '' };
+
+            let datiStudio = { 
+                nome: 'G&LSTUDIO', 
+                indirizzo: 'Via Ciarrocco n.21', 
+                telefono: '3206337370', 
+                email: 'weddinggel@aruba.it', 
+                piva: '03064060845' 
+            };
+            
             try {
+                console.log('[PDF] Caricamento dati studio...');
                 const res = await fetch(`${WORKER_URL}/api/studio/profilo?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
                 const data = await res.json();
-                if (data.success && data.studio) datiStudio = data.studio;
-            } catch (error) { console.error('Errore caricamento studio:', error); }
+                console.log('[PDF] Risposta worker:', data);
+                if (data.success && data.studio) {
+                    datiStudio = data.studio;
+                    console.log('[PDF] Dati studio caricati:', datiStudio);
+                }
+            } catch (error) {
+                console.error('[PDF] Errore caricamento studio (uso dati default):', error);
+            }
 
             document.getElementById('pdf-nome-studio').textContent = datiStudio.nome || 'Studio Fotografico';
             document.getElementById('pdf-indirizzo-studio').textContent = datiStudio.indirizzo || '';
-            document.getElementById('pdf-contatti-studio').textContent = 'Tel: ' + (datiStudio.telefono || '-') + ' | Email: ' + (datiStudio.email || '-') + ' | P.IVA: ' + (datiStudio.piva || '-');
+            document.getElementById('pdf-contatti-studio').textContent = `Tel: ${datiStudio.telefono || '-'} | Email: ${datiStudio.email || '-'} | P.IVA: ${datiStudio.piva || '-'}`;
             
             const titoloDoc = tipo === 'contratto' ? 'CONTRATTO' : 'PREVENTIVO';
             const numeroDoc = tipo === 'contratto' ? (dati.numero_contratto || dati.numero) : dati.numero;
-            document.getElementById('pdf-tipo-doc').innerHTML = titoloDoc + ' N. <span id="pdf-numero">' + (numeroDoc || 'N.D.') + '</span>';
+            document.getElementById('pdf-tipo-doc').innerHTML = `${titoloDoc} N. <span id="pdf-numero">${numeroDoc || 'N.D.'}</span>`;
 
             let ca = dati.cliente_a || {};
             if (typeof ca === 'string') { try { ca = JSON.parse(ca); } catch(e) { ca = {}; } }
-            document.getElementById('pdf-cliente-a-nome').textContent = (ca.nome || '') + ' ' + (ca.cognome || '');
-            document.getElementById('pdf-cliente-a-indirizzo').textContent = (ca.indirizzo || '') + ', ' + (ca.cap || '') + ' ' + (ca.citta || '') + ' (' + (ca.provincia || '') + ')';
-            document.getElementById('pdf-cliente-a-contatti').textContent = 'Tel: ' + (ca.telefono || '-') + ' | Email: ' + (ca.email || '-');
+            document.getElementById('pdf-cliente-a-nome').textContent = `${ca.nome || ''} ${ca.cognome || ''}`;
+            document.getElementById('pdf-cliente-a-indirizzo').textContent = `${ca.indirizzo || ''}, ${ca.cap || ''} ${ca.citta || ''} (${ca.provincia || ''})`;
+            document.getElementById('pdf-cliente-a-contatti').textContent = `Tel: ${ca.telefono || '-'} | Email: ${ca.email || '-'}`;
 
             let cb = dati.cliente_b || {};
             if (typeof cb === 'string') { try { cb = JSON.parse(cb); } catch(e) { cb = {}; } }
-            document.getElementById('pdf-cliente-b-nome').textContent = (cb.nome || '') + ' ' + (cb.cognome || '');
-            document.getElementById('pdf-cliente-b-indirizzo').textContent = (cb.indirizzo || '') + ', ' + (cb.cap || '') + ' ' + (cb.citta || '') + ' (' + (cb.provincia || '') + ')';
-            document.getElementById('pdf-cliente-b-contatti').textContent = 'Tel: ' + (cb.telefono || '-') + ' | Email: ' + (cb.email || '-');
+            document.getElementById('pdf-cliente-b-nome').textContent = `${cb.nome || ''} ${cb.cognome || ''}`;
+            document.getElementById('pdf-cliente-b-indirizzo').textContent = `${cb.indirizzo || ''}, ${cb.cap || ''} ${cb.citta || ''} (${cb.provincia || ''})`;
+            document.getElementById('pdf-cliente-b-contatti').textContent = `Tel: ${cb.telefono || '-'} | Email: ${cb.email || '-'}`;
 
             document.getElementById('pdf-tipo-servizio').textContent = dati.tipo_servizio || '-';
             document.getElementById('pdf-luogo-cerimonia').textContent = dati.luogo_cerimonia || '-';
@@ -1328,23 +1344,22 @@
             let serviziParsed = [];
             if (dati.servizi) {
                 if (typeof dati.servizi === 'string') {
-                    try { 
-                        serviziParsed = JSON.parse(dati.servizi); 
-                    } catch(e) { 
-                        console.error('Errore parsing servizi:', e);
-                        serviziParsed = []; 
-                    }
+                    try { serviziParsed = JSON.parse(dati.servizi); } 
+                    catch(e) { console.error('Errore parsing servizi:', e); serviziParsed = []; }
                 } else if (Array.isArray(dati.servizi)) {
                     serviziParsed = dati.servizi;
                 }
             }
+            console.log('[PDF] Servizi parsati:', serviziParsed);
 
-            if (Array.isArray(serviziParsed)) {
+            if (Array.isArray(serviziParsed) && serviziParsed.length > 0) {
                 serviziParsed.forEach(s => {
                     const totaleRiga = (parseFloat(s.prezzo) || 0) * (parseInt(s.quantita) || 1);
                     totaleServizi += totaleRiga;
-                    tbody.innerHTML += '<tr><td>' + (s.descrizione || '') + '</td><td>€ ' + (parseFloat(s.prezzo) || 0).toFixed(2) + '</td><td>' + (parseInt(s.quantita) || 1) + '</td><td>€ ' + totaleRiga.toFixed(2) + '</td></tr>';
+                    tbody.innerHTML += `<tr><td>${s.descrizione || ''}</td><td>€ ${(parseFloat(s.prezzo) || 0).toFixed(2)}</td><td>${parseInt(s.quantita) || 1}</td><td>€ ${totaleRiga.toFixed(2)}</td></tr>`;
                 });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">Nessun servizio inserito</td></tr>';
             }
 
             const scontoPerc = parseFloat(dati.sconto_perc) || 0;
@@ -1357,12 +1372,8 @@
             let accontiParsed = [];
             if (dati.acconti) {
                 if (typeof dati.acconti === 'string') {
-                    try { 
-                        accontiParsed = JSON.parse(dati.acconti); 
-                    } catch(e) { 
-                        console.error('Errore parsing acconti:', e);
-                        accontiParsed = []; 
-                    }
+                    try { accontiParsed = JSON.parse(dati.acconti); } 
+                    catch(e) { console.error('Errore parsing acconti:', e); accontiParsed = []; }
                 } else if (Array.isArray(dati.acconti)) {
                     accontiParsed = dati.acconti;
                 }
@@ -1382,16 +1393,18 @@
 
             const template = document.getElementById('pdf-template');
             template.style.display = 'block';
+            console.log('[PDF] Template visibile per generazione');
 
             const opt = {
-                margin: [5, 5, 5, 5],
-                filename: (tipo === 'contratto' ? 'Contratto' : 'Preventivo') + '_' + (numeroDoc || 'N.D.') + '_' + (ca.cognome || 'cliente') + '.pdf',
+                margin: [10, 10, 10, 10],
+                filename: `${tipo === 'contratto' ? 'Contratto' : 'Preventivo'}_${numeroDoc || 'N.D.'}_${(ca.cognome || 'cliente')}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { 
-                    scale: 1,
+                    scale: 1.2,
                     useCORS: true,
                     width: 210,
-                    windowWidth: 210
+                    windowWidth: 210,
+                    logging: false
                 },
                 jsPDF: { 
                     unit: 'mm', 
@@ -1402,14 +1415,17 @@
             };
 
             html2pdf().set(opt).from(template).save().then(() => {
+                console.log('[PDF] Generato con successo');
                 template.style.display = 'none';
                 mostraToast('PDF generato e scaricato con successo!', 'success');
             }).catch(err => {
+                console.error('[PDF] Errore generazione:', err);
                 template.style.display = 'none';
-                console.error('Errore PDF:', err);
-                mostraToast('Errore nella generazione PDF', 'error');
+                mostraToast('Errore nella generazione PDF: ' + err.message, 'error');
             });
         }
     </script>
 </body>
 </html>
+
+    <div class="toast-container" id="toastContainer"></div>
