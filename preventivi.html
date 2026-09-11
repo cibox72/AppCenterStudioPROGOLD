@@ -907,45 +907,59 @@
         }
 
         function raccogliDatiPreventivo() {
-            const acconti = [];
-            document.querySelectorAll('#accontiList .service-row').forEach(row => {
-                acconti.push({
-                    data: row.querySelector('input[type="date"]').value,
-                    importo: parseFloat(row.querySelector('.acconto-importo').value) || 0
-                });
-            });
+    // Raccogli gli acconti
+    const acconti = [];
+    document.querySelectorAll('#accontiList .service-row').forEach(row => {
+        acconti.push({
+            data: row.querySelector('input[type="date"]').value,
+            importo: parseFloat(row.querySelector('.acconto-importo').value) || 0
+        });
+    });
 
-            return {
-                numero: document.getElementById('pvNumero').value,
-                data_emissione: document.getElementById('pvData').value,
-                tipo_servizio: document.getElementById('pvTipoServizio').value,
-                luogo_cerimonia: document.getElementById('pvLuogoCerimonia').value,
-                luogo_ricevimento: document.getElementById('pvLuogoRicevimento').value,
-                cliente_a: {
-                    nome: document.getElementById('cA_nome').value, cognome: document.getElementById('cA_cognome').value,
-                    telefono: document.getElementById('cA_tel').value, email: document.getElementById('cA_email').value,
-                    indirizzo: document.getElementById('cA_indirizzo').value, citta: document.getElementById('cA_citta').value,
-                    cap: document.getElementById('cA_cap').value, provincia: document.getElementById('cA_prov').value
-                },
-                cliente_b: {
-                    nome: document.getElementById('cB_nome').value, cognome: document.getElementById('cB_cognome').value,
-                    telefono: document.getElementById('cB_tel').value, email: document.getElementById('cB_email').value,
-                    indirizzo: document.getElementById('cB_indirizzo').value, citta: document.getElementById('cB_citta').value,
-                    cap: document.getElementById('cB_cap').value, provincia: document.getElementById('cB_prov').value
-                },
-                servizi: serviziSelezionati.map(s => ({
-                    id: s.id, descrizione: s.descrizione, prezzo: s.prezzo, quantita: s.quantita, categoria: s.categoria
-                })),
-                acconti: acconti,
-                sconto_perc: parseFloat(document.getElementById('scontoPerc').value) || 0,
-                sconto_fisso: parseFloat(document.getElementById('scontoFisso').value) || 0,
-                sconto_fisso_nota: document.getElementById('scontoFissoNota').value,
-                accettato: document.getElementById('checkAccettazione').checked,
-                note: document.getElementById('noteAggiuntive').value,
-                totale_finale: parseFloat(document.getElementById('rowImportoTotale').textContent.replace(' €', '').replace(',', '.')) || 0,
-                stato: document.getElementById('checkAccettazione').checked ? 'accettato' : 'bozza'
-            };
-        }
+    // Raccogli i dati del preventivo
+    return {
+        numero: document.getElementById('pvNumero').value,
+        data_emissione: document.getElementById('pvData').value,
+        tipo_servizio: document.getElementById('pvTipoServizio').value,
+        luogo_cerimonia: document.getElementById('pvLuogoCerimonia').value,
+        luogo_ricevimento: document.getElementById('pvLuogoRicevimento').value,
+        cliente_a: {
+            nome: document.getElementById('cA_nome').value || '',
+            cognome: document.getElementById('cA_cognome').value || '',
+            telefono: document.getElementById('cA_tel').value || '',
+            email: document.getElementById('cA_email').value || '',
+            indirizzo: document.getElementById('cA_indirizzo').value || '',
+            citta: document.getElementById('cA_citta').value || '',
+            cap: document.getElementById('cA_cap').value || '',
+            provincia: document.getElementById('cA_prov').value || ''
+        },
+        cliente_b: {
+            nome: document.getElementById('cB_nome').value || '',
+            cognome: document.getElementById('cB_cognome').value || '',
+            telefono: document.getElementById('cB_tel').value || '',
+            email: document.getElementById('cB_email').value || '',
+            indirizzo: document.getElementById('cB_indirizzo').value || '',
+            citta: document.getElementById('cB_citta').value || '',
+            cap: document.getElementById('cB_cap').value || '',
+            provincia: document.getElementById('cB_prov').value || ''
+        },
+        servizi: serviziSelezionati.map(s => ({
+            id: s.id,
+            descrizione: s.descrizione,
+            prezzo: s.prezzo,
+            quantita: s.quantita,
+            categoria: s.categoria
+        })),
+        acconti: acconti,
+        sconto_perc: parseFloat(document.getElementById('scontoPerc').value) || 0,
+        sconto_fisso: parseFloat(document.getElementById('scontoFisso').value) || 0,
+        sconto_fisso_nota: document.getElementById('scontoFissoNota').value || '',
+        accettato: document.getElementById('checkAccettazione').checked,
+        note: document.getElementById('noteAggiuntive').value || '',
+        totale_finale: parseFloat(document.getElementById('rowImportoTotale').textContent.replace(' €', '').replace(',', '.')) || 0,
+        stato: document.getElementById('checkAccettazione').checked ? 'accettato' : 'bozza'
+    };
+}
 
         async function salvaInArchivio(tipo) {
             const dati = raccogliDatiPreventivo();
