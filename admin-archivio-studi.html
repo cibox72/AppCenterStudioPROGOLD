@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scheda Studio - AppCenterStudioPROGOLD</title>
+    <title>Archivio Studi - AppCenterStudioPROGOLD</title>
     <style>
         :root {
             --primary: #82e0aa;
@@ -55,7 +55,7 @@
         .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
         .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
         .page-header {
             text-align: center;
             padding: 32px;
@@ -83,112 +83,80 @@
             margin-bottom: 8px;
         }
         .page-header p { color: var(--text-light); font-size: 15px; }
+        .studi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
         .studio-card {
             background: white;
             border-radius: var(--radius);
             overflow: hidden;
-            box-shadow: 0 10px 40px rgba(30, 132, 73, 0.15);
-            margin-bottom: 32px;
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
-        .studio-header {
+        .studio-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(30, 132, 73, 0.2);
+        }
+        .studio-card-header {
             background: var(--primary-gradient);
-            padding: 40px;
+            padding: 24px;
             color: white;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
-        .studio-header h2 {
-            font-size: 36px;
-            font-weight: 800;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .studio-header .subtitle {
-            font-size: 18px;
-            opacity: 0.95;
-            margin-bottom: 8px;
-        }
-        .studio-header .piva {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-        .studio-body {
-            padding: 40px;
-        }
-        .section-title {
+        .studio-card-header-info h3 {
             font-size: 20px;
             font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 24px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--primary-light);
+            margin-bottom: 4px;
+        }
+        .studio-card-header-info p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        .studio-card-body {
+            padding: 24px;
+        }
+        .studio-info-row {
             display: flex;
-            align-items: center;
-            gap: 12px;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
         }
-        .section-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--primary-gradient);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
+        .studio-info-row:last-child {
+            border-bottom: none;
         }
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 32px;
-        }
-        .info-item {
-            background: var(--primary-light);
-            padding: 20px;
-            border-radius: 12px;
-            border-left: 4px solid var(--primary);
-        }
-        .info-label {
-            font-size: 12px;
-            font-weight: 600;
+        .studio-info-label {
             color: var(--text-light);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-        .info-value {
-            font-size: 16px;
             font-weight: 600;
+        }
+        .studio-info-value {
             color: var(--text-main);
+            font-weight: 500;
         }
-        .info-value.mono {
-            font-family: 'Courier New', monospace;
-            background: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            display: inline-block;
-        }
-        .action-buttons {
+        .studio-card-actions {
+            padding: 16px 24px;
+            background: var(--primary-light);
             display: flex;
             gap: 12px;
-            margin-top: 32px;
-            padding-top: 32px;
-            border-top: 2px solid var(--border-color);
         }
         .btn {
-            padding: 14px 28px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 700;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .btn:hover { transform: translateY(-2px); }
         .btn-primary { background: var(--primary-gradient); color: white; }
-        .btn-outline { background: white; color: var(--primary-dark); border: 2px solid var(--primary); }
-        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
         .loading { text-align: center; padding: 40px; color: var(--text-light); }
         .spinner {
             width: 40px; height: 40px;
@@ -211,6 +179,16 @@
         }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
         .error-box {
             background: #fee;
             border: 2px solid var(--danger);
@@ -218,30 +196,12 @@
             padding: 32px;
             text-align: center;
             color: var(--danger);
+            max-width: 600px;
+            margin: 40px auto;
         }
         .error-box h3 { margin-bottom: 16px; font-size: 20px; }
         .error-box p { margin-bottom: 20px; }
         .hidden { display: none !important; }
-        
-        @media print {
-            @page { size: A4 portrait; margin: 10mm; }
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            body { background: white !important; font-size: 10px; }
-            .top-bar, .action-buttons, .toast-container { display: none !important; }
-            .container { padding: 0; }
-            .page-header { padding: 10px 15px; margin-bottom: 10px; box-shadow: none; border: 1px solid #ddd; }
-            .page-header h1 { font-size: 18px; }
-            .studio-card { box-shadow: none; border: 1px solid #ddd; }
-            .studio-header { padding: 20px 15px; }
-            .studio-header h2 { font-size: 24px; }
-            .studio-header .subtitle { font-size: 14px; }
-            .studio-body { padding: 12px 15px; }
-            .section-title { font-size: 11px; margin-bottom: 6px; }
-            .info-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
-            .info-item { padding: 6px 8px; }
-            .info-label { font-size: 7px; }
-            .info-value { font-size: 10px; }
-        }
     </style>
 </head>
 <body>
@@ -255,26 +215,27 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>Scheda Anagrafica Studio</h1>
-            <p>Visualizzazione dettagliata dei dati aziendali</p>
+            <h1>Archivio Studi Fotografici</h1>
+            <p>Visualizza e gestisci tutte le schede studio archiviate</p>
         </div>
 
         <div id="loadingArea" class="loading">
             <div class="spinner"></div>
-            <div>Caricamento dati studio...</div>
+            <div>Caricamento archivio studi...</div>
         </div>
 
         <div id="errorArea" class="error-box hidden">
-            <h3>️ Errore nel caricamento</h3>
-            <p id="errorMessage">Impossibile caricare i dati dello studio</p>
-            <button class="btn btn-primary" onclick="location.reload()">Riprova</button>
+            <h3>⚠️ Errore nel caricamento</h3>
+            <p id="errorMessage">Impossibile caricare l'archivio studi</p>
+            <button class="btn btn-primary" onclick="location.reload()" style="margin-top: 20px;">Riprova</button>
         </div>
 
         <div id="mainContent" class="hidden">
-            <div class="studio-card" id="studioCard"></div>
-            <div class="action-buttons">
-                <button class="btn btn-success" onclick="window.print()">📄 Stampa PDF</button>
-                <button class="btn btn-outline" onclick="tornaAdmin()">Chiudi</button>
+            <div id="studiContainer" class="studi-grid"></div>
+            <div id="emptyState" class="empty-state hidden">
+                <div class="empty-state-icon">📁</div>
+                <h3>Nessuno studio archiviato</h3>
+                <p>Le schede studio completate appariranno qui</p>
             </div>
         </div>
     </div>
@@ -285,7 +246,6 @@
         var WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         var urlParams = new URLSearchParams(window.location.search);
         var token = urlParams.get('token');
-        var studioId = urlParams.get('studioId');
 
         function tornaAdmin() {
             window.location.href = 'admin.html?token=' + encodeURIComponent(token);
@@ -304,11 +264,17 @@
             setTimeout(function() { toast.remove(); }, 3000);
         }
 
-        function mostraErrore(msg) {
-            document.getElementById('loadingArea').classList.add('hidden');
-            document.getElementById('errorArea').classList.remove('hidden');
-            document.getElementById('errorMessage').textContent = msg;
-            mostraToast(msg, 'error');
+        function visualizzaScheda(studioId) {
+            console.log('[ARCHIVIO] Visualizza scheda per:', studioId);
+            var url = 'admin-scheda-studio.html?studioId=' + encodeURIComponent(studioId) + '&token=' + encodeURIComponent(token);
+            console.log('[ARCHIVIO] URL:', url);
+            window.location.href = url;
+        }
+
+        function stampaScheda(studioId) {
+            console.log('[ARCHIVIO] Stampa scheda per:', studioId);
+            var url = 'admin-scheda-studio.html?studioId=' + encodeURIComponent(studioId) + '&token=' + encodeURIComponent(token) + '&print=1';
+            window.open(url, '_blank');
         }
 
         async function caricaTemaGlobale() {
@@ -332,127 +298,102 @@
                     document.documentElement.style.setProperty('--primary-light', t.pl);
                     document.documentElement.style.setProperty('--primary-gradient', t.pg);
                     document.documentElement.style.setProperty('--bg-gradient', t.bg);
-                    console.log('[SCHEDA] Tema applicato:', data.tema.tema_attivo);
+                    console.log('[ARCHIVIO] Tema applicato:', data.tema.tema_attivo);
                 }
             } catch (e) {
-                console.error('[SCHEDA] Errore tema:', e);
+                console.error('[ARCHIVIO] Errore tema:', e);
             }
         }
 
-        function escapeHtml(text) {
-            if (!text) return '';
-            return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        }
-
-        function renderizzaScheda(studio) {
-            var card = document.getElementById('studioCard');
-            
-            // Header con solo testo - NIENTE LOGO
-            var html = '';
-            html += '<div class="studio-header">';
-            html += '<h2>' + escapeHtml(studio.nome || 'Studio Fotografico') + '</h2>';
-            html += '<div class="subtitle">Studio Fotografico</div>';
-            html += '<div class="piva">P.IVA: ' + escapeHtml(studio.piva || 'N/D') + ' | ID: ' + escapeHtml(studio.id) + '</div>';
-            html += '</div>';
-            html += '<div class="studio-body">';
-
-            // Dati Aziendali
-            html += '<div class="section-title"><div class="section-icon">&#128203;</div>Dati Aziendali</div>';
-            html += '<div class="info-grid">';
-            html += '<div class="info-item"><div class="info-label">Ragione Sociale</div><div class="info-value">' + escapeHtml(studio.nome || 'N/D') + '</div></div>';
-            html += '<div class="info-item"><div class="info-label">P.IVA / CF</div><div class="info-value mono">' + escapeHtml(studio.piva || 'N/D') + '</div></div>';
-            html += '<div class="info-item"><div class="info-label">Email</div><div class="info-value">' + escapeHtml(studio.email || 'N/D') + '</div></div>';
-            html += '<div class="info-item"><div class="info-label">Telefono</div><div class="info-value">' + escapeHtml(studio.telefono || 'N/D') + '</div></div>';
-            if (studio.pec) html += '<div class="info-item"><div class="info-label">PEC</div><div class="info-value">' + escapeHtml(studio.pec) + '</div></div>';
-            if (studio.sdi) html += '<div class="info-item"><div class="info-label">Codice SDI</div><div class="info-value mono">' + escapeHtml(studio.sdi) + '</div></div>';
-            html += '</div>';
-
-            // Indirizzo
-            html += '<div class="section-title"><div class="section-icon">&#128205;</div>Indirizzo Sede Legale</div>';
-            html += '<div class="info-grid">';
-            html += '<div class="info-item"><div class="info-label">Indirizzo</div><div class="info-value">' + escapeHtml(studio.indirizzo || 'N/D') + '</div></div>';
-            html += '<div class="info-item"><div class="info-label">CAP</div><div class="info-value mono">' + escapeHtml(studio.cap || 'N/D') + '</div></div>';
-            html += '<div class="info-item"><div class="info-label">Città</div><div class="info-value">' + escapeHtml(studio.citta || 'N/D') + '</div></div>';
-            html += '<div class="info-item"><div class="info-label">Provincia</div><div class="info-value">' + escapeHtml(studio.provincia || 'N/D') + '</div></div>';
-            html += '<div class="info-item"><div class="info-label">Stato</div><div class="info-value">' + escapeHtml(studio.stato || 'Italia') + '</div></div>';
-            html += '</div>';
-
-            // Legale
-            html += '<div class="section-title"><div class="section-icon">&#128100;</div>Rappresentante Legale</div>';
-            html += '<div class="info-grid">';
-            html += '<div class="info-item"><div class="info-label">Nome e Cognome</div><div class="info-value">' + escapeHtml(studio.legale || 'N/D') + '</div></div>';
-            if (studio.cf_legale) html += '<div class="info-item"><div class="info-label">Codice Fiscale</div><div class="info-value mono">' + escapeHtml(studio.cf_legale) + '</div></div>';
-            html += '</div>';
-
-            // IBAN
-            if (studio.iban) {
-                html += '<div class="section-title"><div class="section-icon">&#127974;</div>Dati Bancari</div>';
-                html += '<div class="info-grid">';
-                html += '<div class="info-item"><div class="info-label">IBAN</div><div class="info-value mono">' + escapeHtml(studio.iban) + '</div></div>';
-                if (studio.iban_intestato) html += '<div class="info-item"><div class="info-label">Intestato a</div><div class="info-value">' + escapeHtml(studio.iban_intestato) + '</div></div>';
-                html += '</div>';
-            }
-
-            // Link
-            html += '<div class="section-title"><div class="section-icon">&#128279;</div>Link e Social</div>';
-            html += '<div class="info-grid">';
-            if (studio.website) html += '<div class="info-item"><div class="info-label">Sito Web</div><div class="info-value"><a href="' + escapeHtml(studio.website) + '" target="_blank" style="color:var(--primary-dark);">' + escapeHtml(studio.website) + '</a></div></div>';
-            if (studio.link_facebook) html += '<div class="info-item"><div class="info-label">Facebook</div><div class="info-value"><a href="' + escapeHtml(studio.link_facebook) + '" target="_blank" style="color:var(--primary-dark);">' + escapeHtml(studio.link_facebook) + '</a></div></div>';
-            if (studio.link_instagram) html += '<div class="info-item"><div class="info-label">Instagram</div><div class="info-value"><a href="' + escapeHtml(studio.link_instagram) + '" target="_blank" style="color:var(--primary-dark);">' + escapeHtml(studio.link_instagram) + '</a></div></div>';
-            if (studio.link_portfolio) html += '<div class="info-item"><div class="info-label">Portfolio</div><div class="info-value"><a href="' + escapeHtml(studio.link_portfolio) + '" target="_blank" style="color:var(--primary-dark);">' + escapeHtml(studio.link_portfolio) + '</a></div></div>';
-            html += '</div>';
-
-            // Messaggi
-            if (studio.msg_benvenuto || studio.msg_ringraziamento) {
-                html += '<div class="section-title"><div class="section-icon">&#128172;</div>Messaggi Automatici</div>';
-                html += '<div class="info-grid">';
-                if (studio.msg_benvenuto) html += '<div class="info-item" style="grid-column:1/-1;"><div class="info-label">Messaggio di Benvenuto</div><div class="info-value" style="white-space:pre-wrap;font-size:14px;">' + escapeHtml(studio.msg_benvenuto) + '</div></div>';
-                if (studio.msg_ringraziamento) html += '<div class="info-item" style="grid-column:1/-1;"><div class="info-label">Messaggio di Ringraziamento</div><div class="info-value" style="white-space:pre-wrap;font-size:14px;">' + escapeHtml(studio.msg_ringraziamento) + '</div></div>';
-                html += '</div>';
-            }
-
-            html += '</div>';
-            card.innerHTML = html;
-        }
-
-        async function caricaSchedaStudio() {
+        async function caricaArchivioStudi() {
             try {
-                console.log('[SCHEDA] Caricamento per studio:', studioId);
-                var response = await fetch(WORKER_URL + '/api/admin/scheda-studio?studioId=' + encodeURIComponent(studioId) + '&token=' + encodeURIComponent(token));
-                console.log('[SCHEDA] Status:', response.status);
+                console.log('[ARCHIVIO] Chiamo API archivio studi...');
+                var response = await fetch(WORKER_URL + '/api/admin/archivio-studi?token=' + encodeURIComponent(token));
+                console.log('[ARCHIVIO] Status:', response.status);
                 
                 if (!response.ok) {
                     throw new Error('Errore server: ' + response.status);
                 }
                 
                 var data = await response.json();
-                console.log('[SCHEDA] Dati:', data);
+                console.log('[ARCHIVIO] Dati ricevuti:', data);
                 
-                if (data.success && data.studio) {
-                    renderizzaScheda(data.studio);
+                if (data.success && data.studi && data.studi.length > 0) {
+                    renderizzaStudi(data.studi);
                     document.getElementById('loadingArea').classList.add('hidden');
                     document.getElementById('mainContent').classList.remove('hidden');
                 } else {
-                    throw new Error(data.error || 'Nessun dato ricevuto');
+                    document.getElementById('loadingArea').classList.add('hidden');
+                    document.getElementById('mainContent').classList.remove('hidden');
+                    document.getElementById('emptyState').classList.remove('hidden');
                 }
             } catch (error) {
-                console.error('[SCHEDA] Errore:', error);
-                mostraErrore(error.message);
+                console.error('[ARCHIVIO] Errore:', error);
+                document.getElementById('loadingArea').classList.add('hidden');
+                document.getElementById('errorArea').classList.remove('hidden');
+                document.getElementById('errorMessage').textContent = error.message || 'Errore di connessione al server';
+                mostraToast(error.message, 'error');
             }
         }
 
-        document.addEventListener('DOMContentLoaded', async function() {
-            console.log('[SCHEDA] Pagina caricata');
-            console.log('[SCHEDA] Token:', token ? 'presente' : 'ASSENTE');
-            console.log('[SCHEDA] Studio ID:', studioId || 'ASSENTE');
+        function renderizzaStudi(studi) {
+            var container = document.getElementById('studiContainer');
+            var html = '';
             
-            if (!token || !studioId) {
-                mostraErrore('Parametri mancanti (token o studioId)');
+            for (var i = 0; i < studi.length; i++) {
+                var studio = studi[i];
+                html += '<div class="studio-card">';
+                html += '<div class="studio-card-header">';
+                html += '<div style="flex:1;">';
+                html += '<h3>' + (studio.nome || 'Studio') + '</h3>';
+                html += '<p>P.IVA: ' + (studio.piva || 'N/D') + '</p>';
+                html += '<p>' + (studio.citta || '') + ', ' + (studio.provincia || '') + '</p>';
+                html += '</div></div>';
+                html += '<div class="studio-card-body">';
+                html += '<div class="studio-info-row">';
+                html += '<span class="studio-info-label">Email</span>';
+                html += '<span class="studio-info-value">' + (studio.email || 'N/D') + '</span>';
+                html += '</div>';
+                html += '<div class="studio-info-row">';
+                html += '<span class="studio-info-label">Telefono</span>';
+                html += '<span class="studio-info-value">' + (studio.telefono || 'N/D') + '</span>';
+                html += '</div>';
+                html += '<div class="studio-info-row">';
+                html += '<span class="studio-info-label">Legale</span>';
+                html += '<span class="studio-info-value">' + (studio.legale || 'N/D') + '</span>';
+                html += '</div>';
+                html += '<div class="studio-info-row">';
+                html += '<span class="studio-info-label">Stato</span>';
+                html += '<span class="studio-info-value" style="color: var(--success); font-weight: 700;">Completato</span>';
+                html += '</div>';
+                html += '</div>';
+                html += '<div class="studio-card-actions">';
+                html += '<button class="btn btn-primary" onclick="event.stopPropagation(); visualizzaScheda(\'' + studio.id + '\')">Visualizza Scheda</button>';
+                html += '<button class="btn btn-outline" onclick="event.stopPropagation(); stampaScheda(\'' + studio.id + '\')">Stampa PDF</button>';
+                html += '</div>';
+                html += '</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('[ARCHIVIO] Pagina caricata');
+            console.log('[ARCHIVIO] Token:', token ? 'presente' : 'ASSENTE');
+            
+            if (!token) {
+                document.getElementById('loadingArea').classList.add('hidden');
+                document.getElementById('errorArea').classList.remove('hidden');
+                document.getElementById('errorMessage').textContent = 'Token di accesso mancante. Effettua nuovamente il login.';
+                mostraToast('Token mancante', 'error');
+                setTimeout(function() {
+                    window.location.href = 'index.html';
+                }, 3000);
                 return;
             }
             
             await caricaTemaGlobale();
-            await caricaSchedaStudio();
+            await caricaArchivioStudi();
         });
     </script>
 </body>
