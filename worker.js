@@ -468,7 +468,7 @@ export default {
         return new Response(JSON.stringify({ success: true, preventivi: result.results }), { headers: corsHeaders });
       }
 
-           // ============================================
+      // ============================================
       // 22. PREVENTIVI - CREA (Studio)
       // ============================================
       if (path === "/api/studio/preventivo" && request.method === "POST") {
@@ -493,6 +493,21 @@ export default {
         
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
+      // ============================================
+      // 22.5 PREVENTIVI - ELIMINA (Studio) [NUOVO]
+      // ============================================
+      if (path.startsWith("/api/studio/preventivo/") && request.method === "DELETE") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const preventivoId = path.split("/api/studio/preventivo/")[1];
+        await env.DB.prepare("DELETE FROM preventivi WHERE id = ? AND studio_id = ?").bind(preventivoId, sess.user_id).run();
+        
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
       // ============================================
       // 23. NOTIFICA ACCETTAZIONE PREVENTIVO
       // ============================================
@@ -678,7 +693,8 @@ export default {
         await env.DB.prepare("DELETE FROM agenda WHERE id=?").bind(id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-            // ============================================
+
+      // ============================================
       // 33. CLIENTI (Studio)
       // ============================================
       if (path === "/api/studio/clienti" && request.method === "GET") {
@@ -1151,7 +1167,8 @@ export default {
         }
         return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
       }
-            // ============================================
+
+      // ============================================
       // 49. GALLERIE - LISTA (Studio)
       // ============================================
       if (path === "/api/studio/gallerie" && request.method === "GET") {
@@ -1290,6 +1307,20 @@ export default {
         if (d.acconti !== undefined) {
           await env.DB.prepare(`UPDATE contratti SET acconti=? WHERE id=?`).bind(JSON.stringify(d.acconti), id).run();
         }
+        
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 56.5 CONTRATTI - ELIMINA (Studio) [NUOVO]
+      // ============================================
+      if (path.startsWith("/api/studio/contratti/") && request.method === "DELETE") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+
+        const contrattoId = path.split("/api/studio/contratti/")[1];
+        await env.DB.prepare("DELETE FROM contratti WHERE id = ? AND studio_id = ?").bind(contrattoId, sess.user_id).run();
         
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
