@@ -14,91 +14,200 @@
             --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; --radius: 16px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh; }
-        .top-bar { background: var(--primary-gradient); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100; }
-        .nav-btn { background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark); margin-right: 8px; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .top-bar {
+            background: var(--primary-gradient); padding: 16px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100;
+            transition: background 0.3s ease;
+        }
+        .nav-btn {
+            background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
+            cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark);
+        }
         .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
         .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
-        .page-header { text-align: center; padding: 32px; background: white; border-radius: var(--radius); box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; }
-        .page-header h1 { font-size: 32px; font-weight: 800; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+        .page-header {
+            text-align: center; padding: 32px; background: white; border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
+        }
+        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
+        .page-header h1 {
+            font-size: 32px; font-weight: 800; background: var(--primary-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px;
+        }
         .page-header p { color: var(--text-light); font-size: 15px; }
-        .card-3d { background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; }
+        .card-3d {
+            background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden;
+        }
         .card-3d::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
-        .card-title { font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); display: flex; justify-content: space-between; align-items: center; }
+        .card-title {
+            font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px;
+            padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
         .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border-color); }
-        .tab { padding: 12px 24px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-light); }
+        .tab {
+            padding: 12px 24px; background: none; border: none; border-bottom: 3px solid transparent;
+            cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-light); transition: all 0.2s ease;
+        }
+        .tab:hover { color: var(--primary-dark); }
         .tab.active { color: var(--primary-dark); border-bottom-color: var(--primary); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; margin-bottom: 16px; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-        .form-group input, .form-group select, .form-group textarea { padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; }
-        .btn { padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .btn:hover { transform: translateY(-2px); }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
+        }
+        .btn {
+            padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
         .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
         .btn-dark { background: #2c3e50; color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
         .btn-sm { padding: 6px 12px; font-size: 12px; }
         .btn-lg { padding: 14px 28px; font-size: 15px; }
-        .service-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--border-color); }
-        .service-row input { padding: 8px; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+        
+        .service-category-title {
+            font-size: 14px; font-weight: 800; color: var(--text-main); margin: 20px 0 10px 0;
+            text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;
+        }
+        .service-row {
+            display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--border-color);
+        }
+        .service-row input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+        .service-row .svc-desc { flex: 1; font-size: 13px; }
+        .service-row .svc-price { width: 80px; padding: 6px; text-align: right; }
+        .service-row .svc-qty { width: 60px; padding: 6px; text-align: center; }
+        
         .totals-box { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 20px; }
         .total-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
-        .total-row.final { font-size: 18px; font-weight: 800; color: var(--primary-dark); border-top: 2px solid var(--border-color); padding-top: 15px; }
+        .total-row.final { font-size: 18px; font-weight: 800; color: var(--primary-dark); border-top: 2px solid var(--border-color); margin-top: 10px; padding-top: 15px; }
         .total-row.saldo { background: var(--primary-light); padding: 12px; border-radius: 8px; margin-top: 10px; font-weight: 700; }
-        .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); background: white; }
+
+        .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); background: white; margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; }
-        th { background: var(--primary-light); color: var(--primary-dark); font-weight: 700; text-transform: uppercase; font-size: 11px; }
-        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        th { background: var(--primary-light); color: var(--primary-dark); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        tr:hover td { background: #fafafa; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
         .badge-preventivo { background: #fef9e7; color: #f39c12; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; align-items: center; justify-content: center; }
-        .modal-overlay.active { display: flex; }
-        .modal-content { background: white; border-radius: var(--radius); padding: 32px; max-width: 800px; width: 90%; max-height: 80vh; overflow-y: auto; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border-color); }
-        .close-modal { background: none; border: none; font-size: 28px; cursor: pointer; width: 40px; height: 40px; }
-        .service-category-title { font-size: 14px; font-weight: 800; margin: 20px 0 10px 0; text-transform: uppercase; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
-        .service-select-item { background: white; border: 2px solid var(--border-color); border-radius: 10px; padding: 16px; margin-bottom: 12px; cursor: pointer; display: flex; align-items: center; gap: 16px; }
-        .service-select-item.selected { border-color: var(--success); background: #e8f8f5; }
-        .service-select-info { flex: 1; }
-        .service-select-name { font-size: 15px; font-weight: 600; }
-        .service-select-price { background: var(--primary); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 700; }
-        .footer-branding { text-align: center; padding: 24px; color: var(--text-light); margin-top: 40px; }
+        .badge-contratto { background: #d5f4e6; color: #27ae60; }
+
+        .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
-        .toast { background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); }
+        .toast {
+            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease;
+        }
         .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
         .loading { text-align: center; padding: 40px; color: var(--text-light); }
-        .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        .spinner {
+            width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary);
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;
+        }
         @keyframes spin { to { transform: rotate(360deg); } }
         .hidden { display: none !important; }
-        #pdf-template { display: none; font-family: 'Georgia', serif; color: #000; background: #fff; padding: 40px; width: 800px; }
+
+        /* Modal Selezione Servizi */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 3000; align-items: center; justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white; border-radius: var(--radius); padding: 32px;
+            max-width: 800px; width: 90%; max-height: 80vh; overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border-color);
+        }
+        .modal-header h2 { font-size: 24px; color: var(--primary-dark); }
+        .close-modal {
+            background: none; border: none; font-size: 28px; cursor: pointer;
+            color: var(--text-light); width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; transition: all 0.2s ease;
+        }
+        .close-modal:hover { background: var(--primary-light); color: var(--primary-dark); }
+        
+        .service-select-item {
+            background: white; border: 2px solid var(--border-color); border-radius: 10px;
+            padding: 16px; margin-bottom: 12px; cursor: pointer;
+            transition: all 0.2s ease; display: flex; align-items: center; gap: 16px;
+        }
+        .service-select-item:hover {
+            border-color: var(--primary); background: var(--primary-light);
+            transform: translateX(4px);
+        }
+        .service-select-item.selected {
+            border-color: var(--success); background: #e8f8f5;
+        }
+        .service-select-item input[type="checkbox"] {
+            width: 22px; height: 22px; cursor: pointer;
+        }
+        .service-select-info { flex: 1; }
+        .service-select-name { font-size: 15px; font-weight: 600; color: var(--text-main); margin-bottom: 4px; }
+        .service-select-category { font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
+        .service-select-price {
+            background: var(--primary); color: white; padding: 8px 16px;
+            border-radius: 20px; font-size: 16px; font-weight: 700;
+        }
+
+        /* Stili per il template PDF nascosto */
+        #pdf-template {
+            display: none;
+            font-family: 'Georgia', serif;
+            color: #000;
+            background: #fff;
+            padding: 40px;
+            width: 800px;
+        }
         .pdf-header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 20px; }
-        .pdf-header h1 { font-size: 24px; text-transform: uppercase; }
+        .pdf-header h1 { margin: 0; font-size: 24px; text-transform: uppercase; }
+        .pdf-header p { margin: 5px 0; font-size: 12px; color: #333; }
         .pdf-title { text-align: center; text-transform: uppercase; margin-bottom: 30px; font-size: 20px; font-weight: bold; }
         .pdf-section { margin-bottom: 30px; }
-        .pdf-section h3 { border-bottom: 1px solid #ccc; padding-bottom: 5px; font-size: 16px; }
+        .pdf-section h3 { border-bottom: 1px solid #ccc; padding-bottom: 5px; font-size: 16px; margin-bottom: 10px; }
         .pdf-row { display: flex; justify-content: space-between; margin-bottom: 30px; }
         .pdf-col { width: 48%; font-size: 13px; line-height: 1.6; }
         .pdf-table { width: 100%; border-collapse: collapse; font-size: 12px; }
         .pdf-table th, .pdf-table td { border: 1px solid #ccc; padding: 8px; }
-        .pdf-table th { background: #f0f0f0; }
-        .pdf-totals { text-align: right; margin-bottom: 30px; }
-        .pdf-totals .final { font-size: 18px; font-weight: bold; border-top: 2px solid #000; padding-top: 10px; }
-        .pdf-signatures { display: flex; justify-content: space-between; margin-top: 60px; }
+        .pdf-table th { background: #f0f0f0; text-align: left; }
+        .pdf-totals { text-align: right; margin-bottom: 30px; font-size: 14px; }
+        .pdf-totals .final { font-size: 18px; font-weight: bold; border-top: 2px solid #000; padding-top: 10px; margin-top: 10px; }
+        .pdf-totals .saldo { color: #d32f2f; font-size: 16px; font-weight: bold; }
+        .pdf-signatures { display: flex; justify-content: space-between; margin-top: 60px; page-break-inside: avoid; }
         .pdf-sign-box { width: 45%; text-align: center; }
-        .pdf-sign-box p { border-top: 1px solid #000; padding-top: 10px; }
+        .pdf-sign-box p { border-top: 1px solid #000; padding-top: 10px; font-size: 12px; }
         .pdf-sign-space { height: 60px; }
     </style>
 </head>
 <body>
     <div class="top-bar">
-        <div>
+        <div style="display: flex; gap: 10px;">
             <button class="nav-btn" onclick="tornaPlancia()">Indietro</button>
             <button class="nav-btn" onclick="tornaPlancia()">Plancia</button>
         </div>
@@ -108,211 +217,374 @@
     <div class="container">
         <div class="page-header">
             <h1>Preventivi & Contratti</h1>
-            <p>Crea preventivi, inviali via WhatsApp, converti in contratti.</p>
+            <p>Crea preventivi, inviali via WhatsApp, converti in contratti e gestisci pagamenti.</p>
         </div>
 
         <div id="loadingArea" class="loading">
             <div class="spinner"></div>
-            <div>Caricamento...</div>
+            <div>Caricamento dati...</div>
         </div>
 
         <div id="mainContent" class="hidden">
+            
+            <!-- TABS -->
             <div class="tabs">
                 <button class="tab active" onclick="switchTab('crea')">Crea Preventivo</button>
                 <button class="tab" onclick="switchTab('archivio')">Archivio Preventivi</button>
                 <button class="tab" onclick="switchTab('contratti')">Archivio Contratti</button>
             </div>
 
+            <!-- TAB CREA PREVENTIVO -->
             <div id="tab-crea" class="tab-content active">
-                <div class="card-3d">
-                    <div class="card-title">
-                        <span>Preventivo / Contratto</span>
-                        <button class="btn btn-dark btn-sm" onclick="nuovoPreventivo()">+ Nuovo</button>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Numero</label>
-                            <input type="text" id="pvNumero" value="(assegnato al salvataggio)" readonly style="background:#f4f6f7;">
-                        </div>
-                        <div class="form-group">
-                            <label>Data</label>
-                            <input type="date" id="pvData">
-                        </div>
-                    </div>
+            
+            <!-- DATI PREVENTIVO -->
+            <div class="card-3d">
+                <div class="card-title">
+                    <span>Preventivo / Contratto</span>
+                    <button class="btn btn-dark btn-sm" onclick="nuovoPreventivo()">+ Nuovo preventivo</button>
                 </div>
-
-                <div class="card-3d">
-                    <div class="card-title">Cliente A (Intestatario)</div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Nome *</label><input type="text" id="cA_nome"></div>
-                        <div class="form-group"><label>Cognome *</label><input type="text" id="cA_cognome"></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Telefono *</label><input type="tel" id="cA_tel"></div>
-                        <div class="form-group"><label>Email</label><input type="email" id="cA_email"></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Indirizzo</label><input type="text" id="cA_indirizzo"></div>
-                        <div class="form-group"><label>Città</label><input type="text" id="cA_citta"></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>CAP</label><input type="text" id="cA_cap"></div>
-                        <div class="form-group"><label>Provincia</label><input type="text" id="cA_prov"></div>
-                    </div>
-                </div>
-
-                <div class="card-3d">
-                    <div class="card-title">Cliente B</div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Nome</label><input type="text" id="cB_nome"></div>
-                        <div class="form-group"><label>Cognome</label><input type="text" id="cB_cognome"></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Telefono</label><input type="tel" id="cB_tel"></div>
-                        <div class="form-group"><label>Email</label><input type="email" id="cB_email"></div>
-                    </div>
-                </div>
-
-                <div class="card-3d">
-                    <div class="card-title">Dettagli Evento</div>
-                    <div class="form-group">
-                        <label>Tipo Servizio *</label>
-                        <input type="text" id="pvTipoServizio" placeholder="Es. Matrimonio, Compleanno...">
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Luogo Cerimonia</label><input type="text" id="pvLuogoCerimonia"></div>
-                        <div class="form-group"><label>Luogo Ricevimento</label><input type="text" id="pvLuogoRicevimento"></div>
-                    </div>
-                </div>
-
-                <div class="card-3d">
-                    <div class="card-title">
-                        <span>Servizi</span>
-                        <button class="btn btn-primary btn-lg" onclick="apriModalServizi()">Seleziona Servizi</button>
-                    </div>
-                    <div id="serviziSelezionatiContainer">
-                        <div style="text-align:center;padding:40px;color:var(--text-light);border:2px dashed var(--border-color);border-radius:10px;">
-                            Nessun servizio selezionato
-                        </div>
-                    </div>
-                </div>
-
                 <div class="form-row">
-                    <div class="card-3d">
-                        <div class="card-title">Sconto</div>
-                        <div class="form-row">
-                            <div class="form-group"><label>Sconto %</label><input type="number" id="scontoPerc" value="0" oninput="calcolaTotali()"></div>
-                            <div class="form-group"><label>Sconto €</label><input type="number" id="scontoFisso" value="0" oninput="calcolaTotali()"></div>
-                        </div>
+                    <div class="form-group">
+                        <label>Numero Preventivo</label>
+                        <input type="text" id="pvNumero" value="(assegnato al salvataggio)" readonly style="background:#f4f6f7;">
                     </div>
-                    <div class="card-3d">
-                        <div class="card-title">Acconti</div>
-                        <div id="accontiList"><div style="color:var(--text-light);font-size:13px;">Nessun acconto</div></div>
-                        <button class="btn btn-outline btn-sm" onclick="aggiungiAcconto()" style="margin-top:10px;">+ Aggiungi</button>
+                    <div class="form-group">
+                        <label>Data emissione</label>
+                        <input type="date" id="pvData">
                     </div>
-                </div>
-
-                <div class="card-3d">
-                    <div class="totals-box">
-                        <div class="total-row"><span>Totale servizi</span><strong id="rowTotaleServizi">0,00 €</strong></div>
-                        <div class="total-row"><span>Sconto</span><strong id="rowTotaleSconto">-0,00 €</strong></div>
-                        <div class="total-row final"><span>TOTALE</span><strong id="rowImportoTotale">0,00 €</strong></div>
-                        <div class="total-row"><span>Acconti</span><strong id="rowTotaleAcconti">0,00 €</strong></div>
-                        <div class="total-row saldo"><span>SALDO</span><strong id="rowSaldoResiduo">0,00 €</strong></div>
-                    </div>
-                </div>
-
-                <div class="card-3d">
-                    <div class="card-title">Accettazione</div>
-                    <div style="display:flex;align-items:center;gap:10px;">
-                        <input type="checkbox" id="checkAccettazione" style="width:20px;height:20px;">
-                        <label>ACCETTATO E FIRMATO DAL CLIENTE</label>
-                    </div>
-                </div>
-
-                <div class="card-3d">
-                    <div class="card-title">Note</div>
-                    <textarea id="noteAggiuntive" rows="4"></textarea>
-                </div>
-
-                <div style="display:flex;gap:10px;justify-content:center;margin-bottom:40px;flex-wrap:wrap;">
-                    <button class="btn btn-dark" onclick="salvaInArchivio('preventivo')"> Salva</button>
-                    <button class="btn btn-success" onclick="inviaWhatsApp()"> WhatsApp</button>
-                    <button class="btn btn-dark" onclick="creaPDF()"> PDF</button>
                 </div>
             </div>
 
+            <!-- ANAGRAFICA CLIENTE A -->
+            <div class="card-3d">
+                <div class="card-title">Anagrafica Cliente A (Intestatario Principale)</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Nome</label><input type="text" id="cA_nome"></div>
+                    <div class="form-group"><label>Cognome</label><input type="text" id="cA_cognome"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Telefono *</label><input type="tel" id="cA_tel"></div>
+                    <div class="form-group"><label>Email</label><input type="email" id="cA_email"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Via / Piazza e n. civico</label><input type="text" id="cA_indirizzo"></div>
+                    <div class="form-group"><label>Città</label><input type="text" id="cA_citta"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>CAP</label><input type="text" id="cA_cap"></div>
+                    <div class="form-group"><label>Provincia</label><input type="text" id="cA_prov"></div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="apriMaps('A')">📍 Vedi luogo su Google Maps</button>
+            </div>
+
+            <!-- ANAGRAFICA CLIENTE B -->
+            <div class="card-3d">
+                <div class="card-title">Anagrafica Cliente B (secondo intestatario)</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Nome</label><input type="text" id="cB_nome"></div>
+                    <div class="form-group"><label>Cognome</label><input type="text" id="cB_cognome"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Telefono</label><input type="tel" id="cB_tel"></div>
+                    <div class="form-group"><label>Email</label><input type="email" id="cB_email"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Via / Piazza e n. civico</label><input type="text" id="cB_indirizzo"></div>
+                    <div class="form-group"><label>Città</label><input type="text" id="cB_citta"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>CAP</label><input type="text" id="cB_cap"></div>
+                    <div class="form-group"><label>Provincia</label><input type="text" id="cB_prov"></div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="apriMaps('B')"> Vedi luogo su Google Maps</button>
+            </div>
+
+            <!-- DETTAGLI EVENTO -->
+            <div class="card-3d" style="border-left: 5px solid var(--warning);">
+                <div class="card-title" style="color: var(--warning);">Dettagli Evento Richiesto</div>
+                <div class="form-row">
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label style="font-size: 15px;">Tipo di Servizio Richiesto *</label>
+                        <input type="text" id="pvTipoServizio" placeholder="Es. Matrimonio, Battesimo, Compleanno, Servizio Aziendale..." style="font-size: 16px; font-weight: 600; padding: 14px;">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label style="font-size: 15px;">Luogo Cerimonia (Chiesa / Location) <span style="color:var(--text-light); font-weight:400; font-size:12px;">(opzionale)</span></label>
+                        <input type="text" id="pvLuogoCerimonia" placeholder="Nome e indirizzo della chiesa o location" style="font-size: 15px;">
+                        <button class="btn btn-outline btn-sm" style="margin-top: 8px;" onclick="apriMaps('cerimonia')">📍 Vedi luogo su Google Maps</button>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size: 15px;">Luogo Ricevimento (Ristorante / Sala) <span style="color:var(--text-light); font-weight:400; font-size:12px;">(opzionale)</span></label>
+                        <input type="text" id="pvLuogoRicevimento" placeholder="Nome e indirizzo del ristorante o sala" style="font-size: 15px;">
+                        <button class="btn btn-outline btn-sm" style="margin-top: 8px;" onclick="apriMaps('ricevimento')">📍 Vedi luogo su Google Maps</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SERVIZI & COSTI -->
+            <div class="card-3d">
+                <div class="card-title">
+                    <span>Servizi & Costi</span>
+                    <button class="btn btn-primary btn-lg" onclick="apriModalServizi()"> Vai a Listini & Categorie</button>
+                </div>
+                <div class="card-subtitle">Clicca sul tasto per selezionare servizi dall'archivio. Puoi modificarne prezzi e quantità.</div>
+                
+                <div id="serviziSelezionatiContainer">
+                    <div style="text-align: center; padding: 40px; color: var(--text-light); border: 2px dashed var(--border-color); border-radius: 10px;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
+                        <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Nessun servizio selezionato</div>
+                        <div style="font-size: 13px;">Clicca su "Vai a Listini & Categorie" per aggiungere servizi dal tuo archivio</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCONTO & ACCONTI -->
+            <div class="form-row">
+                <div class="card-3d" style="margin-bottom:0;">
+                    <div class="card-title">Sconto</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Sconto % (es. 15)</label>
+                            <input type="number" id="scontoPerc" value="0" min="0" max="100" oninput="calcolaTotali()">
+                        </div>
+                        <div class="form-group">
+                            <label>Importo sconto % calcolato</label>
+                            <input type="text" id="scontoPercVal" value="0,00 €" readonly style="background:#f4f6f7;">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Buono / promozione (€)</label>
+                            <input type="number" id="scontoFisso" value="0" min="0" step="0.01" oninput="calcolaTotali()">
+                        </div>
+                        <div class="form-group">
+                            <label>Nota buono / promozione</label>
+                            <input type="text" id="scontoFissoNota" placeholder="Es. buono fiera, promozione...">
+                        </div>
+                    </div>
+                    <div style="font-weight:700; color:var(--primary-dark);">Totale sconto applicato: <span id="totaleScontoDisplay">-0,00 €</span></div>
+                </div>
+
+                <div class="card-3d" style="margin-bottom:0;">
+                    <div class="card-title">Acconti ricevuti (date e importi modificabili)</div>
+                    <div id="accontiList">
+                        <div style="font-size:13px; color:var(--text-light); margin-bottom:10px;">Nessun acconto registrato.</div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="aggiungiAcconto()" style="margin-top:10px;">+ Aggiungi acconto</button>
+                </div>
+            </div>
+
+            <!-- PIANO DI PAGAMENTO -->
+            <div class="card-3d">
+                <div class="card-title">Piano di pagamento (importi inseriti dallo studio)</div>
+                <div id="pianoPagamentoList">
+                    <div class="service-row">
+                        <input type="text" value="Caparra alla firma" style="flex:1; padding:8px;">
+                        <input type="number" class="piano-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                        <span>€</span>
+                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+                    </div>
+                    <div class="service-row">
+                        <input type="text" value="Acconto prima del servizio" style="flex:1; padding:8px;">
+                        <input type="number" class="piano-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                        <span>€</span>
+                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+                    </div>
+                    <div class="service-row">
+                        <input type="text" value="Acconto alla scelta foto e copertina" style="flex:1; padding:8px;">
+                        <input type="number" class="piano-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                        <span>€</span>
+                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+                    </div>
+                    <div class="service-row">
+                        <input type="text" value="Saldo prima della stampa" style="flex:1; padding:8px;">
+                        <input type="number" class="piano-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                        <span>€</span>
+                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+                    </div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="aggiungiVocePiano()" style="margin-top:15px;">+ Aggiungi voce</button>
+                <div style="margin-top:15px; font-size:13px; color:var(--text-light);">
+                    Pianificato: <strong id="pianoPianificato">0,00 €</strong> · Non pianificato: <strong id="pianoNonPianificato">0,00 €</strong>
+                </div>
+            </div>
+
+            <!-- TOTALI -->
+            <div class="card-3d">
+                <div class="totals-box">
+                    <div class="total-row"><span>Totale servizi</span><strong id="rowTotaleServizi">0,00 €</strong></div>
+                    <div class="total-row"><span>Sconto percentuale (<span id="rowScontoPerc">0</span>%)</span><strong id="rowScontoPercVal">-0,00 €</strong></div>
+                    <div class="total-row"><span>Buono / promozione</span><strong id="rowScontoFisso">-0,00 €</strong></div>
+                    <div class="total-row"><span>TOTALE SCONTO APPLICATO</span><strong id="rowTotaleSconto">-0,00 €</strong></div>
+                    <div class="total-row final"><span>IMPORTO TOTALE</span><strong id="rowImportoTotale">0,00 €</strong></div>
+                    <div class="total-row"><span>Totale acconti versati</span><strong id="rowTotaleAcconti">0,00 €</strong></div>
+                    <div class="total-row saldo"><span>SALDO RESIDUO</span><strong id="rowSaldoResiduo">0,00 €</strong></div>
+                </div>
+            </div>
+
+            <!-- ACCETTAZIONE & NOTE -->
+            <div class="card-3d">
+                <div class="card-title">Accettazione</div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <input type="checkbox" id="checkAccettazione" style="width:20px; height:20px;" onchange="gestisciAccettazione()">
+                    <label for="checkAccettazione" style="font-weight:600; cursor:pointer;">ACCETTATO E FIRMATO DAL CLIENTE (flag apposto dallo studio – il PDF inviato resta con i riquadri firma da compilare a mano)</label>
+                </div>
+            </div>
+
+            <div class="card-3d">
+                <div class="card-title">Note aggiuntive</div>
+                <textarea id="noteAggiuntive" rows="4" placeholder="Condizioni particolari, tempi di consegna, ecc."></textarea>
+            </div>
+
+            <!-- AZIONI FINALI -->
+            <div class="btn-group" style="justify-content: center; margin-bottom: 40px;">
+                <button class="btn btn-dark" onclick="salvaInArchivio('preventivo')">💾 Salva Preventivo</button>
+                <button class="btn btn-success" onclick="inviaWhatsApp()"> Invia WhatsApp</button>
+                <button class="btn btn-dark" onclick="creaPDF()">📄 Crea PDF</button>
+                <button class="btn btn-primary" onclick="trasformaInContratto()">📝 Converti in Contratto</button>
+            </div>
+
+            </div> <!-- FINE TAB CREA -->
+
+            <!-- TAB ARCHIVIO PREVENTIVI -->
             <div id="tab-archivio" class="tab-content">
                 <div class="card-3d">
                     <div class="card-title">Archivio Preventivi</div>
                     <div class="table-container">
                         <table>
                             <thead>
-                                <tr><th>N.</th><th>Cliente</th><th>Data</th><th>Servizio</th><th>Totale</th><th>Stato</th><th>Azioni</th></tr>
+                                <tr>
+                                    <th>N.</th>
+                                    <th>Cliente</th>
+                                    <th>Data</th>
+                                    <th>Tipo Servizio</th>
+                                    <th>Totale</th>
+                                    <th>Stato</th>
+                                    <th>Azioni</th>
+                                </tr>
                             </thead>
                             <tbody id="archivioPreventiviTable"></tbody>
                         </table>
                     </div>
-                    <div id="emptyArchivio" class="hidden" style="text-align:center;padding:40px;color:var(--text-light);">Nessun preventivo</div>
+                    <div id="emptyArchivio" class="hidden" style="text-align: center; padding: 40px; color: var(--text-light);">Nessun preventivo in archivio.</div>
                 </div>
             </div>
 
+            <!-- TAB ARCHIVIO CONTRATTI -->
             <div id="tab-contratti" class="tab-content">
                 <div class="card-3d">
-                    <div class="card-title">Archivio Contratti</div>
+                    <div class="card-title">Archivio Contratti Attivi</div>
+                    <div class="card-subtitle">Contratti firmati con monitoraggio pagamenti e acconti</div>
                     <div class="table-container">
                         <table>
                             <thead>
-                                <tr><th>N.</th><th>Cliente</th><th>Data</th><th>Servizio</th><th>Totale</th><th>Saldo</th><th>Azioni</th></tr>
+                                <tr>
+                                    <th>N. Contratto</th>
+                                    <th>Cliente</th>
+                                    <th>Data</th>
+                                    <th>Servizio</th>
+                                    <th>Totale</th>
+                                    <th>Pagato</th>
+                                    <th>Saldo</th>
+                                    <th>Azioni</th>
+                                </tr>
                             </thead>
                             <tbody id="archivioContrattiTable"></tbody>
                         </table>
                     </div>
-                    <div id="emptyContratti" class="hidden" style="text-align:center;padding:40px;color:var(--text-light);">Nessun contratto</div>
+                    <div id="emptyContratti" class="hidden" style="text-align: center; padding: 40px; color: var(--text-light);">Nessun contratto attivo.</div>
                 </div>
             </div>
-        </div>
 
-        <div class="footer-branding">AppCenterStudioPROGOLD</div>
+        </div> <!-- FINE MAIN CONTENT -->
+
+        <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
     </div>
 
+    <!-- MODAL SELEZIONE SERVIZI DA ARCHIVIO -->
     <div id="modalServizi" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Seleziona Servizi</h2>
+                <h2> Seleziona Servizi dall'Archivio</h2>
                 <button class="close-modal" onclick="chiudiModalServizi()">×</button>
             </div>
-            <div id="modalServiziContent"></div>
-            <div style="display:flex;gap:12px;margin-top:24px;justify-content:flex-end;">
+            <div id="modalServiziContent">
+                <div class="loading" style="padding: 40px;">
+                    <div class="spinner"></div>
+                    <div>Caricamento archivio servizi...</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 24px; justify-content: flex-end;">
                 <button class="btn btn-outline" onclick="chiudiModalServizi()">Annulla</button>
-                <button class="btn btn-primary" onclick="confermaSelezioneServizi()">Conferma</button>
+                <button class="btn btn-primary" onclick="confermaSelezioneServizi()">✅ Conferma Selezione</button>
             </div>
         </div>
     </div>
 
+    <!-- TEMPLATE PDF NASCOSTO -->
     <div id="pdf-template">
         <div class="pdf-header">
-            <h1 id="pdf-nome-studio">STUDIO</h1>
-            <p id="pdf-contatti-studio"></p>
+            <h1 id="pdf-nome-studio">NOME STUDIO</h1>
+            <p id="pdf-indirizzo-studio">Indirizzo Studio</p>
+            <p id="pdf-contatti-studio">Tel: - Email: - P.IVA: </p>
         </div>
-        <div class="pdf-title" id="pdf-tipo-doc">PREVENTIVO</div>
+        <div class="pdf-title" id="pdf-tipo-doc">PREVENTIVO N. <span id="pdf-numero"></span></div>
+        
         <div class="pdf-row">
-            <div class="pdf-col"><h3>Cliente A</h3><p id="pdf-cliente-a"></p></div>
-            <div class="pdf-col"><h3>Cliente B</h3><p id="pdf-cliente-b"></p></div>
+            <div class="pdf-col">
+                <h3>Cliente A</h3>
+                <p id="pdf-cliente-a-nome"></p>
+                <p id="pdf-cliente-a-indirizzo"></p>
+                <p id="pdf-cliente-a-contatti"></p>
+            </div>
+            <div class="pdf-col">
+                <h3>Cliente B</h3>
+                <p id="pdf-cliente-b-nome"></p>
+                <p id="pdf-cliente-b-indirizzo"></p>
+                <p id="pdf-cliente-b-contatti"></p>
+            </div>
         </div>
-        <div class="pdf-section"><h3>Servizio</h3><p id="pdf-servizio"></p></div>
+
         <div class="pdf-section">
-            <h3>Servizi</h3>
-            <table class="pdf-table"><thead><tr><th>Descrizione</th><th>Prezzo</th><th>Q.tà</th><th>Totale</th></tr></thead><tbody id="pdf-servizi-body"></tbody></table>
+            <h3>Dettagli Evento</h3>
+            <p><strong>Tipo:</strong> <span id="pdf-tipo-servizio"></span></p>
+            <p><strong>Luogo Cerimonia:</strong> <span id="pdf-luogo-cerimonia"></span></p>
+            <p><strong>Luogo Ricevimento:</strong> <span id="pdf-luogo-ricevimento"></span></p>
         </div>
+
+        <div class="pdf-section">
+            <h3>Servizi Richiesti</h3>
+            <table class="pdf-table">
+                <thead>
+                    <tr><th>Descrizione</th><th>Prezzo</th><th>Q.tà</th><th>Totale</th></tr>
+                </thead>
+                <tbody id="pdf-servizi-body"></tbody>
+            </table>
+        </div>
+
         <div class="pdf-totals">
-            <div>Totale: <strong id="pdf-totale">0,00 €</strong></div>
-            <div>Acconti: <strong id="pdf-acconti">0,00 €</strong></div>
-            <div class="final">Saldo: <strong id="pdf-saldo">0,00 €</strong></div>
+            <div>Totale servizi: <strong id="pdf-totale-servizi">0,00 €</strong></div>
+            <div>Sconto (<span id="pdf-sconto-perc">0</span>% + fisso): <strong id="pdf-totale-sconto">-0,00 €</strong></div>
+            <div class="final">TOTALE: <strong id="pdf-totale">0,00 €</strong></div>
+            <div>Acconti versati: <strong id="pdf-totale-acconti">0,00 €</strong></div>
+            <div class="saldo">SALDO RESIDUO: <strong id="pdf-saldo">0,00 €</strong></div>
         </div>
+
+        <div class="pdf-section">
+            <h3>Note</h3>
+            <p id="pdf-note"></p>
+        </div>
+
         <div class="pdf-signatures">
-            <div class="pdf-sign-box"><div class="pdf-sign-space"></div><p>Firma Cliente A</p></div>
-            <div class="pdf-sign-box"><div class="pdf-sign-space"></div><p>Firma Cliente B</p></div>
+            <div class="pdf-sign-box">
+                <div class="pdf-sign-space"></div>
+                <p>Firma Cliente A</p>
+            </div>
+            <div class="pdf-sign-box">
+                <div class="pdf-sign-space"></div>
+                <p>Firma Cliente B</p>
+            </div>
         </div>
     </div>
 
@@ -324,6 +596,7 @@
         let studioId = null;
         let serviziArchivio = [];
         let serviziSelezionati = [];
+        let preventivoCorrente = null;
         let archivioPreventivi = [];
         let archivioContratti = [];
 
@@ -343,6 +616,9 @@
                     return;
                 }
                 studioId = data.user.id;
+                
+                await caricaTemaGlobale();
+                
                 document.getElementById('loadingArea').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
                 await caricaArchivioPreventivi();
@@ -353,9 +629,39 @@
             }
         }
 
+        async function caricaTemaGlobale() {
+            if (!studioId) return;
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
+                const data = await response.json();
+                if (data.success && data.tema && data.tema.tema_attivo) {
+                    const temaId = data.tema.tema_attivo;
+                    const temi = {
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
+                    };
+                    const t = temi[temaId] || temi['default'];
+                    const root = document.documentElement;
+                    root.style.setProperty('--primary', t.p);
+                    root.style.setProperty('--primary-dark', t.pd);
+                    root.style.setProperty('--primary-light', t.pl);
+                    root.style.setProperty('--primary-gradient', t.pg);
+                    root.style.setProperty('--bg-gradient', t.bg);
+                }
+            } catch (error) {
+                console.error('Errore caricamento tema:', error);
+            }
+        }
+
         function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             event.target.classList.add('active');
             document.getElementById('tab-' + tabName).classList.add('active');
         }
@@ -363,55 +669,75 @@
         async function apriModalServizi() {
             const modal = document.getElementById('modalServizi');
             const content = document.getElementById('modalServiziContent');
+            
             modal.classList.add('active');
-            content.innerHTML = '<div class="loading"><div class="spinner"></div>Caricamento...</div>';
+            content.innerHTML = '<div class="loading" style="padding: 40px;"><div class="spinner"></div><div>Caricamento archivio servizi...</div></div>';
             
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/servizi?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
                 const data = await response.json();
+                
                 if (data.success && data.servizi && data.servizi.length > 0) {
                     serviziArchivio = data.servizi;
                     renderizzaModalServizi();
                 } else {
-                    content.innerHTML = '<div style="text-align:center;padding:40px;">Nessun servizio in archivio</div>';
+                    content.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: var(--text-light);">
+                            <div style="font-size: 48px; margin-bottom: 16px;"></div>
+                            <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Nessun servizio in archivio</div>
+                            <div style="font-size: 13px; margin-bottom: 20px;">Vai su "Listini & Categorie" per creare i tuoi servizi</div>
+                            <button class="btn btn-primary" onclick="window.location.href='listini-categorie.html?token=${encodeURIComponent(token)}'">Vai a Listini & Categorie</button>
+                        </div>
+                    `;
                 }
             } catch (error) {
-                content.innerHTML = '<div style="text-align:center;padding:40px;color:var(--danger);">Errore</div>';
+                console.error('Errore:', error);
+                content.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--danger);">Errore nel caricamento dell\'archivio servizi</div>';
             }
         }
 
         function renderizzaModalServizi() {
             const content = document.getElementById('modalServiziContent');
             const categorie = {};
+            
             serviziArchivio.forEach(s => {
                 if (!categorie[s.categoria]) categorie[s.categoria] = [];
                 categorie[s.categoria].push(s);
             });
+
             let html = '';
             Object.keys(categorie).sort().forEach(cat => {
                 html += `<div class="service-category-title">${cat}</div>`;
                 categorie[cat].forEach(s => {
                     const isSelected = serviziSelezionati.some(sv => sv.id === s.id);
-                    html += `<div class="service-select-item ${isSelected ? 'selected' : ''}" onclick="toggleServizioModal('${s.id}')">
-                        <div class="service-select-info">
-                            <div class="service-select-name">${s.descrizione}</div>
+                    html += `
+                        <div class="service-select-item ${isSelected ? 'selected' : ''}" onclick="toggleServizioModal('${s.id}')">
+                            <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="event.stopPropagation(); toggleServizioModal('${s.id}')">
+                            <div class="service-select-info">
+                                <div class="service-select-name">${s.descrizione}</div>
+                                <div class="service-select-category">${s.categoria}</div>
+                            </div>
+                            <div class="service-select-price">€ ${parseFloat(s.prezzo).toFixed(2)}</div>
                         </div>
-                        <div class="service-select-price">€ ${parseFloat(s.prezzo).toFixed(2)}</div>
-                    </div>`;
+                    `;
                 });
             });
+            
             content.innerHTML = html;
         }
 
-        function toggleServizioModal(id) {
-            const servizio = serviziArchivio.find(s => s.id === id);
+        function toggleServizioModal(servizioId) {
+            const servizio = serviziArchivio.find(s => s.id === servizioId);
             if (!servizio) return;
-            const index = serviziSelezionati.findIndex(s => s.id === id);
+
+            const index = serviziSelezionati.findIndex(s => s.id === servizioId);
+            
             if (index === -1) {
                 serviziSelezionati.push({ ...servizio, quantita: 1, prezzo: parseFloat(servizio.prezzo) });
             } else {
                 serviziSelezionati.splice(index, 1);
             }
+            
             renderizzaModalServizi();
             renderizzaServiziSelezionati();
         }
@@ -420,6 +746,7 @@
             chiudiModalServizi();
             renderizzaServiziSelezionati();
             calcolaTotali();
+            mostraToast(`${serviziSelezionati.length} servizio/i selezionato/i`, 'success');
         }
 
         function chiudiModalServizi() {
@@ -428,81 +755,172 @@
 
         function renderizzaServiziSelezionati() {
             const container = document.getElementById('serviziSelezionatiContainer');
+            
             if (serviziSelezionati.length === 0) {
-                container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);border:2px dashed var(--border-color);border-radius:10px;">Nessun servizio</div>';
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-light); border: 2px dashed var(--border-color); border-radius: 10px;">
+                        <div style="font-size: 48px; margin-bottom: 16px;"></div>
+                        <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Nessun servizio selezionato</div>
+                        <div style="font-size: 13px;">Clicca su "Vai a Listini & Categorie" per aggiungere servizi dal tuo archivio</div>
+                    </div>
+                `;
                 return;
             }
+
             let html = '';
+            const categorie = {};
             serviziSelezionati.forEach(s => {
-                html += `<div class="service-row">
-                    <div style="flex:1;font-weight:600;">${s.descrizione}</div>
-                    <input type="number" class="svc-price" value="${s.prezzo}" step="0.01" oninput="aggiornaPrezzo('${s.id}',this.value)" style="width:80px;">
-                    <input type="number" class="svc-qty" value="${s.quantita}" min="1" oninput="aggiornaQuantita('${s.id}',this.value)" style="width:60px;">
-                    <span>€</span>
-                    <button class="btn btn-danger btn-sm" onclick="rimuoviServizio('${s.id}')">✕</button>
-                </div>`;
+                if (!categorie[s.categoria]) categorie[s.categoria] = [];
+                categorie[s.categoria].push(s);
             });
+
+            Object.keys(categorie).sort().forEach(cat => {
+                html += `<div class="service-category-title">${cat}</div>`;
+                categorie[cat].forEach(s => {
+                    html += `
+                        <div class="service-row">
+                            <div class="svc-desc" style="font-weight: 600;">${s.descrizione}</div>
+                            <input type="number" class="svc-price" value="${s.prezzo}" step="0.01" oninput="aggiornaPrezzoServizio('${s.id}', this.value)">
+                            <input type="number" class="svc-qty" value="${s.quantita}" min="1" oninput="aggiornaQuantitaServizio('${s.id}', this.value)">
+                            <span>€</span>
+                            <button class="btn btn-danger btn-sm" onclick="rimuoviServizio('${s.id}')">✕</button>
+                        </div>
+                    `;
+                });
+            });
+            
             container.innerHTML = html;
         }
 
-        function aggiornaPrezzo(id, prezzo) {
-            const s = serviziSelezionati.find(x => x.id === id);
-            if (s) { s.prezzo = parseFloat(prezzo) || 0; calcolaTotali(); }
+        function aggiornaPrezzoServizio(id, prezzo) {
+            const servizio = serviziSelezionati.find(s => s.id === id);
+            if (servizio) {
+                servizio.prezzo = parseFloat(prezzo) || 0;
+                calcolaTotali();
+            }
         }
 
-        function aggiornaQuantita(id, q) {
-            const s = serviziSelezionati.find(x => x.id === id);
-            if (s) { s.quantita = parseInt(q) || 1; calcolaTotali(); }
+        function aggiornaQuantitaServizio(id, quantita) {
+            const servizio = serviziSelezionati.find(s => s.id === id);
+            if (servizio) {
+                servizio.quantita = parseInt(quantita) || 1;
+                calcolaTotali();
+            }
         }
 
         function rimuoviServizio(id) {
             const index = serviziSelezionati.findIndex(s => s.id === id);
-            if (index !== -1) { serviziSelezionati.splice(index, 1); renderizzaServiziSelezionati(); calcolaTotali(); }
+            if (index !== -1) {
+                serviziSelezionati.splice(index, 1);
+                renderizzaServiziSelezionati();
+                calcolaTotali();
+            }
         }
 
         function calcolaTotali() {
-            let totServizi = 0;
-            serviziSelezionati.forEach(s => { totServizi += (s.prezzo * s.quantita); });
+            let totaleServizi = 0;
+            serviziSelezionati.forEach(s => {
+                totaleServizi += (s.prezzo * s.quantita);
+            });
+
             const scontoPerc = parseFloat(document.getElementById('scontoPerc').value) || 0;
             const scontoFisso = parseFloat(document.getElementById('scontoFisso').value) || 0;
-            const valScontoPerc = totServizi * (scontoPerc / 100);
-            const totSconto = valScontoPerc + scontoFisso;
-            const importoTotale = Math.max(0, totServizi - totSconto);
-            let totAcconti = 0;
-            document.querySelectorAll('.acconto-importo').forEach(inp => { totAcconti += (parseFloat(inp.value) || 0); });
-            const saldo = importoTotale - totAcconti;
-            document.getElementById('rowTotaleServizi').textContent = totServizi.toFixed(2) + ' €';
-            document.getElementById('rowTotaleSconto').textContent = '-' + totSconto.toFixed(2) + ' €';
+            
+            const valScontoPerc = totaleServizi * (scontoPerc / 100);
+            const totaleSconto = valScontoPerc + scontoFisso;
+            const importoTotale = Math.max(0, totaleServizi - totaleSconto);
+
+            let totaleAcconti = 0;
+            document.querySelectorAll('.acconto-importo').forEach(inp => {
+                totaleAcconti += (parseFloat(inp.value) || 0);
+            });
+
+            let pianoPianificato = 0;
+            document.querySelectorAll('.piano-importo').forEach(inp => {
+                pianoPianificato += (parseFloat(inp.value) || 0);
+            });
+
+            const saldoResiduo = importoTotale - totaleAcconti;
+
+            document.getElementById('scontoPercVal').value = valScontoPerc.toFixed(2) + ' €';
+            document.getElementById('totaleScontoDisplay').textContent = '-' + totaleSconto.toFixed(2) + ' €';
+            
+            document.getElementById('rowTotaleServizi').textContent = totaleServizi.toFixed(2) + ' €';
+            document.getElementById('rowScontoPerc').textContent = scontoPerc;
+            document.getElementById('rowScontoPercVal').textContent = '-' + valScontoPerc.toFixed(2) + ' €';
+            document.getElementById('rowScontoFisso').textContent = '-' + scontoFisso.toFixed(2) + ' €';
+            document.getElementById('rowTotaleSconto').textContent = '-' + totaleSconto.toFixed(2) + ' €';
             document.getElementById('rowImportoTotale').textContent = importoTotale.toFixed(2) + ' €';
-            document.getElementById('rowTotaleAcconti').textContent = totAcconti.toFixed(2) + ' €';
-            document.getElementById('rowSaldoResiduo').textContent = saldo.toFixed(2) + ' €';
+            document.getElementById('rowTotaleAcconti').textContent = totaleAcconti.toFixed(2) + ' €';
+            document.getElementById('rowSaldoResiduo').textContent = saldoResiduo.toFixed(2) + ' €';
+
+            document.getElementById('pianoPianificato').textContent = pianoPianificato.toFixed(2) + ' €';
+            document.getElementById('pianoNonPianificato').textContent = Math.max(0, importoTotale - pianoPianificato).toFixed(2) + ' €';
         }
 
         function aggiungiAcconto() {
             const list = document.getElementById('accontiList');
             if (list.querySelector('div[style*="font-size:13px"]')) list.innerHTML = '';
+            
             const div = document.createElement('div');
             div.className = 'service-row';
-            div.innerHTML = `<input type="date" style="padding:8px;"><input type="number" class="acconto-importo" value="0" oninput="calcolaTotali()" style="width:100px;padding:8px;"><span>€</span><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();calcolaTotali()">✕</button>`;
+            div.innerHTML = `
+                <input type="date" style="padding:8px;">
+                <input type="number" class="acconto-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                <span>€</span>
+                <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+            `;
             list.appendChild(div);
+        }
+
+        function aggiungiVocePiano() {
+            const list = document.getElementById('pianoPagamentoList');
+            const div = document.createElement('div');
+            div.className = 'service-row';
+            div.innerHTML = `
+                <input type="text" placeholder="Descrizione voce" style="flex:1; padding:8px;">
+                <input type="number" class="piano-importo" value="0" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                <span>€</span>
+                <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+            `;
+            list.appendChild(div);
+        }
+
+        function apriMaps(tipo) {
+            let indirizzo = '';
+            if (tipo === 'A') {
+                indirizzo = document.getElementById('cA_indirizzo').value + ', ' + document.getElementById('cA_citta').value;
+            } else if (tipo === 'B') {
+                indirizzo = document.getElementById('cB_indirizzo').value + ', ' + document.getElementById('cB_citta').value;
+            } else if (tipo === 'cerimonia') {
+                indirizzo = document.getElementById('pvLuogoCerimonia').value;
+            } else if (tipo === 'ricevimento') {
+                indirizzo = document.getElementById('pvLuogoRicevimento').value;
+            }
+
+            if (indirizzo && indirizzo.trim() !== ', ' && indirizzo.trim() !== '') {
+                const query = encodeURIComponent(indirizzo);
+                window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+            } else {
+                mostraToast('Inserisci un indirizzo o un luogo prima di aprire Maps', 'error');
+            }
         }
 
         function raccogliDatiPreventivo() {
             const acconti = [];
             document.querySelectorAll('#accontiList .service-row').forEach(row => {
-                const dataInput = row.querySelector('input[type="date"]');
-                const importoInput = row.querySelector('.acconto-importo');
-                if (dataInput && importoInput) {
-                    acconti.push({ data: dataInput.value || '', importo: parseFloat(importoInput.value) || 0 });
-                }
+                acconti.push({
+                    data: row.querySelector('input[type="date"]').value,
+                    importo: parseFloat(row.querySelector('.acconto-importo').value) || 0
+                });
             });
 
             return {
-                numero: document.getElementById('pvNumero').value || '',
-                data_emissione: document.getElementById('pvData').value || '',
-                tipo_servizio: document.getElementById('pvTipoServizio').value || '',
-                luogo_cerimonia: document.getElementById('pvLuogoCerimonia').value || '',
-                luogo_ricevimento: document.getElementById('pvLuogoRicevimento').value || '',
+                numero: document.getElementById('pvNumero').value,
+                data_emissione: document.getElementById('pvData').value,
+                tipo_servizio: document.getElementById('pvTipoServizio').value,
+                luogo_cerimonia: document.getElementById('pvLuogoCerimonia').value,
+                luogo_ricevimento: document.getElementById('pvLuogoRicevimento').value,
                 cliente_a: {
                     nome: document.getElementById('cA_nome').value || '',
                     cognome: document.getElementById('cA_cognome').value || '',
@@ -517,20 +935,25 @@
                     nome: document.getElementById('cB_nome').value || '',
                     cognome: document.getElementById('cB_cognome').value || '',
                     telefono: document.getElementById('cB_tel').value || '',
-                    email: document.getElementById('cB_email').value || ''
+                    email: document.getElementById('cB_email').value || '',
+                    indirizzo: document.getElementById('cB_indirizzo').value || '',
+                    citta: document.getElementById('cB_citta').value || '',
+                    cap: document.getElementById('cB_cap').value || '',
+                    provincia: document.getElementById('cB_prov').value || ''
                 },
                 servizi: serviziSelezionati.map(s => ({
-                    id: s.id || '',
-                    descrizione: s.descrizione || '',
-                    prezzo: parseFloat(s.prezzo) || 0,
-                    quantita: parseInt(s.quantita) || 1,
-                    categoria: s.categoria || ''
+                    id: s.id,
+                    descrizione: s.descrizione,
+                    prezzo: s.prezzo,
+                    quantita: s.quantita,
+                    categoria: s.categoria
                 })),
                 acconti: acconti,
                 sconto_perc: parseFloat(document.getElementById('scontoPerc').value) || 0,
                 sconto_fisso: parseFloat(document.getElementById('scontoFisso').value) || 0,
+                sconto_fisso_nota: document.getElementById('scontoFissoNota').value,
                 accettato: document.getElementById('checkAccettazione').checked,
-                note: document.getElementById('noteAggiuntive').value || '',
+                note: document.getElementById('noteAggiuntive').value,
                 totale_finale: parseFloat(document.getElementById('rowImportoTotale').textContent.replace(' €', '').replace(',', '.')) || 0,
                 stato: document.getElementById('checkAccettazione').checked ? 'accettato' : 'bozza'
             };
@@ -541,56 +964,102 @@
             const dati = raccogliDatiPreventivo();
             console.log('Dati:', dati);
             
-            if (dati.servizi.length === 0) { 
-                mostraToast('Seleziona almeno un servizio', 'error'); 
-                return; 
-            }
-            
-            if (!dati.cliente_a.nome || !dati.cliente_a.cognome) {
-                mostraToast('Inserisci nome e cognome Cliente A', 'error');
+            if (dati.servizi.length === 0) {
+                mostraToast('Seleziona almeno un servizio', 'error');
                 return;
             }
-            
+
             const id = tipo === 'contratto' ? 'ctr-' + Date.now() : 'pv-' + Date.now();
-            const payload = { 
-                ...dati, 
-                studio_id: studioId, 
-                id: id, 
-                data_creazione: new Date().toISOString() 
-            };
-            
-            console.log('Payload:', JSON.stringify(payload));
-            
+            const endpoint = tipo === 'contratto' ? 'contratti' : 'preventivo';
+
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/preventivo?token=${encodeURIComponent(token)}`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/${endpoint}?token=${encodeURIComponent(token)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ ...dati, studio_id: studioId, id: id, data_creazione: new Date().toISOString() })
                 });
-                
-                console.log('Status:', response.status);
                 const result = await response.json();
                 console.log('Risposta:', result);
-                
                 if (result.success) {
-                    mostraToast('Preventivo salvato!', 'success');
-                    document.getElementById('pvNumero').value = 'PV-' + Date.now().toString().slice(-6);
-                    await caricaArchivioPreventivi();
+                    mostraToast(tipo === 'contratto' ? 'Contratto salvato!' : 'Preventivo salvato in archivio!', 'success');
+                    document.getElementById('pvNumero').value = (tipo === 'contratto' ? 'CTR-' : 'PV-') + Date.now().toString().slice(-6);
+                    if (tipo === 'contratto') {
+                        await caricaArchivioContratti();
+                    } else {
+                        await caricaArchivioPreventivi();
+                    }
                 } else {
                     mostraToast('Errore: ' + (result.error || 'Riprova'), 'error');
                 }
             } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore: ' + error.message, 'error');
+                console.error('Errore salvataggio:', error);
+                mostraToast('Errore di connessione', 'error');
             }
         }
 
         async function inviaWhatsApp() {
             const dati = raccogliDatiPreventivo();
-            const telefono = (dati.cliente_a.telefono || '').replace(/[^0-9]/g, '');
-            if (!telefono) { mostraToast('Inserisci telefono Cliente A', 'error'); return; }
-            const msg = `Ciao ${dati.cliente_a.nome} ${dati.cliente_a.cognome}, preventivo per: ${dati.tipo_servizio} - Totale: € ${dati.totale_finale.toFixed(2)}`;
-            window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(msg)}`, '_blank');
+            const telefono = dati.cliente_a.telefono.replace(/[^0-9]/g, '');
+            
+            if (!telefono) {
+                mostraToast('Inserisci il numero di telefono del Cliente A', 'error');
+                return;
+            }
+
+            const messaggio = `Ciao ${dati.cliente_a.nome} ${dati.cliente_a.cognome},\n\nti invio il preventivo per il servizio: ${dati.tipo_servizio}\n\nImporto totale: € ${dati.totale_finale.toFixed(2)}\n\nPuoi visualizzarlo e firmarlo. Resto a disposizione!\n\nAppCenterStudioPROGOLD`;
+            
+            const url = `https://wa.me/${telefono}?text=${encodeURIComponent(messaggio)}`;
+            window.open(url, '_blank');
+            
+            mostraToast('WhatsApp aperto! Il preventivo è pronto per essere inviato.', 'success');
+        }
+
+        function gestisciAccettazione() {
+            const accettato = document.getElementById('checkAccettazione').checked;
+            if (accettato) {
+                fetch(`${WORKER_URL}/api/studio/notifica-accettazione?token=${encodeURIComponent(token)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        studio_id: studioId,
+                        messaggio: `Il cliente ha accettato il preventivo. Importo: ${document.getElementById('rowImportoTotale').textContent}`
+                    })
+                }).catch(e => console.error(e));
+                mostraToast('Preventivo segnato come ACCETTATO. Notifica inviata al CRM.', 'success');
+            }
+            calcolaTotali();
+        }
+
+        async function trasformaInContratto() {
+            if (!document.getElementById('checkAccettazione').checked) {
+                mostraToast('Il preventivo deve essere prima accettato dal cliente (flag "ACCETTATO E FIRMATO")', 'error');
+                return;
+            }
+
+            if (!confirm('Sei sicuro di voler trasformare questo preventivo in CONTRATTO? Il documento verrà spostato nell\'archivio contratti e comincerà a tracciare gli acconti.')) {
+                return;
+            }
+
+            const dati = raccogliDatiPreventivo();
+            dati.id = 'ctr-' + Date.now();
+            dati.numero_contratto = 'CTR-' + Date.now().toString().slice(-6);
+            dati.data_contratto = new Date().toISOString().split('T')[0];
+            
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/contratti?token=${encodeURIComponent(token)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...dati, studio_id: studioId, stato: 'attivo', data_creazione: new Date().toISOString() })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Preventivo convertito in CONTRATTO! Ora è nell\'archivio contratti.', 'success');
+                    await caricaArchivioContratti();
+                    nuovoPreventivo();
+                }
+            } catch (error) {
+                mostraToast('Errore nella conversione', 'error');
+            }
         }
 
         async function caricaArchivioPreventivi() {
@@ -602,29 +1071,45 @@
                     archivioPreventivi = data.preventivi;
                     renderizzaArchivioPreventivi();
                 }
-            } catch (error) { console.error('Errore:', error); }
+            } catch (error) {
+                console.error('Errore:', error);
+            }
         }
 
         function renderizzaArchivioPreventivi() {
             const tbody = document.getElementById('archivioPreventiviTable');
-            const empty = document.getElementById('emptyArchivio');
-            if (archivioPreventivi.length === 0) { empty.classList.remove('hidden'); tbody.innerHTML = ''; return; }
-            empty.classList.add('hidden');
+            const emptyState = document.getElementById('emptyArchivio');
+            
+            if (archivioPreventivi.length === 0) {
+                emptyState.classList.remove('hidden');
+                tbody.innerHTML = '';
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            
             tbody.innerHTML = archivioPreventivi.map(pv => {
-                const ca = pv.cliente_a || {};
-                const nome = (ca.nome || '') + ' ' + (ca.cognome || '');
-                return `<tr>
-                    <td>${pv.numero || 'N.D.'}</td>
-                    <td>${nome.trim() || 'N/D'}</td>
-                    <td>${new Date(pv.data_emissione || Date.now()).toLocaleDateString('it-IT')}</td>
-                    <td>${pv.tipo_servizio || 'N/D'}</td>
-                    <td>€ ${parseFloat(pv.totale_finale || 0).toFixed(2)}</td>
-                    <td><span class="badge badge-preventivo">${pv.stato === 'accettato' ? 'Accettato' : 'Bozza'}</span></td>
-                    <td>
-                        <button class="btn btn-sm btn-outline" onclick="apriPreventivo('${pv.id}')">Apri</button>
-                        <button class="btn btn-sm btn-success" onclick="stampaPreventivo('${pv.id}')">PDF</button>
-                    </td>
-                </tr>`;
+                const statoClass = pv.stato === 'accettato' ? 'badge-preventivo' : '';
+                const statoText = pv.stato === 'accettato' ? 'Accettato' : 'Bozza';
+                
+                const nomeClienteA = pv.cliente_a ? (pv.cliente_a.nome || '') : '';
+                const cognomeClienteA = pv.cliente_a ? (pv.cliente_a.cognome || '') : '';
+                const nomeCompleto = (nomeClienteA + ' ' + cognomeClienteA).trim() || 'N/D';
+                
+                return `
+                    <tr>
+                        <td>${pv.numero || 'N.D.'}</td>
+                        <td>${nomeCompleto}</td>
+                        <td>${new Date(pv.data_emissione).toLocaleDateString('it-IT')}</td>
+                        <td>${pv.tipo_servizio || 'N/D'}</td>
+                        <td>€ ${parseFloat(pv.totale_finale || 0).toFixed(2)}</td>
+                        <td><span class="badge ${statoClass}">${statoText}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline" onclick="apriPreventivo('${pv.id}')">Apri</button>
+                            <button class="btn btn-sm btn-success" onclick="stampaPreventivo('${pv.id}')">PDF</button>
+                        </td>
+                    </tr>
+                `;
             }).join('');
         }
 
@@ -636,41 +1121,62 @@
                     archivioContratti = data.contratti;
                     renderizzaArchivioContratti();
                 }
-            } catch (error) { console.error('Errore:', error); }
+            } catch (error) {
+                console.error('Errore:', error);
+            }
         }
 
         function renderizzaArchivioContratti() {
             const tbody = document.getElementById('archivioContrattiTable');
-            const empty = document.getElementById('emptyContratti');
-            if (archivioContratti.length === 0) { empty.classList.remove('hidden'); tbody.innerHTML = ''; return; }
-            empty.classList.add('hidden');
+            const emptyState = document.getElementById('emptyContratti');
+            
+            if (archivioContratti.length === 0) {
+                emptyState.classList.remove('hidden');
+                tbody.innerHTML = '';
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            
             tbody.innerHTML = archivioContratti.map(ctr => {
-                let totAcconti = 0;
-                if (ctr.acconti && Array.isArray(ctr.acconti)) { totAcconti = ctr.acconti.reduce((sum, acc) => sum + (acc.importo || 0), 0); }
-                const saldo = parseFloat(ctr.totale_finale) - totAcconti;
-                return `<tr>
-                    <td>${ctr.numero_contratto || ctr.numero || 'N.D.'}</td>
-                    <td>${ctr.cliente_a.nome} ${ctr.cliente_a.cognome}</td>
-                    <td>${new Date(ctr.data_contratto || ctr.data_emissione || Date.now()).toLocaleDateString('it-IT')}</td>
-                    <td>${ctr.tipo_servizio}</td>
-                    <td>€ ${parseFloat(ctr.totale_finale).toFixed(2)}</td>
-                    <td style="color:${saldo > 0 ? 'var(--danger)' : 'var(--success)'}">€ ${saldo.toFixed(2)}</td>
-                    <td><button class="btn btn-sm btn-success" onclick="stampaContratto('${ctr.id}')">PDF</button></td>
-                </tr>`;
+                let totaleAcconti = 0;
+                if (ctr.acconti && Array.isArray(ctr.acconti)) {
+                    totaleAcconti = ctr.acconti.reduce((sum, acc) => sum + (acc.importo || 0), 0);
+                }
+                const saldo = parseFloat(ctr.totale_finale) - totaleAcconti;
+                
+                return `
+                    <tr>
+                        <td>${ctr.numero_contratto || ctr.numero || 'N.D.'}</td>
+                        <td>${ctr.cliente_a.nome} ${ctr.cliente_a.cognome}</td>
+                        <td>${new Date(ctr.data_contratto || ctr.data_emissione).toLocaleDateString('it-IT')}</td>
+                        <td>${ctr.tipo_servizio}</td>
+                        <td>€ ${parseFloat(ctr.totale_finale).toFixed(2)}</td>
+                        <td style="color: var(--success); font-weight: 600;">€ ${totaleAcconti.toFixed(2)}</td>
+                        <td style="color: ${saldo > 0 ? 'var(--danger)' : 'var(--success)'}; font-weight: 700;">€ ${saldo.toFixed(2)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline" onclick="apriContratto('${ctr.id}')">Apri</button>
+                            <button class="btn btn-sm btn-success" onclick="stampaContratto('${ctr.id}')">PDF</button>
+                            <button class="btn btn-sm btn-primary" onclick="aggiungiAccontoContratto('${ctr.id}')">+ Acconto</button>
+                        </td>
+                    </tr>
+                `;
             }).join('');
         }
 
         async function apriPreventivo(id) {
-            console.log('=== APRI PREVENTIVO ===');
-            console.log('ID:', id);
-            console.log('Archivio:', archivioPreventivi);
+            console.log('[DEBUG] ID preventivo:', id);
+            console.log('[DEBUG] Archivio:', archivioPreventivi);
             
             const pv = archivioPreventivi.find(p => p.id === id);
-            if (!pv) { mostraToast('Preventivo non trovato', 'error'); return; }
-            
-            console.log('Preventivo:', pv);
-            console.log('Cliente A:', pv.cliente_a);
-            console.log('Servizi:', pv.servizi);
+            if (!pv) {
+                mostraToast('Preventivo non trovato', 'error');
+                return;
+            }
+
+            console.log('[DEBUG] Preventivo trovato:', pv);
+            console.log('[DEBUG] Cliente A:', pv.cliente_a);
+            console.log('[DEBUG] Servizi:', pv.servizi);
 
             document.getElementById('pvNumero').value = pv.numero || '';
             document.getElementById('pvData').value = pv.data_emissione || '';
@@ -692,17 +1198,30 @@
             if (pv.cliente_b) {
                 document.getElementById('cB_nome').value = pv.cliente_b.nome || '';
                 document.getElementById('cB_cognome').value = pv.cliente_b.cognome || '';
+                document.getElementById('cB_tel').value = pv.cliente_b.telefono || '';
+                document.getElementById('cB_email').value = pv.cliente_b.email || '';
+                document.getElementById('cB_indirizzo').value = pv.cliente_b.indirizzo || '';
+                document.getElementById('cB_citta').value = pv.cliente_b.citta || '';
+                document.getElementById('cB_cap').value = pv.cliente_b.cap || '';
+                document.getElementById('cB_prov').value = pv.cliente_b.provincia || '';
             }
 
             document.getElementById('scontoPerc').value = pv.sconto_perc || 0;
             document.getElementById('scontoFisso').value = pv.sconto_fisso || 0;
+            document.getElementById('scontoFissoNota').value = pv.sconto_fisso_nota || '';
             document.getElementById('checkAccettazione').checked = pv.accettato || false;
             document.getElementById('noteAggiuntive').value = pv.note || '';
 
             if (pv.servizi && Array.isArray(pv.servizi) && pv.servizi.length > 0) {
-                serviziSelezionati = pv.servizi.map(s => ({ ...s, prezzo: parseFloat(s.prezzo) || 0, quantita: parseInt(s.quantita) || 1 }));
+                serviziSelezionati = pv.servizi.map(s => ({
+                    ...s,
+                    prezzo: parseFloat(s.prezzo) || 0,
+                    quantita: parseInt(s.quantita) || 1
+                }));
+                console.log('[DEBUG] Servizi caricati:', serviziSelezionati);
             } else {
                 serviziSelezionati = [];
+                console.log('[DEBUG] Nessun servizio nel preventivo');
             }
 
             const accontiList = document.getElementById('accontiList');
@@ -711,23 +1230,66 @@
                 pv.acconti.forEach(acc => {
                     const div = document.createElement('div');
                     div.className = 'service-row';
-                    div.innerHTML = `<input type="date" value="${acc.data || ''}"><input type="number" class="acconto-importo" value="${acc.importo || 0}" oninput="calcolaTotali()" style="width:100px;"><span>€</span><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();calcolaTotali()">✕</button>`;
+                    div.innerHTML = `
+                        <input type="date" value="${acc.data || ''}" style="padding:8px;">
+                        <input type="number" class="acconto-importo" value="${acc.importo || 0}" oninput="calcolaTotali()" style="width:100px; padding:8px;">
+                        <span>€</span>
+                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.remove(); calcolaTotali()">✕</button>
+                    `;
                     accontiList.appendChild(div);
                 });
             } else {
-                accontiList.innerHTML = '<div style="color:var(--text-light);font-size:13px;">Nessun acconto</div>';
+                accontiList.innerHTML = '<div style="font-size:13px; color:var(--text-light); margin-bottom:10px;">Nessun acconto registrato.</div>';
             }
 
             renderizzaServiziSelezionati();
             calcolaTotali();
+            
             switchTab('crea');
             mostraToast('Preventivo caricato', 'success');
         }
 
+        async function apriContratto(id) {
+            const ctr = archivioContratti.find(c => c.id === id);
+            if (!ctr) return;
+            await apriPreventivo(id);
+            mostraToast('Contratto caricato. Puoi aggiungere acconti.', 'success');
+        }
+
+        async function aggiungiAccontoContratto(id) {
+            const ctr = archivioContratti.find(c => c.id === id);
+            if (!ctr) return;
+
+            const data = prompt('Data acconto (YYYY-MM-DD):', new Date().toISOString().split('T')[0]);
+            if (!data) return;
+            
+            const importo = prompt('Importo acconto (€):');
+            if (!importo || isNaN(parseFloat(importo))) return;
+
+            if (!ctr.acconti) ctr.acconti = [];
+            ctr.acconti.push({ data: data, importo: parseFloat(importo) });
+
+            try {
+                await fetch(`${WORKER_URL}/api/studio/contratti/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ acconti: ctr.acconti })
+                });
+                mostraToast('Acconto aggiunto!', 'success');
+                await caricaArchivioContratti();
+            } catch (error) {
+                mostraToast('Errore nell\'aggiunta acconto', 'error');
+            }
+        }
+
         function creaPDF() {
             const dati = raccogliDatiPreventivo();
-            if (dati.servizi.length === 0) { mostraToast('Seleziona servizi prima', 'error'); return; }
-            generaPDF(dati, 'preventivo');
+            if (dati.servizi.length === 0) {
+                mostraToast('Seleziona almeno un servizio prima di generare il PDF', 'error');
+                return;
+            }
+            const tipo = document.getElementById('checkAccettazione').checked ? 'contratto' : 'preventivo';
+            generaPDF(dati, tipo);
         }
 
         function stampaPreventivo(id) {
@@ -740,8 +1302,16 @@
             if (ctr) generaPDF(ctr, 'contratto');
         }
 
-        function nuovoPreventivo() { if (confirm('I dati non salvati andranno persi')) location.reload(); }
-        function tornaPlancia() { window.location.href = `plancia-studio.html?token=${encodeURIComponent(token)}`; }
+        function nuovoPreventivo() {
+            if (confirm('Sei sicuro? I dati non salvati andranno persi.')) {
+                location.reload();
+            }
+        }
+
+        function tornaPlancia() {
+            window.location.href = `plancia-studio.html?token=${encodeURIComponent(token)}`;
+        }
+
         function mostraToast(msg, tipo) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -752,61 +1322,94 @@
         }
 
         async function generaPDF(dati, tipo) {
-            console.log('=== GENERA PDF ===');
-            console.log('Dati:', dati);
+            console.log('[PDF] Generazione PDF per:', tipo);
+            console.log('[PDF] Dati:', dati);
             
             if (typeof html2pdf === 'undefined') {
-                mostraToast('Libreria PDF non caricata', 'error');
+                mostraToast('Libreria PDF non caricata. Riprova.', 'error');
                 return;
             }
 
-            let datiStudio = { nome: 'Studio Fotografico', telefono: '', email: '', piva: '' };
+            let datiStudio = { nome: 'Studio Fotografico', indirizzo: '', telefono: '', email: '', piva: '' };
             try {
                 const res = await fetch(`${WORKER_URL}/api/studio/profilo?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
                 const data = await res.json();
-                if (data.success && data.studio) datiStudio = data.studio;
-            } catch (error) { console.error('Errore profilo:', error); }
+                if (data.success && data.studio) {
+                    datiStudio = data.studio;
+                }
+            } catch (error) {
+                console.error('Errore caricamento studio:', error);
+            }
 
-            document.getElementById('pdf-nome-studio').textContent = datiStudio.nome || 'Studio';
-            document.getElementById('pdf-contatti-studio').textContent = `Tel: ${datiStudio.telefono || '-'} | Email: ${datiStudio.email || '-'} | P.IVA: ${datiStudio.piva || '-'}`;
+            document.getElementById('pdf-nome-studio').textContent = datiStudio.nome || 'Studio Fotografico';
+            document.getElementById('pdf-indirizzo-studio').textContent = datiStudio.indirizzo || '';
+            document.getElementById('pdf-contatti-studio').textContent = 
+                `Tel: ${datiStudio.telefono || '-'} | Email: ${datiStudio.email || '-'} | P.IVA: ${datiStudio.piva || '-'}`;
             
             const titoloDoc = tipo === 'contratto' ? 'CONTRATTO' : 'PREVENTIVO';
-            document.getElementById('pdf-tipo-doc').textContent = `${titoloDoc} N. ${dati.numero || 'N.D.'}`;
+            const numeroDoc = tipo === 'contratto' ? (dati.numero_contratto || dati.numero) : dati.numero;
+            document.getElementById('pdf-tipo-doc').innerHTML = `${titoloDoc} N. <span id="pdf-numero">${numeroDoc || 'N.D.'}</span>`;
 
             const ca = dati.cliente_a || {};
-            document.getElementById('pdf-cliente-a').textContent = `${ca.nome || ''} ${ca.cognome || ''}\n${ca.telefono || ''}\n${ca.email || ''}`;
+            document.getElementById('pdf-cliente-a-nome').textContent = `${ca.nome || ''} ${ca.cognome || ''}`;
+            document.getElementById('pdf-cliente-a-indirizzo').textContent = 
+                `${ca.indirizzo || ''}, ${ca.cap || ''} ${ca.citta || ''} (${ca.provincia || ''})`;
+            document.getElementById('pdf-cliente-a-contatti').textContent = 
+                `Tel: ${ca.telefono || '-'} | Email: ${ca.email || '-'}`;
+
             const cb = dati.cliente_b || {};
-            document.getElementById('pdf-cliente-b').textContent = `${cb.nome || ''} ${cb.cognome || ''}`;
-            document.getElementById('pdf-servizio').textContent = dati.tipo_servizio || '-';
+            document.getElementById('pdf-cliente-b-nome').textContent = `${cb.nome || ''} ${cb.cognome || ''}`;
+            document.getElementById('pdf-cliente-b-indirizzo').textContent = 
+                `${cb.indirizzo || ''}, ${cb.cap || ''} ${cb.citta || ''} (${cb.provincia || ''})`;
+            document.getElementById('pdf-cliente-b-contatti').textContent = 
+                `Tel: ${cb.telefono || '-'} | Email: ${cb.email || '-'}`;
+
+            document.getElementById('pdf-tipo-servizio').textContent = dati.tipo_servizio || '-';
+            document.getElementById('pdf-luogo-cerimonia').textContent = dati.luogo_cerimonia || '-';
+            document.getElementById('pdf-luogo-ricevimento').textContent = dati.luogo_ricevimento || '-';
 
             const tbody = document.getElementById('pdf-servizi-body');
             tbody.innerHTML = '';
-            let totServizi = 0;
+            let totaleServizi = 0;
             (dati.servizi || []).forEach(s => {
-                const totRiga = (s.prezzo || 0) * (s.quantita || 1);
-                totServizi += totRiga;
-                tbody.innerHTML += `<tr><td>${s.descrizione || ''}</td><td>€ ${(s.prezzo || 0).toFixed(2)}</td><td>${s.quantita || 1}</td><td>€ ${totRiga.toFixed(2)}</td></tr>`;
+                const totaleRiga = (s.prezzo || 0) * (s.quantita || 1);
+                totaleServizi += totaleRiga;
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${s.descrizione || ''}</td>
+                        <td>€ ${(s.prezzo || 0).toFixed(2)}</td>
+                        <td>${s.quantita || 1}</td>
+                        <td>€ ${totaleRiga.toFixed(2)}</td>
+                    </tr>
+                `;
             });
 
             const scontoPerc = parseFloat(dati.sconto_perc) || 0;
             const scontoFisso = parseFloat(dati.sconto_fisso) || 0;
-            const valScontoPerc = totServizi * (scontoPerc / 100);
-            const totSconto = valScontoPerc + scontoFisso;
-            const importoTotale = Math.max(0, totServizi - totSconto);
-            let totAcconti = 0;
-            if (dati.acconti && Array.isArray(dati.acconti)) { totAcconti = dati.acconti.reduce((sum, acc) => sum + (parseFloat(acc.importo) || 0), 0); }
-            const saldo = importoTotale - totAcconti;
+            const valScontoPerc = totaleServizi * (scontoPerc / 100);
+            const totaleSconto = valScontoPerc + scontoFisso;
+            const importoTotale = Math.max(0, totaleServizi - totaleSconto);
 
+            let totaleAcconti = 0;
+            if (dati.acconti && Array.isArray(dati.acconti)) {
+                totaleAcconti = dati.acconti.reduce((sum, acc) => sum + (parseFloat(acc.importo) || 0), 0);
+            }
+            const saldo = importoTotale - totaleAcconti;
+
+            document.getElementById('pdf-totale-servizi').textContent = totaleServizi.toFixed(2) + ' €';
+            document.getElementById('pdf-sconto-perc').textContent = scontoPerc + '% + ' + scontoFisso.toFixed(2) + ' €';
+            document.getElementById('pdf-totale-sconto').textContent = '-' + totaleSconto.toFixed(2) + ' €';
             document.getElementById('pdf-totale').textContent = importoTotale.toFixed(2) + ' €';
-            document.getElementById('pdf-acconti').textContent = totAcconti.toFixed(2) + ' €';
+            document.getElementById('pdf-totale-acconti').textContent = totaleAcconti.toFixed(2) + ' €';
             document.getElementById('pdf-saldo').textContent = saldo.toFixed(2) + ' €';
+            document.getElementById('pdf-note').textContent = dati.note || 'Nessuna nota aggiuntiva.';
 
             const template = document.getElementById('pdf-template');
             template.style.display = 'block';
 
             const opt = {
                 margin: 15,
-                filename: `${tipo}_${dati.numero || 'N.D.'}.pdf`,
+                filename: `${tipo === 'contratto' ? 'Contratto' : 'Preventivo'}_${numeroDoc || 'N.D.'}_${(ca.cognome || 'cliente')}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -814,11 +1417,11 @@
 
             html2pdf().set(opt).from(template).save().then(() => {
                 template.style.display = 'none';
-                mostraToast('PDF generato!', 'success');
+                mostraToast('PDF generato e scaricato con successo!', 'success');
             }).catch(err => {
                 template.style.display = 'none';
                 console.error('Errore PDF:', err);
-                mostraToast('Errore PDF: ' + err.message, 'error');
+                mostraToast('Errore nella generazione PDF', 'error');
             });
         }
     </script>
