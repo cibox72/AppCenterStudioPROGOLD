@@ -17,13 +17,11 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
-            transition: background 0.3s ease, color 0.3s ease;
         }
         .top-bar {
             background: var(--primary-gradient); padding: 16px 24px;
             display: flex; justify-content: space-between; align-items: center;
             box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100;
-            transition: background 0.3s ease;
         }
         .nav-btn {
             background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
@@ -181,27 +179,27 @@
             color: #000;
             background: #fff;
             padding: 20px;
-            width: 210mm;
-            max-width: 210mm;
+            width: 800px;
+            max-width: 800px;
         }
         .pdf-header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 15px; }
-        .pdf-header h1 { margin: 0; font-size: 20px; text-transform: uppercase; }
-        .pdf-header p { margin: 3px 0; font-size: 11px; color: #333; }
-        .pdf-title { text-align: center; text-transform: uppercase; margin-bottom: 20px; font-size: 16px; font-weight: bold; }
+        .pdf-header h1 { margin: 0; font-size: 24px; text-transform: uppercase; }
+        .pdf-header p { margin: 3px 0; font-size: 12px; color: #333; }
+        .pdf-title { text-align: center; text-transform: uppercase; margin-bottom: 20px; font-size: 18px; font-weight: bold; }
         .pdf-section { margin-bottom: 20px; }
-        .pdf-section h3 { border-bottom: 1px solid #ccc; padding-bottom: 3px; font-size: 13px; margin-bottom: 8px; }
+        .pdf-section h3 { border-bottom: 1px solid #ccc; padding-bottom: 5px; font-size: 14px; margin-bottom: 10px; }
         .pdf-row { display: flex; justify-content: space-between; margin-bottom: 15px; }
-        .pdf-col { width: 48%; font-size: 11px; line-height: 1.5; }
-        .pdf-table { width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 15px; }
-        .pdf-table th, .pdf-table td { border: 1px solid #999; padding: 5px; text-align: left; }
+        .pdf-col { width: 48%; font-size: 12px; line-height: 1.6; }
+        .pdf-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 15px; }
+        .pdf-table th, .pdf-table td { border: 1px solid #999; padding: 6px; text-align: left; }
         .pdf-table th { background: #f5f5f5; font-weight: bold; }
-        .pdf-totals { text-align: right; margin-bottom: 15px; font-size: 11px; }
-        .pdf-totals .final { font-size: 14px; font-weight: bold; border-top: 2px solid #000; padding-top: 5px; margin-top: 5px; }
-        .pdf-totals .saldo { color: #d32f2f; font-size: 12px; font-weight: bold; }
-        .pdf-note { font-size: 10px; margin-top: 15px; }
+        .pdf-totals { text-align: right; margin-bottom: 15px; font-size: 12px; }
+        .pdf-totals .final { font-size: 16px; font-weight: bold; border-top: 2px solid #000; padding-top: 8px; margin-top: 8px; }
+        .pdf-totals .saldo { color: #d32f2f; font-size: 14px; font-weight: bold; }
+        .pdf-note { font-size: 11px; margin-top: 15px; }
         .pdf-signatures { display: flex; justify-content: space-between; margin-top: 40px; }
         .pdf-sign-box { width: 45%; text-align: center; }
-        .pdf-sign-box p { border-top: 1px solid #000; padding-top: 5px; font-size: 10px; margin-top: 30px; }
+        .pdf-sign-box p { border-top: 1px solid #000; padding-top: 5px; font-size: 11px; margin-top: 40px; }
     </style>
 </head>
 <body>
@@ -428,7 +426,7 @@
             <div class="btn-group" style="justify-content: center; margin-bottom: 40px;">
                 <button class="btn btn-dark" onclick="salvaInArchivio('preventivo')">💾 Salva Preventivo</button>
                 <button class="btn btn-success" onclick="inviaWhatsApp()">📱 Invia WhatsApp</button>
-                <button class="btn btn-dark" onclick="creaPDF()">📄 Crea PDF</button>
+                <button class="btn btn-dark" onclick="creaPDF()"> Crea PDF</button>
                 <button class="btn btn-primary" onclick="trasformaInContratto()">📝 Converti in Contratto</button>
             </div>
 
@@ -570,6 +568,9 @@
             </div>
         </div>
     </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
     <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         const urlParams = new URLSearchParams(window.location.search);
@@ -1285,7 +1286,6 @@
 
         async function generaPDF(dati, tipo) {
             console.log('[PDF] Generazione PDF per:', tipo);
-            console.log('[PDF] Dati ricevuti:', dati);
             
             if (typeof html2pdf === 'undefined') {
                 mostraToast('Libreria PDF non caricata. Riprova.', 'error');
@@ -1301,13 +1301,10 @@
             };
             
             try {
-                console.log('[PDF] Caricamento dati studio...');
                 const res = await fetch(`${WORKER_URL}/api/studio/profilo?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
                 const data = await res.json();
-                console.log('[PDF] Risposta worker:', data);
                 if (data.success && data.studio) {
                     datiStudio = data.studio;
-                    console.log('[PDF] Dati studio caricati:', datiStudio);
                 }
             } catch (error) {
                 console.error('[PDF] Errore caricamento studio (uso dati default):', error);
@@ -1350,7 +1347,6 @@
                     serviziParsed = dati.servizi;
                 }
             }
-            console.log('[PDF] Servizi parsati:', serviziParsed);
 
             if (Array.isArray(serviziParsed) && serviziParsed.length > 0) {
                 serviziParsed.forEach(s => {
@@ -1393,39 +1389,37 @@
 
             const template = document.getElementById('pdf-template');
             template.style.display = 'block';
-            console.log('[PDF] Template visibile per generazione');
 
             const opt = {
-                margin: [10, 10, 10, 10],
+                margin: [15, 15, 15, 15],
                 filename: `${tipo === 'contratto' ? 'Contratto' : 'Preventivo'}_${numeroDoc || 'N.D.'}_${(ca.cognome || 'cliente')}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { 
-                    scale: 1.2,
+                    scale: 2,
                     useCORS: true,
-                    width: 210,
-                    windowWidth: 210,
-                    logging: false
+                    width: 800,
+                    windowWidth: 800,
+                    logging: false,
+                    letterRendering: true
                 },
                 jsPDF: { 
                     unit: 'mm', 
                     format: 'a4', 
                     orientation: 'portrait',
-                    compress: true
+                    compress: true,
+                    putOnlyUsedFonts: true
                 }
             };
 
             html2pdf().set(opt).from(template).save().then(() => {
-                console.log('[PDF] Generato con successo');
                 template.style.display = 'none';
                 mostraToast('PDF generato e scaricato con successo!', 'success');
             }).catch(err => {
                 console.error('[PDF] Errore generazione:', err);
                 template.style.display = 'none';
-                mostraToast('Errore nella generazione PDF: ' + err.message, 'error');
+                mostraToast('Errore nella generazione PDF', 'error');
             });
         }
     </script>
 </body>
 </html>
-    
-    <div class="toast-container" id="toastContainer"></div>
