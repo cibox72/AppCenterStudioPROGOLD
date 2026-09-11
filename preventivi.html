@@ -173,33 +173,37 @@
             border-radius: 20px; font-size: 16px; font-weight: 700;
         }
 
+        /* TEMPLATE PDF - PROPORZIONI A4 CORRETTE */
         #pdf-template {
             display: none;
             font-family: 'Arial', sans-serif;
             color: #000;
             background: #fff;
-            padding: 20px;
-            width: 800px;
-            max-width: 800px;
+            padding: 30px 40px;
+            width: 650px;
+            max-width: 650px;
+            box-sizing: border-box;
         }
-        .pdf-header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 15px; }
-        .pdf-header h1 { margin: 0; font-size: 24px; text-transform: uppercase; }
-        .pdf-header p { margin: 3px 0; font-size: 12px; color: #333; }
-        .pdf-title { text-align: center; text-transform: uppercase; margin-bottom: 20px; font-size: 18px; font-weight: bold; }
+        .pdf-header { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #000; padding-bottom: 15px; }
+        .pdf-header h1 { margin: 0; font-size: 22px; text-transform: uppercase; font-weight: bold; }
+        .pdf-header p { margin: 4px 0; font-size: 11px; color: #333; }
+        .pdf-title { text-align: center; text-transform: uppercase; margin-bottom: 25px; font-size: 16px; font-weight: bold; letter-spacing: 1px; }
         .pdf-section { margin-bottom: 20px; }
-        .pdf-section h3 { border-bottom: 1px solid #ccc; padding-bottom: 5px; font-size: 14px; margin-bottom: 10px; }
+        .pdf-section h3 { border-bottom: 1px solid #ccc; padding-bottom: 5px; font-size: 13px; margin-bottom: 10px; text-transform: uppercase; }
         .pdf-row { display: flex; justify-content: space-between; margin-bottom: 15px; }
-        .pdf-col { width: 48%; font-size: 12px; line-height: 1.6; }
-        .pdf-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 15px; }
-        .pdf-table th, .pdf-table td { border: 1px solid #999; padding: 6px; text-align: left; }
-        .pdf-table th { background: #f5f5f5; font-weight: bold; }
-        .pdf-totals { text-align: right; margin-bottom: 15px; font-size: 12px; }
-        .pdf-totals .final { font-size: 16px; font-weight: bold; border-top: 2px solid #000; padding-top: 8px; margin-top: 8px; }
-        .pdf-totals .saldo { color: #d32f2f; font-size: 14px; font-weight: bold; }
-        .pdf-note { font-size: 11px; margin-top: 15px; }
-        .pdf-signatures { display: flex; justify-content: space-between; margin-top: 40px; }
+        .pdf-col { width: 48%; font-size: 11px; line-height: 1.6; }
+        .pdf-col h3 { font-size: 12px; margin-bottom: 5px; }
+        .pdf-col p { margin: 2px 0; }
+        .pdf-table { width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 20px; }
+        .pdf-table th, .pdf-table td { border: 1px solid #999; padding: 6px 8px; text-align: left; }
+        .pdf-table th { background: #f5f5f5; font-weight: bold; text-transform: uppercase; }
+        .pdf-totals { text-align: right; margin-bottom: 20px; font-size: 11px; line-height: 1.8; }
+        .pdf-totals .final { font-size: 15px; font-weight: bold; border-top: 2px solid #000; padding-top: 8px; margin-top: 8px; }
+        .pdf-totals .saldo { color: #d32f2f; font-size: 13px; font-weight: bold; }
+        .pdf-note { font-size: 10px; margin-top: 15px; line-height: 1.6; }
+        .pdf-signatures { display: flex; justify-content: space-between; margin-top: 50px; page-break-inside: avoid; }
         .pdf-sign-box { width: 45%; text-align: center; }
-        .pdf-sign-box p { border-top: 1px solid #000; padding-top: 5px; font-size: 11px; margin-top: 40px; }
+        .pdf-sign-box p { border-top: 1px solid #000; padding-top: 5px; font-size: 10px; margin-top: 50px; }
     </style>
 </head>
 <body>
@@ -316,7 +320,7 @@
             <div class="card-3d">
                 <div class="card-title">
                     <span>Servizi & Costi</span>
-                    <button class="btn btn-primary btn-lg" onclick="apriModalServizi()">📚 Vai a Listini & Categorie</button>
+                    <button class="btn btn-primary btn-lg" onclick="apriModalServizi()"> Vai a Listini & Categorie</button>
                 </div>
                 <div class="card-subtitle">Clicca sul tasto per selezionare servizi dall'archivio. Puoi modificarne prezzi e quantità.</div>
                 
@@ -425,7 +429,7 @@
 
             <div class="btn-group" style="justify-content: center; margin-bottom: 40px;">
                 <button class="btn btn-dark" onclick="salvaInArchivio('preventivo')">💾 Salva Preventivo</button>
-                <button class="btn btn-success" onclick="inviaWhatsApp()">📱 Invia WhatsApp</button>
+                <button class="btn btn-success" onclick="inviaWhatsApp()"> Invia WhatsApp</button>
                 <button class="btn btn-dark" onclick="creaPDF()"> Crea PDF</button>
                 <button class="btn btn-primary" onclick="trasformaInContratto()">📝 Converti in Contratto</button>
             </div>
@@ -488,7 +492,7 @@
     <div id="modalServizi" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h2> Seleziona Servizi dall'Archivio</h2>
+                <h2>📚 Seleziona Servizi dall'Archivio</h2>
                 <button class="close-modal" onclick="chiudiModalServizi()">×</button>
             </div>
             <div id="modalServiziContent">
@@ -730,7 +734,7 @@
                     html += '<input type="number" class="svc-price" value="' + s.prezzo + '" step="0.01" oninput="aggiornaPrezzoServizio(\'' + s.id + '\', this.value)" style="width:80px;">';
                     html += '<input type="number" class="svc-qty" value="' + s.quantita + '" min="1" oninput="aggiornaQuantitaServizio(\'' + s.id + '\', this.value)" style="width:60px;">';
                     html += '<span>€</span>';
-                    html += '<button class="btn btn-danger btn-sm" onclick="rimuoviServizio(\'' + s.id + '\')">✕</button>';
+                    html += '<button class="btn btn-danger btn-sm" onclick="rimuoviServizio(\'' + s.id + '\')"></button>';
                     html += '</div>';
                 });
             });
@@ -1391,14 +1395,14 @@
             template.style.display = 'block';
 
             const opt = {
-                margin: [15, 15, 15, 15],
+                margin: [10, 10, 10, 10],
                 filename: `${tipo === 'contratto' ? 'Contratto' : 'Preventivo'}_${numeroDoc || 'N.D.'}_${(ca.cognome || 'cliente')}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { 
                     scale: 2,
                     useCORS: true,
-                    width: 800,
-                    windowWidth: 800,
+                    width: 650,
+                    windowWidth: 650,
                     logging: false,
                     letterRendering: true
                 },
@@ -1408,7 +1412,8 @@
                     orientation: 'portrait',
                     compress: true,
                     putOnlyUsedFonts: true
-                }
+                },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
 
             html2pdf().set(opt).from(template).save().then(() => {
