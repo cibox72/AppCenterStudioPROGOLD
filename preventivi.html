@@ -129,7 +129,6 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         .hidden { display: none !important; }
 
-        /* Modal Selezione Servizi */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); z-index: 3000; align-items: center; justify-content: center;
@@ -176,7 +175,6 @@
             border-radius: 20px; font-size: 16px; font-weight: 700;
         }
 
-        /* Stili per il template PDF nascosto */
         #pdf-template {
             display: none;
             font-family: 'Georgia', serif;
@@ -227,17 +225,14 @@
 
         <div id="mainContent" class="hidden">
             
-            <!-- TABS -->
             <div class="tabs">
                 <button class="tab active" onclick="switchTab('crea')">Crea Preventivo</button>
                 <button class="tab" onclick="switchTab('archivio')">Archivio Preventivi</button>
                 <button class="tab" onclick="switchTab('contratti')">Archivio Contratti</button>
             </div>
 
-            <!-- TAB CREA PREVENTIVO -->
             <div id="tab-crea" class="tab-content active">
             
-            <!-- DATI PREVENTIVO -->
             <div class="card-3d">
                 <div class="card-title">
                     <span>Preventivo / Contratto</span>
@@ -255,7 +250,6 @@
                 </div>
             </div>
 
-            <!-- ANAGRAFICA CLIENTE A -->
             <div class="card-3d">
                 <div class="card-title">Anagrafica Cliente A (Intestatario Principale)</div>
                 <div class="form-row">
@@ -274,10 +268,9 @@
                     <div class="form-group"><label>CAP</label><input type="text" id="cA_cap"></div>
                     <div class="form-group"><label>Provincia</label><input type="text" id="cA_prov"></div>
                 </div>
-                <button class="btn btn-outline btn-sm" onclick="apriMaps('A')"> Vedi luogo su Google Maps</button>
+                <button class="btn btn-outline btn-sm" onclick="apriMaps('A')">📍 Vedi luogo su Google Maps</button>
             </div>
 
-            <!-- ANAGRAFICA CLIENTE B -->
             <div class="card-3d">
                 <div class="card-title">Anagrafica Cliente B (secondo intestatario)</div>
                 <div class="form-row">
@@ -296,10 +289,9 @@
                     <div class="form-group"><label>CAP</label><input type="text" id="cB_cap"></div>
                     <div class="form-group"><label>Provincia</label><input type="text" id="cB_prov"></div>
                 </div>
-                <button class="btn btn-outline btn-sm" onclick="apriMaps('B')"> Vedi luogo su Google Maps</button>
+                <button class="btn btn-outline btn-sm" onclick="apriMaps('B')">📍 Vedi luogo su Google Maps</button>
             </div>
 
-            <!-- DETTAGLI EVENTO -->
             <div class="card-3d" style="border-left: 5px solid var(--warning);">
                 <div class="card-title" style="color: var(--warning);">Dettagli Evento Richiesto</div>
                 <div class="form-row">
@@ -317,16 +309,15 @@
                     <div class="form-group">
                         <label style="font-size: 15px;">Luogo Ricevimento (Ristorante / Sala) <span style="color:var(--text-light); font-weight:400; font-size:12px;">(opzionale)</span></label>
                         <input type="text" id="pvLuogoRicevimento" placeholder="Nome e indirizzo del ristorante o sala" style="font-size: 15px;">
-                        <button class="btn btn-outline btn-sm" style="margin-top: 8px;" onclick="apriMaps('ricevimento')">📍 Vedi luogo su Google Maps</button>
+                        <button class="btn btn-outline btn-sm" style="margin-top: 8px;" onclick="apriMaps('ricevimento')"> Vedi luogo su Google Maps</button>
                     </div>
                 </div>
             </div>
 
-            <!-- SERVIZI & COSTI -->
             <div class="card-3d">
                 <div class="card-title">
                     <span>Servizi & Costi</span>
-                    <button class="btn btn-primary btn-lg" onclick="apriModalServizi()"> Vai a Listini & Categorie</button>
+                    <button class="btn btn-primary btn-lg" onclick="apriModalServizi()">📚 Vai a Listini & Categorie</button>
                 </div>
                 <div class="card-subtitle">Clicca sul tasto per selezionare servizi dall'archivio. Puoi modificarne prezzi e quantità.</div>
                 
@@ -339,7 +330,6 @@
                 </div>
             </div>
 
-            <!-- SCONTO & ACCONTI -->
             <div class="form-row">
                 <div class="card-3d" style="margin-bottom:0;">
                     <div class="card-title">Sconto</div>
@@ -375,7 +365,6 @@
                 </div>
             </div>
 
-            <!-- PIANO DI PAGAMENTO -->
             <div class="card-3d">
                 <div class="card-title">Piano di pagamento (importi inseriti dallo studio)</div>
                 <div id="pianoPagamentoList">
@@ -410,7 +399,6 @@
                 </div>
             </div>
 
-            <!-- TOTALI -->
             <div class="card-3d">
                 <div class="totals-box">
                     <div class="total-row"><span>Totale servizi</span><strong id="rowTotaleServizi">0,00 €</strong></div>
@@ -423,7 +411,6 @@
                 </div>
             </div>
 
-            <!-- ACCETTAZIONE & NOTE -->
             <div class="card-3d">
                 <div class="card-title">Accettazione</div>
                 <div style="display:flex; align-items:center; gap:10px;">
@@ -437,17 +424,15 @@
                 <textarea id="noteAggiuntive" rows="4" placeholder="Condizioni particolari, tempi di consegna, ecc."></textarea>
             </div>
 
-            <!-- AZIONI FINALI -->
             <div class="btn-group" style="justify-content: center; margin-bottom: 40px;">
                 <button class="btn btn-dark" onclick="salvaInArchivio('preventivo')">💾 Salva Preventivo</button>
-                <button class="btn btn-success" onclick="inviaWhatsApp()"> Invia WhatsApp</button>
-                <button class="btn btn-dark" onclick="creaPDF()"> Crea PDF</button>
+                <button class="btn btn-success" onclick="inviaWhatsApp()">📱 Invia WhatsApp</button>
+                <button class="btn btn-dark" onclick="creaPDF()">📄 Crea PDF</button>
                 <button class="btn btn-primary" onclick="trasformaInContratto()">📝 Converti in Contratto</button>
             </div>
 
-            </div> <!-- FINE TAB CREA -->
+            </div>
 
-            <!-- TAB ARCHIVIO PREVENTIVI -->
             <div id="tab-archivio" class="tab-content">
                 <div class="card-3d">
                     <div class="card-title">Archivio Preventivi</div>
@@ -471,7 +456,6 @@
                 </div>
             </div>
 
-            <!-- TAB ARCHIVIO CONTRATTI -->
             <div id="tab-contratti" class="tab-content">
                 <div class="card-3d">
                     <div class="card-title">Archivio Contratti Attivi</div>
@@ -497,12 +481,11 @@
                 </div>
             </div>
 
-        </div> <!-- FINE MAIN CONTENT -->
+        </div>
 
         <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
     </div>
 
-    <!-- MODAL SELEZIONE SERVIZI DA ARCHIVIO -->
     <div id="modalServizi" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -522,7 +505,6 @@
         </div>
     </div>
 
-    <!-- TEMPLATE PDF NASCOSTO -->
     <div id="pdf-template">
         <div class="pdf-header">
             <h1 id="pdf-nome-studio">NOME STUDIO</h1>
@@ -683,7 +665,7 @@
                 } else {
                     content.innerHTML = `
                         <div style="text-align: center; padding: 40px; color: var(--text-light);">
-                            <div style="font-size: 48px; margin-bottom: 16px;">📭</div>
+                            <div style="font-size: 48px; margin-bottom: 16px;"></div>
                             <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Nessun servizio in archivio</div>
                             <div style="font-size: 13px; margin-bottom: 20px;">Vai su "Listini & Categorie" per creare i tuoi servizi</div>
                             <button class="btn btn-primary" onclick="window.location.href='listini-categorie.html?token=${encodeURIComponent(token)}'">Vai a Listini & Categorie</button>
@@ -759,7 +741,7 @@
             if (serviziSelezionati.length === 0) {
                 container.innerHTML = `
                     <div style="text-align: center; padding: 40px; color: var(--text-light); border: 2px dashed var(--border-color); border-radius: 10px;">
-                        <div style="font-size: 48px; margin-bottom: 16px;"></div>
+                        <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
                         <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Nessun servizio selezionato</div>
                         <div style="font-size: 13px;">Clicca su "Vai a Listini & Categorie" per aggiungere servizi dal tuo archivio</div>
                     </div>
@@ -1092,8 +1074,14 @@
                 const statoClass = pv.stato === 'accettato' ? 'badge-preventivo' : '';
                 const statoText = pv.stato === 'accettato' ? 'Accettato' : 'Bozza';
                 
-                const nomeClienteA = pv.cliente_a ? (pv.cliente_a.nome || '') : '';
-                const cognomeClienteA = pv.cliente_a ? (pv.cliente_a.cognome || '') : '';
+                // Parsa cliente_a se è stringa JSON
+                let clienteA = pv.cliente_a;
+                if (typeof clienteA === 'string') {
+                    try { clienteA = JSON.parse(clienteA); } catch(e) { clienteA = {}; }
+                }
+                
+                const nomeClienteA = clienteA ? (clienteA.nome || '') : '';
+                const cognomeClienteA = clienteA ? (clienteA.cognome || '') : '';
                 const nomeCompleto = (nomeClienteA + ' ' + cognomeClienteA).trim() || 'N/D';
                 
                 return `
@@ -1139,6 +1127,11 @@
             emptyState.classList.add('hidden');
             
             tbody.innerHTML = archivioContratti.map(ctr => {
+                let clienteA = ctr.cliente_a;
+                if (typeof clienteA === 'string') {
+                    try { clienteA = JSON.parse(clienteA); } catch(e) { clienteA = {}; }
+                }
+                
                 let totaleAcconti = 0;
                 if (ctr.acconti && Array.isArray(ctr.acconti)) {
                     totaleAcconti = ctr.acconti.reduce((sum, acc) => sum + (acc.importo || 0), 0);
@@ -1148,7 +1141,7 @@
                 return `
                     <tr>
                         <td>${ctr.numero_contratto || ctr.numero || 'N.D.'}</td>
-                        <td>${ctr.cliente_a.nome} ${ctr.cliente_a.cognome}</td>
+                        <td>${clienteA.nome || ''} ${clienteA.cognome || ''}</td>
                         <td>${new Date(ctr.data_contratto || ctr.data_emissione).toLocaleDateString('it-IT')}</td>
                         <td>${ctr.tipo_servizio}</td>
                         <td>€ ${parseFloat(ctr.totale_finale).toFixed(2)}</td>
@@ -1164,6 +1157,7 @@
             }).join('');
         }
 
+        // FUNZIONE CORRETTA - Parsa cliente_a e cliente_b se sono stringhe JSON
         async function apriPreventivo(id) {
             console.log('[DEBUG] ID preventivo:', id);
             
@@ -1174,8 +1168,6 @@
             }
 
             console.log('[DEBUG] Preventivo trovato:', pv);
-            console.log('[DEBUG] Tipo di pv.servizi:', typeof pv.servizi);
-            console.log('[DEBUG] pv.servizi:', pv.servizi);
 
             document.getElementById('pvNumero').value = pv.numero || '';
             document.getElementById('pvData').value = pv.data_emissione || '';
@@ -1183,26 +1175,50 @@
             document.getElementById('pvLuogoCerimonia').value = pv.luogo_cerimonia || '';
             document.getElementById('pvLuogoRicevimento').value = pv.luogo_ricevimento || '';
             
-            if (pv.cliente_a) {
-                document.getElementById('cA_nome').value = pv.cliente_a.nome || '';
-                document.getElementById('cA_cognome').value = pv.cliente_a.cognome || '';
-                document.getElementById('cA_tel').value = pv.cliente_a.telefono || '';
-                document.getElementById('cA_email').value = pv.cliente_a.email || '';
-                document.getElementById('cA_indirizzo').value = pv.cliente_a.indirizzo || '';
-                document.getElementById('cA_citta').value = pv.cliente_a.citta || '';
-                document.getElementById('cA_cap').value = pv.cliente_a.cap || '';
-                document.getElementById('cA_prov').value = pv.cliente_a.provincia || '';
+            // Parsa cliente_a se è stringa JSON
+            let clienteA = pv.cliente_a;
+            if (typeof clienteA === 'string') {
+                try { 
+                    clienteA = JSON.parse(clienteA); 
+                    console.log('[DEBUG] cliente_a parsato da stringa:', clienteA);
+                } catch(e) { 
+                    console.error('[DEBUG] Errore parsing cliente_a:', e);
+                    clienteA = {}; 
+                }
             }
             
-            if (pv.cliente_b) {
-                document.getElementById('cB_nome').value = pv.cliente_b.nome || '';
-                document.getElementById('cB_cognome').value = pv.cliente_b.cognome || '';
-                document.getElementById('cB_tel').value = pv.cliente_b.telefono || '';
-                document.getElementById('cB_email').value = pv.cliente_b.email || '';
-                document.getElementById('cB_indirizzo').value = pv.cliente_b.indirizzo || '';
-                document.getElementById('cB_citta').value = pv.cliente_b.citta || '';
-                document.getElementById('cB_cap').value = pv.cliente_b.cap || '';
-                document.getElementById('cB_prov').value = pv.cliente_b.provincia || '';
+            if (clienteA) {
+                document.getElementById('cA_nome').value = clienteA.nome || '';
+                document.getElementById('cA_cognome').value = clienteA.cognome || '';
+                document.getElementById('cA_tel').value = clienteA.telefono || '';
+                document.getElementById('cA_email').value = clienteA.email || '';
+                document.getElementById('cA_indirizzo').value = clienteA.indirizzo || '';
+                document.getElementById('cA_citta').value = clienteA.citta || '';
+                document.getElementById('cA_cap').value = clienteA.cap || '';
+                document.getElementById('cA_prov').value = clienteA.provincia || '';
+            }
+            
+            // Parsa cliente_b se è stringa JSON
+            let clienteB = pv.cliente_b;
+            if (typeof clienteB === 'string') {
+                try { 
+                    clienteB = JSON.parse(clienteB); 
+                    console.log('[DEBUG] cliente_b parsato da stringa:', clienteB);
+                } catch(e) { 
+                    console.error('[DEBUG] Errore parsing cliente_b:', e);
+                    clienteB = {}; 
+                }
+            }
+            
+            if (clienteB) {
+                document.getElementById('cB_nome').value = clienteB.nome || '';
+                document.getElementById('cB_cognome').value = clienteB.cognome || '';
+                document.getElementById('cB_tel').value = clienteB.telefono || '';
+                document.getElementById('cB_email').value = clienteB.email || '';
+                document.getElementById('cB_indirizzo').value = clienteB.indirizzo || '';
+                document.getElementById('cB_citta').value = clienteB.citta || '';
+                document.getElementById('cB_cap').value = clienteB.cap || '';
+                document.getElementById('cB_prov').value = clienteB.provincia || '';
             }
 
             document.getElementById('scontoPerc').value = pv.sconto_perc || 0;
@@ -1211,24 +1227,19 @@
             document.getElementById('checkAccettazione').checked = pv.accettato || false;
             document.getElementById('noteAggiuntive').value = pv.note || '';
 
-            console.log('[DEBUG] Servizi raw:', pv.servizi);
+            // Parsa servizi se è stringa JSON
             let serviziDaCaricare = [];
-            
             if (pv.servizi) {
                 if (typeof pv.servizi === 'string') {
                     try {
                         serviziDaCaricare = JSON.parse(pv.servizi);
                         console.log('[DEBUG] Servizi parsati da stringa:', serviziDaCaricare);
                     } catch (e) {
-                        console.error('[DEBUG] Errore nel parsing JSON servizi:', e);
+                        console.error('[DEBUG] Errore parsing servizi:', e);
                         serviziDaCaricare = [];
                     }
                 } else if (Array.isArray(pv.servizi)) {
                     serviziDaCaricare = pv.servizi;
-                    console.log('[DEBUG] Servizi già array:', serviziDaCaricare);
-                } else {
-                    console.log('[DEBUG] pv.servizi non è né stringa né array:', typeof pv.servizi);
-                    serviziDaCaricare = [];
                 }
             }
             
@@ -1238,12 +1249,12 @@
                     prezzo: parseFloat(s.prezzo) || 0,
                     quantita: parseInt(s.quantita) || 1
                 }));
-                console.log('[DEBUG] Servizi caricati e mappati:', serviziSelezionati);
+                console.log('[DEBUG] Servizi caricati:', serviziSelezionati);
             } else {
                 serviziSelezionati = [];
-                console.log('[DEBUG] Nessun servizio da caricare');
             }
 
+            // Carica acconti
             const accontiList = document.getElementById('accontiList');
             accontiList.innerHTML = '';
             if (pv.acconti && Array.isArray(pv.acconti) && pv.acconti.length > 0) {
@@ -1343,7 +1354,6 @@
 
         async function generaPDF(dati, tipo) {
             console.log('[PDF] Generazione PDF per:', tipo);
-            console.log('[PDF] Dati:', dati);
             
             if (typeof html2pdf === 'undefined') {
                 mostraToast('Libreria PDF non caricata. Riprova.', 'error');
@@ -1370,14 +1380,24 @@
             const numeroDoc = tipo === 'contratto' ? (dati.numero_contratto || dati.numero) : dati.numero;
             document.getElementById('pdf-tipo-doc').innerHTML = `${titoloDoc} N. <span id="pdf-numero">${numeroDoc || 'N.D.'}</span>`;
 
-            const ca = dati.cliente_a || {};
+            // Parsa cliente_a se è stringa JSON
+            let ca = dati.cliente_a || {};
+            if (typeof ca === 'string') {
+                try { ca = JSON.parse(ca); } catch(e) { ca = {}; }
+            }
+            
             document.getElementById('pdf-cliente-a-nome').textContent = `${ca.nome || ''} ${ca.cognome || ''}`;
             document.getElementById('pdf-cliente-a-indirizzo').textContent = 
                 `${ca.indirizzo || ''}, ${ca.cap || ''} ${ca.citta || ''} (${ca.provincia || ''})`;
             document.getElementById('pdf-cliente-a-contatti').textContent = 
                 `Tel: ${ca.telefono || '-'} | Email: ${ca.email || '-'}`;
 
-            const cb = dati.cliente_b || {};
+            // Parsa cliente_b se è stringa JSON
+            let cb = dati.cliente_b || {};
+            if (typeof cb === 'string') {
+                try { cb = JSON.parse(cb); } catch(e) { cb = {}; }
+            }
+            
             document.getElementById('pdf-cliente-b-nome').textContent = `${cb.nome || ''} ${cb.cognome || ''}`;
             document.getElementById('pdf-cliente-b-indirizzo').textContent = 
                 `${cb.indirizzo || ''}, ${cb.cap || ''} ${cb.citta || ''} (${cb.provincia || ''})`;
