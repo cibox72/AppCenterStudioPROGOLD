@@ -1666,10 +1666,28 @@ if (Array.isArray(serviziParsed)) {
             const totaleSconto = valScontoPerc + scontoFisso;
             const importoTotale = Math.max(0, totaleServizi - totaleSconto);
 
+            
             let totaleAcconti = 0;
-            if (dati.acconti && Array.isArray(dati.acconti)) {
-                totaleAcconti = dati.acconti.reduce((sum, acc) => sum + (parseFloat(acc.importo) || 0), 0);
-            }
+
+// Parsa acconti correttamente
+let accontiParsed = [];
+if (dati.acconti) {
+    if (typeof dati.acconti === 'string') {
+        try { 
+            accontiParsed = JSON.parse(dati.acconti); 
+        } catch(e) { 
+            console.error('Errore parsing acconti:', e);
+            accontiParsed = []; 
+        }
+    } else if (Array.isArray(dati.acconti)) {
+        accontiParsed = dati.acconti;
+    }
+}
+
+// Calcola totale acconti
+if (Array.isArray(accontiParsed)) {
+    totaleAcconti = accontiParsed.reduce((sum, acc) => sum + (parseFloat(acc.importo) || 0), 0);
+}
             const saldo = importoTotale - totaleAcconti;
 
             document.getElementById('pdf-totale-servizi').textContent = totaleServizi.toFixed(2) + ' €';
