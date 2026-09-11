@@ -177,30 +177,31 @@
 
         #pdf-template {
             display: none;
-            font-family: 'Georgia', serif;
+            font-family: 'Arial', sans-serif;
             color: #000;
             background: #fff;
-            padding: 40px;
-            width: 800px;
+            padding: 20px;
+            width: 210mm;
+            max-width: 210mm;
         }
-        .pdf-header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 20px; }
-        .pdf-header h1 { margin: 0; font-size: 24px; text-transform: uppercase; }
-        .pdf-header p { margin: 5px 0; font-size: 12px; color: #333; }
-        .pdf-title { text-align: center; text-transform: uppercase; margin-bottom: 30px; font-size: 20px; font-weight: bold; }
-        .pdf-section { margin-bottom: 30px; }
-        .pdf-section h3 { border-bottom: 1px solid #ccc; padding-bottom: 5px; font-size: 16px; margin-bottom: 10px; }
-        .pdf-row { display: flex; justify-content: space-between; margin-bottom: 30px; }
-        .pdf-col { width: 48%; font-size: 13px; line-height: 1.6; }
-        .pdf-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        .pdf-table th, .pdf-table td { border: 1px solid #ccc; padding: 8px; }
-        .pdf-table th { background: #f0f0f0; text-align: left; }
-        .pdf-totals { text-align: right; margin-bottom: 30px; font-size: 14px; }
-        .pdf-totals .final { font-size: 18px; font-weight: bold; border-top: 2px solid #000; padding-top: 10px; margin-top: 10px; }
-        .pdf-totals .saldo { color: #d32f2f; font-size: 16px; font-weight: bold; }
-        .pdf-signatures { display: flex; justify-content: space-between; margin-top: 60px; page-break-inside: avoid; }
+        .pdf-header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 15px; }
+        .pdf-header h1 { margin: 0; font-size: 20px; text-transform: uppercase; }
+        .pdf-header p { margin: 3px 0; font-size: 11px; color: #333; }
+        .pdf-title { text-align: center; text-transform: uppercase; margin-bottom: 20px; font-size: 16px; font-weight: bold; }
+        .pdf-section { margin-bottom: 20px; }
+        .pdf-section h3 { border-bottom: 1px solid #ccc; padding-bottom: 3px; font-size: 13px; margin-bottom: 8px; }
+        .pdf-row { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .pdf-col { width: 48%; font-size: 11px; line-height: 1.5; }
+        .pdf-table { width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 15px; }
+        .pdf-table th, .pdf-table td { border: 1px solid #999; padding: 5px; text-align: left; }
+        .pdf-table th { background: #f5f5f5; font-weight: bold; }
+        .pdf-totals { text-align: right; margin-bottom: 15px; font-size: 11px; }
+        .pdf-totals .final { font-size: 14px; font-weight: bold; border-top: 2px solid #000; padding-top: 5px; margin-top: 5px; }
+        .pdf-totals .saldo { color: #d32f2f; font-size: 12px; font-weight: bold; }
+        .pdf-note { font-size: 10px; margin-top: 15px; }
+        .pdf-signatures { display: flex; justify-content: space-between; margin-top: 40px; }
         .pdf-sign-box { width: 45%; text-align: center; }
-        .pdf-sign-box p { border-top: 1px solid #000; padding-top: 10px; font-size: 12px; }
-        .pdf-sign-space { height: 60px; }
+        .pdf-sign-box p { border-top: 1px solid #000; padding-top: 5px; font-size: 10px; margin-top: 30px; }
     </style>
 </head>
 <body>
@@ -317,7 +318,7 @@
             <div class="card-3d">
                 <div class="card-title">
                     <span>Servizi & Costi</span>
-                    <button class="btn btn-primary btn-lg" onclick="apriModalServizi()">📚 Vai a Listini & Categorie</button>
+                    <button class="btn btn-primary btn-lg" onclick="apriModalServizi()"> Vai a Listini & Categorie</button>
                 </div>
                 <div class="card-subtitle">Clicca sul tasto per selezionare servizi dall'archivio. Puoi modificarne prezzi e quantità.</div>
                 
@@ -924,31 +925,17 @@
             if (!confirm('Sei sicuro di voler trasformare questo preventivo in CONTRATTO?')) return;
             
             const dati = raccogliDatiPreventivo();
-            console.log('[CONTRATTO] Dati raccolti:', dati);
-            console.log('[CONTRATTO] Piano pagamento:', dati.piano_pagamento);
-            
             dati.id = 'ctr-' + Date.now();
             dati.numero_contratto = 'CTR-' + Date.now().toString().slice(-6);
             dati.data_contratto = new Date().toISOString().split('T')[0];
             
             try {
-                const bodyDaInviare = { 
-                    ...dati, 
-                    studio_id: studioId, 
-                    stato: 'attivo', 
-                    data_creazione: new Date().toISOString() 
-                };
-                
-                console.log('[CONTRATTO] Body inviato:', bodyDaInviare);
-                
                 const response = await fetch(`${WORKER_URL}/api/studio/contratti?token=${encodeURIComponent(token)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(bodyDaInviare)
+                    body: JSON.stringify({ ...dati, studio_id: studioId, stato: 'attivo', data_creazione: new Date().toISOString() })
                 });
                 const result = await response.json();
-                console.log('[CONTRATTO] Risposta:', result);
-                
                 if (result.success) {
                     mostraToast('Preventivo convertito in CONTRATTO!', 'success');
                     await caricaArchivioContratti();
@@ -1278,14 +1265,7 @@
 
         function stampaContratto(id) {
             const ctr = archivioContratti.find(c => c.id === id);
-            if (!ctr) return;
-            let contrattoParsed = { ...ctr };
-            if (typeof ctr.cliente_a === 'string') { try { contrattoParsed.cliente_a = JSON.parse(ctr.cliente_a); } catch(e) { contrattoParsed.cliente_a = {}; } }
-            if (typeof ctr.cliente_b === 'string') { try { contrattoParsed.cliente_b = JSON.parse(ctr.cliente_b); } catch(e) { contrattoParsed.cliente_b = {}; } }
-            if (typeof ctr.servizi === 'string') { try { contrattoParsed.servizi = JSON.parse(ctr.servizi); } catch(e) { contrattoParsed.servizi = []; } }
-            if (typeof ctr.acconti === 'string') { try { contrattoParsed.acconti = JSON.parse(ctr.acconti); } catch(e) { contrattoParsed.acconti = []; } }
-            if (typeof ctr.piano_pagamento === 'string') { try { contrattoParsed.piano_pagamento = JSON.parse(ctr.piano_pagamento); } catch(e) { contrattoParsed.piano_pagamento = []; } }
-            generaPDF(contrattoParsed, 'contratto');
+            if (ctr) generaPDF(ctr, 'contratto');
         }
 
         function nuovoPreventivo() {
@@ -1404,14 +1384,14 @@
             template.style.display = 'block';
 
             const opt = {
-                margin: [10, 10, 10, 10],
+                margin: [5, 5, 5, 5],
                 filename: (tipo === 'contratto' ? 'Contratto' : 'Preventivo') + '_' + (numeroDoc || 'N.D.') + '_' + (ca.cognome || 'cliente') + '.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { 
-                    scale: 1.5,
+                    scale: 1,
                     useCORS: true,
-                    width: 800,
-                    windowWidth: 800
+                    width: 210,
+                    windowWidth: 210
                 },
                 jsPDF: { 
                     unit: 'mm', 
