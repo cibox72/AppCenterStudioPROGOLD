@@ -1633,21 +1633,32 @@
             document.getElementById('pdf-luogo-cerimonia').textContent = dati.luogo_cerimonia || '-';
             document.getElementById('pdf-luogo-ricevimento').textContent = dati.luogo_ricevimento || '-';
 
+            
             const tbody = document.getElementById('pdf-servizi-body');
-            tbody.innerHTML = '';
-            let totaleServizi = 0;
-            (dati.servizi || []).forEach(s => {
-                const totaleRiga = (s.prezzo || 0) * (s.quantita || 1);
-                totaleServizi += totaleRiga;
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${s.descrizione || ''}</td>
-                        <td>€ ${(s.prezzo || 0).toFixed(2)}</td>
-                        <td>${s.quantita || 1}</td>
-                        <td>€ ${totaleRiga.toFixed(2)}</td>
-                    </tr>
-                `;
-            });
+tbody.innerHTML = '';
+let totaleServizi = 0;
+
+let serviziParsed = [];
+if (dati.servizi) {
+    if (typeof dati.servizi === 'string') {
+        try { 
+            serviziParsed = JSON.parse(dati.servizi); 
+        } catch(e) { 
+            console.error('Errore parsing servizi:', e);
+            serviziParsed = []; 
+        }
+    } else if (Array.isArray(dati.servizi)) {
+        serviziParsed = dati.servizi;
+    }
+}
+
+if (Array.isArray(serviziParsed)) {
+    serviziParsed.forEach(s => {
+        const totaleRiga = (parseFloat(s.prezzo) || 0) * (parseInt(s.quantita) || 1);
+        totaleServizi += totaleRiga;
+        tbody.innerHTML += '<tr><td>' + (s.descrizione || '') + '</td><td>€ ' + (parseFloat(s.prezzo) || 0).toFixed(2) + '</td><td>' + (parseInt(s.quantita) || 1) + '</td><td>€ ' + totaleRiga.toFixed(2) + '</td></tr>';
+    });
+}
 
             const scontoPerc = parseFloat(dati.sconto_perc) || 0;
             const scontoFisso = parseFloat(dati.sconto_fisso) || 0;
