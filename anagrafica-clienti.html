@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anagrafica Clienti - AppCenterStudioPROGOLD</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
+            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
+            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
+            --success: #27ae60; --danger: #c0392b; --warning: #d35400; --radius: 12px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
+            transition: background 0.3s ease;
+        }
+        .top-bar {
+            background: var(--primary-gradient); padding: 16px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;
+        }
+        .nav-btn {
+            background: rgba(255,255,255,0.95); border: none; padding: 8px 16px; border-radius: 8px;
+            cursor: pointer; font-size: 13px; font-weight: 600; color: var(--primary-dark); margin-right: 8px;
+        }
+        .nav-btn:hover { background: white; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+        .page-header {
+            text-align: center; padding: 24px; background: white; border-radius: var(--radius);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 24px;
+        }
+        .page-header h1 { font-size: 24px; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; }
+        .page-header p { color: var(--text-light); font-size: 13px; }
+        
+        .card {
+            background: white; border-radius: var(--radius); padding: 24px; margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border-color);
+        }
+        .card-title {
+            font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 16px;
+            padding-bottom: 8px; border-bottom: 1px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--text-main); }
+        .form-group input, .form-group textarea {
+            padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; font-family: inherit;
+        }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); }
+        
+        .btn {
+            padding: 10px 20px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .btn-primary { background: var(--primary-dark); color: white; }
+        .btn-primary:hover { background: #145a32; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary-dark); }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: #922b21; }
+        .btn-sm { padding: 6px 12px; font-size: 11px; }
+        
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { background: #f8f9fa; color: var(--text-main); font-weight: 600; text-transform: uppercase; font-size: 10px; }
+        tr:hover td { background: #fafafa; }
+        
+        .cred-box {
+            background: #f8f9fa; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 11px;
+            display: inline-block; margin-right: 4px;
+        }
+        
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white; border-radius: var(--radius); padding: 24px; max-width: 600px; width: 90%;
+            max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);
+        }
+        .modal-header h2 { font-size: 18px; color: var(--primary-dark); }
+        .close-modal {
+            background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-light);
+        }
+        
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 3000; }
+        .toast {
+            background: white; border-radius: 6px; padding: 12px 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-bottom: 8px; border-left: 4px solid var(--success); font-size: 13px;
+        }
+        .toast.error { border-left-color: var(--danger); }
+        .hidden { display: none !important; }
+        .loading { text-align: center; padding: 40px; color: var(--text-light); }
+        
+        .search-box {
+            display: flex; gap: 8px; margin-bottom: 16px;
+        }
+        .search-box input {
+            flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px;
+        }
+        
+        .cliente-id {
+            font-weight: 700; color: var(--primary-dark); font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div>
+            <button class="nav-btn" onclick="tornaPlancia()">Indietro</button>
+            <button class="nav-btn" onclick="tornaPlancia()">Plancia</button>
+        </div>
+        <div style="color: white; font-size: 13px; font-weight: 500;">Cloud Sync: OK</div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Anagrafica Clienti</h1>
+            <p>Registra, gestisci e stampa le schede dei tuoi clienti. ID univoco permanente per fidelizzazione.</p>
+        </div>
+
+        <div id="loadingArea" class="loading">Caricamento dati...</div>
+
+        <div id="mainContent" class="hidden">
+            
+            <!-- CARD 1: REGISTRAZIONE NUOVO CLIENTE -->
+            <div class="card">
+                <div class="card-title">Registra Nuovo Cliente</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Nome *</label><input type="text" id="c_nome"></div>
+                    <div class="form-group"><label>Cognome *</label><input type="text" id="c_cognome"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Email *</label><input type="email" id="c_email"></div>
+                    <div class="form-group"><label>Telefono</label><input type="tel" id="c_tel"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Indirizzo</label><input type="text" id="c_indirizzo"></div>
+                    <div class="form-group"><label>CAP</label><input type="text" id="c_cap"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Città</label><input type="text" id="c_citta"></div>
+                    <div class="form-group"><label>Provincia</label><input type="text" id="c_provincia"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Note interne</label>
+                        <textarea id="c_note" rows="2" placeholder="Note riservate allo studio..."></textarea>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="registraCliente()">Registra Cliente e Genera Credenziali</button>
+            </div>
+
+            <!-- CARD 2: ARCHIVIO CLIENTI -->
+            <div class="card">
+                <div class="card-title">
+                    <span>Archivio Clienti</span>
+                    <span id="countClienti" style="font-size: 12px; color: var(--text-light); font-weight: 400; text-transform: none;">0 clienti</span>
+                </div>
+                
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Cerca per nome, cognome, email o ID..." oninput="filtraClienti()">
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Cognome</th>
+                                <th>Email</th>
+                                <th>Telefono</th>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabellaClienti"></tbody>
+                    </table>
+                </div>
+                <div id="emptyState" class="hidden" style="text-align: center; padding: 40px; color: var(--text-light);">Nessun cliente registrato.</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODALE MODIFICA CLIENTE -->
+    <div id="modalModifica" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Modifica Cliente <span id="mod_id" style="color: var(--text-light); font-size: 14px;"></span></h2>
+                <button class="close-modal" onclick="chiudiModale()">×</button>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Nome</label><input type="text" id="mod_nome"></div>
+                <div class="form-group"><label>Cognome</label><input type="text" id="mod_cognome"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Email</label><input type="email" id="mod_email"></div>
+                <div class="form-group"><label>Telefono</label><input type="tel" id="mod_tel"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Indirizzo</label><input type="text" id="mod_indirizzo"></div>
+                <div class="form-group"><label>CAP</label><input type="text" id="mod_cap"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Città</label><input type="text" id="mod_citta"></div>
+                <div class="form-group"><label>Provincia</label><input type="text" id="mod_provincia"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Username</label><input type="text" id="mod_username"></div>
+                <div class="form-group"><label>Password</label><input type="text" id="mod_password"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label>Note interne</label>
+                    <textarea id="mod_note" rows="3"></textarea>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
+                <button class="btn btn-outline" onclick="chiudiModale()">Annulla</button>
+                <button class="btn btn-primary" onclick="salvaModifica()">Salva Modifiche</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        let studioId = null;
+        let listaClienti = [];
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!token) { window.location.href = 'index.html'; return; }
+            await verificaSessione();
+        });
+
+        async function verificaSessione() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`);
+                const data = await response.json();
+                if (!data.success || data.tipo !== 'studio') {
+                    mostraToast('Sessione non valida', 'error');
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                    return;
+                }
+                studioId = data.user.id;
+                await caricaTemaGlobale();
+                document.getElementById('loadingArea').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                await caricaClienti();
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        // ============================================
+        // SEZIONE TEMA GLOBALE
+        // ============================================
+        async function caricaTemaGlobale() {
+            if (!studioId) return;
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
+                const data = await response.json();
+                if (data.success && data.tema && data.tema.tema_attivo) {
+                    const temaId = data.tema.tema_attivo;
+                    const temi = {
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
+                    };
+                    const t = temi[temaId] || temi['default'];
+                    const root = document.documentElement;
+                    root.style.setProperty('--primary', t.p);
+                    root.style.setProperty('--primary-dark', t.pd);
+                    root.style.setProperty('--primary-light', t.pl);
+                    root.style.setProperty('--primary-gradient', t.pg);
+                    root.style.setProperty('--bg-gradient', t.bg);
+                    console.log('[TEMA] Tema applicato:', temaId);
+                }
+            } catch (error) {
+                console.error('[TEMA] Errore caricamento tema:', error);
+            }
+        }
+
+        async function registraCliente() {
+            const nome = document.getElementById('c_nome').value.trim();
+            const cognome = document.getElementById('c_cognome').value.trim();
+            const email = document.getElementById('c_email').value.trim();
+            
+            if (!nome || !cognome || !email) {
+                mostraToast('Compila Nome, Cognome ed Email', 'error');
+                return;
+            }
+
+            const dati = {
+                nome, cognome, email,
+                telefono: document.getElementById('c_tel').value,
+                indirizzo: document.getElementById('c_indirizzo').value,
+                cap: document.getElementById('c_cap').value,
+                citta: document.getElementById('c_citta').value,
+                provincia: document.getElementById('c_provincia').value,
+                note: document.getElementById('c_note').value
+            };
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti?token=${encodeURIComponent(token)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dati)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast(`Cliente registrato. ID: ${result.cliente.id} | Username: ${result.cliente.username}`, 'success');
+                    document.getElementById('c_nome').value = '';
+                    document.getElementById('c_cognome').value = '';
+                    document.getElementById('c_email').value = '';
+                    document.getElementById('c_tel').value = '';
+                    document.getElementById('c_indirizzo').value = '';
+                    document.getElementById('c_cap').value = '';
+                    document.getElementById('c_citta').value = '';
+                    document.getElementById('c_provincia').value = '';
+                    document.getElementById('c_note').value = '';
+                    await caricaClienti();
+                } else {
+                    mostraToast('Errore: ' + (result.error || 'Riprova'), 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        async function caricaClienti() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti?token=${encodeURIComponent(token)}`);
+                const data = await response.json();
+                if (data.success) {
+                    listaClienti = data.clienti || [];
+                    renderizzaTabella(listaClienti);
+                    document.getElementById('countClienti').textContent = listaClienti.length + ' clienti';
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore caricamento clienti', 'error');
+            }
+        }
+
+        function renderizzaTabella(clienti) {
+            const tbody = document.getElementById('tabellaClienti');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (clienti.length === 0) {
+                emptyState.classList.remove('hidden');
+                tbody.innerHTML = '';
+                return;
+            }
+            emptyState.classList.add('hidden');
+            
+            tbody.innerHTML = clienti.map(c => `
+                <tr>
+                    <td><span class="cliente-id">${c.id}</span></td>
+                    <td>${c.nome || ''}</td>
+                    <td>${c.cognome || ''}</td>
+                    <td>${c.email || ''}</td>
+                    <td>${c.telefono || ''}</td>
+                    <td><span class="cred-box">${c.username || '-'}</span></td>
+                    <td><span class="cred-box">${c.password || '-'}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline" onclick="apriModifica('${c.id}')">Modifica</button>
+                        <button class="btn btn-sm btn-outline" onclick="stampaScheda('${c.id}')">PDF</button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminaCliente('${c.id}')">Elimina</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filtraClienti() {
+            const q = document.getElementById('searchInput').value.toLowerCase().trim();
+            if (!q) {
+                renderizzaTabella(listaClienti);
+                return;
+            }
+            const filtrati = listaClienti.filter(c => 
+                (c.nome || '').toLowerCase().includes(q) ||
+                (c.cognome || '').toLowerCase().includes(q) ||
+                (c.email || '').toLowerCase().includes(q) ||
+                (c.id || '').toLowerCase().includes(q)
+            );
+            renderizzaTabella(filtrati);
+        }
+
+        async function apriModifica(id) {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`);
+                const data = await response.json();
+                if (data.success) {
+                    const c = data.cliente;
+                    document.getElementById('mod_id').textContent = '(' + c.id + ')';
+                    document.getElementById('mod_nome').value = c.nome || '';
+                    document.getElementById('mod_cognome').value = c.cognome || '';
+                    document.getElementById('mod_email').value = c.email || '';
+                    document.getElementById('mod_tel').value = c.telefono || '';
+                    document.getElementById('mod_indirizzo').value = c.indirizzo || '';
+                    document.getElementById('mod_cap').value = c.cap || '';
+                    document.getElementById('mod_citta').value = c.citta || '';
+                    document.getElementById('mod_provincia').value = c.provincia || '';
+                    document.getElementById('mod_username').value = c.username || '';
+                    document.getElementById('mod_password').value = c.password || '';
+                    document.getElementById('mod_note').value = c.note || '';
+                    document.getElementById('modalModifica').classList.add('active');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore caricamento cliente', 'error');
+            }
+        }
+
+        function chiudiModale() {
+            document.getElementById('modalModifica').classList.remove('active');
+        }
+
+        async function salvaModifica() {
+            const id = document.getElementById('mod_id').textContent.replace(/[()]/g, '');
+            const dati = {
+                nome: document.getElementById('mod_nome').value,
+                cognome: document.getElementById('mod_cognome').value,
+                email: document.getElementById('mod_email').value,
+                telefono: document.getElementById('mod_tel').value,
+                indirizzo: document.getElementById('mod_indirizzo').value,
+                cap: document.getElementById('mod_cap').value,
+                citta: document.getElementById('mod_citta').value,
+                provincia: document.getElementById('mod_provincia').value,
+                username: document.getElementById('mod_username').value,
+                password: document.getElementById('mod_password').value,
+                note: document.getElementById('mod_note').value
+            };
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dati)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Cliente aggiornato', 'success');
+                    chiudiModale();
+                    await caricaClienti();
+                } else {
+                    mostraToast('Errore: ' + (result.error || ''), 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        async function eliminaCliente(id) {
+            if (!confirm('Eliminare definitivamente questo cliente?')) return;
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Cliente eliminato', 'success');
+                    await caricaClienti();
+                } else {
+                    mostraToast('Errore: ' + (result.error || ''), 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        async function stampaScheda(id) {
+            const cliente = listaClienti.find(c => c.id === id);
+            if (!cliente) { mostraToast('Cliente non trovato', 'error'); return; }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const margin = 20;
+            let y = margin;
+
+            // Carica dati studio
+            let datiStudio = { nome: 'Studio', indirizzo: '', telefono: '', email: '', piva: '' };
+            try {
+                const res = await fetch(`${WORKER_URL}/api/studio/profilo?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
+                const data = await res.json();
+                if (data.success && data.studio) datiStudio = data.studio;
+            } catch (error) { console.error('Errore caricamento studio:', error); }
+
+            // Header studio
+            doc.setFontSize(18);
+            doc.setFont(undefined, 'bold');
+            doc.text(datiStudio.nome || 'Studio', pageWidth / 2, y, { align: 'center' });
+            y += 7;
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'normal');
+            doc.text(datiStudio.indirizzo || '', pageWidth / 2, y, { align: 'center' });
+            y += 5;
+            doc.text(`Tel: ${datiStudio.telefono || '-'} | Email: ${datiStudio.email || '-'} | P.IVA: ${datiStudio.piva || '-'}`, pageWidth / 2, y, { align: 'center' });
+            y += 4;
+            doc.setDrawColor(0);
+            doc.setLineWidth(0.5);
+            doc.line(margin, y, pageWidth - margin, y);
+            y += 12;
+
+            // Titolo
+            doc.setFontSize(16);
+            doc.setFont(undefined, 'bold');
+            doc.text('SCHEDA CLIENTE', pageWidth / 2, y, { align: 'center' });
+            y += 10;
+
+            // ID Cliente
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'bold');
+            doc.text('ID Cliente:', margin, y);
+            doc.setFont(undefined, 'normal');
+            doc.text(cliente.id || '', margin + 30, y);
+            y += 8;
+
+            // Dati anagrafici
+            doc.setFont(undefined, 'bold');
+            doc.text('Dati Anagrafici', margin, y);
+            y += 2;
+            doc.setDrawColor(200);
+            doc.line(margin, y, pageWidth - margin, y);
+            y += 6;
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(10);
+            
+            const righe = [
+                ['Nome:', cliente.nome || ''],
+                ['Cognome:', cliente.cognome || ''],
+                ['Email:', cliente.email || ''],
+                ['Telefono:', cliente.telefono || ''],
+                ['Indirizzo:', cliente.indirizzo || ''],
+                ['CAP / Città:', `${cliente.cap || ''} ${cliente.citta || ''}`],
+                ['Provincia:', cliente.provincia || '']
+            ];
+            
+            righe.forEach(([label, valore]) => {
+                doc.setFont(undefined, 'bold');
+                doc.text(label, margin, y);
+                doc.setFont(undefined, 'normal');
+                doc.text(valore, margin + 35, y);
+                y += 6;
+            });
+
+            y += 4;
+
+            // Credenziali
+            doc.setFont(undefined, 'bold');
+            doc.text('Credenziali di Accesso', margin, y);
+            y += 2;
+            doc.line(margin, y, pageWidth - margin, y);
+            y += 6;
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(10);
+            doc.text('Username:', margin, y);
+            doc.text(cliente.username || '-', margin + 35, y);
+            y += 6;
+            doc.text('Password:', margin, y);
+            doc.text(cliente.password || '-', margin + 35, y);
+            y += 10;
+
+            // Note
+            if (cliente.note) {
+                doc.setFont(undefined, 'bold');
+                doc.text('Note Interne', margin, y);
+                y += 2;
+                doc.line(margin, y, pageWidth - margin, y);
+                y += 6;
+                doc.setFont(undefined, 'normal');
+                doc.setFontSize(9);
+                const noteLines = doc.splitTextToSize(cliente.note, pageWidth - margin * 2);
+                noteLines.forEach(line => {
+                    if (y > 270) { doc.addPage(); y = margin; }
+                    doc.text(line, margin, y);
+                    y += 5;
+                });
+            }
+
+            // Footer
+            y = 280;
+            doc.setFontSize(8);
+            doc.setFont(undefined, 'italic');
+            doc.text(`Scheda generata il ${new Date().toLocaleDateString('it-IT')} - AppCenterStudioPROGOLD`, pageWidth / 2, y, { align: 'center' });
+
+            const filename = `Scheda_${cliente.id}_${(cliente.cognome || 'cliente')}.pdf`;
+            doc.save(filename);
+            mostraToast('Scheda PDF generata', 'success');
+        }
+
+        function tornaPlancia() {
+            window.location.href = 'plancia-studio.html?token=' + encodeURIComponent(token);
+        }
+
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + tipo;
+            toast.innerHTML = '<div>' + msg + '</div>';
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
+    <div class="toast-container" id="toastContainer"></div>
