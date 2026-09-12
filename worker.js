@@ -1146,7 +1146,7 @@ export default {
           "INSERT INTO selezioni_album (id, studio_id, cliente_id, cliente_nome, username, password, stato, data_creazione, data_scadenza) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
         ).bind(id, sess.user_id, clienteId, clienteNome, username, password, 'in_attesa', dataCreazione, dataScadenza).run();
         
-        const linkPubblico = `https://cibox72.github.io/AppCenterStudioPROGOLD/selezione-cliente.html?id=${id}&token=${token}`;
+        const linkPubblico = `https://cibox72.github.io/AppCenterStudioPROGOLD/selezione-album-cliente.html?id=${id}&token=${token}`;
         
         return new Response(JSON.stringify({ success: true, id, username, password, link: linkPubblico, scadenza: dataScadenza }), { headers: corsHeaders });
       }
