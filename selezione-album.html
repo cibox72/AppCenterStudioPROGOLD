@@ -2,135 +2,222 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Selezione Foto Album - AppCenterStudioPROGOLD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seleziona Cartelle Clienti - AppCenterStudioPROGOLD</title>
     <style>
         :root {
-            --primary: #5dade2; --primary-dark: #2874a6; --primary-light: #d6eaf8;
-            --primary-gradient: linear-gradient(135deg, #85c1e9 0%, #5dade2 50%, #2874a6 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #ebf5fb 100%);
+            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
+            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
             --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
-            --success: #27ae60; --danger: #e74c3c; --radius: 16px;
+            --success: #27ae60; --danger: #c0392b; --warning: #d35400; --radius: 12px;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh; }
-        .top-bar { background: var(--primary-gradient); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(40, 116, 166, 0.15); position: sticky; top: 0; z-index: 100; }
-        .nav-btn { background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark); }
-        .user-info { color: white; font-size: 14px; font-weight: 600; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
-        .header-card { background: white; border-radius: var(--radius); padding: 32px; box-shadow: 0 10px 30px rgba(40, 116, 166, 0.12); margin-bottom: 24px; text-align: center; position: relative; overflow: hidden; }
-        .header-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
-        .header-card h1 { font-size: 28px; font-weight: 800; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
-        .countdown-display { display: flex; justify-content: center; gap: 16px; margin-top: 20px; }
-        .countdown-box { background: var(--primary-light); padding: 15px; border-radius: 12px; min-width: 70px; }
-        .countdown-value { font-size: 28px; font-weight: 800; color: var(--primary-dark); }
-        .countdown-label { font-size: 10px; color: var(--text-light); text-transform: uppercase; }
-        .countdown-box.urgent { background: #fadbd8; }
-        .countdown-box.urgent .countdown-value { color: var(--danger); }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
+            transition: background 0.3s ease;
+        }
+        .top-bar {
+            background: var(--primary-gradient); padding: 16px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;
+        }
+        .nav-btn {
+            background: rgba(255,255,255,0.95); border: none; padding: 8px 16px; border-radius: 8px;
+            cursor: pointer; font-size: 13px; font-weight: 600; color: var(--primary-dark); margin-right: 8px;
+        }
+        .nav-btn:hover { background: white; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+        .page-header {
+            text-align: center; padding: 24px; background: white; border-radius: var(--radius);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 24px;
+        }
+        .page-header h1 { font-size: 24px; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; }
+        .page-header p { color: var(--text-light); font-size: 13px; }
         
-        .folder-grid, .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-bottom: 32px; }
-        .folder-card { background: white; border-radius: 12px; padding: 24px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.06); cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
-        .folder-card:hover { transform: translateY(-4px); border-color: var(--primary); }
-        .folder-icon { font-size: 40px; margin-bottom: 12px; }
-        .folder-name { font-weight: 700; color: var(--text-main); }
-        
-        .photo-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.06); position: relative; cursor: pointer; aspect-ratio: 1; }
-        .photo-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-        .photo-card:hover img { transform: scale(1.05); }
-        .heart-btn { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #ccc; border: none; cursor: pointer; z-index: 10; transition: all 0.2s; }
-        .heart-btn.selected { color: var(--danger); transform: scale(1.1); }
-        
-        .selection-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 16px 24px; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; z-index: 90; }
-        .selection-count { font-size: 18px; font-weight: 700; color: var(--primary-dark); }
-        .btn { padding: 14px 28px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
-        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
-        .btn-success:disabled { background: #ccc; cursor: not-allowed; }
-        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .card {
+            background: white; border-radius: var(--radius); padding: 24px; margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border-color);
+        }
+        .card-title {
+            font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 16px;
+            padding-bottom: 8px; border-bottom: 1px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .warning-box {
+            background: #fef9e7; border-left: 4px solid var(--warning); padding: 16px; border-radius: 8px; margin-bottom: 20px;
+        }
+        .warning-box h3 { color: var(--warning); font-size: 14px; margin-bottom: 8px; text-transform: uppercase; }
+        .warning-box p { font-size: 13px; color: var(--text-main); line-height: 1.5; }
 
-        /* Lightbox */
-        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; flex-direction: column; }
-        .lightbox.active { display: flex; }
-        .lightbox-header { padding: 16px; display: flex; justify-content: space-between; align-items: center; color: white; }
-        .lightbox-img-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-        .lightbox-img { max-width: 100%; max-height: 80vh; object-fit: contain; transition: opacity 0.3s; }
-        .lightbox-controls { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; display: flex; justify-content: space-between; padding: 0 20px; pointer-events: none; }
-        .lb-btn { pointer-events: auto; background: rgba(255,255,255,0.2); border: none; color: white; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; cursor: pointer; backdrop-filter: blur(5px); }
-        .lb-heart { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.9); border: none; width: 60px; height: 60px; border-radius: 50%; font-size: 32px; color: #ccc; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .lb-heart.selected { color: var(--danger); }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--text-main); }
+        .form-group input, .form-group select {
+            padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; font-family: inherit;
+        }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); }
+        
+        .btn {
+            padding: 10px 20px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; margin-right: 8px; margin-bottom: 8px;
+        }
+        .btn-primary { background: var(--primary-dark); color: white; }
+        .btn-primary:hover { background: #145a32; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary-dark); }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: #922b21; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-sm { padding: 6px 12px; font-size: 11px; }
+        
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        th { background: #f8f9fa; color: var(--text-main); font-weight: 600; text-transform: uppercase; font-size: 10px; }
+        tr:hover td { background: #fafafa; }
+        
+        /* Stati Professionali (No Emoji) */
+        .status-badge {
+            display: inline-block; padding: 6px 10px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .status-pending { background: #f4f6f7; color: #7f8c8d; border: 1px solid #bdc3c7; }
+        
+        .status-received {
+            background: #fdedec; color: var(--danger); border: 1px solid var(--danger);
+            animation: pulse-red 2s infinite;
+        }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(192, 57, 43, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0); }
+        }
+        
+        .status-downloaded { background: #eafaf1; color: var(--success); border: 1px solid var(--success); }
 
-        .loading { text-align: center; padding: 40px; color: var(--text-light); }
-        .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .hidden { display: none !important; }
-        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
-        .toast { background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease; }
+        .cred-box {
+            background: #f8f9fa; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 11px;
+            display: inline-block; margin-right: 4px; border: 1px solid var(--border-color);
+        }
+        
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 3000; }
+        .toast {
+            background: white; border-radius: 6px; padding: 12px 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-bottom: 8px; border-left: 4px solid var(--success); font-size: 13px;
+        }
         .toast.error { border-left-color: var(--danger); }
-        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+        .hidden { display: none !important; }
+        .loading { text-align: center; padding: 40px; color: var(--text-light); }
+        
+        .search-results { 
+            position: absolute; top: 100%; left: 0; right: 0; background: white; 
+            border: 1px solid var(--border-color); border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            z-index: 10; max-height: 200px; overflow-y: auto; display: none; 
+        }
+        .search-result-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #f0f0f0; font-size: 12px; }
+        .search-result-item:hover { background: var(--primary-light); }
+        .search-result-item strong { color: var(--primary-dark); }
+        .cliente-search-box { position: relative; margin-bottom: 16px; }
     </style>
 </head>
 <body>
     <div class="top-bar">
-        <button class="nav-btn" onclick="tornaDashboard()">← Indietro</button>
-        <div class="user-info" id="userInfo">Caricamento...</div>
+        <div>
+            <button class="nav-btn" onclick="tornaPlancia()">Indietro</button>
+            <button class="nav-btn" onclick="tornaPlancia()">Plancia</button>
+        </div>
+        <div style="color: white; font-size: 13px; font-weight: 500;">Cloud Sync: OK</div>
     </div>
 
     <div class="container">
-        <div id="loadingArea" class="loading">
-            <div class="spinner"></div>
-            <div>Verifica sessione e carica cartelle...</div>
+        <div class="page-header">
+            <h1>Seleziona Cartelle Clienti</h1>
+            <p>Gestione caricamento gallerie, generazione link di selezione e monitoraggio stati.</p>
         </div>
 
-        <div id="expiredArea" class="hidden">
-            <div class="header-card">
-                <h1>Selezione Scaduta</h1>
-                <p>Il periodo di 7 giorni per selezionare le foto è terminato.</p>
-                <p style="margin-top:16px; color: var(--text-light);">Contatta lo studio per richiedere un nuovo link.</p>
-            </div>
-        </div>
+        <div id="loadingArea" class="loading">Caricamento dati...</div>
 
         <div id="mainContent" class="hidden">
-            <div class="header-card">
-                <h1>Seleziona le Tue Foto</h1>
-                <p style="color: var(--text-light);">Sfoglia le cartelle, ingrandisci le foto e clicca sul ❤️ per selezionarle.</p>
-                <div class="countdown-display">
-                    <div class="countdown-box" id="daysBox"><div class="countdown-value" id="daysCount">0</div><div class="countdown-label">Giorni</div></div>
-                    <div class="countdown-box" id="hoursBox"><div class="countdown-value" id="hoursCount">0</div><div class="countdown-label">Ore</div></div>
+            
+            <!-- AVVISO IMPORTANTE -->
+            <div class="warning-box">
+                <h3>Avviso Importante per lo Studio</h3>
+                <p>Prima di caricare le cartelle, assicurati di aver esportato le foto in <strong>bassa risoluzione</strong> (es. da Lightroom, esporta con lato lungo a 2000px o qualità 20%). Questo garantisce un caricamento rapido e un'esperienza fluida per il cliente che selezionerà le foto da cellulare. Il sistema eliminerà automaticamente le foto non selezionate per liberare spazio cloud.</p>
+            </div>
+
+            <!-- CARD 1: RICERCA E CARICAMENTO -->
+            <div class="card">
+                <div class="card-title">1. Seleziona Cliente e Carica Materiale</div>
+                
+                <div class="form-row">
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Cerca Cliente per ID, Nome o Cognome *</label>
+                        <div class="cliente-search-box">
+                            <input type="text" id="searchCliente" placeholder="Es. CLI-00150 o Mario Rossi..." oninput="cercaCliente(this.value)">
+                            <div id="resultsCliente" class="search-results"></div>
+                        </div>
+                        <input type="hidden" id="selectedClienteId">
+                        <input type="hidden" id="selectedClienteNome">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nome Cartella (es. Casa Sposa, Chiesa)</label>
+                        <input type="text" id="nomeCartella" placeholder="Inserisci nome cartella">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;">
+                    <input type="file" id="uploadCartella" webkitdirectory directory multiple style="display: none;" onchange="gestisciUploadCartella()">
+                    <button class="btn btn-primary" onclick="document.getElementById('uploadCartella').click()">Carica Intera Cartella</button>
+                    
+                    <input type="file" id="uploadFile" style="display: none;" onchange="gestisciUploadFile()">
+                    <button class="btn btn-outline" onclick="document.getElementById('uploadFile').click()">Carica Singolo File</button>
+                </div>
+
+                <div id="uploadStatus" class="hidden" style="background: var(--primary-light); padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 16px;"></div>
+
+                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+
+                <div class="card-title" style="font-size: 14px; margin-bottom: 12px;">2. Genera Link di Selezione</div>
+                <button class="btn btn-success" onclick="generaLinkSelezione()">Genera Username, Password e Link</button>
+                
+                <div id="linkGenerato" class="hidden" style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-top: 16px; border: 1px solid var(--border-color);">
+                    <div class="form-row">
+                        <div class="form-group"><label>Username Cliente</label><div class="cred-box" id="genUsername"></div></div>
+                        <div class="form-group"><label>Password Cliente</label><div class="cred-box" id="genPassword"></div></div>
+                    </div>
+                    <div class="form-group" style="margin-top: 12px;">
+                        <label>Link da inviare</label>
+                        <input type="text" id="genLink" readonly style="width: 100%; background: white;">
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 12px;" onclick="inviaWhatsApp()">Invia Link via WhatsApp</button>
                 </div>
             </div>
 
-            <div id="foldersView">
-                <h2 style="margin-bottom: 16px; color: var(--primary-dark);">Cartelle Disponibili</h2>
-                <div class="folder-grid" id="folderGrid"></div>
-            </div>
-
-            <div id="photosView" class="hidden">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                    <button class="btn btn-outline" onclick="showFolders()">← Torna alle cartelle</button>
-                    <h3 id="currentFolderTitle" style="color: var(--primary-dark);"></h3>
+            <!-- CARD 2: ARCHIVIO SELEZIONI -->
+            <div class="card">
+                <div class="card-title">Archivio Selezioni Attive</div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID Cliente</th>
+                                <th>Nome</th>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Stato</th>
+                                <th>Scadenza Link</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabellaSelezione"></tbody>
+                    </table>
                 </div>
-                <div class="photo-grid" id="photoGrid"></div>
+                <div id="emptyState" class="hidden" style="text-align: center; padding: 40px; color: var(--text-light);">Nessuna selezione attiva.</div>
             </div>
-        </div>
-    </div>
 
-    <div class="selection-bar" id="selectionBar">
-        <div class="selection-count">❤️ Selezionate: <strong id="selectedCount">0</strong></div>
-        <button class="btn btn-success" id="btnInvia" onclick="inviaSelezione()">INVIA SELEZIONE ALLO STUDIO</button>
-    </div>
-
-    <!-- Lightbox -->
-    <div class="lightbox" id="lightbox">
-        <div class="lightbox-header">
-            <button class="nav-btn" onclick="closeLightbox()">✕ Chiudi</button>
-            <span id="lbCounter">1 / 10</span>
-        </div>
-        <div class="lightbox-img-container" id="lbContainer">
-            <img src="" class="lightbox-img" id="lbImg">
-            <div class="lightbox-controls">
-                <button class="lb-btn" onclick="prevPhoto()">‹</button>
-                <button class="lb-btn" onclick="nextPhoto()">›</button>
-                <button class="lb-heart" id="lbHeart" onclick="toggleCurrentHeart()">❤️</button>
-            </div>
         </div>
     </div>
 
@@ -140,13 +227,8 @@
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
-        const clienteId = urlParams.get('clienteId');
-        
-        let cartelle = [];
-        let fotoCorrenti = [];
-        let fotoSelezionate = new Set();
-        let currentIndex = 0;
-        let countdownInterval = null;
+        let studioId = null;
+        let listaSelezione = [];
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) { window.location.href = 'index.html'; return; }
@@ -155,223 +237,326 @@
 
         async function verificaSessione() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`);
                 const data = await response.json();
-                if (!data.success || data.tipo !== 'cliente') {
+                if (!data.success || data.tipo !== 'studio') {
                     mostraToast('Sessione non valida', 'error');
                     setTimeout(() => window.location.href = 'index.html', 1500);
                     return;
                 }
-                await caricaDati(data.user);
-            } catch (error) { mostraToast('Errore di connessione', 'error'); }
-        }
-
-        async function caricaDati(user) {
-            document.getElementById('userInfo').textContent = `${user.nome_a} ${user.cognome_a}`;
-            const dataCreazione = new Date(user.data_registrazione);
-            const scadenza = new Date(dataCreazione);
-            scadenza.setDate(scadenza.getDate() + 7);
-            const oggi = new Date();
-
-            if (oggi > scadenza) {
+                studioId = data.user.id;
+                await caricaTemaGlobale();
                 document.getElementById('loadingArea').classList.add('hidden');
-                document.getElementById('expiredArea').classList.remove('hidden');
-                document.getElementById('selectionBar').classList.add('hidden');
-                return;
+                document.getElementById('mainContent').classList.remove('hidden');
+                await caricaSelezione();
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
             }
-
-            avviaCountdown(scadenza);
-            await caricaCartelle();
-            document.getElementById('loadingArea').classList.add('hidden');
-            document.getElementById('mainContent').classList.remove('hidden');
         }
 
-        async function caricaCartelle() {
+        async function caricaTemaGlobale() {
+            if (!studioId) return;
             try {
-                const res = await fetch(`${WORKER_URL}/api/cliente/foto/cartelle?token=${token}&clienteId=${clienteId}`);
-                const data = await res.json();
-                if (data.success) {
-                    cartelle = data.cartelle;
-                    renderCartelle();
+                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
+                const data = await response.json();
+                if (data.success && data.tema && data.tema.tema_attivo) {
+                    const temaId = data.tema.tema_attivo;
+                    const temi = {
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
+                    };
+                    const t = temi[temaId] || temi['default'];
+                    const root = document.documentElement;
+                    root.style.setProperty('--primary', t.p);
+                    root.style.setProperty('--primary-dark', t.pd);
+                    root.style.setProperty('--primary-light', t.pl);
+                    root.style.setProperty('--primary-gradient', t.pg);
+                    root.style.setProperty('--bg-gradient', t.bg);
                 }
-            } catch (e) { console.error(e); }
+            } catch (error) { console.error('[TEMA] Errore:', error); }
         }
 
-        function renderCartelle() {
-            const grid = document.getElementById('folderGrid');
-            if (cartelle.length === 0) {
-                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-light);">Nessuna cartella disponibile al momento.</p>';
-                return;
+        let debounceTimer;
+        function cercaCliente(query) {
+            clearTimeout(debounceTimer);
+            const resultsDiv = document.getElementById('resultsCliente');
+            if (query.length < 2) { resultsDiv.style.display = 'none'; return; }
+
+            debounceTimer = setTimeout(async () => {
+                try {
+                    const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti/ricerca?q=${encodeURIComponent(query)}&token=${encodeURIComponent(token)}`);
+                    const data = await response.json();
+                    if (data.success && data.clienti.length > 0) {
+                        resultsDiv.innerHTML = data.clienti.map(c => `
+                            <div class="search-result-item" onclick="selezionaCliente('${c.id}', '${c.nome}', '${c.cognome}')">
+                                <strong>${c.id}</strong> - ${c.nome} ${c.cognome}<br>
+                                <small style="color:var(--text-light)">${c.email}</small>
+                            </div>
+                        `).join('');
+                        resultsDiv.style.display = 'block';
+                    } else {
+                        resultsDiv.style.display = 'none';
+                    }
+                } catch (error) { console.error('Errore ricerca:', error); }
+            }, 300);
+        }
+
+        function selezionaCliente(id, nome, cognome) {
+            document.getElementById('selectedClienteId').value = id;
+            document.getElementById('selectedClienteNome').value = `${nome} ${cognome}`;
+            document.getElementById('searchCliente').value = `${id} - ${nome} ${cognome}`;
+            document.getElementById('resultsCliente').style.display = 'none';
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.cliente-search-box')) {
+                document.getElementById('resultsCliente').style.display = 'none';
             }
-            grid.innerHTML = cartelle.map(c => `
-                <div class="folder-card" onclick="apriCartella('${c}')">
-                    <div class="folder-icon">📁</div>
-                    <div class="folder-name">${c}</div>
-                </div>
-            `).join('');
-        }
+        });
 
-        async function apriCartella(nomeCartella) {
-            document.getElementById('foldersView').classList.add('hidden');
-            document.getElementById('photosView').classList.remove('hidden');
-            document.getElementById('currentFolderTitle').textContent = nomeCartella;
-            document.getElementById('photoGrid').innerHTML = '<div class="loading"><div class="spinner"></div>Caricamento foto...</div>';
+        async function gestisciUploadCartella() {
+            const files = document.getElementById('uploadCartella').files;
+            const selezioneId = document.getElementById('selectedClienteId').value;
+            const nomeCartella = document.getElementById('nomeCartella').value.trim() || 'Cartella_Generale';
+            
+            if (!selezioneId) { mostraToast('Seleziona prima un cliente', 'error'); return; }
+            if (files.length === 0) return;
+
+            const statusDiv = document.getElementById('uploadStatus');
+            statusDiv.classList.remove('hidden');
+            statusDiv.innerHTML = `Caricamento di ${files.length} file in corso... Attendere.`;
+
+            const formData = new FormData();
+            formData.append('selezione_id', 'temp-' + Date.now()); // Usiamo un ID temporaneo se non ancora creato, o quello reale
+            formData.append('nome_cartella', nomeCartella);
+            formData.append('cliente_id', selezioneId);
+            for (let i = 0; i < files.length; i++) {
+                formData.append('files', files[i]);
+            }
 
             try {
-                const res = await fetch(`${WORKER_URL}/api/cliente/foto/elenco?token=${token}&clienteId=${clienteId}&cartella=${encodeURIComponent(nomeCartella)}`);
-                const data = await res.json();
-                if (data.success) {
-                    fotoCorrenti = data.foto;
-                    renderFoto();
+                // Nota: per upload massivi, in un sistema reale si userebbe un chunking, ma per ora proviamo diretto
+                const response = await fetch(`${WORKER_URL}/api/studio/selezione-album/upload-cartella?token=${encodeURIComponent(token)}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast(`${result.uploaded} file caricati con successo`, 'success');
+                    statusDiv.innerHTML = `Caricamento completato: ${result.uploaded} file.`;
+                } else {
+                    mostraToast('Errore nel caricamento', 'error');
                 }
-            } catch (e) { console.error(e); }
-        }
-
-        function renderFoto() {
-            const grid = document.getElementById('photoGrid');
-            grid.innerHTML = fotoCorrenti.map((f, index) => {
-                const isSelected = fotoSelezionate.has(f.name);
-                return `
-                <div class="photo-card" onclick="openLightbox(${index})">
-                    <button class="heart-btn ${isSelected ? 'selected' : ''}" onclick="event.stopPropagation(); toggleHeart('${f.name}', this)">❤️</button>
-                    <img src="${f.url}" alt="${f.name}" loading="lazy">
-                </div>
-            `}).join('');
-        }
-
-        function showFolders() {
-            document.getElementById('photosView').classList.add('hidden');
-            document.getElementById('foldersView').classList.remove('hidden');
-        }
-
-        function toggleHeart(filename, btnElement) {
-            if (fotoSelezionate.has(filename)) {
-                fotoSelezionate.delete(filename);
-                if(btnElement) btnElement.classList.remove('selected');
-            } else {
-                fotoSelezionate.add(filename);
-                if(btnElement) btnElement.classList.add('selected');
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione durante l\'upload', 'error');
             }
-            aggiornaContatore();
         }
 
-        function aggiornaContatore() {
-            document.getElementById('selectedCount').textContent = fotoSelezionate.size;
-            // Aggiorna anche i cuoricini nella grid se siamo in quella view
-            document.querySelectorAll('.heart-btn').forEach(btn => {
-                // Logica semplificata: al prossimo render si aggiornerà, o possiamo farlo live
-            });
-        }
-
-        // --- LIGHTBOX & SWIPE ---
-        function openLightbox(index) {
-            currentIndex = index;
-            updateLightbox();
-            document.getElementById('lightbox').classList.add('active');
+        async function gestisciUploadFile() {
+            const fileInput = document.getElementById('uploadFile');
+            const file = fileInput.files[0];
+            const selezioneId = document.getElementById('selectedClienteId').value;
             
-            // Touch Swipe Logic
-            let touchStartX = 0;
-            const container = document.getElementById('lbContainer');
-            container.ontouchstart = e => { touchStartX = e.changedTouches[0].screenX; };
-            container.ontouchend = e => {
-                const touchEndX = e.changedTouches[0].screenX;
-                if (touchStartX - touchEndX > 50) nextPhoto();
-                if (touchEndX - touchStartX > 50) prevPhoto();
-            };
-        }
+            if (!selezioneId) { mostraToast('Seleziona prima un cliente', 'error'); return; }
+            if (!file) return;
 
-        function closeLightbox() {
-            document.getElementById('lightbox').classList.remove('active');
-            renderFoto(); // Refresh grid hearts
-        }
-
-        function updateLightbox() {
-            const f = fotoCorrenti[currentIndex];
-            document.getElementById('lbImg').src = f.url;
-            document.getElementById('lbCounter').textContent = `${currentIndex + 1} / ${fotoCorrenti.length}`;
-            
-            const heartBtn = document.getElementById('lbHeart');
-            if (fotoSelezionate.has(f.name)) {
-                heartBtn.classList.add('selected');
-            } else {
-                heartBtn.classList.remove('selected');
-            }
-        }
-
-        function nextPhoto() {
-            if (currentIndex < fotoCorrenti.length - 1) { currentIndex++; updateLightbox(); }
-        }
-
-        function prevPhoto() {
-            if (currentIndex > 0) { currentIndex--; updateLightbox(); }
-        }
-
-        function toggleCurrentHeart() {
-            const f = fotoCorrenti[currentIndex];
-            toggleHeart(f.name, document.getElementById('lbHeart'));
-        }
-
-        // --- INVIO SELEZIONE ---
-        async function inviaSelezione() {
-            if (fotoSelezionate.size === 0) {
-                mostraToast('Seleziona almeno una foto prima di inviare', 'error');
-                return;
-            }
-
-            if (!confirm(`Confermi l'invio di ${fotoSelezionate.size} foto allo studio? Le foto non selezionate verranno eliminate.`)) {
-                return;
-            }
-
-            const btn = document.getElementById('btnInvia');
-            btn.disabled = true;
-            btn.textContent = 'Elaborazione in corso...';
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('selezione_id', 'temp-' + Date.now());
+            formData.append('nome_cartella', 'Singoli_File');
+            formData.append('cliente_id', selezioneId);
 
             try {
-                const res = await fetch(`${WORKER_URL}/api/cliente/selezione/invia?token=${token}&clienteId=${clienteId}`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/selezione-album/upload-file?token=${encodeURIComponent(token)}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast(`File ${result.filename} caricato`, 'success');
+                } else {
+                    mostraToast('Errore nel caricamento', 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        async function generaLinkSelezione() {
+            const clienteId = document.getElementById('selectedClienteId').value;
+            const clienteNome = document.getElementById('selectedClienteNome').value;
+
+            if (!clienteId) { mostraToast('Seleziona un cliente dalla ricerca', 'error'); return; }
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/selezione-album/crea?token=${encodeURIComponent(token)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ selezionate: Array.from(fotoSelezionate) })
+                    body: JSON.stringify({ cliente_id: clienteId, cliente_nome: clienteNome })
                 });
-                const data = await res.json();
-                
-                if (data.success) {
-                    mostraToast('Selezione inviata con successo! Contatta lo studio per i prossimi step.', 'success');
-                    document.getElementById('selectionBar').innerHTML = '<div style="width:100%; text-align:center; color: var(--success); font-weight:700; font-size:18px;">✓ SELEZIONE INVIATA ALLO STUDIO</div>';
-                    document.querySelectorAll('.photo-card').forEach(c => c.style.pointerEvents = 'none');
+                const result = await response.json();
+                if (result.success) {
+                    document.getElementById('genUsername').textContent = result.username;
+                    document.getElementById('genPassword').textContent = result.password;
+                    document.getElementById('genLink').value = result.link;
+                    document.getElementById('linkGenerato').classList.remove('hidden');
+                    mostraToast('Link e credenziali generati con successo', 'success');
+                    await caricaSelezione();
                 } else {
-                    mostraToast('Errore durante l\'invio', 'error');
-                    btn.disabled = false;
-                    btn.textContent = 'INVIA SELEZIONE ALLO STUDIO';
+                    mostraToast('Errore: ' + (result.error || ''), 'error');
                 }
-            } catch (e) {
+            } catch (error) {
+                console.error('Errore:', error);
                 mostraToast('Errore di connessione', 'error');
-                btn.disabled = false;
-                btn.textContent = 'INVIA SELEZIONE ALLO STUDIO';
             }
         }
 
-        function avviaCountdown(scadenza) {
-            const aggiorna = () => {
-                const diff = scadenza - new Date();
-                if (diff <= 0) { location.reload(); return; }
-                document.getElementById('daysCount').textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
-                document.getElementById('hoursCount').textContent = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                if (Math.floor(diff / (1000 * 60 * 60 * 24)) <= 2) {
-                    document.querySelectorAll('.countdown-box').forEach(b => b.classList.add('urgent'));
-                }
-            };
-            aggiorna();
-            countdownInterval = setInterval(aggiorna, 60000);
+        function inviaWhatsApp() {
+            const link = document.getElementById('genLink').value;
+            const username = document.getElementById('genUsername').textContent;
+            const password = document.getElementById('genPassword').textContent;
+            const clienteNome = document.getElementById('selectedClienteNome').value;
+            
+            // Qui dovresti avere il telefono del cliente, per ora lo chiediamo o usiamo un placeholder
+            const messaggio = `Ciao ${clienteNome}, il tuo album è pronto per la selezione!\n\nAccedi qui: ${link}\nUsername: ${username}\nPassword: ${password}\n\nIl link scadrà tra 7 giorni. Buon divertimento!`;
+            
+            window.open(`https://wa.me/?text=${encodeURIComponent(messaggio)}`, '_blank');
         }
 
-        function tornaDashboard() { window.location.href = `dashboard-cliente.html?token=${token}`; }
+        async function caricaSelezione() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/selezioni-album?token=${encodeURIComponent(token)}`);
+                const data = await response.json();
+                if (data.success) {
+                    listaSelezione = data.selezioni || [];
+                    renderizzaTabella();
+                }
+            } catch (error) { console.error('Errore:', error); }
+        }
+
+        function renderizzaTabella() {
+            const tbody = document.getElementById('tabellaSelezione');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (listaSelezione.length === 0) {
+                emptyState.classList.remove('hidden');
+                tbody.innerHTML = '';
+                return;
+            }
+            emptyState.classList.add('hidden');
+            
+            tbody.innerHTML = listaSelezione.map(s => {
+                let statoClass = 'status-pending';
+                let statoText = 'IN ATTESA';
+                let azioni = `<button class="btn btn-sm btn-outline" onclick="copiaLink('${s.id}')">Copia Link</button>`;
+
+                if (s.stato === 'selezione_ricevuta') {
+                    statoClass = 'status-received';
+                    statoText = 'SELEZIONE RICEVUTA';
+                    azioni = `<button class="btn btn-sm btn-success" onclick="scaricaSelezione('${s.id}')">SCARICA SELEZIONE</button>`;
+                } else if (s.stato === 'scaricata') {
+                    statoClass = 'status-downloaded';
+                    statoText = 'SCARICATA';
+                    azioni = `<span style="font-size:11px; color:var(--text-light);">Eliminazione auto in corso</span>`;
+                }
+
+                const dataScad = new Date(s.data_scadenza).toLocaleDateString('it-IT');
+
+                return `
+                <tr>
+                    <td><strong>${s.cliente_id}</strong></td>
+                    <td>${s.cliente_nome || 'N/D'}</td>
+                    <td><span class="cred-box">${s.username}</span></td>
+                    <td><span class="cred-box">${s.password}</span></td>
+                    <td><span class="status-badge ${statoClass}">${statoText}</span></td>
+                    <td>${dataScad}</td>
+                    <td>${azioni} <button class="btn btn-sm btn-danger" onclick="eliminaSelezione('${s.id}')">Elimina</button></td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        function copiaLink(id) {
+            const sel = listaSelezione.find(s => s.id === id);
+            if (sel) {
+                const link = `https://cibox72.github.io/AppCenterStudioPROGOLD/selezione-cliente.html?id=${sel.id}&token=${token}`; // Semplificato per demo, in produzione usare il link salvato
+                navigator.clipboard.writeText(link).then(() => mostraToast('Link copiato', 'success'));
+            }
+        }
+
+        async function scaricaSelezione(id) {
+            if (!confirm('Scaricare la selezione? Questa azione segnerà la pratica come "Scaricata" e avvierà l\'eliminazione automatica tra 7 giorni.')) return;
+            
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/selezione-album/scarica?token=${encodeURIComponent(token)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ selezione_id: id })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    // Scarica il file .txt
+                    const txtFile = result.files.find(f => f.type === 'txt');
+                    if (txtFile) {
+                        const blob = new Blob([txtFile.content], { type: 'text/plain' });
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = txtFile.name;
+                        a.click();
+                    }
+                    mostraToast('Selezione scaricata con successo', 'success');
+                    await caricaSelezione();
+                } else {
+                    mostraToast('Errore: ' + (result.error || ''), 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        async function eliminaSelezione(id) {
+            if (!confirm('Eliminare definitivamente questa selezione e tutti i file associati dal cloud?')) return;
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/selezione-album/elimina?token=${encodeURIComponent(token)}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ selezione_id: id })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Selezione eliminata', 'success');
+                    await caricaSelezione();
+                } else {
+                    mostraToast('Errore: ' + (result.error || ''), 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        function tornaPlancia() {
+            window.location.href = 'plancia-studio.html?token=' + encodeURIComponent(token);
+        }
+
         function mostraToast(msg, tipo) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div>${msg}</div>`;
+            toast.className = 'toast ' + tipo;
+            toast.innerHTML = '<div>' + msg + '</div>';
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
+            setTimeout(() => toast.remove(), 3000);
         }
     </script>
 </body>
