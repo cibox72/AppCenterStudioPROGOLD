@@ -35,6 +35,39 @@ export default {
       ).bind(id, tipo, titolo, messaggio, JSON.stringify(dati), 0, new Date().toISOString()).run();
     }
 
+    // ============================================
+    // FUNZIONI UTILI PER ANAGRAFICA CLIENTI
+    // ============================================
+    async function generaIdCliente(studioId) {
+      const result = await env.DB.prepare(
+        "SELECT id FROM anagrafica_clienti WHERE studio_id=? ORDER BY CAST(SUBSTR(id, 5) AS INTEGER) DESC LIMIT 1"
+      ).bind(studioId).first();
+      
+      let prossimoNumero = 1;
+      if (result && result.id) {
+        const numeroEsistente = parseInt(result.id.replace('CLI-', ''));
+        prossimoNumero = numeroEsistente + 1;
+      }
+      return 'CLI-' + String(prossimoNumero).padStart(5, '0');
+    }
+
+    function generaUsername(nome, cognome) {
+      const base = (nome + '.' + cognome).toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]/g, '');
+      const numero = Math.floor(Math.random() * 9000) + 1000;
+      return base + numero;
+    }
+
+    function generaPassword() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+      let password = '';
+      for (let i = 0; i < 8; i++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return password;
+    }
+
     try {
       // ============================================
       // 1. LOGIN
@@ -147,8 +180,10 @@ export default {
           }
           await env.DB.prepare("DELETE FROM messaggi_regali WHERE lista_id IN (SELECT id FROM lista_regali WHERE studio_id=?)").bind(studioId).run();
           await env.DB.prepare("DELETE FROM sessioni WHERE user_id=? AND tipo='studio'").bind(studioId).run();
-          const tablesToClean = ['clienti', 'servizi', 'preventivi', 'contratti', 'workflow', 'ricevute', 'agenda', 'email_archivio', 'prodotti_negozio', 'negozi_config', 'ordini_negozio', 'lista_regali', 'link_utili', 'gallerie', 'temi_colori', 'email_config'];
-          for (const table of tablesToClean) await env.DB.prepare(`DELETE FROM ${table} WHERE studio_id=?`).bind(studioId).run();
+          const tablesToClean = ['clienti', 'servizi', 'preventivi', 'contratti', 'workflow', 'ricevute', 'agenda', 'email_archivio', 'prodotti_negozio', 'negozi_config', 'ordini_negozio', 'lista_regali', 'link_utili', 'gallerie', 'temi_colori', 'email_config', 'anagrafica_clienti', 'cartelle_cliente', 'selezioni_album'];
+          for (const table of tablesToClean) {
+            try { await env.DB.prepare(`DELETE FROM ${table} WHERE studio_id=?`).bind(studioId).run(); } catch(e) {}
+          }
           await env.DB.prepare("DELETE FROM studi WHERE id=?").bind(studioId).run();
           return new Response(JSON.stringify({ success: true, message: "Studio eliminato con successo" }), { headers: corsHeaders });
         } catch (error) {
@@ -238,8 +273,7 @@ export default {
         await creaNotifica('registrazione', 'Nuova Richiesta di Registrazione', `Studio "${d.nome}" ha richiesto la prova. Email: ${d.email}`, { ...d, studioId });
         return new Response(JSON.stringify({ success: true, studioId }), { headers: corsHeaders });
       }
-
-      // ============================================
+            // ============================================
       // 13. DASHBOARD CLIENTE
       // ============================================
       if (path === "/api/cliente/dashboard" && request.method === "GET") {
@@ -249,7 +283,8 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM clienti WHERE id=?").bind(sess.user_id).first();
         return new Response(JSON.stringify({ success: true, cliente: result }), { headers: corsHeaders });
       }
-            // ============================================
+
+      // ============================================
       // 14-16. CLIENTE FOTO E SELEZIONE
       // ============================================
       if (path === "/api/cliente/foto/cartelle" && request.method === "GET") {
@@ -353,7 +388,7 @@ export default {
       }
 
       // ============================================
-      // 22. PREVENTIVI - CREA (Studio) CON PIANO_PAGAMENTO
+      // 22. PREVENTIVI - CREA (Studio)
       // ============================================
       if (path === "/api/studio/preventivo" && request.method === "POST") {
         const token = url.searchParams.get("token");
@@ -491,7 +526,7 @@ export default {
       }
 
       // ============================================
-      // 33. CLIENTI (Studio)
+      // 33. CLIENTI (Studio) - ESISTENTE
       // ============================================
       if (path === "/api/studio/clienti" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -508,7 +543,7 @@ export default {
         const hashed = await hashPassword(d.password);
         await env.DB.prepare(`INSERT INTO clienti (id, password, password_plain, studio_id, nome_a, cognome_a, nome_b, cognome_b, email, telefono, tipo_evento, data_evento, data_registrazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, 'hash:' + hashed, d.password, d.studio_id, d.nome_a, d.cognome_a, d.nome_b, d.cognome_b, d.email, d.telefono, d.tipo_evento, d.data_evento, d.data_registrazione).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-      }
+      
             // ============================================
       // 34. EMAIL ARCHIVIO (Studio)
       // ============================================
@@ -862,18 +897,13 @@ export default {
       }
 
       // ============================================
-      // 55. CONTRATTI - CREA (Studio) CON PIANO_PAGAMENTO
+      // 55. CONTRATTI - CREA (Studio)
       // ============================================
       if (path === "/api/studio/contratti" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-
         const d = await request.json();
-        
-        console.log('[WORKER] Contratto creato:', d);
-        console.log('[WORKER] Piano pagamento:', d.piano_pagamento);
-        
         await env.DB.prepare(`INSERT INTO contratti (id, studio_id, numero_contratto, numero, data_contratto, data_emissione, tipo_servizio, luogo_cerimonia, luogo_ricevimento, cliente_a, cliente_b, servizi, acconti, piano_pagamento, sconto_perc, sconto_fisso, sconto_fisso_nota, accettato, note, totale_finale, stato, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
           d.id, d.studio_id, d.numero_contratto || d.numero, d.numero, d.data_contratto || new Date().toISOString().split('T')[0], d.data_emissione, d.tipo_servizio || null, d.luogo_cerimonia || null, d.luogo_ricevimento || null,
           JSON.stringify(d.cliente_a || {}), JSON.stringify(d.cliente_b || {}), JSON.stringify(d.servizi || []), JSON.stringify(d.acconti || []), JSON.stringify(d.piano_pagamento || []),
@@ -881,7 +911,6 @@ export default {
           d.accettato ? 1 : 0, d.note || null, d.totale_finale || 0, d.stato || 'attivo',
           d.data_creazione || new Date().toISOString()
         ).run();
-        
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
@@ -983,6 +1012,92 @@ export default {
         if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
         const result = await env.DB.prepare("SELECT * FROM studi WHERE scheda_completata=1 ORDER BY data_registrazione DESC").all();
         return new Response(JSON.stringify({ success: true, studi: result.results }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 70. ANAGRAFICA CLIENTI - LISTA (Studio)
+      // ============================================
+      if (path === "/api/studio/anagrafica-clienti" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const result = await env.DB.prepare("SELECT * FROM anagrafica_clienti WHERE studio_id=? ORDER BY CAST(SUBSTR(id, 5) AS INTEGER) ASC").bind(sess.user_id).all();
+        return new Response(JSON.stringify({ success: true, clienti: result.results }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 71. ANAGRAFICA CLIENTI - CREA (Studio)
+      // ============================================
+      if (path === "/api/studio/anagrafica-clienti" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const d = await request.json();
+        const id = await generaIdCliente(sess.user_id);
+        const username = generaUsername(d.nome, d.cognome);
+        const password = generaPassword();
+        await env.DB.prepare(`INSERT INTO anagrafica_clienti (id, studio_id, nome, cognome, email, telefono, indirizzo, cap, citta, provincia, username, password, data_creazione, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+          id, sess.user_id, d.nome || '', d.cognome || '', d.email || '', d.telefono || '', d.indirizzo || '', d.cap || '', d.citta || '', d.provincia || '', username, password, new Date().toISOString(), d.note || ''
+        ).run();
+        return new Response(JSON.stringify({ success: true, cliente: { id, username, password } }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 72. ANAGRAFICA CLIENTI - DETTAGLIO (Studio)
+      // ============================================
+      if (path.startsWith("/api/studio/anagrafica-clienti/") && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const id = path.split("/api/studio/anagrafica-clienti/")[1];
+        const result = await env.DB.prepare("SELECT * FROM anagrafica_clienti WHERE id=? AND studio_id=?").bind(id, sess.user_id).first();
+        if (!result) return new Response(JSON.stringify({ error: "Cliente non trovato" }), { status: 404, headers: corsHeaders });
+        return new Response(JSON.stringify({ success: true, cliente: result }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 73. ANAGRAFICA CLIENTI - MODIFICA (Studio)
+      // ============================================
+      if (path.startsWith("/api/studio/anagrafica-clienti/") && request.method === "PUT") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const id = path.split("/api/studio/anagrafica-clienti/")[1];
+        const d = await request.json();
+        const updates = []; const params = [];
+        ['nome', 'cognome', 'email', 'telefono', 'indirizzo', 'cap', 'citta', 'provincia', 'username', 'password', 'note'].forEach(field => {
+            if (d[field] !== undefined) { updates.push(`${field}=?`); params.push(d[field]); }
+        });
+        if (updates.length === 0) return new Response(JSON.stringify({ error: "Nessun campo da aggiornare" }), { status: 400, headers: corsHeaders });
+        params.push(id, sess.user_id);
+        await env.DB.prepare(`UPDATE anagrafica_clienti SET ${updates.join(', ')} WHERE id=? AND studio_id=?`).bind(...params).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 74. ANAGRAFICA CLIENTI - ELIMINA (Studio)
+      // ============================================
+      if (path.startsWith("/api/studio/anagrafica-clienti/") && request.method === "DELETE") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const id = path.split("/api/studio/anagrafica-clienti/")[1];
+        await env.DB.prepare("DELETE FROM anagrafica_clienti WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 75. ANAGRAFICA CLIENTI - RICERCA (Studio)
+      // ============================================
+      if (path === "/api/studio/anagrafica-clienti/ricerca" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const q = (url.searchParams.get("q") || '').toLowerCase();
+        const result = await env.DB.prepare(
+          "SELECT id, nome, cognome, email, telefono FROM anagrafica_clienti WHERE studio_id=? AND (LOWER(nome) LIKE ? OR LOWER(cognome) LIKE ? OR LOWER(email) LIKE ?) ORDER BY cognome, nome LIMIT 20"
+        ).bind(sess.user_id, `%${q}%`, `%${q}%`, `%${q}%`).all();
+        return new Response(JSON.stringify({ success: true, clienti: result.results }), { headers: corsHeaders });
       }
 
       // ============================================
