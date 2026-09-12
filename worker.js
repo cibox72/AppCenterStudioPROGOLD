@@ -1077,14 +1077,14 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
-      if (path === "/api/studio/anagrafica-clienti/ricerca" && request.method === "GET") {
+            if (path === "/api/studio/anagrafica-clienti/ricerca" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
         const q = (url.searchParams.get("q") || '').toLowerCase();
         const result = await env.DB.prepare(
-          "SELECT id, nome, cognome, email, telefono FROM anagrafica_clienti WHERE studio_id=? AND (LOWER(nome) LIKE ? OR LOWER(cognome) LIKE ? OR LOWER(email) LIKE ?) ORDER BY cognome, nome LIMIT 20"
-        ).bind(sess.user_id, `%${q}%`, `%${q}%`, `%${q}%`).all();
+          "SELECT id, nome, cognome, email, telefono FROM anagrafica_clienti WHERE studio_id=? AND (LOWER(id) LIKE ? OR LOWER(nome) LIKE ? OR LOWER(cognome) LIKE ? OR LOWER(email) LIKE ?) ORDER BY cognome, nome LIMIT 20"
+        ).bind(sess.user_id, `%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`).all();
         return new Response(JSON.stringify({ success: true, clienti: result.results }), { headers: corsHeaders });
       }
 
