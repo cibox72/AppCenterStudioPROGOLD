@@ -1137,7 +1137,7 @@ export default {
         if (!cliente) return new Response(JSON.stringify({ error: "Cliente non trovato" }), { status: 404, headers: corsHeaders });
         
         const username = (cliente.nome || 'cl').substring(0, 2).toLowerCase() + Math.floor(10 + Math.random() * 90);
-        const password = generaPassword();
+        const password = Math.random().toString(36).substring(2, 4).toUpperCase() + Math.floor(10 + Math.random() * 90);
         const id = 'sel-' + Date.now();
         const dataCreazione = new Date().toISOString();
         const dataScadenza = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
