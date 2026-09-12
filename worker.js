@@ -168,7 +168,7 @@ export default {
         try {
           const bucket = env.appcenter_studio_foto;
           if (bucket) {
-            const prefixes = [`loghi/${studioId}/`, `gallerie/${studioId}/`];
+            const prefixes = [`loghi/${studioId}/`, `gallerie/${studioId}/`, `selezioni/${studioId}/`];
             for (const prefix of prefixes) {
               let cursor = undefined;
               do {
@@ -183,6 +183,7 @@ export default {
           const tablesToClean = ['clienti', 'servizi', 'preventivi', 'contratti', 'workflow', 'ricevute', 'agenda', 'email_archivio', 'prodotti_negozio', 'negozi_config', 'ordini_negozio', 'lista_regali', 'link_utili', 'gallerie', 'temi_colori', 'email_config', 'anagrafica_clienti', 'cartelle_cliente', 'selezioni_album'];
           for (const table of tablesToClean) {
             try { await env.DB.prepare(`DELETE FROM ${table} WHERE studio_id=?`).bind(studioId).run(); } catch(e) {}
+            try { await env.DB.prepare(`DELETE FROM ${table} WHERE id LIKE '%-${studioId}-%'`).run(); } catch(e) {} // Pulizia extra per ID composti
           }
           await env.DB.prepare("DELETE FROM studi WHERE id=?").bind(studioId).run();
           return new Response(JSON.stringify({ success: true, message: "Studio eliminato con successo" }), { headers: corsHeaders });
@@ -273,7 +274,8 @@ export default {
         await creaNotifica('registrazione', 'Nuova Richiesta di Registrazione', `Studio "${d.nome}" ha richiesto la prova. Email: ${d.email}`, { ...d, studioId });
         return new Response(JSON.stringify({ success: true, studioId }), { headers: corsHeaders });
       }
-            // ============================================
+
+      // ============================================
       // 13. DASHBOARD CLIENTE
       // ============================================
       if (path === "/api/cliente/dashboard" && request.method === "GET") {
@@ -285,7 +287,7 @@ export default {
       }
 
       // ============================================
-      // 14-16. CLIENTE FOTO E SELEZIONE
+      // 14-16. CLIENTE FOTO E SELEZIONE (Legacy)
       // ============================================
       if (path === "/api/cliente/foto/cartelle" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -544,7 +546,8 @@ export default {
         await env.DB.prepare(`INSERT INTO clienti (id, password, password_plain, studio_id, nome_a, cognome_a, nome_b, cognome_b, email, telefono, tipo_evento, data_evento, data_registrazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, 'hash:' + hashed, d.password, d.studio_id, d.nome_a, d.cognome_a, d.nome_b, d.cognome_b, d.email, d.telefono, d.tipo_evento, d.data_evento, d.data_registrazione).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-            // ============================================
+
+      // ============================================
       // 34. EMAIL ARCHIVIO (Studio)
       // ============================================
       if (path === "/api/studio/email-archivio" && request.method === "GET") {
@@ -1015,7 +1018,7 @@ export default {
       }
 
       // ============================================
-      // 70. ANAGRAFICA CLIENTI - LISTA (Studio)
+      // 70-75. ANAGRAFICA CLIENTI (Studio)
       // ============================================
       if (path === "/api/studio/anagrafica-clienti" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -1025,9 +1028,6 @@ export default {
         return new Response(JSON.stringify({ success: true, clienti: result.results }), { headers: corsHeaders });
       }
 
-      // ============================================
-      // 71. ANAGRAFICA CLIENTI - CREA (Studio)
-      // ============================================
       if (path === "/api/studio/anagrafica-clienti" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -1042,9 +1042,6 @@ export default {
         return new Response(JSON.stringify({ success: true, cliente: { id, username, password } }), { headers: corsHeaders });
       }
 
-      // ============================================
-      // 72. ANAGRAFICA CLIENTI - DETTAGLIO (Studio)
-      // ============================================
       if (path.startsWith("/api/studio/anagrafica-clienti/") && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -1055,9 +1052,6 @@ export default {
         return new Response(JSON.stringify({ success: true, cliente: result }), { headers: corsHeaders });
       }
 
-      // ============================================
-      // 73. ANAGRAFICA CLIENTI - MODIFICA (Studio)
-      // ============================================
       if (path.startsWith("/api/studio/anagrafica-clienti/") && request.method === "PUT") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -1074,9 +1068,6 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
-      // ============================================
-      // 74. ANAGRAFICA CLIENTI - ELIMINA (Studio)
-      // ============================================
       if (path.startsWith("/api/studio/anagrafica-clienti/") && request.method === "DELETE") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -1086,9 +1077,6 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
-      // ============================================
-      // 75. ANAGRAFICA CLIENTI - RICERCA (Studio)
-      // ============================================
       if (path === "/api/studio/anagrafica-clienti/ricerca" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -1098,6 +1086,299 @@ export default {
           "SELECT id, nome, cognome, email, telefono FROM anagrafica_clienti WHERE studio_id=? AND (LOWER(nome) LIKE ? OR LOWER(cognome) LIKE ? OR LOWER(email) LIKE ?) ORDER BY cognome, nome LIMIT 20"
         ).bind(sess.user_id, `%${q}%`, `%${q}%`, `%${q}%`).all();
         return new Response(JSON.stringify({ success: true, clienti: result.results }), { headers: corsHeaders });
+      }
+
+      // ============================================
+      // 76-87. SELEZIONE ALBUM (NUOVI ENDPOINT)
+      // ============================================
+      
+      // 76. CREA LINK SELEZIONE
+      if (path === "/api/studio/selezione-album/crea" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        
+        const d = await request.json();
+        const clienteId = d.cliente_id;
+        const clienteNome = d.cliente_nome || '';
+        
+        const cliente = await env.DB.prepare("SELECT * FROM anagrafica_clienti WHERE id=? AND studio_id=?").bind(clienteId, sess.user_id).first();
+        if (!cliente) return new Response(JSON.stringify({ error: "Cliente non trovato" }), { status: 404, headers: corsHeaders });
+        
+        const username = generaUsername(cliente.nome, cliente.cognome) + '-' + Date.now().toString().slice(-4);
+        const password = generaPassword();
+        const id = 'sel-' + Date.now();
+        const dataCreazione = new Date().toISOString();
+        const dataScadenza = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+        
+        await env.DB.prepare(
+          "INSERT INTO selezioni_album (id, studio_id, cliente_id, cliente_nome, username, password, stato, data_creazione, data_scadenza) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        ).bind(id, sess.user_id, clienteId, clienteNome, username, password, 'in_attesa', dataCreazione, dataScadenza).run();
+        
+        const linkPubblico = `https://cibox72.github.io/AppCenterStudioPROGOLD/selezione-cliente.html?id=${id}&token=${token}`;
+        
+        return new Response(JSON.stringify({ success: true, id, username, password, link: linkPubblico, scadenza: dataScadenza }), { headers: corsHeaders });
+      }
+
+      // 77. UPLOAD CARTELLA (FormData per gestire file pesanti)
+      if (path === "/api/studio/selezione-album/upload-cartella" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        
+        const formData = await request.formData();
+        const selezioneId = formData.get('selezione_id');
+        const nomeCartella = formData.get('nome_cartella');
+        const clienteId = formData.get('cliente_id');
+        const files = formData.getAll('files');
+        
+        const bucket = env.appcenter_studio_foto;
+        if (!bucket) return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
+        
+        const prefix = `selezioni/${sess.user_id}/${clienteId}/${selezioneId}/${nomeCartella}/`;
+        let uploadCount = 0;
+        
+        for (const file of files) {
+          try {
+            const key = prefix + file.name;
+            const arrayBuffer = await file.arrayBuffer();
+            await bucket.put(key, arrayBuffer, { httpMetadata: { contentType: file.type } });
+            uploadCount++;
+          } catch (e) { console.error('Errore upload file:', e); }
+        }
+        return new Response(JSON.stringify({ success: true, uploaded: uploadCount }), { headers: corsHeaders });
+      }
+
+      // 78. UPLOAD SINGOLO FILE
+      if (path === "/api/studio/selezione-album/upload-file" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        
+        const formData = await request.formData();
+        const file = formData.get('file');
+        const selezioneId = formData.get('selezione_id');
+        const nomeCartella = formData.get('nome_cartella') || 'Singoli_File';
+        const clienteId = formData.get('cliente_id');
+        
+        if (!file) return new Response(JSON.stringify({ error: "Nessun file ricevuto" }), { status: 400, headers: corsHeaders });
+        
+        const bucket = env.appcenter_studio_foto;
+        if (!bucket) return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
+        
+        const key = `selezioni/${sess.user_id}/${clienteId}/${selezioneId}/${nomeCartella}/${file.name}`;
+        const arrayBuffer = await file.arrayBuffer();
+        await bucket.put(key, arrayBuffer, { httpMetadata: { contentType: file.type } });
+        
+        return new Response(JSON.stringify({ success: true, filename: file.name }), { headers: corsHeaders });
+      }
+
+      // 79. LISTA CARTELLE (Cliente)
+      if (path === "/api/public/selezione-album/cartelle" && request.method === "GET") {
+        const selezioneId = url.searchParams.get("id");
+        const username = url.searchParams.get("username");
+        const password = url.searchParams.get("password");
+        
+        if (!selezioneId || !username || !password) return new Response(JSON.stringify({ error: "Parametri mancanti" }), { status: 400, headers: corsHeaders });
+        
+        const selezione = await env.DB.prepare("SELECT * FROM selezioni_album WHERE id=? AND username=? AND password=?").bind(selezioneId, username, password).first();
+        if (!selezione) return new Response(JSON.stringify({ error: "Credenziali non valide" }), { status: 401, headers: corsHeaders });
+        if (new Date(selezione.data_scadenza) < new Date()) return new Response(JSON.stringify({ error: "Link scaduto" }), { status: 410, headers: corsHeaders });
+        
+        const bucket = env.appcenter_studio_foto;
+        if (!bucket) return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
+        
+        const prefix = `selezioni/${selezione.studio_id}/${selezione.cliente_id}/${selezioneId}/`;
+        const objects = await bucket.list({ prefix, delimiter: '/' });
+        
+        const cartelle = [];
+        for (const obj of objects.objects || []) {
+          const parts = obj.key.replace(prefix, '').split('/');
+          if (parts.length > 1 && parts[0] && !cartelle.includes(parts[0])) cartelle.push(parts[0]);
+        }
+        return new Response(JSON.stringify({ success: true, cartelle, cliente_nome: selezione.cliente_nome }), { headers: corsHeaders });
+      }
+
+      // 80. LISTA FOTO (Cliente)
+      if (path === "/api/public/selezione-album/foto" && request.method === "GET") {
+        const selezioneId = url.searchParams.get("id");
+        const username = url.searchParams.get("username");
+        const password = url.searchParams.get("password");
+        const cartella = url.searchParams.get("cartella");
+        
+        if (!selezioneId || !username || !password || !cartella) return new Response(JSON.stringify({ error: "Parametri mancanti" }), { status: 400, headers: corsHeaders });
+        
+        const selezione = await env.DB.prepare("SELECT * FROM selezioni_album WHERE id=? AND username=? AND password=?").bind(selezioneId, username, password).first();
+        if (!selezione) return new Response(JSON.stringify({ error: "Credenziali non valide" }), { status: 401, headers: corsHeaders });
+        if (new Date(selezione.data_scadenza) < new Date()) return new Response(JSON.stringify({ error: "Link scaduto" }), { status: 410, headers: corsHeaders });
+        
+        const bucket = env.appcenter_studio_foto;
+        if (!bucket) return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
+        
+        const prefix = `selezioni/${selezione.studio_id}/${selezione.cliente_id}/${selezioneId}/${cartella}/`;
+        const objects = await bucket.list({ prefix });
+        
+        const foto = objects.objects.map(obj => ({ name: obj.key.split('/').pop(), url: `https://appcenter-studio-foto.r2.dev/${obj.key}`, key: obj.key }));
+        return new Response(JSON.stringify({ success: true, foto }), { headers: corsHeaders });
+      }
+
+      // 81. INVIA SELEZIONE (Cliente) - ELIMINA NON PREFERITE E CREA .TXT
+      if (path === "/api/public/selezione-album/invia" && request.method === "POST") {
+        const d = await request.json();
+        const selezioneId = d.selezione_id;
+        const username = d.username;
+        const password = d.password;
+        const preferiti = d.preferiti || [];
+        
+        if (!selezioneId || !username || !password) return new Response(JSON.stringify({ error: "Parametri mancanti" }), { status: 400, headers: corsHeaders });
+        
+        const selezione = await env.DB.prepare("SELECT * FROM selezioni_album WHERE id=? AND username=? AND password=?").bind(selezioneId, username, password).first();
+        if (!selezione) return new Response(JSON.stringify({ error: "Credenziali non valide" }), { status: 401, headers: corsHeaders });
+        
+        const bucket = env.appcenter_studio_foto;
+        if (!bucket) return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
+        
+        const prefix = `selezioni/${selezione.studio_id}/${selezione.cliente_id}/${selezioneId}/`;
+        const preferitiKeys = new Set(preferiti.map(p => p.key));
+        const allObjects = await bucket.list({ prefix });
+        
+        let fileTestoContenuto = `SELEZIONE FOTO - ${selezione.cliente_nome || 'Cliente'}\nID Cliente: ${selezione.cliente_id}\nData selezione: ${new Date().toLocaleString('it-IT')}\nUsername: ${username}\n\n`;
+        fileTestoContenuto += `TOTALE FOTO SELEZIONATE: ${preferiti.length}\n\n----------------------------------------\nELENCO FILE PREFERITI:\n----------------------------------------\n\n`;
+        
+        let eliminatedCount = 0;
+        let keptCount = 0;
+        
+        for (const obj of allObjects.objects) {
+          if (obj.key.endsWith('.txt')) continue;
+          
+          if (preferitiKeys.has(obj.key)) {
+            const filename = obj.key.split('/').pop();
+            const cartella = obj.key.replace(prefix, '').split('/')[0];
+            fileTestoContenuto += `[${cartella}] ${filename}\n`;
+            keptCount++;
+          } else {
+            await bucket.delete(obj.key);
+            eliminatedCount++;
+          }
+        }
+        
+        fileTestoContenuto += `\n----------------------------------------\nRIEPILOGO:\nFoto selezionate: ${keptCount}\nFoto eliminate: ${eliminatedCount}\n----------------------------------------\n`;
+        
+        const txtFilename = `SELEZIONE_${new Date().toISOString().replace(/[:.]/g, '-')}.txt`;
+        await bucket.put(prefix + txtFilename, fileTestoContenuto, { httpMetadata: { contentType: 'text/plain' } });
+        
+        await env.DB.prepare("UPDATE selezioni_album SET stato='selezione_ricevuta', data_selezione=? WHERE id=?").bind(new Date().toISOString(), selezioneId).run();
+        
+        await creaNotifica('selezione_album', 'Nuova Selezione Album Ricevuta', `Il cliente ${selezione.cliente_nome || selezione.cliente_id} ha completato la selezione. Foto selezionate: ${keptCount}`, { selezione_id: selezioneId, studio_id: selezione.studio_id, cliente_id: selezione.cliente_id });
+        
+        return new Response(JSON.stringify({ success: true, kept: keptCount, eliminated: eliminatedCount }), { headers: corsHeaders });
+      }
+
+      // 82. LISTA SELEZIONI (Studio)
+      if (path === "/api/studio/selezioni-album" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const result = await env.DB.prepare("SELECT * FROM selezioni_album WHERE studio_id=? ORDER BY data_creazione DESC").bind(sess.user_id).all();
+        return new Response(JSON.stringify({ success: true, selezioni: result.results }), { headers: corsHeaders });
+      }
+
+      // 83. SCARICA SELEZIONE (Studio)
+      if (path === "/api/studio/selezione-album/scarica" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        
+        const d = await request.json();
+        const selezioneId = d.selezione_id;
+        const selezione = await env.DB.prepare("SELECT * FROM selezioni_album WHERE id=? AND studio_id=?").bind(selezioneId, sess.user_id).first();
+        if (!selezione) return new Response(JSON.stringify({ error: "Selezione non trovata" }), { status: 404, headers: corsHeaders });
+        
+        const bucket = env.appcenter_studio_foto;
+        if (!bucket) return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
+        
+        const prefix = `selezioni/${selezione.studio_id}/${selezione.cliente_id}/${selezioneId}/`;
+        const objects = await bucket.list({ prefix });
+        
+        const files = [];
+        for (const obj of objects.objects) {
+          if (obj.key.endsWith('.txt')) {
+            const content = await bucket.get(obj.key);
+            files.push({ name: obj.key.split('/').pop(), type: 'txt', content: await content.text(), url: `https://appcenter-studio-foto.r2.dev/${obj.key}` });
+          } else {
+            files.push({ name: obj.key.split('/').pop(), type: 'image', url: `https://appcenter-studio-foto.r2.dev/${obj.key}` });
+          }
+        }
+        
+        const dataEliminazione = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+        await env.DB.prepare("UPDATE selezioni_album SET stato='scaricata', data_scaricamento=?, data_eliminazione=? WHERE id=?").bind(new Date().toISOString(), dataEliminazione, selezioneId).run();
+        
+        return new Response(JSON.stringify({ success: true, files, cliente_nome: selezione.cliente_nome }), { headers: corsHeaders });
+      }
+
+      // 84. ELIMINA SELEZIONE (Studio)
+      if (path === "/api/studio/selezione-album/elimina" && request.method === "DELETE") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        
+        const d = await request.json();
+        const selezioneId = d.selezione_id;
+        const selezione = await env.DB.prepare("SELECT * FROM selezioni_album WHERE id=? AND studio_id=?").bind(selezioneId, sess.user_id).first();
+        if (!selezione) return new Response(JSON.stringify({ error: "Selezione non trovata" }), { status: 404, headers: corsHeaders });
+        
+        const bucket = env.appcenter_studio_foto;
+        if (bucket) {
+          const prefix = `selezioni/${selezione.studio_id}/${selezione.cliente_id}/${selezioneId}/`;
+          const objects = await bucket.list({ prefix });
+          if (objects.objects.length > 0) await bucket.delete(objects.objects.map(obj => obj.key));
+        }
+        await env.DB.prepare("DELETE FROM selezioni_album WHERE id=?").bind(selezioneId).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // 85. NOTIFICHE SELEZIONE (Studio)
+      if (path === "/api/studio/selezioni-album/notifiche" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const result = await env.DB.prepare("SELECT * FROM notifiche WHERE tipo='selezione_album' AND dati LIKE ? AND letto=0 ORDER BY data_creazione DESC").bind(`%"studio_id":"${sess.user_id}"%`).all();
+        return new Response(JSON.stringify({ success: true, notifiche: result.results, count: result.results.length }), { headers: corsHeaders });
+      }
+
+      // 86. SEGNA NOTIFICA LETTA (Studio)
+      if (path === "/api/studio/selezione-album/notifica/letta" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const d = await request.json();
+        await env.DB.prepare("UPDATE notifiche SET letto=1 WHERE id=?").bind(d.notifica_id).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      // 87. PULIZIA AUTOMATICA (Admin/Cron)
+      if (path === "/api/admin/selezioni-album/pulizia" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        
+        const now = new Date().toISOString();
+        const bucket = env.appcenter_studio_foto;
+        const daEliminare = await env.DB.prepare("SELECT * FROM selezioni_album WHERE stato='scaricata' AND data_eliminazione < ?").bind(now).all();
+        
+        let eliminatedCount = 0;
+        for (const sel of daEliminare.results || []) {
+          if (bucket) {
+            const prefix = `selezioni/${sel.studio_id}/${sel.cliente_id}/${sel.id}/`;
+            const objects = await bucket.list({ prefix });
+            if (objects.objects.length > 0) {
+              await bucket.delete(objects.objects.map(obj => obj.key));
+              eliminatedCount += objects.objects.length;
+            }
+          }
+          await env.DB.prepare("UPDATE selezioni_album SET stato='eliminata' WHERE id=?").bind(sel.id).run();
+        }
+        return new Response(JSON.stringify({ success: true, eliminated: eliminatedCount, count: daEliminare.results.length }), { headers: corsHeaders });
       }
 
       // ============================================
