@@ -118,7 +118,6 @@
         .search-result-item strong { color: var(--primary-dark); }
         .cliente-search-box { position: relative; margin-bottom: 16px; }
 
-        /* NUOVO: Stile per le cartelle caricate */
         .folder-list {
             margin-top: 16px;
             border: 1px solid var(--border-color);
@@ -167,13 +166,11 @@
 
         <div id="mainContent" class="hidden">
             
-            <!-- AVVISO IMPORTANTE -->
             <div class="warning-box">
                 <h3>Avviso Importante per lo Studio</h3>
                 <p>Prima di caricare le cartelle, assicurati di aver esportato le foto in <strong>bassa risoluzione</strong> (es. da Lightroom, esporta con lato lungo a 2000px o qualità 20%). Questo garantisce un caricamento rapido e un'esperienza fluida per il cliente che selezionerà le foto da cellulare. Il sistema eliminerà automaticamente le foto non selezionate per liberare spazio cloud.</p>
             </div>
 
-            <!-- CARD 1: RICERCA E CARICAMENTO -->
             <div class="card">
                 <div class="card-title">1. Seleziona Cliente e Carica Materiale</div>
                 
@@ -206,7 +203,6 @@
 
                 <div id="uploadStatus" class="hidden" style="background: var(--primary-light); padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 16px;"></div>
 
-                <!-- NUOVO: Elenco cartelle caricate -->
                 <div id="folderListContainer" class="hidden">
                     <div class="card-title" style="font-size: 14px; margin-bottom: 12px;">Cartelle Caricate per questo Cliente:</div>
                     <div id="folderList" class="folder-list"></div>
@@ -230,7 +226,6 @@
                 </div>
             </div>
 
-            <!-- CARD 2: ARCHIVIO SELEZIONI -->
             <div class="card">
                 <div class="card-title">Archivio Selezioni Attive</div>
                 <div class="table-container">
@@ -263,7 +258,8 @@
         const token = urlParams.get('token');
         let studioId = null;
         let listaSelezione = [];
-        let cartelleCaricate = []; // NUOVO: Array per tracciare le cartelle
+        let cartelleCaricate = [];
+        let selezioneIdTemporaneo = null; // NUOVO: ID temporaneo per gli upload
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) { window.location.href = 'index.html'; return; }
@@ -349,7 +345,8 @@
             document.getElementById('searchCliente').value = `${id} - ${nome} ${cognome}`;
             document.getElementById('resultsCliente').style.display = 'none';
             
-            // NUOVO: Resetta le cartelle quando cambi cliente
+            // NUOVO: Genera ID temporaneo e resetta le cartelle
+            selezioneIdTemporaneo = 'sel-' + Date.now();
             cartelleCaricate = [];
             aggiornaListaCartelle();
         }
@@ -363,6 +360,7 @@
         async function gestisciUploadCartella() {
             const files = document.getElementById('uploadCartella').files;
             const selezioneId = document.getElementById('selectedClienteId').value;
+            const clienteId = selezioneId;
             const nomeCartella = document.getElementById('nomeCartella').value.trim() || 'Cartella_' + (cartelleCaricate.length + 1);
             
             if (!selezioneId) { mostraToast('Seleziona prima un cliente', 'error'); return; }
@@ -373,9 +371,9 @@
             statusDiv.innerHTML = `Caricamento di ${files.length} file in corso... Attendere.`;
 
             const formData = new FormData();
-            formData.append('selezione_id', 'temp-' + Date.now());
+            formData.append('selezione_id', selezioneIdTemporaneo); // NUOVO: Usa ID temporaneo
             formData.append('nome_cartella', nomeCartella);
-            formData.append('cliente_id', selezioneId);
+            formData.append('cliente_id', clienteId);
             for (let i = 0; i < files.length; i++) {
                 formData.append('files', files[i]);
             }
@@ -387,7 +385,6 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    // NUOVO: Aggiungi alla lista
                     cartelleCaricate.push({
                         nome: nomeCartella,
                         fileCount: result.uploaded || files.length
@@ -397,7 +394,6 @@
                     mostraToast(`${result.uploaded} file caricati con successo`, 'success');
                     statusDiv.innerHTML = `Caricamento completato: ${result.uploaded} file.`;
                     
-                    // Pulisci il campo nome cartella
                     document.getElementById('nomeCartella').value = '';
                 } else {
                     mostraToast('Errore nel caricamento', 'error');
@@ -412,6 +408,7 @@
             const fileInput = document.getElementById('uploadFile');
             const file = fileInput.files[0];
             const selezioneId = document.getElementById('selectedClienteId').value;
+            const clienteId = selezioneId;
             const nomeCartella = 'Singoli_File';
             
             if (!selezioneId) { mostraToast('Seleziona prima un cliente', 'error'); return; }
@@ -419,9 +416,9 @@
 
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('selezione_id', 'temp-' + Date.now());
+            formData.append('selezione_id', selezioneIdTemporaneo); // NUOVO: Usa ID temporaneo
             formData.append('nome_cartella', nomeCartella);
-            formData.append('cliente_id', selezioneId);
+            formData.append('cliente_id', clienteId);
 
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/selezione-album/upload-file?token=${encodeURIComponent(token)}`, {
@@ -430,7 +427,6 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    // NUOVO: Aggiungi o aggiorna la cartella Singoli_File
                     const existingFolder = cartelleCaricate.find(f => f.nome === nomeCartella);
                     if (existingFolder) {
                         existingFolder.fileCount++;
@@ -449,7 +445,6 @@
             }
         }
 
-        // NUOVO: Funzione per aggiornare la lista cartelle
         function aggiornaListaCartelle() {
             const container = document.getElementById('folderListContainer');
             const list = document.getElementById('folderList');
@@ -463,7 +458,7 @@
             list.innerHTML = cartelleCaricate.map((folder, index) => `
                 <div class="folder-item">
                     <div class="folder-info">
-                        <div class="folder-icon-small">📁</div>
+                        <div class="folder-icon-small"></div>
                         <div class="folder-name">${folder.nome}</div>
                         <div class="folder-count">${folder.fileCount} file</div>
                     </div>
@@ -474,12 +469,35 @@
             `).join('');
         }
 
-        // NUOVO: Funzione per eliminare una cartella
-        function eliminaCartella(index) {
-            if (confirm(`Eliminare la cartella "${cartelleCaricate[index].nome}"?`)) {
-                cartelleCaricate.splice(index, 1);
-                aggiornaListaCartelle();
-                mostraToast('Cartella eliminata dalla lista', 'success');
+        // NUOVO: Elimina cartella anche dal cloud
+        async function eliminaCartella(index) {
+            const folder = cartelleCaricate[index];
+            if (!confirm(`Eliminare la cartella "${folder.nome}" e tutti i suoi file dal cloud?`)) return;
+            
+            const clienteId = document.getElementById('selectedClienteId').value;
+            
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/selezione-album/elimina-cartella?token=${encodeURIComponent(token)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        selezione_id: selezioneIdTemporaneo,
+                        nome_cartella: folder.nome,
+                        cliente_id: clienteId
+                    })
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    cartelleCaricate.splice(index, 1);
+                    aggiornaListaCartelle();
+                    mostraToast(`Cartella eliminata (${result.eliminated} file rimossi dal cloud)`, 'success');
+                } else {
+                    mostraToast('Errore: ' + (result.error || ''), 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
             }
         }
 
