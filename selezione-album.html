@@ -569,21 +569,24 @@
         }
 
         function selezionaCliente(id, nome, cognome) {
-            document.getElementById('selectedClienteId').value = id;
-            document.getElementById('selectedClienteNome').value = `${nome} ${cognome}`;
-            document.getElementById('searchCliente').value = `${id} - ${nome} ${cognome}`;
-            document.getElementById('resultsCliente').style.display = 'none';
-            
-            // Reset stato
-            cartelleCaricate = [];
-            selezioneIdCorrente = null;
-            document.getElementById('linkGenerato').classList.add('hidden');
-            aggiornaListaCartelle();
-            
-            // Sblocca Step 2
-            attivaStep(2);
-            mostraToast('Cliente selezionato. Ora genera il link.', 'success');
-        }
+    document.getElementById('selectedClienteId').value = id;
+    document.getElementById('selectedClienteNome').value = `${nome} ${cognome}`;
+    document.getElementById('searchCliente').value = `${id} - ${nome} ${cognome}`;
+    document.getElementById('resultsCliente').style.display = 'none';
+    
+    // Reset SOLO se non c'è già un link generato
+    if (!selezioneIdCorrente) {
+        cartelleCaricate = [];
+        aggiornaListaCartelle();
+    }
+    
+    // Sblocca Step 2 (ma lascia attivi gli altri se già usati)
+    if (!selezioneIdCorrente) {
+        attivaStep(2);
+    }
+    
+    mostraToast('Cliente selezionato. Ora genera il link o carica cartelle.', 'success');
+}
 
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.cliente-search-box')) {
@@ -592,19 +595,28 @@
         });
 
         function attivaStep(numero) {
-            for (let i = 1; i <= 4; i++) {
-                const step = document.getElementById(`step${i}`);
-                if (i < numero) {
-                    step.classList.add('completed');
-                    step.classList.remove('active');
-                } else if (i === numero) {
-                    step.classList.add('active');
-                    step.classList.remove('completed');
-                } else {
-                    step.classList.remove('active', 'completed');
-                }
-            }
+    for (let i = 1; i <= 4; i++) {
+        const step = document.getElementById(`step${i}`);
+        if (i < numero) {
+            // Step completati ma SEMPRE ATTIVI (cliccabili)
+            step.classList.add('completed');
+            step.classList.add('active');  // ← AGGIUNTO: rimane attivo
+            step.style.pointerEvents = 'all';  // ← AGGIUNTO: permette click
+            step.style.opacity = '0.8';  // ← CAMBIATO: leggermente trasparente ma visibile
+        } else if (i === numero) {
+            // Step corrente: attivo al 100%
+            step.classList.add('active');
+            step.classList.remove('completed');
+            step.style.pointerEvents = 'all';
+            step.style.opacity = '1';
+        } else {
+            // Step futuri: disabilitati
+            step.classList.remove('active', 'completed');
+            step.style.pointerEvents = 'none';
+            step.style.opacity = '0.4';
         }
+    }
+}
 
         async function generaLinkSelezione() {
             const clienteId = document.getElementById('selectedClienteId').value;
