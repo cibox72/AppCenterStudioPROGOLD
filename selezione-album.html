@@ -77,7 +77,6 @@
         th { background: #f8f9fa; color: var(--text-main); font-weight: 600; text-transform: uppercase; font-size: 10px; }
         tr:hover td { background: #fafafa; }
         
-        /* Stati Professionali (No Emoji) */
         .status-badge {
             display: inline-block; padding: 6px 10px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
         }
@@ -118,6 +117,35 @@
         .search-result-item:hover { background: var(--primary-light); }
         .search-result-item strong { color: var(--primary-dark); }
         .cliente-search-box { position: relative; margin-bottom: 16px; }
+
+        /* NUOVO: Stile per le cartelle caricate */
+        .folder-list {
+            margin-top: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .folder-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .folder-item:last-child { border-bottom: none; }
+        .folder-info { display: flex; align-items: center; gap: 12px; }
+        .folder-icon-small { 
+            width: 32px; height: 32px; background: var(--primary-light); 
+            border-radius: 6px; display: flex; align-items: center; justify-content: center;
+            color: var(--primary-dark); font-size: 16px;
+        }
+        .folder-name { font-weight: 600; font-size: 13px; color: var(--text-main); }
+        .folder-count { 
+            font-size: 11px; color: var(--text-light); 
+            background: white; padding: 2px 8px; border-radius: 10px;
+        }
+        .folder-actions { display: flex; gap: 8px; }
     </style>
 </head>
 <body>
@@ -178,6 +206,12 @@
 
                 <div id="uploadStatus" class="hidden" style="background: var(--primary-light); padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 16px;"></div>
 
+                <!-- NUOVO: Elenco cartelle caricate -->
+                <div id="folderListContainer" class="hidden">
+                    <div class="card-title" style="font-size: 14px; margin-bottom: 12px;">Cartelle Caricate per questo Cliente:</div>
+                    <div id="folderList" class="folder-list"></div>
+                </div>
+
                 <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
 
                 <div class="card-title" style="font-size: 14px; margin-bottom: 12px;">2. Genera Link di Selezione</div>
@@ -229,6 +263,7 @@
         const token = urlParams.get('token');
         let studioId = null;
         let listaSelezione = [];
+        let cartelleCaricate = []; // NUOVO: Array per tracciare le cartelle
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) { window.location.href = 'index.html'; return; }
@@ -313,6 +348,10 @@
             document.getElementById('selectedClienteNome').value = `${nome} ${cognome}`;
             document.getElementById('searchCliente').value = `${id} - ${nome} ${cognome}`;
             document.getElementById('resultsCliente').style.display = 'none';
+            
+            // NUOVO: Resetta le cartelle quando cambi cliente
+            cartelleCaricate = [];
+            aggiornaListaCartelle();
         }
 
         document.addEventListener('click', function(e) {
@@ -324,7 +363,7 @@
         async function gestisciUploadCartella() {
             const files = document.getElementById('uploadCartella').files;
             const selezioneId = document.getElementById('selectedClienteId').value;
-            const nomeCartella = document.getElementById('nomeCartella').value.trim() || 'Cartella_Generale';
+            const nomeCartella = document.getElementById('nomeCartella').value.trim() || 'Cartella_' + (cartelleCaricate.length + 1);
             
             if (!selezioneId) { mostraToast('Seleziona prima un cliente', 'error'); return; }
             if (files.length === 0) return;
@@ -334,7 +373,7 @@
             statusDiv.innerHTML = `Caricamento di ${files.length} file in corso... Attendere.`;
 
             const formData = new FormData();
-            formData.append('selezione_id', 'temp-' + Date.now()); // Usiamo un ID temporaneo se non ancora creato, o quello reale
+            formData.append('selezione_id', 'temp-' + Date.now());
             formData.append('nome_cartella', nomeCartella);
             formData.append('cliente_id', selezioneId);
             for (let i = 0; i < files.length; i++) {
@@ -342,15 +381,24 @@
             }
 
             try {
-                // Nota: per upload massivi, in un sistema reale si userebbe un chunking, ma per ora proviamo diretto
                 const response = await fetch(`${WORKER_URL}/api/studio/selezione-album/upload-cartella?token=${encodeURIComponent(token)}`, {
                     method: 'POST',
                     body: formData
                 });
                 const result = await response.json();
                 if (result.success) {
+                    // NUOVO: Aggiungi alla lista
+                    cartelleCaricate.push({
+                        nome: nomeCartella,
+                        fileCount: result.uploaded || files.length
+                    });
+                    aggiornaListaCartelle();
+                    
                     mostraToast(`${result.uploaded} file caricati con successo`, 'success');
                     statusDiv.innerHTML = `Caricamento completato: ${result.uploaded} file.`;
+                    
+                    // Pulisci il campo nome cartella
+                    document.getElementById('nomeCartella').value = '';
                 } else {
                     mostraToast('Errore nel caricamento', 'error');
                 }
@@ -364,6 +412,7 @@
             const fileInput = document.getElementById('uploadFile');
             const file = fileInput.files[0];
             const selezioneId = document.getElementById('selectedClienteId').value;
+            const nomeCartella = 'Singoli_File';
             
             if (!selezioneId) { mostraToast('Seleziona prima un cliente', 'error'); return; }
             if (!file) return;
@@ -371,7 +420,7 @@
             const formData = new FormData();
             formData.append('file', file);
             formData.append('selezione_id', 'temp-' + Date.now());
-            formData.append('nome_cartella', 'Singoli_File');
+            formData.append('nome_cartella', nomeCartella);
             formData.append('cliente_id', selezioneId);
 
             try {
@@ -381,6 +430,15 @@
                 });
                 const result = await response.json();
                 if (result.success) {
+                    // NUOVO: Aggiungi o aggiorna la cartella Singoli_File
+                    const existingFolder = cartelleCaricate.find(f => f.nome === nomeCartella);
+                    if (existingFolder) {
+                        existingFolder.fileCount++;
+                    } else {
+                        cartelleCaricate.push({ nome: nomeCartella, fileCount: 1 });
+                    }
+                    aggiornaListaCartelle();
+                    
                     mostraToast(`File ${result.filename} caricato`, 'success');
                 } else {
                     mostraToast('Errore nel caricamento', 'error');
@@ -391,11 +449,48 @@
             }
         }
 
+        // NUOVO: Funzione per aggiornare la lista cartelle
+        function aggiornaListaCartelle() {
+            const container = document.getElementById('folderListContainer');
+            const list = document.getElementById('folderList');
+            
+            if (cartelleCaricate.length === 0) {
+                container.classList.add('hidden');
+                return;
+            }
+            
+            container.classList.remove('hidden');
+            list.innerHTML = cartelleCaricate.map((folder, index) => `
+                <div class="folder-item">
+                    <div class="folder-info">
+                        <div class="folder-icon-small">📁</div>
+                        <div class="folder-name">${folder.nome}</div>
+                        <div class="folder-count">${folder.fileCount} file</div>
+                    </div>
+                    <div class="folder-actions">
+                        <button class="btn btn-sm btn-danger" onclick="eliminaCartella(${index})">Elimina</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // NUOVO: Funzione per eliminare una cartella
+        function eliminaCartella(index) {
+            if (confirm(`Eliminare la cartella "${cartelleCaricate[index].nome}"?`)) {
+                cartelleCaricate.splice(index, 1);
+                aggiornaListaCartelle();
+                mostraToast('Cartella eliminata dalla lista', 'success');
+            }
+        }
+
         async function generaLinkSelezione() {
             const clienteId = document.getElementById('selectedClienteId').value;
             const clienteNome = document.getElementById('selectedClienteNome').value;
 
             if (!clienteId) { mostraToast('Seleziona un cliente dalla ricerca', 'error'); return; }
+            if (cartelleCaricate.length === 0) { 
+                if (!confirm('Non hai caricato nessuna cartella. Vuoi comunque generare il link?')) return; 
+            }
 
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/selezione-album/crea?token=${encodeURIComponent(token)}`, {
@@ -426,7 +521,6 @@
             const password = document.getElementById('genPassword').textContent;
             const clienteNome = document.getElementById('selectedClienteNome').value;
             
-            // Qui dovresti avere il telefono del cliente, per ora lo chiediamo o usiamo un placeholder
             const messaggio = `Ciao ${clienteNome}, il tuo album è pronto per la selezione!\n\nAccedi qui: ${link}\nUsername: ${username}\nPassword: ${password}\n\nIl link scadrà tra 7 giorni. Buon divertimento!`;
             
             window.open(`https://wa.me/?text=${encodeURIComponent(messaggio)}`, '_blank');
@@ -488,7 +582,7 @@
         function copiaLink(id) {
             const sel = listaSelezione.find(s => s.id === id);
             if (sel) {
-                const link = `https://cibox72.github.io/AppCenterStudioPROGOLD/selezione-cliente.html?id=${sel.id}&token=${token}`; // Semplificato per demo, in produzione usare il link salvato
+                const link = `https://cibox72.github.io/AppCenterStudioPROGOLD/selezione-album-cliente.html?id=${sel.id}&token=${token}`;
                 navigator.clipboard.writeText(link).then(() => mostraToast('Link copiato', 'success'));
             }
         }
@@ -504,7 +598,6 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    // Scarica il file .txt
                     const txtFile = result.files.find(f => f.type === 'txt');
                     if (txtFile) {
                         const blob = new Blob([txtFile.content], { type: 'text/plain' });
