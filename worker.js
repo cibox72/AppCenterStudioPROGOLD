@@ -1094,6 +1094,31 @@ export default {
         await env.DB.prepare("DELETE FROM anagrafica_clienti WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+            // ============================================
+      // 75.5. ELIMINA CARTELLA DA R2 (Studio)
+      // ============================================
+      if (path === "/api/studio/selezione-album/elimina-cartella" && request.method === "POST") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        
+        const d = await request.json();
+        const selezioneId = d.selezione_id;
+        const nomeCartella = d.nome_cartella;
+        const clienteId = d.cliente_id;
+        
+        const bucket = env.appcenter_studio_foto;
+        if (!bucket) return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
+        
+        const prefix = `selezioni/${sess.user_id}/${clienteId}/${selezioneId}/${nomeCartella}/`;
+        const objects = await bucket.list({ prefix });
+        
+        if (objects.objects.length > 0) {
+          await bucket.delete(objects.objects.map(obj => obj.key));
+        }
+        
+        return new Response(JSON.stringify({ success: true, eliminated: objects.objects.length }), { headers: corsHeaders });
+      }
       // ============================================
       // 76-87. SELEZIONE ALBUM (NUOVI ENDPOINT)
       // ============================================
