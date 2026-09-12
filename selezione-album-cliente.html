@@ -2,559 +2,502 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selezione Foto Album - AppCenterStudioPROGOLD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Selezione Album - AppCenterStudioPROGOLD</title>
     <style>
         :root {
-            --primary: #5dade2;
-            --primary-dark: #2874a6;
-            --primary-light: #d6eaf8;
-            --primary-gradient: linear-gradient(135deg, #85c1e9 0%, #5dade2 50%, #2874a6 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #ebf5fb 100%);
-            --text-main: #2c3e50;
-            --text-light: #7f8c8d;
-            --border-color: #e8e8e8;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --radius: 16px;
+            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
+            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
+            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
+            --success: #27ae60; --danger: #c0392b; --warning: #d35400; --radius: 12px;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg-gradient);
-            background-attachment: fixed;
-            color: var(--text-main);
-            line-height: 1.6;
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
+            transition: background 0.3s ease;
         }
-
-        .top-bar {
-            background: var(--primary-gradient);
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(40, 116, 166, 0.15);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        
+        /* LOGIN SCREEN */
+        .login-container {
+            max-width: 400px; margin: 60px auto; padding: 24px;
+            background: white; border-radius: var(--radius); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-
-        .nav-btn {
-            background: rgba(255,255,255,0.95);
-            border: none;
-            padding: 10px 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--primary-dark);
+        .login-logo {
+            width: 120px; height: 120px; margin: 0 auto 20px; border-radius: 50%;
+            background: var(--primary-gradient); display: flex; align-items: center; justify-content: center;
+            font-size: 48px; font-weight: 800; color: white;
         }
-
-        .user-info { color: white; font-size: 14px; font-weight: 600; }
-
-        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
-
-        .timer-card {
-            background: white;
-            border-radius: var(--radius);
-            padding: 32px;
-            box-shadow: 0 10px 30px rgba(40, 116, 166, 0.12);
-            margin-bottom: 24px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+        .login-logo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .login-title { text-align: center; font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; }
+        .login-subtitle { text-align: center; font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
+        .login-form .form-group { margin-bottom: 16px; }
+        .login-form label { font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block; }
+        .login-form input {
+            width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;
         }
-
-        .timer-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 5px;
-            background: var(--primary-gradient);
+        .login-form input:focus { outline: none; border-color: var(--primary); }
+        .login-btn {
+            width: 100%; padding: 14px; background: var(--primary-gradient); color: white;
+            border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer;
         }
-
-        .timer-card h1 {
-            font-size: 28px;
-            font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
+        .login-btn:hover { opacity: 0.9; }
+        .login-error { color: var(--danger); font-size: 13px; text-align: center; margin-top: 12px; display: none; }
+        
+        /* MAIN APP */
+        .app-header {
+            background: var(--primary-gradient); padding: 16px 20px; color: white;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-
-        .timer-card .subtitle {
-            font-size: 15px;
-            color: var(--text-light);
-            margin-bottom: 20px;
+        .app-logo { font-size: 18px; font-weight: 700; }
+        .app-logo img { height: 32px; border-radius: 4px; }
+        .counter-badge {
+            background: white; color: var(--primary-dark); padding: 6px 12px; border-radius: 20px;
+            font-size: 13px; font-weight: 700;
         }
-
-        .countdown-display {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-top: 20px;
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        .welcome-box {
+            background: white; padding: 24px; border-radius: var(--radius); margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center;
         }
-
-        .countdown-box {
-            background: var(--primary-light);
-            padding: 20px;
-            border-radius: 12px;
-            min-width: 80px;
+        .welcome-box h1 { font-size: 22px; color: var(--primary-dark); margin-bottom: 8px; }
+        .welcome-box p { font-size: 14px; color: var(--text-light); line-height: 1.5; }
+        .warning-box {
+            background: #fef9e7; border-left: 4px solid var(--warning); padding: 12px 16px;
+            border-radius: 8px; margin-top: 16px; font-size: 13px; color: var(--warning);
         }
-
-        .countdown-value {
-            font-size: 36px;
-            font-weight: 800;
-            color: var(--primary-dark);
+        
+        .folder-menu {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px;
         }
-
-        .countdown-label {
-            font-size: 11px;
-            color: var(--text-light);
-            text-transform: uppercase;
-            margin-top: 4px;
+        .folder-item {
+            background: white; padding: 20px; border-radius: var(--radius); text-align: center;
+            cursor: pointer; transition: all 0.2s; border: 2px solid transparent;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-
-        .countdown-box.urgent {
-            background: #fadbd8;
+        .folder-item:hover { transform: translateY(-4px); border-color: var(--primary); }
+        .folder-item.active { border-color: var(--primary-dark); background: var(--primary-light); }
+        .folder-icon { font-size: 32px; margin-bottom: 8px; color: var(--primary-dark); }
+        .folder-name { font-size: 13px; font-weight: 600; color: var(--text-main); }
+        
+        .photo-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px;
         }
-
-        .countdown-box.urgent .countdown-value {
-            color: var(--danger);
+        .photo-item {
+            position: relative; aspect-ratio: 1; overflow: hidden; border-radius: 8px; cursor: pointer;
+            background: #f0f0f0;
         }
-
-        .info-card {
-            background: var(--primary-light);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            border-left: 4px solid var(--primary);
+        .photo-item img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-favorite {
+            position: absolute; top: 8px; right: 8px; width: 32px; height: 32px;
+            background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: #ccc; transition: all 0.2s;
         }
-
-        .info-card-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 8px;
+        .photo-favorite.active { color: var(--danger); }
+        
+        /* FULLSCREEN VIEWER */
+        .viewer-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 1000;
         }
-
-        .info-card-text {
-            font-size: 14px;
-            color: var(--text-main);
+        .viewer-overlay.active { display: flex; flex-direction: column; }
+        .viewer-header {
+            padding: 16px 20px; color: white; display: flex; justify-content: space-between; align-items: center;
         }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 32px;
+        .viewer-close {
+            background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 16px;
+            border-radius: 6px; cursor: pointer; font-size: 14px;
         }
-
-        .photo-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            border: 3px solid transparent;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
+        .viewer-counter { font-size: 14px; font-weight: 600; }
+        .viewer-image-container {
+            flex: 1; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
         }
-
-        .photo-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(40, 116, 166, 0.15);
+        .viewer-image { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .viewer-nav {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(255,255,255,0.2); border: none; color: white; width: 48px; height: 48px;
+            border-radius: 50%; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center;
         }
-
-        .photo-card.selected {
-            border-color: var(--primary);
-            box-shadow: 0 8px 24px rgba(40, 116, 166, 0.25);
+        .viewer-nav.prev { left: 20px; }
+        .viewer-nav.next { right: 20px; }
+        .viewer-favorite-btn {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(255,255,255,0.2); border: none; color: white; padding: 12px 24px;
+            border-radius: 30px; cursor: pointer; font-size: 16px; display: flex; align-items: center; gap: 8px;
         }
-
-        .photo-card.selected::after {
-            content: '✓';
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 30px;
-            height: 30px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: 700;
+        .viewer-favorite-btn.active { background: var(--danger); }
+        
+        /* SUBMIT BUTTON */
+        .submit-container {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 500;
         }
-
-        .photo-placeholder {
-            height: 200px;
-            background: var(--primary-gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 48px;
-            font-weight: 800;
+        .submit-btn {
+            background: var(--success); color: white; padding: 16px 32px; border: none;
+            border-radius: 30px; font-size: 16px; font-weight: 700; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
         }
-
-        .photo-info {
-            padding: 16px;
+        .submit-btn:hover { background: #229954; }
+        
+        /* THANK YOU SCREEN */
+        .thankyou-container {
+            display: none; max-width: 500px; margin: 60px auto; padding: 40px 24px;
+            background: white; border-radius: var(--radius); text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-
-        .photo-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-main);
+        .thankyou-container.active { display: block; }
+        .thankyou-icon {
+            width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 50%;
+            background: var(--success); color: white; display: flex; align-items: center; justify-content: center;
+            font-size: 40px;
         }
-
-        .selection-summary {
-            background: white;
-            border-radius: var(--radius);
-            padding: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            margin-bottom: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .selection-count {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary-dark);
-        }
-
-        .btn {
-            padding: 14px 28px;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn:hover { transform: translateY(-2px); }
-
-        .btn-primary {
-            background: var(--primary-gradient);
-            color: white;
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #27ae60, #229954);
-            color: white;
-        }
-
-        .footer-branding {
-            text-align: center;
-            padding: 24px;
-            color: var(--text-light);
-            font-size: 13px;
-        }
-
-        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
-        .toast {
-            background: white;
-            border-radius: 10px;
-            padding: 14px 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            margin-bottom: 10px;
-            border-left: 4px solid var(--success);
-            animation: slideIn 0.3s ease;
-        }
-        .toast.error { border-left-color: var(--danger); }
-        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
-
+        .thankyou-container h1 { font-size: 24px; color: var(--success); margin-bottom: 16px; }
+        .thankyou-container p { font-size: 15px; color: var(--text-main); line-height: 1.6; margin-bottom: 12px; }
+        
         .loading { text-align: center; padding: 40px; color: var(--text-light); }
-        .spinner {
-            width: 40px; height: 40px;
-            border: 3px solid var(--primary-light);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 16px;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
         .hidden { display: none !important; }
-
+        
         @media (max-width: 768px) {
-            .gallery-grid { grid-template-columns: 1fr; }
-            .countdown-display { flex-wrap: wrap; }
-            .timer-card h1 { font-size: 24px; }
+            .photo-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+            .folder-menu { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
         }
     </style>
 </head>
 <body>
-
-    <div class="top-bar">
-        <button class="nav-btn" onclick="logout()">Logout</button>
-        <div class="user-info" id="userInfo">Caricamento...</div>
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-logo" id="loginLogo">STUDIO</div>
+        <div class="login-title">Selezione Album</div>
+        <div class="login-subtitle">Inserisci le tue credenziali per accedere</div>
+        <form class="login-form" onsubmit="effettuaLogin(event)">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="loginUsername" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" required>
+            </div>
+            <button type="submit" class="login-btn">Accedi</button>
+            <div id="loginError" class="login-error"></div>
+        </form>
     </div>
 
-    <div class="container">
-        <div id="loadingArea" class="loading">
-            <div class="spinner"></div>
-            <div>Verifica sessione e carica foto...</div>
+    <!-- MAIN APP -->
+    <div id="mainApp" class="hidden">
+        <div class="app-header">
+            <div class="app-logo" id="appLogo">STUDIO</div>
+            <div class="counter-badge">Preferiti: <span id="counterTotale">0</span></div>
         </div>
 
-        <div id="expiredArea" class="hidden">
-            <div class="timer-card">
-                <h1>Selezione Scaduta</h1>
-                <div class="subtitle">Il periodo di 7 giorni per selezionare le foto è terminato.</div>
-                <div class="info-card" style="margin-top: 20px;">
-                    <div class="info-card-title">Cosa fare ora?</div>
-                    <div class="info-card-text">Contatta lo studio per richiedere un nuovo link di selezione. Le tue foto sono ancora al sicuro nel nostro archivio.</div>
+        <div class="container">
+            <div class="welcome-box">
+                <h1>Benvenuto, <span id="clienteNome">Cliente</span>!</h1>
+                <p>Seleziona le tue foto preferite per il tuo album. Clicca su una foto per ingrandirla e usa il cuore per marcarla come preferita.</p>
+                <div class="warning-box">
+                    <strong>Attenzione:</strong> Questo link scadrà tra 7 giorni. Completa la tua selezione entro questa data.
                 </div>
             </div>
+
+            <div id="folderMenu" class="folder-menu"></div>
+            <div id="photoGrid" class="photo-grid"></div>
         </div>
 
-        <div id="mainContent" class="hidden">
-            <div class="timer-card">
-                <h1>Seleziona le Tue Foto Preferite</h1>
-                <div class="subtitle">Hai 7 giorni per scegliere le foto del tuo album. Clicca sulle foto per selezionarle.</div>
-                
-                <div class="countdown-display">
-                    <div class="countdown-box" id="daysBox">
-                        <div class="countdown-value" id="daysCount">0</div>
-                        <div class="countdown-label">Giorni</div>
-                    </div>
-                    <div class="countdown-box" id="hoursBox">
-                        <div class="countdown-value" id="hoursCount">0</div>
-                        <div class="countdown-label">Ore</div>
-                    </div>
-                    <div class="countdown-box" id="minutesBox">
-                        <div class="countdown-value" id="minutesCount">0</div>
-                        <div class="countdown-label">Minuti</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="info-card">
-                <div class="info-card-title">ℹ️ Come funziona</div>
-                <div class="info-card-text">
-                    Clicca su una foto per selezionarla (apparirà un segno ✓). Puoi selezionare quante foto vuoi. 
-                    Quando hai finito, clicca "Invia Selezione" per confermare le tue scelte allo studio.
-                </div>
-            </div>
-
-            <div class="selection-summary">
-                <div class="selection-count">
-                    Foto selezionate: <strong id="selectedCount">0</strong>
-                </div>
-                <button class="btn btn-success" onclick="inviaSelezione()">INVIA SELEZIONE ALLO STUDIO</button>
-            </div>
-
-            <div class="gallery-grid" id="galleryGrid"></div>
-        </div>
-
-        <div class="footer-branding">
-            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong>
+        <div class="submit-container">
+            <button class="submit-btn" onclick="inviaSelezione()">Invia Selezione allo Studio</button>
         </div>
     </div>
 
-    <div class="toast-container" id="toastContainer"></div>
+    <!-- FULLSCREEN VIEWER -->
+    <div id="viewerOverlay" class="viewer-overlay">
+        <div class="viewer-header">
+            <button class="viewer-close" onclick="chiudiViewer()">Chiudi</button>
+            <div class="viewer-counter"><span id="viewerCurrent">1</span> / <span id="viewerTotal">0</span></div>
+        </div>
+        <div class="viewer-image-container" id="viewerContainer">
+            <button class="viewer-nav prev" onclick="navigaFoto(-1)">&#8249;</button>
+            <img id="viewerImage" class="viewer-image" src="" alt="">
+            <button class="viewer-nav next" onclick="navigaFoto(1)">&#8250;</button>
+            <button class="viewer-favorite-btn" id="viewerFavoriteBtn" onclick="toggleFavoriteViewer()">
+                <span id="viewerHeart">&#9825;</span> <span id="viewerFavoriteText">Aggiungi ai preferiti</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- THANK YOU SCREEN -->
+    <div id="thankyouScreen" class="thankyou-container">
+        <div class="thankyou-icon">&#10003;</div>
+        <h1>Grazie per la tua selezione!</h1>
+        <p>Abbiamo ricevuto le tue foto preferite. Il nostro studio le elaborerà con cura per creare il tuo album perfetto.</p>
+        <p>Contatta lo studio per il prossimo step e completare il servizio.</p>
+        <p style="margin-top: 20px; font-size: 13px; color: var(--text-light);">Questa pagina può essere chiusa.</p>
+    </div>
 
     <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        let clienteData = null;
-        let fotoSelezionate = new Set();
-        let countdownInterval = null;
+        const selezioneId = urlParams.get('id');
+        
+        let studioLogo = null;
+        let clienteNome = '';
+        let cartelle = [];
+        let cartellaAttiva = null;
+        let fotoCorrenti = [];
+        let fotoIndex = 0;
+        let preferiti = new Set();
 
-        document.addEventListener('DOMContentLoaded', async function() {
-            if (!token) {
-                window.location.href = 'index.html';
+        // Carica logo studio
+        async function caricaLogoStudio() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/profilo?studioId=placeholder&token=placeholder`);
+                // Il logo viene caricato dinamicamente dopo il login quando abbiamo lo studio_id
+            } catch (error) {
+                console.error('Errore caricamento logo:', error);
+            }
+        }
+
+        async function effettuaLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const errorDiv = document.getElementById('loginError');
+
+            if (!selezioneId) {
+                errorDiv.textContent = 'Link non valido';
+                errorDiv.style.display = 'block';
                 return;
             }
 
-            await verificaSessione();
-        });
-
-        async function verificaSessione() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+                // Verifica credenziali caricando le cartelle
+                const response = await fetch(`${WORKER_URL}/api/public/selezione-album/cartelle?id=${selezioneId}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`);
                 const data = await response.json();
 
-                if (!data.success || data.tipo !== 'cliente') {
-                    mostraToast('Sessione non valida', 'error');
-                    setTimeout(() => window.location.href = 'index.html', 1500);
-                    return;
-                }
-
-                await caricaDatiCliente(data.user);
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione al cloud', 'error');
-            }
-        }
-
-        async function caricaDatiCliente(user) {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/cliente/dashboard?token=${token}`);
-                const data = await response.json();
-
-                if (data.success && data.cliente) {
-                    clienteData = data.cliente;
-                    document.getElementById('userInfo').textContent = `${clienteData.nome_a} ${clienteData.cognome_a}`;
+                if (data.success) {
+                    cartelle = data.cartelle;
+                    clienteNome = data.cliente_nome || 'Cliente';
                     
-                    // Verifica scadenza
-                    const dataCreazione = new Date(clienteData.data_registrazione);
-                    const scadenza = new Date(dataCreazione);
-                    scadenza.setDate(scadenza.getDate() + 7);
-                    const oggi = new Date();
-
-                    if (oggi > scadenza) {
-                        // Scaduto
-                        document.getElementById('loadingArea').classList.add('hidden');
-                        document.getElementById('expiredArea').classList.remove('hidden');
-                        return;
-                    }
-
-                    // Ancora valido
-                    await caricaFoto();
-                    avviaCountdown(scadenza);
-                    document.getElementById('loadingArea').classList.add('hidden');
-                    document.getElementById('mainContent').classList.remove('hidden');
+                    // Carica logo studio (se disponibile)
+                    // Per ora usiamo il placeholder
+                    
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    document.getElementById('mainApp').classList.remove('hidden');
+                    document.getElementById('clienteNome').textContent = clienteNome;
+                    
+                    renderizzaCartelle();
                 } else {
-                    mostraToast('Errore nel caricamento dati', 'error');
+                    errorDiv.textContent = data.error || 'Credenziali non valide';
+                    errorDiv.style.display = 'block';
                 }
             } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
+                console.error('Errore login:', error);
+                errorDiv.textContent = 'Errore di connessione';
+                errorDiv.style.display = 'block';
             }
         }
 
-        async function caricaFoto() {
-            // Simulazione: in produzione le foto verrebbero dal cloud R2
-            // Per ora mostriamo placeholder
-            const foto = [
-                { id: 1, nome: 'Foto 1 - Cerimonia' },
-                { id: 2, nome: 'Foto 2 - Ritratto Coppia' },
-                { id: 3, nome: 'Foto 3 - Dettagli' },
-                { id: 4, nome: 'Foto 4 - Gruppo Famiglia' },
-                { id: 5, nome: 'Foto 5 - Ricevimento' },
-                { id: 6, nome: 'Foto 6 - Momenti Speciali' }
-            ];
+        function renderizzaCartelle() {
+            const menu = document.getElementById('folderMenu');
+            if (cartelle.length === 0) {
+                menu.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 20px;">Nessuna cartella disponibile</p>';
+                return;
+            }
 
-            const grid = document.getElementById('galleryGrid');
-            grid.innerHTML = foto.map(f => `
-                <div class="photo-card" onclick="toggleFoto(${f.id}, this)">
-                    <div class="photo-placeholder">${f.id}</div>
-                    <div class="photo-info">
-                        <div class="photo-name">${f.nome}</div>
+            menu.innerHTML = cartelle.map((cartella, index) => `
+                <div class="folder-item ${index === 0 ? 'active' : ''}" onclick="selezionaCartella('${cartella}', this)">
+                    <div class="folder-icon">&#128444;</div>
+                    <div class="folder-name">${cartella}</div>
+                </div>
+            `).join('');
+
+            if (cartelle.length > 0) {
+                selezionaCartella(cartelle[0], menu.firstChild);
+            }
+        }
+
+        async function selezionaCartella(cartella, element) {
+            document.querySelectorAll('.folder-item').forEach(el => el.classList.remove('active'));
+            if (element) element.classList.add('active');
+            
+            cartellaAttiva = cartella;
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/public/selezione-album/foto?id=${selezioneId}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&cartella=${encodeURIComponent(cartella)}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    fotoCorrenti = data.foto;
+                    renderizzaFoto();
+                } else {
+                    console.error('Errore caricamento foto:', data.error);
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+            }
+        }
+
+        function renderizzaFoto() {
+            const grid = document.getElementById('photoGrid');
+            if (fotoCorrenti.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 20px;">Nessuna foto in questa cartella</p>';
+                return;
+            }
+
+            grid.innerHTML = fotoCorrenti.map((foto, index) => `
+                <div class="photo-item" onclick="apriViewer(${index})">
+                    <img src="${foto.url}" alt="${foto.name}" loading="lazy">
+                    <div class="photo-favorite ${preferiti.has(foto.key) ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${foto.key}', this)">
+                        ${preferiti.has(foto.key) ? '&#9829;' : '&#9825;'}
                     </div>
                 </div>
             `).join('');
         }
 
-        function toggleFoto(id, element) {
-            if (fotoSelezionate.has(id)) {
-                fotoSelezionate.delete(id);
-                element.classList.remove('selected');
+        function toggleFavorite(key, element) {
+            if (preferiti.has(key)) {
+                preferiti.delete(key);
+                element.classList.remove('active');
+                element.innerHTML = '&#9825;';
             } else {
-                fotoSelezionate.add(id);
-                element.classList.add('selected');
+                preferiti.add(key);
+                element.classList.add('active');
+                element.innerHTML = '&#9829;';
             }
-            document.getElementById('selectedCount').textContent = fotoSelezionate.size;
+            aggiornaContatore();
         }
 
-        function avviaCountdown(scadenza) {
-            aggiornaCountdown(scadenza);
-            countdownInterval = setInterval(() => aggiornaCountdown(scadenza), 60000); // Aggiorna ogni minuto
+        function aggiornaContatore() {
+            document.getElementById('counterTotale').textContent = preferiti.size;
         }
 
-        function aggiornaCountdown(scadenza) {
-            const oggi = new Date();
-            const differenza = scadenza - oggi;
-
-            if (differenza <= 0) {
-                clearInterval(countdownInterval);
-                location.reload(); // Ricarica per mostrare scadenza
-                return;
+        function apriViewer(index) {
+            fotoIndex = index;
+            const foto = fotoCorrenti[index];
+            document.getElementById('viewerImage').src = foto.url;
+            document.getElementById('viewerCurrent').textContent = index + 1;
+            document.getElementById('viewerTotal').textContent = fotoCorrenti.length;
+            
+            const isFavorite = preferiti.has(foto.key);
+            const btn = document.getElementById('viewerFavoriteBtn');
+            const heart = document.getElementById('viewerHeart');
+            const text = document.getElementById('viewerFavoriteText');
+            
+            if (isFavorite) {
+                btn.classList.add('active');
+                heart.innerHTML = '&#9829;';
+                text.textContent = 'Rimuovi dai preferiti';
+            } else {
+                btn.classList.remove('active');
+                heart.innerHTML = '&#9825;';
+                text.textContent = 'Aggiungi ai preferiti';
             }
+            
+            document.getElementById('viewerOverlay').classList.add('active');
+        }
 
-            const giorni = Math.floor(differenza / (1000 * 60 * 60 * 24));
-            const ore = Math.floor((differenza % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minuti = Math.floor((differenza % (1000 * 60 * 60)) / (1000 * 60));
+        function chiudiViewer() {
+            document.getElementById('viewerOverlay').classList.remove('active');
+        }
 
-            document.getElementById('daysCount').textContent = giorni;
-            document.getElementById('hoursCount').textContent = ore;
-            document.getElementById('minutesCount').textContent = minuti;
+        function navigaFoto(direction) {
+            fotoIndex += direction;
+            if (fotoIndex < 0) fotoIndex = fotoCorrenti.length - 1;
+            if (fotoIndex >= fotoCorrenti.length) fotoIndex = 0;
+            apriViewer(fotoIndex);
+        }
 
-            // Stile urgente se mancano meno di 2 giorni
-            if (giorni <= 2) {
-                document.getElementById('daysBox').classList.add('urgent');
-                document.getElementById('hoursBox').classList.add('urgent');
-                document.getElementById('minutesBox').classList.add('urgent');
+        function toggleFavoriteViewer() {
+            const foto = fotoCorrenti[fotoIndex];
+            const btn = document.getElementById('viewerFavoriteBtn');
+            const heart = document.getElementById('viewerHeart');
+            const text = document.getElementById('viewerFavoriteText');
+            
+            if (preferiti.has(foto.key)) {
+                preferiti.delete(foto.key);
+                btn.classList.remove('active');
+                heart.innerHTML = '&#9825;';
+                text.textContent = 'Aggiungi ai preferiti';
+            } else {
+                preferiti.add(foto.key);
+                btn.classList.add('active');
+                heart.innerHTML = '&#9829;';
+                text.textContent = 'Rimuovi dai preferiti';
+            }
+            aggiornaContatore();
+            renderizzaFoto();
+        }
+
+        // Swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.getElementById('viewerContainer').addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.getElementById('viewerContainer').addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) navigaFoto(1);
+                else navigaFoto(-1);
             }
         }
 
         async function inviaSelezione() {
-            if (fotoSelezionate.size === 0) {
-                mostraToast('Seleziona almeno una foto', 'error');
-                return;
+            if (preferiti.size === 0) {
+                if (!confirm('Non hai selezionato nessuna foto preferita. Vuoi comunque inviare la selezione?')) return;
             }
 
-            if (!confirm(`Confermi l'invio di ${fotoSelezionate.size} foto allo studio?`)) {
-                return;
-            }
+            if (!confirm(`Confermi l'invio di ${preferiti.size} foto preferite allo studio?`)) return;
+
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const preferitiArray = Array.from(preferiti).map(key => ({ key }));
 
             try {
-                // In produzione: salva la selezione sul cloud D1
-                // await fetch(`${WORKER_URL}/api/cliente/selezione-foto`, {
-                //     method: 'POST',
-                //     headers: { 'Content-Type': 'application/json' },
-                //     body: JSON.stringify({
-                //         token,
-                //         foto_ids: Array.from(fotoSelezionate)
-                //     })
-                // });
-
-                mostraToast(`Selezione inviata con successo! ${fotoSelezionate.size} foto inviate allo studio.`, 'success');
-                
-                // Disabilita ulteriori modifiche
-                document.querySelectorAll('.photo-card').forEach(card => {
-                    card.style.pointerEvents = 'none';
-                });
-                document.querySelector('.btn-success').disabled = true;
-                document.querySelector('.btn-success').textContent = 'SELEZIONE INVIATA ✓';
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore nell\'invio', 'error');
-            }
-        }
-
-        async function logout() {
-            try {
-                await fetch(`${WORKER_URL}/api/auth/logout`, {
+                const response = await fetch(`${WORKER_URL}/api/public/selezione-album/invia`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token })
+                    body: JSON.stringify({
+                        selezione_id: selezioneId,
+                        username: username,
+                        password: password,
+                        preferiti: preferitiArray
+                    })
                 });
-            } catch(e) {}
-            window.location.href = 'index.html';
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('mainApp').classList.add('hidden');
+                    document.querySelector('.submit-container').classList.add('hidden');
+                    document.getElementById('thankyouScreen').classList.add('active');
+                } else {
+                    alert('Errore: ' + (data.error || 'Impossibile inviare la selezione'));
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                alert('Errore di connessione');
+            }
         }
 
-        function mostraToast(msg, tipo) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div>${msg}</div>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
-        }
+        // Keyboard navigation
+        document.addEventListener('keydown', e => {
+            if (document.getElementById('viewerOverlay').classList.contains('active')) {
+                if (e.key === 'ArrowLeft') navigaFoto(-1);
+                if (e.key === 'ArrowRight') navigaFoto(1);
+                if (e.key === 'Escape') chiudiViewer();
+            }
+        });
     </script>
 </body>
 </html>
