@@ -1136,7 +1136,7 @@ export default {
         const cliente = await env.DB.prepare("SELECT * FROM anagrafica_clienti WHERE id=? AND studio_id=?").bind(clienteId, sess.user_id).first();
         if (!cliente) return new Response(JSON.stringify({ error: "Cliente non trovato" }), { status: 404, headers: corsHeaders });
         
-        const username = generaUsername(cliente.nome, cliente.cognome) + '-' + Date.now().toString().slice(-4);
+        const username = (cliente.nome || 'cl').substring(0, 2).toLowerCase() + Math.floor(10 + Math.random() * 90);
         const password = generaPassword();
         const id = 'sel-' + Date.now();
         const dataCreazione = new Date().toISOString();
