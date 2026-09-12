@@ -145,6 +145,17 @@
             border-color: var(--primary);
         }
 
+        /* Card SA con alert attivo */
+        .module-card.alert-active {
+            border: 2px solid var(--danger);
+            animation: border-pulse 2s infinite;
+        }
+        @keyframes border-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+
         .module-icon {
             width: 60px;
             height: 60px;
@@ -183,6 +194,28 @@
             background: var(--danger);
             color: white;
             align-self: flex-start;
+        }
+
+        /* Badge alert per selezioni */
+        .alert-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--danger);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: badge-pulse 2s infinite;
+            z-index: 10;
+        }
+        @keyframes badge-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.6); }
+            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
         }
 
         .footer-branding {
@@ -290,7 +323,6 @@
                     <div class="module-description">Scheda anagrafica, logo, messaggi automatici e link studio.</div>
                 </a>
 
-                <!-- NUOVA CARD AGGIUNTA QUI -->
                 <a href="#" class="module-card" onclick="navigaConToken('registra-clienti-id.html')">
                     <div class="module-icon">ID</div>
                     <div class="module-title">Registra Clienti ID</div>
@@ -315,10 +347,12 @@
                     <div class="module-description">Anagrafica clienti e gestione contatti.</div>
                 </a>
 
-                <a href="#" class="module-card" onclick="navigaConToken('selezione-album.html')">
+                <!-- CARD SA CON ALERT -->
+                <a href="#" class="module-card" id="cardSA" onclick="navigaConToken('selezione-album.html')">
                     <div class="module-icon">SA</div>
-                    <div class="module-title">Selezione Album</div>
-                    <div class="module-description">Galleria foto e selezione per album clienti.</div>
+                    <div class="module-title">Seleziona Cartelle Clienti</div>
+                    <div class="module-description">Gestione caricamento gallerie e selezione album.</div>
+                    <div id="alertBadgeSA" class="alert-badge hidden">SELEZIONE IN ATTESA</div>
                 </a>
 
                 <a href="#" class="module-card" onclick="navigaConToken('gru.html')">
@@ -454,6 +488,9 @@
                 
                 document.getElementById('loadingArea').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
+
+                // CONTROLLA ALERT SELEZIONI
+                await controllaAlertSelezioni();
             } catch (error) {
                 console.error('Errore:', error);
                 mostraToast('Errore di connessione al cloud', 'error');
@@ -488,6 +525,29 @@
                 }
             } catch (error) {
                 console.error('Errore caricamento tema:', error);
+            }
+        }
+
+        // FUNZIONE ALERT SELEZIONI
+        async function controllaAlertSelezioni() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/selezioni-album?token=${token}`);
+                const data = await response.json();
+                
+                if (data.success && data.selezioni) {
+                    const selezioniInAttesa = data.selezioni.filter(s => s.stato === 'selezione_ricevuta');
+                    
+                    if (selezioniInAttesa.length > 0) {
+                        const badge = document.getElementById('alertBadgeSA');
+                        const card = document.getElementById('cardSA');
+                        
+                        badge.textContent = `${selezioniInAttesa.length} SELEZION${selezioniInAttesa.length === 1 ? 'E' : 'I'} IN ATTESA`;
+                        badge.classList.remove('hidden');
+                        card.classList.add('alert-active');
+                    }
+                }
+            } catch (error) {
+                console.error('Errore controllo alert:', error);
             }
         }
 
