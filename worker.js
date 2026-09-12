@@ -1068,7 +1068,7 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
-      if (path.startsWith("/api/studio/anagrafica-clienti/") && !path.includes("/ricerca") && request.method === "GET") {
+      if (path.startsWith("/api/studio/anagrafica-clienti/") && !path.includes("/ricerca") && request.method === "DELETE") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
