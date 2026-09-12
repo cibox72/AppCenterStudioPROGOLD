@@ -1017,9 +1017,11 @@ export default {
         return new Response(JSON.stringify({ success: true, studi: result.results }), { headers: corsHeaders });
       }
 
-      // ============================================
+            // ============================================
       // 70-75. ANAGRAFICA CLIENTI (Studio)
       // ============================================
+      
+      // 70. LISTA CLIENTI
       if (path === "/api/studio/anagrafica-clienti" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -1028,6 +1030,7 @@ export default {
         return new Response(JSON.stringify({ success: true, clienti: result.results }), { headers: corsHeaders });
       }
 
+      // 71. CREA CLIENTE
       if (path === "/api/studio/anagrafica-clienti" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -1042,6 +1045,19 @@ export default {
         return new Response(JSON.stringify({ success: true, cliente: { id, username, password } }), { headers: corsHeaders });
       }
 
+      // 75. RICERCA CLIENTE (DEVE ESSERE PRIMA DEGLI ALTRI ENDPOINT CON STARTSWITH)
+      if (path === "/api/studio/anagrafica-clienti/ricerca" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const q = (url.searchParams.get("q") || '').toLowerCase();
+        const result = await env.DB.prepare(
+          "SELECT id, nome, cognome, email, telefono FROM anagrafica_clienti WHERE studio_id=? AND (LOWER(id) LIKE ? OR LOWER(nome) LIKE ? OR LOWER(cognome) LIKE ? OR LOWER(email) LIKE ?) ORDER BY cognome, nome LIMIT 20"
+        ).bind(sess.user_id, `%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`).all();
+        return new Response(JSON.stringify({ success: true, clienti: result.results }), { headers: corsHeaders });
+      }
+
+      // 72. DETTAGLIO CLIENTE (DEVE ESSERE DOPO LA RICERCA)
       if (path.startsWith("/api/studio/anagrafica-clienti/") && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -1052,6 +1068,7 @@ export default {
         return new Response(JSON.stringify({ success: true, cliente: result }), { headers: corsHeaders });
       }
 
+      // 73. MODIFICA CLIENTE
       if (path.startsWith("/api/studio/anagrafica-clienti/") && request.method === "PUT") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -1068,7 +1085,8 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
-      if (path.startsWith("/api/studio/anagrafica-clienti/") && !path.includes("/ricerca") && request.method === "DELETE") {
+      // 74. ELIMINA CLIENTE
+      if (path.startsWith("/api/studio/anagrafica-clienti/") && request.method === "DELETE") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
@@ -1076,18 +1094,6 @@ export default {
         await env.DB.prepare("DELETE FROM anagrafica_clienti WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-
-            if (path === "/api/studio/anagrafica-clienti/ricerca" && request.method === "GET") {
-        const token = url.searchParams.get("token");
-        const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const q = (url.searchParams.get("q") || '').toLowerCase();
-        const result = await env.DB.prepare(
-          "SELECT id, nome, cognome, email, telefono FROM anagrafica_clienti WHERE studio_id=? AND (LOWER(id) LIKE ? OR LOWER(nome) LIKE ? OR LOWER(cognome) LIKE ? OR LOWER(email) LIKE ?) ORDER BY cognome, nome LIMIT 20"
-        ).bind(sess.user_id, `%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`).all();
-        return new Response(JSON.stringify({ success: true, clienti: result.results }), { headers: corsHeaders });
-      }
-
       // ============================================
       // 76-87. SELEZIONE ALBUM (NUOVI ENDPOINT)
       // ============================================
