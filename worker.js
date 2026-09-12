@@ -543,7 +543,7 @@ export default {
         const hashed = await hashPassword(d.password);
         await env.DB.prepare(`INSERT INTO clienti (id, password, password_plain, studio_id, nome_a, cognome_a, nome_b, cognome_b, email, telefono, tipo_evento, data_evento, data_registrazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, 'hash:' + hashed, d.password, d.studio_id, d.nome_a, d.cognome_a, d.nome_b, d.cognome_b, d.email, d.telefono, d.tipo_evento, d.data_evento, d.data_registrazione).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-      
+      }
             // ============================================
       // 34. EMAIL ARCHIVIO (Studio)
       // ============================================
