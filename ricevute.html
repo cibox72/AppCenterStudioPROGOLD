@@ -69,8 +69,6 @@
         .btn-primary:hover { background: #145a32; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary-dark); }
         .btn-outline:hover { background: var(--primary-light); }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-danger:hover { background: #922b21; }
         .btn-sm { padding: 6px 12px; font-size: 11px; }
         
         .table-container { overflow-x: auto; }
@@ -91,7 +89,7 @@
         .search-box { display: flex; gap: 8px; margin-bottom: 16px; }
         .search-box input { flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; }
 
-        /* AREA DI STAMPA RICEVUTA BUFFETTI STYLE */
+        /* AREA DI STAMPA RICEVUTA - INVISIBILE SULLO SCHERMO */
         #printArea {
             display: none;
             background: white;
@@ -118,7 +116,7 @@
             justify-content: center;
             border-top: 1px dashed #7f8c8d;
             border-bottom: 1px dashed #7f8c8d;
-            margin: 5mm 0;
+            margin: 4mm 0;
             color: #7f8c8d;
             font-size: 11px;
             text-transform: uppercase;
@@ -200,7 +198,7 @@
         .buffetti-corpo {
             border: 1px solid var(--primary-dark);
             border-radius: 4px;
-            min-height: 140px;
+            min-height: 130px;
             margin-bottom: 15px;
             display: flex;
             flex-direction: column;
@@ -239,10 +237,14 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            margin-top: 10px;
+            margin-top: 5px;
         }
         .buffetti-note {
             width: 60%;
             font-size: 10px;
             color: var(--text-light);
             font-style: italic;
+        }
+        .buffetti-firma {
+            width: 35%;
+            text-align: center;
