@@ -1234,7 +1234,7 @@ export default {
         return new Response(JSON.stringify({ success: true, cartelle: Array.from(cartelle), cliente_nome: selezione.cliente_nome }), { headers: corsHeaders });
       }
 
-      // 80. LISTA FOTO (Cliente)
+            // 80. LISTA FOTO (Cliente) - CORRETTO
       if (path === "/api/public/selezione-album/foto" && request.method === "GET") {
         const selezioneId = url.searchParams.get("id");
         const username = url.searchParams.get("username");
@@ -1250,12 +1250,28 @@ export default {
         const bucket = env.appcenter_studio_foto;
         if (!bucket) return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
         
+        // Cerca ricorsivamente nella cartella e sottocartelle
         const prefix = `selezioni/${selezione.studio_id}/${selezione.cliente_id}/${selezioneId}/${cartella}/`;
         const objects = await bucket.list({ prefix });
         
-        const foto = objects.objects.map(obj => ({ name: obj.key.split('/').pop(), url: `https://appcenter-studio-foto.r2.dev/${obj.key}`, key: obj.key }));
-        return new Response(JSON.stringify({ success: true, foto }), { headers: corsHeaders });
+        const foto = [];
+        for (const obj of objects.objects || []) {
+          // Salta se è una cartella o file di testo
+          if (obj.key.endsWith('/') || obj.key.endsWith('.txt')) continue;
+          
+          // Usa URL pubblico diretto (più semplice)
+          const publicUrl = `https://pub-xxxx.r2.dev/${obj.key}`;
+          
+          foto.push({
+            name: obj.key.split('/').pop(),
+            url: publicUrl,
+            key: obj.key
+          });
+        }
+        
+        return new Response(JSON.stringify({ success: true, foto: foto }), { headers: corsHeaders });
       }
+      
 
       // 81. INVIA SELEZIONE (Cliente) - ELIMINA NON PREFERITE E CREA .TXT
       if (path === "/api/public/selezione-album/invia" && request.method === "POST") {
