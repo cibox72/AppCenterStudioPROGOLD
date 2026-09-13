@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow Foto & Video - AppCenterStudioPROGOLD</title>
+    <style>
+        :root {
+            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
+            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
+            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
+            --success: #27ae60; --warning: #f39c12; --danger: #e74c3c; --info: #3498db;
+            --anteprima-bg: linear-gradient(135deg, #f9e79f 0%, #f1c40f 100%);
+            --servizio-bg: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 100%);
+            --radius: 16px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
+        }
+        .top-bar {
+            background: var(--primary-gradient); padding: 16px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100;
+        }
+        .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
+        .nav-btn {
+            background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
+            cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark);
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover { transform: translateY(-2px); }
+        .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
+        .page-header {
+            text-align: center; padding: 32px; background: white; border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
+        }
+        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
+        .page-header h1 {
+            font-size: 32px; font-weight: 800; background: var(--primary-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px;
+        }
+        .page-header p { color: var(--text-light); font-size: 15px; }
+        .card-3d {
+            background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden;
+        }
+        .card-3d::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
+        .card-title {
+            font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px;
+            padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 16px; }
+        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
+        }
+        .btn {
+            padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .btn-info { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
+        .btn-dark { background: #2c3e50; color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-sm { padding: 8px 16px; font-size: 12px; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+        
+        /* Archivio Servizi */
+        .servizio-card {
+            background: white; border-radius: var(--radius); padding: 28px; margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1px solid var(--border-color);
+            position: relative; overflow: hidden; transition: all 0.3s ease;
+        }
+        .servizio-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(30, 132, 73, 0.15); }
+        .servizio-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
+        .servizio-header {
+            display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+        }
+        .servizio-nome { font-size: 24px; font-weight: 800; color: var(--text-main); }
+        .servizio-videografo { font-size: 13px; color: var(--text-light); margin-top: 4px; }
+        .servizio-tipo-btn {
+            background: var(--primary-gradient); color: white; border: none;
+            padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 700;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .servizio-tipo-btn:hover { transform: scale(1.05); }
+        .progress-sections { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .progress-block { }
+        .progress-label { font-size: 12px; font-weight: 700; color: var(--text-light); text-transform: uppercase; margin-bottom: 8px; }
+        .progress-bar-container { background: var(--primary-light); height: 10px; border-radius: 5px; overflow: hidden; margin-bottom: 6px; }
+        .progress-bar { height: 100%; background: var(--primary-gradient); transition: width 0.4s ease; border-radius: 5px; }
+        .progress-value { font-size: 13px; color: var(--text-main); font-weight: 600; }
+        .servizio-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; padding-top: 16px; border-top: 1px solid var(--border-color); }
+        
+        /* Dettaglio Workflow */
+        .workflow-section {
+            margin-bottom: 24px; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .section-header {
+            padding: 16px 24px; font-size: 18px; font-weight: 800; color: white;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .section-header.anteprima { background: var(--anteprima-bg); }
+        .section-header.servizio { background: var(--servizio-bg); }
+        .section-progress {
+            font-size: 13px; font-weight: 600; background: rgba(255,255,255,0.3);
+            padding: 4px 12px; border-radius: 20px;
+        }
+        .section-body { background: white; padding: 24px; }
+        .task-row {
+            display: flex; align-items: center; gap: 16px; padding: 12px 0;
+            border-bottom: 1px solid var(--border-color); flex-wrap: wrap;
+        }
+        .task-row:last-child { border-bottom: none; }
+        .task-checkbox { width: 20px; height: 20px; cursor: pointer; flex-shrink: 0; }
+        .task-label { flex: 1; font-size: 14px; font-weight: 500; min-width: 200px; }
+        .task-date { width: 140px; }
+        .task-date input { padding: 6px 10px; font-size: 13px; width: 100%; }
+        .task-input { padding: 6px 10px; font-size: 13px; width: 100%; max-width: 250px; }
+        .task-input.full-width { max-width: 100%; }
+        .task-completed .task-label { text-decoration: line-through; color: var(--text-light); }
+        
+        .overall-progress {
+            background: white; padding: 20px; border-radius: 12px; margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .progress-title { font-size: 16px; font-weight: 700; color: var(--text-main); }
+        .progress-percent { font-size: 18px; font-weight: 800; color: var(--primary-dark); }
+        
+        .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
+        .toast {
+            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease;
+        }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+        .loading { text-align: center; padding: 40px; color: var(--text-light); }
+        .spinner {
+            width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary);
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .hidden { display: none !important; }
+        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
+        
+        @media (max-width: 768px) {
+            .progress-sections { grid-template-columns: 1fr; }
+            .servizio-header { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="nav-left">
+            <button class="nav-btn" onclick="tornaPlancia()">Indietro</button>
+            <button class="nav-btn" onclick="tornaPlancia()">Plancia</button>
+        </div>
+        <div class="nav-right">
+            <div class="sync-status"><span class="sync-dot"></span> Cloud Sync: OK</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Workflow Foto & Video</h1>
+            <p>Gestisci i servizi, monitora l'avanzamento e completa ogni fase di produzione.</p>
+        </div>
+
+        <div id="loadingArea" class="loading">
+            <div class="spinner"></div>
+            <div>Caricamento workflow...</div>
+        </div>
+
+        <!-- VISTA ARCHIVIO -->
+        <div id="archivioView" class="hidden">
+            <!-- Form Nuovo Servizio -->
+            <div class="card-3d">
+                <div class="card-title">Nuovo Servizio</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nome Cliente (es. Rossi - Bianchi)</label>
+                        <input type="text" id="newNomeCliente" placeholder="es. Rossi - Bianchi">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo di Servizio</label>
+                        <select id="newTipoServizio">
+                            <option value="">-- Tipo di servizio --</option>
+                            <optgroup label="Anteprima">
+                                <option value="Anteprima">Anteprima</option>
+                                <option value="Anteprima + Matrimonio">Anteprima + Matrimonio</option>
+                                <option value="Anteprima + Battesimo">Anteprima + Battesimo</option>
+                                <option value="Anteprima + 18° Compleanno">Anteprima + 18° Compleanno</option>
+                            </optgroup>
+                            <optgroup label="Famiglia & Neonati">
+                                <option value="Maternity + New Born + Family">Maternity + New Born + Family</option>
+                                <option value="Maternity + New Born">Maternity + New Born</option>
+                                <option value="Maternity + Family">Maternity + Family</option>
+                                <option value="New Born + Family">New Born + Family</option>
+                                <option value="Maternity">Maternity</option>
+                                <option value="New Born">New Born</option>
+                                <option value="Family">Family</option>
+                            </optgroup>
+                            <optgroup label="Cerimonie">
+                                <option value="Matrimonio">Matrimonio</option>
+                                <option value="Battesimo">Battesimo</option>
+                                <option value="Comunione">Comunione</option>
+                                <option value="Cresima">Cresima</option>
+                            </optgroup>
+                            <optgroup label="Feste & Celebrazioni">
+                                <option value="1° Compleanno">1° Compleanno</option>
+                                <option value="18° Compleanno">18° Compleanno</option>
+                                <option value="Compleanno">Compleanno</option>
+                                <option value="Anniversario">Anniversario</option>
+                            </optgroup>
+                            <optgroup label="Altro">
+                                <option value="Evento">Evento</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Data Servizio</label>
+                        <input type="date" id="newDataServizio">
+                    </div>
+                    <div class="form-group">
+                        <label>Videografo / Collega (nome)</label>
+                        <input type="text" id="newVideografo" placeholder="Videografo/Collega (nome)">
+                    </div>
+                </div>
+                <div class="btn-group" style="justify-content: flex-end; margin-top: 10px;">
+                    <button class="btn btn-outline" onclick="pulisciFormNuovo()">Annulla</button>
+                    <button class="btn btn-success" onclick="creaNuovoServizio()">Salva</button>
+                </div>
+            </div>
+
+            <!-- Lista Servizi -->
+            <div id="loadingServizi" class="loading" style="padding: 20px;">
+                <div class="spinner"></div>
+                <div>Caricamento servizi...</div>
+            </div>
+            <div id="emptyServizi" class="empty-state hidden" style="display:none;">Nessun servizio. Clicca su "Nuovo Servizio" per iniziare!</div>
+            <div id="serviziList"></div>
+        </div>
+
+        <!-- VISTA DETTAGLIO -->
+        <div id="dettaglioView" class="hidden">
+            <div class="btn-group" style="margin-bottom: 24px; justify-content: flex-start;">
+                <button class="btn btn-outline" onclick="tornaArchivio()">← Torna all'Archivio</button>
+            </div>
+
+            <div id="dettaglioHeader"></div>
+
+            <div class="overall-progress">
+                <div class="progress-header">
+                    <div class="progress-title">Avanzamento Complessivo</div>
+                    <div class="progress-percent" id="totalProgress">0%</div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="totalProgressBar" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- ANTEPRIMA -->
+            <div class="workflow-section">
+                <div class="section-header anteprima">
+                    <span>📸 ANTEPRIMA</span>
+                    <span class="section-progress" id="progressAnteprima">0/6 (0%)</span>
+                </div>
+                <div class="section-body" id="anteprimaBody">
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="a1" onchange="toggleTask('a1')">
+                        <label class="task-label" for="a1">Download schede</label>
+                        <div class="task-date"><input type="date" id="a1_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="a2" onchange="toggleTask('a2')">
+                        <label class="task-label" for="a2">Archiviazione HD A/B</label>
+                        <div class="task-date"><input type="date" id="a2_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="a3" onchange="toggleTask('a3')">
+                        <label class="task-label" for="a3">Archiviazione Video</label>
+                        <div class="task-date"><input type="date" id="a3_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row" style="padding-left: 30px;">
+                        <select class="task-input full-width" id="a3_archivio" onchange="salvaDettaglio()">
+                            <option value="">-- Seleziona archivio --</option>
+                            <option value="G&LStudio">G&LStudio</option>
+                            <option value="Esterno">Esterno</option>
+                            <option value="Cloud">Cloud</option>
+                        </select>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="a4" onchange="toggleTask('a4')">
+                        <label class="task-label" for="a4">Archiviazione su altro</label>
+                        <div class="task-date"><input type="date" id="a4_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row" style="padding-left: 30px;">
+                        <input type="text" class="task-input full-width" id="a4_dove" placeholder="Dove" onchange="salvaDettaglio()">
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="a5" onchange="toggleTask('a5')">
+                        <label class="task-label" for="a5">RAW → JPEG</label>
+                        <div class="task-date"><input type="date" id="a5_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="a6" onchange="toggleTask('a6')">
+                        <label class="task-label" for="a6">Consegna Anteprima al cliente</label>
+                        <div class="task-date"><input type="date" id="a6_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SERVIZIO -->
+            <div class="workflow-section">
+                <div class="section-header servizio">
+                    <span>🎬 SERVIZIO (<span id="servizioTipoLabel">Battesimo</span>)</span>
+                    <span class="section-progress" id="progressServizio">0/13 (0%)</span>
+                </div>
+                <div class="section-body" id="servizioBody">
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="s1" onchange="toggleTask('s1')">
+                        <label class="task-label" for="s1">Download schede</label>
+                        <div class="task-date"><input type="date" id="s1_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="s2" onchange="toggleTask('s2')">
+                        <label class="task-label" for="s2">Archiviazione HD A/B</label>
+                        <div class="task-date"><input type="date" id="s2_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="s3" onchange="toggleTask('s3')">
+                        <label class="task-label" for="s3">Archiviazione Video</label>
+                        <div class="task-date"><input type="date" id="s3_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row" style="padding-left: 30px;">
+                        <select class="task-input full-width" id="s3_archivio" onchange="salvaDettaglio()">
+                            <option value="">-- Seleziona archivio --</option>
+                            <option value="G&LStudio">G&LStudio</option>
+                            <option value="Esterno">Esterno</option>
+                            <option value="Cloud">Cloud</option>
+                        </select>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="s4" onchange="toggleTask('s4')">
+                        <label class="task-label" for="s4">Archiviazione su altro</label>
+                        <div class="task-date"><input type="date" id="s4_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row" style="padding-left: 30px;">
+                        <input type="text" class="task-input full-width" id="s4_dove" placeholder="Dove" onchange="salvaDettaglio()">
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="s5" onchange="toggleTask('s5')">
+                        <label class="task-label" for="s5">RAW → JPEG</label>
+                        <div class="task-date"><input type="date" id="s5_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="s6" onchange="toggleTask('s6')">
+                        <label class="task-label" for="s6">Selezione + Copertina</label>
+                        <div class="task-date"><input type="date" id="s6_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row" style="padding-left: 30px;">
+                        <input type="text" class="task-input" id="s6_fornitore" placeholder="Fornitore copertina" onchange="salvaDettaglio()">
+                        <input type="text" class="task-input" id="s6_articolo" placeholder="Articolo prodotto" style="margin-left: 10px;" onchange="salvaDettaglio()">
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="s7" onchange="toggleTask('s7')">
+                        <label class="task-label" for="s7">Lavorazione album</label>
+                        <div class="task-date"><input type="date" id="s7_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="s8" onchange="toggleTask('s8')">
+                        <label class="task-label" for="s8">Invio laboratorio</label>
+                        <div class="task-date"><input type="date" id="s8_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="s9" onchange="toggleTask('s9')">
+                        <label class="task-label" for="s9">Lab → Studio</label>
+                        <div class="task-date"><input type="date" id="s9_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="s10" onchange="toggleTask('s10')">
+                        <label class="task-label" for="s10">Album al cliente</label>
+                        <div class="task-date"><input type="date" id="s10_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="s11" onchange="toggleTask('s11')">
+                        <label class="task-label" for="s11">Consegna file cliente</label>
+                        <div class="task-date"><input type="date" id="s11_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="s12" onchange="toggleTask('s12')">
+                        <label class="task-label" for="s12">Video Pronto cliente</label>
+                        <div class="task-date"><input type="date" id="s12_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="s13" onchange="toggleTask('s13')">
+                        <label class="task-label" for="s13">Conferma cancellazione</label>
+                        <div class="task-date"><input type="date" id="s13_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group" style="justify-content: center; margin-bottom: 40px;">
+                <button class="btn btn-info" onclick="visualizzaServizio()">Visualizza</button>
+                <button class="btn btn-warning" onclick="modificaServizio()">Modifica</button>
+                <button class="btn btn-primary" onclick="generaPDF()">📄 PDF</button>
+                <button class="btn btn-danger" onclick="eliminaServizioCorrente()">Elimina</button>
+            </div>
+        </div>
+
+        <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        let studioId = null;
+        let servizi = [];
+        let servizioCorrenteId = null;
+
+        const TASKS_ANTEPRIMA = ['a1','a2','a3','a4','a5','a6'];
+        const TASKS_SERVIZIO = ['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13'];
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!token) { window.location.href = 'index.html'; return; }
+            await verificaSessione();
+        });
+
+        async function verificaSessione() {
+            try {
+                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+                const data = await response.json();
+                if (!data.success || data.tipo !== 'studio') {
+                    mostraToast('Sessione non valida', 'error');
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                    return;
+                }
+                studioId = data.user.id;
+                document.getElementById('loadingArea').classList.add('hidden');
+                document.getElementById('archivioView').classList.remove('hidden');
+                await caricaServizi();
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        async function caricaServizi() {
+            document.getElementById('loadingServizi').style.display = 'block';
+            document.getElementById('serviziList').innerHTML = '';
+            document.getElementById('emptyServizi').style.display = 'none';
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/workflow?studioId=${studioId}&token=${token}`);
+                const data = await response.json();
+                if (data.success && data.workflow) {
+                    servizi = data.workflow;
+                } else {
+                    servizi = [];
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                servizi = [];
+            }
+
+            document.getElementById('loadingServizi').style.display = 'none';
+            renderizzaArchivio();
+        }
+
+        function renderizzaArchivio() {
+            const container = document.getElementById('serviziList');
+            const emptyState = document.getElementById('emptyServizi');
+
+            if (servizi.length === 0) {
+                emptyState.style.display = 'block';
+                container.innerHTML = '';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            container.innerHTML = servizi.map(s => {
+                const tasks = s.tasks || {};
+                const compA = TASKS_ANTEPRIMA.filter(id => tasks[id] && tasks[id].completed).length;
+                const compS = TASKS_SERVIZIO.filter(id => tasks[id] && tasks[id].completed).length;
+                const percA = Math.round((compA / TASKS_ANTEPRIMA.length) * 100);
+                const percS = Math.round((compS / TASKS_SERVIZIO.length) * 100);
+
+                return `
+                    <div class="servizio-card">
+                        <div class="servizio-header">
+                            <div>
+                                <div class="servizio-nome">${s.nome_cliente || 'Senza nome'}</div>
+                                <div class="servizio-videografo">Videografo: ${s.videografo || '-'}</div>
+                            </div>
+                            <button class="servizio-tipo-btn" onclick="apriDettaglio('${s.id}')">${s.tipo_servizio || 'Servizio'}</button>
+                        </div>
+                        <div class="progress-sections">
+                            <div class="progress-block">
+                                <div class="progress-label">ANTEPRIMA</div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar" style="width: ${percA}%;"></div>
+                                </div>
+                                <div class="progress-value">${compA}/${TASKS_ANTEPRIMA.length} (${percA}%)</div>
+                            </div>
+                            <div class="progress-block">
+                                <div class="progress-label">SERVIZIO</div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar" style="width: ${percS}%;"></div>
+                                </div>
+                                <div class="progress-value">${compS}/${TASKS_SERVIZIO.length} (${percS}%)</div>
+                            </div>
+                        </div>
+                        <div class="servizio-actions">
+                            <button class="btn btn-info btn-sm" onclick="apriDettaglio('${s.id}')">Visualizza</button>
+                            <button class="btn btn-warning btn-sm" onclick="apriDettaglio('${s.id}')">Modifica</button>
+                            <button class="btn btn-primary btn-sm" onclick="generaPDFServizio('${s.id}')">PDF</button>
+                            <button class="btn btn-danger btn-sm" onclick="eliminaServizio('${s.id}')">Elimina</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function creaNuovoServizio() {
+            const nomeCliente = document.getElementById('newNomeCliente').value.trim();
+            const tipoServizio = document.getElementById('newTipoServizio').value;
+            const dataServizio = document.getElementById('newDataServizio').value;
+            const videografo = document.getElementById('newVideografo').value.trim();
+
+            if (!nomeCliente || !tipoServizio) {
+                mostraToast('Compila Nome Cliente e Tipo di Servizio', 'error');
+                return;
+            }
+
+            const nuovoServizio = {
+                id: 'wf-' + Date.now(),
+                studio_id: studioId,
+                nome_cliente: nomeCliente,
+                tipo_servizio: tipoServizio,
+                data_servizio: dataServizio,
+                videografo: videografo,
+                tasks: {},
+                data_creazione: new Date().toISOString()
+            };
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/workflow?token=${token}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(nuovoServizio)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Servizio creato!', 'success');
+                    pulisciFormNuovo();
+                    await caricaServizi();
+                } else {
+                    mostraToast('Errore nella creazione', 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        function pulisciFormNuovo() {
+            document.getElementById('newNomeCliente').value = '';
+            document.getElementById('newTipoServizio').value = '';
+            document.getElementById('newDataServizio').value = '';
+            document.getElementById('newVideografo').value = '';
+        }
+
+        function apriDettaglio(id) {
+            servizioCorrenteId = id;
+            const servizio = servizi.find(s => s.id === id);
+            if (!servizio) return;
+
+            document.getElementById('archivioView').classList.add('hidden');
+            document.getElementById('dettaglioView').classList.remove('hidden');
+
+            // Header dettaglio
+            const tasks = servizio.tasks || {};
+            const compA = TASKS_ANTEPRIMA.filter(tid => tasks[tid] && tasks[tid].completed).length;
+            const compS = TASKS_SERVIZIO.filter(tid => tasks[tid] && tasks[tid].completed).length;
+            const percA = Math.round((compA / TASKS_ANTEPRIMA.length) * 100);
+            const percS = Math.round((compS / TASKS_SERVIZIO.length) * 100);
+
+            document.getElementById('dettaglioHeader').innerHTML = `
+                <div class="servizio-card" style="margin-bottom: 24px;">
+                    <div class="servizio-header">
+                        <div>
+                            <div class="servizio-nome">${servizio.nome_cliente}</div>
+                            <div class="servizio-videografo">Videografo: ${servizio.videografo || '-'}</div>
+                        </div>
+                        <button class="servizio-tipo-btn">${servizio.tipo_servizio}</button>
+                    </div>
+                    <div class="progress-sections">
+                        <div class="progress-block">
+                            <div class="progress-label">ANTEPRIMA</div>
+                            <div class="progress-bar-container"><div class="progress-bar" style="width: ${percA}%;"></div></div>
+                            <div class="progress-value">${compA}/${TASKS_ANTEPRIMA.length} (${percA}%)</div>
+                        </div>
+                        <div class="progress-block">
+                            <div class="progress-label">SERVIZIO</div>
+                            <div class="progress-bar-container"><div class="progress-bar" style="width: ${percS}%;"></div></div>
+                            <div class="progress-value">${compS}/${TASKS_SERVIZIO.length} (${percS}%)</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Estrai tipo servizio base per etichetta
+            const tipoBase = servizio.tipo_servizio.replace('Anteprima + ', '');
+            document.getElementById('servizioTipoLabel').textContent = tipoBase;
+
+            // Carica tasks
+            TASKS_ANTEPRIMA.forEach(tid => {
+                const cb = document.getElementById(tid);
+                const dateInp = document.getElementById(tid + '_date');
+                if (cb) cb.checked = tasks[tid] && tasks[tid].completed;
+                if (dateInp && tasks[tid] && tasks[tid].date) dateInp.value = tasks[tid].date;
+                const row = cb ? cb.closest('.task-row') : null;
+                if (row) {
+                    if (cb && cb.checked) row.classList.add('task-completed');
+                    else row.classList.remove('task-completed');
+                }
+            });
+            TASKS_SERVIZIO.forEach(tid => {
+                const cb = document.getElementById(tid);
+                const dateInp = document.getElementById(tid + '_date');
+                if (cb) cb.checked = tasks[tid] && tasks[tid].completed;
+                if (dateInp && tasks[tid] && tasks[tid].date) dateInp.value = tasks[tid].date;
+                const row = cb ? cb.closest('.task-row') : null;
+                if (row) {
+                    if (cb && cb.checked) row.classList.add('task-completed');
+                    else row.classList.remove('task-completed');
+                }
+            });
+
+            // Campi extra
+            if (tasks.a3_archivio) document.getElementById('a3_archivio').value = tasks.a3_archivio;
+            if (tasks.a4_dove) document.getElementById('a4_dove').value = tasks.a4_dove;
+            if (tasks.s3_archivio) document.getElementById('s3_archivio').value = tasks.s3_archivio;
+            if (tasks.s4_dove) document.getElementById('s4_dove').value = tasks.s4_dove;
+            if (tasks.s6_fornitore) document.getElementById('s6_fornitore').value = tasks.s6_fornitore;
+            if (tasks.s6_articolo) document.getElementById('s6_articolo').value = tasks.s6_articolo;
+
+            calcolaProgress();
+            window.scrollTo(0, 0);
+        }
+
+        function tornaArchivio() {
+            document.getElementById('dettaglioView').classList.add('hidden');
+            document.getElementById('archivioView').classList.remove('hidden');
+            servizioCorrenteId = null;
+            caricaServizi();
+        }
+
+        function toggleTask(taskId) {
+            const checkbox = document.getElementById(taskId);
+            const row = checkbox.closest('.task-row');
+            if (checkbox.checked) {
+                row.classList.add('task-completed');
+            } else {
+                row.classList.remove('task-completed');
+            }
+            calcolaProgress();
+            salvaDettaglio();
+        }
+
+        function calcolaProgress() {
+            const compA = TASKS_ANTEPRIMA.filter(id => document.getElementById(id).checked).length;
+            const compS = TASKS_SERVIZIO.filter(id => document.getElementById(id).checked).length;
+            const percA = Math.round((compA / TASKS_ANTEPRIMA.length) * 100);
+            const percS = Math.round((compS / TASKS_SERVIZIO.length) * 100);
+            const totale = TASKS_ANTEPRIMA.length + TASKS_SERVIZIO.length;
+            const totaleComp = compA + compS;
+            const percTotale = Math.round((totaleComp / totale) * 100);
+
+            document.getElementById('progressAnteprima').textContent = `${compA}/${TASKS_ANTEPRIMA.length} (${percA}%)`;
+            document.getElementById('progressServizio').textContent = `${compS}/${TASKS_SERVIZIO.length} (${percS}%)`;
+            document.getElementById('totalProgress').textContent = `${percTotale}%`;
+            document.getElementById('totalProgressBar').style.width = `${percTotale}%`;
+        }
+
+        async function salvaDettaglio() {
+            if (!servizioCorrenteId) return;
+            const servizio = servizi.find(s => s.id === servizioCorrenteId);
+            if (!servizio) return;
+
+            const tasks = {};
+            [...TASKS_ANTEPRIMA, ...TASKS_SERVIZIO].forEach(tid => {
+                const cb = document.getElementById(tid);
+                const dateInp = document.getElementById(tid + '_date');
+                tasks[tid] = {
+                    completed: cb ? cb.checked : false,
+                    date: dateInp ? dateInp.value : null
+                };
+            });
+            tasks.a3_archivio = document.getElementById('a3_archivio').value;
+            tasks.a4_dove = document.getElementById('a4_dove').value;
+            tasks.s3_archivio = document.getElementById('s3_archivio').value;
+            tasks.s4_dove = document.getElementById('s4_dove').value;
+            tasks.s6_fornitore = document.getElementById('s6_fornitore').value;
+            tasks.s6_articolo = document.getElementById('s6_articolo').value;
+
+            try {
+                await fetch(`${WORKER_URL}/api/studio/workflow/${servizioCorrenteId}?token=${token}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tasks })
+                });
+            } catch (error) {
+                console.error('Errore salvataggio:', error);
+            }
+        }
+
+        async function eliminaServizio(id) {
+            if (!confirm('Sei sicuro di voler eliminare questo servizio?')) return;
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/workflow/${id}?token=${token}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Servizio eliminato', 'success');
+                    await caricaServizi();
+                }
+            } catch (error) {
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        function eliminaServizioCorrente() {
+            if (servizioCorrenteId) eliminaServizio(servizioCorrenteId);
+        }
+
+        function visualizzaServizio() {
+            mostraToast('Visualizzazione dettagli servizio', 'success');
+        }
+
+        function modificaServizio() {
+            mostraToast('Modalità modifica attivata', 'success');
+        }
+
+        function generaPDF() {
+            mostraToast('Generazione PDF in corso...', 'success');
+        }
+
+        function generaPDFServizio(id) {
+            mostraToast('Generazione PDF servizio...', 'success');
+        }
+
+        function tornaPlancia() {
+            window.location.href = `plancia-studio.html?token=${token}`;
+        }
+
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `<div>${msg}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
