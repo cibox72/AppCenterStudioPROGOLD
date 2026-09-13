@@ -211,6 +211,8 @@
         .btn-danger:hover { background: #c0392b; }
         .btn-success { background: var(--success); color: white; }
         .btn-success:hover { background: #1e8449; transform: translateY(-1px); }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-warning:hover { background: #d68910; transform: translateY(-1px); }
         .btn-sm { padding: 6px 12px; font-size: 12px; }
         
         .table-container { overflow-x: auto; }
@@ -245,6 +247,7 @@
             margin-bottom: 10px; border-left: 4px solid var(--success); font-size: 14px; animation: slideIn 0.3s ease;
         }
         .toast.error { border-left-color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
         
         .hidden { display: none !important; }
@@ -282,6 +285,20 @@
 
         .studio-logo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 12px; border: 2px solid rgba(255,255,255,0.3); }
         .studio-info-top { display: flex; align-items: center; color: white; font-weight: 600; font-size: 14px; }
+
+        /* MODAL CONFLITTO */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 4000; align-items: center; justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white; border-radius: var(--radius); padding: 32px; width: 90%; max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .modal-content h3 { color: var(--warning); margin-bottom: 16px; font-size: 20px; }
+        .modal-content p { margin-bottom: 20px; color: var(--text-main); line-height: 1.6; }
+        .modal-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
     </style>
 </head>
 <body>
@@ -441,6 +458,19 @@
         </div>
     </div>
 
+    <!-- MODAL CONFLITTO CARTELLA -->
+    <div class="modal-overlay" id="modalConflitto">
+        <div class="modal-content">
+            <h3>⚠️ Cartella già esistente</h3>
+            <p id="conflittoTesto">Esiste già una cartella con questo nome. Cosa vuoi fare?</p>
+            <div class="modal-actions">
+                <button class="btn btn-warning" onclick="confermaSovrascrivi()">🔄 Sovrascrivi</button>
+                <button class="btn btn-primary" onclick="confermaAggiungi()">➕ Aggiungi</button>
+                <button class="btn btn-outline" onclick="annullaCaricamento()"> Annulla</button>
+            </div>
+        </div>
+    </div>
+
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
@@ -451,6 +481,10 @@
         let listaSelezione = [];
         let cartelleCaricate = [];
         let selezioneIdCorrente = null;
+
+        // Variabili per gestione conflitto
+        let pendingFiles = null;
+        let pendingNomeCartella = null;
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) { window.location.href = 'index.html'; return; }
@@ -484,6 +518,7 @@
             }
         }
 
+        // TEMA GLOBALE (ereditato dalla Plancia Admin)
         async function caricaTemaGlobale() {
             if (!studioId) return;
             try {
@@ -639,13 +674,83 @@
             if (files[0].webkitRelativePath) {
                 const parts = files[0].webkitRelativePath.split('/');
                 if (parts.length > 1) {
-                    nomeCartella = parts[0]; // Es: "bassa 1/foto.jpg" → "bassa 1"
+                    nomeCartella = parts[0];
                 }
             }
 
+            // CONTROLLA SE ESISTE GIÀ UNA CARTELLA CON QUESTO NOME
+            const cartellaEsistente = cartelleCaricate.find(c => c.nome === nomeCartella);
+            
+            if (cartellaEsistente) {
+                // Mostra modal di conflitto
+                pendingFiles = files;
+                pendingNomeCartella = nomeCartella;
+                
+                document.getElementById('conflittoTesto').innerHTML = `
+                    Esiste già una cartella <strong>"${nomeCartella}"</strong> con <strong>${cartellaEsistente.fileCount} file</strong>.<br><br>
+                    Cosa vuoi fare?
+                `;
+                document.getElementById('modalConflitto').classList.add('active');
+                return;
+            }
+
+            // Nessun conflitto, procedi normalmente
+            await caricaCartella(files, nomeCartella, clienteId, false);
+        }
+
+        // Azioni modal conflitto
+        async function confermaSovrascrivi() {
+            document.getElementById('modalConflitto').classList.remove('active');
+            const clienteId = document.getElementById('selectedClienteId').value;
+            
+            // Prima elimina la cartella esistente
+            const folderIndex = cartelleCaricate.findIndex(c => c.nome === pendingNomeCartella);
+            if (folderIndex !== -1) {
+                try {
+                    await fetch(`${WORKER_URL}/api/studio/selezione-album/elimina-cartella?token=${encodeURIComponent(token)}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            selezione_id: selezioneIdCorrente, 
+                            nome_cartella: pendingNomeCartella, 
+                            cliente_id: clienteId 
+                        })
+                    });
+                    cartelleCaricate.splice(folderIndex, 1);
+                } catch (error) {
+                    console.error('Errore eliminazione:', error);
+                }
+            }
+            
+            // Poi carica la nuova
+            await caricaCartella(pendingFiles, pendingNomeCartella, clienteId, true);
+            pendingFiles = null;
+            pendingNomeCartella = null;
+        }
+
+        async function confermaAggiungi() {
+            document.getElementById('modalConflitto').classList.remove('active');
+            const clienteId = document.getElementById('selectedClienteId').value;
+            
+            // Carica i file aggiungendoli alla cartella esistente
+            await caricaCartella(pendingFiles, pendingNomeCartella, clienteId, false);
+            pendingFiles = null;
+            pendingNomeCartella = null;
+        }
+
+        function annullaCaricamento() {
+            document.getElementById('modalConflitto').classList.remove('active');
+            document.getElementById('uploadCartella').value = '';
+            pendingFiles = null;
+            pendingNomeCartella = null;
+            mostraToast('Caricamento annullato', 'warning');
+        }
+
+        async function caricaCartella(files, nomeCartella, clienteId, sovrascrivi) {
             const statusDiv = document.getElementById('uploadStatus');
             statusDiv.classList.remove('hidden');
-            statusDiv.innerHTML = ` Caricamento cartella "${nomeCartella}" (${files.length} file) in corso... Attendere.`;
+            const azione = sovrascrivi ? 'Sovrascrittura' : 'Caricamento';
+            statusDiv.innerHTML = `⏳ ${azione} cartella "${nomeCartella}" (${files.length} file) in corso... Attendere.`;
 
             const formData = new FormData();
             formData.append('selezione_id', selezioneIdCorrente);
@@ -659,11 +764,17 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    cartelleCaricate.push({ nome: nomeCartella, fileCount: result.uploaded || files.length });
+                    // Aggiorna o aggiungi la cartella nell'array
+                    const existingIndex = cartelleCaricate.findIndex(c => c.nome === nomeCartella);
+                    if (existingIndex !== -1) {
+                        cartelleCaricate[existingIndex].fileCount = result.uploaded || files.length;
+                    } else {
+                        cartelleCaricate.push({ nome: nomeCartella, fileCount: result.uploaded || files.length });
+                    }
                     aggiornaListaCartelle();
-                    mostraToast(`✅ Cartella "${nomeCartella}" caricata: ${result.uploaded} file`, 'success');
-                    statusDiv.innerHTML = `✅ Caricamento completato: ${result.uploaded} file nella cartella "${nomeCartella}".`;
-                    document.getElementById('uploadCartella').value = ''; // Reset input
+                    mostraToast(`✅ Cartella "${nomeCartella}": ${result.uploaded} file`, 'success');
+                    statusDiv.innerHTML = `✅ ${azione} completato: ${result.uploaded} file nella cartella "${nomeCartella}".`;
+                    document.getElementById('uploadCartella').value = '';
                     if (cartelleCaricate.length > 0) attivaStep(4);
                 } else {
                     mostraToast('Errore nel caricamento', 'error');
@@ -760,7 +871,13 @@
                     azioni = `<button class="btn btn-sm btn-success" onclick="scaricaSelezione('${s.id}')">SCARICA</button>`;
                 } else if (s.stato === 'scaricata') {
                     statoClass = 'status-downloaded'; statoText = 'SCARICATA';
-                    azioni = `<span style="font-size:11px; color:var(--text-light);">Eliminazione auto</span>`;
+                    azioni = `
+                        <button class="btn btn-sm btn-warning" onclick="pulisciCloudOra('${s.id}')">️ Pulisci Cloud Ora</button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminaSelezione('${s.id}')">Elimina</button>
+                    `;
+                } else if (s.stato === 'completata') {
+                    statoClass = 'status-downloaded'; statoText = 'COMPLETATA';
+                    azioni = `<span style="font-size:11px; color:var(--text-light);">Cloud pulito</span>`;
                 }
 
                 return `
@@ -771,9 +888,33 @@
                     <td><span class="cred-box">${s.password}</span></td>
                     <td><span class="status-badge ${statoClass}">${statoText}</span></td>
                     <td>${new Date(s.data_scadenza).toLocaleDateString('it-IT')}</td>
-                    <td>${azioni} <button class="btn btn-sm btn-danger" onclick="eliminaSelezione('${s.id}')">Elimina</button></td>
+                    <td>${azioni}</td>
                 </tr>`;
             }).join('');
+        }
+
+        // NUOVA FUNZIONE: Pulizia Cloud manuale
+        async function pulisciCloudOra(selezioneId) {
+            if (!confirm('⚠️ ATTENZIONE!\n\nQuesta azione eliminerà TUTTI i file rimanenti nel cloud per questa selezione (foto selezionate dal cliente).\n\nSei sicuro di aver già scaricato le foto sul tuo computer?\n\nQuesta azione è IRREVERSIBILE.')) return;
+            
+            try {
+                // Usa l'endpoint elimina che già esiste
+                const response = await fetch(`${WORKER_URL}/api/studio/selezione-album/elimina?token=${encodeURIComponent(token)}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ selezione_id: selezioneId })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('✅ Cloud pulito! File eliminati con successo.', 'success');
+                    await caricaSelezione();
+                } else {
+                    mostraToast('Errore: ' + (result.error || ''), 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
         }
 
         function copiaLinkArchivio(id) {
@@ -798,7 +939,7 @@
                         const a = document.createElement('a'); a.href = window.URL.createObjectURL(blob);
                         a.download = txtFile.name; a.click();
                     }
-                    mostraToast('Selezione scaricata', 'success');
+                    mostraToast('Selezione scaricata. Ora puoi usare "Pulisci Cloud Ora" per eliminare i file rimanenti.', 'success');
                     await caricaSelezione();
                 }
             } catch (error) { mostraToast('Errore di connessione', 'error'); }
