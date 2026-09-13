@@ -1314,6 +1314,31 @@ export default {
         return new Response(JSON.stringify({ success: true, selezioni: result.results }), { headers: corsHeaders });
       }
 
+            // DEBUG: VEDI COSA C'È NEL BUCKET
+      if (path === "/api/studio/selezione-album/cartelle-debug" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const selezioneId = url.searchParams.get("id");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        
+        const selezione = await env.DB.prepare("SELECT * FROM selezioni_album WHERE id=? AND studio_id=?").bind(selezioneId, sess.user_id).first();
+        if (!selezione) return new Response(JSON.stringify({ error: "Selezione non trovata" }), { status: 404, headers: corsHeaders });
+        
+        const bucket = env.appcenter_studio_foto;
+        const prefix = `selezioni/${selezione.studio_id}/${selezione.cliente_id}/${selezioneId}/`;
+        const objects = await bucket.list({ prefix });
+        
+        return new Response(JSON.stringify({ 
+          success: true, 
+          prefix: prefix,
+          totalObjects: objects.objects.length,
+          objects: objects.objects.map(obj => ({
+            key: obj.key,
+            size: obj.size
+          }))
+        }), { headers: corsHeaders });
+      }
+      
       // 83. SCARICA SELEZIONE (Studio)
       if (path === "/api/studio/selezione-album/scarica" && request.method === "POST") {
         const token = url.searchParams.get("token");
