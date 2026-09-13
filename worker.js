@@ -1259,8 +1259,8 @@ export default {
           // Salta se è una cartella o file di testo
           if (obj.key.endsWith('/') || obj.key.endsWith('.txt')) continue;
           
-          // Usa URL pubblico diretto (più semplice)
-         pub-ad933887e7ef48509bbb7dfcf60b14d6.r2.dev
+          // Usa URL pubblico diretto (CORRETTO)
+          const publicUrl = `https://pub-ad933887e7ef48509bbb7dfcf60b14d6.r2.dev/${obj.key}`;
           
           foto.push({
             name: obj.key.split('/').pop(),
@@ -1270,7 +1270,8 @@ export default {
         }
         
         return new Response(JSON.stringify({ success: true, foto: foto }), { headers: corsHeaders });
-      }
+      }      
+      
       
 
       // 81. INVIA SELEZIONE (Cliente) - ELIMINA NON PREFERITE E CREA .TXT
