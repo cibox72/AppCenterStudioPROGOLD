@@ -1470,4 +1470,55 @@ export default {
   }
 };
 
+      // ============================================
+      // ROTTA INDIPENDENTE: STRUMENTO RICEVUTE D'EMERGENZA
+      // ============================================
+      
+      // 1. Lettura del tema attivo per la colorazione dinamica ed elegante
+      if (path === "/api/get-active-theme" && request.method === "GET") {
+        // Tenta di recuperare la configurazione dell'ultimo tema salvato
+        const configurazione = await env.DB.prepare(
+          "SELECT * FROM temi_colori ORDER BY id DESC LIMIT 1"
+        ).first();
+
+        if (configurazione) {
+          return new Response(JSON.stringify(configurazione), { headers: corsHeaders });
+        }
+        // Se non trova nulla, risponde con null così la pagina usa il verde salvia predefinito
+        return new Response(JSON.stringify({ active: false }), { headers: corsHeaders });
+      }
+
+      // 2. Salvataggio autonomo della ricevuta compilata a mano
+      if (path === "/api/ricevute" && request.method === "POST") {
+        const d = await request.json();
+        
+        // Genera un ID di tracciamento interno unico per il record del database
+        const idRecord = 'ric-' + Date.now();
+
+        // Esegue l'inserimento diretto basato sulle colonne della tua tabella
+        // Adatta i campi in base all'esatta struttura a 10 colonne vista nel PRAGMA
+        await env.DB.prepare(
+          `INSERT INTO ricevute (
+            id, 
+            numero, 
+            data, 
+            cliente, 
+            importo, 
+            causale,
+            data_creazione
+          ) VALUES (?, ?, ?, ?, ?, ?, ?)`
+        ).bind(
+          idRecord,
+          parseInt(d.numero),
+          d.data,
+          d.cliente,
+          parseFloat(d.importo),
+          d.causale,
+          new Date().toISOString()
+        ).run();
+
+        // Ritorna una risposta di successo per sbloccare la stampa A4 sul browser
+        return new Response(JSON.stringify({ success: true, id: idRecord }), { headers: corsHeaders });
+      }
+
 
