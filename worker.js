@@ -1204,7 +1204,7 @@ export default {
         return new Response(JSON.stringify({ success: true, filename: file.name }), { headers: corsHeaders });
       }
 
-      // 79. LISTA CARTELLE (Cliente)
+           // 79. LISTA CARTELLE (Cliente) - CORRETTO
       if (path === "/api/public/selezione-album/cartelle" && request.method === "GET") {
         const selezioneId = url.searchParams.get("id");
         const username = url.searchParams.get("username");
@@ -1220,14 +1220,20 @@ export default {
         if (!bucket) return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
         
         const prefix = `selezioni/${selezione.studio_id}/${selezione.cliente_id}/${selezioneId}/`;
-        const objects = await bucket.list({ prefix, delimiter: '/' });
+        // SENZA delimiter per vedere tutti i file ricorsivamente
+        const objects = await bucket.list({ prefix });
         
-        const cartelle = [];
+        const cartelle = new Set();
         for (const obj of objects.objects || []) {
-          const parts = obj.key.replace(prefix, '').split('/');
-          if (parts.length > 1 && parts[0] && !cartelle.includes(parts[0])) cartelle.push(parts[0]);
+          const relativePath = obj.key.replace(prefix, '');
+          const parts = relativePath.split('/');
+          // Il primo elemento è il nome della cartella
+          if (parts.length >= 2 && parts[0]) {
+            cartelle.add(parts[0]);
+          }
         }
-        return new Response(JSON.stringify({ success: true, cartelle, cliente_nome: selezione.cliente_nome }), { headers: corsHeaders });
+        
+        return new Response(JSON.stringify({ success: true, cartelle: Array.from(cartelle), cliente_nome: selezione.cliente_nome }), { headers: corsHeaders });
       }
 
       // 80. LISTA FOTO (Cliente)
