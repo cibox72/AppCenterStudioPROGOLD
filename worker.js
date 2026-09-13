@@ -1260,7 +1260,7 @@ export default {
           if (obj.key.endsWith('/') || obj.key.endsWith('.txt')) continue;
           
           // Usa URL pubblico diretto (più semplice)
-          const publicUrl = `https://pub-xxxx.r2.dev/${obj.key}`;
+         pub-ad933887e7ef48509bbb7dfcf60b14d6.r2.dev
           
           foto.push({
             name: obj.key.split('/').pop(),
