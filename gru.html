@@ -226,7 +226,7 @@
                 <p>Per utilizzare la funzione di selezione foto, devi aprire questa pagina con <strong>Google Chrome</strong> o <strong>Microsoft Edge</strong>. Questi browser supportano l'accesso sicuro alle cartelle del tuo computer.</p>
                 <div class="browser-badges">
                     <span class="browser-badge"> Google Chrome</span>
-                    <span class="browser-badge">🌐 Microsoft Edge</span>
+                    <span class="browser-badge"> Microsoft Edge</span>
                     <span class="browser-badge">❌ Safari non supportato</span>
                 </div>
             </div>
@@ -267,7 +267,7 @@
                 <div class="card-subtitle">Copia automatica delle foto originali basate sulla selezione del cliente</div>
                 
                 <div class="file-section" id="sectionTxt">
-                    <h3> 1. File TXT Selezione (dal cloud)</h3>
+                    <h3>📄 1. File TXT Selezione (dal cloud)</h3>
                     <div class="form-group">
                         <button class="btn btn-outline" onclick="selezionaFileTXT()" style="width: 100%;">
                             📂 Seleziona File TXT
@@ -310,7 +310,7 @@
 
                 <div class="btn-group" style="justify-content: center;">
                     <button class="btn btn-success" id="btnCopia" onclick="avviaCopia()" disabled style="font-size: 18px; padding: 18px 36px;">
-                        🚀 AVVIAMENTO COPIA INTELLIGENTE
+                         AVVIAMENTO COPIA INTELLIGENTE
                     </button>
                 </div>
 
@@ -487,16 +487,25 @@
                 
                 // Leggi il contenuto
                 const contenuto = await file.text();
-                const righe = contenuto.split('\n').filter(riga => righa.trim() !== '');
+                const righe = contenuto.split('\n');
                 
-                // Filtra solo le righe che sono nomi file (ignora intestazioni)
-                fotoSelezionate = righe.filter(riga => 
-                    !righe.includes('FOTO SELEZIONATE') && 
-                    !righe.includes('Cliente:') && 
-                    !righe.includes('Data:') &&
-                    !righe.includes('---') &&
-                    riga.trim().length > 0
-                );
+                // Lista di intestazioni da ignorare
+                const intestazioni = [
+                    'FOTO SELEZIONATE', 'Cliente:', 'Data:', 'Username:',
+                    'SELEZIONE FOTO', 'ID Cliente:', 'TOTALE FOTO',
+                    'ELENCO FILE', 'RIEPILOGO', 'Foto selezionate:',
+                    'Foto eliminate:', '---'
+                ];
+                
+                // Filtra solo le righe che sono nomi file
+                fotoSelezionate = righe.filter(riga => {
+                    const trimmed = riga.trim();
+                    // Ignora righe vuote e intestazioni
+                    if (trimmed.length === 0) return false;
+                    if (intestazioni.some(h => trimmed.includes(h))) return false;
+                    // È un nome file valido
+                    return true;
+                });
 
                 // Aggiorna UI
                 document.getElementById('txtNome').textContent = file.name;
@@ -520,7 +529,7 @@
         async function selezionaCartellaOrigini() {
             try {
                 if (!('showDirectoryPicker' in window)) {
-                    mostraToast('❌ Il tuo browser non supporta questa funzione. Usa Chrome o Edge!', 'error');
+                    mostraToast(' Il tuo browser non supporta questa funzione. Usa Chrome o Edge!', 'error');
                     return;
                 }
 
@@ -546,7 +555,7 @@
         async function selezionaCartellaDestinazione() {
             try {
                 if (!('showDirectoryPicker' in window)) {
-                    mostraToast('❌ Il tuo browser non supporta questa funzione. Usa Chrome o Edge!', 'error');
+                    mostraToast(' Il tuo browser non supporta questa funzione. Usa Chrome o Edge!', 'error');
                     return;
                 }
 
@@ -573,7 +582,7 @@
             const btn = document.getElementById('btnCopia');
             if (fileTXT && cartellaOrigini && cartellaDestinazione && fotoSelezionate.length > 0) {
                 btn.disabled = false;
-                btn.innerHTML = '🚀 AVVIAMENTO COPIA INTELLIGENTE';
+                btn.innerHTML = ' AVVIAMENTO COPIA INTELLIGENTE';
             } else {
                 btn.disabled = true;
                 btn.innerHTML = 'Completa tutti i passaggi sopra';
