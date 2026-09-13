@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ricevute - AppCenterStudioPROGOLD</title>
+    <!-- Libreria per generare il PDF al volo -->
+    <script src="https://cloudflare.com"></script>
     <style>
         :root {
             --primary: #82e0aa;
@@ -40,9 +42,10 @@
             cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark);
         }
         .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; }
+        
         .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
+        
         .page-header {
             text-align: center; padding: 32px; background: white; border-radius: var(--radius);
             box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
@@ -53,6 +56,7 @@
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px;
         }
         .page-header p { color: var(--text-light); font-size: 15px; }
+        
         .card-3d {
             background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
             box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden;
@@ -63,6 +67,7 @@
             padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
         }
         .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
+        
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
@@ -72,19 +77,15 @@
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
         }
+        
         .btn {
-            padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
+            padding: 14px 28px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700;
             cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            text-transform: uppercase; letter-spacing: 0.5px;
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .btn-primary { background: var(--primary-gradient); color: white; }
-        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-        .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); background: white; margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; }
-        th { background: var(--primary-light); color: var(--primary-dark); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-        tr:hover td { background: #fafafa; }
-        .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
+        .btn-primary { background: var(--primary-gradient); color: white; width: 100%; max-width: 300px; margin-top: 10px; }
+        
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast {
             background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
@@ -92,222 +93,142 @@
         }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
-        .loading { text-align: center; padding: 40px; color: var(--text-light); }
-        .spinner {
-            width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary);
-            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;
+
+        /* ==========================================================================
+           STILE LAYOUT A4 DOPPIA COPIA (TAGLIO RICEVUTA ORIZZONTALE)
+           ========================================================================== */
+        #printTemplate {
+            background: #ffffff;
+            color: #2c3e50;
+            width: 210mm; /* Larghezza esatta A4 */
+            height: 297mm; /* Altezza esatta A4 */
+            padding: 10mm 15mm;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .hidden { display: none !important; }
-    </style>
-</head>
-<body>
-    <div class="top-bar">
-        <div style="display: flex; gap: 10px;">
-            <button class="nav-btn" onclick="tornaPlancia()">Indietro</button>
-            <button class="nav-btn" onclick="tornaPlancia()">Plancia</button>
-        </div>
-        <div class="sync-status"><span class="sync-dot"></span> Cloud Sync: OK</div>
-    </div>
-
-    <div class="container">
-        <div class="page-header">
-            <h1>Gestione Ricevute</h1>
-            <p>Crea e gestisci ricevute fiscali. Dati salvati sul cloud multi-tenant.</p>
-        </div>
-
-        <div id="loadingArea" class="loading">
-            <div class="spinner"></div>
-            <div>Verifica sessione cloud...</div>
-        </div>
-
-        <div id="mainContent" class="hidden">
-            <div class="card-3d">
-                <div class="card-title">Nuova Ricevuta</div>
-                <div class="card-subtitle">Compila i dati per creare una nuova ricevuta fiscale.</div>
-                <div class="form-row">
-                    <div class="form-group"><label>Nome Cliente *</label><input type="text" id="ricCliente"></div>
-                    <div class="form-group"><label>Servizio *</label><input type="text" id="ricServizio"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Importo (€) *</label><input type="number" id="ricImporto" min="0" step="0.01"></div>
-                    <div class="form-group"><label>Data *</label><input type="date" id="ricData"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Tipologia</label>
-                        <select id="ricTipologia">
-                            <option value="acconto">Acconto</option>
-                            <option value="saldo">Saldo</option>
-                            <option value="unico">Pagamento Unico</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Metodo di Pagamento</label>
-                        <select id="ricMetodo">
-                            <option value="contanti">Contanti</option>
-                            <option value="bonifico">Bonifico</option>
-                            <option value="carta">Carta</option>
-                            <option value="paypal">PayPal</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group"><label>Note</label><textarea id="ricNote" rows="3"></textarea></div>
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="salvaRicevuta()">SALVA RICEVUTA</button>
-                </div>
-            </div>
-
-            <div class="card-3d">
-                <div class="card-title">Elenco Ricevute</div>
-                <div class="table-container">
-                    <table>
-                        <thead><tr><th>Data</th><th>Cliente</th><th>Servizio</th><th>Importo</th><th>Tipologia</th><th>Metodo</th></tr></thead>
-                        <tbody id="ricevuteTable"></tbody>
-                    </table>
-                </div>
-                <div id="emptyRicevute" class="hidden" style="text-align: center; padding: 40px; color: var(--text-light);">Nessuna ricevuta presente.</div>
-            </div>
-        </div>
-
-        <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
-    </div>
-
-    <div class="toast-container" id="toastContainer"></div>
-
-    <script>
-        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        let studioId = null;
-        let ricevute = [];
-
-        document.addEventListener('DOMContentLoaded', async function() {
-            if (!token) { window.location.href = 'index.html'; return; }
-            await verificaSessione();
-        });
-
-        async function verificaSessione() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
-                const data = await response.json();
-                if (!data.success || data.tipo !== 'studio') {
-                    mostraToast('Sessione non valida', 'error');
-                    setTimeout(() => window.location.href = 'index.html', 1500);
-                    return;
-                }
-                studioId = data.user.id;
-                document.getElementById('loadingArea').classList.add('hidden');
-                document.getElementById('mainContent').classList.remove('hidden');
-                await caricaRicevute();
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
-            }
+        
+        .receipt-block {
+            height: 130mm; /* Spazio preciso per far stare due blocchi in un A4 */
+            border: 2px solid #1e8449;
+            padding: 15px 20px;
+            background-color: #fafdfb;
+            border-radius: 8px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
         }
 
-        async function salvaRicevuta() {
-            const cliente = document.getElementById('ricCliente').value.trim();
-            const servizio = document.getElementById('ricServizio').value.trim();
-            const importo = parseFloat(document.getElementById('ricImporto').value);
-            const data = document.getElementById('ricData').value;
-            const tipologia = document.getElementById('ricTipologia').value;
-            const metodo = document.getElementById('ricMetodo').value;
-            const note = document.getElementById('ricNote').value.trim();
-
-            if (!cliente || !servizio || isNaN(importo) || !data) {
-                mostraToast('Compila i campi obbligatori', 'error');
-                return;
-            }
-
-            const ricevuta = {
-                id: 'ric-' + Date.now(),
-                studio_id: studioId,
-                cliente_nome: cliente,
-                servizio, importo, data, tipologia, metodo, note,
-                data_creazione: new Date().toISOString()
-            };
-
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/ricevuta?token=${token}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(ricevuta)
-                });
-                const result = await response.json();
-                if (result.success) {
-                    mostraToast('Ricevuta salvata sul cloud!', 'success');
-                    pulisciForm();
-                    await caricaRicevute();
-                } else {
-                    mostraToast('Errore nel salvataggio', 'error');
-                }
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
-            }
+        .receipt-tag {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e8449;
+            color: #fff;
+            padding: 2px 14px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 20px;
+            letter-spacing: 1px;
+        }
+        
+        .block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid #1e8449;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .block-logo-area { width: 55%; font-size: 12px; line-height: 1.4; font-family: sans-serif; }
+        .block-logo-title { font-size: 18px; font-weight: 800; color: #1e8449; text-transform: uppercase; }
+        
+        .block-meta-box {
+            width: 40%;
+            border: 1px solid #1e8449;
+            padding: 6px 10px;
+            background: #fff;
+            border-radius: 6px;
+        }
+        .meta-row { display: flex; justify-content: space-between; font-size: 13px; font-family: sans-serif; }
+        .meta-label { font-weight: 700; color: #1e8449; }
+        
+        .block-body-row {
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .block-label {
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+            color: #1e8449;
+            white-space: nowrap;
+            margin-right: 8px;
+            min-width: 130px;
+        }
+        .block-filler {
+            flex-grow: 1;
+            border-bottom: 1px dashed #b2babb;
+            padding-bottom: 1px;
+            font-weight: 600;
+            color: #111;
+            font-family: Arial, sans-serif;
+        }
+        
+        /* Linea di taglio centrale */
+        .cut-line {
+            height: 5mm;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px dashed #1e8449;
+            position: relative;
+            margin: 5mm 0;
+            color: #1e8449;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .cut-line span {
+            background: #fff;
+            padding: 0 10px;
+            position: relative;
+            top: 10px;
         }
 
-        async function caricaRicevute() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/ricevute?studioId=${studioId}&token=${token}`);
-                const data = await response.json();
-                if (data.success && data.ricevute) {
-                    ricevute = data.ricevute;
-                } else {
-                    ricevute = [];
-                }
-                renderizzaRicevute();
-            } catch (error) {
-                console.error('Errore:', error);
-            }
+        .block-footer-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 15px;
         }
+        .bollo-nota { width: 50%; font-size: 11px; line-height: 1.3; color: #555; }
+        
+        /* Box monetario Buffetti */
+        .buffetti-money-box {
+            display: flex;
+            border: 2px solid #1e8449;
+            background: #fff;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .money-title {
+            background: #1e8449;
+            color: white;
+            font-weight: 800;
+            font-size: 14px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+        }
+        .money-fields { display: flex; text-align: center; }
+        .field-euro { width: 85px; padding: 6px; font-size: 18px; font-weight: bold; border-right: 1px solid #1e8449; color: #000; }
+        .field-cents { width: 45px; padding: 6px; font-size: 14px; font-weight: bold; color: #000; padding-top: 10px; }
+        .money-header-sub { font-size: 9px; font-weight: bold; text-transform: uppercase; color: #1e8449; display: block; border-bottom: 1px solid #1e8449; padding-bottom: 1px; margin-bottom: 3px; }
 
-        function renderizzaRicevute() {
-            const tbody = document.getElementById('ricevuteTable');
-            const emptyState = document.getElementById('emptyRicevute');
-            if (ricevute.length === 0) {
-                emptyState.classList.remove('hidden');
-                tbody.innerHTML = '';
-                return;
-            }
-            emptyState.classList.add('hidden');
-            const tipologieMap = { 'acconto': 'Acconto', 'saldo': 'Saldo', 'unico': 'Pagamento Unico' };
-            const metodiMap = { 'contanti': 'Contanti', 'bonifico': 'Bonifico', 'carta': 'Carta', 'paypal': 'PayPal' };
-            tbody.innerHTML = ricevute.map(ric => `
-                <tr>
-                    <td>${new Date(ric.data).toLocaleDateString('it-IT')}</td>
-                    <td><strong>${ric.cliente_nome}</strong></td>
-                    <td>${ric.servizio}</td>
-                    <td style="font-weight: 700; color: var(--primary-dark);">€ ${parseFloat(ric.importo).toFixed(2)}</td>
-                    <td>${tipologieMap[ric.tipologia] || ric.tipologia}</td>
-                    <td>${metodiMap[ric.metodo] || ric.metodo}</td>
-                </tr>
-            `).join('');
-        }
-
-        function pulisciForm() {
-            document.getElementById('ricCliente').value = '';
-            document.getElementById('ricServizio').value = '';
-            document.getElementById('ricImporto').value = '';
-            document.getElementById('ricData').value = '';
-            document.getElementById('ricTipologia').value = 'acconto';
-            document.getElementById('ricMetodo').value = 'contanti';
-            document.getElementById('ricNote').value = '';
-        }
-
-        function tornaPlancia() {
-            window.location.href = `plancia-studio.html?token=${token}`;
-        }
-
-        function mostraToast(msg, tipo) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div>${msg}</div>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-    </script>
-</body>
-</html>
