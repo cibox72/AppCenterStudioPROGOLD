@@ -4,20 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ricevute - AppCenterStudioPROGOLD</title>
+    <script src="https://cloudflare.com"></script>
     <style>
         :root {
-            --primary: #82e0aa; 
-            --primary-dark: #1e8449; 
-            --primary-light: #e8f8f5;
+            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
             --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --text-main: #2c3e50; 
-            --text-light: #7f8c8d; 
-            --border-color: #e8e8e8;
-            --success: #27ae60; 
-            --danger: #c0392b; 
-            --warning: #d35400; 
-            --radius: 12px;
+            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
+            --success: #27ae60; --danger: #c0392b; --warning: #d35400; --radius: 12px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -89,7 +83,7 @@
         .search-box { display: flex; gap: 8px; margin-bottom: 16px; }
         .search-box input { flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; }
 
-        /* AREA DI STAMPA RICEVUTA */
+        /* AREA DI STAMPA A4 IN DUPLICE COPIA (BUFFETTI STYLE) */
         #printArea {
             display: none;
             background: white;
@@ -132,119 +126,45 @@
             padding-bottom: 10px;
             margin-bottom: 15px;
         }
-        .buffetti-studio-info {
-            width: 60%;
-            font-size: 12px;
-            line-height: 1.4;
-        }
-        .buffetti-studio-name {
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--primary-dark);
-            text-transform: uppercase;
-        }
-        .buffetti-meta {
-            width: 35%;
-            text-align: right;
-        }
-        .buffetti-title {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--primary-dark);
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-        }
+        .buffetti-studio-info { width: 60%; font-size: 12px; line-height: 1.4; }
+        .buffetti-studio-name { font-size: 16px; font-weight: bold; color: var(--primary-dark); text-transform: uppercase; }
+        .buffetti-meta { width: 35%; text-align: right; }
+        .buffetti-title { font-size: 20px; font-weight: 800; color: var(--primary-dark); letter-spacing: 1px; margin-bottom: 5px; }
         .buffetti-badge {
-            background: var(--primary-light);
-            color: var(--primary-dark);
-            padding: 4px 8px;
-            border: 1px solid var(--primary-dark);
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-            display: inline-block;
-            text-transform: uppercase;
+            background: var(--primary-light); color: var(--primary-dark); padding: 4px 8px;
+            border: 1px solid var(--primary-dark); border-radius: 4px; font-size: 11px; font-weight: bold;
+            display: inline-block; text-transform: uppercase;
         }
-        .buffetti-grid-top {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .buffetti-box {
-            border: 1px solid var(--primary-dark);
-            border-radius: 4px;
-            padding: 6px;
-            background: #fafafa;
-        }
-        .buffetti-box-label {
-            font-size: 9px;
-            font-weight: bold;
-            color: var(--primary-dark);
-            text-transform: uppercase;
-            margin-bottom: 2px;
-        }
-        .buffetti-box-value {
-            font-size: 13px;
-            font-weight: 600;
-        }
-        .buffetti-row-cliente {
-            border: 1px solid var(--primary-dark);
-            border-radius: 4px;
-            padding: 8px;
-            margin-bottom: 15px;
-            background: #fff;
-        }
-        .buffetti-corpo {
-            border: 1px solid var(--primary-dark);
-            border-radius: 4px;
-            min-height: 130px;
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-        }
-        .buffetti-corpo-header {
-            display: flex;
-            background: var(--primary-light);
-            border-bottom: 1px solid var(--primary-dark);
-            font-weight: bold;
-            font-size: 10px;
-            text-transform: uppercase;
-            color: var(--primary-dark);
-        }
+        .buffetti-grid-top { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .buffetti-box { border: 1px solid var(--primary-dark); border-radius: 4px; padding: 6px; background: #fafafa; }
+        .buffetti-box-label { font-size: 9px; font-weight: bold; color: var(--primary-dark); text-transform: uppercase; margin-bottom: 2px; }
+        .buffetti-box-value { font-size: 13px; font-weight: 600; }
+        .buffetti-row-cliente { border: 1px solid var(--primary-dark); border-radius: 4px; padding: 8px; margin-bottom: 15px; background: #fff; }
+        .buffetti-corpo { border: 1px solid var(--primary-dark); border-radius: 4px; min-height: 130px; margin-bottom: 15px; display: flex; flex-direction: column; }
+        .buffetti-corpo-header { display: flex; background: var(--primary-light); border-bottom: 1px solid var(--primary-dark); font-weight: bold; font-size: 10px; text-transform: uppercase; color: var(--primary-dark); }
         .buffetti-col-desc { flex: 1; padding: 6px; border-right: 1px solid var(--primary-dark); }
         .buffetti-col-importo { width: 120px; padding: 6px; text-align: right; }
-        .buffetti-corpo-row {
-            display: flex;
-            flex: 1;
-            font-size: 13px;
+        .buffetti-corpo-row { display: flex; flex: 1; font-size: 13px; }
+        .buffetti-desc-text { flex: 1; padding: 10px; border-right: 1px solid var(--primary-dark); white-space: pre-line; }
+        .buffetti-importo-text { width: 120px; padding: 10px; text-align: right; font-weight: bold; font-size: 15px; align-self: flex-end; }
+        .buffetti-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 5px; }
+        .buffetti-note { width: 60%; font-size: 10px; color: var(--text-light); font-style: italic; }
+        .buffetti-firma { width: 35%; text-align: center; border-top: 1px dashed var(--primary-dark); padding-top: 5px; font-size: 11px; font-weight: 500; }
+
+        @media print {
+            body { background: white !important; color: black !important; }
+            .top-bar, .container, .toast-container { display: none !important; }
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 210mm; height: 297mm; padding: 10mm; background: white; }
+            .ricevuta-block { display: block !important; height: 133mm !important; }
+            .ricevuta-separator { display: flex !important; }
+            .buffetti-header { display: flex !important; }
+            .buffetti-grid-top { display: grid !important; }
+            .buffetti-corpo-header { display: flex !important; }
+            .buffetti-corpo-row { display: flex !important; }
+            .buffetti-footer { display: flex !important; }
         }
-        .buffetti-desc-text {
-            flex: 1;
-            padding: 10px;
-            border-right: 1px solid var(--primary-dark);
-            white-space: pre-line;
-        }
-        .buffetti-importo-text {
-            width: 120px;
-            padding: 10px;
-            text-align: right;
-            font-weight: bold;
-            font-size: 15px;
-            align-self: flex-end;
-        }
-        .buffetti-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-top: 5px;
-        }
-        .buffetti-note {
-            width: 60%;
-            font-size: 10px;
-            color: var(--text-light);
-            font-style: italic;
-        }
-        .buffetti-firma {
-            width: 35%;
-            text-align: center;
+    </style>
+</head>
+<body>
