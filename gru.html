@@ -227,7 +227,7 @@
                 <div class="browser-badges">
                     <span class="browser-badge"> Google Chrome</span>
                     <span class="browser-badge"> Microsoft Edge</span>
-                    <span class="browser-badge">❌ Safari non supportato</span>
+                    <span class="browser-badge"> Safari non supportato</span>
                 </div>
             </div>
         </div>
@@ -310,7 +310,7 @@
 
                 <div class="btn-group" style="justify-content: center;">
                     <button class="btn btn-success" id="btnCopia" onclick="avviaCopia()" disabled style="font-size: 18px; padding: 18px 36px;">
-                         AVVIAMENTO COPIA INTELLIGENTE
+                        🚀 AVVIAMENTO COPIA INTELLIGENTE
                     </button>
                 </div>
 
@@ -347,7 +347,7 @@
 
             <!-- UTILITY -->
             <div class="card-3d">
-                <div class="card-title">🛠️ Utility Rapide</div>
+                <div class="card-title">️ Utility Rapide</div>
                 <div class="card-subtitle">Strumenti utili per la gestione quotidiana</div>
                 <div class="utility-grid">
                     <div class="utility-card" onclick="calcolaIVA()">
@@ -497,14 +497,23 @@
                     'Foto eliminate:', '---'
                 ];
                 
-                // Filtra solo le righe che sono nomi file
-                fotoSelezionate = righe.filter(riga => {
+                // Filtra e estrai solo i nomi file (rimuovendo il prefisso [Cartella])
+                fotoSelezionate = [];
+                righe.forEach(riga => {
                     const trimmed = riga.trim();
                     // Ignora righe vuote e intestazioni
-                    if (trimmed.length === 0) return false;
-                    if (intestazioni.some(h => trimmed.includes(h))) return false;
-                    // È un nome file valido
-                    return true;
+                    if (trimmed.length === 0) return;
+                    if (intestazioni.some(h => trimmed.includes(h))) return;
+                    
+                    // Estrai il nome file rimuovendo il prefisso [Cartella]
+                    // Esempio: "[Casa sposa] 4N6A9233.jpg" → "4N6A9233.jpg"
+                    const match = trimmed.match(/\[.*?\]\s*(.+\.(jpg|jpeg|png|gif|webp))/i);
+                    if (match) {
+                        fotoSelezionate.push(match[1]);
+                    } else if (trimmed.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+                        // Se è già un nome file senza prefisso
+                        fotoSelezionate.push(trimmed);
+                    }
                 });
 
                 // Aggiorna UI
@@ -529,7 +538,7 @@
         async function selezionaCartellaOrigini() {
             try {
                 if (!('showDirectoryPicker' in window)) {
-                    mostraToast(' Il tuo browser non supporta questa funzione. Usa Chrome o Edge!', 'error');
+                    mostraToast('❌ Il tuo browser non supporta questa funzione. Usa Chrome o Edge!', 'error');
                     return;
                 }
 
@@ -555,7 +564,7 @@
         async function selezionaCartellaDestinazione() {
             try {
                 if (!('showDirectoryPicker' in window)) {
-                    mostraToast(' Il tuo browser non supporta questa funzione. Usa Chrome o Edge!', 'error');
+                    mostraToast('❌ Il tuo browser non supporta questa funzione. Usa Chrome o Edge!', 'error');
                     return;
                 }
 
@@ -616,24 +625,29 @@
                 const nomeFile = fotoSelezionate[i].trim();
                 
                 try {
-                    // Cerca il file nella cartella origini
                     let fileTrovato = null;
                     
-                    // Cerca in tutte le sottocartelle
+                    // Cerca prima nella cartella principale
                     for await (const entry of cartellaOrigini.values()) {
-                        if (entry.kind === 'directory') {
-                            // Cerca nelle sottocartelle (Casa Sposa, Ristorante, ecc.)
-                            for await (const subEntry of entry.values()) {
-                                if (subEntry.kind === 'file' && subEntry.name === nomeFile) {
-                                    fileTrovato = subEntry;
-                                    break;
+                        if (entry.kind === 'file' && entry.name === nomeFile) {
+                            fileTrovato = entry;
+                            break;
+                        }
+                    }
+                    
+                    // Se non trovato, cerca nelle sottocartelle
+                    if (!fileTrovato) {
+                        for await (const entry of cartellaOrigini.values()) {
+                            if (entry.kind === 'directory') {
+                                for await (const subEntry of entry.values()) {
+                                    if (subEntry.kind === 'file' && subEntry.name === nomeFile) {
+                                        fileTrovato = subEntry;
+                                        break;
+                                    }
                                 }
                             }
-                        } else if (entry.kind === 'file' && entry.name === nomeFile) {
-                            fileTrovato = entry;
+                            if (fileTrovato) break;
                         }
-                        
-                        if (fileTrovato) break;
                     }
 
                     if (fileTrovato) {
@@ -655,10 +669,10 @@
                 }
 
                 // Aggiorna progress bar
-                const percent = Math.round((copiate / totale) * 100);
+                const percent = Math.round(((copiate + mancanti) / totale) * 100);
                 document.getElementById('progressBar').style.width = percent + '%';
                 document.getElementById('progressPercent').textContent = percent + '%';
-                document.getElementById('progressText').textContent = `${copiate} / ${totale} foto`;
+                document.getElementById('progressText').textContent = `${copiate + mancanti} / ${totale} foto`;
                 document.getElementById('statCopiateVal').textContent = copiate;
                 document.getElementById('statMancantiVal').textContent = mancanti;
                 document.getElementById('progressDetails').textContent = `Elaborazione: ${nomeFile}...`;
