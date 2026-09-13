@@ -52,7 +52,7 @@
         .search-box { display: flex; gap: 8px; margin-bottom: 16px; }
         .search-box input { flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; }
 
-        /* AREA DI STAMPA A4 IN DUPLICE COPIA (BUFFETTI STYLE) */
+        /* AREA DI STAMPA FISICA (BUFFETTI STYLE) */
         #printArea { display: none; background: white; width: 210mm; min-height: 297mm; padding: 10mm; margin: 0 auto; box-sizing: border-box; }
         .ricevuta-block { height: 133mm; border: 2px solid var(--primary-dark); border-radius: 8px; padding: 15px; position: relative; box-sizing: border-box; background-color: #fff; overflow: hidden; }
         .ricevuta-separator { height: 11mm; display: flex; align-items: center; justify-content: center; border-top: 1px dashed #7f8c8d; border-bottom: 1px dashed #7f8c8d; margin: 4mm 0; color: #7f8c8d; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; background: #fafafa; }
@@ -119,3 +119,4 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Seleziona Cliente *</label>
+                        <select id="r_cliente">
