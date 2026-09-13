@@ -47,12 +47,10 @@
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 3000; }
         .toast { background: white; border-radius: 6px; padding: 12px 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-bottom: 8px; border-left: 4px solid var(--success); font-size: 13px; }
         .toast.error { border-left-color: var(--danger); }
-        .hidden { display: none !important; }
-        .loading { text-align: center; padding: 40px; color: var(--text-light); }
         .search-box { display: flex; gap: 8px; margin-bottom: 16px; }
         .search-box input { flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; }
 
-        /* AREA DI STAMPA FISICA (BUFFETTI STYLE) */
+        /* BLOCCO RICEVUTA STAMPA INTERNA */
         #printArea { display: none; background: white; width: 210mm; min-height: 297mm; padding: 10mm; margin: 0 auto; box-sizing: border-box; }
         .ricevuta-block { height: 133mm; border: 2px solid var(--primary-dark); border-radius: 8px; padding: 15px; position: relative; box-sizing: border-box; background-color: #fff; overflow: hidden; }
         .ricevuta-separator { height: 11mm; display: flex; align-items: center; justify-content: center; border-top: 1px dashed #7f8c8d; border-bottom: 1px dashed #7f8c8d; margin: 4mm 0; color: #7f8c8d; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; background: #fafafa; }
@@ -97,6 +95,16 @@
 <body>
     <div class="toast-container" id="toastContainer"></div>
 
+    <!-- SCRIPT INIZIALE DI NAVIGAZIONE POSIZIONATO IN ALTO PER EVITARE ERRORE REF-ERR -->
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const tokenUrl = urlParams.get('token');
+
+        function tornaPlancia() {
+            window.location.href = `plancia-studio.html?token=${encodeURIComponent(tokenUrl)}`;
+        }
+    </script>
+
     <div class="top-bar">
         <div>
             <button class="nav-btn" onclick="tornaPlancia()">Indietro</button>
@@ -111,12 +119,7 @@
             <p>Emetti ricevute in duplice copia su foglio A4 con layout Buffetti.</p>
         </div>
 
-        <div id="loadingArea" class="loading">Sincronizzazione Cloud in corso...</div>
-
-        <div id="mainContent" class="hidden">
+        <div id="mainContent">
             <div class="card">
                 <div class="card-title">Compila Nuova Ricevuta</div>
                 <div class="form-row">
-                    <div class="form-group">
-                        <label>Seleziona Cliente *</label>
-                        <select id="r_cliente">
