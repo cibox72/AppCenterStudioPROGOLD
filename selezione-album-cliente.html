@@ -81,7 +81,15 @@
         }
         .folder-item:hover { transform: translateY(-4px); border-color: var(--primary); }
         .folder-item.active { border-color: var(--primary-dark); background: var(--primary-light); }
-        .folder-icon { font-size: 32px; margin-bottom: 8px; color: var(--primary-dark); }
+        
+        /* ICONA CARTELLA PROFESSIONALE */
+        .folder-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 12px auto;
+            color: var(--primary-dark);
+        }
+        
         .folder-name { font-size: 13px; font-weight: 600; color: var(--text-main); }
         
         .photo-grid {
@@ -249,16 +257,6 @@
         let fotoIndex = 0;
         let preferiti = new Set();
 
-        // Carica logo studio
-        async function caricaLogoStudio() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/profilo?studioId=placeholder&token=placeholder`);
-                // Il logo viene caricato dinamicamente dopo il login quando abbiamo lo studio_id
-            } catch (error) {
-                console.error('Errore caricamento logo:', error);
-            }
-        }
-
         async function effettuaLogin(event) {
             event.preventDefault();
             const username = document.getElementById('loginUsername').value.trim();
@@ -272,16 +270,12 @@
             }
 
             try {
-                // Verifica credenziali caricando le cartelle
                 const response = await fetch(`${WORKER_URL}/api/public/selezione-album/cartelle?id=${selezioneId}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`);
                 const data = await response.json();
 
                 if (data.success) {
                     cartelle = data.cartelle;
                     clienteNome = data.cliente_nome || 'Cliente';
-                    
-                    // Carica logo studio (se disponibile)
-                    // Per ora usiamo il placeholder
                     
                     document.getElementById('loginScreen').classList.add('hidden');
                     document.getElementById('mainApp').classList.remove('hidden');
@@ -306,9 +300,16 @@
                 return;
             }
 
+            // Icona cartella professionale SVG
+            const folderIconSvg = `
+                <svg class="folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+            `;
+
             menu.innerHTML = cartelle.map((cartella, index) => `
                 <div class="folder-item ${index === 0 ? 'active' : ''}" onclick="selezionaCartella('${cartella}', this)">
-                    <div class="folder-icon">&#128444;</div>
+                    ${folderIconSvg}
                     <div class="folder-name">${cartella}</div>
                 </div>
             `).join('');
@@ -432,7 +433,6 @@
             renderizzaFoto();
         }
 
-        // Swipe support
         let touchStartX = 0;
         let touchEndX = 0;
 
@@ -490,7 +490,6 @@
             }
         }
 
-        // Keyboard navigation
         document.addEventListener('keydown', e => {
             if (document.getElementById('viewerOverlay').classList.contains('active')) {
                 if (e.key === 'ArrowLeft') navigaFoto(-1);
