@@ -4,100 +4,282 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista Regali - AppCenterStudioPROGOLD</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
+            --primary: #82e0aa;
+            --primary-dark: #1e8449;
+            --primary-light: #e8f8f5;
             --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
-            --success: #27ae60; --warning: #f39c12; --danger: #e74c3c; --info: #3498db;
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e8e8e8;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
             --radius: 16px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg-gradient); background-attachment: fixed;
-            color: var(--text-main); line-height: 1.6; min-height: 100vh;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
         }
         .top-bar {
-            background: var(--primary-gradient); padding: 16px 24px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100;
+            background: var(--primary-gradient);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         .nav-btn {
-            background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
-            cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark);
+            background: rgba(255,255,255,0.95);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            transition: all 0.2s;
         }
         .nav-btn:hover { transform: translateY(-2px); }
-        .container { max-width: 1000px; margin: 0 auto; padding: 30px 24px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 30px 24px; }
         
         .card {
-            background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden;
+            background: white;
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
+            position: relative;
+            overflow: hidden;
         }
-        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
-        .card-title { font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 20px; text-transform: uppercase; }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-light);
+        }
         
-        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-        .form-group input, .form-group select {
-            padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px;
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
         }
-        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+        .form-group input, .form-group select {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
+        }
         
         .btn {
-            padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
-            cursor: pointer; transition: all 0.2s; margin-right: 8px; margin-bottom: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-family: inherit;
         }
         .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
         .btn-info { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
         .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
-        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
-        .btn:hover { transform: translateY(-2px); }
+        .btn-outline {
+            background: white;
+            color: var(--primary-dark);
+            border: 1px solid var(--primary);
+        }
+        .btn-sm { padding: 8px 14px; font-size: 12px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
         .cred-box {
-            background: var(--primary-light); padding: 16px; border-radius: 10px; border: 1px solid var(--primary);
-            text-align: center; margin-top: 16px;
+            background: var(--primary-light);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--primary);
+            text-align: center;
+            margin-top: 16px;
         }
-        .cred-box .label { font-size: 12px; color: var(--text-light); text-transform: uppercase; font-weight: 700; }
-        .cred-box .value { font-size: 18px; font-weight: 800; color: var(--primary-dark); margin: 4px 0 12px; font-family: monospace; }
+        .cred-box .label {
+            font-size: 11px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .cred-box .value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin: 8px 0;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+        .cred-box .value.small {
+            font-size: 13px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            word-break: break-all;
+            font-weight: 500;
+        }
 
         .table-container { overflow-x: auto; margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
         th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        th { background: #f8f9fa; color: var(--text-main); font-weight: 700; text-transform: uppercase; font-size: 11px; }
-        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        th {
+            background: #f8f9fa;
+            color: var(--text-main);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
         .status-coperto { background: #eafaf1; color: var(--success); }
         .status-corso { background: #fef9e7; color: var(--warning); }
 
-        /* PUBLIC & DASHBOARD STYLES */
         .public-header { text-align: center; padding: 40px 20px; }
-        .public-header h1 { font-size: 36px; color: var(--primary-dark); font-style: italic; margin-bottom: 12px; }
+        .public-header h1 {
+            font-size: 42px;
+            color: var(--primary-dark);
+            font-style: italic;
+            margin-bottom: 12px;
+            font-family: 'Georgia', serif;
+            font-weight: 400;
+        }
+        .public-header .sottotitolo {
+            font-size: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
         .public-header p { font-size: 16px; color: var(--text-light); }
-        .wish-card { background: #f8f9fa; padding: 16px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--primary); }
-        .wish-card .name { font-weight: 700; color: var(--primary-dark); }
-        .wish-card .msg { font-style: italic; color: var(--text-main); margin-top: 4px; }
+        .wish-card {
+            background: #f8f9fa;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--primary);
+        }
+        .wish-card .name { font-weight: 700; color: var(--primary-dark); font-size: 14px; }
+        .wish-card .msg { font-style: italic; color: var(--text-main); margin-top: 4px; font-size: 14px; }
         
-        .progress-container { background: var(--primary-light); height: 20px; border-radius: 10px; overflow: hidden; margin: 16px 0; }
-        .progress-bar { height: 100%; background: var(--primary-gradient); transition: width 0.5s ease; }
+        .progress-container {
+            background: var(--primary-light);
+            height: 24px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 20px 0;
+            border: 1px solid var(--border-color);
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 12px;
+        }
         .progress-bar.full { background: linear-gradient(135deg, #f1c40f, #f39c12); }
 
         .hidden { display: none !important; }
         .loading { text-align: center; padding: 60px; color: var(--text-light); }
-        .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--primary-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
         @keyframes spin { to { transform: rotate(360deg); } }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
-        .toast { background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease; }
+        .toast {
+            background: white;
+            border-radius: 10px;
+            padding: 14px 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
+            border-left: 4px solid var(--success);
+            animation: slideIn 0.3s ease;
+            font-size: 14px;
+        }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+        
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid var(--info);
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-size: 14px;
+            color: var(--text-main);
+        }
+        .info-box strong { color: var(--primary-dark); }
+        
+        .center-text { text-align: center; }
+        .mt-20 { margin-top: 20px; }
+        .mb-16 { margin-bottom: 16px; }
+        
+        @media (max-width: 768px) {
+            .public-header h1 { font-size: 32px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
     <div id="topBar" class="top-bar hidden">
-        <div class="nav-left">
+        <div>
             <button class="nav-btn" onclick="tornaPlancia()">Indietro alla Plancia</button>
         </div>
     </div>
@@ -111,14 +293,14 @@
         <!-- VISTA 1: STUDIO (Gestione e Creazione) -->
         <div id="studioView" class="hidden">
             <div class="card">
-                <div class="card-title">🎁 Crea Nuova Lista Regali</div>
+                <div class="card-title">Crea Nuova Lista Regali</div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Cliente *</label>
                         <input type="text" id="searchCliente" placeholder="Cerca ID o Nome..." oninput="cercaCliente(this.value)">
                         <input type="hidden" id="selectedClienteId">
                         <input type="hidden" id="selectedClienteNome">
-                        <div id="resultsCliente" style="position:absolute; background:white; border:1px solid #ccc; width:100%; max-height:150px; overflow-y:auto; z-index:10; display:none;"></div>
+                        <div id="resultsCliente" style="position:absolute; background:white; border:1px solid #ccc; width:100%; max-height:150px; overflow-y:auto; z-index:10; display:none; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1);"></div>
                     </div>
                     <div class="form-group">
                         <label>Tipo di Evento *</label>
@@ -133,7 +315,7 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Importo del Servizio (€) *</label>
+                        <label>Importo del Servizio (EUR) *</label>
                         <input type="number" id="importoServizio" placeholder="Es. 1500">
                     </div>
                     <div class="form-group">
@@ -141,12 +323,13 @@
                         <input type="url" id="linkPagamento" placeholder="https://...">
                     </div>
                 </div>
-                <button class="btn btn-success" onclick="creaListaRegali()">✨ Genera Lista e Credenziali</button>
+                <button class="btn btn-success" onclick="creaListaRegali()">Genera Lista e Credenziali</button>
             </div>
 
             <div id="credenzialiGenerate" class="card hidden">
-                <div class="card-title">✅ Lista Creata con Successo!</div>
-                <p style="margin-bottom:16px; color:var(--text-light)">Consegna queste credenziali al cliente. Potrai inviarle direttamente via WhatsApp.</p>
+                <div class="card-title">Lista Creata con Successo</div>
+                <p class="mb-16" style="color:var(--text-light); font-size:14px;">Consegna queste credenziali al cliente. Potrai inviarle direttamente via WhatsApp.</p>
+                
                 <div class="form-row">
                     <div class="cred-box">
                         <div class="label">Username Cliente</div>
@@ -157,14 +340,25 @@
                         <div class="value" id="genPass">---</div>
                     </div>
                 </div>
-                <div style="text-align:center; margin-top:20px;">
-                    <button class="btn btn-info" onclick="inviaWhatsAppCliente()">📱 Invia Credenziali via WhatsApp</button>
+                
+                <div class="cred-box">
+                    <div class="label">Link Pubblico per gli Invitati</div>
+                    <div class="value small" id="genLink">---</div>
+                    <button class="btn btn-sm btn-info mt-20" onclick="copiaLinkPubblico()">Copia Link</button>
+                </div>
+
+                <div class="info-box mt-20">
+                    <strong>Come funziona:</strong> Il link pubblico va consegnato al cliente, che lo condividera con gli invitati. Le credenziali sopra permettono al cliente di accedere alla propria dashboard privata per monitorare lo stato della raccolta.
+                </div>
+
+                <div class="center-text mt-20">
+                    <button class="btn btn-info" onclick="inviaWhatsAppCliente()">Invia Credenziali via WhatsApp</button>
                     <button class="btn btn-outline" onclick="document.getElementById('credenzialiGenerate').classList.add('hidden')">Chiudi</button>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-title">📋 Archivio Liste Regali</div>
+                <div class="card-title">Archivio Liste Regali</div>
                 <div class="table-container">
                     <table>
                         <thead>
@@ -185,27 +379,28 @@
         <div id="clientView" class="hidden">
             <div class="card">
                 <div class="public-header">
+                    <div class="sottotitolo">Dashboard Privata</div>
                     <h1 id="dashNomeCliente">I Festeggiati</h1>
-                    <p>Benvenuti nella vostra dashboard privata!</p>
+                    <p>Benvenuti nella vostra area riservata</p>
                 </div>
                 
-                <div style="text-align:center; margin: 30px 0;">
-                    <h3 style="color:var(--text-light); font-size:14px; text-transform:uppercase;">Importo Raccolto</h3>
-                    <div style="font-size:48px; font-weight:800; color:var(--primary-dark);" id="dashRaccolto">€ 0</div>
-                    <div style="font-size:16px; color:var(--text-light);">su un costo servizio di <strong id="dashCosto">€ 0</strong></div>
+                <div class="center-text" style="margin: 30px 0;">
+                    <h3 style="color:var(--text-light); font-size:12px; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Importo Raccolto</h3>
+                    <div style="font-size:56px; font-weight:800; color:var(--primary-dark); font-family:'Georgia', serif;" id="dashRaccolto">EUR 0</div>
+                    <div style="font-size:16px; color:var(--text-light);">su un costo servizio di <strong id="dashCosto">EUR 0</strong></div>
                     
                     <div class="progress-container">
-                        <div class="progress-bar" id="dashProgressBar" style="width: 0%;"></div>
+                        <div class="progress-bar" id="dashProgressBar" style="width: 0%;">0%</div>
                     </div>
                     <div id="dashMessaggioStato" style="font-weight:700; font-size:18px; margin-top:12px;"></div>
                 </div>
 
-                <div style="margin-top:30px;">
-                    <h3 style="margin-bottom:16px; color:var(--primary-dark);">💌 Auguri Ricevuti</h3>
+                <div style="margin-top:40px;">
+                    <h3 style="margin-bottom:16px; color:var(--primary-dark); font-size:16px; text-transform:uppercase; letter-spacing:1px;">Auguri Ricevuti</h3>
                     <div id="dashAuguriList"></div>
                 </div>
                 
-                <div style="text-align:center; margin-top:30px;">
+                <div class="center-text mt-20">
                     <button class="btn btn-outline" onclick="logoutCliente()">Esci dalla Dashboard</button>
                 </div>
             </div>
@@ -215,35 +410,35 @@
         <div id="publicView" class="hidden">
             <div class="card">
                 <div class="public-header">
-                    <div style="font-size:12px; text-transform:uppercase; letter-spacing:2px; color:var(--text-light); margin-bottom:8px;">Un regalo speciale per</div>
+                    <div class="sottotitolo">Un regalo speciale per</div>
                     <h1 id="pubNomeCliente">I Festeggiati</h1>
-                    <div style="display:inline-block; background:var(--primary-light); color:var(--primary-dark); padding:6px 16px; border-radius:20px; font-size:13px; font-weight:600; margin-top:8px;" id="pubTipoEvento">Evento</div>
+                    <div style="display:inline-block; background:var(--primary-light); color:var(--primary-dark); padding:6px 16px; border-radius:20px; font-size:13px; font-weight:600; margin-top:8px; text-transform:uppercase; letter-spacing:1px;" id="pubTipoEvento">Evento</div>
                 </div>
                 
-                <div style="text-align:center; padding: 20px; background:var(--primary-light); border-radius:12px; margin-bottom:30px;">
-                    <p id="pubMessaggioStudio" style="font-style:italic; font-size:16px; color:var(--text-main);"></p>
+                <div class="center-text" style="padding: 24px; background:var(--primary-light); border-radius:12px; margin-bottom:30px;">
+                    <p id="pubMessaggioStudio" style="font-style:italic; font-size:16px; color:var(--text-main); font-family:'Georgia', serif;"></p>
                 </div>
 
-                <div style="text-align:center; margin-bottom:40px;">
-                    <a id="pubLinkPagamento" href="#" target="_blank" class="btn btn-success" style="font-size:18px; padding:16px 32px;">🎁 Fai il tuo Regalo</a>
+                <div class="center-text" style="margin-bottom:40px;">
+                    <a id="pubLinkPagamento" href="#" target="_blank" class="btn btn-success" style="font-size:16px; padding:16px 32px;">Fai il tuo Regalo</a>
                     <p style="font-size:13px; color:var(--text-light); margin-top:12px;">Verrai reindirizzato al link sicuro fornito dai festeggiati.</p>
                 </div>
 
                 <div class="card" style="background:#f8f9fa; box-shadow:none;">
                     <div class="card-title">Lascia un Messaggio di Auguri</div>
-                    <div class="form-group">
+                    <div class="form-group mb-16">
                         <label>Il tuo Nome</label>
                         <input type="text" id="wishName" placeholder="Es. Zia Maria">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-16">
                         <label>Il tuo Messaggio</label>
                         <input type="text" id="wishMsg" placeholder="Scrivi qui i tuoi auguri...">
                     </div>
-                    <button class="btn btn-primary" onclick="inviaAugurio()" style="width:100%; margin-top:12px;">Invia Auguri 💌</button>
+                    <button class="btn btn-primary" onclick="inviaAugurio()" style="width:100%; margin-top:12px;">Invia Auguri</button>
                 </div>
 
-                <div style="margin-top:30px;">
-                    <h3 style="margin-bottom:16px; color:var(--primary-dark); font-size:16px;">Messaggi degli Invitati</h3>
+                <div style="margin-top:40px;">
+                    <h3 style="margin-bottom:16px; color:var(--primary-dark); font-size:16px; text-transform:uppercase; letter-spacing:1px;">Messaggi degli Invitati</h3>
                     <div id="pubAuguriList"></div>
                 </div>
             </div>
@@ -313,7 +508,6 @@
             document.getElementById('loadingArea').classList.add('hidden');
             document.getElementById('studioView').classList.remove('hidden');
             
-            // Recupera studioId dal token (semplificato, in produzione usa verifica sessione)
             const res = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
             const data = await res.json();
             if(data.success) studioId = data.user.id;
@@ -332,7 +526,7 @@
                 const data = await res.json();
                 if (data.success && data.clienti.length > 0) {
                     div.innerHTML = data.clienti.map(c => `
-                        <div style="padding:10px; cursor:pointer; border-bottom:1px solid #eee;" onclick="selezionaCliente('${c.id}', '${c.nome}', '${c.cognome}')">
+                        <div style="padding:12px; cursor:pointer; border-bottom:1px solid #eee; font-size:14px;" onclick="selezionaCliente('${c.id}', '${c.nome}', '${c.cognome}')">
                             <strong>${c.id}</strong> - ${c.nome} ${c.cognome}
                         </div>
                     `).join('');
@@ -380,10 +574,11 @@
                 if (data.success) {
                     document.getElementById('genUser').textContent = username;
                     document.getElementById('genPass').textContent = password;
+                    document.getElementById('genLink').textContent = linkPubblico;
                     document.getElementById('credenzialiGenerate').classList.remove('hidden');
                     currentLista = { id, username, password, link_pubblico: linkPubblico, cliente_nome: clienteNome };
                     caricaArchivioListe();
-                    mostraToast('Lista creata con successo!', 'success');
+                    mostraToast('Lista creata con successo', 'success');
                 } else {
                     mostraToast('Errore: ' + (data.error || 'Sconosciuto'), 'error');
                 }
@@ -393,9 +588,19 @@
             }
         }
 
+        function copiaLinkPubblico() {
+            if (!currentLista) return;
+            navigator.clipboard.writeText(currentLista.link_pubblico).then(() => {
+                mostraToast('Link invitati copiato', 'success');
+            }).catch(() => {
+                mostraToast('Errore nella copia', 'error');
+            });
+        }
+
         function inviaWhatsAppCliente() {
             if (!currentLista) return;
-            const msg = `Ciao ${currentLista.cliente_nome}! 🎉\n\nLo studio ha creato la tua Lista Regali.\n\n🔗 Link da condividere con gli invitati:\n${currentLista.link_pubblico}\n\n🔑 Le tue credenziali per monitorare gli auguri e l'importo raccolto:\nUser: ${currentLista.username}\nPass: ${currentLista.password}\n\nBuona festa! `;
+            const dashboardUrl = `${window.location.origin}${window.location.pathname}?dashboard=${currentLista.id}&pass=${currentLista.password}`;
+            const msg = `Buongiorno ${currentLista.cliente_nome},\n\nlo studio ha creato la tua Lista Regali.\n\nLINK DA CONDIVIDERE CON GLI INVITATI:\n${currentLista.link_pubblico}\n(Gli invitati potranno lasciare auguri e fare il regalo)\n\nLE TUE CREDENZIALI PER MONITORARE LO STATO:\nDashboard: ${dashboardUrl}\nUsername: ${currentLista.username}\nPassword: ${currentLista.password}\n\nCon la dashboard puoi vedere:\n- L'importo raccolto\n- I messaggi degli invitati\n- Quando hai coperto il costo del servizio\n\nUn cordiale saluto.`;
             window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
@@ -406,18 +611,29 @@
             if (data.success && data.lista) {
                 tbody.innerHTML = data.lista.map(l => {
                     const isCoperto = l.raccolto_attuale >= l.importo_servizio;
+                    const linkPubblico = `${window.location.origin}${window.location.pathname}?id=${l.id}`;
                     return `
                     <tr>
                         <td><strong>${l.cliente_nome}</strong></td>
                         <td>${l.tipo_evento}</td>
-                        <td><span class="status-badge ${isCoperto ? 'status-coperto' : 'status-corso'}">${isCoperto ? '✅ SERVIZIO COPERTO' : '⏳ IN CORSO'}</span></td>
+                        <td><span class="status-badge ${isCoperto ? 'status-coperto' : 'status-corso'}">${isCoperto ? 'Servizio Coperto' : 'In Corso'}</span></td>
                         <td>
-                            <button class="btn btn-sm btn-info" onclick="window.open('?dashboard=${l.id}', '_blank')">Dashboard Cliente</button>
+                            <button class="btn btn-sm btn-info" onclick="window.open('?dashboard=${l.id}&pass=${l.password}', '_blank')">Dashboard</button>
+                            <button class="btn btn-sm btn-primary" onclick="copiaLinkArchivio('${l.id}')">Copia Link Invitati</button>
                             <button class="btn btn-sm btn-danger" onclick="eliminaLista('${l.id}')">Elimina</button>
                         </td>
                     </tr>`;
                 }).join('');
             }
+        }
+
+        function copiaLinkArchivio(id) {
+            const link = `${window.location.origin}${window.location.pathname}?id=${id}`;
+            navigator.clipboard.writeText(link).then(() => {
+                mostraToast('Link invitati copiato', 'success');
+            }).catch(() => {
+                mostraToast('Errore nella copia', 'error');
+            });
         }
 
         async function eliminaLista(id) {
@@ -437,7 +653,7 @@
                 const data = await res.json();
                 if (data.success && data.lista) {
                     if (data.lista.password !== pass) {
-                        document.getElementById('loadingArea').innerHTML = '<h3>Password errata. Contatta lo studio.</h3>';
+                        document.getElementById('loadingArea').innerHTML = '<h3 style="color:var(--danger);">Password errata. Contatta lo studio.</h3>';
                         return;
                     }
                     studioId = data.lista.studio_id;
@@ -448,22 +664,23 @@
                     document.getElementById('clientView').classList.remove('hidden');
                     
                     document.getElementById('dashNomeCliente').textContent = currentLista.cliente_nome;
-                    document.getElementById('dashRaccolto').textContent = `€ ${currentLista.raccolto_attuale || 0}`;
-                    document.getElementById('dashCosto').textContent = `€ ${currentLista.importo_servizio}`;
+                    document.getElementById('dashRaccolto').textContent = `EUR ${currentLista.raccolto_attuale || 0}`;
+                    document.getElementById('dashCosto').textContent = `EUR ${currentLista.importo_servizio}`;
                     
                     const perc = Math.min(100, Math.round(((currentLista.raccolto_attuale || 0) / currentLista.importo_servizio) * 100));
                     const bar = document.getElementById('dashProgressBar');
                     bar.style.width = `${perc}%`;
+                    bar.textContent = `${perc}%`;
                     if (perc >= 100) {
                         bar.classList.add('full');
-                        document.getElementById('dashMessaggioStato').innerHTML = ' COMPLIMENTI! AVETE COPERTO IL COSTO DEL SERVIZIO! 🎉';
+                        document.getElementById('dashMessaggioStato').innerHTML = 'Complimenti! Avete coperto il costo del servizio.';
                         document.getElementById('dashMessaggioStato').style.color = 'var(--success)';
                     } else {
-                        document.getElementById('dashMessaggioStato').textContent = `Mancano ancora € ${(currentLista.importo_servizio - (currentLista.raccolto_attuale || 0)).toFixed(2)} per coprire il servizio.`;
+                        const mancante = (currentLista.importo_servizio - (currentLista.raccolto_attuale || 0)).toFixed(2);
+                        document.getElementById('dashMessaggioStato').textContent = `Mancano ancora EUR ${mancante} per coprire il servizio.`;
                         document.getElementById('dashMessaggioStato').style.color = 'var(--warning)';
                     }
 
-                    // Carica auguri
                     const resAuguri = await fetch(`${WORKER_URL}/api/public/lista-regali/messaggi?listaId=${id}`);
                     const dataAuguri = await resAuguri.json();
                     const divAuguri = document.getElementById('dashAuguriList');
@@ -475,7 +692,7 @@
                             </div>
                         `).join('');
                     } else {
-                        divAuguri.innerHTML = '<p style="color:var(--text-light); text-align:center;">Nessun augurio ricevuto ancora.</p>';
+                        divAuguri.innerHTML = '<p style="color:var(--text-light); text-align:center; padding:20px;">Nessun augurio ricevuto ancora.</p>';
                     }
                 } else {
                     document.getElementById('loadingArea').textContent = 'Lista non trovata.';
@@ -515,7 +732,6 @@
                         btn.style.display = 'none';
                     }
 
-                    // Carica auguri pubblici
                     const resAuguri = await fetch(`${WORKER_URL}/api/public/lista-regali/messaggi?listaId=${id}`);
                     const dataAuguri = await resAuguri.json();
                     const divAuguri = document.getElementById('pubAuguriList');
@@ -546,10 +762,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ lista_id: currentLista.id, nome_donatore: nome, messaggio: msg, importo: 0 })
                 });
-                mostraToast('Augurio inviato con successo! 💌', 'success');
+                mostraToast('Augurio inviato con successo', 'success');
                 document.getElementById('wishName').value = '';
                 document.getElementById('wishMsg').value = '';
-                initPublicView(currentLista.id); // Ricarica
+                initPublicView(currentLista.id);
             } catch (e) { mostraToast('Errore nell\'invio', 'error'); }
         }
 
