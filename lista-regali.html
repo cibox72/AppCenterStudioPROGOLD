@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista Regali - AppCenterStudioPROGOLD</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #82e0aa;
@@ -94,17 +95,23 @@
             margin-bottom: 6px;
             color: var(--text-main);
         }
-        .form-group input, .form-group select {
+        .form-group input, .form-group select, .form-group textarea {
             padding: 12px;
             border: 1px solid var(--border-color);
             border-radius: 10px;
             font-size: 14px;
             font-family: inherit;
         }
-        .form-group input:focus, .form-group select:focus {
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
+        }
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 4px;
+            font-style: italic;
         }
         
         .btn {
@@ -209,6 +216,12 @@
         }
         .wish-card .name { font-weight: 700; color: var(--primary-dark); font-size: 14px; }
         .wish-card .msg { font-style: italic; color: var(--text-main); margin-top: 4px; font-size: 14px; }
+        .wish-card .amount {
+            font-size: 13px;
+            color: var(--success);
+            font-weight: 600;
+            margin-top: 6px;
+        }
         
         .progress-container {
             background: var(--primary-light);
@@ -271,9 +284,96 @@
         .mt-20 { margin-top: 20px; }
         .mb-16 { margin-bottom: 16px; }
         
+        .qr-container {
+            text-align: center;
+            padding: 24px;
+            background: white;
+            border-radius: 12px;
+            border: 2px dashed var(--primary);
+            margin: 20px 0;
+        }
+        .qr-container #qrcode {
+            display: inline-block;
+            padding: 16px;
+            background: white;
+        }
+        .qr-container .qr-label {
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        .payment-box {
+            background: var(--primary-light);
+            padding: 24px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .payment-box .payment-method {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+        .payment-box .payment-data {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            word-break: break-all;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .donation-item {
+            background: white;
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .donation-item .donor-name {
+            font-weight: 700;
+            color: var(--primary-dark);
+            font-size: 15px;
+        }
+        .donation-item .donor-msg {
+            font-style: italic;
+            color: var(--text-main);
+            margin: 6px 0;
+            font-size: 14px;
+        }
+        .donation-item .donor-amount {
+            font-weight: 700;
+            color: var(--success);
+            font-size: 14px;
+        }
+        .donation-item .donor-date {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        
+        .whatsapp-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
         @media (max-width: 768px) {
+            .whatsapp-buttons { grid-template-columns: 1fr; }
             .public-header h1 { font-size: 32px; }
             .form-row { grid-template-columns: 1fr; }
+        }
+        
+        @media print {
+            .top-bar, .btn, .no-print { display: none !important; }
+            .qr-print-only { display: block !important; }
         }
     </style>
 </head>
@@ -290,7 +390,7 @@
             <div>Caricamento in corso...</div>
         </div>
 
-        <!-- VISTA 1: STUDIO (Gestione e Creazione) -->
+        <!-- VISTA 1: STUDIO -->
         <div id="studioView" class="hidden">
             <div class="card">
                 <div class="card-title">Crea Nuova Lista Regali</div>
@@ -309,6 +409,7 @@
                             <option value="Compleanno">Compleanno</option>
                             <option value="Comunione/Cresima">Comunione / Cresima</option>
                             <option value="Battesimo">Battesimo</option>
+                            <option value="Anniversario">Anniversario</option>
                             <option value="Altro">Altro</option>
                         </select>
                     </div>
@@ -317,18 +418,37 @@
                     <div class="form-group">
                         <label>Importo del Servizio (EUR) *</label>
                         <input type="number" id="importoServizio" placeholder="Es. 1500">
+                        <div class="form-hint">Importo che il cliente desidera raccogliere</div>
                     </div>
                     <div class="form-group">
-                        <label>Link Pagamento (PayPal, Hype, ecc.) *</label>
-                        <input type="url" id="linkPagamento" placeholder="https://...">
+                        <label>Metodo di Pagamento *</label>
+                        <select id="metodoPagamento" onchange="onMetodoChange()">
+                            <option value="">-- Seleziona metodo --</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="iban">Bonifico IBAN</option>
+                            <option value="stripe">Stripe</option>
+                            <option value="satispay">Satispay</option>
+                            <option value="altro">Altro</option>
+                        </select>
                     </div>
                 </div>
-                <button class="btn btn-success" onclick="creaListaRegali()">Genera Lista e Credenziali</button>
+                <div class="form-row">
+                    <div class="form-group" id="groupDatiPagamento" style="display:none;">
+                        <label id="labelDatiPagamento">Dati Pagamento *</label>
+                        <input type="text" id="datiPagamento" placeholder="">
+                        <div class="form-hint" id="hintDatiPagamento"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Messaggio di Cortesia per gli Invitati</label>
+                        <textarea id="messaggioCortesia" rows="3" placeholder="Es. Con gioia vi invitiamo a contribuire al regalo di nozze..."></textarea>
+                    </div>
+                </div>
+                <button class="btn btn-success" onclick="creaListaRegali()">Genera Lista, Credenziali e QR</button>
             </div>
 
             <div id="credenzialiGenerate" class="card hidden">
                 <div class="card-title">Lista Creata con Successo</div>
-                <p class="mb-16" style="color:var(--text-light); font-size:14px;">Consegna queste credenziali al cliente. Potrai inviarle direttamente via WhatsApp.</p>
+                <p class="mb-16" style="color:var(--text-light); font-size:14px;">Invia le credenziali al cliente e il link pubblico agli invitati.</p>
                 
                 <div class="form-row">
                     <div class="cred-box">
@@ -342,17 +462,32 @@
                 </div>
                 
                 <div class="cred-box">
-                    <div class="label">Link Pubblico per gli Invitati</div>
+                    <div class="label">Link Dashboard (per il cliente)</div>
+                    <div class="value small" id="genDashLink">---</div>
+                </div>
+
+                <div class="cred-box">
+                    <div class="label">Link Pubblico (per gli invitati)</div>
                     <div class="value small" id="genLink">---</div>
-                    <button class="btn btn-sm btn-info mt-20" onclick="copiaLinkPubblico()">Copia Link</button>
+                    <button class="btn btn-sm btn-info mt-20" onclick="copiaLinkPubblico()">Copia Link Invitati</button>
+                </div>
+
+                <div id="qrSection" class="qr-container">
+                    <div class="label" style="font-size:11px; color:var(--text-light); text-transform:uppercase; font-weight:700; letter-spacing:1px;">QR Code per gli Invitati</div>
+                    <div id="qrcode"></div>
+                    <div class="qr-label">Stampa questo QR e consegnalo al cliente per i tavoli</div>
+                    <button class="btn btn-sm btn-primary mt-20" onclick="stampaQR()">Stampa QR</button>
                 </div>
 
                 <div class="info-box mt-20">
-                    <strong>Come funziona:</strong> Il link pubblico va consegnato al cliente, che lo condividera con gli invitati. Le credenziali sopra permettono al cliente di accedere alla propria dashboard privata per monitorare lo stato della raccolta.
+                    <strong>Come funziona:</strong> Il link pubblico va condiviso con gli invitati (via WhatsApp, email o QR stampato). Le credenziali permettono al cliente di accedere alla dashboard privata per monitorare lo stato della raccolta e vedere i messaggi con gli importi ricevuti.
                 </div>
 
+                <div class="whatsapp-buttons">
+                    <button class="btn btn-info" onclick="inviaWhatsAppCliente()">Invia Credenziali al Cliente</button>
+                    <button class="btn btn-primary" onclick="inviaWhatsAppInvitati()">Crea Messaggio per Invitati</button>
+                </div>
                 <div class="center-text mt-20">
-                    <button class="btn btn-info" onclick="inviaWhatsAppCliente()">Invia Credenziali via WhatsApp</button>
                     <button class="btn btn-outline" onclick="document.getElementById('credenzialiGenerate').classList.add('hidden')">Chiudi</button>
                 </div>
             </div>
@@ -381,13 +516,13 @@
                 <div class="public-header">
                     <div class="sottotitolo">Dashboard Privata</div>
                     <h1 id="dashNomeCliente">I Festeggiati</h1>
-                    <p>Benvenuti nella vostra area riservata</p>
+                    <p id="dashTipoEvento">Evento</p>
                 </div>
                 
                 <div class="center-text" style="margin: 30px 0;">
                     <h3 style="color:var(--text-light); font-size:12px; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Importo Raccolto</h3>
                     <div style="font-size:56px; font-weight:800; color:var(--primary-dark); font-family:'Georgia', serif;" id="dashRaccolto">EUR 0</div>
-                    <div style="font-size:16px; color:var(--text-light);">su un costo servizio di <strong id="dashCosto">EUR 0</strong></div>
+                    <div style="font-size:16px; color:var(--text-light);">su un obiettivo di <strong id="dashCosto">EUR 0</strong></div>
                     
                     <div class="progress-container">
                         <div class="progress-bar" id="dashProgressBar" style="width: 0%;">0%</div>
@@ -395,8 +530,14 @@
                     <div id="dashMessaggioStato" style="font-weight:700; font-size:18px; margin-top:12px;"></div>
                 </div>
 
+                <div class="info-box">
+                    <strong>Link da condividere con gli invitati:</strong>
+                    <div style="margin-top:8px; word-break:break-all; font-family:monospace; font-size:13px;" id="dashLinkPubblico">---</div>
+                    <button class="btn btn-sm btn-info mt-20" onclick="copiaLinkDashboard()">Copia Link</button>
+                </div>
+
                 <div style="margin-top:40px;">
-                    <h3 style="margin-bottom:16px; color:var(--primary-dark); font-size:16px; text-transform:uppercase; letter-spacing:1px;">Auguri Ricevuti</h3>
+                    <h3 style="margin-bottom:16px; color:var(--primary-dark); font-size:16px; text-transform:uppercase; letter-spacing:1px;">Archivio Donazioni e Auguri</h3>
                     <div id="dashAuguriList"></div>
                 </div>
                 
@@ -419,20 +560,17 @@
                     <p id="pubMessaggioStudio" style="font-style:italic; font-size:16px; color:var(--text-main); font-family:'Georgia', serif;"></p>
                 </div>
 
-                <div class="center-text" style="margin-bottom:40px;">
-                    <a id="pubLinkPagamento" href="#" target="_blank" class="btn btn-success" style="font-size:16px; padding:16px 32px;">Fai il tuo Regalo</a>
-                    <p style="font-size:13px; color:var(--text-light); margin-top:12px;">Verrai reindirizzato al link sicuro fornito dai festeggiati.</p>
-                </div>
+                <div id="pubPaymentArea"></div>
 
                 <div class="card" style="background:#f8f9fa; box-shadow:none;">
                     <div class="card-title">Lascia un Messaggio di Auguri</div>
                     <div class="form-group mb-16">
                         <label>Il tuo Nome</label>
-                        <input type="text" id="wishName" placeholder="Es. Zia Maria">
+                        <input type="text" id="wishName" placeholder="Es. Zio Mario">
                     </div>
                     <div class="form-group mb-16">
                         <label>Il tuo Messaggio</label>
-                        <input type="text" id="wishMsg" placeholder="Scrivi qui i tuoi auguri...">
+                        <textarea id="wishMsg" rows="3" placeholder="Scrivi qui i tuoi auguri..."></textarea>
                     </div>
                     <button class="btn btn-primary" onclick="inviaAugurio()" style="width:100%; margin-top:12px;">Invia Auguri</button>
                 </div>
@@ -457,6 +595,7 @@
         
         let studioId = null;
         let currentLista = null;
+        let qrCodeInstance = null;
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (token) {
@@ -498,6 +637,70 @@
                     root.style.setProperty('--bg-gradient', t.bg);
                 }
             } catch (e) { console.error('Errore tema:', e); }
+        }
+
+        // ==========================================
+        // HELPERS METODO PAGAMENTO
+        // ==========================================
+        const METODI_CONFIG = {
+            'paypal': { label: 'Link PayPal', placeholder: 'https://paypal.me/...', hint: 'Inserisci il link PayPal.me o il link di pagamento PayPal' },
+            'iban': { label: 'Coordinate IBAN', placeholder: 'IT00 X000 0000 0000 0000 0000 000', hint: 'IBAN completo con intestatario' },
+            'stripe': { label: 'Link Stripe', placeholder: 'https://buy.stripe.com/...', hint: 'Link di pagamento Stripe' },
+            'satispay': { label: 'Numero Satispay o Link', placeholder: '+39 333 1234567', hint: 'Numero di telefono associato a Satispay' },
+            'altro': { label: 'Istruzioni di Pagamento', placeholder: 'Es. Contanti, Postepay, ecc.', hint: 'Descrivi il metodo di pagamento preferito' }
+        };
+
+        function onMetodoChange() {
+            const metodo = document.getElementById('metodoPagamento').value;
+            const group = document.getElementById('groupDatiPagamento');
+            const label = document.getElementById('labelDatiPagamento');
+            const input = document.getElementById('datiPagamento');
+            const hint = document.getElementById('hintDatiPagamento');
+            
+            if (metodo && METODI_CONFIG[metodo]) {
+                group.style.display = 'flex';
+                label.textContent = METODI_CONFIG[metodo].label + ' *';
+                input.placeholder = METODI_CONFIG[metodo].placeholder;
+                hint.textContent = METODI_CONFIG[metodo].hint;
+            } else {
+                group.style.display = 'none';
+            }
+        }
+
+        function renderPaymentArea(lista) {
+            const area = document.getElementById('pubPaymentArea');
+            const metodo = lista.metodo_pagamento;
+            const dati = lista.dati_pagamento;
+            
+            if (!metodo || !dati) {
+                area.innerHTML = '';
+                return;
+            }
+            
+            const config = METODI_CONFIG[metodo] || { label: metodo };
+            
+            let html = `<div class="payment-box">
+                <div class="payment-method">Metodo di pagamento: ${config.label}</div>`;
+            
+            if (metodo === 'iban' || metodo === 'altro') {
+                html += `<div class="payment-data">${dati}</div>
+                    <button class="btn btn-sm btn-info" onclick="copiaDatiPagamento('${dati.replace(/'/g, "\\'")}')">Copia Dati</button>`;
+            } else {
+                html += `<a href="${dati}" target="_blank" class="btn btn-success" style="font-size:16px; padding:14px 28px; display:inline-block; text-decoration:none;">Procedi al Pagamento</a>`;
+            }
+            
+            html += `<p style="font-size:13px; color:var(--text-light); margin-top:16px;">I festeggiati riceveranno direttamente il tuo contributo.</p>
+                </div>`;
+            
+            area.innerHTML = html;
+        }
+
+        function copiaDatiPagamento(testo) {
+            navigator.clipboard.writeText(testo).then(() => {
+                mostraToast('Dati di pagamento copiati', 'success');
+            }).catch(() => {
+                mostraToast('Errore nella copia', 'error');
+            });
         }
 
         // ==========================================
@@ -547,9 +750,11 @@
             const clienteNome = document.getElementById('selectedClienteNome').value;
             const tipoEvento = document.getElementById('tipoEvento').value;
             const importo = document.getElementById('importoServizio').value;
-            const link = document.getElementById('linkPagamento').value;
+            const metodo = document.getElementById('metodoPagamento').value;
+            const datiPagamento = document.getElementById('datiPagamento').value;
+            const messaggio = document.getElementById('messaggioCortesia').value.trim();
 
-            if (!clienteId || !importo || !link) {
+            if (!clienteId || !importo || !metodo || !datiPagamento) {
                 mostraToast('Compila tutti i campi obbligatori', 'error');
                 return;
             }
@@ -558,6 +763,7 @@
             const password = Math.random().toString(36).substring(2, 6).toUpperCase() + Math.floor(10+Math.random()*90);
             const id = 'lr-' + Date.now();
             const linkPubblico = `${window.location.origin}${window.location.pathname}?id=${id}`;
+            const linkDashboard = `${window.location.origin}${window.location.pathname}?dashboard=${id}&pass=${password}`;
 
             try {
                 const res = await fetch(`${WORKER_URL}/api/studio/lista-regali?token=${token}`, {
@@ -566,7 +772,9 @@
                     body: JSON.stringify({
                         id, studio_id: studioId, cliente_id: clienteId, cliente_nome: clienteNome,
                         tipo_evento: tipoEvento, importo_servizio: parseFloat(importo),
-                        link_pagamento: link, username, password, link_pubblico: linkPubblico,
+                        metodo_pagamento: metodo, dati_pagamento: datiPagamento,
+                        messaggio_cortesia: messaggio,
+                        username, password, link_pubblico: linkPubblico,
                         raccolto_attuale: 0, stato: 'in_corso'
                     })
                 });
@@ -575,10 +783,24 @@
                     document.getElementById('genUser').textContent = username;
                     document.getElementById('genPass').textContent = password;
                     document.getElementById('genLink').textContent = linkPubblico;
+                    document.getElementById('genDashLink').textContent = linkDashboard;
                     document.getElementById('credenzialiGenerate').classList.remove('hidden');
-                    currentLista = { id, username, password, link_pubblico: linkPubblico, cliente_nome: clienteNome };
+                    
+                    currentLista = { 
+                        id, username, password, 
+                        link_pubblico: linkPubblico, 
+                        link_dashboard: linkDashboard,
+                        cliente_nome: clienteNome,
+                        tipo_evento: tipoEvento,
+                        metodo_pagamento: metodo,
+                        dati_pagamento: datiPagamento
+                    };
+                    
+                    generaQR(linkPubblico);
                     caricaArchivioListe();
                     mostraToast('Lista creata con successo', 'success');
+                    
+                    document.getElementById('credenzialiGenerate').scrollIntoView({ behavior: 'smooth' });
                 } else {
                     mostraToast('Errore: ' + (data.error || 'Sconosciuto'), 'error');
                 }
@@ -586,6 +808,25 @@
                 console.error(e);
                 mostraToast('Errore di connessione', 'error'); 
             }
+        }
+
+        function generaQR(url) {
+            const qrDiv = document.getElementById('qrcode');
+            qrDiv.innerHTML = '';
+            if (typeof QRCode !== 'undefined') {
+                qrCodeInstance = new QRCode(qrDiv, {
+                    text: url,
+                    width: 200,
+                    height: 200,
+                    colorDark: '#1e8449',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            }
+        }
+
+        function stampaQR() {
+            window.print();
         }
 
         function copiaLinkPubblico() {
@@ -599,9 +840,26 @@
 
         function inviaWhatsAppCliente() {
             if (!currentLista) return;
-            const dashboardUrl = `${window.location.origin}${window.location.pathname}?dashboard=${currentLista.id}&pass=${currentLista.password}`;
-            const msg = `Buongiorno ${currentLista.cliente_nome},\n\nlo studio ha creato la tua Lista Regali.\n\nLINK DA CONDIVIDERE CON GLI INVITATI:\n${currentLista.link_pubblico}\n(Gli invitati potranno lasciare auguri e fare il regalo)\n\nLE TUE CREDENZIALI PER MONITORARE LO STATO:\nDashboard: ${dashboardUrl}\nUsername: ${currentLista.username}\nPassword: ${currentLista.password}\n\nCon la dashboard puoi vedere:\n- L'importo raccolto\n- I messaggi degli invitati\n- Quando hai coperto il costo del servizio\n\nUn cordiale saluto.`;
+            const msg = `Buongiorno ${currentLista.cliente_nome},\n\nlo studio ha creato la tua Lista Regali per il tuo ${currentLista.tipo_evento}.\n\nLE TUE CREDENZIALI PRIVATE:\nUsername: ${currentLista.username}\nPassword: ${currentLista.password}\n\nLINK DASHBOARD (per monitorare lo stato):\n${currentLista.link_dashboard}\n\nCon la dashboard puoi:\n- Vedere l'importo raccolto in tempo reale\n- Leggere i messaggi e gli auguri ricevuti\n- Sapere quando hai raggiunto l'obiettivo\n\nIl link pubblico da condividere con gli invitati te lo invieremo a parte, insieme al QR code stampabile.\n\nUn cordiale saluto.`;
             window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function inviaWhatsAppInvitati() {
+            if (!currentLista) return;
+            const msg = `Cari amici e familiari,\n\n${currentLista.cliente_nome} festeggia il suo ${currentLista.tipo_evento} e ha creato una lista regali per voi.\n\nPotete lasciare un augurio e contribuire al regalo tramite questo link:\n${currentLista.link_pubblico}\n\nVi aspettiamo per festeggiare insieme!\n\nCon affetto.`;
+            
+            const textarea = document.createElement('textarea');
+            textarea.value = msg;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
+            mostraToast('Messaggio per invitati copiato. Incollalo in WhatsApp.', 'success');
+            
+            setTimeout(() => {
+                window.open('https://web.whatsapp.com/', '_blank');
+            }, 1000);
         }
 
         async function caricaArchivioListe() {
@@ -611,7 +869,6 @@
             if (data.success && data.lista) {
                 tbody.innerHTML = data.lista.map(l => {
                     const isCoperto = l.raccolto_attuale >= l.importo_servizio;
-                    const linkPubblico = `${window.location.origin}${window.location.pathname}?id=${l.id}`;
                     return `
                     <tr>
                         <td><strong>${l.cliente_nome}</strong></td>
@@ -664,8 +921,10 @@
                     document.getElementById('clientView').classList.remove('hidden');
                     
                     document.getElementById('dashNomeCliente').textContent = currentLista.cliente_nome;
+                    document.getElementById('dashTipoEvento').textContent = currentLista.tipo_evento;
                     document.getElementById('dashRaccolto').textContent = `EUR ${currentLista.raccolto_attuale || 0}`;
                     document.getElementById('dashCosto').textContent = `EUR ${currentLista.importo_servizio}`;
+                    document.getElementById('dashLinkPubblico').textContent = currentLista.link_pubblico;
                     
                     const perc = Math.min(100, Math.round(((currentLista.raccolto_attuale || 0) / currentLista.importo_servizio) * 100));
                     const bar = document.getElementById('dashProgressBar');
@@ -677,7 +936,7 @@
                         document.getElementById('dashMessaggioStato').style.color = 'var(--success)';
                     } else {
                         const mancante = (currentLista.importo_servizio - (currentLista.raccolto_attuale || 0)).toFixed(2);
-                        document.getElementById('dashMessaggioStato').textContent = `Mancano ancora EUR ${mancante} per coprire il servizio.`;
+                        document.getElementById('dashMessaggioStato').textContent = `Mancano ancora EUR ${mancante} per raggiungere l'obiettivo.`;
                         document.getElementById('dashMessaggioStato').style.color = 'var(--warning)';
                     }
 
@@ -686,13 +945,15 @@
                     const divAuguri = document.getElementById('dashAuguriList');
                     if (dataAuguri.success && dataAuguri.messaggi.length > 0) {
                         divAuguri.innerHTML = dataAuguri.messaggi.map(m => `
-                            <div class="wish-card">
-                                <div class="name">${m.nome_donatore}</div>
-                                <div class="msg">"${m.messaggio}"</div>
+                            <div class="donation-item">
+                                <div class="donor-name">${m.nome_donatore}</div>
+                                <div class="donor-msg">"${m.messaggio}"</div>
+                                ${m.importo && m.importo > 0 ? `<div class="donor-amount">Donazione: EUR ${parseFloat(m.importo).toFixed(2)}</div>` : ''}
+                                <div class="donor-date">${m.data ? new Date(m.data).toLocaleDateString('it-IT') : ''}</div>
                             </div>
                         `).join('');
                     } else {
-                        divAuguri.innerHTML = '<p style="color:var(--text-light); text-align:center; padding:20px;">Nessun augurio ricevuto ancora.</p>';
+                        divAuguri.innerHTML = '<p style="color:var(--text-light); text-align:center; padding:20px;">Nessuna donazione o augurio ricevuto ancora.</p>';
                     }
                 } else {
                     document.getElementById('loadingArea').textContent = 'Lista non trovata.';
@@ -700,6 +961,15 @@
             } catch (e) {
                 document.getElementById('loadingArea').textContent = 'Errore di connessione.';
             }
+        }
+
+        function copiaLinkDashboard() {
+            if (!currentLista) return;
+            navigator.clipboard.writeText(currentLista.link_pubblico).then(() => {
+                mostraToast('Link copiato', 'success');
+            }).catch(() => {
+                mostraToast('Errore nella copia', 'error');
+            });
         }
 
         function logoutCliente() {
@@ -723,20 +993,15 @@
                     
                     document.getElementById('pubNomeCliente').textContent = currentLista.cliente_nome;
                     document.getElementById('pubTipoEvento').textContent = currentLista.tipo_evento;
-                    document.getElementById('pubMessaggioStudio').textContent = currentLista.messaggio_studio || `Con gioia vi invitiamo a contribuire al regalo di ${currentLista.cliente_nome}.`;
+                    document.getElementById('pubMessaggioStudio').textContent = currentLista.messaggio_cortesia || `Con gioia vi invitiamo a contribuire al regalo di ${currentLista.cliente_nome}.`;
                     
-                    const btn = document.getElementById('pubLinkPagamento');
-                    if (currentLista.link_pagamento && currentLista.link_pagamento.startsWith('http')) {
-                        btn.href = currentLista.link_pagamento;
-                    } else {
-                        btn.style.display = 'none';
-                    }
+                    renderPaymentArea(currentLista);
 
                     const resAuguri = await fetch(`${WORKER_URL}/api/public/lista-regali/messaggi?listaId=${id}`);
                     const dataAuguri = await resAuguri.json();
                     const divAuguri = document.getElementById('pubAuguriList');
                     if (dataAuguri.success && dataAuguri.messaggi.length > 0) {
-                        divAuguri.innerHTML = dataAuguri.messaggi.slice(0, 5).map(m => `
+                        divAuguri.innerHTML = dataAuguri.messaggi.map(m => `
                             <div class="wish-card">
                                 <div class="name">${m.nome_donatore}</div>
                                 <div class="msg">"${m.messaggio}"</div>
