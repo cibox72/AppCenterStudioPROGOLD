@@ -6,16 +6,16 @@
     <title>Galleria Foto - AppCenterStudioPROGOLD</title>
     <style>
         :root {
-            --primary: #d4a5a5; --primary-dark: #9b6b6b; --primary-light: #f9ebea;
-            --primary-gradient: linear-gradient(135deg, #f5b7b1 0%, #d4a5a5 50%, #9b6b6b 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #f9ebea 40%, #fef9e7 100%);
+            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
+            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
             --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
             --radius: 16px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Georgia', serif; background: var(--bg-gradient); background-attachment: fixed; color: var(--text-main); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
         .container { max-width: 800px; margin: 0 auto; padding: 40px 24px; flex: 1; }
-        .header-card { text-align: center; padding: 50px 32px; background: white; border-radius: var(--radius); box-shadow: 0 10px 40px rgba(155, 107, 107, 0.15); margin-bottom: 32px; position: relative; overflow: hidden; }
+        .header-card { text-align: center; padding: 50px 32px; background: white; border-radius: var(--radius); box-shadow: 0 10px 40px rgba(30, 132, 73, 0.15); margin-bottom: 32px; position: relative; overflow: hidden; }
         .header-card::before { content: ''; position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 40px; height: 2px; background: var(--primary); }
         .header-card h1 { font-size: 42px; font-weight: 400; color: var(--primary-dark); margin-top: 20px; margin-bottom: 16px; font-style: italic; }
         .header-card .sottotitolo { font-size: 12px; color: var(--text-light); margin-bottom: 8px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; text-transform: uppercase; letter-spacing: 2px; }
@@ -28,9 +28,9 @@
             display: inline-block; padding: 18px 40px; background: var(--primary-gradient); color: white;
             text-decoration: none; border-radius: 10px; font-size: 18px; font-weight: 700;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(155, 107, 107, 0.3);
+            transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(30, 132, 73, 0.3);
         }
-        .btn-access:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(155, 107, 107, 0.4); }
+        .btn-access:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(30, 132, 73, 0.4); }
         
         .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .loading { text-align: center; padding: 60px; color: var(--text-light); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -60,13 +60,14 @@
 
         <div class="footer-branding">
             Gestito professionalmente da AppCenterStudioPROGOLD
-        </div.
+        </div>
     </div>
 
     <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         const urlParams = new URLSearchParams(window.location.search);
         const galleriaId = urlParams.get('id');
+        let studioId = null;
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!galleriaId) {
@@ -83,6 +84,8 @@
 
                 if (data.success && data.galleria) {
                     const gal = data.galleria;
+                    studioId = gal.studio_id;
+                    
                     document.getElementById('nomiCliente').textContent = gal.cliente_nome || 'I Clienti';
                     document.getElementById('tipoEvento').textContent = gal.tipo_evento || 'Servizio Fotografico';
                     document.getElementById('messaggioBenvenuto').textContent = gal.messaggio_benvenuto || 'Benvenuti nella vostra galleria privata.';
@@ -98,12 +101,45 @@
 
                     document.getElementById('loadingArea').classList.add('hidden');
                     document.getElementById('mainContent').classList.remove('hidden');
+                    
+                    // Carica il tema dello studio
+                    await caricaTemaGlobale();
                 } else {
                     document.getElementById('loadingArea').textContent = 'Galleria non trovata o non piu disponibile.';
                 }
             } catch (error) {
                 console.error('Errore:', error);
                 document.getElementById('loadingArea').textContent = 'Errore di connessione al server.';
+            }
+        }
+
+        async function caricaTemaGlobale() {
+            if (!studioId) return;
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${studioId}`);
+                const data = await response.json();
+                if (data.success && data.tema && data.tema.tema_attivo) {
+                    const temaId = data.tema.tema_attivo;
+                    const temi = {
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
+                    };
+                    const t = temi[temaId] || temi['default'];
+                    const root = document.documentElement;
+                    root.style.setProperty('--primary', t.p);
+                    root.style.setProperty('--primary-dark', t.pd);
+                    root.style.setProperty('--primary-light', t.pl);
+                    root.style.setProperty('--primary-gradient', t.pg);
+                    root.style.setProperty('--bg-gradient', t.bg);
+                }
+            } catch (error) {
+                console.error('[TEMA] Errore:', error);
             }
         }
     </script>
