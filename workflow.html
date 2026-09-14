@@ -163,11 +163,31 @@
         .search-result-item:hover { background: var(--primary-light); }
         .search-result-item strong { color: var(--primary-dark); }
         
+        /* TABELLA ARCHIVIO */
+        .table-container { overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; background: white; }
+        th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        th { background: #f8f9fa; color: var(--text-main); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        tr:hover td { background: #fafafa; }
+        .status-badge {
+            display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700;
+        }
+        .status-completed { background: #eafaf1; color: var(--success); }
+        .status-progress { background: #fef9e7; color: var(--warning); }
+        .status-new { background: #f4f6f7; color: var(--text-light); }
+        
         @media (max-width: 768px) {
             .progress-sections { grid-template-columns: 1fr; }
             .servizio-header { flex-direction: column; }
             .task-row { flex-direction: column; align-items: flex-start; gap: 8px; }
             .task-date, .task-input { width: 100%; max-width: 100%; }
+        }
+        
+        /* STILI PER STAMPA */
+        @media print {
+            .top-bar, .btn-group, .nav-btn, .toast-container { display: none !important; }
+            .container { max-width: 100%; padding: 0; }
+            .workflow-section { break-inside: avoid; }
         }
     </style>
 </head>
@@ -234,18 +254,38 @@
                 </div>
             </div>
 
-            <div id="loadingServizi" class="loading" style="padding: 20px;">
-                <div class="spinner"></div>
-                <div>Caricamento servizi...</div>
+            <!-- TABELLA ARCHIVIO -->
+            <div class="card-3d">
+                <div class="card-title">📋 Archivio Servizi</div>
+                <div id="loadingServizi" class="loading" style="padding: 20px;">
+                    <div class="spinner"></div>
+                    <div>Caricamento servizi...</div>
+                </div>
+                <div id="emptyServizi" class="empty-state hidden">Nessun servizio attivo. Crea il tuo primo servizio!</div>
+                <div class="table-container" id="tabellaArchivio" style="display:none;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID Cliente</th>
+                                <th>Nome Cliente</th>
+                                <th>Tipo Servizio</th>
+                                <th>Data</th>
+                                <th>Avanzamento</th>
+                                <th>Stato</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabellaBody"></tbody>
+                    </table>
+                </div>
             </div>
-            <div id="emptyServizi" class="empty-state hidden">Nessun servizio attivo. Clicca su "Nuovo Servizio" per iniziare!</div>
-            <div id="serviziList"></div>
         </div>
 
         <!-- VISTA DETTAGLIO -->
         <div id="dettaglioView" class="hidden">
             <div class="btn-group" style="margin-bottom: 24px; justify-content: flex-start;">
                 <button class="btn btn-outline" onclick="tornaArchivio()">← Torna all'Archivio</button>
+                <button class="btn btn-info" onclick="stampaWorkflow()">️ Stampa</button>
             </div>
 
             <div id="dettaglioHeader"></div>
@@ -416,8 +456,8 @@
             </div>
 
             <div class="btn-group" style="justify-content: center; margin-bottom: 40px;">
-                <button class="btn btn-primary" onclick="generaPDF()">📄 Genera Report PDF</button>
-                <button class="btn btn-danger" onclick="eliminaServizioCorrente()">🗑️ Elimina Servizio</button>
+                <button class="btn btn-info" onclick="stampaWorkflow()">🖨️ Stampa Report</button>
+                <button class="btn btn-danger" onclick="eliminaServizioCorrente()">️ Elimina Servizio</button>
             </div>
         </div>
 
@@ -434,7 +474,6 @@
         let servizi = [];
         let servizioCorrenteId = null;
 
-        // Lista di tutti gli ID delle checkbox per il calcolo del progresso
         const ALL_TASKS = [
             'f_download', 'f_archivio_raw', 
             'f_raw_jpeg', 'f_anteprima', 
@@ -459,10 +498,7 @@
                     return;
                 }
                 studioId = data.user.id;
-                
-                // Caricamento Tema Globale
                 await caricaTemaGlobale();
-                
                 document.getElementById('loadingArea').classList.add('hidden');
                 document.getElementById('archivioView').classList.remove('hidden');
                 await caricaServizi();
@@ -502,7 +538,7 @@
 
         async function caricaServizi() {
             document.getElementById('loadingServizi').style.display = 'block';
-            document.getElementById('serviziList').innerHTML = '';
+            document.getElementById('tabellaArchivio').style.display = 'none';
             document.getElementById('emptyServizi').classList.add('hidden');
 
             try {
@@ -523,51 +559,47 @@
         }
 
         function renderizzaArchivio() {
-            const container = document.getElementById('serviziList');
+            const tbody = document.getElementById('tabellaBody');
             const emptyState = document.getElementById('emptyServizi');
+            const tabella = document.getElementById('tabellaArchivio');
 
             if (servizi.length === 0) {
                 emptyState.classList.remove('hidden');
-                container.innerHTML = '';
+                tabella.style.display = 'none';
                 return;
             }
 
             emptyState.classList.add('hidden');
-            container.innerHTML = servizi.map(s => {
+            tabella.style.display = 'block';
+            
+            tbody.innerHTML = servizi.map(s => {
                 const tasks = s.tasks || {};
                 const comp = ALL_TASKS.filter(id => tasks[id] && tasks[id].completed).length;
                 const perc = Math.round((comp / ALL_TASKS.length) * 100);
+                
+                let statoClass = 'status-new', statoText = 'Nuovo';
+                if (perc === 100) { statoClass = 'status-completed'; statoText = 'Completato'; }
+                else if (perc > 0) { statoClass = 'status-progress'; statoText = 'In corso'; }
 
                 return `
-                    <div class="servizio-card">
-                        <div class="servizio-header">
-                            <div>
-                                <div class="servizio-id">${s.cliente_id || 'ID Non specificato'}</div>
-                                <div class="servizio-nome">${s.nome_cliente || 'Senza nome'}</div>
-                                <div class="servizio-videografo">Video: ${s.tasks?.v_nome || 'Non specificato'} (${s.tasks?.v_tipologia || '-'})</div>
+                    <tr>
+                        <td><strong>${s.cliente_id || '-'}</strong></td>
+                        <td>${s.nome_cliente || 'Senza nome'}</td>
+                        <td>${s.tipo_servizio || '-'}</td>
+                        <td>${s.data_servizio ? new Date(s.data_servizio).toLocaleDateString('it-IT') : '-'}</td>
+                        <td>
+                            <div class="progress-bar-container" style="width: 100px; display: inline-block; vertical-align: middle; margin-right: 8px;">
+                                <div class="progress-bar" style="width: ${perc}%;"></div>
                             </div>
-                            <button class="servizio-tipo-btn" onclick="apriDettaglio('${s.id}')">${s.tipo_servizio || 'Servizio'}</button>
-                        </div>
-                        <div class="progress-sections">
-                            <div class="progress-block">
-                                <div class="progress-label">AVANZAMENTO TOTALE</div>
-                                <div class="progress-bar-container">
-                                    <div class="progress-bar" style="width: ${perc}%;"></div>
-                                </div>
-                                <div class="progress-value">${comp}/${ALL_TASKS.length} (${perc}%)</div>
-                            </div>
-                            <div class="progress-block">
-                                <div class="progress-label">DATA SERVIZIO</div>
-                                <div class="progress-value" style="font-size: 16px; margin-top: 8px;">
-                                    ${s.data_servizio ? new Date(s.data_servizio).toLocaleDateString('it-IT') : 'Non impostata'}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="servizio-actions">
-                            <button class="btn btn-info btn-sm" onclick="apriDettaglio('${s.id}')">Gestisci Workflow</button>
-                            <button class="btn btn-danger btn-sm" onclick="eliminaServizio('${s.id}')">Elimina</button>
-                        </div>
-                    </div>
+                            <span style="font-weight: 600;">${perc}%</span>
+                        </td>
+                        <td><span class="status-badge ${statoClass}">${statoText}</span></td>
+                        <td>
+                            <button class="btn btn-info btn-sm" onclick="apriDettaglio('${s.id}')">Apri</button>
+                            <button class="btn btn-primary btn-sm" onclick="stampaDaArchivio('${s.id}')">️</button>
+                            <button class="btn btn-danger btn-sm" onclick="eliminaServizio('${s.id}')">🗑️</button>
+                        </td>
+                    </tr>
                 `;
             }).join('');
         }
@@ -641,10 +673,12 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    mostraToast('Servizio creato con successo!', 'success');
+                    // FIX: Aggiungo subito il servizio all'array locale
+                    servizi.unshift(nuovoServizio);
+                    mostraToast('Servizio creato! Apertura workflow...', 'success');
                     pulisciFormNuovo();
-                    await caricaServizi(); // Aggiorna la lista in background
-                    apriDettaglio(nuovoServizio.id); // 🚀 APRE SUBITO LE "SLIDE" DEL NUOVO SERVIZIO
+                    renderizzaArchivio(); // Aggiorna la tabella
+                    setTimeout(() => apriDettaglio(nuovoServizio.id), 300); // Apre le slide dopo un attimo
                 } else {
                     mostraToast('Errore nella creazione', 'error');
                 }
@@ -666,7 +700,10 @@
         function apriDettaglio(id) {
             servizioCorrenteId = id;
             const servizio = servizi.find(s => s.id === id);
-            if (!servizio) return;
+            if (!servizio) {
+                mostraToast('Servizio non trovato. Ricarica la pagina.', 'error');
+                return;
+            }
 
             document.getElementById('archivioView').classList.add('hidden');
             document.getElementById('dettaglioView').classList.remove('hidden');
@@ -786,6 +823,9 @@
             tasks.v_tipologia = document.getElementById('v_tipologia').value;
             tasks.v_nome = document.getElementById('v_nome').value;
 
+            // Aggiorna anche l'array locale
+            servizio.tasks = tasks;
+
             try {
                 await fetch(`${WORKER_URL}/api/studio/workflow/${servizioCorrenteId}?token=${token}`, {
                     method: 'PUT',
@@ -819,8 +859,14 @@
             if (servizioCorrenteId) eliminaServizio(servizioCorrenteId);
         }
 
-        function generaPDF() {
-            mostraToast('Funzione Genera Report PDF in arrivo!', 'success');
+        function stampaWorkflow() {
+            if (!servizioCorrenteId) return;
+            window.print();
+        }
+
+        function stampaDaArchivio(id) {
+            apriDettaglio(id);
+            setTimeout(() => window.print(), 500);
         }
 
         function tornaPlancia() {
