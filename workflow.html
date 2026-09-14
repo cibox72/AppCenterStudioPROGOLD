@@ -163,7 +163,6 @@
         .search-result-item:hover { background: var(--primary-light); }
         .search-result-item strong { color: var(--primary-dark); }
         
-        /* TABELLA ARCHIVIO */
         .table-container { overflow-x: auto; margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; background: white; }
         th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
@@ -183,7 +182,6 @@
             .task-date, .task-input { width: 100%; max-width: 100%; }
         }
         
-        /* STILI PER STAMPA */
         @media print {
             .top-bar, .btn-group, .nav-btn, .toast-container { display: none !important; }
             .container { max-width: 100%; padding: 0; }
@@ -285,7 +283,7 @@
         <div id="dettaglioView" class="hidden">
             <div class="btn-group" style="margin-bottom: 24px; justify-content: flex-start;">
                 <button class="btn btn-outline" onclick="tornaArchivio()">← Torna all'Archivio</button>
-                <button class="btn btn-info" onclick="stampaWorkflow()">️ Stampa</button>
+                <button class="btn btn-info" onclick="stampaWorkflow()">🖨️ Stampa</button>
             </div>
 
             <div id="dettaglioHeader"></div>
@@ -300,53 +298,52 @@
                 </div>
             </div>
 
-            <!-- SEZIONE 1: ACQUISIZIONE -->
-<div class="workflow-section">
-    <div class="section-header">
-        <span>💾 1. Acquisizione & Archiviazione Iniziale</span>
-        <span class="section-progress" id="prog1">0/4</span>
-    </div>
-    <div class="section-body">
-        <div class="task-row">
-            <input type="checkbox" class="task-checkbox" id="f_download" onchange="toggleTask('f_download')">
-            <label class="task-label" for="f_download">Download schede memoria su NAS/PC</label>
-            <div class="task-date"><input type="date" id="f_download_date" onchange="salvaDettaglio()"></div>
-        </div>
+            <!-- SEZIONE 1: ACQUISIZIONE (AGGIORNATA CON 3 HD) -->
+            <div class="workflow-section">
+                <div class="section-header">
+                    <span> 1. Acquisizione & Archiviazione Iniziale</span>
+                    <span class="section-progress" id="prog1">0/4</span>
+                </div>
+                <div class="section-body">
+                    <div class="task-row">
+                        <input type="checkbox" class="task-checkbox" id="f_download" onchange="toggleTask('f_download')">
+                        <label class="task-label" for="f_download">Download schede memoria su NAS/PC</label>
+                        <div class="task-date"><input type="date" id="f_download_date" onchange="salvaDettaglio()"></div>
+                    </div>
 
-        <div class="task-row" style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin: 8px 0;">
-            <input type="checkbox" class="task-checkbox" id="f_hd_a" onchange="toggleTask('f_hd_a')">
-            <label class="task-label" for="f_hd_a">Archiviazione RAW - <strong>Hard Disk A</strong></label>
-            <div class="task-date"><input type="date" id="f_hd_a_date" onchange="salvaDettaglio()"></div>
-        </div>
-        <div class="task-row" style="padding-left: 36px;">
-            <input type="text" class="task-input full-width" id="f_hd_a_desc" placeholder="Es. HD nero 4TB in studio, scaffale A..." onchange="salvaDettaglio()">
-        </div>
+                    <div class="task-row" style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin: 8px 0;">
+                        <input type="checkbox" class="task-checkbox" id="f_hd_a" onchange="toggleTask('f_hd_a')">
+                        <label class="task-label" for="f_hd_a">Archiviazione RAW - <strong>Hard Disk A</strong></label>
+                        <div class="task-date"><input type="date" id="f_hd_a_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row" style="padding-left: 36px;">
+                        <input type="text" class="task-input full-width" id="f_hd_a_desc" placeholder="Es. HD nero 4TB in studio, scaffale A..." onchange="salvaDettaglio()">
+                    </div>
 
-        <div class="task-row" style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin: 8px 0;">
-            <input type="checkbox" class="task-checkbox" id="f_hd_b" onchange="toggleTask('f_hd_b')">
-            <label class="task-label" for="f_hd_b">Archiviazione RAW - <strong>Hard Disk B</strong></label>
-            <div class="task-date"><input type="date" id="f_hd_b_date" onchange="salvaDettaglio()"></div>
-        </div>
-        <div class="task-row" style="padding-left: 36px;">
-            <input type="text" class="task-input full-width" id="f_hd_b_desc" placeholder="Es. HD blu 2TB a casa, cassetto scrivania..." onchange="salvaDettaglio()">
-        </div>
+                    <div class="task-row" style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin: 8px 0;">
+                        <input type="checkbox" class="task-checkbox" id="f_hd_b" onchange="toggleTask('f_hd_b')">
+                        <label class="task-label" for="f_hd_b">Archiviazione RAW - <strong>Hard Disk B</strong></label>
+                        <div class="task-date"><input type="date" id="f_hd_b_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row" style="padding-left: 36px;">
+                        <input type="text" class="task-input full-width" id="f_hd_b_desc" placeholder="Es. HD blu 2TB a casa, cassetto scrivania..." onchange="salvaDettaglio()">
+                    </div>
 
-        <div class="task-row" style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin: 8px 0;">
-            <input type="checkbox" class="task-checkbox" id="f_hd_ext" onchange="toggleTask('f_hd_ext')">
-            <label class="task-label" for="f_hd_ext">Archiviazione RAW - <strong>HD Esterno / Altro</strong></label>
-            <div class="task-date"><input type="date" id="f_hd_ext_date" onchange="salvaDettaglio()"></div>
-        </div>
-        <div class="task-row" style="padding-left: 36px;">
-            <input type="text" class="task-input full-width" id="f_hd_ext_desc" placeholder="Es. SSD Samsung in cassaforte, NAS remoto..." onchange="salvaDettaglio()">
-        </div>
-    </div>
-</div>
-            
+                    <div class="task-row" style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin: 8px 0;">
+                        <input type="checkbox" class="task-checkbox" id="f_hd_ext" onchange="toggleTask('f_hd_ext')">
+                        <label class="task-label" for="f_hd_ext">Archiviazione RAW - <strong>HD Esterno / Altro</strong></label>
+                        <div class="task-date"><input type="date" id="f_hd_ext_date" onchange="salvaDettaglio()"></div>
+                    </div>
+                    <div class="task-row" style="padding-left: 36px;">
+                        <input type="text" class="task-input full-width" id="f_hd_ext_desc" placeholder="Es. SSD Samsung in cassaforte, NAS remoto..." onchange="salvaDettaglio()">
+                    </div>
+                </div>
+            </div>
 
             <!-- SEZIONE 2: LAVORAZIONE FOTO -->
             <div class="workflow-section">
                 <div class="section-header">
-                    <span>📸 2. Lavorazione Foto</span>
+                    <span> 2. Lavorazione Foto</span>
                     <span class="section-progress" id="prog2">0/2</span>
                 </div>
                 <div class="section-body">
@@ -480,7 +477,7 @@
 
             <div class="btn-group" style="justify-content: center; margin-bottom: 40px;">
                 <button class="btn btn-info" onclick="stampaWorkflow()">🖨️ Stampa Report</button>
-                <button class="btn btn-danger" onclick="eliminaServizioCorrente()">️ Elimina Servizio</button>
+                <button class="btn btn-danger" onclick="eliminaServizioCorrente()">🗑️ Elimina Servizio</button>
             </div>
         </div>
 
@@ -498,13 +495,13 @@
         let servizioCorrenteId = null;
 
         const ALL_TASKS = [
-    'f_download', 'f_hd_a', 'f_hd_b', 'f_hd_ext',
-    'f_raw_jpeg', 'f_anteprima', 
-    'f_selezione', 
-    'f_impaginazione', 'f_invio_lab', 
-    'f_ricezione_lab', 'f_consegna_cliente', 'f_consegna_file', 'f_archiviazione_finale',
-    'v_consegna_grezzo', 'v_montaggio', 'v_consegna_finale'
-];
+            'f_download', 'f_hd_a', 'f_hd_b', 'f_hd_ext',
+            'f_raw_jpeg', 'f_anteprima', 
+            'f_selezione', 
+            'f_impaginazione', 'f_invio_lab', 
+            'f_ricezione_lab', 'f_consegna_cliente', 'f_consegna_file', 'f_archiviazione_finale',
+            'v_consegna_grezzo', 'v_montaggio', 'v_consegna_finale'
+        ];
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) { window.location.href = 'index.html'; return; }
@@ -619,7 +616,7 @@
                         <td><span class="status-badge ${statoClass}">${statoText}</span></td>
                         <td>
                             <button class="btn btn-info btn-sm" onclick="apriDettaglio('${s.id}')">Apri</button>
-                            <button class="btn btn-primary btn-sm" onclick="stampaDaArchivio('${s.id}')">️</button>
+                            <button class="btn btn-primary btn-sm" onclick="stampaDaArchivio('${s.id}')">🖨️</button>
                             <button class="btn btn-danger btn-sm" onclick="eliminaServizio('${s.id}')">🗑️</button>
                         </td>
                     </tr>
@@ -696,12 +693,11 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    // FIX: Aggiungo subito il servizio all'array locale
                     servizi.unshift(nuovoServizio);
                     mostraToast('Servizio creato! Apertura workflow...', 'success');
                     pulisciFormNuovo();
-                    renderizzaArchivio(); // Aggiorna la tabella
-                    setTimeout(() => apriDettaglio(nuovoServizio.id), 300); // Apre le slide dopo un attimo
+                    renderizzaArchivio();
+                    setTimeout(() => apriDettaglio(nuovoServizio.id), 300);
                 } else {
                     mostraToast('Errore nella creazione', 'error');
                 }
@@ -773,6 +769,11 @@
             if (tasks.v_tipologia) document.getElementById('v_tipologia').value = tasks.v_tipologia;
             if (tasks.v_nome) document.getElementById('v_nome').value = tasks.v_nome;
 
+            // Caricamento descrizioni HD
+            if (tasks.f_hd_a_desc) document.getElementById('f_hd_a_desc').value = tasks.f_hd_a_desc;
+            if (tasks.f_hd_b_desc) document.getElementById('f_hd_b_desc').value = tasks.f_hd_b_desc;
+            if (tasks.f_hd_ext_desc) document.getElementById('f_hd_ext_desc').value = tasks.f_hd_ext_desc;
+
             calcolaProgress();
             window.scrollTo(0, 0);
         }
@@ -807,7 +808,7 @@
             }).length;
             const perc = Math.round((comp / ALL_TASKS.length) * 100);
 
-            document.getElementById('prog1').textContent = `${checkCount(['f_download', 'f_archivio_raw'])}/2`;
+            document.getElementById('prog1').textContent = `${checkCount(['f_download', 'f_hd_a', 'f_hd_b', 'f_hd_ext'])}/4`;
             document.getElementById('prog2').textContent = `${checkCount(['f_raw_jpeg', 'f_anteprima'])}/2`;
             document.getElementById('prog3').textContent = `${checkCount(['f_selezione'])}/1`;
             document.getElementById('prog4').textContent = `${checkCount(['f_impaginazione', 'f_invio_lab'])}/2`;
@@ -846,7 +847,11 @@
             tasks.v_tipologia = document.getElementById('v_tipologia').value;
             tasks.v_nome = document.getElementById('v_nome').value;
 
-            // Aggiorna anche l'array locale
+            // Salvataggio descrizioni HD
+            tasks.f_hd_a_desc = document.getElementById('f_hd_a_desc').value;
+            tasks.f_hd_b_desc = document.getElementById('f_hd_b_desc').value;
+            tasks.f_hd_ext_desc = document.getElementById('f_hd_ext_desc').value;
+
             servizio.tasks = tasks;
 
             try {
