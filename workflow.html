@@ -301,24 +301,47 @@
             </div>
 
             <!-- SEZIONE 1: ACQUISIZIONE -->
-            <div class="workflow-section">
-                <div class="section-header">
-                    <span>💾 1. Acquisizione & Archiviazione Iniziale</span>
-                    <span class="section-progress" id="prog1">0/2</span>
-                </div>
-                <div class="section-body">
-                    <div class="task-row">
-                        <input type="checkbox" class="task-checkbox" id="f_download" onchange="toggleTask('f_download')">
-                        <label class="task-label" for="f_download">Download schede memoria su NAS/PC</label>
-                        <div class="task-date"><input type="date" id="f_download_date" onchange="salvaDettaglio()"></div>
-                    </div>
-                    <div class="task-row">
-                        <input type="checkbox" class="task-checkbox" id="f_archivio_raw" onchange="toggleTask('f_archivio_raw')">
-                        <label class="task-label" for="f_archivio_raw">Archiviazione RAW su HD A/B (Backup)</label>
-                        <div class="task-date"><input type="date" id="f_archivio_raw_date" onchange="salvaDettaglio()"></div>
-                    </div>
-                </div>
-            </div>
+<div class="workflow-section">
+    <div class="section-header">
+        <span>💾 1. Acquisizione & Archiviazione Iniziale</span>
+        <span class="section-progress" id="prog1">0/4</span>
+    </div>
+    <div class="section-body">
+        <div class="task-row">
+            <input type="checkbox" class="task-checkbox" id="f_download" onchange="toggleTask('f_download')">
+            <label class="task-label" for="f_download">Download schede memoria su NAS/PC</label>
+            <div class="task-date"><input type="date" id="f_download_date" onchange="salvaDettaglio()"></div>
+        </div>
+
+        <div class="task-row" style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin: 8px 0;">
+            <input type="checkbox" class="task-checkbox" id="f_hd_a" onchange="toggleTask('f_hd_a')">
+            <label class="task-label" for="f_hd_a">Archiviazione RAW - <strong>Hard Disk A</strong></label>
+            <div class="task-date"><input type="date" id="f_hd_a_date" onchange="salvaDettaglio()"></div>
+        </div>
+        <div class="task-row" style="padding-left: 36px;">
+            <input type="text" class="task-input full-width" id="f_hd_a_desc" placeholder="Es. HD nero 4TB in studio, scaffale A..." onchange="salvaDettaglio()">
+        </div>
+
+        <div class="task-row" style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin: 8px 0;">
+            <input type="checkbox" class="task-checkbox" id="f_hd_b" onchange="toggleTask('f_hd_b')">
+            <label class="task-label" for="f_hd_b">Archiviazione RAW - <strong>Hard Disk B</strong></label>
+            <div class="task-date"><input type="date" id="f_hd_b_date" onchange="salvaDettaglio()"></div>
+        </div>
+        <div class="task-row" style="padding-left: 36px;">
+            <input type="text" class="task-input full-width" id="f_hd_b_desc" placeholder="Es. HD blu 2TB a casa, cassetto scrivania..." onchange="salvaDettaglio()">
+        </div>
+
+        <div class="task-row" style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin: 8px 0;">
+            <input type="checkbox" class="task-checkbox" id="f_hd_ext" onchange="toggleTask('f_hd_ext')">
+            <label class="task-label" for="f_hd_ext">Archiviazione RAW - <strong>HD Esterno / Altro</strong></label>
+            <div class="task-date"><input type="date" id="f_hd_ext_date" onchange="salvaDettaglio()"></div>
+        </div>
+        <div class="task-row" style="padding-left: 36px;">
+            <input type="text" class="task-input full-width" id="f_hd_ext_desc" placeholder="Es. SSD Samsung in cassaforte, NAS remoto..." onchange="salvaDettaglio()">
+        </div>
+    </div>
+</div>
+            
 
             <!-- SEZIONE 2: LAVORAZIONE FOTO -->
             <div class="workflow-section">
@@ -475,13 +498,13 @@
         let servizioCorrenteId = null;
 
         const ALL_TASKS = [
-            'f_download', 'f_archivio_raw', 
-            'f_raw_jpeg', 'f_anteprima', 
-            'f_selezione', 
-            'f_impaginazione', 'f_invio_lab', 
-            'f_ricezione_lab', 'f_consegna_cliente', 'f_consegna_file', 'f_archiviazione_finale',
-            'v_consegna_grezzo', 'v_montaggio', 'v_consegna_finale'
-        ];
+    'f_download', 'f_hd_a', 'f_hd_b', 'f_hd_ext',
+    'f_raw_jpeg', 'f_anteprima', 
+    'f_selezione', 
+    'f_impaginazione', 'f_invio_lab', 
+    'f_ricezione_lab', 'f_consegna_cliente', 'f_consegna_file', 'f_archiviazione_finale',
+    'v_consegna_grezzo', 'v_montaggio', 'v_consegna_finale'
+];
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) { window.location.href = 'index.html'; return; }
