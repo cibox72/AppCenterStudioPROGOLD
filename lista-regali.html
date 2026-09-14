@@ -3,309 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestione Lista Regali - AppCenterStudioPROGOLD</title>
+    <title>Lista Regali - AppCenterStudioPROGOLD</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            --primary: #82e0aa;
-            --primary-dark: #1e8449;
-            --primary-light: #e8f8f5;
+            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
             --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --text-main: #2c3e50;
-            --text-light: #7f8c8d;
-            --border-color: #e8e8e8;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --danger: #e74c3c;
+            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
+            --success: #27ae60; --warning: #f39c12; --danger: #e74c3c; --info: #3498db;
             --radius: 16px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text-main);
-            line-height: 1.6;
-            min-height: 100vh;
+            background: var(--bg-gradient); background-attachment: fixed;
+            color: var(--text-main); line-height: 1.6; min-height: 100vh;
         }
         .top-bar {
-            background: var(--primary-gradient);
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            background: var(--primary-gradient); padding: 16px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100;
         }
         .nav-btn {
-            background: rgba(255,255,255,0.95);
-            border: none;
-            padding: 10px 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--primary-dark);
-            transition: all 0.2s ease;
+            background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
+            cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark);
         }
         .nav-btn:hover { transform: translateY(-2px); }
-        .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
-        .page-header {
-            text-align: center;
-            padding: 32px;
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
-            margin-bottom: 32px;
-            position: relative;
-            overflow: hidden;
+        .container { max-width: 1000px; margin: 0 auto; padding: 30px 24px; }
+        
+        .card {
+            background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden;
         }
-        .page-header::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 5px;
-            background: var(--primary-gradient);
-        }
-        .page-header h1 {
-            font-size: 32px;
-            font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
-        }
-        .page-header p { color: var(--text-light); font-size: 15px; }
-        .card-3d {
-            background: white;
-            border-radius: var(--radius);
-            padding: 32px;
-            margin-bottom: 24px;
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
-            position: relative;
-            overflow: hidden;
-        }
-        .card-3d::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 4px;
-            background: var(--primary-gradient);
-        }
-        .card-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 8px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--primary-light);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
+        .card-title { font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 20px; text-transform: uppercase; }
+        
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-        .form-group input, .form-group select, .form-group textarea {
-            padding: 12px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: inherit;
+        .form-group input, .form-group select {
+            padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px;
         }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
-        }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
+        
         .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; margin-right: 8px; margin-bottom: 8px;
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-info { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
-        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-        
-        .lista-card {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 16px;
-            transition: all 0.3s ease;
+        .btn:hover { transform: translateY(-2px); }
+
+        .cred-box {
+            background: var(--primary-light); padding: 16px; border-radius: 10px; border: 1px solid var(--primary);
+            text-align: center; margin-top: 16px;
         }
-        .lista-card:hover { box-shadow: 0 8px 24px rgba(30, 132, 73, 0.12); border-color: var(--primary); }
-        .lista-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
-        .lista-nomi { font-size: 20px; font-weight: 700; color: var(--text-main); }
-        .lista-evento { font-size: 13px; color: var(--primary-dark); font-weight: 600; margin-top: 4px; }
+        .cred-box .label { font-size: 12px; color: var(--text-light); text-transform: uppercase; font-weight: 700; }
+        .cred-box .value { font-size: 18px; font-weight: 800; color: var(--primary-dark); margin: 4px 0 12px; font-family: monospace; }
+
+        .table-container { overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { background: #f8f9fa; color: var(--text-main); font-weight: 700; text-transform: uppercase; font-size: 11px; }
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        .status-coperto { background: #eafaf1; color: var(--success); }
+        .status-corso { background: #fef9e7; color: var(--warning); }
+
+        /* PUBLIC & DASHBOARD STYLES */
+        .public-header { text-align: center; padding: 40px 20px; }
+        .public-header h1 { font-size: 36px; color: var(--primary-dark); font-style: italic; margin-bottom: 12px; }
+        .public-header p { font-size: 16px; color: var(--text-light); }
+        .wish-card { background: #f8f9fa; padding: 16px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--primary); }
+        .wish-card .name { font-weight: 700; color: var(--primary-dark); }
+        .wish-card .msg { font-style: italic; color: var(--text-main); margin-top: 4px; }
         
-        .progress-bar-container {
-            background: #ecf0f1;
-            height: 16px;
-            border-radius: 8px;
-            overflow: hidden;
-            margin: 16px 0;
-            position: relative;
-        }
-        .progress-bar {
-            height: 100%;
-            transition: width 0.6s ease, background-color 0.6s ease;
-        }
-        .progress-text {
-            position: absolute;
-            width: 100%;
-            text-align: center;
-            line-height: 16px;
-            font-size: 11px;
-            font-weight: 700;
-            color: white;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-        }
-        
-        .lista-stats { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
-        .lista-stat { background: var(--primary-light); padding: 12px 16px; border-radius: 8px; flex: 1; min-width: 120px; }
-        .lista-stat-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; }
-        .lista-stat-value { font-size: 18px; font-weight: 700; color: var(--primary-dark); margin-top: 4px; }
-        
-        .lista-status-text { font-size: 14px; font-weight: 600; margin-top: 8px; text-align: center; }
-        
-        .lista-link {
-            background: #f4f6f7;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            word-break: break-all;
-            margin: 12px 0;
-            font-family: monospace;
-            color: var(--text-main);
-        }
-        .lista-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
-        .lista-actions .btn { padding: 8px 16px; font-size: 12px; }
-        
-        .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
-        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
-        .toast {
-            background: white;
-            border-radius: 10px;
-            padding: 14px 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            margin-bottom: 10px;
-            border-left: 4px solid var(--success);
-            animation: slideIn 0.3s ease;
-        }
+        .progress-container { background: var(--primary-light); height: 20px; border-radius: 10px; overflow: hidden; margin: 16px 0; }
+        .progress-bar { height: 100%; background: var(--primary-gradient); transition: width 0.5s ease; }
+        .progress-bar.full { background: linear-gradient(135deg, #f1c40f, #f39c12); }
+
+        .hidden { display: none !important; }
+        .loading { text-align: center; padding: 60px; color: var(--text-light); }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
+        .toast { background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease; }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
-        .loading { text-align: center; padding: 40px; color: var(--text-light); }
-        .spinner {
-            width: 40px; height: 40px;
-            border: 3px solid var(--primary-light);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 16px;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
-        .hidden { display: none !important; }
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            z-index: 3000;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-overlay.active { display: flex; }
-        .modal-content {
-            background: white;
-            border-radius: var(--radius);
-            padding: 32px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-        }
-        #qrcode { margin: 20px auto; display: flex; justify-content: center; }
-        #qrcode img { border: 8px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
-    <div class="top-bar">
-        <div style="display: flex; gap: 10px;">
-            <button class="nav-btn" onclick="tornaPlancia()">Indietro</button>
-            <button class="nav-btn" onclick="tornaPlancia()">Plancia</button>
+    <div id="topBar" class="top-bar hidden">
+        <div class="nav-left">
+            <button class="nav-btn" onclick="tornaPlancia()">Indietro alla Plancia</button>
         </div>
-        <div class="sync-status"><span class="sync-dot"></span> Cloud Sync: OK</div>
     </div>
 
     <div class="container">
-        <div class="page-header">
-            <h1>Gestione Lista Regali</h1>
-            <p>Crea e gestisci liste regali per i tuoi clienti. Link pubblico condiviso con gli invitati.</p>
-        </div>
-
         <div id="loadingArea" class="loading">
             <div class="spinner"></div>
-            <div>Verifica sessione cloud...</div>
+            <div>Caricamento in corso...</div>
         </div>
 
-        <div id="mainContent" class="hidden">
-            <div class="card-3d">
-                <div class="card-title">Nuova Lista Regali</div>
-                <div class="card-subtitle">Crea una lista regali per un cliente. Verra generato un link pubblico da condividere.</div>
+        <!-- VISTA 1: STUDIO (Gestione e Creazione) -->
+        <div id="studioView" class="hidden">
+            <div class="card">
+                <div class="card-title">🎁 Crea Nuova Lista Regali</div>
                 <div class="form-row">
-                    <div class="form-group"><label>Nomi Coppia/Evento *</label><input type="text" id="lrNomi" placeholder="es. Mario e Giulia Rossi"></div>
-                    <div class="form-group"><label>Tipo Evento *</label><input type="text" id="lrEvento" placeholder="es. Matrimonio"></div>
+                    <div class="form-group">
+                        <label>Cliente *</label>
+                        <input type="text" id="searchCliente" placeholder="Cerca ID o Nome..." oninput="cercaCliente(this.value)">
+                        <input type="hidden" id="selectedClienteId">
+                        <input type="hidden" id="selectedClienteNome">
+                        <div id="resultsCliente" style="position:absolute; background:white; border:1px solid #ccc; width:100%; max-height:150px; overflow-y:auto; z-index:10; display:none;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo di Evento *</label>
+                        <select id="tipoEvento">
+                            <option value="Matrimonio">Matrimonio</option>
+                            <option value="Compleanno">Compleanno</option>
+                            <option value="Comunione/Cresima">Comunione / Cresima</option>
+                            <option value="Battesimo">Battesimo</option>
+                            <option value="Altro">Altro</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group"><label>Costo Totale Obiettivo (EUR)</label><input type="number" id="lrCosto" min="0" step="0.01" placeholder="5000"></div>
-                    <div class="form-group"><label>Link Pagamento (PayPal/Bancomat)</label><input type="url" id="lrLinkPagamento" placeholder="https://paypal.me/..."></div>
+                    <div class="form-group">
+                        <label>Importo del Servizio (€) *</label>
+                        <input type="number" id="importoServizio" placeholder="Es. 1500">
+                    </div>
+                    <div class="form-group">
+                        <label>Link Pagamento (PayPal, Hype, ecc.) *</label>
+                        <input type="url" id="linkPagamento" placeholder="https://...">
+                    </div>
                 </div>
-                <div class="form-group"><label>Numero WhatsApp Clienti</label><input type="tel" id="lrWhatsapp" placeholder="+39 333 1234567"></div>
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="creaListaRegali()">CREA LISTA REGALI</button>
+                <button class="btn btn-success" onclick="creaListaRegali()">✨ Genera Lista e Credenziali</button>
+            </div>
+
+            <div id="credenzialiGenerate" class="card hidden">
+                <div class="card-title">✅ Lista Creata con Successo!</div>
+                <p style="margin-bottom:16px; color:var(--text-light)">Consegna queste credenziali al cliente. Potrai inviarle direttamente via WhatsApp.</p>
+                <div class="form-row">
+                    <div class="cred-box">
+                        <div class="label">Username Cliente</div>
+                        <div class="value" id="genUser">---</div>
+                    </div>
+                    <div class="cred-box">
+                        <div class="label">Password Cliente</div>
+                        <div class="value" id="genPass">---</div>
+                    </div>
+                </div>
+                <div style="text-align:center; margin-top:20px;">
+                    <button class="btn btn-info" onclick="inviaWhatsAppCliente()">📱 Invia Credenziali via WhatsApp</button>
+                    <button class="btn btn-outline" onclick="document.getElementById('credenzialiGenerate').classList.add('hidden')">Chiudi</button>
                 </div>
             </div>
 
-            <div class="card-3d">
-                <div class="card-title">Liste Regali Attive</div>
-                <div class="card-subtitle">Elenco di tutte le liste regali create con monitoraggio a scalare.</div>
-                <div id="loadingListe" class="loading" style="padding: 20px;">
-                    <div class="spinner"></div>
-                    <div>Caricamento liste...</div>
+            <div class="card">
+                <div class="card-title">📋 Archivio Liste Regali</div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Evento</th>
+                                <th>Stato</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabellaListe"></tbody>
+                    </table>
                 </div>
-                <div id="emptyListe" class="empty-state hidden">Nessuna lista regali presente.</div>
-                <div id="listeContainer"></div>
             </div>
         </div>
 
-        <div class="footer-branding">Piattaforma sviluppata da AppCenterStudioPROGOLD</div>
-    </div>
+        <!-- VISTA 2: DASHBOARD CLIENTE -->
+        <div id="clientView" class="hidden">
+            <div class="card">
+                <div class="public-header">
+                    <h1 id="dashNomeCliente">I Festeggiati</h1>
+                    <p>Benvenuti nella vostra dashboard privata!</p>
+                </div>
+                
+                <div style="text-align:center; margin: 30px 0;">
+                    <h3 style="color:var(--text-light); font-size:14px; text-transform:uppercase;">Importo Raccolto</h3>
+                    <div style="font-size:48px; font-weight:800; color:var(--primary-dark);" id="dashRaccolto">€ 0</div>
+                    <div style="font-size:16px; color:var(--text-light);">su un costo servizio di <strong id="dashCosto">€ 0</strong></div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar" id="dashProgressBar" style="width: 0%;"></div>
+                    </div>
+                    <div id="dashMessaggioStato" style="font-weight:700; font-size:18px; margin-top:12px;"></div>
+                </div>
 
-    <div class="modal-overlay" id="qrModal">
-        <div class="modal-content">
-            <h3 style="color: var(--primary-dark); margin-bottom: 16px;">Locandina QR Code</h3>
-            <p style="font-size: 14px; color: var(--text-light); margin-bottom: 16px;">Inquadra per accedere alla lista regali</p>
-            <div id="qrcode"></div>
-            <p id="qrLinkText" style="font-size: 12px; word-break: break-all; margin-top: 16px; color: var(--text-main);"></p>
-            <div class="btn-group" style="justify-content: center; margin-top: 24px;">
-                <button class="btn btn-outline" onclick="chiudiQR()">Chiudi</button>
-                <button class="btn btn-primary" onclick="stampaQR()">Stampa Locandina</button>
+                <div style="margin-top:30px;">
+                    <h3 style="margin-bottom:16px; color:var(--primary-dark);">💌 Auguri Ricevuti</h3>
+                    <div id="dashAuguriList"></div>
+                </div>
+                
+                <div style="text-align:center; margin-top:30px;">
+                    <button class="btn btn-outline" onclick="logoutCliente()">Esci dalla Dashboard</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA 3: PUBBLICA (INVITATI) -->
+        <div id="publicView" class="hidden">
+            <div class="card">
+                <div class="public-header">
+                    <div style="font-size:12px; text-transform:uppercase; letter-spacing:2px; color:var(--text-light); margin-bottom:8px;">Un regalo speciale per</div>
+                    <h1 id="pubNomeCliente">I Festeggiati</h1>
+                    <div style="display:inline-block; background:var(--primary-light); color:var(--primary-dark); padding:6px 16px; border-radius:20px; font-size:13px; font-weight:600; margin-top:8px;" id="pubTipoEvento">Evento</div>
+                </div>
+                
+                <div style="text-align:center; padding: 20px; background:var(--primary-light); border-radius:12px; margin-bottom:30px;">
+                    <p id="pubMessaggioStudio" style="font-style:italic; font-size:16px; color:var(--text-main);"></p>
+                </div>
+
+                <div style="text-align:center; margin-bottom:40px;">
+                    <a id="pubLinkPagamento" href="#" target="_blank" class="btn btn-success" style="font-size:18px; padding:16px 32px;">🎁 Fai il tuo Regalo</a>
+                    <p style="font-size:13px; color:var(--text-light); margin-top:12px;">Verrai reindirizzato al link sicuro fornito dai festeggiati.</p>
+                </div>
+
+                <div class="card" style="background:#f8f9fa; box-shadow:none;">
+                    <div class="card-title">Lascia un Messaggio di Auguri</div>
+                    <div class="form-group">
+                        <label>Il tuo Nome</label>
+                        <input type="text" id="wishName" placeholder="Es. Zia Maria">
+                    </div>
+                    <div class="form-group">
+                        <label>Il tuo Messaggio</label>
+                        <input type="text" id="wishMsg" placeholder="Scrivi qui i tuoi auguri...">
+                    </div>
+                    <button class="btn btn-primary" onclick="inviaAugurio()" style="width:100%; margin-top:12px;">Invia Auguri 💌</button>
+                </div>
+
+                <div style="margin-top:30px;">
+                    <h3 style="margin-bottom:16px; color:var(--primary-dark); font-size:16px;">Messaggi degli Invitati</h3>
+                    <div id="pubAuguriList"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -316,233 +256,296 @@
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
+        const listaId = urlParams.get('id');
+        const dashboardId = urlParams.get('dashboard');
+        const dashboardPass = urlParams.get('pass');
+        
         let studioId = null;
-        let listeRegali = [];
+        let currentLista = null;
 
         document.addEventListener('DOMContentLoaded', async function() {
-            if (!token) { window.location.href = 'index.html'; return; }
-            await verificaSessione();
+            if (token) {
+                await initStudioView();
+            } else if (dashboardId) {
+                await initClientView(dashboardId, dashboardPass);
+            } else if (listaId) {
+                await initPublicView(listaId);
+            } else {
+                document.getElementById('loadingArea').textContent = 'Link non valido. Contatta lo studio.';
+            }
         });
 
-        async function verificaSessione() {
+        // ==========================================
+        // TEMI GLOBALI
+        // ==========================================
+        async function applicaTemaGlobale(sId) {
+            if (!sId) return;
             try {
-                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
-                const data = await response.json();
-                if (!data.success || data.tipo !== 'studio') {
-                    mostraToast('Sessione non valida', 'error');
-                    setTimeout(() => window.location.href = 'index.html', 1500);
-                    return;
+                const res = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${sId}`);
+                const data = await res.json();
+                if (data.success && data.tema && data.tema.tema_attivo) {
+                    const temi = {
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
+                    };
+                    const t = temi[data.tema.tema_attivo] || temi['default'];
+                    const root = document.documentElement;
+                    root.style.setProperty('--primary', t.p);
+                    root.style.setProperty('--primary-dark', t.pd);
+                    root.style.setProperty('--primary-light', t.pl);
+                    root.style.setProperty('--primary-gradient', t.pg);
+                    root.style.setProperty('--bg-gradient', t.bg);
                 }
-                studioId = data.user.id;
-                document.getElementById('loadingArea').classList.add('hidden');
-                document.getElementById('mainContent').classList.remove('hidden');
-                await caricaListe();
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
-            }
+            } catch (e) { console.error('Errore tema:', e); }
+        }
+
+        // ==========================================
+        // VISTA STUDIO
+        // ==========================================
+        async function initStudioView() {
+            document.getElementById('topBar').classList.remove('hidden');
+            document.getElementById('loadingArea').classList.add('hidden');
+            document.getElementById('studioView').classList.remove('hidden');
+            
+            // Recupera studioId dal token (semplificato, in produzione usa verifica sessione)
+            const res = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+            const data = await res.json();
+            if(data.success) studioId = data.user.id;
+            
+            applicaTemaGlobale(studioId);
+            caricaArchivioListe();
+        }
+
+        let debounceTimer;
+        function cercaCliente(query) {
+            clearTimeout(debounceTimer);
+            const div = document.getElementById('resultsCliente');
+            if (query.length < 2) { div.style.display = 'none'; return; }
+            debounceTimer = setTimeout(async () => {
+                const res = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti/ricerca?q=${encodeURIComponent(query)}&token=${token}`);
+                const data = await res.json();
+                if (data.success && data.clienti.length > 0) {
+                    div.innerHTML = data.clienti.map(c => `
+                        <div style="padding:10px; cursor:pointer; border-bottom:1px solid #eee;" onclick="selezionaCliente('${c.id}', '${c.nome}', '${c.cognome}')">
+                            <strong>${c.id}</strong> - ${c.nome} ${c.cognome}
+                        </div>
+                    `).join('');
+                    div.style.display = 'block';
+                } else { div.style.display = 'none'; }
+            }, 300);
+        }
+
+        function selezionaCliente(id, nome, cognome) {
+            document.getElementById('selectedClienteId').value = id;
+            document.getElementById('selectedClienteNome').value = `${nome} ${cognome}`;
+            document.getElementById('searchCliente').value = `${id} - ${nome} ${cognome}`;
+            document.getElementById('resultsCliente').style.display = 'none';
         }
 
         async function creaListaRegali() {
-            const nomi = document.getElementById('lrNomi').value.trim();
-            const evento = document.getElementById('lrEvento').value.trim();
-            const costo_totale = parseFloat(document.getElementById('lrCosto').value) || 0;
-            const link_pagamento = document.getElementById('lrLinkPagamento').value.trim();
-            const whatsapp_clienti = document.getElementById('lrWhatsapp').value.trim();
+            const clienteId = document.getElementById('selectedClienteId').value;
+            const clienteNome = document.getElementById('selectedClienteNome').value;
+            const tipoEvento = document.getElementById('tipoEvento').value;
+            const importo = document.getElementById('importoServizio').value;
+            const link = document.getElementById('linkPagamento').value;
 
-            if (!nomi || !evento) {
-                mostraToast('Compila Nomi e Tipo Evento', 'error');
+            if (!clienteId || !importo || !link) {
+                mostraToast('Compila tutti i campi obbligatori', 'error');
                 return;
             }
 
-            const lista = {
-                id: 'lr-' + Date.now(),
-                studio_id: studioId,
-                nomi, evento, costo_totale, link_pagamento, whatsapp_clienti,
-                raccolto_attuale: 0,
-                data_creazione: new Date().toISOString()
-            };
+            const username = 'lr-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+            const password = Math.random().toString(36).substring(2, 6).toUpperCase() + Math.floor(10+Math.random()*90);
+            const id = 'lr-' + Date.now();
+            const linkPubblico = `${window.location.origin}${window.location.pathname}?id=${id}`;
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/lista-regali?token=${token}`, {
+                const res = await fetch(`${WORKER_URL}/api/studio/lista-regali`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(lista)
+                    body: JSON.stringify({
+                        id, studio_id: studioId, cliente_id: clienteId, cliente_nome: clienteNome,
+                        tipo_evento: tipoEvento, importo_servizio: parseFloat(importo),
+                        link_pagamento: link, username, password, link_pubblico: linkPubblico,
+                        raccolto_attuale: 0, stato: 'in_corso'
+                    })
                 });
-                const result = await response.json();
-                if (result.success) {
-                    mostraToast('Lista regali creata sul cloud', 'success');
-                    pulisciForm();
-                    await caricaListe();
-                } else {
-                    mostraToast('Errore nella creazione', 'error');
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('genUser').textContent = username;
+                    document.getElementById('genPass').textContent = password;
+                    document.getElementById('credenzialiGenerate').classList.remove('hidden');
+                    currentLista = { id, username, password, link_pubblico: linkPubblico, cliente_nome: clienteNome };
+                    caricaArchivioListe();
+                    mostraToast('Lista creata con successo!', 'success');
                 }
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
+            } catch (e) { mostraToast('Errore di connessione', 'error'); }
+        }
+
+        function inviaWhatsAppCliente() {
+            if (!currentLista) return;
+            const msg = `Ciao ${currentLista.cliente_nome}! 🎉\n\nLo studio ha creato la tua Lista Regali.\n\n🔗 Link da condividere con gli invitati:\n${currentLista.link_pubblico}\n\n🔑 Le tue credenziali per monitorare gli auguri e l'importo raccolto:\nUser: ${currentLista.username}\nPass: ${currentLista.password}\n\nBuona festa! 🥂`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        async function caricaArchivioListe() {
+            const res = await fetch(`${WORKER_URL}/api/studio/lista-regali?token=${token}`);
+            const data = await res.json();
+            const tbody = document.getElementById('tabellaListe');
+            if (data.success && data.lista) {
+                tbody.innerHTML = data.lista.map(l => {
+                    const isCoperto = l.raccolto_attuale >= l.importo_servizio;
+                    return `
+                    <tr>
+                        <td><strong>${l.cliente_nome}</strong></td>
+                        <td>${l.tipo_evento}</td>
+                        <td><span class="status-badge ${isCoperto ? 'status-coperto' : 'status-corso'}">${isCoperto ? '✅ SERVIZIO COPERTO' : '⏳ IN CORSO'}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-info" onclick="window.open('?dashboard=${l.id}', '_blank')">Dashboard Cliente</button>
+                            <button class="btn btn-sm btn-danger" onclick="eliminaLista('${l.id}')">Elimina</button>
+                        </td>
+                    </tr>`;
+                }).join('');
             }
         }
 
-        async function caricaListe() {
-            document.getElementById('loadingListe').style.display = 'block';
-            document.getElementById('emptyListe').classList.add('hidden');
-            document.getElementById('listeContainer').innerHTML = '';
+        async function eliminaLista(id) {
+            if (!confirm('Eliminare questa lista?')) return;
+            await fetch(`${WORKER_URL}/api/studio/lista-regali/${id}?token=${token}`, { method: 'DELETE' });
+            caricaArchivioListe();
+            mostraToast('Lista eliminata', 'success');
+        }
+
+        // ==========================================
+        // VISTA CLIENTE (DASHBOARD)
+        // ==========================================
+        async function initClientView(id, pass) {
+            document.getElementById('loadingArea').classList.remove('hidden');
+            try {
+                const res = await fetch(`${WORKER_URL}/api/public/lista-regali/${id}`);
+                const data = await res.json();
+                if (data.success && data.lista) {
+                    if (data.lista.password !== pass) {
+                        document.getElementById('loadingArea').innerHTML = '<h3>Password errata. Contatta lo studio.</h3>';
+                        return;
+                    }
+                    studioId = data.lista.studio_id;
+                    currentLista = data.lista;
+                    applicaTemaGlobale(studioId);
+                    
+                    document.getElementById('loadingArea').classList.add('hidden');
+                    document.getElementById('clientView').classList.remove('hidden');
+                    
+                    document.getElementById('dashNomeCliente').textContent = currentLista.cliente_nome;
+                    document.getElementById('dashRaccolto').textContent = `€ ${currentLista.raccolto_attuale || 0}`;
+                    document.getElementById('dashCosto').textContent = `€ ${currentLista.importo_servizio}`;
+                    
+                    const perc = Math.min(100, Math.round(((currentLista.raccolto_attuale || 0) / currentLista.importo_servizio) * 100));
+                    const bar = document.getElementById('dashProgressBar');
+                    bar.style.width = `${perc}%`;
+                    if (perc >= 100) {
+                        bar.classList.add('full');
+                        document.getElementById('dashMessaggioStato').innerHTML = '🎉 COMPLIMENTI! AVETE COPERTO IL COSTO DEL SERVIZIO! 🎉';
+                        document.getElementById('dashMessaggioStato').style.color = 'var(--success)';
+                    } else {
+                        document.getElementById('dashMessaggioStato').textContent = `Mancano ancora € ${(currentLista.importo_servizio - (currentLista.raccolto_attuale || 0)).toFixed(2)} per coprire il servizio.`;
+                        document.getElementById('dashMessaggioStato').style.color = 'var(--warning)';
+                    }
+
+                    // Carica auguri
+                    const resAuguri = await fetch(`${WORKER_URL}/api/public/lista-regali/messaggi?listaId=${id}`);
+                    const dataAuguri = await resAuguri.json();
+                    const divAuguri = document.getElementById('dashAuguriList');
+                    if (dataAuguri.success && dataAuguri.messaggi.length > 0) {
+                        divAuguri.innerHTML = dataAuguri.messaggi.map(m => `
+                            <div class="wish-card">
+                                <div class="name">${m.nome_donatore}</div>
+                                <div class="msg">"${m.messaggio}"</div>
+                            </div>
+                        `).join('');
+                    } else {
+                        divAuguri.innerHTML = '<p style="color:var(--text-light); text-align:center;">Nessun augurio ricevuto ancora.</p>';
+                    }
+                } else {
+                    document.getElementById('loadingArea').textContent = 'Lista non trovata.';
+                }
+            } catch (e) {
+                document.getElementById('loadingArea').textContent = 'Errore di connessione.';
+            }
+        }
+
+        function logoutCliente() {
+            window.location.href = window.location.pathname;
+        }
+
+        // ==========================================
+        // VISTA PUBBLICA (INVITATI)
+        // ==========================================
+        async function initPublicView(id) {
+            try {
+                const res = await fetch(`${WORKER_URL}/api/public/lista-regali/${id}`);
+                const data = await res.json();
+                if (data.success && data.lista) {
+                    studioId = data.lista.studio_id;
+                    currentLista = data.lista;
+                    applicaTemaGlobale(studioId);
+                    
+                    document.getElementById('loadingArea').classList.add('hidden');
+                    document.getElementById('publicView').classList.remove('hidden');
+                    
+                    document.getElementById('pubNomeCliente').textContent = currentLista.cliente_nome;
+                    document.getElementById('pubTipoEvento').textContent = currentLista.tipo_evento;
+                    document.getElementById('pubMessaggioStudio').textContent = currentLista.messaggio_studio || `Con gioia vi invitiamo a contribuire al regalo di ${currentLista.cliente_nome}.`;
+                    
+                    const btn = document.getElementById('pubLinkPagamento');
+                    if (currentLista.link_pagamento && currentLista.link_pagamento.startsWith('http')) {
+                        btn.href = currentLista.link_pagamento;
+                    } else {
+                        btn.style.display = 'none';
+                    }
+
+                    // Carica auguri pubblici
+                    const resAuguri = await fetch(`${WORKER_URL}/api/public/lista-regali/messaggi?listaId=${id}`);
+                    const dataAuguri = await resAuguri.json();
+                    const divAuguri = document.getElementById('pubAuguriList');
+                    if (dataAuguri.success && dataAuguri.messaggi.length > 0) {
+                        divAuguri.innerHTML = dataAuguri.messaggi.slice(0, 5).map(m => `
+                            <div class="wish-card">
+                                <div class="name">${m.nome_donatore}</div>
+                                <div class="msg">"${m.messaggio}"</div>
+                            </div>
+                        `).join('');
+                    }
+                } else {
+                    document.getElementById('loadingArea').textContent = 'Lista non trovata o conclusa.';
+                }
+            } catch (e) {
+                document.getElementById('loadingArea').textContent = 'Errore di connessione.';
+            }
+        }
+
+        async function inviaAugurio() {
+            const nome = document.getElementById('wishName').value.trim();
+            const msg = document.getElementById('wishMsg').value.trim();
+            if (!nome || !msg) { mostraToast('Compila nome e messaggio', 'error'); return; }
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/lista-regali?studioId=${studioId}&token=${token}`);
-                const data = await response.json();
-                if (data.success && data.lista) {
-                    listeRegali = Array.isArray(data.lista) ? data.lista : [data.lista];
-                } else {
-                    listeRegali = [];
-                }
-            } catch (error) {
-                console.error('Errore:', error);
-                listeRegali = [];
-            }
-
-            document.getElementById('loadingListe').style.display = 'none';
-            renderizzaListe();
-        }
-
-        function renderizzaListe() {
-            const container = document.getElementById('listeContainer');
-            const emptyState = document.getElementById('emptyListe');
-            
-            if (listeRegali.length === 0) {
-                emptyState.classList.remove('hidden');
-                container.innerHTML = '';
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-            
-            container.innerHTML = listeRegali.map(lr => {
-                const raccolto = parseFloat(lr.raccolto_attuale || 0);
-                const obiettivo = parseFloat(lr.costo_totale || 1);
-                const percentuale = Math.min(100, Math.round((raccolto / obiettivo) * 100));
-                
-                let barColor = '#e74c3c'; // Rosso < 50%
-                let statusText = `Mancano: EUR ${(obiettivo - raccolto).toFixed(2)}`;
-                
-                if (percentuale >= 50 && percentuale < 100) {
-                    barColor = '#f39c12'; // Giallo 50-99%
-                    statusText = `Obiettivo quasi raggiunto. Mancano: EUR ${(obiettivo - raccolto).toFixed(2)}`;
-                } else if (percentuale >= 100) {
-                    barColor = '#27ae60'; // Verde >= 100%
-                    statusText = `COPERTO. Eccedenza: EUR ${(raccolto - obiettivo).toFixed(2)}`;
-                }
-
-                const linkPubblico = `${window.location.origin}/lista-regali-pubblica.html?clienteId=${lr.id}`;
-                
-                return `
-                    <div class="lista-card">
-                        <div class="lista-header">
-                            <div>
-                                <div class="lista-nomi">${lr.nomi}</div>
-                                <div class="lista-evento">${lr.evento}</div>
-                            </div>
-                            <div style="font-size: 12px; color: var(--text-light);">
-                                Creato: ${new Date(lr.data_creazione).toLocaleDateString('it-IT')}
-                            </div>
-                        </div>
-                        
-                        <div class="progress-bar-container">
-                            <div class="progress-bar" style="width: ${percentuale}%; background-color: ${barColor};"></div>
-                            <div class="progress-text">${percentuale}%</div>
-                        </div>
-                        <div class="lista-status-text" style="color: ${barColor};">${statusText}</div>
-                        
-                        <div class="lista-stats">
-                            <div class="lista-stat">
-                                <div class="lista-stat-label">Raccolto</div>
-                                <div class="lista-stat-value">EUR ${raccolto.toFixed(2)}</div>
-                            </div>
-                            <div class="lista-stat">
-                                <div class="lista-stat-label">Obiettivo</div>
-                                <div class="lista-stat-value">EUR ${obiettivo.toFixed(2)}</div>
-                            </div>
-                        </div>
-                        
-                        <div style="font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 8px;">Link Pubblico per Invitati:</div>
-                        <div class="lista-link">${linkPubblico}</div>
-                        
-                        <div class="lista-actions">
-                            <button class="btn btn-success" onclick="copiaLink('${linkPubblico}')">Copia Link</button>
-                            <button class="btn btn-outline" onclick="generaQR('${linkPubblico}', '${lr.nomi}')">Genera QR Locandina</button>
-                            <button class="btn btn-outline" onclick="condividiWhatsApp('${lr.whatsapp_clienti}', '${linkPubblico}', '${lr.nomi}')">Invia WhatsApp</button>
-                            <button class="btn btn-outline" onclick="apriLinkPubblico('${linkPubblico}')">Anteprima</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function copiaLink(link) {
-            navigator.clipboard.writeText(link).then(() => {
-                mostraToast('Link copiato negli appunti', 'success');
-            }).catch(() => {
-                const input = document.createElement('input');
-                input.value = link;
-                document.body.appendChild(input);
-                input.select();
-                document.execCommand('copy');
-                document.body.removeChild(input);
-                mostraToast('Link copiato', 'success');
-            });
-        }
-
-        function condividiWhatsApp(numero, link, nomi) {
-            const messaggio = `Ciao. Ecco il link per la lista regali di ${nomi}: ${link}`;
-            const url = `https://wa.me/${numero.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(messaggio)}`;
-            window.open(url, '_blank');
-        }
-
-        function apriLinkPubblico(link) {
-            window.open(link, '_blank');
-        }
-
-        function generaQR(link, nomi) {
-            document.getElementById('qrcode').innerHTML = '';
-            document.getElementById('qrLinkText').textContent = link;
-            new QRCode(document.getElementById("qrcode"), {
-                text: link,
-                width: 200,
-                height: 200,
-                colorDark : "#2c3e50",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
-            });
-            document.getElementById('qrModal').classList.add('active');
-        }
-
-        function chiudiQR() {
-            document.getElementById('qrModal').classList.remove('active');
-        }
-
-        function stampaQR() {
-            const printWindow = window.open('', '', 'height=600,width=800');
-            const qrContent = document.getElementById('qrcode').innerHTML;
-            const linkText = document.getElementById('qrLinkText').textContent;
-            printWindow.document.write('<html><head><title>Locandina Lista Regali</title>');
-            printWindow.document.write('<style>body{font-family: sans-serif; text-align: center; padding: 40px;} h1{color: #1e8449;} p{color: #7f8c8d; margin-bottom: 30px;} .qr-box{border: 2px solid #e8e8e8; display: inline-block; padding: 20px; border-radius: 16px;}</style>');
-            printWindow.document.write('</head><body>');
-            printWindow.document.write('<h1>Lista Regali</h1>');
-            printWindow.document.write('<p>Inquadra il codice QR con il tuo smartphone per accedere alla lista e lasciare un augurio.</p>');
-            printWindow.document.write('<div class="qr-box">' + qrContent + '</div>');
-            printWindow.document.write('<p style="margin-top: 20px; font-size: 12px; word-break: break-all;">' + linkText + '</p>');
-            printWindow.document.write('</body></html>');
-            printWindow.document.close();
-            printWindow.focus();
-            setTimeout(() => { printWindow.print(); }, 500);
-        }
-
-        function pulisciForm() {
-            document.getElementById('lrNomi').value = '';
-            document.getElementById('lrEvento').value = '';
-            document.getElementById('lrCosto').value = '';
-            document.getElementById('lrLinkPagamento').value = '';
-            document.getElementById('lrWhatsapp').value = '';
+                await fetch(`${WORKER_URL}/api/public/lista-regali/messaggio`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lista_id: currentLista.id, nome_donatore: nome, messaggio: msg, importo: 0 })
+                });
+                mostraToast('Augurio inviato con successo! 💌', 'success');
+                document.getElementById('wishName').value = '';
+                document.getElementById('wishMsg').value = '';
+                initPublicView(currentLista.id); // Ricarica
+            } catch (e) { mostraToast('Errore nell\'invio', 'error'); }
         }
 
         function tornaPlancia() {
