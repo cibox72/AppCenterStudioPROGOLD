@@ -366,7 +366,7 @@
             const linkPubblico = `${window.location.origin}${window.location.pathname}?id=${id}`;
 
             try {
-                const res = await fetch(`${WORKER_URL}/api/studio/lista-regali`, {
+                const res = await fetch(`${WORKER_URL}/api/studio/lista-regali?token=${token}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -384,13 +384,18 @@
                     currentLista = { id, username, password, link_pubblico: linkPubblico, cliente_nome: clienteNome };
                     caricaArchivioListe();
                     mostraToast('Lista creata con successo!', 'success');
+                } else {
+                    mostraToast('Errore: ' + (data.error || 'Sconosciuto'), 'error');
                 }
-            } catch (e) { mostraToast('Errore di connessione', 'error'); }
+            } catch (e) { 
+                console.error(e);
+                mostraToast('Errore di connessione', 'error'); 
+            }
         }
 
         function inviaWhatsAppCliente() {
             if (!currentLista) return;
-            const msg = `Ciao ${currentLista.cliente_nome}! 🎉\n\nLo studio ha creato la tua Lista Regali.\n\n🔗 Link da condividere con gli invitati:\n${currentLista.link_pubblico}\n\n🔑 Le tue credenziali per monitorare gli auguri e l'importo raccolto:\nUser: ${currentLista.username}\nPass: ${currentLista.password}\n\nBuona festa! 🥂`;
+            const msg = `Ciao ${currentLista.cliente_nome}! 🎉\n\nLo studio ha creato la tua Lista Regali.\n\n🔗 Link da condividere con gli invitati:\n${currentLista.link_pubblico}\n\n🔑 Le tue credenziali per monitorare gli auguri e l'importo raccolto:\nUser: ${currentLista.username}\nPass: ${currentLista.password}\n\nBuona festa! `;
             window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
@@ -451,7 +456,7 @@
                     bar.style.width = `${perc}%`;
                     if (perc >= 100) {
                         bar.classList.add('full');
-                        document.getElementById('dashMessaggioStato').innerHTML = '🎉 COMPLIMENTI! AVETE COPERTO IL COSTO DEL SERVIZIO! 🎉';
+                        document.getElementById('dashMessaggioStato').innerHTML = ' COMPLIMENTI! AVETE COPERTO IL COSTO DEL SERVIZIO! 🎉';
                         document.getElementById('dashMessaggioStato').style.color = 'var(--success)';
                     } else {
                         document.getElementById('dashMessaggioStato').textContent = `Mancano ancora € ${(currentLista.importo_servizio - (currentLista.raccolto_attuale || 0)).toFixed(2)} per coprire il servizio.`;
