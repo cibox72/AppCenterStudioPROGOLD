@@ -610,38 +610,69 @@ export default {
       }
 
       // ============================================
-      // 36-37. LISTA REGALI
-      // ============================================
-      if (path === "/api/studio/lista-regali" && request.method === "GET") {
-        const token = url.searchParams.get("token");
-        const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const result = await env.DB.prepare("SELECT * FROM lista_regali WHERE studio_id=?").bind(url.searchParams.get("studioId")).all();
-        return new Response(JSON.stringify({ success: true, lista: result.results }), { headers: corsHeaders });
-      }
-      if (path === "/api/studio/lista-regali" && request.method === "POST") {
-        const token = url.searchParams.get("token");
-        const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const d = await request.json();
-        await env.DB.prepare(`INSERT INTO lista_regali (id, studio_id, nomi, evento, costo_totale, link_pagamento, whatsapp_clienti, raccolto_attuale, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, d.studio_id, d.nomi, d.evento, d.costo_totale, d.link_pagamento, d.whatsapp_clienti, d.raccolto_attuale, d.data_creazione).run();
-        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-      }
-      if (path === "/api/public/lista-regali" && request.method === "GET") {
-        const result = await env.DB.prepare("SELECT * FROM lista_regali WHERE id=?").bind(url.searchParams.get("id")).first();
-        return new Response(JSON.stringify({ success: true, lista: result }), { headers: corsHeaders });
-      }
-      if (path === "/api/public/lista-regali/messaggio" && request.method === "POST") {
-        const d = await request.json();
-        await env.DB.prepare(`INSERT INTO messaggi_regali (lista_id, nome_donatore, messaggio, importo, data) VALUES (?, ?, ?, ?, ?)`).bind(d.lista_id, d.nome_donatore, d.messaggio, d.importo || 0, d.data).run();
-        const lista = await env.DB.prepare("SELECT * FROM lista_regali WHERE id=?").bind(d.lista_id).first();
-        if (lista) await env.DB.prepare("UPDATE lista_regali SET raccolto_attuale=? WHERE id=?").bind((parseFloat(lista.raccolto_attuale || 0) + parseFloat(d.importo || 0)), d.lista_id).run();
-        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-      }
-      if (path === "/api/public/lista-regali/messaggi" && request.method === "GET") {
-        const result = await env.DB.prepare("SELECT * FROM messaggi_regali WHERE lista_id=? ORDER BY data DESC").bind(url.searchParams.get("listaId")).all();
-        return new Response(JSON.stringify({ success: true, messaggi: result.results }), { headers: corsHeaders });
-      }
+// 36-37. LISTA REGALI (AGGIORNATO)
+// ============================================
+
+// 1. LISTA ARCHIVIO (Studio)
+if (path === "/api/studio/lista-regali" && request.method === "GET") {
+    const token = url.searchParams.get("token");
+    const sess = await verificaSessione(token);
+    if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+    const result = await env.DB.prepare("SELECT * FROM lista_regali WHERE studio_id=? ORDER BY data_creazione DESC").bind(sess.user_id).all();
+    return new Response(JSON.stringify({ success: true, lista: result.results }), { headers: corsHeaders });
+}
+
+// 2. CREA LISTA REGALI (Studio)
+if (path === "/api/studio/lista-regali" && request.method === "POST") {
+    const token = url.searchParams.get("token");
+    const sess = await verificaSessione(token);
+    if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+    
+    const d = await request.json();
+    await env.DB.prepare(`INSERT INTO lista_regali (id, studio_id, cliente_id, cliente_nome, tipo_evento, importo_servizio, link_pagamento, username, password, link_pubblico, raccolto_attuale, stato, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+        d.id, d.studio_id, d.cliente_id, d.cliente_nome, d.tipo_evento, d.importo_servizio, d.link_pagamento, d.username, d.password, d.link_pubblico, d.raccolto_attuale || 0, d.stato || 'in_corso', d.data_creazione || new Date().toISOString()
+    ).run();
+    return new Response(JSON.stringify({ success: true, id: d.id }), { headers: corsHeaders });
+}
+
+// 3. ELIMINA LISTA (Studio)
+if (path.startsWith("/api/studio/lista-regali/") && request.method === "DELETE") {
+    const token = url.searchParams.get("token");
+    const sess = await verificaSessione(token);
+    if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+    const id = path.split("/api/studio/lista-regali/")[1];
+    await env.DB.prepare("DELETE FROM lista_regali WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
+    return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+}
+
+// 4. LETTURA PUBBLICA LISTA (Invitati e Cliente)
+if (path.startsWith("/api/public/lista-regali/") && request.method === "GET") {
+    const id = path.split("/api/public/lista-regali/")[1];
+    const result = await env.DB.prepare("SELECT * FROM lista_regali WHERE id=?").bind(id).first();
+    if (!result) return new Response(JSON.stringify({ error: "Lista non trovata" }), { status: 404, headers: corsHeaders });
+    return new Response(JSON.stringify({ success: true, lista: result }), { headers: corsHeaders });
+}
+
+// 5. INVIA AUGURIO (Pubblico)
+if (path === "/api/public/lista-regali/messaggio" && request.method === "POST") {
+    const d = await request.json();
+    await env.DB.prepare(`INSERT INTO messaggi_regali (lista_id, nome_donatore, messaggio, importo, data) VALUES (?, ?, ?, ?, ?)`).bind(
+        d.lista_id, d.nome_donatore, d.messaggio, d.importo || 0, new Date().toISOString()
+    ).run();
+    
+    if (d.importo && d.importo > 0) {
+        await env.DB.prepare("UPDATE lista_regali SET raccolto_attuale = raccolto_attuale + ? WHERE id=?").bind(parseFloat(d.importo), d.lista_id).run();
+    }
+    
+    return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+}
+
+// 6. LISTA AUGURI (Pubblico e Cliente)
+if (path === "/api/public/lista-regali/messaggi" && request.method === "GET") {
+    const listaId = url.searchParams.get("listaId");
+    const result = await env.DB.prepare("SELECT * FROM messaggi_regali WHERE lista_id=? ORDER BY data DESC").bind(listaId).all();
+    return new Response(JSON.stringify({ success: true, messaggi: result.results }), { headers: corsHeaders });
+}
 
       // ============================================
       // 38. UPLOAD FOTO R2 (Studio)
