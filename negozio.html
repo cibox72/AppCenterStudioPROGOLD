@@ -1048,18 +1048,18 @@
         }
 
         function mostraSezione(nome) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(nome + 'Section').classList.add('active');
-            
-            if (nome === 'anteprima') renderizzaVetrina();
-            if (nome === 'prodotti') { 
-                annullaModificaProdotto();
-                renderizzaProdotti();
-                caricaProdotti();
-            }
-            if (nome === 'ordini') caricaOrdini();
-            if (nome === 'config') caricaConfig();
-        }
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(nome + 'Section').classList.add('active');
+    
+    if (nome === 'anteprima') renderizzaVetrina();
+    if (nome === 'prodotti') { 
+        annullaModificaProdotto();
+        renderizzaProdotti();
+        caricaProdotti();
+    }
+    if (nome === 'ordini') caricaOrdini();
+    if (nome === 'config') caricaConfig();
+}
 
         function renderizzaVetrina() {
             const grid = document.getElementById('vetrinaGrid');
