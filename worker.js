@@ -637,8 +637,7 @@ if (path === "/api/studio/lista-regali" && request.method === "POST") {
 }
 
 // 3. ELIMINA LISTA (Studio)
-if (path.startsWith("/api/studio/lista-regali/") && request.method === "DELETE") {
-    const token = url.searchParams.get("token");
+if (path.startsWith("/api/public/lista-regali/") && request.method === "GET" && !path.includes("findByCredentials") && !path.includes("donazioni") && !path.includes("messaggi") && !path.includes("messaggio") && !path.includes("aggiorna-totale")) {    const token = url.searchParams.get("token");
     const sess = await verificaSessione(token);
     if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
     const id = path.split("/api/studio/lista-regali/")[1];
