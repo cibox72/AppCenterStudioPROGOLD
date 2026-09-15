@@ -33,7 +33,6 @@
             flex-direction: column;
         }
         
-        /* BRANDING HEADER - SEMPRE VISIBILE */
         .branding-header {
             background: var(--primary-gradient);
             padding: 12px 24px;
@@ -136,6 +135,7 @@
         .btn-sm { padding: 8px 14px; font-size: 12px; }
         .btn-xs { padding: 4px 8px; font-size: 11px; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
         .cred-box {
             background: var(--primary-light); padding: 20px; border-radius: 10px;
@@ -229,7 +229,32 @@
         .success-message p { color: var(--text-main); font-size: 16px; margin-bottom: 8px; }
         .success-message .thanks { font-style: italic; color: var(--text-light); margin-top: 16px; font-family: 'Georgia', serif; }
 
-        /* FOOTER BRANDING */
+        /* SEZIONE AUGURI DISABILITATA */
+        .auguri-disabled {
+            background: #f0f0f0;
+            padding: 32px;
+            border-radius: 12px;
+            margin: 20px 0;
+            opacity: 0.5;
+            pointer-events: none;
+            position: relative;
+        }
+        .auguri-disabled::after {
+            content: '🔒 Completa il pagamento per sbloccare';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .auguri-disabled .card-title { color: #999; }
+        .auguri-disabled input, .auguri-disabled textarea { background: #e0e0e0; cursor: not-allowed; }
+
         .footer-branding {
             text-align: center;
             padding: 20px 24px;
@@ -250,7 +275,7 @@
 
         @media print {
             .branding-header, .top-bar, .btn, .no-print, .form-group, .payment-box, .info-box,
-            .progress-container, .whatsapp-buttons, .card::before, .footer-branding {
+            .progress-container, .whatsapp-buttons, .card::before, .footer-branding, .auguri-disabled::after {
                 display: none !important;
             }
             body { background: white; }
@@ -274,7 +299,6 @@
     </style>
 </head>
 <body>
-    <!-- BRANDING HEADER - SEMPRE VISIBILE -->
     <div class="branding-header">
         <span>Servizio offerto da </span>
         <a href="https://www.glstudio.it" target="_blank" class="studio-name">G&L Studio</a>
@@ -282,7 +306,6 @@
         <span class="tagline">Lista Regali Digitale</span>
     </div>
 
-    <!-- TOP BAR (solo per studio e cliente) -->
     <div id="topBar" class="top-bar hidden">
         <div style="color: white; font-size: 14px;">
             <span id="topBarTitle">Dashboard</span>
@@ -298,7 +321,6 @@
             <div>Caricamento in corso...</div>
         </div>
 
-        <!-- VISTA LOGIN CLIENTE -->
         <div id="loginView" class="hidden">
             <div class="login-container">
                 <h2>Accesso Dashboard Privata</h2>
@@ -316,7 +338,6 @@
             </div>
         </div>
 
-        <!-- VISTA 1: STUDIO -->
         <div id="studioView" class="hidden">
             <div class="card">
                 <div class="card-title">Crea Nuova Lista Regali</div>
@@ -443,7 +464,6 @@
             </div>
         </div>
 
-        <!-- VISTA 2: DASHBOARD CLIENTE/FESTEGGIATI -->
         <div id="clientView" class="hidden">
             <div class="card">
                 <div class="public-header">
@@ -493,7 +513,6 @@
             </div>
         </div>
 
-        <!-- VISTA 3: PUBBLICA (INVITATI) -->
         <div id="publicView" class="hidden">
             <div class="card">
                 <div class="public-header">
@@ -508,6 +527,26 @@
 
                 <div id="pubPaymentArea"></div>
 
+                <!-- SEZIONE AUGURI DISABILITATA (visibile ma grigia) -->
+                <div id="augurioSectionDisabled" class="auguri-disabled">
+                    <div class="card-title">Lascia un Messaggio di Auguri</div>
+                    <p style="font-size:14px; color:var(--text-light); margin-bottom:16px;">Completa il pagamento per sbloccare questa sezione.</p>
+                    <div class="form-group mb-16">
+                        <label>Il tuo Nome</label>
+                        <input type="text" disabled placeholder="Completa il pagamento per sbloccare">
+                    </div>
+                    <div class="form-group mb-16">
+                        <label>Il tuo Messaggio</label>
+                        <textarea disabled rows="3" placeholder="Completa il pagamento per sbloccare"></textarea>
+                    </div>
+                    <div class="form-group mb-16">
+                        <label>Importo Donato (EUR)</label>
+                        <input type="number" disabled placeholder="Completa il pagamento per sbloccare">
+                    </div>
+                    <button class="btn btn-primary" disabled style="width:100%; margin-top:12px;">Invia Auguri</button>
+                </div>
+
+                <!-- SEZIONE AUGURI ABILITATA (nascosta fino al pagamento) -->
                 <div id="augurioSection" class="hidden">
                     <div class="card" style="background:#f8f9fa; box-shadow:none;">
                         <div class="card-title">Lascia un Messaggio di Auguri</div>
@@ -546,7 +585,6 @@
         </div>
     </div>
 
-    <!-- FOOTER CON BRANDING -->
     <div class="footer-branding">
         Servizio offerto da <a href="https://www.glstudio.it" target="_blank">G&L Studio</a> - Lista Regali Digitale
     </div>
@@ -582,9 +620,6 @@
             }
         });
 
-        // ==========================================
-        // TEMI GLOBALI
-        // ==========================================
         async function applicaTemaGlobale(sId) {
             if (!sId) return;
             try {
@@ -612,9 +647,6 @@
             } catch (e) { console.error('Errore tema:', e); }
         }
 
-        // ==========================================
-        // LOGIN CLIENTE
-        // ==========================================
         async function effettuaLogin() {
             const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
@@ -720,9 +752,6 @@
         function stampaArchivio() { window.print(); }
         function logoutCliente() { window.location.href = window.location.pathname; }
 
-        // ==========================================
-        // HELPERS METODO PAGAMENTO
-        // ==========================================
         const METODI_CONFIG = {
             'paypal': { label: 'Link PayPal', placeholder: 'https://paypal.me/...', hint: 'Inserisci il link PayPal.me o il link di pagamento PayPal' },
             'iban': { label: 'Coordinate IBAN', placeholder: 'IT00 X000 0000 0000 0000 0000 000', hint: 'IBAN completo con intestatario' },
@@ -787,14 +816,14 @@
         }
 
         function confermaPagamento() {
-            document.getElementById('pubPaymentArea').classList.add('hidden');
+            // Nasconde sezione disabilitata
+            document.getElementById('augurioSectionDisabled').classList.add('hidden');
+            // Mostra sezione abilitata
             document.getElementById('augurioSection').classList.remove('hidden');
+            // Scroll alla sezione
             document.getElementById('augurioSection').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // ==========================================
-        // VISTA STUDIO
-        // ==========================================
         async function initStudioView() {
             document.getElementById('loadingArea').classList.add('hidden');
             document.getElementById('studioView').classList.remove('hidden');
@@ -1011,9 +1040,6 @@
             mostraToast('Lista eliminata', 'success');
         }
 
-        // ==========================================
-        // VISTA PUBBLICA (INVITATI)
-        // ==========================================
         async function initPublicView(id) {
             try {
                 const res = await fetch(`${WORKER_URL}/api/public/lista-regali/${id}`);
