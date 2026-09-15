@@ -1197,7 +1197,7 @@
             const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
 
             try {
-                await fetch(`${WORKER_URL}/api/studio/negozio/ordine`, {
+                await fetch(`${WORKER_URL}/api/studio/negozio/ordine?token=${token}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -1363,7 +1363,7 @@
             };
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio/prodotto`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/negozio/prodotto?token=${token}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(prodotto)
@@ -1404,7 +1404,7 @@
             };
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio/prodotto/${editingId}`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/negozio/prodotto/${editingId}?token=${token}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(prodotto)
@@ -1456,7 +1456,7 @@
             
             for (const prod of prodottiDefault) {
                 try {
-                    await fetch(`${WORKER_URL}/api/studio/negozio/prodotto`, {
+                    await fetch(`${WORKER_URL}/api/studio/negozio/prodotto?token=${token}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -1476,7 +1476,7 @@
 
         async function caricaProdotti() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio/prodotti?studioId=${studioId}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/negozio/prodotti?token=${token}&studioId=${studioId}`);
                 const data = await response.json();
                 if (data.success && data.prodotti) {
                     prodotti = data.prodotti;
@@ -1573,7 +1573,7 @@
         async function eliminaProdotto(id) {
             if (!confirm('Eliminare questo prodotto?')) return;
             try {
-                await fetch(`${WORKER_URL}/api/studio/negozio/prodotto/${id}`, { method: 'DELETE' });
+                await fetch(`${WORKER_URL}/api/studio/negozio/prodotto/${id}?token=${token}`, { method: 'DELETE' });
                 mostraToast('Prodotto eliminato', 'success');
                 await caricaProdotti();
                 renderizzaProdotti();
@@ -1606,7 +1606,7 @@
             let stats = { att: 0, pag: 0, lav: 0, pro: 0, rit: 0 };
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio/ordini?studioId=${studioId}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/negozio/ordini?token=${token}&studioId=${studioId}`);
                 const data = await response.json();
                 const ordini = data.success ? data.ordini : [];
                 
@@ -1673,7 +1673,7 @@
 
         async function cambiaStatoOrdine(ordineId, nuovoStato) {
             try {
-                await fetch(`${WORKER_URL}/api/studio/negozio/ordine/${ordineId}`, {
+                await fetch(`${WORKER_URL}/api/studio/negozio/ordine/${ordineId}?token=${token}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ stato: nuovoStato })
@@ -1698,7 +1698,7 @@
 
         async function caricaConfig() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio-config?studioId=${studioId}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/negozio-config?token=${token}&studioId=${studioId}`);
                 const data = await response.json();
                 if (data.success && data.config) {
                     config = data.config;
@@ -1742,7 +1742,7 @@
             }
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio-config`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/negozio-config?token=${token}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
