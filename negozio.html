@@ -1145,7 +1145,7 @@
                     <div class="cart-item-price">EUR ${subtotale.toFixed(2)}</div>
                     <button class="cart-item-remove" onclick="rimuoviDalCarrello(${index})">X</button>
                 </div>
-            `}).join('');
+            `).join('');
             
             totalEl.textContent = `EUR ${totale.toFixed(2)}`;
         }
@@ -1659,7 +1659,7 @@
                                 ${o.stato !== 'ritirato' ? `<button class="btn btn-sm btn-primary" onclick="cambiaStatoOrdine('${o.id}', 'ritirato')">Ritirato</button>` : ''}
                             </div>
                         </div>
-                    `}).join('');
+                    `).join('');
                 }
             } catch (error) { console.error('Errore:', error); }
             
