@@ -778,7 +778,7 @@
 
         <div id="prodottiSection" class="section">
             <div class="card">
-                <div class="card-title">Nuovo Prodotto</div>
+                <div class="card-title" id="formTitolo">Nuovo Prodotto</div>
                 <div class="form-row">
                     <div class="form-group"><label>Nome Prodotto *</label><input type="text" id="prodNome"></div>
                     <div class="form-group">
@@ -816,7 +816,8 @@
                         L'immagine verrà automaticamente ridimensionata per ottimizzare il caricamento.
                     </div>
                 </div>
-                <button class="btn btn-primary" onclick="creaProdotto()">CREA PRODOTTO</button>
+                <button class="btn btn-primary" id="btnSalvaProdotto" onclick="creaProdotto()">CREA PRODOTTO</button>
+                <button class="btn btn-outline hidden" id="btnAnnullaModifica" onclick="annullaModificaProdotto()">ANNULLA MODIFICA</button>
                 <button class="btn btn-outline" onclick="aggiungiProdottiDefault()">AGGIUNGI PRODOTTI DEFAULT</button>
             </div>
 
@@ -979,6 +980,8 @@
         let carrello = [];
         let fileCheckout = null;
         let immagineProdottoBase64 = null;
+        let isEditing = false;
+        let editingId = null;
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) {
@@ -1050,6 +1053,7 @@
             
             if (nome === 'anteprima') renderizzaVetrina();
             if (nome === 'prodotti') { 
+                annullaModificaProdotto();
                 renderizzaProdotti();
                 caricaProdotti();
             }
@@ -1379,6 +1383,47 @@
             }
         }
 
+        async function aggiornaProdotto() {
+            const nome = document.getElementById('prodNome').value.trim();
+            const categoria = document.getElementById('prodCategoria').value;
+            const prezzo = parseFloat(document.getElementById('prodPrezzo').value);
+            const misura = document.getElementById('prodMisura').value.trim();
+            const descrizione = document.getElementById('prodDescrizione').value.trim();
+            const colori = document.getElementById('prodColori').value.trim();
+            const misure = document.getElementById('prodMisure').value.trim();
+
+            if (!nome || isNaN(prezzo)) {
+                mostraToast('Compila Nome e Prezzo', 'error');
+                return;
+            }
+
+            const prodotto = {
+                nome, categoria, prezzo, misura, descrizione,
+                colori, misure,
+                immagine: immagineProdottoBase64 || '',
+            };
+
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/negozio/prodotto/${editingId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(prodotto)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Prodotto aggiornato', 'success');
+                    annullaModificaProdotto();
+                    await caricaProdotti();
+                    renderizzaProdotti();
+                } else {
+                    mostraToast('Errore nell\'aggiornamento', 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
         async function aggiungiProdottiDefault() {
             const prodottiDefault = [
                 {
@@ -1476,10 +1521,53 @@
                     ${p.misura ? `<div class="product-measure">${p.misura}</div>` : ''}
                     ${p.descrizione ? `<div class="product-desc">${p.descrizione}</div>` : ''}
                     <div style="display: flex; gap: 8px; margin-top: 12px;">
+                        <button class="btn btn-info btn-sm" onclick="preparaModificaProdotto('${p.id}')">Modifica</button>
                         <button class="btn btn-danger btn-sm" onclick="eliminaProdotto('${p.id}')">Elimina</button>
                     </div>
                 </div>
             `).join('');
+        }
+
+        function preparaModificaProdotto(id) {
+            const prodotto = prodotti.find(p => p.id === id);
+            if (!prodotto) return;
+
+            isEditing = true;
+            editingId = id;
+
+            document.getElementById('formTitolo').textContent = 'Modifica Prodotto';
+            document.getElementById('prodNome').value = prodotto.nome;
+            document.getElementById('prodCategoria').value = prodotto.categoria;
+            document.getElementById('prodPrezzo').value = prodotto.prezzo;
+            document.getElementById('prodMisura').value = prodotto.misura || '';
+            document.getElementById('prodDescrizione').value = prodotto.descrizione || '';
+            document.getElementById('prodColori').value = prodotto.colori || '';
+            document.getElementById('prodMisure').value = prodotto.misure || '';
+            
+            if (prodotto.immagine) {
+                document.getElementById('imgPreview').src = prodotto.immagine;
+                document.getElementById('imgPreview').classList.remove('hidden');
+                immagineProdottoBase64 = prodotto.immagine;
+            }
+
+            const btnSalva = document.getElementById('btnSalvaProdotto');
+            btnSalva.textContent = 'AGGIORNA PRODOTTO';
+            btnSalva.onclick = aggiornaProdotto;
+            
+            document.getElementById('btnAnnullaModifica').classList.remove('hidden');
+            
+            document.getElementById('prodottiSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function annullaModificaProdotto() {
+            isEditing = false;
+            editingId = null;
+            pulisciFormProdotto();
+            document.getElementById('formTitolo').textContent = 'Nuovo Prodotto';
+            const btnSalva = document.getElementById('btnSalvaProdotto');
+            btnSalva.textContent = 'CREA PRODOTTO';
+            btnSalva.onclick = creaProdotto;
+            document.getElementById('btnAnnullaModifica').classList.add('hidden');
         }
 
         async function eliminaProdotto(id) {
