@@ -53,7 +53,7 @@
             transition: all 0.2s;
         }
         .nav-btn:hover { transform: translateY(-2px); }
-        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 30px 24px; }
         
         .card {
             background: white;
@@ -89,199 +89,97 @@
             margin-bottom: 16px;
         }
         .form-group { display: flex; flex-direction: column; }
-        .form-group label {
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--text-main);
-        }
+        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
         .form-group input, .form-group select, .form-group textarea {
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: inherit;
+            padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
+            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
         }
-        .form-hint {
-            font-size: 12px;
-            color: var(--text-light);
-            margin-top: 4px;
-            font-style: italic;
-        }
+        .form-hint { font-size: 12px; color: var(--text-light); margin-top: 4px; font-style: italic; }
         
         .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-right: 8px;
-            margin-bottom: 8px;
-            font-family: inherit;
+            padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; margin-right: 8px; margin-bottom: 8px; font-family: inherit;
         }
         .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
         .btn-info { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
         .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
-        .btn-outline {
-            background: white;
-            color: var(--primary-dark);
-            border: 1px solid var(--primary);
-        }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
         .btn-sm { padding: 8px 14px; font-size: 12px; }
         .btn-xs { padding: 4px 8px; font-size: 11px; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
         .cred-box {
-            background: var(--primary-light);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid var(--primary);
-            text-align: center;
-            margin-top: 16px;
+            background: var(--primary-light); padding: 20px; border-radius: 10px;
+            border: 1px solid var(--primary); text-align: center; margin-top: 16px;
         }
-        .cred-box .label {
-            font-size: 11px;
-            color: var(--text-light);
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        .cred-box .value {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--primary-dark);
-            margin: 8px 0;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 1px;
-        }
-        .cred-box .value.small {
-            font-size: 13px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            word-break: break-all;
-            font-weight: 500;
-        }
+        .cred-box .label { font-size: 11px; color: var(--text-light); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .cred-box .value { font-size: 20px; font-weight: 800; color: var(--primary-dark); margin: 8px 0; font-family: 'Courier New', monospace; letter-spacing: 1px; }
+        .cred-box .value.small { font-size: 13px; font-family: -apple-system, sans-serif; word-break: break-all; font-weight: 500; }
 
         .table-container { overflow-x: auto; margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
         th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
-        th {
-            background: #f8f9fa;
-            color: var(--text-main);
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 0.5px;
-        }
-        .status-badge {
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        th { background: #f8f9fa; color: var(--text-main); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        .status-badge { padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
         .status-coperto { background: #eafaf1; color: var(--success); }
         .status-corso { background: #fef9e7; color: var(--warning); }
-
-        .cred-cell {
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            line-height: 1.5;
-        }
-        .cred-cell strong {
-            color: var(--primary-dark);
-            font-weight: 700;
-        }
+        .cred-cell { font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.5; }
+        .cred-cell strong { color: var(--primary-dark); }
 
         .public-header { text-align: center; padding: 40px 20px; }
-        .public-header h1 {
-            font-size: 42px;
-            color: var(--primary-dark);
-            font-style: italic;
-            margin-bottom: 12px;
-            font-family: 'Georgia', serif;
-            font-weight: 400;
-        }
-        .public-header .sottotitolo {
-            font-size: 12px;
-            color: var(--text-light);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-        }
+        .public-header h1 { font-size: 42px; color: var(--primary-dark); font-style: italic; margin-bottom: 12px; font-family: 'Georgia', serif; font-weight: 400; }
+        .public-header .sottotitolo { font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
         .public-header p { font-size: 16px; color: var(--text-light); }
+
         .wish-card {
-            background: #f8f9fa;
-            padding: 18px;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            border-left: 4px solid var(--primary);
+            background: #f8f9fa; padding: 18px; border-radius: 10px; margin-bottom: 12px;
+            border-left: 4px solid var(--primary); page-break-inside: avoid;
         }
         .wish-card .name { font-weight: 700; color: var(--primary-dark); font-size: 14px; }
         .wish-card .msg { font-style: italic; color: var(--text-main); margin-top: 4px; font-size: 14px; }
-        
+        .wish-card .date { font-size: 12px; color: var(--text-light); margin-top: 6px; }
+
+        .donation-item {
+            background: white; padding: 16px; border-radius: 10px; margin-bottom: 12px;
+            border-left: 4px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            page-break-inside: avoid;
+        }
+        .donation-item .donor-name { font-weight: 700; color: var(--primary-dark); font-size: 15px; }
+        .donation-item .donor-amount { font-weight: 700; color: var(--success); font-size: 14px; }
+        .donation-item .donor-date { font-size: 12px; color: var(--text-light); }
+        .donation-item .donor-delete { margin-top: 8px; font-size: 11px; color: var(--danger); cursor: pointer; text-decoration: underline; }
+
         .progress-container {
-            background: var(--primary-light);
-            height: 24px;
-            border-radius: 12px;
-            overflow: hidden;
-            margin: 20px 0;
-            border: 1px solid var(--border-color);
+            background: var(--primary-light); height: 24px; border-radius: 12px;
+            overflow: hidden; margin: 20px 0; border: 1px solid var(--border-color);
         }
         .progress-bar {
-            height: 100%;
-            background: var(--primary-gradient);
-            transition: width 0.5s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 12px;
+            height: 100%; background: var(--primary-gradient); transition: width 0.5s ease;
+            display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 12px;
         }
         .progress-bar.full { background: linear-gradient(135deg, #f1c40f, #f39c12); }
 
         .hidden { display: none !important; }
         .loading { text-align: center; padding: 60px; color: var(--text-light); }
         .spinner {
-            width: 40px; height: 40px;
-            border: 3px solid var(--primary-light);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 16px;
+            width: 40px; height: 40px; border: 3px solid var(--primary-light);
+            border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
         .toast {
-            background: white;
-            border-radius: 10px;
-            padding: 14px 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            margin-bottom: 10px;
-            border-left: 4px solid var(--success);
-            animation: slideIn 0.3s ease;
-            font-size: 14px;
+            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease; font-size: 14px;
         }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
         
         .info-box {
-            background: #f8f9fa;
-            border-left: 4px solid var(--info);
-            padding: 16px 20px;
-            border-radius: 8px;
-            margin: 16px 0;
-            font-size: 14px;
-            color: var(--text-main);
+            background: #f8f9fa; border-left: 4px solid var(--info); padding: 16px 20px;
+            border-radius: 8px; margin: 16px 0; font-size: 14px; color: var(--text-main);
         }
         .info-box strong { color: var(--primary-dark); }
         
@@ -290,118 +188,59 @@
         .mb-16 { margin-bottom: 16px; }
         
         .qr-container {
-            text-align: center;
-            padding: 24px;
-            background: white;
-            border-radius: 12px;
-            border: 2px dashed var(--primary);
-            margin: 20px 0;
+            text-align: center; padding: 24px; background: white; border-radius: 12px;
+            border: 2px dashed var(--primary); margin: 20px 0;
         }
-        .qr-container #qrcode {
-            display: inline-block;
-            padding: 16px;
-            background: white;
-        }
-        .qr-container .qr-label {
-            margin-top: 12px;
-            font-size: 13px;
-            color: var(--text-light);
-            font-style: italic;
-        }
+        .qr-container #qrcode { display: inline-block; padding: 16px; background: white; }
+        .qr-container .qr-label { margin-top: 12px; font-size: 13px; color: var(--text-light); font-style: italic; }
         
         .payment-box {
-            background: var(--primary-light);
-            padding: 24px;
-            border-radius: 12px;
-            margin: 20px 0;
-            text-align: center;
+            background: var(--primary-light); padding: 24px; border-radius: 12px; margin: 20px 0; text-align: center;
         }
-        .payment-box .payment-method {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-light);
-            margin-bottom: 8px;
-        }
+        .payment-box .payment-method { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); margin-bottom: 8px; }
         .payment-box .payment-data {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--primary-dark);
-            word-break: break-all;
-            padding: 12px;
-            background: white;
-            border-radius: 8px;
-            margin: 12px 0;
-            font-family: 'Courier New', monospace;
+            font-size: 16px; font-weight: 600; color: var(--primary-dark); word-break: break-all;
+            padding: 12px; background: white; border-radius: 8px; margin: 12px 0; font-family: 'Courier New', monospace;
         }
         
-        .donation-item {
-            background: white;
-            padding: 16px;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            border-left: 4px solid var(--primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .donation-item .donor-name {
-            font-weight: 700;
-            color: var(--primary-dark);
-            font-size: 15px;
-        }
-        .donation-item .donor-msg {
-            font-style: italic;
-            color: var(--text-main);
-            margin: 6px 0;
-            font-size: 14px;
-        }
-        .donation-item .donor-amount {
-            font-weight: 700;
-            color: var(--success);
-            font-size: 14px;
-        }
-        .donation-item .donor-date {
-            font-size: 12px;
-            color: var(--text-light);
-        }
-        .donation-item .donor-delete {
-            margin-top: 8px;
-            font-size: 11px;
-            color: var(--danger);
-            cursor: pointer;
-            text-decoration: underline;
-        }
+        .whatsapp-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
         
-        .whatsapp-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 20px;
+        .login-container { max-width: 400px; margin: 100px auto; text-align: center; }
+        .login-container h2 { font-size: 28px; color: var(--primary-dark); margin-bottom: 24px; font-family: 'Georgia', serif; }
+        .login-container .form-group { margin-bottom: 16px; text-align: left; }
+
+        /* ARCHIVIO STAMPA */
+        .archive-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
         }
-        
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            text-align: center;
+        .archive-header h3 { color: var(--primary-dark); font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
+        .archive-summary {
+            background: var(--primary-light); padding: 20px; border-radius: 10px;
+            margin-bottom: 24px; text-align: center;
         }
-        .login-container h2 {
-            font-size: 28px;
-            color: var(--primary-dark);
-            margin-bottom: 24px;
-            font-family: 'Georgia', serif;
-        }
-        .login-container .form-group {
-            margin-bottom: 16px;
-            text-align: left;
+        .archive-summary .total { font-size: 36px; font-weight: 800; color: var(--primary-dark); font-family: 'Georgia', serif; }
+        .archive-summary .label { font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; }
+        .archive-summary .count { font-size: 14px; color: var(--text-main); margin-top: 8px; }
+
+        @media print {
+            .top-bar, .btn, .no-print, .form-group, .payment-box, .info-box,
+            .progress-container, .whatsapp-buttons, .donor-delete, .card::before {
+                display: none !important;
+            }
+            body { background: white; }
+            .container { max-width: 100%; padding: 0; }
+            .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+            .wish-card, .donation-item { page-break-inside: avoid; border: 1px solid #e0e0e0; }
+            .archive-section { border-top: 2px solid #333; }
+            .archive-summary { background: #f0f0f0; border: 1px solid #ccc; }
         }
         
         @media (max-width: 768px) {
             .whatsapp-buttons { grid-template-columns: 1fr; }
             .public-header h1 { font-size: 32px; }
             .form-row { grid-template-columns: 1fr; }
-        }
-        
-        @media print {
-            .top-bar, .btn, .no-print { display: none !important; }
+            .archive-header { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
@@ -436,7 +275,7 @@
             </div>
         </div>
 
-        <!-- VISTA 1: STUDIO -->
+        <!-- VISTA 1: STUDIO (solo creazione e gestione liste) -->
         <div id="studioView" class="hidden">
             <div class="card">
                 <div class="card-title">Crea Nuova Lista Regali</div>
@@ -526,7 +365,7 @@
                 </div>
 
                 <div class="info-box mt-20">
-                    <strong>Come funziona:</strong> Il link pubblico va condiviso con gli invitati (via WhatsApp, email o QR stampato). Le credenziali permettono al cliente di accedere alla dashboard privata per monitorare lo stato della raccolta e registrare ogni donazione ricevuta.
+                    <strong>Come funziona:</strong> Il link pubblico va condiviso con gli invitati. Le credenziali permettono al cliente di accedere alla dashboard privata dove trovera l'archivio completo di donazioni e auguri ricevuti, stampabile in PDF per ricambiare i regali in futuro.
                 </div>
 
                 <div class="whatsapp-buttons">
@@ -557,7 +396,7 @@
             </div>
         </div>
 
-        <!-- VISTA 2: DASHBOARD CLIENTE -->
+        <!-- VISTA 2: DASHBOARD CLIENTE/FESTEGGIATI (con archivio completo e stampa PDF) -->
         <div id="clientView" class="hidden">
             <div class="card">
                 <div class="public-header">
@@ -577,13 +416,14 @@
                     <div id="dashMessaggioStato" style="font-weight:700; font-size:18px; margin-top:12px;"></div>
                 </div>
 
-                <div class="info-box">
+                <div class="info-box no-print">
                     <strong>Link da condividere con gli invitati:</strong>
                     <div style="margin-top:8px; word-break:break-all; font-family:monospace; font-size:13px;" id="dashLinkPubblico">---</div>
                     <button class="btn btn-sm btn-info mt-20" onclick="copiaLinkDashboard()">Copia Link</button>
                 </div>
 
-                <div class="card mt-20" style="background:#f8f9fa; box-shadow:none;">
+                <!-- FORM REGISTRA DONAZIONE (solo per cliente) -->
+                <div class="card mt-20 no-print" style="background:#f8f9fa; box-shadow:none;">
                     <div class="card-title">Registra Nuova Donazione Ricevuta</div>
                     <p style="font-size:14px; color:var(--text-light); margin-bottom:16px;">Quando ricevi una donazione, registrala qui. Il totale si aggiornera automaticamente.</p>
                     <div class="form-row">
@@ -603,18 +443,33 @@
                     <button class="btn btn-success" onclick="registraDonazione()">Registra Donazione</button>
                 </div>
 
-                <div style="margin-top:40px;">
-                    <h3 style="margin-bottom:16px; color:var(--primary-dark); font-size:16px; text-transform:uppercase; letter-spacing:1px;">Archivio Donazioni e Auguri</h3>
-                    <div id="dashAuguriList"></div>
+                <!-- ARCHIVIO COMPLETO (visibile e stampabile) -->
+                <div class="archive-section" id="archiveSection">
+                    <div class="archive-header">
+                        <h3>Archivio Regali e Auguri Ricevuti</h3>
+                        <button class="btn btn-info no-print" onclick="stampaArchivio()">Stampa / Salva PDF</button>
+                    </div>
+
+                    <div class="archive-summary">
+                        <div class="label">Totale Raccolto</div>
+                        <div class="total" id="archiveTotale">EUR 0</div>
+                        <div class="count" id="archiveCount">0 donazioni - 0 auguri</div>
+                    </div>
+
+                    <div id="archiveDonazioni"></div>
+                    <div id="archiveAuguri"></div>
+                    <div id="archiveEmpty" style="text-align:center; padding:40px; color:var(--text-light);">
+                        Nessun regalo o augurio ricevuto ancora.
+                    </div>
                 </div>
                 
-                <div class="center-text mt-20">
+                <div class="center-text mt-20 no-print">
                     <button class="btn btn-outline" onclick="logoutCliente()">Esci dalla Dashboard</button>
                 </div>
             </div>
         </div>
 
-        <!-- VISTA 3: PUBBLICA (INVITATI) -->
+        <!-- VISTA 3: PUBBLICA (solo invitati - NO archivio, NO cifre) -->
         <div id="publicView" class="hidden">
             <div class="card">
                 <div class="public-header">
@@ -764,21 +619,34 @@
                 document.getElementById('dashMessaggioStato').style.color = 'var(--warning)';
             }
 
-            const divAuguri = document.getElementById('dashAuguriList');
-            divAuguri.innerHTML = '';
+            // Carica donazioni e auguri per l'archivio
+            await caricaArchivio(listaId);
+        }
 
-            // Carica donazioni registrate
+        async function caricaArchivio(listaId) {
+            const divDonazioni = document.getElementById('archiveDonazioni');
+            const divAuguri = document.getElementById('archiveAuguri');
+            const divEmpty = document.getElementById('archiveEmpty');
+            
+            divDonazioni.innerHTML = '';
+            divAuguri.innerHTML = '';
+            
+            let numDonazioni = 0;
+            let numAuguri = 0;
+
+            // Carica donazioni
             try {
                 const resDon = await fetch(`${WORKER_URL}/api/public/lista-regali/donazioni?listaId=${listaId}`);
                 const dataDon = await resDon.json();
                 if (dataDon.success && dataDon.donazioni.length > 0) {
-                    divAuguri.innerHTML += '<h4 style="margin-bottom:12px; color:var(--text-main);">Donazioni Ricevute</h4>';
-                    divAuguri.innerHTML += dataDon.donazioni.map(d => `
+                    numDonazioni = dataDon.donazioni.length;
+                    divDonazioni.innerHTML = '<h4 style="margin-bottom:16px; color:var(--primary-dark); font-size:16px; text-transform:uppercase; letter-spacing:1px;">Donazioni Ricevute</h4>';
+                    divDonazioni.innerHTML += dataDon.donazioni.map(d => `
                         <div class="donation-item">
                             <div class="donor-name">${d.nome_donatore}</div>
                             <div class="donor-amount">EUR ${parseFloat(d.importo).toFixed(2)}</div>
                             <div class="donor-date">${d.data_donazione ? new Date(d.data_donazione).toLocaleDateString('it-IT') : ''}</div>
-                            <div class="donor-delete" onclick="eliminaDonazione('${d.id}')">Elimina</div>
+                            <div class="donor-delete no-print" onclick="eliminaDonazione('${d.id}')">Elimina</div>
                         </div>
                     `).join('');
                 }
@@ -789,19 +657,26 @@
                 const resAug = await fetch(`${WORKER_URL}/api/public/lista-regali/messaggi?listaId=${listaId}`);
                 const dataAug = await resAug.json();
                 if (dataAug.success && dataAug.messaggi.length > 0) {
-                    divAuguri.innerHTML += '<h4 style="margin:20px 0 12px; color:var(--text-main);">Auguri Ricevuti</h4>';
+                    numAuguri = dataAug.messaggi.length;
+                    divAuguri.innerHTML = '<h4 style="margin:24px 0 16px; color:var(--primary-dark); font-size:16px; text-transform:uppercase; letter-spacing:1px;">Auguri Ricevuti</h4>';
                     divAuguri.innerHTML += dataAug.messaggi.map(m => `
                         <div class="wish-card">
                             <div class="name">${m.nome_donatore}</div>
                             <div class="msg">"${m.messaggio}"</div>
-                            <div class="donor-date">${m.data ? new Date(m.data).toLocaleDateString('it-IT') : ''}</div>
+                            <div class="date">${m.data ? new Date(m.data).toLocaleDateString('it-IT') : ''}</div>
                         </div>
                     `).join('');
                 }
             } catch (e) { console.error('Errore auguri:', e); }
 
-            if (divAuguri.innerHTML === '') {
-                divAuguri.innerHTML = '<p style="color:var(--text-light); text-align:center; padding:20px;">Nessuna donazione o augurio ricevuto ancora.</p>';
+            // Aggiorna riepilogo
+            document.getElementById('archiveTotale').textContent = `EUR ${currentLista.raccolto_attuale || 0}`;
+            document.getElementById('archiveCount').textContent = `${numDonazioni} donazioni - ${numAuguri} auguri`;
+            
+            if (numDonazioni === 0 && numAuguri === 0) {
+                divEmpty.style.display = 'block';
+            } else {
+                divEmpty.style.display = 'none';
             }
         }
 
@@ -846,9 +721,7 @@
             if (!confirm('Sei sicuro di voler eliminare questa donazione?')) return;
             
             try {
-                const res = await fetch(`${WORKER_URL}/api/public/lista-regali/donazione/${id}`, {
-                    method: 'DELETE'
-                });
+                const res = await fetch(`${WORKER_URL}/api/public/lista-regali/donazione/${id}`, { method: 'DELETE' });
                 const data = await res.json();
                 if (data.success) {
                     await caricaDashboard(currentLista.id);
@@ -859,6 +732,10 @@
             } catch (e) {
                 mostraToast('Errore di connessione', 'error');
             }
+        }
+
+        function stampaArchivio() {
+            window.print();
         }
 
         function logoutCliente() {
@@ -1039,19 +916,14 @@
             qrDiv.innerHTML = '';
             if (typeof QRCode !== 'undefined') {
                 qrCodeInstance = new QRCode(qrDiv, {
-                    text: url,
-                    width: 200,
-                    height: 200,
-                    colorDark: '#1e8449',
-                    colorLight: '#ffffff',
+                    text: url, width: 200, height: 200,
+                    colorDark: '#1e8449', colorLight: '#ffffff',
                     correctLevel: QRCode.CorrectLevel.H
                 });
             }
         }
 
-        function stampaQR() {
-            window.print();
-        }
+        function stampaQR() { window.print(); }
 
         function copiaLinkPubblico() {
             if (!currentLista) return;
@@ -1065,7 +937,7 @@
         function inviaWhatsAppCliente() {
             if (!currentLista) return;
             const linkDashboard = `${window.location.origin}${window.location.pathname}?dashboard=${currentLista.id}`;
-            const msg = `Buongiorno ${currentLista.cliente_nome},\n\nlo studio ha creato la tua Lista Regali per il tuo ${currentLista.tipo_evento}.\n\nLE TUE CREDENZIALI PRIVATE:\nUsername: ${currentLista.username}\nPassword: ${currentLista.password}\n\nLINK DASHBOARD (per monitorare lo stato):\n${linkDashboard}\n\nCon la dashboard puoi:\n- Vedere l'importo raccolto in tempo reale\n- Leggere i messaggi e gli auguri ricevuti\n- Registrare ogni singola donazione ricevuta\n- Sapere quando hai raggiunto l'obiettivo\n\nUn cordiale saluto.`;
+            const msg = `Buongiorno ${currentLista.cliente_nome},\n\nlo studio ha creato la tua Lista Regali per il tuo ${currentLista.tipo_evento}.\n\nLE TUE CREDENZIALI PRIVATE:\nUsername: ${currentLista.username}\nPassword: ${currentLista.password}\n\nLINK DASHBOARD (per monitorare lo stato):\n${linkDashboard}\n\nCon la dashboard puoi:\n- Vedere l'importo raccolto\n- Registrare ogni donazione ricevuta\n- Vedere l'archivio completo di regali e auguri\n- Stampare l'archivio in PDF per ricambiare i regali\n\nUn cordiale saluto.`;
             window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
@@ -1151,7 +1023,7 @@
         }
 
         // ==========================================
-        // VISTA PUBBLICA (INVITATI)
+        // VISTA PUBBLICA (INVITATI) - NO ARCHIVIO
         // ==========================================
         async function initPublicView(id) {
             try {
