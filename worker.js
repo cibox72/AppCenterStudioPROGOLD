@@ -609,135 +609,136 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      
       // ============================================
-      // 36-37. LISTA REGALI (COMPLETO E CORRETTO)
-      // ============================================
+// 36-37. LISTA REGALI (COMPLETO E CORRETTO)
+// ============================================
 
-      // 1. LISTA ARCHIVIO (Studio)
-      if (path === "/api/studio/lista-regali" && request.method === "GET") {
-          const token = url.searchParams.get("token");
-          const sess = await verificaSessione(token);
-          if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-          const result = await env.DB.prepare("SELECT * FROM lista_regali WHERE studio_id=? ORDER BY data_creazione DESC").bind(sess.user_id).all();
-          return new Response(JSON.stringify({ success: true, lista: result.results }), { headers: corsHeaders });
-      }
+// 1. LISTA ARCHIVIO (Studio)
+if (path === "/api/studio/lista-regali" && request.method === "GET") {
+    const token = url.searchParams.get("token");
+    const sess = await verificaSessione(token);
+    if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+    const result = await env.DB.prepare("SELECT * FROM lista_regali WHERE studio_id=? ORDER BY data_creazione DESC").bind(sess.user_id).all();
+    return new Response(JSON.stringify({ success: true, lista: result.results }), { headers: corsHeaders });
+}
 
-      // 2. CREA LISTA REGALI (Studio) - CORRETTO CON MESSAGGIO_RINGRAZIAMENTO
-      if (path === "/api/studio/lista-regali" && request.method === "POST") {
-          const token = url.searchParams.get("token");
-          const sess = await verificaSessione(token);
-          if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-          
-          const d = await request.json();
-          await env.DB.prepare(`INSERT INTO lista_regali (id, studio_id, cliente_id, cliente_nome, tipo_evento, importo_servizio, metodo_pagamento, dati_pagamento, messaggio_cortesia, messaggio_ringraziamento, username, password, link_pubblico, raccolto_attuale, stato, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
-              d.id, d.studio_id, d.cliente_id, d.cliente_nome, d.tipo_evento, d.importo_servizio, d.metodo_pagamento, d.dati_pagamento, d.messaggio_cortesia, d.messaggio_ringraziamento || '', d.username, d.password, d.link_pubblico, d.raccolto_attuale || 0, d.stato || 'in_corso', d.data_creazione || new Date().toISOString()
-          ).run();
-          return new Response(JSON.stringify({ success: true, id: d.id }), { headers: corsHeaders });
-      }
+// 2. CREA LISTA REGALI (Studio)
+if (path === "/api/studio/lista-regali" && request.method === "POST") {
+    const token = url.searchParams.get("token");
+    const sess = await verificaSessione(token);
+    if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+    
+    const d = await request.json();
+    await env.DB.prepare(`INSERT INTO lista_regali (id, studio_id, cliente_id, cliente_nome, tipo_evento, importo_servizio, metodo_pagamento, dati_pagamento, messaggio_cortesia, messaggio_ringraziamento, username, password, link_pubblico, raccolto_attuale, stato, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+        d.id, d.studio_id, d.cliente_id, d.cliente_nome, d.tipo_evento, d.importo_servizio, d.metodo_pagamento, d.dati_pagamento, d.messaggio_cortesia, d.messaggio_ringraziamento || '', d.username, d.password, d.link_pubblico, d.raccolto_attuale || 0, d.stato || 'in_corso', d.data_creazione || new Date().toISOString()
+    ).run();
+    return new Response(JSON.stringify({ success: true, id: d.id }), { headers: corsHeaders });
+}
 
-      // 3. ELIMINA LISTA (Studio)
-      if (path.startsWith("/api/studio/lista-regali/") && request.method === "DELETE") {
-          const token = url.searchParams.get("token");
-          const sess = await verificaSessione(token);
-          if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-          const id = path.split("/api/studio/lista-regali/")[1];
-          await env.DB.prepare("DELETE FROM lista_regali WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
-          return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-      }
+// 3. ELIMINA LISTA (Studio)
+if (path.startsWith("/api/studio/lista-regali/") && request.method === "DELETE") {
+    const token = url.searchParams.get("token");
+    const sess = await verificaSessione(token);
+    if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+    const id = path.split("/api/studio/lista-regali/")[1];
+    await env.DB.prepare("DELETE FROM lista_regali WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
+    return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+}
 
-      // 4. LETTURA PUBBLICA LISTA (Invitati e Cliente)
-      if (path.startsWith("/api/public/lista-regali/") && request.method === "GET" && !path.includes("findByCredentials") && !path.includes("donazioni") && !path.includes("messaggi") && !path.includes("messaggio") && !path.includes("aggiorna-totale")) {
-          const id = path.split("/api/public/lista-regali/")[1];
-          const result = await env.DB.prepare("SELECT * FROM lista_regali WHERE id=?").bind(id).first();
-          if (!result) return new Response(JSON.stringify({ error: "Lista non trovata" }), { status: 404, headers: corsHeaders });
-          return new Response(JSON.stringify({ success: true, lista: result }), { headers: corsHeaders });
-      }
+// 4. LETTURA PUBBLICA LISTA
+if (path.startsWith("/api/public/lista-regali/") && request.method === "GET" && !path.includes("findByCredentials") && !path.includes("donazioni") && !path.includes("messaggi") && !path.includes("messaggio") && !path.includes("aggiorna-totale")) {
+    const id = path.split("/api/public/lista-regali/")[1];
+    const result = await env.DB.prepare("SELECT * FROM lista_regali WHERE id=?").bind(id).first();
+    if (!result) return new Response(JSON.stringify({ error: "Lista non trovata" }), { status: 404, headers: corsHeaders });
+    return new Response(JSON.stringify({ success: true, lista: result }), { headers: corsHeaders });
+}
 
-      // 5. TROVA LISTA PER CREDENZIALI (Login Cliente)
-      if (path === "/api/public/lista-regali/findByCredentials" && request.method === "GET") {
-          const username = url.searchParams.get("username");
-          const password = url.searchParams.get("password");
-          if (!username || !password) return new Response(JSON.stringify({ error: "Parametri mancanti" }), { status: 400, headers: corsHeaders });
-          
-          const result = await env.DB.prepare("SELECT * FROM lista_regali WHERE username=? AND password=?").bind(username, password).first();
-          if (!result) return new Response(JSON.stringify({ error: "Credenziali non valide" }), { status: 401, headers: corsHeaders });
-          return new Response(JSON.stringify({ success: true, lista: result }), { headers: corsHeaders });
-      }
+// 5. TROVA LISTA PER CREDENZIALI
+if (path === "/api/public/lista-regali/findByCredentials" && request.method === "GET") {
+    const username = url.searchParams.get("username");
+    const password = url.searchParams.get("password");
+    if (!username || !password) return new Response(JSON.stringify({ error: "Parametri mancanti" }), { status: 400, headers: corsHeaders });
+    
+    const result = await env.DB.prepare("SELECT * FROM lista_regali WHERE username=? AND password=?").bind(username, password).first();
+    if (!result) return new Response(JSON.stringify({ error: "Credenziali non valide" }), { status: 401, headers: corsHeaders });
+    return new Response(JSON.stringify({ success: true, lista: result }), { headers: corsHeaders });
+}
 
-      // 6. REGISTRA DONAZIONE SINGOLA (Dashboard Cliente)
-      if (path === "/api/public/lista-regali/donazione" && request.method === "POST") {
-          const d = await request.json();
-          const id = 'don-' + Date.now();
-          
-          await env.DB.prepare(`INSERT INTO donazioni_lista (id, lista_id, nome_donatore, importo, data_donazione, data_registrazione) VALUES (?, ?, ?, ?, ?, ?)`).bind(
-              id, d.lista_id, d.nome_donatore, parseFloat(d.importo), d.data_donazione, new Date().toISOString()
-          ).run();
-          
-          const totalResult = await env.DB.prepare("SELECT COALESCE(SUM(importo), 0) as totale FROM donazioni_lista WHERE lista_id=?").bind(d.lista_id).first();
-          await env.DB.prepare("UPDATE lista_regali SET raccolto_attuale=? WHERE id=?").bind(totalResult.totale, d.lista_id).run();
-          
-          return new Response(JSON.stringify({ success: true, id, totale: totalResult.totale }), { headers: corsHeaders });
-      }
+// 6. REGISTRA DONAZIONE SINGOLA
+if (path === "/api/public/lista-regali/donazione" && request.method === "POST") {
+    const d = await request.json();
+    const id = 'don-' + Date.now();
+    
+    await env.DB.prepare(`INSERT INTO donazioni_lista (id, lista_id, nome_donatore, importo, data_donazione, data_registrazione) VALUES (?, ?, ?, ?, ?, ?)`).bind(
+        id, d.lista_id, d.nome_donatore, parseFloat(d.importo), d.data_donazione, new Date().toISOString()
+    ).run();
+    
+    const totalResult = await env.DB.prepare("SELECT COALESCE(SUM(importo), 0) as totale FROM donazioni_lista WHERE lista_id=?").bind(d.lista_id).first();
+    await env.DB.prepare("UPDATE lista_regali SET raccolto_attuale=? WHERE id=?").bind(totalResult.totale, d.lista_id).run();
+    
+    return new Response(JSON.stringify({ success: true, id, totale: totalResult.totale }), { headers: corsHeaders });
+}
 
-      // 7. LISTA DONAZIONI (Dashboard Cliente)
-      if (path === "/api/public/lista-regali/donazioni" && request.method === "GET") {
-          const listaId = url.searchParams.get("listaId");
-          if (!listaId) return new Response(JSON.stringify({ error: "Parametro mancante" }), { status: 400, headers: corsHeaders });
-          
-          const result = await env.DB.prepare("SELECT * FROM donazioni_lista WHERE lista_id=? ORDER BY data_donazione DESC").bind(listaId).all();
-          return new Response(JSON.stringify({ success: true, donazioni: result.results }), { headers: corsHeaders });
-      }
+// 7. LISTA DONAZIONI
+if (path === "/api/public/lista-regali/donazioni" && request.method === "GET") {
+    const listaId = url.searchParams.get("listaId");
+    if (!listaId) return new Response(JSON.stringify({ error: "Parametro mancante" }), { status: 400, headers: corsHeaders });
+    
+    const result = await env.DB.prepare("SELECT * FROM donazioni_lista WHERE lista_id=? ORDER BY data_donazione DESC").bind(listaId).all();
+    return new Response(JSON.stringify({ success: true, donazioni: result.results }), { headers: corsHeaders });
+}
 
-      // 8. ELIMINA DONAZIONE (Dashboard Cliente)
-      if (path.startsWith("/api/public/lista-regali/donazione/") && request.method === "DELETE") {
-          const id = path.split("/api/public/lista-regali/donazione/")[1];
-          const donazione = await env.DB.prepare("SELECT lista_id FROM donazioni_lista WHERE id=?").bind(id).first();
-          if (donazione) {
-              await env.DB.prepare("DELETE FROM donazioni_lista WHERE id=?").bind(id).run();
-              const totalResult = await env.DB.prepare("SELECT COALESCE(SUM(importo), 0) as totale FROM donazioni_lista WHERE lista_id=?").bind(donazione.lista_id).first();
-              await env.DB.prepare("UPDATE lista_regali SET raccolto_attuale=? WHERE id=?").bind(totalResult.totale, donazione.lista_id).run();
-          }
-          return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-      }
+// 8. ELIMINA DONAZIONE
+if (path.startsWith("/api/public/lista-regali/donazione/") && request.method === "DELETE") {
+    const id = path.split("/api/public/lista-regali/donazione/")[1];
+    const donazione = await env.DB.prepare("SELECT lista_id FROM donazioni_lista WHERE id=?").bind(id).first();
+    if (donazione) {
+        await env.DB.prepare("DELETE FROM donazioni_lista WHERE id=?").bind(id).run();
+        const totalResult = await env.DB.prepare("SELECT COALESCE(SUM(importo), 0) as totale FROM donazioni_lista WHERE lista_id=?").bind(donazione.lista_id).first();
+        await env.DB.prepare("UPDATE lista_regali SET raccolto_attuale=? WHERE id=?").bind(totalResult.totale, donazione.lista_id).run();
+    }
+    return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+}
 
-      // 9. INVIA AUGURIO (Pubblico)
-      if (path === "/api/public/lista-regali/messaggio" && request.method === "POST") {
-          const d = await request.json();
-          try {
-              await env.DB.prepare(`INSERT INTO messaggi_regali (lista_id, nome_donatore, messaggio, importo, data) VALUES (?, ?, ?, ?, ?)`).bind(
-                  d.lista_id, d.nome_donatore, d.messaggio, d.importo || 0, new Date().toISOString()
-              ).run();
-              return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-          } catch (error) {
-              console.error('Errore inserimento messaggio:', error);
-              return new Response(JSON.stringify({ error: "Errore nel salvataggio del messaggio", details: error.message }), { status: 500, headers: corsHeaders });
-          }
-      }
+// 9. INVIA AUGURIO
+if (path === "/api/public/lista-regali/messaggio" && request.method === "POST") {
+    const d = await request.json();
+    try {
+        await env.DB.prepare(`INSERT INTO messaggi_regali (lista_id, nome_donatore, messaggio, importo, data) VALUES (?, ?, ?, ?, ?)`).bind(
+            d.lista_id, d.nome_donatore, d.messaggio, d.importo || 0, new Date().toISOString()
+        ).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+    } catch (error) {
+        console.error('Errore inserimento messaggio:', error);
+        return new Response(JSON.stringify({ error: "Errore nel salvataggio del messaggio", details: error.message }), { status: 500, headers: corsHeaders });
+    }
+}
 
-      // 10. LISTA AUGURI (Pubblico e Cliente)
-      if (path === "/api/public/lista-regali/messaggi" && request.method === "GET") {
-          const listaId = url.searchParams.get("listaId");
-          try {
-              const result = await env.DB.prepare("SELECT * FROM messaggi_regali WHERE lista_id=? ORDER BY data DESC").bind(listaId).all();
-              return new Response(JSON.stringify({ success: true, messaggi: result.results }), { headers: corsHeaders });
-          } catch (error) {
-              console.error('Errore lettura messaggi:', error);
-              return new Response(JSON.stringify({ error: "Errore nella lettura dei messaggi" }), { status: 500, headers: corsHeaders });
-          }
-      }
+// 10. LISTA AUGURI
+if (path === "/api/public/lista-regali/messaggi" && request.method === "GET") {
+    const listaId = url.searchParams.get("listaId");
+    try {
+        const result = await env.DB.prepare("SELECT * FROM messaggi_regali WHERE lista_id=? ORDER BY data DESC").bind(listaId).all();
+        return new Response(JSON.stringify({ success: true, messaggi: result.results }), { headers: corsHeaders });
+    } catch (error) {
+        console.error('Errore lettura messaggi:', error);
+        return new Response(JSON.stringify({ error: "Errore nella lettura dei messaggi" }), { status: 500, headers: corsHeaders });
+    }
+}
 
-      // 11. AGGIORNA TOTALE (dopo invio augurio con importo) - AGGIUNTO
-      if (path === "/api/public/lista-regali/aggiorna-totale" && request.method === "POST") {
-          const d = await request.json();
-          try {
-              const totalResult = await env.DB.prepare("SELECT COALESCE(SUM(importo), 0) as totale FROM messaggi_regali WHERE lista_id=?").bind(d.lista_id).first();
-              await env.DB.prepare("UPDATE lista_regali SET raccolto_attuale=? WHERE id=?").bind(totalResult.totale, d.lista_id).run();
-              return new Response(JSON.stringify({ success: true, totale: totalResult.totale }), { headers: corsHeaders });
-          } catch (error) {
-              console.error('Errore aggiornamento totale:', error);
-              return new Response(JSON.stringify({ error: "Errore nell'aggiornamento del totale" }), { status: 500, headers: corsHeaders });
-          }
-      }
+// 11. AGGIORNA TOTALE
+if (path === "/api/public/lista-regali/aggiorna-totale" && request.method === "POST") {
+    const d = await request.json();
+    try {
+        const totalResult = await env.DB.prepare("SELECT COALESCE(SUM(importo), 0) as totale FROM messaggi_regali WHERE lista_id=?").bind(d.lista_id).first();
+        await env.DB.prepare("UPDATE lista_regali SET raccolto_attuale=? WHERE id=?").bind(totalResult.totale, d.lista_id).run();
+        return new Response(JSON.stringify({ success: true, totale: totalResult.totale }), { headers: corsHeaders });
+    } catch (error) {
+        console.error('Errore aggiornamento totale:', error);
+        return new Response(JSON.stringify({ error: "Errore nell'aggiornamento del totale" }), { status: 500, headers: corsHeaders });
+    }
+}
      
       // ============================================
       // 38. UPLOAD FOTO R2 (Studio)
