@@ -637,7 +637,8 @@ if (path === "/api/studio/lista-regali" && request.method === "POST") {
 }
 
 // 3. ELIMINA LISTA (Studio)
-if (path.startsWith("/api/public/lista-regali/") && request.method === "GET" && !path.includes("findByCredentials") && !path.includes("donazioni") && !path.includes("messaggi") && !path.includes("messaggio") && !path.includes("aggiorna-totale")) {    const token = url.searchParams.get("token");
+if (path.startsWith("/api/studio/lista-regali/") && request.method === "DELETE") {
+    const token = url.searchParams.get("token");
     const sess = await verificaSessione(token);
     if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
     const id = path.split("/api/studio/lista-regali/")[1];
@@ -652,7 +653,6 @@ if (path.startsWith("/api/public/lista-regali/") && request.method === "GET" && 
     if (!result) return new Response(JSON.stringify({ error: "Lista non trovata" }), { status: 404, headers: corsHeaders });
     return new Response(JSON.stringify({ success: true, lista: result }), { headers: corsHeaders });
 }
-
 // 5. TROVA LISTA PER CREDENZIALI
 if (path === "/api/public/lista-regali/findByCredentials" && request.method === "GET") {
     const username = url.searchParams.get("username");
