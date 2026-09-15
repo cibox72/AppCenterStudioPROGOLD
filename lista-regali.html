@@ -32,6 +32,30 @@
             display: flex;
             flex-direction: column;
         }
+        
+        /* BRANDING HEADER - SEMPRE VISIBILE */
+        .branding-header {
+            background: var(--primary-gradient);
+            padding: 12px 24px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(30, 132, 73, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .branding-header .studio-name {
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+        .branding-header .studio-name:hover { text-decoration: underline; }
+        .branding-header .separator { margin: 0 8px; opacity: 0.8; }
+        .branding-header .tagline { font-size: 13px; opacity: 0.9; }
+        
         .top-bar {
             background: var(--primary-gradient);
             padding: 14px 24px;
@@ -43,24 +67,6 @@
             top: 0;
             z-index: 100;
         }
-        .studio-branding {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: white;
-            font-size: 13px;
-        }
-        .studio-branding .studio-name {
-            font-family: 'Georgia', serif;
-            font-style: italic;
-            font-size: 15px;
-            font-weight: 700;
-            color: white;
-            text-decoration: none;
-            letter-spacing: 0.5px;
-        }
-        .studio-branding .studio-name:hover { text-decoration: underline; }
-        .studio-branding .separator { opacity: 0.6; }
         .nav-btn {
             background: rgba(255,255,255,0.95);
             border: none;
@@ -243,7 +249,7 @@
         .footer-branding a:hover { text-decoration: underline; }
 
         @media print {
-            .top-bar, .btn, .no-print, .form-group, .payment-box, .info-box,
+            .branding-header, .top-bar, .btn, .no-print, .form-group, .payment-box, .info-box,
             .progress-container, .whatsapp-buttons, .card::before, .footer-branding {
                 display: none !important;
             }
@@ -262,17 +268,24 @@
             .archive-header { flex-direction: column; align-items: flex-start; }
             .archive-item { flex-direction: column; }
             .archive-item .item-amount { text-align: left; }
-            .studio-branding { font-size: 11px; }
-            .studio-branding .studio-name { font-size: 13px; }
+            .branding-header { font-size: 12px; }
+            .branding-header .studio-name { font-size: 14px; }
         }
     </style>
 </head>
 <body>
-    <!-- TOP BAR CON BRANDING -->
+    <!-- BRANDING HEADER - SEMPRE VISIBILE -->
+    <div class="branding-header">
+        <span>Servizio offerto da </span>
+        <a href="https://www.glstudio.it" target="_blank" class="studio-name">G&L Studio</a>
+        <span class="separator">|</span>
+        <span class="tagline">Lista Regali Digitale</span>
+    </div>
+
+    <!-- TOP BAR (solo per studio e cliente) -->
     <div id="topBar" class="top-bar hidden">
-        <div class="studio-branding">
-            <span>Servizio offerto da</span>
-            <a href="https://www.glstudio.it" target="_blank" class="studio-name" id="studioBrandName">G&L Studio</a>
+        <div style="color: white; font-size: 14px;">
+            <span id="topBarTitle">Dashboard</span>
         </div>
         <div id="topBarActions">
             <button class="nav-btn" onclick="tornaPlancia()">Indietro alla Plancia</button>
@@ -534,8 +547,8 @@
     </div>
 
     <!-- FOOTER CON BRANDING -->
-    <div class="footer-branding" id="footerBranding">
-        Servizio offerto da <a href="https://www.glstudio.it" target="_blank" id="footerStudioName">G&L Studio</a> - Lista Regali Digitale
+    <div class="footer-branding">
+        Servizio offerto da <a href="https://www.glstudio.it" target="_blank">G&L Studio</a> - Lista Regali Digitale
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
@@ -560,24 +573,14 @@
             } else if (dashboardId) {
                 document.getElementById('loadingArea').classList.add('hidden');
                 document.getElementById('loginView').classList.remove('hidden');
-                mostraTopBar(false);
+                document.getElementById('topBar').classList.remove('hidden');
+                document.getElementById('topBarTitle').textContent = 'Dashboard Cliente';
             } else if (listaId) {
                 await initPublicView(listaId);
             } else {
                 document.getElementById('loadingArea').textContent = 'Link non valido. Contatta lo studio.';
             }
         });
-
-        function mostraTopBar(mostraPulsantePlancia) {
-            const topBar = document.getElementById('topBar');
-            const actions = document.getElementById('topBarActions');
-            topBar.classList.remove('hidden');
-            if (mostraPulsantePlancia) {
-                actions.innerHTML = '<button class="nav-btn" onclick="tornaPlancia()">Indietro alla Plancia</button>';
-            } else {
-                actions.innerHTML = '';
-            }
-        }
 
         // ==========================================
         // TEMI GLOBALI
@@ -795,7 +798,8 @@
         async function initStudioView() {
             document.getElementById('loadingArea').classList.add('hidden');
             document.getElementById('studioView').classList.remove('hidden');
-            mostraTopBar(true);
+            document.getElementById('topBar').classList.remove('hidden');
+            document.getElementById('topBarTitle').textContent = 'Gestione Liste Regali';
             
             const res = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
             const data = await res.json();
@@ -1021,9 +1025,6 @@
                     
                     document.getElementById('loadingArea').classList.add('hidden');
                     document.getElementById('publicView').classList.remove('hidden');
-                    
-                    // Mostra top bar e footer con branding
-                    mostraTopBar(false);
                     
                     document.getElementById('pubNomeCliente').textContent = currentLista.cliente_nome;
                     document.getElementById('pubTipoEvento').textContent = currentLista.tipo_evento;
