@@ -629,8 +629,23 @@ if (path === "/api/studio/lista-regali" && request.method === "POST") {
     if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
     
     const d = await request.json();
-    await env.DB.prepare(`INSERT INTO lista_regali (id, studio_id, cliente_id, cliente_nome, tipo_evento, importo_servizio, link_pagamento, username, password, link_pubblico, raccolto_attuale, stato, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
-        d.id, d.studio_id, d.cliente_id, d.cliente_nome, d.tipo_evento, d.importo_servizio, d.link_pagamento, d.username, d.password, d.link_pubblico, d.raccolto_attuale || 0, d.stato || 'in_corso', d.data_creazione || new Date().toISOString()
+    await env.DB.prepare(`INSERT INTO lista_regali (id, studio_id, cliente_id, cliente_nome, tipo_evento, importo_servizio, metodo_pagamento, dati_pagamento, messaggio_cortesia, link_pagamento, username, password, link_pubblico, raccolto_attuale, stato, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+        d.id, 
+        d.studio_id, 
+        d.cliente_id, 
+        d.cliente_nome, 
+        d.tipo_evento, 
+        d.importo_servizio, 
+        d.metodo_pagamento || null, 
+        d.dati_pagamento || null, 
+        d.messaggio_cortesia || null, 
+        d.link_pagamento || null, 
+        d.username, 
+        d.password, 
+        d.link_pubblico, 
+        d.raccolto_attuale || 0, 
+        d.stato || 'in_corso', 
+        d.data_creazione || new Date().toISOString()
     ).run();
     return new Response(JSON.stringify({ success: true, id: d.id }), { headers: corsHeaders });
 }
