@@ -29,6 +29,8 @@
             color: var(--text-main);
             line-height: 1.6;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         .top-bar {
             background: var(--primary-gradient);
@@ -41,6 +43,25 @@
             top: 0;
             z-index: 100;
         }
+        .studio-branding {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .studio-branding .studio-name {
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            font-size: 16px;
+        }
+        .studio-branding a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .studio-branding a:hover { opacity: 0.8; }
         .nav-btn {
             background: rgba(255,255,255,0.95);
             border: none;
@@ -53,7 +74,7 @@
             transition: all 0.2s;
         }
         .nav-btn:hover { transform: translateY(-2px); }
-        .container { max-width: 1100px; margin: 0 auto; padding: 30px 24px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 30px 24px; flex: 1; }
         
         .card {
             background: white;
@@ -134,114 +155,56 @@
         .public-header .sottotitolo { font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
         .public-header p { font-size: 16px; color: var(--text-light); }
 
-        /* ARCHIVIO STAMPA */
-        .archive-section {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 2px solid var(--border-color);
-        }
-        .archive-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
+        .archive-section { margin-top: 40px; padding-top: 30px; border-top: 2px solid var(--border-color); }
+        .archive-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
         .archive-header h3 { color: var(--primary-dark); font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
-        .archive-summary {
-            background: var(--primary-light); padding: 20px; border-radius: 10px;
-            margin-bottom: 24px; text-align: center;
-        }
+        .archive-summary { background: var(--primary-light); padding: 20px; border-radius: 10px; margin-bottom: 24px; text-align: center; }
         .archive-summary .total { font-size: 36px; font-weight: 800; color: var(--primary-dark); font-family: 'Georgia', serif; }
         .archive-summary .label { font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; }
         .archive-summary .count { font-size: 14px; color: var(--text-main); margin-top: 8px; }
-
         .archive-item {
-            background: white;
-            padding: 18px;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            border-left: 4px solid var(--primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            page-break-inside: avoid;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 16px;
+            background: white; padding: 18px; border-radius: 10px; margin-bottom: 12px;
+            border-left: 4px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            page-break-inside: avoid; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
         }
         .archive-item .item-content { flex: 1; }
         .archive-item .item-name { font-weight: 700; color: var(--primary-dark); font-size: 15px; }
         .archive-item .item-msg { font-style: italic; color: var(--text-main); margin-top: 4px; font-size: 14px; }
         .archive-item .item-date { font-size: 12px; color: var(--text-light); margin-top: 6px; }
-        .archive-item .item-amount {
-            font-weight: 800;
-            color: var(--success);
-            font-size: 18px;
-            font-family: 'Georgia', serif;
-            white-space: nowrap;
-            min-width: 100px;
-            text-align: right;
-        }
+        .archive-item .item-amount { font-weight: 800; color: var(--success); font-size: 18px; font-family: 'Georgia', serif; white-space: nowrap; min-width: 100px; text-align: right; }
 
-        .wish-card {
-            background: #f8f9fa; padding: 18px; border-radius: 10px; margin-bottom: 12px;
-            border-left: 4px solid var(--primary); page-break-inside: avoid;
-        }
+        .wish-card { background: #f8f9fa; padding: 18px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--primary); page-break-inside: avoid; }
         .wish-card .name { font-weight: 700; color: var(--primary-dark); font-size: 14px; }
         .wish-card .msg { font-style: italic; color: var(--text-main); margin-top: 4px; font-size: 14px; }
         .wish-card .date { font-size: 12px; color: var(--text-light); margin-top: 6px; }
 
-        .progress-container {
-            background: var(--primary-light); height: 24px; border-radius: 12px;
-            overflow: hidden; margin: 20px 0; border: 1px solid var(--border-color);
-        }
-        .progress-bar {
-            height: 100%; background: var(--primary-gradient); transition: width 0.5s ease;
-            display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 12px;
-        }
+        .progress-container { background: var(--primary-light); height: 24px; border-radius: 12px; overflow: hidden; margin: 20px 0; border: 1px solid var(--border-color); }
+        .progress-bar { height: 100%; background: var(--primary-gradient); transition: width 0.5s ease; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 12px; }
         .progress-bar.full { background: linear-gradient(135deg, #f1c40f, #f39c12); }
 
         .hidden { display: none !important; }
         .loading { text-align: center; padding: 60px; color: var(--text-light); }
-        .spinner {
-            width: 40px; height: 40px; border: 3px solid var(--primary-light);
-            border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;
-        }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
-        .toast {
-            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease; font-size: 14px;
-        }
+        .toast { background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease; font-size: 14px; }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
         
-        .info-box {
-            background: #f8f9fa; border-left: 4px solid var(--info); padding: 16px 20px;
-            border-radius: 8px; margin: 16px 0; font-size: 14px; color: var(--text-main);
-        }
+        .info-box { background: #f8f9fa; border-left: 4px solid var(--info); padding: 16px 20px; border-radius: 8px; margin: 16px 0; font-size: 14px; color: var(--text-main); }
         .info-box strong { color: var(--primary-dark); }
         
         .center-text { text-align: center; }
         .mt-20 { margin-top: 20px; }
         .mb-16 { margin-bottom: 16px; }
         
-        .qr-container {
-            text-align: center; padding: 24px; background: white; border-radius: 12px;
-            border: 2px dashed var(--primary); margin: 20px 0;
-        }
+        .qr-container { text-align: center; padding: 24px; background: white; border-radius: 12px; border: 2px dashed var(--primary); margin: 20px 0; }
         .qr-container #qrcode { display: inline-block; padding: 16px; background: white; }
         .qr-container .qr-label { margin-top: 12px; font-size: 13px; color: var(--text-light); font-style: italic; }
         
-        .payment-box {
-            background: var(--primary-light); padding: 24px; border-radius: 12px; margin: 20px 0; text-align: center;
-        }
+        .payment-box { background: var(--primary-light); padding: 28px; border-radius: 12px; margin: 20px 0; text-align: center; }
         .payment-box .payment-method { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); margin-bottom: 8px; }
-        .payment-box .payment-data {
-            font-size: 16px; font-weight: 600; color: var(--primary-dark); word-break: break-all;
-            padding: 12px; background: white; border-radius: 8px; margin: 12px 0; font-family: 'Courier New', monospace;
-        }
+        .payment-box .payment-data { font-size: 16px; font-weight: 600; color: var(--primary-dark); word-break: break-all; padding: 12px; background: white; border-radius: 8px; margin: 12px 0; font-family: 'Courier New', monospace; }
         
         .whatsapp-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
         
@@ -249,9 +212,51 @@
         .login-container h2 { font-size: 28px; color: var(--primary-dark); margin-bottom: 24px; font-family: 'Georgia', serif; }
         .login-container .form-group { margin-bottom: 16px; text-align: left; }
 
+        /* CONFERMA AUGURIO */
+        .success-message {
+            background: var(--primary-light);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .success-message h3 {
+            color: var(--primary-dark);
+            font-size: 24px;
+            font-family: 'Georgia', serif;
+            margin-bottom: 12px;
+        }
+        .success-message p {
+            color: var(--text-main);
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .success-message .thanks {
+            font-style: italic;
+            color: var(--text-light);
+            margin-top: 16px;
+            font-family: 'Georgia', serif;
+        }
+
+        /* FOOTER BRANDING */
+        .footer-branding {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-light);
+            font-size: 13px;
+            margin-top: auto;
+        }
+        .footer-branding a {
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .footer-branding a:hover { text-decoration: underline; }
+
         @media print {
             .top-bar, .btn, .no-print, .form-group, .payment-box, .info-box,
-            .progress-container, .whatsapp-buttons, .card::before {
+            .progress-container, .whatsapp-buttons, .card::before, .footer-branding {
                 display: none !important;
             }
             body { background: white; }
@@ -269,11 +274,17 @@
             .archive-header { flex-direction: column; align-items: flex-start; }
             .archive-item { flex-direction: column; }
             .archive-item .item-amount { text-align: left; }
+            .studio-branding { font-size: 12px; }
+            .studio-branding .studio-name { font-size: 14px; }
         }
     </style>
 </head>
 <body>
     <div id="topBar" class="top-bar hidden">
+        <div class="studio-branding">
+            <span>Servizio offerto da</span>
+            <a href="https://www.glstudio.it" target="_blank" class="studio-name" id="studioBrandName">G&L Studio</a>
+        </div>
         <div>
             <button class="nav-btn" onclick="tornaPlancia()">Indietro alla Plancia</button>
         </div>
@@ -356,6 +367,12 @@
                         <textarea id="messaggioCortesia" rows="3" placeholder="Es. Con gioia vi invitiamo a contribuire al regalo di nozze..."></textarea>
                     </div>
                 </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Messaggio di Ringraziamento (dopo augurio)</label>
+                        <textarea id="messaggioRingraziamento" rows="3" placeholder="Es. Grazie per il tuo pensiero! I festeggiati apprezzeranno molto.">Grazie per il tuo pensiero gentile! Il tuo augurio è stato registrato e i festeggiati potranno leggerlo.</textarea>
+                    </div>
+                </div>
                 <button class="btn btn-success" onclick="creaListaRegali()">Genera Lista, Credenziali e QR</button>
             </div>
 
@@ -393,7 +410,7 @@
                 </div>
 
                 <div class="info-box mt-20">
-                    <strong>Come funziona:</strong> Il link pubblico va condiviso con gli invitati. Quando un invitato lascia un augurio dichiarando l'importo donato, l'archivio si aggiorna automaticamente. I festeggiati potranno stampare l'archivio completo in PDF per ricambiare i regali in futuro.
+                    <strong>Come funziona:</strong> Il link pubblico va condiviso con gli invitati. Quando un invitato effettua il pagamento e lascia un augurio, l'archivio si aggiorna automaticamente. I festeggiati potranno stampare l'archivio completo in PDF per ricambiare i regali in futuro.
                 </div>
 
                 <div class="whatsapp-buttons">
@@ -450,7 +467,6 @@
                     <button class="btn btn-sm btn-info mt-20" onclick="copiaLinkDashboard()">Copia Link</button>
                 </div>
 
-                <!-- ARCHIVIO AUTOMATICO -->
                 <div class="archive-section" id="archiveSection">
                     <div class="archive-header">
                         <h3>Archivio Regali e Auguri Ricevuti</h3>
@@ -490,22 +506,36 @@
 
                 <div id="pubPaymentArea"></div>
 
-                <div class="card" style="background:#f8f9fa; box-shadow:none;">
-                    <div class="card-title">Lascia un Messaggio di Auguri</div>
-                    <div class="form-group mb-16">
-                        <label>Il tuo Nome *</label>
-                        <input type="text" id="wishName" placeholder="Es. Zio Mario">
+                <!-- SEZIONE AUGURIO (si sblocca dopo pagamento) -->
+                <div id="augurioSection" class="hidden">
+                    <div class="card" style="background:#f8f9fa; box-shadow:none;">
+                        <div class="card-title">Lascia un Messaggio di Auguri</div>
+                        <p style="font-size:14px; color:var(--text-light); margin-bottom:16px;">Il pagamento è stato confermato. Ora puoi lasciare il tuo augurio ai festeggiati.</p>
+                        <div class="form-group mb-16">
+                            <label>Il tuo Nome *</label>
+                            <input type="text" id="wishName" placeholder="Es. Zio Mario">
+                        </div>
+                        <div class="form-group mb-16">
+                            <label>Il tuo Messaggio *</label>
+                            <textarea id="wishMsg" rows="3" placeholder="Scrivi qui i tuoi auguri..."></textarea>
+                        </div>
+                        <div class="form-group mb-16">
+                            <label>Importo Donato (EUR)</label>
+                            <input type="number" id="wishImporto" placeholder="Es. 50" step="0.01">
+                            <div class="form-hint">Indica l'importo del tuo regalo per aiutare i festeggiati a tenere traccia</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="inviaAugurio()" style="width:100%; margin-top:12px;">Invia Auguri</button>
                     </div>
-                    <div class="form-group mb-16">
-                        <label>Il tuo Messaggio *</label>
-                        <textarea id="wishMsg" rows="3" placeholder="Scrivi qui i tuoi auguri..."></textarea>
+                </div>
+
+                <!-- CONFERMA AUGURIO INVIATO -->
+                <div id="successSection" class="hidden">
+                    <div class="success-message">
+                        <h3>Augurio Inviato con Successo!</h3>
+                        <p id="successMessage">Grazie per il tuo pensiero gentile!</p>
+                        <p style="font-size:14px; color:var(--text-light); margin-top:16px;">Il tuo messaggio è stato registrato e i festeggiati potranno leggerlo nella loro dashboard privata.</p>
+                        <p class="thanks">Con affetto, i festeggiati ti ringraziano.</p>
                     </div>
-                    <div class="form-group mb-16">
-                        <label>Importo Donato (EUR) - Opzionale</label>
-                        <input type="number" id="wishImporto" placeholder="Es. 50" step="0.01">
-                        <div class="form-hint">Indica l'importo del tuo regalo per aiutare i festeggiati a tenere traccia</div>
-                    </div>
-                    <button class="btn btn-primary" onclick="inviaAugurio()" style="width:100%; margin-top:12px;">Invia Auguri</button>
                 </div>
 
                 <div style="margin-top:40px;">
@@ -514,6 +544,10 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="footer-branding">
+        Servizio offerto da <a href="https://www.glstudio.it" target="_blank" id="footerStudioName">G&L Studio</a> - Lista Regali Digitale
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
@@ -642,7 +676,6 @@
             let totale = 0;
             let count = 0;
 
-            // Carica messaggi/auguri con importo
             try {
                 const res = await fetch(`${WORKER_URL}/api/public/lista-regali/messaggi?listaId=${listaId}`);
                 const data = await res.json();
@@ -668,7 +701,6 @@
                 }
             } catch (e) { console.error('Errore archivio:', e); }
 
-            // Aggiorna riepilogo
             document.getElementById('archiveTotale').textContent = `EUR ${totale.toFixed(2)}`;
             document.getElementById('archiveCount').textContent = `${count} regali ricevuti`;
             
@@ -732,12 +764,14 @@
             
             if (metodo === 'iban' || metodo === 'altro') {
                 html += `<div class="payment-data">${dati}</div>
-                    <button class="btn btn-sm btn-info" onclick="copiaDatiPagamento('${dati.replace(/'/g, "\\'")}')">Copia Dati</button>`;
+                    <button class="btn btn-sm btn-info" onclick="copiaDatiPagamento('${dati.replace(/'/g, "\\'")}')">Copia Dati</button>
+                    <button class="btn btn-success mt-20" onclick="confermaPagamento()">Ho completato il pagamento</button>`;
             } else {
-                html += `<a href="${dati}" target="_blank" class="btn btn-success" style="font-size:16px; padding:14px 28px; display:inline-block; text-decoration:none;">Procedi al Pagamento</a>`;
+                html += `<a href="${dati}" target="_blank" class="btn btn-success" style="font-size:16px; padding:14px 28px; display:inline-block; text-decoration:none; margin-bottom:16px;">Procedi al Pagamento</a>
+                    <br><button class="btn btn-outline mt-20" onclick="confermaPagamento()">Ho completato il pagamento</button>`;
             }
             
-            html += `<p style="font-size:13px; color:var(--text-light); margin-top:16px;">I festeggiati riceveranno direttamente il tuo contributo.</p>
+            html += `<p style="font-size:13px; color:var(--text-light); margin-top:16px;">Dopo il pagamento potrai lasciare il tuo augurio ai festeggiati.</p>
                 </div>`;
             
             area.innerHTML = html;
@@ -749,6 +783,12 @@
             }).catch(() => {
                 mostraToast('Errore nella copia', 'error');
             });
+        }
+
+        function confermaPagamento() {
+            document.getElementById('pubPaymentArea').classList.add('hidden');
+            document.getElementById('augurioSection').classList.remove('hidden');
+            document.getElementById('augurioSection').scrollIntoView({ behavior: 'smooth' });
         }
 
         // ==========================================
@@ -801,6 +841,7 @@
             const metodo = document.getElementById('metodoPagamento').value;
             const datiPagamento = document.getElementById('datiPagamento').value;
             const messaggio = document.getElementById('messaggioCortesia').value.trim();
+            const ringraziamento = document.getElementById('messaggioRingraziamento').value.trim();
 
             if (!clienteId || !importo || !metodo || !datiPagamento) {
                 mostraToast('Compila tutti i campi obbligatori', 'error');
@@ -820,7 +861,7 @@
                         id, studio_id: studioId, cliente_id: clienteId, cliente_nome: clienteNome,
                         tipo_evento: tipoEvento, importo_servizio: parseFloat(importo),
                         metodo_pagamento: metodo, dati_pagamento: datiPagamento,
-                        messaggio_cortesia: messaggio,
+                        messaggio_cortesia: messaggio, messaggio_ringraziamento: ringraziamento,
                         username, password, link_pubblico: linkPubblico,
                         raccolto_attuale: 0, stato: 'in_corso'
                     })
@@ -839,7 +880,8 @@
                         cliente_nome: clienteNome,
                         tipo_evento: tipoEvento,
                         metodo_pagamento: metodo,
-                        dati_pagamento: datiPagamento
+                        dati_pagamento: datiPagamento,
+                        messaggio_ringraziamento: ringraziamento
                     };
                     
                     generaQR(linkPubblico);
@@ -1031,7 +1073,6 @@
                     })
                 });
                 
-                // Se c'è un importo, aggiorna anche il totale
                 if (importoNum > 0) {
                     await fetch(`${WORKER_URL}/api/public/lista-regali/aggiorna-totale`, {
                         method: 'POST',
@@ -1040,11 +1081,18 @@
                     });
                 }
                 
-                mostraToast('Augurio inviato con successo', 'success');
-                document.getElementById('wishName').value = '';
-                document.getElementById('wishMsg').value = '';
-                document.getElementById('wishImporto').value = '';
-                initPublicView(currentLista.id);
+                // Mostra conferma
+                document.getElementById('augurioSection').classList.add('hidden');
+                document.getElementById('successSection').classList.remove('hidden');
+                
+                // Messaggio di ringraziamento personalizzato
+                const thanksMsg = currentLista.messaggio_ringraziamento || 'Grazie per il tuo pensiero gentile!';
+                document.getElementById('successMessage').textContent = thanksMsg;
+                
+                document.getElementById('successSection').scrollIntoView({ behavior: 'smooth' });
+                
+                // Ricarica lista auguri
+                setTimeout(() => initPublicView(currentLista.id), 1000);
             } catch (e) { 
                 mostraToast('Errore nell\'invio', 'error'); 
             }
