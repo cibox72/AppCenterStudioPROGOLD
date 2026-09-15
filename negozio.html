@@ -1,135 +1,617 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Negozio - AppCenterStudioPROGOLD</title>
-    <style>
-        :root {
-            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
-            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
-            --success: #27ae60; --warning: #f39c12; --danger: #e74c3c; --info: #3498db;
-            --radius: 16px;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh; }
-        .branding-header { background: var(--primary-gradient); padding: 12px 24px; text-align: center; box-shadow: 0 2px 10px rgba(30, 132, 73, 0.15); }
-        .branding-header a { font-family: 'Georgia', serif; font-style: italic; font-size: 16px; font-weight: 700; color: white; text-decoration: none; }
-        .branding-header .tagline { font-size: 13px; opacity: 0.9; color: white; margin-left: 8px; }
-        .top-bar { background: var(--primary-gradient); padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); }
-        .nav-btn { background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark); transition: all 0.2s; }
-        .nav-btn:hover { transform: translateY(-2px); }
-        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
-        .page-header { text-align: center; padding: 32px; background: white; border-radius: var(--radius); box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden; }
-        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
-        .page-header h1 { font-size: 32px; font-weight: 800; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
-        .page-header p { color: var(--text-light); font-size: 15px; }
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-top: 24px; }
-        .dash-card { background: white; border-radius: var(--radius); padding: 32px 24px; box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; text-align: center; border: 2px solid transparent; }
-        .dash-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
-        .dash-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(30, 132, 73, 0.2); border-color: var(--primary); }
-        .dash-card .card-icon { font-size: 48px; margin-bottom: 16px; display: block; }
-        .dash-card .card-title { font-size: 18px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .dash-card .card-desc { font-size: 13px; color: var(--text-light); line-height: 1.5; }
-        .dash-card .badge-alert { position: absolute; top: 16px; right: 16px; background: var(--danger); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-        .section { display: none; }
-        .section.active { display: block; }
-        .card { background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden; }
-        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
-        .card-title { font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px; padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); }
-        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-        .form-group input, .form-group select, .form-group textarea { padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
-        .btn { padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-right: 8px; margin-bottom: 8px; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .btn-primary { background: var(--primary-gradient); color: white; }
-        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
-        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
-        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
-        .btn-info { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
-        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
-        .btn-sm { padding: 8px 16px; font-size: 12px; }
-        .btn-whatsapp { background: linear-gradient(135deg, #25d366, #128c7e); color: white; }
-        .vetrina-header { background: var(--primary-gradient); color: white; padding: 40px 24px; text-align: center; border-radius: var(--radius); margin-bottom: 24px; }
-        .vetrina-header h2 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
-        .vetrina-header p { font-size: 16px; opacity: 0.9; }
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin-top: 20px; }
-        .product-card { background: white; border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); transition: all 0.3s; }
-        .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(30, 132, 73, 0.12); border-color: var(--primary); }
-        .product-image { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; background: var(--primary-light); }
-        .product-category { font-size: 11px; color: var(--primary-dark); font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
-        .product-name { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
-        .product-price { font-size: 22px; font-weight: 800; color: var(--primary-dark); margin-bottom: 8px; }
-        .product-desc { font-size: 13px; color: var(--text-light); margin-bottom: 12px; }
-        .product-measure { font-size: 12px; color: var(--text-light); margin-bottom: 12px; }
-        .cart-float-btn { position: fixed; bottom: 24px; right: 24px; background: var(--primary-gradient); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; box-shadow: 0 4px 20px rgba(30, 132, 73, 0.4); cursor: pointer; z-index: 1000; border: none; }
-        .cart-count { position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; width: 24px; height: 24px; border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-        .cart-sidebar { position: fixed; top: 0; right: -420px; width: 400px; max-width: 90vw; height: 100vh; background: white; box-shadow: -4px 0 20px rgba(0,0,0,0.15); z-index: 2000; transition: right 0.3s; display: flex; flex-direction: column; }
-        .cart-sidebar.open { right: 0; }
-        .cart-header { padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        .cart-items { flex: 1; overflow-y: auto; padding: 20px; }
-        .cart-footer { padding: 20px; border-top: 1px solid var(--border-color); background: var(--primary-light); }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 12px; }
-        .cart-item-info { flex: 1; }
-        .cart-item-name { font-weight: 700; font-size: 14px; }
-        .cart-item-details { font-size: 12px; color: var(--text-light); margin-top: 4px; }
-        .cart-item-price { font-weight: 700; color: var(--primary-dark); margin-left: 12px; }
-        .cart-item-remove { background: var(--danger); color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-left: 8px; }
-        .order-item { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; border-left: 4px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
-        .order-code { font-size: 16px; font-weight: 700; color: var(--primary-dark); }
-        .order-date { font-size: 12px; color: var(--text-light); }
-        .order-products { margin-bottom: 12px; }
-        .order-product { padding: 8px 0; border-bottom: 1px solid var(--border-color); font-size: 13px; }
-        .order-product:last-child { border-bottom: none; }
-        .order-total { font-size: 18px; font-weight: 700; color: var(--primary-dark); text-align: right; margin-top: 12px; }
-        .order-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-        .badge-attesa { background: #fef9e7; color: #f39c12; }
-        .badge-pagato { background: #d5f4e6; color: #27ae60; }
-        .badge-lavorazione { background: #d6eaf8; color: #3498db; }
-        .badge-pronto { background: #e8daef; color: #9b59b6; }
-        .badge-ritirato { background: #d5f4e6; color: #27ae60; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 24px; }
-        .stat-card { background: white; border-radius: 12px; padding: 16px; text-align: center; border-left: 4px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .stat-number { font-size: 28px; font-weight: 800; color: var(--primary-dark); }
-        .stat-label { font-size: 12px; color: var(--text-light); margin-top: 4px; }
-        .alert-box { background: #ffebee; border-left: 4px solid var(--danger); padding: 16px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
-        .alert-icon { font-size: 24px; font-weight: 700; color: var(--danger); }
-        .alert-title { font-weight: 700; color: var(--danger); margin-bottom: 4px; }
-        .cred-box { background: var(--primary-light); padding: 20px; border-radius: 10px; border: 1px solid var(--primary); text-align: center; margin: 16px 0; }
-        .cred-box .label { font-size: 11px; color: var(--text-light); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
-        .cred-box .value { font-size: 20px; font-weight: 800; color: var(--primary-dark); margin: 8px 0; font-family: 'Courier New', monospace; }
-        .payment-methods { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 16px 0; }
-        .payment-option { padding: 16px; border: 2px solid var(--border-color); border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.2s; }
-        .payment-option:hover { border-color: var(--primary); background: var(--primary-light); }
-        .payment-option.selected { border-color: var(--primary); background: var(--primary-light); font-weight: 600; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2500; align-items: center; justify-content: center; }
-        .modal-overlay.active { display: flex; }
-        .modal-content { background: white; border-radius: var(--radius); padding: 32px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .modal-header h2 { font-size: 22px; color: var(--primary-dark); }
-        .close-modal { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-light); }
-        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
-        .toast { background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s; }
-        .toast.error { border-left-color: var(--danger); }
-        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
-        .hidden { display: none !important; }
-        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
-        .loading { text-align: center; padding: 40px; color: var(--text-light); }
-        .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
-        .upload-area { border: 2px dashed var(--border-color); border-radius: 12px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.3s; margin-bottom: 16px; }
-        .upload-area:hover { border-color: var(--primary); background: var(--primary-light); }
-        .file-preview { max-width: 150px; max-height: 150px; border-radius: 8px; margin-top: 12px; object-fit: cover; }
-        @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } .products-grid { grid-template-columns: 1fr; } .vetrina-header h2 { font-size: 24px; } .cart-sidebar { width: 100%; right: -100%; } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Negozio - AppCenterStudioPROGOLD</title>
+<style>
+:root {
+    --primary: #82e0aa;
+    --primary-dark: #1e8449;
+    --primary-light: #e8f8f5;
+    --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
+    --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
+    --text-main: #2c3e50;
+    --text-light: #7f8c8d;
+    --border-color: #e8e8e8;
+    --success: #27ae60;
+    --warning: #f39c12;
+    --danger: #e74c3c;
+    --info: #3498db;
+    --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-main);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+.branding-header {
+    background: var(--primary-gradient);
+    padding: 12px 24px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(30, 132, 73, 0.15);
+}
+.branding-header a {
+    font-family: 'Georgia', serif;
+    font-style: italic;
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+}
+.branding-header .tagline {
+    font-size: 13px;
+    opacity: 0.9;
+    color: white;
+    margin-left: 8px;
+}
+.top-bar {
+    background: var(--primary-gradient);
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
+}
+.nav-btn {
+    background: rgba(255,255,255,0.95);
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+.nav-btn:hover { transform: translateY(-2px); }
+.container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
+.page-header {
+    text-align: center;
+    padding: 32px;
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+}
+.page-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: var(--primary-gradient);
+}
+.page-header h1 {
+    font-size: 32px;
+    font-weight: 800;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+.page-header p { color: var(--text-light); font-size: 15px; }
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+}
+.dash-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    border: 2px solid transparent;
+}
+.dash-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--primary-gradient);
+}
+.dash-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(30, 132, 73, 0.2);
+    border-color: var(--primary);
+}
+.dash-card .card-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    display: block;
+}
+.dash-card .card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.dash-card .card-desc {
+    font-size: 13px;
+    color: var(--text-light);
+    line-height: 1.5;
+}
+.dash-card .badge-alert {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--danger);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    animation: pulse 2s infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+.section { display: none; }
+.section.active { display: block; }
+.card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
+    position: relative;
+    overflow: hidden;
+}
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--primary-gradient);
+}
+.card-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--primary-light);
+}
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.form-group { display: flex; flex-direction: column; }
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+.form-group input, .form-group select, .form-group textarea {
+    padding: 12px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
+}
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+.btn-primary { background: var(--primary-gradient); color: white; }
+.btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+.btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+.btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+.btn-info { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
+.btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+.btn-sm { padding: 8px 16px; font-size: 12px; }
+.btn-whatsapp {
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    color: white;
+}
+.vetrina-header {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 40px 24px;
+    text-align: center;
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+}
+.vetrina-header h2 {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+.vetrina-header p { font-size: 16px; opacity: 0.9; }
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+.product-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s;
+}
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(30, 132, 73, 0.12);
+    border-color: var(--primary);
+}
+.product-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: var(--primary-light);
+}
+.product-category {
+    font-size: 11px;
+    color: var(--primary-dark);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+.product-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 4px;
+}
+.product-price {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin-bottom: 8px;
+}
+.product-desc {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 12px;
+}
+.product-measure {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 12px;
+}
+.cart-float-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--primary-gradient);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    box-shadow: 0 4px 20px rgba(30, 132, 73, 0.4);
+    cursor: pointer;
+    z-index: 1000;
+    border: none;
+}
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--danger);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.cart-sidebar {
+    position: fixed;
+    top: 0;
+    right: -420px;
+    width: 400px;
+    max-width: 90vw;
+    height: 100vh;
+    background: white;
+    box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+    z-index: 2000;
+    transition: right 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+.cart-sidebar.open { right: 0; }
+.cart-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.cart-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+.cart-footer {
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
+    background: var(--primary-light);
+}
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+.cart-item-info { flex: 1; }
+.cart-item-name { font-weight: 700; font-size: 14px; }
+.cart-item-details { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+.cart-item-price { font-weight: 700; color: var(--primary-dark); margin-left: 12px; }
+.cart-item-remove {
+    background: var(--danger);
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    margin-left: 8px;
+}
+.order-item {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    border-left: 4px solid var(--primary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.order-code { font-size: 16px; font-weight: 700; color: var(--primary-dark); }
+.order-date { font-size: 12px; color: var(--text-light); }
+.order-products { margin-bottom: 12px; }
+.order-product {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 13px;
+}
+.order-product:last-child { border-bottom: none; }
+.order-total {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    text-align: right;
+    margin-top: 12px;
+}
+.order-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.badge-attesa { background: #fef9e7; color: #f39c12; }
+.badge-pagato { background: #d5f4e6; color: #27ae60; }
+.badge-lavorazione { background: #d6eaf8; color: #3498db; }
+.badge-pronto { background: #e8daef; color: #9b59b6; }
+.badge-ritirato { background: #d5f4e6; color: #27ae60; }
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    border-left: 4px solid var(--primary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.stat-number { font-size: 28px; font-weight: 800; color: var(--primary-dark); }
+.stat-label { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+.alert-box {
+    background: #ffebee;
+    border-left: 4px solid var(--danger);
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.alert-icon {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--danger);
+}
+.alert-title { font-weight: 700; color: var(--danger); margin-bottom: 4px; }
+.cred-box {
+    background: var(--primary-light);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--primary);
+    text-align: center;
+    margin: 16px 0;
+}
+.cred-box .label {
+    font-size: 11px;
+    color: var(--text-light);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.cred-box .value {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin: 8px 0;
+    font-family: 'Courier New', monospace;
+}
+.payment-methods {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+}
+.payment-option {
+    padding: 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.payment-option:hover { border-color: var(--primary); background: var(--primary-light); }
+.payment-option.selected {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    font-weight: 600;
+}
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 2500;
+    align-items: center;
+    justify-content: center;
+}
+.modal-overlay.active { display: flex; }
+.modal-content {
+    background: white;
+    border-radius: var(--radius);
+    padding: 32px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+.modal-header h2 { font-size: 22px; color: var(--primary-dark); }
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-light);
+}
+.toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
+.toast {
+    background: white;
+    border-radius: 10px;
+    padding: 14px 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    margin-bottom: 10px;
+    border-left: 4px solid var(--success);
+    animation: slideIn 0.3s;
+}
+.toast.error { border-left-color: var(--danger); }
+@keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+.hidden { display: none !important; }
+.empty-state { text-align: center; padding: 40px; color: var(--text-light); }
+.loading { text-align: center; padding: 40px; color: var(--text-light); }
+.spinner {
+    width: 40px; height: 40px;
+    border: 3px solid var(--primary-light);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.footer-branding {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-light);
+    font-size: 13px;
+    margin-top: 40px;
+}
+.upload-area {
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-bottom: 16px;
+}
+.upload-area:hover { border-color: var(--primary); background: var(--primary-light); }
+.file-preview {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 8px;
+    margin-top: 12px;
+    object-fit: cover;
+}
+@media (max-width: 768px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .products-grid { grid-template-columns: 1fr; }
+    .vetrina-header h2 { font-size: 24px; }
+    .cart-sidebar { width: 100%; right: -100%; }
+}
+</style>
 </head>
 <body>
     <div class="branding-header">
@@ -139,8 +621,8 @@
 
     <div class="top-bar">
         <div style="display: flex; gap: 10px;">
-            <button class="nav-btn" onclick="window.tornaPlancia()">Indietro alla Plancia</button>
-            <button class="nav-btn" onclick="window.mostraDashboard()">Dashboard Negozio</button>
+            <button class="nav-btn" onclick="tornaPlancia()">Indietro alla Plancia</button>
+            <button class="nav-btn" onclick="mostraDashboard()">Dashboard Negozio</button>
         </div>
         <div style="color: white; font-size: 13px;">Negozio Online</div>
     </div>
@@ -153,35 +635,35 @@
             </div>
 
             <div class="dashboard-grid">
-                <div class="dash-card" onclick="window.mostraSezione('anteprima')">
+                <div class="dash-card" onclick="mostraSezione('anteprima')">
                     <span class="card-icon">&#128065;</span>
                     <div class="card-title">Anteprima Negozio</div>
-                    <div class="card-desc">Vedi esattamente come appare il negozio ai tuoi clienti. Vetrina, prodotti e carrello.</div>
+                    <div class="card-desc">Vedi esattamente come appare il negozio ai tuoi clienti.</div>
                 </div>
 
-                <div class="dash-card" onclick="window.mostraSezione('link')">
+                <div class="dash-card" onclick="mostraSezione('link')">
                     <span class="card-icon">&#128279;</span>
                     <div class="card-title">Link Cliente</div>
                     <div class="card-desc">Genera link e credenziali da inviare al cliente tramite WhatsApp.</div>
                 </div>
 
-                <div class="dash-card" onclick="window.mostraSezione('prodotti')">
+                <div class="dash-card" onclick="mostraSezione('prodotti')">
                     <span class="card-icon">&#128230;</span>
                     <div class="card-title">Gestione Prodotti</div>
-                    <div class="card-desc">Crea, modifica e archivia i prodotti della vetrina. Aggiungi anche prodotti acconto.</div>
+                    <div class="card-desc">Crea, modifica e archivia i prodotti della vetrina.</div>
                 </div>
 
-                <div class="dash-card" onclick="window.mostraSezione('ordini')">
+                <div class="dash-card" onclick="mostraSezione('ordini')">
                     <span class="badge-alert hidden" id="alertOrdini">0</span>
                     <span class="card-icon">&#128203;</span>
                     <div class="card-title">Ordini Ricevuti</div>
-                    <div class="card-desc">Visualizza e gestisci gli ordini dei clienti con stato e dettagli.</div>
+                    <div class="card-desc">Visualizza e gestisci gli ordini dei clienti.</div>
                 </div>
 
-                <div class="dash-card" onclick="window.mostraSezione('config')">
+                <div class="dash-card" onclick="mostraSezione('config')">
                     <span class="card-icon">&#9881;</span>
                     <div class="card-title">Configurazioni</div>
-                    <div class="card-desc">Pagamenti anticipati, WhatsApp, messaggi automatici e ritiro in studio.</div>
+                    <div class="card-desc">Pagamenti, WhatsApp, messaggi automatici.</div>
                 </div>
             </div>
         </div>
@@ -191,26 +673,23 @@
                 <h2 id="vetrinaNomeStudio">Negozio G&L Studio</h2>
                 <p>Benvenuto! Scegli i tuoi prodotti personalizzati. Ritiro merce presso lo studio. Pagamento anticipato obbligatorio.</p>
             </div>
-
             <div class="card">
                 <div class="card-title">Vetrina Prodotti</div>
                 <div id="vetrinaLoading" class="loading">
                     <div class="spinner"></div>
                     <div>Caricamento prodotti...</div>
                 </div>
-                <div id="vetrinaEmpty" class="empty-state hidden">Nessun prodotto in vetrina. Vai in "Gestione Prodotti" per aggiungerli.</div>
+                <div id="vetrinaEmpty" class="empty-state hidden">Nessun prodotto in vetrina.</div>
                 <div class="products-grid" id="vetrinaGrid"></div>
             </div>
-
-            <button class="cart-float-btn" onclick="window.toggleCart()" id="cartBtn" style="display:none;">
+            <button class="cart-float-btn" onclick="toggleCart()" id="cartBtn" style="display:none;">
                 <span>+</span>
                 <span class="cart-count" id="cartCount">0</span>
             </button>
-
             <div class="cart-sidebar" id="cartSidebar">
                 <div class="cart-header">
                     <h3>Il tuo Carrello</h3>
-                    <button class="nav-btn" onclick="window.toggleCart()">Chiudi</button>
+                    <button class="nav-btn" onclick="toggleCart()">Chiudi</button>
                 </div>
                 <div class="cart-items" id="cartItems">
                     <div class="empty-state">Il carrello è vuoto</div>
@@ -223,7 +702,7 @@
                     <div style="font-size: 12px; color: var(--text-light); margin-bottom: 12px; text-align: center;">
                         Ritiro merce presso lo studio - Pagamento anticipato obbligatorio
                     </div>
-                    <button class="btn btn-success" style="width: 100%;" onclick="window.apriCheckout()">PROCEDI ALL'ORDINE</button>
+                    <button class="btn btn-success" style="width: 100%;" onclick="apriCheckout()">PROCEDI ALL'ORDINE</button>
                 </div>
             </div>
         </div>
@@ -232,9 +711,8 @@
             <div class="card">
                 <div class="card-title">Genera Link e Credenziali per il Cliente</div>
                 <div style="font-size: 13px; color: var(--text-light); margin-bottom: 24px;">
-                    Inserisci i dati del cliente e invia direttamente tramite WhatsApp link e credenziali di accesso al negozio.
+                    Inserisci i dati del cliente e invia direttamente tramite WhatsApp.
                 </div>
-
                 <div class="form-row">
                     <div class="form-group">
                         <label>Nome Cliente *</label>
@@ -242,15 +720,13 @@
                     </div>
                     <div class="form-group">
                         <label>Numero WhatsApp Cliente * (con prefisso)</label>
-                        <input type="tel" id="linkClienteTelefono" placeholder="+39 333 1234567" oninput="window.aggiornaBtnWhatsApp()">
-                        <button type="button" class="btn btn-whatsapp" id="btnWhatsAppWeb" onclick="window.apriWhatsAppWeb()" style="margin-top: 12px; display: none; width: 100%;">
+                        <input type="tel" id="linkClienteTelefono" placeholder="+39 333 1234567" oninput="aggiornaBtnWhatsApp()">
+                        <button type="button" class="btn btn-whatsapp" id="btnWhatsAppWeb" onclick="apriWhatsAppWeb()" style="margin-top: 12px; display: none; width: 100%;">
                             &#128279; Apri WhatsApp Web con questo numero
                         </button>
                     </div>
                 </div>
-
-                <button class="btn btn-primary" onclick="window.generaLinkCliente()">Genera Link e Credenziali</button>
-
+                <button class="btn btn-primary" onclick="generaLinkCliente()">Genera Link e Credenziali</button>
                 <div id="linkGenerato" class="hidden" style="margin-top: 24px;">
                     <div class="cred-box">
                         <div class="label">Username</div>
@@ -264,10 +740,9 @@
                         <div class="label">Link Negozio</div>
                         <div class="value" style="font-size: 13px; word-break: break-all;" id="genLink">---</div>
                     </div>
-
                     <div style="margin-top: 20px;">
-                        <button class="btn btn-whatsapp" onclick="window.inviaWhatsAppCliente()">INVIA TRAMITE WHATSAPP</button>
-                        <button class="btn btn-outline" onclick="window.copiaLinkCliente()">Copia Link</button>
+                        <button class="btn btn-whatsapp" onclick="inviaWhatsAppCliente()">INVIA TRAMITE WHATSAPP</button>
+                        <button class="btn btn-outline" onclick="copiaLinkCliente()">Copia Link</button>
                     </div>
                 </div>
             </div>
@@ -302,22 +777,18 @@
                     <div class="form-group"><label>Misure (separate da virgola)</label><input type="text" id="prodMisure" placeholder="es. 30x30, 40x40"></div>
                 </div>
                 <div class="form-group">
-                    <label>Immagine Prodotto (carica file - verrà ridimensionata automaticamente)</label>
+                    <label>Immagine Prodotto (carica file)</label>
                     <div class="upload-area" onclick="document.getElementById('prodImmagineFile').click()">
                         <div style="font-size: 32px; margin-bottom: 8px;">&#128247;</div>
                         <div style="font-size: 13px; color: var(--text-light);">Clicca per caricare l'immagine</div>
-                        <input type="file" id="prodImmagineFile" accept="image/*" style="display:none" onchange="window.previewImmagineProdotto(this)">
+                        <input type="file" id="prodImmagineFile" accept="image/*" style="display:none" onchange="previewImmagineProdotto(this)">
                         <img id="imgPreview" class="file-preview hidden">
                     </div>
-                    <div style="font-size: 12px; color: var(--text-light);">
-                        L'immagine verrà automaticamente ridimensionata per ottimizzare il caricamento.
-                    </div>
                 </div>
-                <button class="btn btn-primary" id="btnSalvaProdotto" onclick="window.creaProdotto()">CREA PRODOTTO</button>
-                <button class="btn btn-outline hidden" id="btnAnnullaModifica" onclick="window.annullaModificaProdotto()">ANNULLA MODIFICA</button>
-                <button class="btn btn-outline" onclick="window.aggiungiProdottiDefault()">AGGIUNGI PRODOTTI DEFAULT</button>
+                <button class="btn btn-primary" id="btnSalvaProdotto" onclick="creaProdotto()">CREA PRODOTTO</button>
+                <button class="btn btn-outline hidden" id="btnAnnullaModifica" onclick="annullaModificaProdotto()">ANNULLA MODIFICA</button>
+                <button class="btn btn-outline" onclick="aggiungiProdottiDefault()">AGGIUNGI PRODOTTI DEFAULT</button>
             </div>
-
             <div class="card">
                 <div class="card-title">Archivio Prodotti</div>
                 <div id="prodottiLoading" class="loading">
@@ -337,7 +808,6 @@
                     <div>Hai <strong id="countNuoviOrdini">0</strong> ordini da processare</div>
                 </div>
             </div>
-
             <div class="stats-grid">
                 <div class="stat-card"><div class="stat-number" id="statAtt">0</div><div class="stat-label">In Attesa</div></div>
                 <div class="stat-card"><div class="stat-number" id="statPag">0</div><div class="stat-label">Pagati</div></div>
@@ -345,7 +815,6 @@
                 <div class="stat-card"><div class="stat-number" id="statPro">0</div><div class="stat-label">Pronti</div></div>
                 <div class="stat-card"><div class="stat-number" id="statRit">0</div><div class="stat-label">Ritirati</div></div>
             </div>
-
             <div class="card">
                 <div class="card-title">Gestione Ordini</div>
                 <div id="ordiniLoading" class="loading">
@@ -361,32 +830,30 @@
             <div class="card">
                 <div class="card-title">Configurazione Negozio</div>
                 <div style="font-size: 13px; color: var(--text-light); margin-bottom: 20px;">
-                    Tutti i pagamenti devono essere effettuati anticipatamente. Non è accettato il pagamento in contanti al ritiro.
+                    Tutti i pagamenti devono essere effettuati anticipatamente.
                 </div>
-
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label>Metodi di Pagamento Anticipato</label>
                     <div class="payment-methods">
-                        <div class="payment-option" onclick="window.togglePayment('paypal')" id="opt-paypal">
+                        <div class="payment-option" onclick="togglePayment('paypal')" id="opt-paypal">
                             <div style="font-weight: 700;">PayPal</div>
                             <div style="font-size: 12px; color: var(--text-light);">Pagamento online</div>
                         </div>
-                        <div class="payment-option" onclick="window.togglePayment('iban')" id="opt-iban">
+                        <div class="payment-option" onclick="togglePayment('iban')" id="opt-iban">
                             <div style="font-weight: 700;">Bonifico IBAN</div>
                             <div style="font-size: 12px; color: var(--text-light);">Trasferimento bancario</div>
                         </div>
-                        <div class="payment-option" onclick="window.togglePayment('satispay')" id="opt-satispay">
+                        <div class="payment-option" onclick="togglePayment('satispay')" id="opt-satispay">
                             <div style="font-weight: 700;">Satispay</div>
                             <div style="font-size: 12px; color: var(--text-light);">App mobile</div>
                         </div>
-                        <div class="payment-option" onclick="window.togglePayment('stripe')" id="opt-stripe">
+                        <div class="payment-option" onclick="togglePayment('stripe')" id="opt-stripe">
                             <div style="font-weight: 700;">Stripe</div>
                             <div style="font-size: 12px; color: var(--text-light);">Carta di credito</div>
                         </div>
                     </div>
                     <input type="hidden" id="paymentMethods">
                 </div>
-
                 <div class="form-row">
                     <div class="form-group"><label>Email PayPal</label><input type="email" id="paypalEmail"></div>
                     <div class="form-group"><label>IBAN</label><input type="text" id="ibanNumero" placeholder="IT00..."></div>
@@ -399,17 +866,15 @@
                     <div class="form-group"><label>WhatsApp Studio *</label><input type="tel" id="whatsappNumero" placeholder="+39 333 1234567"></div>
                     <div class="form-group"><label>Indirizzo Studio (ritiro)</label><input type="text" id="studioIndirizzo"></div>
                 </div>
-
                 <div class="form-group">
                     <label>Messaggio Benvenuto (dopo ordine)</label>
-                    <textarea id="msgBenvenuto" rows="3">Grazie per il tuo ordine! Codice: {codice}. Procedi al pagamento anticipato per confermare l'ordine. Ti contatteremo per il ritiro.</textarea>
+                    <textarea id="msgBenvenuto" rows="3">Grazie per il tuo ordine! Codice: {codice}. Procedi al pagamento anticipato.</textarea>
                 </div>
                 <div class="form-group">
                     <label>Messaggio Ritiro (quando pronto)</label>
                     <textarea id="msgRitiro" rows="3">Ciao! Il tuo ordine {codice} è pronto per il ritiro in studio.</textarea>
                 </div>
-
-                <button class="btn btn-primary" onclick="window.salvaConfig()">SALVA CONFIGURAZIONE</button>
+                <button class="btn btn-primary" onclick="salvaConfig()">SALVA CONFIGURAZIONE</button>
             </div>
         </div>
     </div>
@@ -418,7 +883,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Completa l'Ordine</h2>
-                <button class="close-modal" onclick="window.chiudiCheckout()">X</button>
+                <button class="close-modal" onclick="chiudiCheckout()">X</button>
             </div>
             <div class="form-group">
                 <label>Nome e Cognome *</label>
@@ -430,7 +895,7 @@
             </div>
             <div class="form-group">
                 <label>Carica File (Foto da stampare)</label>
-                <input type="file" id="checkFile" accept="image/*,.pdf" onchange="window.previewFileCheckout(this)">
+                <input type="file" id="checkFile" accept="image/*,.pdf" onchange="previewFileCheckout(this)">
                 <div id="checkFileName" style="margin-top: 8px; font-weight: 600; color: var(--primary-dark);"></div>
             </div>
             <div style="margin-top: 20px; padding: 16px; background: var(--primary-light); border-radius: 8px;">
@@ -443,8 +908,8 @@
                 </div>
             </div>
             <div style="margin-top: 20px; display: flex; gap: 10px;">
-                <button class="btn btn-outline" onclick="window.chiudiCheckout()" style="flex: 1;">Annulla</button>
-                <button class="btn btn-success" onclick="window.confermaOrdine()" style="flex: 2;">CONFERMA ORDINE</button>
+                <button class="btn btn-outline" onclick="chiudiCheckout()" style="flex: 1;">Annulla</button>
+                <button class="btn btn-success" onclick="confermaOrdine()" style="flex: 2;">CONFERMA ORDINE</button>
             </div>
         </div>
     </div>
@@ -467,143 +932,142 @@
     </div>
 
     <script>
-        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        
-        let studioId = null;
-        let prodotti = [];
-        let config = null;
-        let carrello = [];
-        let fileCheckout = null;
-        let immagineProdottoBase64 = null;
-        let isEditing = false;
-        let editingId = null;
+        var WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        var urlParams = new URLSearchParams(window.location.search);
+        var token = urlParams.get('token');
+        var studioId = null;
+        var prodotti = [];
+        var config = null;
+        var carrello = [];
+        var fileCheckout = null;
+        var immagineProdottoBase64 = null;
+        var isEditing = false;
+        var editingId = null;
 
-        document.addEventListener('DOMContentLoaded', async function() {
+        document.addEventListener('DOMContentLoaded', function() {
             if (!token) {
                 window.location.href = 'index.html';
                 return;
             }
-            await window.verificaSessione();
+            verificaSessione();
         });
 
-        window.verificaSessione = async function() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
-                const data = await response.json();
-                if (!data.success || data.tipo !== 'studio') {
-                    window.mostraToast('Sessione non valida', 'error');
-                    setTimeout(() => window.location.href = 'index.html', 1500);
-                    return;
-                }
-                studioId = data.user.id;
-                await window.applicaTemaGlobale(studioId);
-                await window.caricaDatiIniziali();
-            } catch (error) {
-                console.error('Errore:', error);
-                window.mostraToast('Errore di connessione', 'error');
-            }
-        };
+        function verificaSessione() {
+            fetch(WORKER_URL + '/api/auth/verifica?token=' + token)
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (!data.success || data.tipo !== 'studio') {
+                        mostraToast('Sessione non valida', 'error');
+                        setTimeout(function() { window.location.href = 'index.html'; }, 1500);
+                        return;
+                    }
+                    studioId = data.user.id;
+                    applicaTemaGlobale(studioId);
+                    caricaDatiIniziali();
+                })
+                .catch(function(error) {
+                    console.error('Errore:', error);
+                    mostraToast('Errore di connessione', 'error');
+                });
+        }
 
-        window.applicaTemaGlobale = async function(sId) {
+        function applicaTemaGlobale(sId) {
             if (!sId) return;
-            try {
-                const res = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${sId}`);
-                const data = await res.json();
-                if (data.success && data.tema && data.tema.tema_attivo) {
-                    const temi = {
-                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
-                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
-                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
-                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
-                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
-                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
-                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
-                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
-                    };
-                    const t = temi[data.tema.tema_attivo] || temi['default'];
-                    const root = document.documentElement;
-                    root.style.setProperty('--primary', t.p);
-                    root.style.setProperty('--primary-dark', t.pd);
-                    root.style.setProperty('--primary-light', t.pl);
-                    root.style.setProperty('--primary-gradient', t.pg);
-                    root.style.setProperty('--bg-gradient', t.bg);
-                }
-            } catch (e) { console.error('Errore tema:', e); }
-        };
+            fetch(WORKER_URL + '/api/studio/tema?studioId=' + sId)
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.success && data.tema && data.tema.tema_attivo) {
+                        var temi = {
+                            'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
+                            'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
+                            'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
+                            'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
+                            'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
+                            'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
+                            'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
+                            'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
+                        };
+                        var t = temi[data.tema.tema_attivo] || temi['default'];
+                        var root = document.documentElement;
+                        root.style.setProperty('--primary', t.p);
+                        root.style.setProperty('--primary-dark', t.pd);
+                        root.style.setProperty('--primary-light', t.pl);
+                        root.style.setProperty('--primary-gradient', t.pg);
+                        root.style.setProperty('--bg-gradient', t.bg);
+                    }
+                })
+                .catch(function(e) { console.error('Errore tema:', e); });
+        }
 
-        window.caricaDatiIniziali = async function() {
-            await window.caricaProdotti();
-            await window.caricaOrdini();
-            await window.caricaConfig();
-        };
+        function caricaDatiIniziali() {
+            caricaProdotti();
+            caricaOrdini();
+            caricaConfig();
+        }
 
-        window.mostraDashboard = function() {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        function mostraDashboard() {
+            document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
             document.getElementById('dashboardSection').classList.add('active');
-        };
+        }
 
-        window.mostraSezione = function(nome) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        function mostraSezione(nome) {
+            document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
             document.getElementById(nome + 'Section').classList.add('active');
-            
-            if (nome === 'anteprima') window.renderizzaVetrina();
-            if (nome === 'prodotti') { 
-                window.annullaModificaProdotto();
-                window.renderizzaProdotti();
-                window.caricaProdotti();
+            if (nome === 'anteprima') renderizzaVetrina();
+            if (nome === 'prodotti') {
+                annullaModificaProdotto();
+                renderizzaProdotti();
+                caricaProdotti();
             }
-            if (nome === 'ordini') window.caricaOrdini();
-            if (nome === 'config') window.caricaConfig();
-        };
+            if (nome === 'ordini') caricaOrdini();
+            if (nome === 'config') caricaConfig();
+        }
 
-        window.renderizzaVetrina = function() {
-            const grid = document.getElementById('vetrinaGrid');
-            const loading = document.getElementById('vetrinaLoading');
-            const empty = document.getElementById('vetrinaEmpty');
-            const cartBtn = document.getElementById('cartBtn');
-            
+        function renderizzaVetrina() {
+            var grid = document.getElementById('vetrinaGrid');
+            var loading = document.getElementById('vetrinaLoading');
+            var empty = document.getElementById('vetrinaEmpty');
+            var cartBtn = document.getElementById('cartBtn');
             loading.style.display = 'none';
-            
             if (prodotti.length === 0) {
                 empty.classList.remove('hidden');
                 cartBtn.style.display = 'none';
                 grid.innerHTML = '';
                 return;
             }
-            
             empty.classList.add('hidden');
             cartBtn.style.display = 'flex';
-            
-            const categorieMap = {
-                'canvas': 'Canvas/Tela',
-                'poster': 'Poster/Stampa',
-                'album': 'Album',
-                'cornice': 'Cornice',
-                'cuscino': 'Cuscino',
-                'tazza': 'Tazza',
-                'acconto': 'Acconto',
-                'altro': 'Altro'
+            var categorieMap = {
+                'canvas': 'Canvas/Tela', 'poster': 'Poster/Stampa', 'album': 'Album',
+                'cornice': 'Cornice', 'cuscino': 'Cuscino', 'tazza': 'Tazza',
+                'acconto': 'Acconto', 'altro': 'Altro'
             };
+            var html = '';
+            for (var i = 0; i < prodotti.length; i++) {
+                var p = prodotti[i];
+                html += '<div class="product-card">';
+                if (p.immagine) {
+                    html += '<img src="' + p.immagine + '" class="product-image" alt="' + p.nome + '">';
+                } else {
+                    html += '<div class="product-image" style="display:flex;align-items:center;justify-content:center;color:var(--text-light);">Nessuna immagine</div>';
+                }
+                html += '<div class="product-category">' + (categorieMap[p.categoria] || p.categoria) + '</div>';
+                html += '<div class="product-name">' + p.nome + '</div>';
+                html += '<div class="product-price">EUR ' + parseFloat(p.prezzo).toFixed(2) + '</div>';
+                if (p.misura) html += '<div class="product-measure">' + p.misura + '</div>';
+                if (p.descrizione) html += '<div class="product-desc">' + p.descrizione + '</div>';
+                html += '<button class="btn btn-primary" style="width: 100%;" onclick="aggiungiAlCarrello(\'' + p.id + '\')">Aggiungi al Carrello</button>';
+                html += '</div>';
+            }
+            grid.innerHTML = html;
+        }
 
-            grid.innerHTML = prodotti.map(p => `
-                <div class="product-card">
-                    ${p.immagine ? `<img src="${p.immagine}" class="product-image" alt="${p.nome}">` : '<div class="product-image" style="display:flex;align-items:center;justify-content:center;color:var(--text-light);">Nessuna immagine</div>'}
-                    <div class="product-category">${categorieMap[p.categoria] || p.categoria}</div>
-                    <div class="product-name">${p.nome}</div>
-                    <div class="product-price">EUR ${parseFloat(p.prezzo).toFixed(2)}</div>
-                    ${p.misura ? `<div class="product-measure">${p.misura}</div>` : ''}
-                    ${p.descrizione ? `<div class="product-desc">${p.descrizione}</div>` : ''}
-                    <button class="btn btn-primary" style="width: 100%;" onclick="window.aggiungiAlCarrello('${p.id}')">Aggiungi al Carrello</button>
-                </div>
-            `).join('');
-        };
-
-        window.aggiungiAlCarrello = function(prodId) {
-            const prodotto = prodotti.find(p => p.id === prodId);
+        function aggiungiAlCarrello(prodId) {
+            var prodotto = null;
+            for (var i = 0; i < prodotti.length; i++) {
+                if (prodotti[i].id === prodId) { prodotto = prodotti[i]; break; }
+            }
             if (!prodotto) return;
-            
             carrello.push({
                 id: prodotto.id,
                 nome: prodotto.nome,
@@ -611,202 +1075,190 @@
                 quantita: 1,
                 variante: ''
             });
-            
-            window.aggiornaCarrelloUI();
-            window.mostraToast('Prodotto aggiunto al carrello', 'success');
-        };
+            aggiornaCarrelloUI();
+            mostraToast('Prodotto aggiunto al carrello', 'success');
+        }
 
-        window.aggiornaCarrelloUI = function() {
-            const container = document.getElementById('cartItems');
-            const countBadge = document.getElementById('cartCount');
-            const totalEl = document.getElementById('cartTotal');
-            
-            countBadge.textContent = carrello.reduce((sum, item) => sum + item.quantita, 0);
-            
+        function aggiornaCarrelloUI() {
+            var container = document.getElementById('cartItems');
+            var countBadge = document.getElementById('cartCount');
+            var totalEl = document.getElementById('cartTotal');
+            var count = 0;
+            for (var i = 0; i < carrello.length; i++) count += carrello[i].quantita;
+            countBadge.textContent = count;
             if (carrello.length === 0) {
                 container.innerHTML = '<div class="empty-state">Il carrello è vuoto</div>';
                 totalEl.textContent = 'EUR 0.00';
                 return;
             }
-
-            let totale = 0;
-            container.innerHTML = carrello.map((item, index) => {
-                const subtotale = item.prezzo * item.quantita;
+            var html = '';
+            var totale = 0;
+            for (var i = 0; i < carrello.length; i++) {
+                var item = carrello[i];
+                var subtotale = item.prezzo * item.quantita;
                 totale += subtotale;
-                return `
-                <div class="cart-item">
-                    <div class="cart-item-info">
-                        <div class="cart-item-name">${item.nome}</div>
-                        <div class="cart-item-details">Qty: ${item.quantita}</div>
-                    </div>
-                    <div class="cart-item-price">EUR ${subtotale.toFixed(2)}</div>
-                    <button class="cart-item-remove" onclick="window.rimuoviDalCarrello(${index})">X</button>
-                </div>
-            `).join('');
-            
-            totalEl.textContent = `EUR ${totale.toFixed(2)}`;
-        };
+                html += '<div class="cart-item">';
+                html += '<div class="cart-item-info">';
+                html += '<div class="cart-item-name">' + item.nome + '</div>';
+                html += '<div class="cart-item-details">Qty: ' + item.quantita + '</div>';
+                html += '</div>';
+                html += '<div class="cart-item-price">EUR ' + subtotale.toFixed(2) + '</div>';
+                html += '<button class="cart-item-remove" onclick="rimuoviDalCarrello(' + i + ')">X</button>';
+                html += '</div>';
+            }
+            container.innerHTML = html;
+            totalEl.textContent = 'EUR ' + totale.toFixed(2);
+        }
 
-        window.rimuoviDalCarrello = function(index) {
+        function rimuoviDalCarrello(index) {
             carrello.splice(index, 1);
-            window.aggiornaCarrelloUI();
-        };
+            aggiornaCarrelloUI();
+        }
 
-        window.toggleCart = function() {
+        function toggleCart() {
             document.getElementById('cartSidebar').classList.toggle('open');
-        };
+        }
 
-        window.apriCheckout = function() {
+        function apriCheckout() {
             if (carrello.length === 0) {
-                window.mostraToast('Il carrello è vuoto', 'error');
+                mostraToast('Il carrello è vuoto', 'error');
                 return;
             }
-            const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
-            document.getElementById('checkTotal').textContent = `EUR ${totale.toFixed(2)}`;
+            var totale = 0;
+            for (var i = 0; i < carrello.length; i++) totale += carrello[i].prezzo * carrello[i].quantita;
+            document.getElementById('checkTotal').textContent = 'EUR ' + totale.toFixed(2);
             document.getElementById('checkoutModal').classList.add('active');
-            window.toggleCart();
-        };
+            toggleCart();
+        }
 
-        window.chiudiCheckout = function() {
+        function chiudiCheckout() {
             document.getElementById('checkoutModal').classList.remove('active');
-        };
+        }
 
-        window.previewFileCheckout = function(input) {
+        function previewFileCheckout(input) {
             if (input.files && input.files[0]) {
                 fileCheckout = input.files[0];
                 document.getElementById('checkFileName').textContent = fileCheckout.name;
             }
-        };
+        }
 
-        window.confermaOrdine = async function() {
-            const nome = document.getElementById('checkNome').value.trim();
-            const telefono = document.getElementById('checkTelefono').value.trim();
-            const email = document.getElementById('checkEmail').value.trim();
-
+        function confermaOrdine() {
+            var nome = document.getElementById('checkNome').value.trim();
+            var telefono = document.getElementById('checkTelefono').value.trim();
+            var email = document.getElementById('checkEmail').value.trim();
             if (!nome || !telefono) {
-                window.mostraToast('Compila Nome e Telefono', 'error');
+                mostraToast('Compila Nome e Telefono', 'error');
                 return;
             }
-
-            window.mostraToast('Elaborazione ordine...', 'success');
-            
-            const codiceOrdine = 'ORD-' + Date.now().toString().slice(-6);
-            const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
-
-            try {
-                await fetch(`${WORKER_URL}/api/studio/negozio/ordine?token=${token}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        studio_id: studioId,
-                        codice_ordine: codiceOrdine,
-                        cliente_nome: nome,
-                        cliente_telefono: telefono,
-                        cliente_email: email,
-                        prodotti: JSON.stringify(carrello),
-                        totale: totale,
-                        stato: 'in_attesa',
-                        metodo_pagamento: 'anticipato',
-                        file_url: '',
-                        data_creazione: new Date().toISOString()
-                    })
-                });
-
+            mostraToast('Elaborazione ordine...', 'success');
+            var codiceOrdine = 'ORD-' + Date.now().toString().slice(-6);
+            var totale = 0;
+            for (var i = 0; i < carrello.length; i++) totale += carrello[i].prezzo * carrello[i].quantita;
+            fetch(WORKER_URL + '/api/studio/negozio/ordine?token=' + token, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    studio_id: studioId,
+                    codice_ordine: codiceOrdine,
+                    cliente_nome: nome,
+                    cliente_telefono: telefono,
+                    cliente_email: email,
+                    prodotti: JSON.stringify(carrello),
+                    totale: totale,
+                    stato: 'in_attesa',
+                    metodo_pagamento: 'anticipato',
+                    file_url: '',
+                    data_creazione: new Date().toISOString()
+                })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(result) {
                 document.getElementById('checkoutModal').classList.remove('active');
                 document.getElementById('successCode').textContent = codiceOrdine;
                 document.getElementById('successModal').classList.add('active');
                 carrello = [];
-                window.aggiornaCarrelloUI();
+                aggiornaCarrelloUI();
                 document.getElementById('checkNome').value = '';
                 document.getElementById('checkTelefono').value = '';
                 document.getElementById('checkEmail').value = '';
                 document.getElementById('checkFileName').textContent = '';
-            } catch (error) {
+            })
+            .catch(function(error) {
                 console.error('Errore:', error);
-                window.mostraToast('Errore durante l\'ordine', 'error');
-            }
-        };
+                mostraToast('Errore durante l\'ordine', 'error');
+            });
+        }
 
-        window.generaLinkCliente = function() {
-            const nome = document.getElementById('linkClienteNome').value.trim();
-            const telefono = document.getElementById('linkClienteTelefono').value.trim();
-            
+        function generaLinkCliente() {
+            var nome = document.getElementById('linkClienteNome').value.trim();
+            var telefono = document.getElementById('linkClienteTelefono').value.trim();
             if (!nome || !telefono) {
-                window.mostraToast('Inserisci nome e numero WhatsApp del cliente', 'error');
+                mostraToast('Inserisci nome e numero WhatsApp del cliente', 'error');
                 return;
             }
-
-            const username = 'cl-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-            const password = Math.random().toString(36).substring(2, 6).toUpperCase() + Math.floor(10+Math.random()*90);
-            const link = `${window.location.origin}${window.location.pathname}?studioId=${studioId}&cliente=${username}`;
-
+            var username = 'cl-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+            var password = Math.random().toString(36).substring(2, 6).toUpperCase() + Math.floor(10 + Math.random() * 90);
+            var link = window.location.origin + window.location.pathname + '?studioId=' + studioId + '&cliente=' + username;
             document.getElementById('genUsername').textContent = username;
             document.getElementById('genPassword').textContent = password;
             document.getElementById('genLink').textContent = link;
             document.getElementById('linkGenerato').classList.remove('hidden');
-            
-            window.mostraToast('Link e credenziali generati', 'success');
-        };
+            mostraToast('Link e credenziali generati', 'success');
+        }
 
-        window.copiaLinkCliente = function() {
-            const link = document.getElementById('genLink').textContent;
-            navigator.clipboard.writeText(link).then(() => {
-                window.mostraToast('Link copiato', 'success');
-            }).catch(() => {
-                window.mostraToast('Errore nella copia', 'error');
+        function copiaLinkCliente() {
+            var link = document.getElementById('genLink').textContent;
+            navigator.clipboard.writeText(link).then(function() {
+                mostraToast('Link copiato', 'success');
+            }).catch(function() {
+                mostraToast('Errore nella copia', 'error');
             });
-        };
+        }
 
-        window.aggiornaBtnWhatsApp = function() {
-            const telefono = document.getElementById('linkClienteTelefono').value.trim();
-            const btn = document.getElementById('btnWhatsAppWeb');
-            const cifre = telefono.replace(/\D/g, '');
+        function aggiornaBtnWhatsApp() {
+            var telefono = document.getElementById('linkClienteTelefono').value.trim();
+            var btn = document.getElementById('btnWhatsAppWeb');
+            var cifre = telefono.replace(/\D/g, '');
             btn.style.display = cifre.length >= 8 ? 'block' : 'none';
-        };
+        }
 
-        window.apriWhatsAppWeb = function() {
-            const telefono = document.getElementById('linkClienteTelefono').value.trim();
-            const cifre = telefono.replace(/\D/g, '');
-            
+        function apriWhatsAppWeb() {
+            var telefono = document.getElementById('linkClienteTelefono').value.trim();
+            var cifre = telefono.replace(/\D/g, '');
             if (cifre.length < 8) {
-                window.mostraToast('Inserisci un numero valido', 'error');
+                mostraToast('Inserisci un numero valido', 'error');
                 return;
             }
-            
-            window.open(`https://web.whatsapp.com/send?phone=${cifre}`, '_blank');
-        };
+            window.open('https://web.whatsapp.com/send?phone=' + cifre, '_blank');
+        }
 
-        window.inviaWhatsAppCliente = function() {
-            const username = document.getElementById('genUsername').textContent;
-            const password = document.getElementById('genPassword').textContent;
-            const link = document.getElementById('genLink').textContent;
-            const nome = document.getElementById('linkClienteNome').value.trim();
-            const telefono = document.getElementById('linkClienteTelefono').value.trim();
-            
+        function inviaWhatsAppCliente() {
+            var username = document.getElementById('genUsername').textContent;
+            var password = document.getElementById('genPassword').textContent;
+            var link = document.getElementById('genLink').textContent;
+            var nome = document.getElementById('linkClienteNome').value.trim();
+            var telefono = document.getElementById('linkClienteTelefono').value.trim();
             if (!telefono) {
-                window.mostraToast('Inserisci il numero WhatsApp del cliente', 'error');
+                mostraToast('Inserisci il numero WhatsApp del cliente', 'error');
                 return;
             }
-            
-            const msg = `Buongiorno ${nome},\n\nti inviamo il link per accedere al nostro negozio online:\n\nUsername: ${username}\nPassword: ${password}\n\nLink: ${link}\n\nBuon acquisto!`;
-            
-            const cleanPhone = telefono.replace(/\D/g, '');
-            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
-        };
+            var msg = 'Buongiorno ' + nome + ',\n\nti inviamo il link per accedere al nostro negozio online:\n\nUsername: ' + username + '\nPassword: ' + password + '\n\nLink: ' + link + '\n\nBuon acquisto!';
+            var cleanPhone = telefono.replace(/\D/g, '');
+            window.open('https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent(msg), '_blank');
+        }
 
-        window.previewImmagineProdotto = async function(input) {
+        function previewImmagineProdotto(input) {
             if (input.files && input.files[0]) {
-                const file = input.files[0];
-                const reader = new FileReader();
+                var file = input.files[0];
+                var reader = new FileReader();
                 reader.onload = function(e) {
-                    const img = new Image();
+                    var img = new Image();
                     img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 800;
-                        const MAX_HEIGHT = 800;
-                        let width = img.width;
-                        let height = img.height;
-                        
+                        var canvas = document.createElement('canvas');
+                        var MAX_WIDTH = 800;
+                        var MAX_HEIGHT = 800;
+                        var width = img.width;
+                        var height = img.height;
                         if (width > height) {
                             if (width > MAX_WIDTH) {
                                 height *= MAX_WIDTH / width;
@@ -818,15 +1270,12 @@
                                 height = MAX_HEIGHT;
                             }
                         }
-                        
                         canvas.width = width;
                         canvas.height = height;
-                        const ctx = canvas.getContext('2d');
+                        var ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        
-                        const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+                        var dataUrl = canvas.toDataURL('image/jpeg', 0.6);
                         immagineProdottoBase64 = dataUrl;
-                        
                         document.getElementById('imgPreview').src = dataUrl;
                         document.getElementById('imgPreview').classList.remove('hidden');
                     };
@@ -834,204 +1283,192 @@
                 };
                 reader.readAsDataURL(file);
             }
-        };
+        }
 
-        window.creaProdotto = async function() {
-            const nome = document.getElementById('prodNome').value.trim();
-            const categoria = document.getElementById('prodCategoria').value;
-            const prezzo = parseFloat(document.getElementById('prodPrezzo').value);
-            const misura = document.getElementById('prodMisura').value.trim();
-            const descrizione = document.getElementById('prodDescrizione').value.trim();
-            const colori = document.getElementById('prodColori').value.trim();
-            const misure = document.getElementById('prodMisure').value.trim();
-
+        function creaProdotto() {
+            var nome = document.getElementById('prodNome').value.trim();
+            var categoria = document.getElementById('prodCategoria').value;
+            var prezzo = parseFloat(document.getElementById('prodPrezzo').value);
+            var misura = document.getElementById('prodMisura').value.trim();
+            var descrizione = document.getElementById('prodDescrizione').value.trim();
+            var colori = document.getElementById('prodColori').value.trim();
+            var misure = document.getElementById('prodMisure').value.trim();
             if (!nome || isNaN(prezzo)) {
-                window.mostraToast('Compila Nome e Prezzo', 'error');
+                mostraToast('Compila Nome e Prezzo', 'error');
                 return;
             }
-
-            const prodotto = {
+            var prodotto = {
                 id: 'prod-' + Date.now(),
                 studio_id: studioId,
-                nome, categoria, prezzo, misura, descrizione,
-                colori, misure,
+                nome: nome,
+                categoria: categoria,
+                prezzo: prezzo,
+                misura: misura,
+                descrizione: descrizione,
+                colori: colori,
+                misure: misure,
                 immagine: immagineProdottoBase64 || '',
                 data_creazione: new Date().toISOString()
             };
-
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio/prodotto?token=${token}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(prodotto)
-                });
-                const result = await response.json();
+            fetch(WORKER_URL + '/api/studio/negozio/prodotto?token=' + token, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(prodotto)
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(result) {
                 if (result.success) {
-                    window.mostraToast('Prodotto creato', 'success');
-                    window.pulisciFormProdotto();
-                    await window.caricaProdotti();
-                    window.renderizzaProdotti();
+                    mostraToast('Prodotto creato', 'success');
+                    pulisciFormProdotto();
+                    caricaProdotti();
+                    renderizzaProdotti();
                 } else {
-                    window.mostraToast('Errore nella creazione', 'error');
+                    mostraToast('Errore nella creazione', 'error');
                 }
-            } catch (error) {
+            })
+            .catch(function(error) {
                 console.error('Errore:', error);
-                window.mostraToast('Errore di connessione', 'error');
-            }
-        };
+                mostraToast('Errore di connessione', 'error');
+            });
+        }
 
-        window.aggiornaProdotto = async function() {
-            const nome = document.getElementById('prodNome').value.trim();
-            const categoria = document.getElementById('prodCategoria').value;
-            const prezzo = parseFloat(document.getElementById('prodPrezzo').value);
-            const misura = document.getElementById('prodMisura').value.trim();
-            const descrizione = document.getElementById('prodDescrizione').value.trim();
-            const colori = document.getElementById('prodColori').value.trim();
-            const misure = document.getElementById('prodMisure').value.trim();
-
+        function aggiornaProdotto() {
+            var nome = document.getElementById('prodNome').value.trim();
+            var categoria = document.getElementById('prodCategoria').value;
+            var prezzo = parseFloat(document.getElementById('prodPrezzo').value);
+            var misura = document.getElementById('prodMisura').value.trim();
+            var descrizione = document.getElementById('prodDescrizione').value.trim();
+            var colori = document.getElementById('prodColori').value.trim();
+            var misure = document.getElementById('prodMisure').value.trim();
             if (!nome || isNaN(prezzo)) {
-                window.mostraToast('Compila Nome e Prezzo', 'error');
+                mostraToast('Compila Nome e Prezzo', 'error');
                 return;
             }
-
-            const prodotto = {
-                nome, categoria, prezzo, misura, descrizione,
-                colori, misure,
-                immagine: immagineProdottoBase64 || '',
+            var prodotto = {
+                nome: nome,
+                categoria: categoria,
+                prezzo: prezzo,
+                misura: misura,
+                descrizione: descrizione,
+                colori: colori,
+                misure: misure,
+                immagine: immagineProdottoBase64 || ''
             };
-
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio/prodotto/${editingId}?token=${token}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(prodotto)
-                });
-                const result = await response.json();
+            fetch(WORKER_URL + '/api/studio/negozio/prodotto/' + editingId + '?token=' + token, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(prodotto)
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(result) {
                 if (result.success) {
-                    window.mostraToast('Prodotto aggiornato', 'success');
-                    window.annullaModificaProdotto();
-                    await window.caricaProdotti();
-                    window.renderizzaProdotti();
+                    mostraToast('Prodotto aggiornato', 'success');
+                    annullaModificaProdotto();
+                    caricaProdotti();
+                    renderizzaProdotti();
                 } else {
-                    window.mostraToast('Errore nell\'aggiornamento', 'error');
+                    mostraToast('Errore nell\'aggiornamento', 'error');
                 }
-            } catch (error) {
+            })
+            .catch(function(error) {
                 console.error('Errore:', error);
-                window.mostraToast('Errore di connessione', 'error');
-            }
-        };
+                mostraToast('Errore di connessione', 'error');
+            });
+        }
 
-        window.aggiungiProdottiDefault = async function() {
-            const prodottiDefault = [
-                {
-                    nome: 'Tela Canvas 50x70 cm senza telaio',
-                    categoria: 'canvas',
-                    prezzo: 70,
-                    misura: '50x70 cm',
-                    descrizione: 'Stampa su tela canvas di alta qualità, senza telaio.',
-                    immagine: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=400'
-                },
-                {
-                    nome: 'Tela Canvas 50x70 cm con telaio',
-                    categoria: 'canvas',
-                    prezzo: 100,
-                    misura: '50x70 cm',
-                    descrizione: 'Stampa su tela canvas montata su telaio in legno. Pronta da appendere.',
-                    immagine: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400'
-                },
-                {
-                    nome: 'Stampa Poster 50x70 cm carta fotografica satinata',
-                    categoria: 'poster',
-                    prezzo: 30,
-                    misura: '50x70 cm',
-                    descrizione: 'Stampa professionale su carta fotografica satinata.',
-                    immagine: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb13f?w=400'
-                }
+        function aggiungiProdottiDefault() {
+            var prodottiDefault = [
+                { nome: 'Tela Canvas 50x70 cm senza telaio', categoria: 'canvas', prezzo: 70, misura: '50x70 cm', descrizione: 'Stampa su tela canvas di alta qualità, senza telaio.', immagine: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=400' },
+                { nome: 'Tela Canvas 50x70 cm con telaio', categoria: 'canvas', prezzo: 100, misura: '50x70 cm', descrizione: 'Stampa su tela canvas montata su telaio in legno. Pronta da appendere.', immagine: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400' },
+                { nome: 'Stampa Poster 50x70 cm carta fotografica satinata', categoria: 'poster', prezzo: 30, misura: '50x70 cm', descrizione: 'Stampa professionale su carta fotografica satinata.', immagine: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb13f?w=400' }
             ];
-
-            window.mostraToast('Aggiunta prodotti default...', 'success');
-            
-            for (const prod of prodottiDefault) {
-                try {
-                    await fetch(`${WORKER_URL}/api/studio/negozio/prodotto?token=${token}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            id: 'prod-' + Date.now() + Math.random().toString(36).substr(2, 9),
-                            studio_id: studioId,
-                            ...prod,
-                            data_creazione: new Date().toISOString()
-                        })
-                    });
-                } catch (e) { console.error(e); }
+            mostraToast('Aggiunta prodotti default...', 'success');
+            for (var i = 0; i < prodottiDefault.length; i++) {
+                var prod = prodottiDefault[i];
+                fetch(WORKER_URL + '/api/studio/negozio/prodotto?token=' + token, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id: 'prod-' + Date.now() + Math.random().toString(36).substr(2, 9),
+                        studio_id: studioId,
+                        nome: prod.nome,
+                        categoria: prod.categoria,
+                        prezzo: prod.prezzo,
+                        misura: prod.misura,
+                        descrizione: prod.descrizione,
+                        immagine: prod.immagine,
+                        data_creazione: new Date().toISOString()
+                    })
+                }).catch(function(e) { console.error(e); });
             }
-            
-            window.mostraToast('Prodotti default aggiunti', 'success');
-            await window.caricaProdotti();
-            window.renderizzaProdotti();
-        };
+            setTimeout(function() {
+                mostraToast('Prodotti default aggiunti', 'success');
+                caricaProdotti();
+                renderizzaProdotti();
+            }, 1500);
+        }
 
-        window.caricaProdotti = async function() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio/prodotti?token=${token}&studioId=${studioId}`);
-                const data = await response.json();
-                if (data.success && data.prodotti) {
-                    prodotti = data.prodotti;
-                }
-            } catch (error) { 
-                console.error('Errore:', error);
-                prodotti = [];
-            }
-        };
+        function caricaProdotti() {
+            fetch(WORKER_URL + '/api/studio/negozio/prodotti?token=' + token + '&studioId=' + studioId)
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.success && data.prodotti) {
+                        prodotti = data.prodotti;
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Errore:', error);
+                    prodotti = [];
+                });
+        }
 
-        window.renderizzaProdotti = function() {
-            const grid = document.getElementById('prodottiGrid');
-            const loading = document.getElementById('prodottiLoading');
-            const empty = document.getElementById('prodottiEmpty');
-            
+        function renderizzaProdotti() {
+            var grid = document.getElementById('prodottiGrid');
+            var loading = document.getElementById('prodottiLoading');
+            var empty = document.getElementById('prodottiEmpty');
             loading.style.display = 'none';
-            
             if (prodotti.length === 0) {
                 empty.classList.remove('hidden');
                 grid.innerHTML = '';
                 return;
             }
-            
             empty.classList.add('hidden');
-            const categorieMap = {
-                'canvas': 'Canvas/Tela',
-                'poster': 'Poster/Stampa',
-                'album': 'Album',
-                'cornice': 'Cornice',
-                'cuscino': 'Cuscino',
-                'tazza': 'Tazza',
-                'acconto': 'Acconto',
-                'altro': 'Altro'
+            var categorieMap = {
+                'canvas': 'Canvas/Tela', 'poster': 'Poster/Stampa', 'album': 'Album',
+                'cornice': 'Cornice', 'cuscino': 'Cuscino', 'tazza': 'Tazza',
+                'acconto': 'Acconto', 'altro': 'Altro'
             };
+            var html = '';
+            for (var i = 0; i < prodotti.length; i++) {
+                var p = prodotti[i];
+                html += '<div class="product-card">';
+                if (p.immagine) {
+                    html += '<img src="' + p.immagine + '" class="product-image" alt="' + p.nome + '">';
+                } else {
+                    html += '<div class="product-image" style="display:flex;align-items:center;justify-content:center;color:var(--text-light);">Nessuna immagine</div>';
+                }
+                html += '<div class="product-category">' + (categorieMap[p.categoria] || p.categoria) + '</div>';
+                html += '<div class="product-name">' + p.nome + '</div>';
+                html += '<div class="product-price">EUR ' + parseFloat(p.prezzo).toFixed(2) + '</div>';
+                if (p.misura) html += '<div class="product-measure">' + p.misura + '</div>';
+                if (p.descrizione) html += '<div class="product-desc">' + p.descrizione + '</div>';
+                html += '<div style="display: flex; gap: 8px; margin-top: 12px;">';
+                html += '<button class="btn btn-info btn-sm" onclick="preparaModificaProdotto(\'' + p.id + '\')">Modifica</button>';
+                html += '<button class="btn btn-danger btn-sm" onclick="eliminaProdotto(\'' + p.id + '\')">Elimina</button>';
+                html += '</div>';
+                html += '</div>';
+            }
+            grid.innerHTML = html;
+        }
 
-            grid.innerHTML = prodotti.map(p => `
-                <div class="product-card">
-                    ${p.immagine ? `<img src="${p.immagine}" class="product-image" alt="${p.nome}">` : '<div class="product-image" style="display:flex;align-items:center;justify-content:center;color:var(--text-light);">Nessuna immagine</div>'}
-                    <div class="product-category">${categorieMap[p.categoria] || p.categoria}</div>
-                    <div class="product-name">${p.nome}</div>
-                    <div class="product-price">EUR ${parseFloat(p.prezzo).toFixed(2)}</div>
-                    ${p.misura ? `<div class="product-measure">${p.misura}</div>` : ''}
-                    ${p.descrizione ? `<div class="product-desc">${p.descrizione}</div>` : ''}
-                    <div style="display: flex; gap: 8px; margin-top: 12px;">
-                        <button class="btn btn-info btn-sm" onclick="window.preparaModificaProdotto('${p.id}')">Modifica</button>
-                        <button class="btn btn-danger btn-sm" onclick="window.eliminaProdotto('${p.id}')">Elimina</button>
-                    </div>
-                </div>
-            `).join('');
-        };
-
-        window.preparaModificaProdotto = function(id) {
-            const prodotto = prodotti.find(p => p.id === id);
+        function preparaModificaProdotto(id) {
+            var prodotto = null;
+            for (var i = 0; i < prodotti.length; i++) {
+                if (prodotti[i].id === id) { prodotto = prodotti[i]; break; }
+            }
             if (!prodotto) return;
-
             isEditing = true;
             editingId = id;
-
             document.getElementById('formTitolo').textContent = 'Modifica Prodotto';
             document.getElementById('prodNome').value = prodotto.nome;
             document.getElementById('prodCategoria').value = prodotto.categoria;
@@ -1040,46 +1477,44 @@
             document.getElementById('prodDescrizione').value = prodotto.descrizione || '';
             document.getElementById('prodColori').value = prodotto.colori || '';
             document.getElementById('prodMisure').value = prodotto.misure || '';
-            
             if (prodotto.immagine) {
                 document.getElementById('imgPreview').src = prodotto.immagine;
                 document.getElementById('imgPreview').classList.remove('hidden');
                 immagineProdottoBase64 = prodotto.immagine;
             }
-
-            const btnSalva = document.getElementById('btnSalvaProdotto');
+            var btnSalva = document.getElementById('btnSalvaProdotto');
             btnSalva.textContent = 'AGGIORNA PRODOTTO';
-            btnSalva.onclick = window.aggiornaProdotto;
-            
+            btnSalva.onclick = aggiornaProdotto;
             document.getElementById('btnAnnullaModifica').classList.remove('hidden');
-            
             document.getElementById('prodottiSection').scrollIntoView({ behavior: 'smooth' });
-        };
+        }
 
-        window.annullaModificaProdotto = function() {
+        function annullaModificaProdotto() {
             isEditing = false;
             editingId = null;
-            window.pulisciFormProdotto();
+            pulisciFormProdotto();
             document.getElementById('formTitolo').textContent = 'Nuovo Prodotto';
-            const btnSalva = document.getElementById('btnSalvaProdotto');
+            var btnSalva = document.getElementById('btnSalvaProdotto');
             btnSalva.textContent = 'CREA PRODOTTO';
-            btnSalva.onclick = window.creaProdotto;
+            btnSalva.onclick = creaProdotto;
             document.getElementById('btnAnnullaModifica').classList.add('hidden');
-        };
+        }
 
-        window.eliminaProdotto = async function(id) {
+        function eliminaProdotto(id) {
             if (!confirm('Eliminare questo prodotto?')) return;
-            try {
-                await fetch(`${WORKER_URL}/api/studio/negozio/prodotto/${id}?token=${token}`, { method: 'DELETE' });
-                window.mostraToast('Prodotto eliminato', 'success');
-                await window.caricaProdotti();
-                window.renderizzaProdotti();
-            } catch (error) {
-                window.mostraToast('Errore eliminazione', 'error');
-            }
-        };
+            fetch(WORKER_URL + '/api/studio/negozio/prodotto/' + id + '?token=' + token, { method: 'DELETE' })
+                .then(function(r) { return r.json(); })
+                .then(function() {
+                    mostraToast('Prodotto eliminato', 'success');
+                    caricaProdotti();
+                    renderizzaProdotti();
+                })
+                .catch(function(error) {
+                    mostraToast('Errore eliminazione', 'error');
+                });
+        }
 
-        window.pulisciFormProdotto = function() {
+        function pulisciFormProdotto() {
             document.getElementById('prodNome').value = '';
             document.getElementById('prodPrezzo').value = '';
             document.getElementById('prodMisura').value = '';
@@ -1089,138 +1524,144 @@
             document.getElementById('prodImmagineFile').value = '';
             document.getElementById('imgPreview').classList.add('hidden');
             immagineProdottoBase64 = null;
-        };
+        }
 
-        window.caricaOrdini = async function() {
-            const loading = document.getElementById('ordiniLoading');
-            const empty = document.getElementById('ordiniEmpty');
-            const list = document.getElementById('ordersList');
-            
+        function caricaOrdini() {
+            var loading = document.getElementById('ordiniLoading');
+            var empty = document.getElementById('ordiniEmpty');
+            var list = document.getElementById('ordersList');
             loading.style.display = 'block';
             empty.classList.add('hidden');
             list.innerHTML = '';
-            
-            let stats = { att: 0, pag: 0, lav: 0, pro: 0, rit: 0 };
-
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio/ordini?token=${token}&studioId=${studioId}`);
-                const data = await response.json();
-                const ordini = data.success ? data.ordini : [];
-                
-                if (ordini.length === 0) {
-                    empty.classList.remove('hidden');
-                    document.getElementById('alertNuoviOrdini').classList.add('hidden');
-                } else {
-                    const badge = document.getElementById('alertOrdini');
-                    const inAttesa = ordini.filter(o => o.stato === 'in_attesa').length;
-                    badge.textContent = inAttesa;
-                    badge.classList.toggle('hidden', inAttesa === 0);
-                    
-                    const alertBox = document.getElementById('alertNuoviOrdini');
-                    const countEl = document.getElementById('countNuoviOrdini');
-                    if (inAttesa > 0) {
-                        alertBox.classList.remove('hidden');
-                        countEl.textContent = inAttesa;
+            var stats = { att: 0, pag: 0, lav: 0, pro: 0, rit: 0 };
+            fetch(WORKER_URL + '/api/studio/negozio/ordini?token=' + token + '&studioId=' + studioId)
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    var ordini = data.success ? data.ordini : [];
+                    if (ordini.length === 0) {
+                        empty.classList.remove('hidden');
+                        document.getElementById('alertNuoviOrdini').classList.add('hidden');
                     } else {
-                        alertBox.classList.add('hidden');
+                        var badge = document.getElementById('alertOrdini');
+                        var inAttesa = 0;
+                        for (var i = 0; i < ordini.length; i++) {
+                            if (ordini[i].stato === 'in_attesa') inAttesa++;
+                        }
+                        badge.textContent = inAttesa;
+                        badge.classList.toggle('hidden', inAttesa === 0);
+                        var alertBox = document.getElementById('alertNuoviOrdini');
+                        var countEl = document.getElementById('countNuoviOrdini');
+                        if (inAttesa > 0) {
+                            alertBox.classList.remove('hidden');
+                            countEl.textContent = inAttesa;
+                        } else {
+                            alertBox.classList.add('hidden');
+                        }
+                        var html = '';
+                        for (var i = 0; i < ordini.length; i++) {
+                            var o = ordini[i];
+                            if (o.stato === 'in_attesa') stats.att++;
+                            if (o.stato === 'pagato') stats.pag++;
+                            if (o.stato === 'in_lavorazione') stats.lav++;
+                            if (o.stato === 'pronto') stats.pro++;
+                            if (o.stato === 'ritirato') stats.rit++;
+                            var prodottiOrdinati = JSON.parse(o.prodotti || '[]');
+                            var badgeClass = 'badge-' + o.stato;
+                            var statoText = o.stato.replace('_', ' ').toUpperCase();
+                            html += '<div class="order-item">';
+                            html += '<div class="order-header">';
+                            html += '<div>';
+                            html += '<div class="order-code">Ordine #' + o.codice_ordine + '</div>';
+                            html += '<div class="order-date">' + new Date(o.data_creazione).toLocaleString('it-IT') + ' - ' + o.cliente_nome + ' (' + o.cliente_telefono + ')</div>';
+                            html += '</div>';
+                            html += '<span class="badge ' + badgeClass + '">' + statoText + '</span>';
+                            html += '</div>';
+                            html += '<div class="order-products">';
+                            for (var j = 0; j < prodottiOrdinati.length; j++) {
+                                var p = prodottiOrdinati[j];
+                                html += '<div class="order-product">• ' + p.nome + ' x' + p.quantita + ' - EUR ' + (p.prezzo * p.quantita).toFixed(2) + '</div>';
+                            }
+                            html += '</div>';
+                            html += '<div class="order-total">Totale: EUR ' + parseFloat(o.totale).toFixed(2) + '</div>';
+                            html += '<div class="order-actions">';
+                            if (o.stato !== 'pagato') html += '<button class="btn btn-sm btn-success" onclick="cambiaStatoOrdine(\'' + o.id + '\', \'pagato\')">Pagato</button>';
+                            if (o.stato !== 'in_lavorazione') html += '<button class="btn btn-sm btn-info" onclick="cambiaStatoOrdine(\'' + o.id + '\', \'in_lavorazione\')">In Lavorazione</button>';
+                            if (o.stato !== 'pronto') html += '<button class="btn btn-sm btn-warning" onclick="cambiaStatoOrdine(\'' + o.id + '\', \'pronto\')">Pronto</button>';
+                            if (o.stato !== 'ritirato') html += '<button class="btn btn-sm btn-primary" onclick="cambiaStatoOrdine(\'' + o.id + '\', \'ritirato\')">Ritirato</button>';
+                            html += '</div>';
+                            html += '</div>';
+                        }
+                        list.innerHTML = html;
                     }
-
-                    list.innerHTML = ordini.map(o => {
-                        if (o.stato === 'in_attesa') stats.att++;
-                        if (o.stato === 'pagato') stats.pag++;
-                        if (o.stato === 'in_lavorazione') stats.lav++;
-                        if (o.stato === 'pronto') stats.pro++;
-                        if (o.stato === 'ritirato') stats.rit++;
-
-                        const prodottiOrdinati = JSON.parse(o.prodotti || '[]');
-                        const badgeClass = `badge-${o.stato}`;
-                        const statoText = o.stato.replace('_', ' ').toUpperCase();
-
-                        return `
-                        <div class="order-item">
-                            <div class="order-header">
-                                <div>
-                                    <div class="order-code">Ordine #${o.codice_ordine}</div>
-                                    <div class="order-date">${new Date(o.data_creazione).toLocaleString('it-IT')} - ${o.cliente_nome} (${o.cliente_telefono})</div>
-                                </div>
-                                <span class="badge ${badgeClass}">${statoText}</span>
-                            </div>
-                            <div class="order-products">
-                                ${prodottiOrdinati.map(p => `<div class="order-product">• ${p.nome} x${p.quantita} - EUR ${(p.prezzo * p.quantita).toFixed(2)}</div>`).join('')}
-                            </div>
-                            <div class="order-total">Totale: EUR ${parseFloat(o.totale).toFixed(2)}</div>
-                            <div class="order-actions">
-                                ${o.stato !== 'pagato' ? `<button class="btn btn-sm btn-success" onclick="window.cambiaStatoOrdine('${o.id}', 'pagato')">Pagato</button>` : ''}
-                                ${o.stato !== 'in_lavorazione' ? `<button class="btn btn-sm btn-info" onclick="window.cambiaStatoOrdine('${o.id}', 'in_lavorazione')">In Lavorazione</button>` : ''}
-                                ${o.stato !== 'pronto' ? `<button class="btn btn-sm btn-warning" onclick="window.cambiaStatoOrdine('${o.id}', 'pronto')">Pronto</button>` : ''}
-                                ${o.stato !== 'ritirato' ? `<button class="btn btn-sm btn-primary" onclick="window.cambiaStatoOrdine('${o.id}', 'ritirato')">Ritirato</button>` : ''}
-                            </div>
-                        </div>
-                    `).join('');
-                }
-            } catch (error) { console.error('Errore:', error); }
-            
+                })
+                .catch(function(error) { console.error('Errore:', error); });
             loading.style.display = 'none';
             document.getElementById('statAtt').textContent = stats.att;
             document.getElementById('statPag').textContent = stats.pag;
             document.getElementById('statLav').textContent = stats.lav;
             document.getElementById('statPro').textContent = stats.pro;
             document.getElementById('statRit').textContent = stats.rit;
-        };
+        }
 
-        window.cambiaStatoOrdine = async function(ordineId, nuovoStato) {
-            try {
-                await fetch(`${WORKER_URL}/api/studio/negozio/ordine/${ordineId}?token=${token}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ stato: nuovoStato })
-                });
-                window.mostraToast(`Ordine aggiornato: ${nuovoStato}`, 'success');
-                await window.caricaOrdini();
-            } catch (error) {
-                window.mostraToast('Errore aggiornamento', 'error');
-            }
-        };
-
-        window.togglePayment = function(method) {
-            const el = document.getElementById('opt-' + method);
-            el.classList.toggle('selected');
-            
-            const selected = [];
-            ['paypal', 'iban', 'satispay', 'stripe'].forEach(m => {
-                if (document.getElementById('opt-' + m).classList.contains('selected')) selected.push(m);
+        function cambiaStatoOrdine(ordineId, nuovoStato) {
+            fetch(WORKER_URL + '/api/studio/negozio/ordine/' + ordineId + '?token=' + token, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ stato: nuovoStato })
+            })
+            .then(function(r) { return r.json(); })
+            .then(function() {
+                mostraToast('Ordine aggiornato: ' + nuovoStato, 'success');
+                caricaOrdini();
+            })
+            .catch(function(error) {
+                mostraToast('Errore aggiornamento', 'error');
             });
-            document.getElementById('paymentMethods').value = selected.join(',');
-        };
+        }
 
-        window.caricaConfig = async function() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio-config?token=${token}&studioId=${studioId}`);
-                const data = await response.json();
-                if (data.success && data.config) {
-                    config = data.config;
-                    document.getElementById('paypalEmail').value = config.paypal_email || '';
-                    document.getElementById('ibanNumero').value = config.iban_numero || '';
-                    document.getElementById('satispayNumero').value = config.satispay_numero || '';
-                    document.getElementById('stripeLink').value = config.stripe_link || '';
-                    document.getElementById('whatsappNumero').value = config.whatsapp_numero || '';
-                    document.getElementById('studioIndirizzo').value = config.studio_indirizzo || '';
-                    document.getElementById('msgBenvenuto').value = config.msg_benvenuto || '';
-                    document.getElementById('msgRitiro').value = config.msg_ritiro || '';
-                    
-                    if (config.metodi_pagamento) {
-                        config.metodi_pagamento.split(',').forEach(m => {
-                            const el = document.getElementById('opt-' + m.trim());
-                            if (el) el.classList.add('selected');
-                        });
-                        document.getElementById('paymentMethods').value = config.metodi_pagamento;
-                    }
+        function togglePayment(method) {
+            var el = document.getElementById('opt-' + method);
+            el.classList.toggle('selected');
+            var selected = [];
+            var methods = ['paypal', 'iban', 'satispay', 'stripe'];
+            for (var i = 0; i < methods.length; i++) {
+                if (document.getElementById('opt-' + methods[i]).classList.contains('selected')) {
+                    selected.push(methods[i]);
                 }
-            } catch (error) { console.error('Errore:', error); }
-        };
+            }
+            document.getElementById('paymentMethods').value = selected.join(',');
+        }
 
-        window.salvaConfig = async function() {
-            const data = {
+        function caricaConfig() {
+            fetch(WORKER_URL + '/api/studio/negozio-config?token=' + token + '&studioId=' + studioId)
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.success && data.config) {
+                        config = data.config;
+                        document.getElementById('paypalEmail').value = config.paypal_email || '';
+                        document.getElementById('ibanNumero').value = config.iban_numero || '';
+                        document.getElementById('satispayNumero').value = config.satispay_numero || '';
+                        document.getElementById('stripeLink').value = config.stripe_link || '';
+                        document.getElementById('whatsappNumero').value = config.whatsapp_numero || '';
+                        document.getElementById('studioIndirizzo').value = config.studio_indirizzo || '';
+                        document.getElementById('msgBenvenuto').value = config.msg_benvenuto || '';
+                        document.getElementById('msgRitiro').value = config.msg_ritiro || '';
+                        if (config.metodi_pagamento) {
+                            var methods = config.metodi_pagamento.split(',');
+                            for (var i = 0; i < methods.length; i++) {
+                                var m = methods[i].trim();
+                                var el = document.getElementById('opt-' + m);
+                                if (el) el.classList.add('selected');
+                            }
+                            document.getElementById('paymentMethods').value = config.metodi_pagamento;
+                        }
+                    }
+                })
+                .catch(function(error) { console.error('Errore:', error); });
+        }
+
+        function salvaConfig() {
+            var data = {
                 studio_id: studioId,
                 paypal_email: document.getElementById('paypalEmail').value.trim(),
                 iban_numero: document.getElementById('ibanNumero').value.trim(),
@@ -1232,43 +1673,42 @@
                 msg_ritiro: document.getElementById('msgRitiro').value.trim(),
                 metodi_pagamento: document.getElementById('paymentMethods').value
             };
-
             if (!data.whatsapp_numero) {
-                window.mostraToast('Inserisci almeno il numero WhatsApp', 'error');
+                mostraToast('Inserisci almeno il numero WhatsApp', 'error');
                 return;
             }
-
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio-config?token=${token}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                const result = await response.json();
+            fetch(WORKER_URL + '/api/studio/negozio-config?token=' + token, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(result) {
                 if (result.success) {
-                    window.mostraToast('Configurazione salvata', 'success');
-                    await window.caricaConfig();
+                    mostraToast('Configurazione salvata', 'success');
+                    caricaConfig();
                 } else {
-                    window.mostraToast('Errore nel salvataggio', 'error');
+                    mostraToast('Errore nel salvataggio', 'error');
                 }
-            } catch (error) {
+            })
+            .catch(function(error) {
                 console.error('Errore:', error);
-                window.mostraToast('Errore di connessione', 'error');
-            }
-        };
+                mostraToast('Errore di connessione', 'error');
+            });
+        }
 
-        window.tornaPlancia = function() {
-            window.location.href = `plancia-studio.html?token=${token}`;
-        };
+        function tornaPlancia() {
+            window.location.href = 'plancia-studio.html?token=' + token;
+        }
 
-        window.mostraToast = function(msg, tipo) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div>${msg}</div>`;
+        function mostraToast(msg, tipo) {
+            var container = document.getElementById('toastContainer');
+            var toast = document.createElement('div');
+            toast.className = 'toast ' + (tipo || '');
+            toast.innerHTML = '<div>' + msg + '</div>';
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        };
+            setTimeout(function() { toast.remove(); }, 3000);
+        }
     </script>
 </body>
 </html>
