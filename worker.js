@@ -306,7 +306,7 @@ export default {
       }
 
       // ============================================
-      // SERVIZI, PREVENTIVI, WORKFLOW, RICEVUTE, AGENDA, CLIENTI, EMAIL, NEGOZIO
+      // SERVIZI, PREVENTIVI, WORKFLOW, RICEVUTE, AGENDA, CLIENTI, EMAIL
       // ============================================
       if (path === "/api/studio/servizi" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -504,11 +504,14 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // NEGOZIO (COMPLETO E CORRETTO)
+      // ============================================
       if (path === "/api/studio/negozio/prodotti" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const result = await env.DB.prepare("SELECT * FROM prodotti_negozio WHERE studio_id=?").bind(url.searchParams.get("studioId")).all();
+        const result = await env.DB.prepare("SELECT * FROM prodotti_negozio WHERE studio_id=? ORDER BY data_creazione DESC").bind(url.searchParams.get("studioId")).all();
         return new Response(JSON.stringify({ success: true, prodotti: result.results }), { headers: corsHeaders });
       }
       if (path === "/api/studio/negozio/prodotto" && request.method === "POST") {
@@ -519,6 +522,42 @@ export default {
         await env.DB.prepare(`INSERT INTO prodotti_negozio (id, studio_id, nome, categoria, prezzo, misura, descrizione, colori, misure, immagine, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, d.studio_id, d.nome, d.categoria, d.prezzo, d.misura, d.descrizione, d.colori || '', d.misure || '', d.immagine || '', d.data_creazione).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+      if (path.startsWith("/api/studio/negozio/prodotto/") && request.method === "DELETE") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const id = path.split("/api/studio/negozio/prodotto/")[1];
+        await env.DB.prepare("DELETE FROM prodotti_negozio WHERE id=?").bind(id).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
+      if (path === "/api/studio/negozio/ordini" && request.method === "GET") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const result = await env.DB.prepare("SELECT * FROM ordini_negozio WHERE studio_id=? ORDER BY data_creazione DESC").bind(url.searchParams.get("studioId")).all();
+        return new Response(JSON.stringify({ success: true, ordini: result.results }), { headers: corsHeaders });
+      }
+      if (path === "/api/studio/negozio/ordine" && request.method === "POST") {
+        const d = await request.json();
+        const studioId = d.studio_id || url.searchParams.get("studioId");
+        if (!studioId) return new Response(JSON.stringify({ error: "Studio ID mancante" }), { status: 400, headers: corsHeaders });
+        const orderId = 'ord-' + Date.now();
+        await env.DB.prepare(`INSERT INTO ordini_negozio (id, studio_id, codice_ordine, cliente_nome, cliente_telefono, cliente_email, prodotti, totale, stato, metodo_pagamento, file_url, letto, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+          orderId, studioId, d.codice_ordine, d.cliente_nome, d.cliente_telefono, d.cliente_email, d.prodotti, d.totale, d.stato || 'in_attesa', d.metodo_pagamento || 'anticipato', d.file_url || '', 0, d.data_creazione || new Date().toISOString()
+        ).run();
+        return new Response(JSON.stringify({ success: true, id: orderId }), { headers: corsHeaders });
+      }
+      if (path.startsWith("/api/studio/negozio/ordine/") && request.method === "PUT") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const id = path.split("/api/studio/negozio/ordine/")[1];
+        const d = await request.json();
+        await env.DB.prepare(`UPDATE ordini_negozio SET stato=? WHERE id=?`).bind(d.stato, id).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+
       if (path === "/api/studio/negozio-config" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -533,9 +572,13 @@ export default {
         const d = await request.json();
         const existing = await env.DB.prepare("SELECT id FROM negozi_config WHERE studio_id=?").bind(d.studio_id).first();
         if (existing) {
-          await env.DB.prepare(`UPDATE negozi_config SET paypal_email=?, whatsapp_numero=?, studio_indirizzo=?, msg_benvenuto=?, msg_ritiro=? WHERE studio_id=?`).bind(d.paypal_email, d.whatsapp_numero, d.studio_indirizzo, d.msg_benvenuto || '', d.msg_ritiro || '', d.studio_id).run();
+          await env.DB.prepare(`UPDATE negozi_config SET paypal_email=?, iban_numero=?, satispay_numero=?, stripe_link=?, whatsapp_numero=?, studio_indirizzo=?, msg_benvenuto=?, msg_ritiro=?, metodi_pagamento=? WHERE studio_id=?`).bind(
+            d.paypal_email || '', d.iban_numero || '', d.satispay_numero || '', d.stripe_link || '', d.whatsapp_numero || '', d.studio_indirizzo || '', d.msg_benvenuto || '', d.msg_ritiro || '', d.metodi_pagamento || '', d.studio_id
+          ).run();
         } else {
-          await env.DB.prepare(`INSERT INTO negozi_config (studio_id, paypal_email, whatsapp_numero, studio_indirizzo, msg_benvenuto, msg_ritiro) VALUES (?, ?, ?, ?, ?, ?)`).bind(d.studio_id, d.paypal_email, d.whatsapp_numero, d.studio_indirizzo, d.msg_benvenuto || '', d.msg_ritiro || '').run();
+          await env.DB.prepare(`INSERT INTO negozi_config (studio_id, paypal_email, iban_numero, satispay_numero, stripe_link, whatsapp_numero, studio_indirizzo, msg_benvenuto, msg_ritiro, metodi_pagamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+            d.studio_id, d.paypal_email || '', d.iban_numero || '', d.satispay_numero || '', d.stripe_link || '', d.whatsapp_numero || '', d.studio_indirizzo || '', d.msg_benvenuto || '', d.msg_ritiro || '', d.metodi_pagamento || ''
+          ).run();
         }
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
@@ -543,8 +586,6 @@ export default {
       // ============================================
       // LISTA REGALI (CORRETTO E COMPLETO)
       // ============================================
-
-      // 1. LISTA ARCHIVIO (Studio)
       if (path === "/api/studio/lista-regali" && request.method === "GET") {
           const token = url.searchParams.get("token");
           const sess = await verificaSessione(token);
@@ -552,8 +593,6 @@ export default {
           const result = await env.DB.prepare("SELECT * FROM lista_regali WHERE studio_id=? ORDER BY data_creazione DESC").bind(sess.user_id).all();
           return new Response(JSON.stringify({ success: true, lista: result.results }), { headers: corsHeaders });
       }
-
-      // 2. CREA LISTA REGALI (Studio)
       if (path === "/api/studio/lista-regali" && request.method === "POST") {
           const token = url.searchParams.get("token");
           const sess = await verificaSessione(token);
@@ -564,8 +603,6 @@ export default {
           ).run();
           return new Response(JSON.stringify({ success: true, id: d.id }), { headers: corsHeaders });
       }
-
-      // 3. ELIMINA LISTA (Studio)
       if (path.startsWith("/api/studio/lista-regali/") && request.method === "DELETE") {
           const token = url.searchParams.get("token");
           const sess = await verificaSessione(token);
@@ -574,16 +611,12 @@ export default {
           await env.DB.prepare("DELETE FROM lista_regali WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
           return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-
-      // 4. LETTURA PUBBLICA LISTA (Invitati e Cliente)
       if (path.startsWith("/api/public/lista-regali/") && request.method === "GET" && !path.includes("findByCredentials") && !path.includes("donazioni") && !path.includes("messaggi") && !path.includes("messaggio") && !path.includes("aggiorna-totale")) {
           const id = path.split("/api/public/lista-regali/")[1];
           const result = await env.DB.prepare("SELECT * FROM lista_regali WHERE id=?").bind(id).first();
           if (!result) return new Response(JSON.stringify({ error: "Lista non trovata" }), { status: 404, headers: corsHeaders });
           return new Response(JSON.stringify({ success: true, lista: result }), { headers: corsHeaders });
       }
-
-      // 5. TROVA LISTA PER CREDENZIALI (Login Cliente)
       if (path === "/api/public/lista-regali/findByCredentials" && request.method === "GET") {
           const username = url.searchParams.get("username");
           const password = url.searchParams.get("password");
@@ -592,8 +625,6 @@ export default {
           if (!result) return new Response(JSON.stringify({ error: "Credenziali non valide" }), { status: 401, headers: corsHeaders });
           return new Response(JSON.stringify({ success: true, lista: result }), { headers: corsHeaders });
       }
-
-      // 6. REGISTRA DONAZIONE SINGOLA (Dashboard Cliente)
       if (path === "/api/public/lista-regali/donazione" && request.method === "POST") {
           const d = await request.json();
           const id = 'don-' + Date.now();
@@ -604,16 +635,12 @@ export default {
           await env.DB.prepare("UPDATE lista_regali SET raccolto_attuale=? WHERE id=?").bind(totalResult.totale, d.lista_id).run();
           return new Response(JSON.stringify({ success: true, id, totale: totalResult.totale }), { headers: corsHeaders });
       }
-
-      // 7. LISTA DONAZIONI (Dashboard Cliente)
       if (path === "/api/public/lista-regali/donazioni" && request.method === "GET") {
           const listaId = url.searchParams.get("listaId");
           if (!listaId) return new Response(JSON.stringify({ error: "Parametro mancante" }), { status: 400, headers: corsHeaders });
           const result = await env.DB.prepare("SELECT * FROM donazioni_lista WHERE lista_id=? ORDER BY data_donazione DESC").bind(listaId).all();
           return new Response(JSON.stringify({ success: true, donazioni: result.results }), { headers: corsHeaders });
       }
-
-      // 8. ELIMINA DONAZIONE (Dashboard Cliente)
       if (path.startsWith("/api/public/lista-regali/donazione/") && request.method === "DELETE") {
           const id = path.split("/api/public/lista-regali/donazione/")[1];
           const donazione = await env.DB.prepare("SELECT lista_id FROM donazioni_lista WHERE id=?").bind(id).first();
@@ -624,8 +651,6 @@ export default {
           }
           return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-
-      // 9. INVIA AUGURIO (Pubblico)
       if (path === "/api/public/lista-regali/messaggio" && request.method === "POST") {
           const d = await request.json();
           try {
@@ -638,8 +663,6 @@ export default {
               return new Response(JSON.stringify({ error: "Errore nel salvataggio del messaggio", details: error.message }), { status: 500, headers: corsHeaders });
           }
       }
-
-      // 10. LISTA AUGURI (Pubblico e Cliente)
       if (path === "/api/public/lista-regali/messaggi" && request.method === "GET") {
           const listaId = url.searchParams.get("listaId");
           try {
@@ -650,8 +673,6 @@ export default {
               return new Response(JSON.stringify({ error: "Errore nella lettura dei messaggi" }), { status: 500, headers: corsHeaders });
           }
       }
-
-      // 11. AGGIORNA TOTALE (dopo invio augurio con importo)
       if (path === "/api/public/lista-regali/aggiorna-totale" && request.method === "POST") {
           const d = await request.json();
           try {
@@ -665,7 +686,7 @@ export default {
       }
 
       // ============================================
-      // UPLOAD, TEMI, PROFILO, LINK UTILI, NEGOZIO ORDINI, GALLERIE, CONTRATTI, EMAIL, ANAGRAFICA, SELEZIONE ALBUM
+      // UPLOAD, TEMI, PROFILO, LINK UTILI, GALLERIE, CONTRATTI, EMAIL, ANAGRAFICA, SELEZIONE ALBUM
       // ============================================
       if (path === "/api/studio/upload" && request.method === "POST") {
         const token = url.searchParams.get("token");
@@ -800,56 +821,6 @@ export default {
         const id = path.split("/api/studio/link-utili/")[1];
         await env.DB.prepare("DELETE FROM link_utili WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-      }
-
-      if (path === "/api/studio/negozio/ordini" && request.method === "GET") {
-        const token = url.searchParams.get("token");
-        const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const result = await env.DB.prepare("SELECT * FROM ordini_negozio WHERE studio_id=? ORDER BY data_creazione DESC").bind(url.searchParams.get("studioId")).all();
-        return new Response(JSON.stringify({ success: true, ordini: result.results }), { headers: corsHeaders });
-      }
-      if (path === "/api/studio/negozio/ordine" && request.method === "POST") {
-        const d = await request.json();
-        const studioId = d.studio_id || url.searchParams.get("studioId");
-        if (!studioId) return new Response(JSON.stringify({ error: "Studio ID mancante" }), { status: 400, headers: corsHeaders });
-        const orderId = 'ord-' + Date.now();
-        await env.DB.prepare(`INSERT INTO ordini_negozio (id, studio_id, codice_ordine, cliente_nome, cliente_telefono, cliente_email, prodotti, totale, stato, file_url, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(orderId, studioId, d.codice_ordine, d.cliente_nome, d.cliente_telefono, d.cliente_email, d.prodotti, d.totale, d.stato || 'in_attesa', d.file_url || null, d.data_creazione || new Date().toISOString()).run();
-        return new Response(JSON.stringify({ success: true, id: orderId }), { headers: corsHeaders });
-      }
-      if (path.startsWith("/api/studio/negozio/ordine/") && request.method === "PUT") {
-        const token = url.searchParams.get("token");
-        const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/negozio/ordine/")[1];
-        const d = await request.json();
-        await env.DB.prepare(`UPDATE ordini_negozio SET stato=? WHERE id=?`).bind(d.stato, id).run();
-        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-      }
-      if (path === "/api/studio/upload-prodotto" && request.method === "POST") {
-        const token = url.searchParams.get("token");
-        const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const body = await request.arrayBuffer();
-        const bucket = env.appcenter_studio_foto;
-        if (bucket) {
-          const key = `gallerie/${url.searchParams.get("studioId")}/prodotti/${Date.now()}_${url.searchParams.get("filename") || "immagine.jpg"}`;
-          await bucket.put(key, body);
-          return new Response(JSON.stringify({ success: true, url: `https://appcenter-studio-foto.r2.dev/${key}` }), { headers: corsHeaders });
-        }
-        return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
-      }
-      if (path === "/api/studio/upload-ordine" && request.method === "POST") {
-        const studioId = url.searchParams.get("studioId");
-        if (!studioId) return new Response(JSON.stringify({ error: "Studio ID mancante" }), { status: 400, headers: corsHeaders });
-        const body = await request.arrayBuffer();
-        const bucket = env.appcenter_studio_foto;
-        if (bucket) {
-          const key = `gallerie/${studioId}/ordini/${Date.now()}_${url.searchParams.get("filename") || "file.jpg"}`;
-          await bucket.put(key, body);
-          return new Response(JSON.stringify({ success: true, url: `https://appcenter-studio-foto.r2.dev/${key}` }), { headers: corsHeaders });
-        }
-        return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
       }
 
       if (path === "/api/studio/gallerie" && request.method === "GET") {
