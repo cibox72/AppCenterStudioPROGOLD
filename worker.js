@@ -327,7 +327,7 @@ export default {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/servizio/")[1];
+        const id = path.split("/api/studio/servizio/")[1].split('?')[0];
         const d = await request.json();
         await env.DB.prepare(`UPDATE servizi SET categoria=?, descrizione=?, prezzo=? WHERE id=?`).bind(d.categoria, d.descrizione, d.prezzo, id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
@@ -336,7 +336,7 @@ export default {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/servizio/")[1];
+        const id = path.split("/api/studio/servizio/")[1].split('?')[0];
         await env.DB.prepare("DELETE FROM servizi WHERE id=?").bind(id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
@@ -364,7 +364,7 @@ export default {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/preventivo/")[1];
+        const id = path.split("/api/studio/preventivo/")[1].split('?')[0];
         await env.DB.prepare("DELETE FROM preventivi WHERE id = ? AND studio_id = ?").bind(id, sess.user_id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
@@ -402,7 +402,7 @@ export default {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/workflow/")[1];
+        const id = path.split("/api/studio/workflow/")[1].split('?')[0];
         const d = await request.json();
         await env.DB.prepare(`UPDATE workflow SET note=?, ultimo_aggiornamento=? WHERE id=?`).bind(JSON.stringify(d.tasks || {}), new Date().toISOString(), id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
@@ -411,7 +411,7 @@ export default {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/workflow/")[1];
+        const id = path.split("/api/studio/workflow/")[1].split('?')[0];
         await env.DB.prepare("DELETE FROM workflow WHERE id=?").bind(id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
@@ -451,7 +451,7 @@ export default {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/agenda/")[1];
+        const id = path.split("/api/studio/agenda/")[1].split('?')[0];
         const d = await request.json();
         const updates = []; const params = [];
         ['titolo', 'data', 'ora_inizio', 'ora_fine', 'descrizione', 'luogo', 'tipo_servizio', 'squadra', 'cliente', 'note'].forEach(field => {
@@ -466,7 +466,7 @@ export default {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/agenda/")[1];
+        const id = path.split("/api/studio/agenda/")[1].split('?')[0];
         await env.DB.prepare("DELETE FROM agenda WHERE id=?").bind(id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
@@ -514,6 +514,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM prodotti_negozio WHERE studio_id=? ORDER BY data_creazione DESC").bind(url.searchParams.get("studioId")).all();
         return new Response(JSON.stringify({ success: true, prodotti: result.results }), { headers: corsHeaders });
       }
+      
       if (path === "/api/studio/negozio/prodotto" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -522,12 +523,24 @@ export default {
         await env.DB.prepare(`INSERT INTO prodotti_negozio (id, studio_id, nome, categoria, prezzo, misura, descrizione, colori, misure, immagine, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, d.studio_id, d.nome, d.categoria, d.prezzo, d.misura, d.descrizione, d.colori || '', d.misure || '', d.immagine || '', d.data_creazione).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-            
-            if (path.startsWith("/api/studio/negozio/prodotto/") && request.method === "DELETE") {
+
+      if (path.startsWith("/api/studio/negozio/prodotto/") && request.method === "PUT") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/negozio/prodotto/")[1];
+        const id = path.split("/api/studio/negozio/prodotto/")[1].split('?')[0];
+        const d = await request.json();
+        await env.DB.prepare(`UPDATE prodotti_negozio SET nome=?, categoria=?, prezzo=?, misura=?, descrizione=?, colori=?, misure=?, immagine=? WHERE id=? AND studio_id=?`).bind(
+            d.nome, d.categoria, d.prezzo, d.misura, d.descrizione, d.colori || '', d.misure || '', d.immagine || '', id, sess.user_id
+        ).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
+            
+      if (path.startsWith("/api/studio/negozio/prodotto/") && request.method === "DELETE") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const id = path.split("/api/studio/negozio/prodotto/")[1].split('?')[0];
         await env.DB.prepare("DELETE FROM prodotti_negozio WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
@@ -539,6 +552,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM ordini_negozio WHERE studio_id=? ORDER BY data_creazione DESC").bind(url.searchParams.get("studioId")).all();
         return new Response(JSON.stringify({ success: true, ordini: result.results }), { headers: corsHeaders });
       }
+      
       if (path === "/api/studio/negozio/ordine" && request.method === "POST") {
         const d = await request.json();
         const studioId = d.studio_id || url.searchParams.get("studioId");
@@ -549,11 +563,12 @@ export default {
         ).run();
         return new Response(JSON.stringify({ success: true, id: orderId }), { headers: corsHeaders });
       }
+      
       if (path.startsWith("/api/studio/negozio/ordine/") && request.method === "PUT") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/negozio/ordine/")[1];
+        const id = path.split("/api/studio/negozio/ordine/")[1].split('?')[0];
         const d = await request.json();
         await env.DB.prepare(`UPDATE ordini_negozio SET stato=? WHERE id=?`).bind(d.stato, id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
@@ -566,6 +581,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM negozi_config WHERE studio_id=?").bind(url.searchParams.get("studioId")).first();
         return new Response(JSON.stringify({ success: true, config: result }), { headers: corsHeaders });
       }
+      
       if (path === "/api/studio/negozio-config" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -608,12 +624,12 @@ export default {
           const token = url.searchParams.get("token");
           const sess = await verificaSessione(token);
           if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-          const id = path.split("/api/studio/lista-regali/")[1];
+          const id = path.split("/api/studio/lista-regali/")[1].split('?')[0];
           await env.DB.prepare("DELETE FROM lista_regali WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
           return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
       if (path.startsWith("/api/public/lista-regali/") && request.method === "GET" && !path.includes("findByCredentials") && !path.includes("donazioni") && !path.includes("messaggi") && !path.includes("messaggio") && !path.includes("aggiorna-totale")) {
-          const id = path.split("/api/public/lista-regali/")[1];
+          const id = path.split("/api/public/lista-regali/")[1].split('?')[0];
           const result = await env.DB.prepare("SELECT * FROM lista_regali WHERE id=?").bind(id).first();
           if (!result) return new Response(JSON.stringify({ error: "Lista non trovata" }), { status: 404, headers: corsHeaders });
           return new Response(JSON.stringify({ success: true, lista: result }), { headers: corsHeaders });
@@ -643,7 +659,7 @@ export default {
           return new Response(JSON.stringify({ success: true, donazioni: result.results }), { headers: corsHeaders });
       }
       if (path.startsWith("/api/public/lista-regali/donazione/") && request.method === "DELETE") {
-          const id = path.split("/api/public/lista-regali/donazione/")[1];
+          const id = path.split("/api/public/lista-regali/donazione/")[1].split('?')[0];
           const donazione = await env.DB.prepare("SELECT lista_id FROM donazioni_lista WHERE id=?").bind(id).first();
           if (donazione) {
               await env.DB.prepare("DELETE FROM donazioni_lista WHERE id=?").bind(id).run();
@@ -819,7 +835,7 @@ export default {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/link-utili/")[1];
+        const id = path.split("/api/studio/link-utili/")[1].split('?')[0];
         await env.DB.prepare("DELETE FROM link_utili WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
@@ -845,7 +861,7 @@ export default {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/galleria/")[1];
+        const id = path.split("/api/studio/galleria/")[1].split('?')[0];
         const d = await request.json();
         const updates = []; const params = [];
         ['cliente_nome', 'cliente_email', 'cliente_telefono', 'tipo_evento', 'data_evento', 'messaggio_benvenuto', 'mega_email', 'mega_password', 'mega_link', 'stato', 'data_invio'].forEach(field => {
@@ -860,7 +876,7 @@ export default {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/galleria/")[1];
+        const id = path.split("/api/studio/galleria/")[1].split('?')[0];
         await env.DB.prepare("DELETE FROM gallerie WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
@@ -895,7 +911,7 @@ export default {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/contratti/")[1];
+        const id = path.split("/api/studio/contratti/")[1].split('?')[0];
         const d = await request.json();
         if (d.acconti !== undefined) {
           await env.DB.prepare(`UPDATE contratti SET acconti=? WHERE id=?`).bind(JSON.stringify(d.acconti), id).run();
@@ -906,7 +922,7 @@ export default {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/contratti/")[1];
+        const id = path.split("/api/studio/contratti/")[1].split('?')[0];
         await env.DB.prepare("DELETE FROM contratti WHERE id = ? AND studio_id = ?").bind(id, sess.user_id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
@@ -1006,7 +1022,7 @@ export default {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/anagrafica-clienti/")[1];
+        const id = path.split("/api/studio/anagrafica-clienti/")[1].split('?')[0];
         const result = await env.DB.prepare("SELECT * FROM anagrafica_clienti WHERE id=? AND studio_id=?").bind(id, sess.user_id).first();
         if (!result) return new Response(JSON.stringify({ error: "Cliente non trovato" }), { status: 404, headers: corsHeaders });
         return new Response(JSON.stringify({ success: true, cliente: result }), { headers: corsHeaders });
@@ -1015,7 +1031,7 @@ export default {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/anagrafica-clienti/")[1];
+        const id = path.split("/api/studio/anagrafica-clienti/")[1].split('?')[0];
         const d = await request.json();
         const updates = []; const params = [];
         ['nome', 'cognome', 'email', 'telefono', 'indirizzo', 'cap', 'citta', 'provincia', 'username', 'password', 'note'].forEach(field => {
@@ -1030,7 +1046,7 @@ export default {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const id = path.split("/api/studio/anagrafica-clienti/")[1];
+        const id = path.split("/api/studio/anagrafica-clienti/")[1].split('?')[0];
         await env.DB.prepare("DELETE FROM anagrafica_clienti WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
