@@ -28,8 +28,6 @@
             line-height: 1.6;
             min-height: 100vh;
         }
-        
-        /* BRANDING */
         .branding-header {
             background: var(--primary-gradient);
             padding: 12px 24px;
@@ -50,8 +48,6 @@
             color: white;
             margin-left: 8px;
         }
-        
-        /* TOP BAR */
         .top-bar {
             background: var(--primary-gradient);
             padding: 14px 24px;
@@ -72,10 +68,8 @@
             transition: all 0.2s;
         }
         .nav-btn:hover { transform: translateY(-2px); }
-        
         .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
         
-        /* DASHBOARD CARDS */
         .page-header {
             text-align: center;
             padding: 32px;
@@ -173,7 +167,6 @@
             50% { opacity: 0.6; }
         }
         
-        /* SEZIONI */
         .section { display: none; }
         .section.active { display: block; }
         
@@ -249,8 +242,11 @@
         .btn-info { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
         .btn-sm { padding: 8px 16px; font-size: 12px; }
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: white;
+        }
         
-        /* VETRINA CLIENTE (Anteprima) */
         .vetrina-header {
             background: var(--primary-gradient);
             color: white;
@@ -322,7 +318,6 @@
             margin-bottom: 12px;
         }
         
-        /* CARRELLO */
         .cart-float-btn {
             position: fixed;
             bottom: 24px;
@@ -413,7 +408,6 @@
             margin-left: 8px;
         }
         
-        /* ORDINI */
         .order-item {
             background: white;
             border-radius: 12px;
@@ -500,7 +494,6 @@
         }
         .alert-title { font-weight: 700; color: var(--danger); margin-bottom: 4px; }
         
-        /* LINK CLIENTE */
         .cred-box {
             background: var(--primary-light);
             padding: 20px;
@@ -524,7 +517,6 @@
             font-family: 'Courier New', monospace;
         }
         
-        /* CONFIG */
         .payment-methods {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -546,7 +538,6 @@
             font-weight: 600;
         }
         
-        /* MODAL */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -583,7 +574,6 @@
             color: var(--text-light);
         }
         
-        /* TOAST */
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
         .toast {
             background: white;
@@ -645,13 +635,11 @@
     </style>
 </head>
 <body>
-    <!-- BRANDING -->
     <div class="branding-header">
         <a href="https://www.glstudio.it" target="_blank">G&L Studio</a>
         <span class="tagline">| Negozio Online Professionale</span>
     </div>
 
-    <!-- TOP BAR -->
     <div class="top-bar">
         <div style="display: flex; gap: 10px;">
             <button class="nav-btn" onclick="tornaPlancia()">Indietro alla Plancia</button>
@@ -661,7 +649,6 @@
     </div>
 
     <div class="container">
-        <!-- DASHBOARD CON 4 CARD -->
         <div id="dashboardSection" class="section active">
             <div class="page-header">
                 <h1>Gestione Negozio</h1>
@@ -669,49 +656,43 @@
             </div>
 
             <div class="dashboard-grid">
-                <!-- CARD 1: ANTEPRIMA NEGOZIO -->
                 <div class="dash-card" onclick="mostraSezione('anteprima')">
-                    <span class="card-icon">👁</span>
+                    <span class="card-icon">&#128065;</span>
                     <div class="card-title">Anteprima Negozio</div>
                     <div class="card-desc">Vedi esattamente come appare il negozio ai tuoi clienti. Vetrina, prodotti e carrello.</div>
                 </div>
 
-                <!-- CARD 2: LINK CLIENTE -->
                 <div class="dash-card" onclick="mostraSezione('link')">
-                    <span class="card-icon">🔗</span>
+                    <span class="card-icon">&#128279;</span>
                     <div class="card-title">Link Cliente</div>
-                    <div class="card-desc">Genera link e credenziali da inviare al cliente per accedere al negozio.</div>
+                    <div class="card-desc">Genera link e credenziali da inviare al cliente tramite WhatsApp.</div>
                 </div>
 
-                <!-- CARD 3: PRODOTTI -->
                 <div class="dash-card" onclick="mostraSezione('prodotti')">
-                    <span class="card-icon">📦</span>
+                    <span class="card-icon">&#128230;</span>
                     <div class="card-title">Gestione Prodotti</div>
                     <div class="card-desc">Crea, modifica e archivia i prodotti della vetrina. Aggiungi anche prodotti acconto.</div>
                 </div>
 
-                <!-- CARD 4: ORDINI -->
                 <div class="dash-card" onclick="mostraSezione('ordini')">
                     <span class="badge-alert hidden" id="alertOrdini">0</span>
-                    <span class="card-icon">📋</span>
+                    <span class="card-icon">&#128203;</span>
                     <div class="card-title">Ordini Ricevuti</div>
                     <div class="card-desc">Visualizza e gestisci gli ordini dei clienti con stato e dettagli.</div>
                 </div>
 
-                <!-- CARD 5: CONFIGURAZIONI -->
                 <div class="dash-card" onclick="mostraSezione('config')">
-                    <span class="card-icon">⚙</span>
+                    <span class="card-icon">&#9881;</span>
                     <div class="card-title">Configurazioni</div>
-                    <div class="card-desc">Pagamenti, WhatsApp, messaggi automatici e ritiro in studio.</div>
+                    <div class="card-desc">Pagamenti anticipati, WhatsApp, messaggi automatici e ritiro in studio.</div>
                 </div>
             </div>
         </div>
 
-        <!-- SEZIONE ANTEPRIMA (come la vede il cliente) -->
         <div id="anteprimaSection" class="section">
             <div class="vetrina-header">
                 <h2 id="vetrinaNomeStudio">Negozio G&L Studio</h2>
-                <p>Benvenuto! Scegli i tuoi prodotti personalizzati. Ritiro merce presso lo studio.</p>
+                <p>Benvenuto! Scegli i tuoi prodotti personalizzati. Ritiro merce presso lo studio. Pagamento anticipato obbligatorio.</p>
             </div>
 
             <div class="card">
@@ -743,29 +724,28 @@
                         <span id="cartTotal">EUR 0.00</span>
                     </div>
                     <div style="font-size: 12px; color: var(--text-light); margin-bottom: 12px; text-align: center;">
-                        Ritiro merce presso lo studio
+                        Ritiro merce presso lo studio - Pagamento anticipato obbligatorio
                     </div>
                     <button class="btn btn-success" style="width: 100%;" onclick="apriCheckout()">PROCEDI ALL'ORDINE</button>
                 </div>
             </div>
         </div>
 
-        <!-- SEZIONE LINK CLIENTE -->
         <div id="linkSection" class="section">
             <div class="card">
                 <div class="card-title">Genera Link e Credenziali per il Cliente</div>
-                <div class="card-subtitle" style="font-size: 13px; color: var(--text-light); margin-bottom: 24px;">
-                    Crea un link personalizzato con username e password da inviare al cliente.
+                <div style="font-size: 13px; color: var(--text-light); margin-bottom: 24px;">
+                    Inserisci i dati del cliente e invia direttamente tramite WhatsApp link e credenziali di accesso al negozio.
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Nome Cliente</label>
+                        <label>Nome Cliente *</label>
                         <input type="text" id="linkClienteNome" placeholder="Es. Mario Rossi">
                     </div>
                     <div class="form-group">
-                        <label>Email Cliente</label>
-                        <input type="email" id="linkClienteEmail" placeholder="cliente@email.it">
+                        <label>Numero WhatsApp Cliente * (con prefisso)</label>
+                        <input type="tel" id="linkClienteTelefono" placeholder="+39 333 1234567">
                     </div>
                 </div>
 
@@ -785,15 +765,14 @@
                         <div class="value" style="font-size: 13px; word-break: break-all;" id="genLink">---</div>
                     </div>
 
-                    <div class="btn-group" style="margin-top: 20px;">
-                        <button class="btn btn-info" onclick="copiaLinkCliente()">Copia Link</button>
-                        <button class="btn btn-success" onclick="inviaWhatsAppCliente()">Invia via WhatsApp</button>
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-whatsapp" onclick="inviaWhatsAppCliente()">INVIA TRAMITE WHATSAPP</button>
+                        <button class="btn btn-outline" onclick="copiaLinkCliente()">Copia Link</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- SEZIONE PRODOTTI -->
         <div id="prodottiSection" class="section">
             <div class="card">
                 <div class="card-title">Nuovo Prodotto</div>
@@ -823,8 +802,16 @@
                     <div class="form-group"><label>Misure (separate da virgola)</label><input type="text" id="prodMisure" placeholder="es. 30x30, 40x40"></div>
                 </div>
                 <div class="form-group">
-                    <label>URL Immagine (da internet)</label>
-                    <input type="text" id="prodImmagineUrl" placeholder="https://...">
+                    <label>Immagine Prodotto (carica file - verrà ridimensionata automaticamente)</label>
+                    <div class="upload-area" onclick="document.getElementById('prodImmagineFile').click()">
+                        <div style="font-size: 32px; margin-bottom: 8px;">&#128247;</div>
+                        <div style="font-size: 13px; color: var(--text-light);">Clicca per caricare l'immagine</div>
+                        <input type="file" id="prodImmagineFile" accept="image/*" style="display:none" onchange="previewImmagineProdotto(this)">
+                        <img id="imgPreview" class="file-preview hidden">
+                    </div>
+                    <div style="font-size: 12px; color: var(--text-light);">
+                        L'immagine verrà automaticamente ridimensionata per ottimizzare il caricamento.
+                    </div>
                 </div>
                 <button class="btn btn-primary" onclick="creaProdotto()">CREA PRODOTTO</button>
                 <button class="btn btn-outline" onclick="aggiungiProdottiDefault()">AGGIUNGI PRODOTTI DEFAULT</button>
@@ -841,7 +828,6 @@
             </div>
         </div>
 
-        <!-- SEZIONE ORDINI -->
         <div id="ordiniSection" class="section">
             <div id="alertNuoviOrdini" class="alert-box hidden">
                 <div class="alert-icon">!</div>
@@ -870,29 +856,31 @@
             </div>
         </div>
 
-        <!-- SEZIONE CONFIGURAZIONI -->
         <div id="configSection" class="section">
             <div class="card">
                 <div class="card-title">Configurazione Negozio</div>
+                <div style="font-size: 13px; color: var(--text-light); margin-bottom: 20px;">
+                    Tutti i pagamenti devono essere effettuati anticipatamente. Non è accettato il pagamento in contanti al ritiro.
+                </div>
 
                 <div class="form-group" style="margin-bottom: 20px;">
-                    <label>Metodi di Pagamento</label>
+                    <label>Metodi di Pagamento Anticipato</label>
                     <div class="payment-methods">
                         <div class="payment-option" onclick="togglePayment('paypal')" id="opt-paypal">
                             <div style="font-weight: 700;">PayPal</div>
-                            <div style="font-size: 12px; color: var(--text-light);">Online</div>
+                            <div style="font-size: 12px; color: var(--text-light);">Pagamento online</div>
                         </div>
                         <div class="payment-option" onclick="togglePayment('iban')" id="opt-iban">
                             <div style="font-weight: 700;">Bonifico IBAN</div>
-                            <div style="font-size: 12px; color: var(--text-light);">Bancario</div>
+                            <div style="font-size: 12px; color: var(--text-light);">Trasferimento bancario</div>
                         </div>
                         <div class="payment-option" onclick="togglePayment('satispay')" id="opt-satispay">
                             <div style="font-weight: 700;">Satispay</div>
-                            <div style="font-size: 12px; color: var(--text-light);">App</div>
+                            <div style="font-size: 12px; color: var(--text-light);">App mobile</div>
                         </div>
-                        <div class="payment-option" onclick="togglePayment('contanti')" id="opt-contanti">
-                            <div style="font-weight: 700;">Contanti</div>
-                            <div style="font-size: 12px; color: var(--text-light);">In studio</div>
+                        <div class="payment-option" onclick="togglePayment('stripe')" id="opt-stripe">
+                            <div style="font-weight: 700;">Stripe</div>
+                            <div style="font-size: 12px; color: var(--text-light);">Carta di credito</div>
                         </div>
                     </div>
                     <input type="hidden" id="paymentMethods">
@@ -903,13 +891,17 @@
                     <div class="form-group"><label>IBAN</label><input type="text" id="ibanNumero" placeholder="IT00..."></div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group"><label>WhatsApp *</label><input type="tel" id="whatsappNumero" placeholder="+39 333 1234567"></div>
-                    <div class="form-group"><label>Indirizzo Studio</label><input type="text" id="studioIndirizzo"></div>
+                    <div class="form-group"><label>Numero Satispay</label><input type="tel" id="satispayNumero" placeholder="+39 333 1234567"></div>
+                    <div class="form-group"><label>Link Stripe</label><input type="text" id="stripeLink" placeholder="https://..."></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>WhatsApp Studio *</label><input type="tel" id="whatsappNumero" placeholder="+39 333 1234567"></div>
+                    <div class="form-group"><label>Indirizzo Studio (ritiro)</label><input type="text" id="studioIndirizzo"></div>
                 </div>
 
                 <div class="form-group">
                     <label>Messaggio Benvenuto (dopo ordine)</label>
-                    <textarea id="msgBenvenuto" rows="3">Grazie per il tuo ordine! Codice: {codice}. Ti contatteremo per il ritiro.</textarea>
+                    <textarea id="msgBenvenuto" rows="3">Grazie per il tuo ordine! Codice: {codice}. Procedi al pagamento anticipato per confermare l'ordine. Ti contatteremo per il ritiro.</textarea>
                 </div>
                 <div class="form-group">
                     <label>Messaggio Ritiro (quando pronto)</label>
@@ -921,7 +913,6 @@
         </div>
     </div>
 
-    <!-- MODAL CHECKOUT -->
     <div class="modal-overlay" id="checkoutModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -947,17 +938,16 @@
                     <span id="checkTotal">EUR 0.00</span>
                 </div>
                 <div style="font-size: 12px; color: var(--text-light); margin-top: 8px;">
-                    Ritiro merce presso lo studio
+                    Pagamento anticipato obbligatorio - Ritiro merce presso lo studio
                 </div>
             </div>
-            <div style="margin-top: 20px;">
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
                 <button class="btn btn-outline" onclick="chiudiCheckout()" style="flex: 1;">Annulla</button>
                 <button class="btn btn-success" onclick="confermaOrdine()" style="flex: 2;">CONFERMA ORDINE</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL SUCCESSO -->
     <div class="modal-overlay" id="successModal">
         <div class="modal-content" style="text-align: center;">
             <div style="font-size: 64px; margin-bottom: 16px; color: var(--success);">V</div>
@@ -985,7 +975,7 @@
         let config = null;
         let carrello = [];
         let fileCheckout = null;
-        let selectedPayment = '';
+        let immagineProdottoBase64 = null;
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) {
@@ -1061,9 +1051,6 @@
             if (nome === 'config') caricaConfig();
         }
 
-        // ============================================
-        // ANTEPRIMA NEGOZIO (come la vede il cliente)
-        // ============================================
         function renderizzaVetrina() {
             const grid = document.getElementById('vetrinaGrid');
             const loading = document.getElementById('vetrinaLoading');
@@ -1212,7 +1199,7 @@
                         prodotti: JSON.stringify(carrello),
                         totale: totale,
                         stato: 'in_attesa',
-                        metodo_pagamento: selectedPayment || 'in_studio',
+                        metodo_pagamento: 'anticipato',
                         file_url: '',
                         data_creazione: new Date().toISOString()
                     })
@@ -1223,7 +1210,6 @@
                 document.getElementById('successModal').classList.add('active');
                 carrello = [];
                 aggiornaCarrelloUI();
-                selectedPayment = '';
                 document.getElementById('checkNome').value = '';
                 document.getElementById('checkTelefono').value = '';
                 document.getElementById('checkEmail').value = '';
@@ -1234,15 +1220,12 @@
             }
         }
 
-        // ============================================
-        // LINK CLIENTE
-        // ============================================
         function generaLinkCliente() {
             const nome = document.getElementById('linkClienteNome').value.trim();
-            const email = document.getElementById('linkClienteEmail').value.trim();
+            const telefono = document.getElementById('linkClienteTelefono').value.trim();
             
-            if (!nome) {
-                mostraToast('Inserisci il nome del cliente', 'error');
+            if (!nome || !telefono) {
+                mostraToast('Inserisci nome e numero WhatsApp del cliente', 'error');
                 return;
             }
 
@@ -1272,21 +1255,61 @@
             const password = document.getElementById('genPassword').textContent;
             const link = document.getElementById('genLink').textContent;
             const nome = document.getElementById('linkClienteNome').value.trim();
+            const telefono = document.getElementById('linkClienteTelefono').value.trim();
+            
+            if (!telefono) {
+                mostraToast('Inserisci il numero WhatsApp del cliente', 'error');
+                return;
+            }
             
             const msg = `Buongiorno ${nome},\n\nti inviamo il link per accedere al nostro negozio online:\n\nUsername: ${username}\nPassword: ${password}\n\nLink: ${link}\n\nBuon acquisto!`;
             
-            const numero = config && config.whatsapp_numero ? config.whatsapp_numero.replace(/\D/g, '') : '';
-            if (numero) {
-                window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`, '_blank');
-            } else {
-                navigator.clipboard.writeText(msg);
-                mostraToast('Messaggio copiato. Incolla in WhatsApp.', 'success');
+            const cleanPhone = telefono.replace(/\D/g, '');
+            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        async function previewImmagineProdotto(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 800;
+                        const MAX_HEIGHT = 800;
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+                        immagineProdottoBase64 = dataUrl;
+                        
+                        document.getElementById('imgPreview').src = dataUrl;
+                        document.getElementById('imgPreview').classList.remove('hidden');
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
             }
         }
 
-        // ============================================
-        // PRODOTTI
-        // ============================================
         async function creaProdotto() {
             const nome = document.getElementById('prodNome').value.trim();
             const categoria = document.getElementById('prodCategoria').value;
@@ -1295,7 +1318,6 @@
             const descrizione = document.getElementById('prodDescrizione').value.trim();
             const colori = document.getElementById('prodColori').value.trim();
             const misure = document.getElementById('prodMisure').value.trim();
-            const immagine = document.getElementById('prodImmagineUrl').value.trim();
 
             if (!nome || isNaN(prezzo)) {
                 mostraToast('Compila Nome e Prezzo', 'error');
@@ -1306,7 +1328,8 @@
                 id: 'prod-' + Date.now(),
                 studio_id: studioId,
                 nome, categoria, prezzo, misura, descrizione,
-                colori, misure, immagine,
+                colori, misure,
+                immagine: immagineProdottoBase64 || '',
                 data_creazione: new Date().toISOString()
             };
 
@@ -1444,12 +1467,11 @@
             document.getElementById('prodDescrizione').value = '';
             document.getElementById('prodColori').value = '';
             document.getElementById('prodMisure').value = '';
-            document.getElementById('prodImmagineUrl').value = '';
+            document.getElementById('prodImmagineFile').value = '';
+            document.getElementById('imgPreview').classList.add('hidden');
+            immagineProdottoBase64 = null;
         }
 
-        // ============================================
-        // ORDINI
-        // ============================================
         async function caricaOrdini() {
             const loading = document.getElementById('ordiniLoading');
             const empty = document.getElementById('ordiniEmpty');
@@ -1541,15 +1563,12 @@
             }
         }
 
-        // ============================================
-        // CONFIGURAZIONE
-        // ============================================
         function togglePayment(method) {
             const el = document.getElementById('opt-' + method);
             el.classList.toggle('selected');
             
             const selected = [];
-            ['paypal', 'iban', 'satispay', 'contanti'].forEach(m => {
+            ['paypal', 'iban', 'satispay', 'stripe'].forEach(m => {
                 if (document.getElementById('opt-' + m).classList.contains('selected')) selected.push(m);
             });
             document.getElementById('paymentMethods').value = selected.join(',');
@@ -1563,6 +1582,8 @@
                     config = data.config;
                     document.getElementById('paypalEmail').value = config.paypal_email || '';
                     document.getElementById('ibanNumero').value = config.iban_numero || '';
+                    document.getElementById('satispayNumero').value = config.satispay_numero || '';
+                    document.getElementById('stripeLink').value = config.stripe_link || '';
                     document.getElementById('whatsappNumero').value = config.whatsapp_numero || '';
                     document.getElementById('studioIndirizzo').value = config.studio_indirizzo || '';
                     document.getElementById('msgBenvenuto').value = config.msg_benvenuto || '';
@@ -1584,6 +1605,8 @@
                 studio_id: studioId,
                 paypal_email: document.getElementById('paypalEmail').value.trim(),
                 iban_numero: document.getElementById('ibanNumero').value.trim(),
+                satispay_numero: document.getElementById('satispayNumero').value.trim(),
+                stripe_link: document.getElementById('stripeLink').value.trim(),
                 whatsapp_numero: document.getElementById('whatsappNumero').value.trim(),
                 studio_indirizzo: document.getElementById('studioIndirizzo').value.trim(),
                 msg_benvenuto: document.getElementById('msgBenvenuto').value.trim(),
@@ -1615,9 +1638,6 @@
             }
         }
 
-        // ============================================
-        // COMUNI
-        // ============================================
         function tornaPlancia() {
             window.location.href = `plancia-studio.html?token=${token}`;
         }
