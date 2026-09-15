@@ -139,8 +139,8 @@
 
     <div class="top-bar">
         <div style="display: flex; gap: 10px;">
-            <button class="nav-btn" onclick="tornaPlancia()">Indietro alla Plancia</button>
-            <button class="nav-btn" onclick="mostraDashboard()">Dashboard Negozio</button>
+            <button class="nav-btn" onclick="window.tornaPlancia()">Indietro alla Plancia</button>
+            <button class="nav-btn" onclick="window.mostraDashboard()">Dashboard Negozio</button>
         </div>
         <div style="color: white; font-size: 13px;">Negozio Online</div>
     </div>
@@ -153,32 +153,32 @@
             </div>
 
             <div class="dashboard-grid">
-                <div class="dash-card" onclick="mostraSezione('anteprima')">
+                <div class="dash-card" onclick="window.mostraSezione('anteprima')">
                     <span class="card-icon">&#128065;</span>
                     <div class="card-title">Anteprima Negozio</div>
                     <div class="card-desc">Vedi esattamente come appare il negozio ai tuoi clienti. Vetrina, prodotti e carrello.</div>
                 </div>
 
-                <div class="dash-card" onclick="mostraSezione('link')">
+                <div class="dash-card" onclick="window.mostraSezione('link')">
                     <span class="card-icon">&#128279;</span>
                     <div class="card-title">Link Cliente</div>
                     <div class="card-desc">Genera link e credenziali da inviare al cliente tramite WhatsApp.</div>
                 </div>
 
-                <div class="dash-card" onclick="mostraSezione('prodotti')">
+                <div class="dash-card" onclick="window.mostraSezione('prodotti')">
                     <span class="card-icon">&#128230;</span>
                     <div class="card-title">Gestione Prodotti</div>
                     <div class="card-desc">Crea, modifica e archivia i prodotti della vetrina. Aggiungi anche prodotti acconto.</div>
                 </div>
 
-                <div class="dash-card" onclick="mostraSezione('ordini')">
+                <div class="dash-card" onclick="window.mostraSezione('ordini')">
                     <span class="badge-alert hidden" id="alertOrdini">0</span>
                     <span class="card-icon">&#128203;</span>
                     <div class="card-title">Ordini Ricevuti</div>
                     <div class="card-desc">Visualizza e gestisci gli ordini dei clienti con stato e dettagli.</div>
                 </div>
 
-                <div class="dash-card" onclick="mostraSezione('config')">
+                <div class="dash-card" onclick="window.mostraSezione('config')">
                     <span class="card-icon">&#9881;</span>
                     <div class="card-title">Configurazioni</div>
                     <div class="card-desc">Pagamenti anticipati, WhatsApp, messaggi automatici e ritiro in studio.</div>
@@ -202,7 +202,7 @@
                 <div class="products-grid" id="vetrinaGrid"></div>
             </div>
 
-            <button class="cart-float-btn" onclick="toggleCart()" id="cartBtn" style="display:none;">
+            <button class="cart-float-btn" onclick="window.toggleCart()" id="cartBtn" style="display:none;">
                 <span>+</span>
                 <span class="cart-count" id="cartCount">0</span>
             </button>
@@ -210,7 +210,7 @@
             <div class="cart-sidebar" id="cartSidebar">
                 <div class="cart-header">
                     <h3>Il tuo Carrello</h3>
-                    <button class="nav-btn" onclick="toggleCart()">Chiudi</button>
+                    <button class="nav-btn" onclick="window.toggleCart()">Chiudi</button>
                 </div>
                 <div class="cart-items" id="cartItems">
                     <div class="empty-state">Il carrello è vuoto</div>
@@ -223,7 +223,7 @@
                     <div style="font-size: 12px; color: var(--text-light); margin-bottom: 12px; text-align: center;">
                         Ritiro merce presso lo studio - Pagamento anticipato obbligatorio
                     </div>
-                    <button class="btn btn-success" style="width: 100%;" onclick="apriCheckout()">PROCEDI ALL'ORDINE</button>
+                    <button class="btn btn-success" style="width: 100%;" onclick="window.apriCheckout()">PROCEDI ALL'ORDINE</button>
                 </div>
             </div>
         </div>
@@ -242,14 +242,14 @@
                     </div>
                     <div class="form-group">
                         <label>Numero WhatsApp Cliente * (con prefisso)</label>
-                        <input type="tel" id="linkClienteTelefono" placeholder="+39 333 1234567" oninput="aggiornaBtnWhatsApp()">
-                        <button type="button" class="btn btn-whatsapp" id="btnWhatsAppWeb" onclick="apriWhatsAppWeb()" style="margin-top: 12px; display: none; width: 100%;">
+                        <input type="tel" id="linkClienteTelefono" placeholder="+39 333 1234567" oninput="window.aggiornaBtnWhatsApp()">
+                        <button type="button" class="btn btn-whatsapp" id="btnWhatsAppWeb" onclick="window.apriWhatsAppWeb()" style="margin-top: 12px; display: none; width: 100%;">
                             &#128279; Apri WhatsApp Web con questo numero
                         </button>
                     </div>
                 </div>
 
-                <button class="btn btn-primary" onclick="generaLinkCliente()">Genera Link e Credenziali</button>
+                <button class="btn btn-primary" onclick="window.generaLinkCliente()">Genera Link e Credenziali</button>
 
                 <div id="linkGenerato" class="hidden" style="margin-top: 24px;">
                     <div class="cred-box">
@@ -266,8 +266,8 @@
                     </div>
 
                     <div style="margin-top: 20px;">
-                        <button class="btn btn-whatsapp" onclick="inviaWhatsAppCliente()">INVIA TRAMITE WHATSAPP</button>
-                        <button class="btn btn-outline" onclick="copiaLinkCliente()">Copia Link</button>
+                        <button class="btn btn-whatsapp" onclick="window.inviaWhatsAppCliente()">INVIA TRAMITE WHATSAPP</button>
+                        <button class="btn btn-outline" onclick="window.copiaLinkCliente()">Copia Link</button>
                     </div>
                 </div>
             </div>
@@ -306,16 +306,16 @@
                     <div class="upload-area" onclick="document.getElementById('prodImmagineFile').click()">
                         <div style="font-size: 32px; margin-bottom: 8px;">&#128247;</div>
                         <div style="font-size: 13px; color: var(--text-light);">Clicca per caricare l'immagine</div>
-                        <input type="file" id="prodImmagineFile" accept="image/*" style="display:none" onchange="previewImmagineProdotto(this)">
+                        <input type="file" id="prodImmagineFile" accept="image/*" style="display:none" onchange="window.previewImmagineProdotto(this)">
                         <img id="imgPreview" class="file-preview hidden">
                     </div>
                     <div style="font-size: 12px; color: var(--text-light);">
                         L'immagine verrà automaticamente ridimensionata per ottimizzare il caricamento.
                     </div>
                 </div>
-                <button class="btn btn-primary" id="btnSalvaProdotto" onclick="creaProdotto()">CREA PRODOTTO</button>
-                <button class="btn btn-outline hidden" id="btnAnnullaModifica" onclick="annullaModificaProdotto()">ANNULLA MODIFICA</button>
-                <button class="btn btn-outline" onclick="aggiungiProdottiDefault()">AGGIUNGI PRODOTTI DEFAULT</button>
+                <button class="btn btn-primary" id="btnSalvaProdotto" onclick="window.creaProdotto()">CREA PRODOTTO</button>
+                <button class="btn btn-outline hidden" id="btnAnnullaModifica" onclick="window.annullaModificaProdotto()">ANNULLA MODIFICA</button>
+                <button class="btn btn-outline" onclick="window.aggiungiProdottiDefault()">AGGIUNGI PRODOTTI DEFAULT</button>
             </div>
 
             <div class="card">
@@ -367,19 +367,19 @@
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label>Metodi di Pagamento Anticipato</label>
                     <div class="payment-methods">
-                        <div class="payment-option" onclick="togglePayment('paypal')" id="opt-paypal">
+                        <div class="payment-option" onclick="window.togglePayment('paypal')" id="opt-paypal">
                             <div style="font-weight: 700;">PayPal</div>
                             <div style="font-size: 12px; color: var(--text-light);">Pagamento online</div>
                         </div>
-                        <div class="payment-option" onclick="togglePayment('iban')" id="opt-iban">
+                        <div class="payment-option" onclick="window.togglePayment('iban')" id="opt-iban">
                             <div style="font-weight: 700;">Bonifico IBAN</div>
                             <div style="font-size: 12px; color: var(--text-light);">Trasferimento bancario</div>
                         </div>
-                        <div class="payment-option" onclick="togglePayment('satispay')" id="opt-satispay">
+                        <div class="payment-option" onclick="window.togglePayment('satispay')" id="opt-satispay">
                             <div style="font-weight: 700;">Satispay</div>
                             <div style="font-size: 12px; color: var(--text-light);">App mobile</div>
                         </div>
-                        <div class="payment-option" onclick="togglePayment('stripe')" id="opt-stripe">
+                        <div class="payment-option" onclick="window.togglePayment('stripe')" id="opt-stripe">
                             <div style="font-weight: 700;">Stripe</div>
                             <div style="font-size: 12px; color: var(--text-light);">Carta di credito</div>
                         </div>
@@ -409,7 +409,7 @@
                     <textarea id="msgRitiro" rows="3">Ciao! Il tuo ordine {codice} è pronto per il ritiro in studio.</textarea>
                 </div>
 
-                <button class="btn btn-primary" onclick="salvaConfig()">SALVA CONFIGURAZIONE</button>
+                <button class="btn btn-primary" onclick="window.salvaConfig()">SALVA CONFIGURAZIONE</button>
             </div>
         </div>
     </div>
@@ -418,7 +418,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Completa l'Ordine</h2>
-                <button class="close-modal" onclick="chiudiCheckout()">X</button>
+                <button class="close-modal" onclick="window.chiudiCheckout()">X</button>
             </div>
             <div class="form-group">
                 <label>Nome e Cognome *</label>
@@ -430,7 +430,7 @@
             </div>
             <div class="form-group">
                 <label>Carica File (Foto da stampare)</label>
-                <input type="file" id="checkFile" accept="image/*,.pdf" onchange="previewFileCheckout(this)">
+                <input type="file" id="checkFile" accept="image/*,.pdf" onchange="window.previewFileCheckout(this)">
                 <div id="checkFileName" style="margin-top: 8px; font-weight: 600; color: var(--primary-dark);"></div>
             </div>
             <div style="margin-top: 20px; padding: 16px; background: var(--primary-light); border-radius: 8px;">
@@ -443,8 +443,8 @@
                 </div>
             </div>
             <div style="margin-top: 20px; display: flex; gap: 10px;">
-                <button class="btn btn-outline" onclick="chiudiCheckout()" style="flex: 1;">Annulla</button>
-                <button class="btn btn-success" onclick="confermaOrdine()" style="flex: 2;">CONFERMA ORDINE</button>
+                <button class="btn btn-outline" onclick="window.chiudiCheckout()" style="flex: 1;">Annulla</button>
+                <button class="btn btn-success" onclick="window.confermaOrdine()" style="flex: 2;">CONFERMA ORDINE</button>
             </div>
         </div>
     </div>
@@ -485,28 +485,28 @@
                 window.location.href = 'index.html';
                 return;
             }
-            await verificaSessione();
+            await window.verificaSessione();
         });
 
-        async function verificaSessione() {
+        window.verificaSessione = async function() {
             try {
                 const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
                 const data = await response.json();
                 if (!data.success || data.tipo !== 'studio') {
-                    mostraToast('Sessione non valida', 'error');
+                    window.mostraToast('Sessione non valida', 'error');
                     setTimeout(() => window.location.href = 'index.html', 1500);
                     return;
                 }
                 studioId = data.user.id;
-                await applicaTemaGlobale(studioId);
-                await caricaDatiIniziali();
+                await window.applicaTemaGlobale(studioId);
+                await window.caricaDatiIniziali();
             } catch (error) {
                 console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
+                window.mostraToast('Errore di connessione', 'error');
             }
-        }
+        };
 
-        async function applicaTemaGlobale(sId) {
+        window.applicaTemaGlobale = async function(sId) {
             if (!sId) return;
             try {
                 const res = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${sId}`);
@@ -531,34 +531,34 @@
                     root.style.setProperty('--bg-gradient', t.bg);
                 }
             } catch (e) { console.error('Errore tema:', e); }
-        }
+        };
 
-        async function caricaDatiIniziali() {
-            await caricaProdotti();
-            await caricaOrdini();
-            await caricaConfig();
-        }
+        window.caricaDatiIniziali = async function() {
+            await window.caricaProdotti();
+            await window.caricaOrdini();
+            await window.caricaConfig();
+        };
 
-        function mostraDashboard() {
+        window.mostraDashboard = function() {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById('dashboardSection').classList.add('active');
-        }
+        };
 
-        function mostraSezione(nome) {
+        window.mostraSezione = function(nome) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(nome + 'Section').classList.add('active');
             
-            if (nome === 'anteprima') renderizzaVetrina();
+            if (nome === 'anteprima') window.renderizzaVetrina();
             if (nome === 'prodotti') { 
-                annullaModificaProdotto();
-                renderizzaProdotti();
-                caricaProdotti();
+                window.annullaModificaProdotto();
+                window.renderizzaProdotti();
+                window.caricaProdotti();
             }
-            if (nome === 'ordini') caricaOrdini();
-            if (nome === 'config') caricaConfig();
-        }
+            if (nome === 'ordini') window.caricaOrdini();
+            if (nome === 'config') window.caricaConfig();
+        };
 
-        function renderizzaVetrina() {
+        window.renderizzaVetrina = function() {
             const grid = document.getElementById('vetrinaGrid');
             const loading = document.getElementById('vetrinaLoading');
             const empty = document.getElementById('vetrinaEmpty');
@@ -595,12 +595,12 @@
                     <div class="product-price">EUR ${parseFloat(p.prezzo).toFixed(2)}</div>
                     ${p.misura ? `<div class="product-measure">${p.misura}</div>` : ''}
                     ${p.descrizione ? `<div class="product-desc">${p.descrizione}</div>` : ''}
-                    <button class="btn btn-primary" style="width: 100%;" onclick="aggiungiAlCarrello('${p.id}')">Aggiungi al Carrello</button>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="window.aggiungiAlCarrello('${p.id}')">Aggiungi al Carrello</button>
                 </div>
             `).join('');
-        }
+        };
 
-        function aggiungiAlCarrello(prodId) {
+        window.aggiungiAlCarrello = function(prodId) {
             const prodotto = prodotti.find(p => p.id === prodId);
             if (!prodotto) return;
             
@@ -612,11 +612,11 @@
                 variante: ''
             });
             
-            aggiornaCarrelloUI();
-            mostraToast('Prodotto aggiunto al carrello', 'success');
-        }
+            window.aggiornaCarrelloUI();
+            window.mostraToast('Prodotto aggiunto al carrello', 'success');
+        };
 
-        function aggiornaCarrelloUI() {
+        window.aggiornaCarrelloUI = function() {
             const container = document.getElementById('cartItems');
             const countBadge = document.getElementById('cartCount');
             const totalEl = document.getElementById('cartTotal');
@@ -640,55 +640,55 @@
                         <div class="cart-item-details">Qty: ${item.quantita}</div>
                     </div>
                     <div class="cart-item-price">EUR ${subtotale.toFixed(2)}</div>
-                    <button class="cart-item-remove" onclick="rimuoviDalCarrello(${index})">X</button>
+                    <button class="cart-item-remove" onclick="window.rimuoviDalCarrello(${index})">X</button>
                 </div>
             `).join('');
             
             totalEl.textContent = `EUR ${totale.toFixed(2)}`;
-        }
+        };
 
-        function rimuoviDalCarrello(index) {
+        window.rimuoviDalCarrello = function(index) {
             carrello.splice(index, 1);
-            aggiornaCarrelloUI();
-        }
+            window.aggiornaCarrelloUI();
+        };
 
-        function toggleCart() {
+        window.toggleCart = function() {
             document.getElementById('cartSidebar').classList.toggle('open');
-        }
+        };
 
-        function apriCheckout() {
+        window.apriCheckout = function() {
             if (carrello.length === 0) {
-                mostraToast('Il carrello è vuoto', 'error');
+                window.mostraToast('Il carrello è vuoto', 'error');
                 return;
             }
             const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
             document.getElementById('checkTotal').textContent = `EUR ${totale.toFixed(2)}`;
             document.getElementById('checkoutModal').classList.add('active');
-            toggleCart();
-        }
+            window.toggleCart();
+        };
 
-        function chiudiCheckout() {
+        window.chiudiCheckout = function() {
             document.getElementById('checkoutModal').classList.remove('active');
-        }
+        };
 
-        function previewFileCheckout(input) {
+        window.previewFileCheckout = function(input) {
             if (input.files && input.files[0]) {
                 fileCheckout = input.files[0];
                 document.getElementById('checkFileName').textContent = fileCheckout.name;
             }
-        }
+        };
 
-        async function confermaOrdine() {
+        window.confermaOrdine = async function() {
             const nome = document.getElementById('checkNome').value.trim();
             const telefono = document.getElementById('checkTelefono').value.trim();
             const email = document.getElementById('checkEmail').value.trim();
 
             if (!nome || !telefono) {
-                mostraToast('Compila Nome e Telefono', 'error');
+                window.mostraToast('Compila Nome e Telefono', 'error');
                 return;
             }
 
-            mostraToast('Elaborazione ordine...', 'success');
+            window.mostraToast('Elaborazione ordine...', 'success');
             
             const codiceOrdine = 'ORD-' + Date.now().toString().slice(-6);
             const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
@@ -716,23 +716,23 @@
                 document.getElementById('successCode').textContent = codiceOrdine;
                 document.getElementById('successModal').classList.add('active');
                 carrello = [];
-                aggiornaCarrelloUI();
+                window.aggiornaCarrelloUI();
                 document.getElementById('checkNome').value = '';
                 document.getElementById('checkTelefono').value = '';
                 document.getElementById('checkEmail').value = '';
                 document.getElementById('checkFileName').textContent = '';
             } catch (error) {
                 console.error('Errore:', error);
-                mostraToast('Errore durante l\'ordine', 'error');
+                window.mostraToast('Errore durante l\'ordine', 'error');
             }
-        }
+        };
 
-        function generaLinkCliente() {
+        window.generaLinkCliente = function() {
             const nome = document.getElementById('linkClienteNome').value.trim();
             const telefono = document.getElementById('linkClienteTelefono').value.trim();
             
             if (!nome || !telefono) {
-                mostraToast('Inserisci nome e numero WhatsApp del cliente', 'error');
+                window.mostraToast('Inserisci nome e numero WhatsApp del cliente', 'error');
                 return;
             }
 
@@ -745,38 +745,38 @@
             document.getElementById('genLink').textContent = link;
             document.getElementById('linkGenerato').classList.remove('hidden');
             
-            mostraToast('Link e credenziali generati', 'success');
-        }
+            window.mostraToast('Link e credenziali generati', 'success');
+        };
 
-        function copiaLinkCliente() {
+        window.copiaLinkCliente = function() {
             const link = document.getElementById('genLink').textContent;
             navigator.clipboard.writeText(link).then(() => {
-                mostraToast('Link copiato', 'success');
+                window.mostraToast('Link copiato', 'success');
             }).catch(() => {
-                mostraToast('Errore nella copia', 'error');
+                window.mostraToast('Errore nella copia', 'error');
             });
-        }
+        };
 
-        function aggiornaBtnWhatsApp() {
+        window.aggiornaBtnWhatsApp = function() {
             const telefono = document.getElementById('linkClienteTelefono').value.trim();
             const btn = document.getElementById('btnWhatsAppWeb');
             const cifre = telefono.replace(/\D/g, '');
             btn.style.display = cifre.length >= 8 ? 'block' : 'none';
-        }
+        };
 
-        function apriWhatsAppWeb() {
+        window.apriWhatsAppWeb = function() {
             const telefono = document.getElementById('linkClienteTelefono').value.trim();
             const cifre = telefono.replace(/\D/g, '');
             
             if (cifre.length < 8) {
-                mostraToast('Inserisci un numero valido', 'error');
+                window.mostraToast('Inserisci un numero valido', 'error');
                 return;
             }
             
             window.open(`https://web.whatsapp.com/send?phone=${cifre}`, '_blank');
-        }
+        };
 
-        function inviaWhatsAppCliente() {
+        window.inviaWhatsAppCliente = function() {
             const username = document.getElementById('genUsername').textContent;
             const password = document.getElementById('genPassword').textContent;
             const link = document.getElementById('genLink').textContent;
@@ -784,7 +784,7 @@
             const telefono = document.getElementById('linkClienteTelefono').value.trim();
             
             if (!telefono) {
-                mostraToast('Inserisci il numero WhatsApp del cliente', 'error');
+                window.mostraToast('Inserisci il numero WhatsApp del cliente', 'error');
                 return;
             }
             
@@ -792,9 +792,9 @@
             
             const cleanPhone = telefono.replace(/\D/g, '');
             window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
-        }
+        };
 
-        async function previewImmagineProdotto(input) {
+        window.previewImmagineProdotto = async function(input) {
             if (input.files && input.files[0]) {
                 const file = input.files[0];
                 const reader = new FileReader();
@@ -834,9 +834,9 @@
                 };
                 reader.readAsDataURL(file);
             }
-        }
+        };
 
-        async function creaProdotto() {
+        window.creaProdotto = async function() {
             const nome = document.getElementById('prodNome').value.trim();
             const categoria = document.getElementById('prodCategoria').value;
             const prezzo = parseFloat(document.getElementById('prodPrezzo').value);
@@ -846,7 +846,7 @@
             const misure = document.getElementById('prodMisure').value.trim();
 
             if (!nome || isNaN(prezzo)) {
-                mostraToast('Compila Nome e Prezzo', 'error');
+                window.mostraToast('Compila Nome e Prezzo', 'error');
                 return;
             }
 
@@ -867,20 +867,20 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    mostraToast('Prodotto creato', 'success');
-                    pulisciFormProdotto();
-                    await caricaProdotti();
-                    renderizzaProdotti();
+                    window.mostraToast('Prodotto creato', 'success');
+                    window.pulisciFormProdotto();
+                    await window.caricaProdotti();
+                    window.renderizzaProdotti();
                 } else {
-                    mostraToast('Errore nella creazione', 'error');
+                    window.mostraToast('Errore nella creazione', 'error');
                 }
             } catch (error) {
                 console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
+                window.mostraToast('Errore di connessione', 'error');
             }
-        }
+        };
 
-        async function aggiornaProdotto() {
+        window.aggiornaProdotto = async function() {
             const nome = document.getElementById('prodNome').value.trim();
             const categoria = document.getElementById('prodCategoria').value;
             const prezzo = parseFloat(document.getElementById('prodPrezzo').value);
@@ -890,7 +890,7 @@
             const misure = document.getElementById('prodMisure').value.trim();
 
             if (!nome || isNaN(prezzo)) {
-                mostraToast('Compila Nome e Prezzo', 'error');
+                window.mostraToast('Compila Nome e Prezzo', 'error');
                 return;
             }
 
@@ -908,20 +908,20 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    mostraToast('Prodotto aggiornato', 'success');
-                    annullaModificaProdotto();
-                    await caricaProdotti();
-                    renderizzaProdotti();
+                    window.mostraToast('Prodotto aggiornato', 'success');
+                    window.annullaModificaProdotto();
+                    await window.caricaProdotti();
+                    window.renderizzaProdotti();
                 } else {
-                    mostraToast('Errore nell\'aggiornamento', 'error');
+                    window.mostraToast('Errore nell\'aggiornamento', 'error');
                 }
             } catch (error) {
                 console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
+                window.mostraToast('Errore di connessione', 'error');
             }
-        }
+        };
 
-        async function aggiungiProdottiDefault() {
+        window.aggiungiProdottiDefault = async function() {
             const prodottiDefault = [
                 {
                     nome: 'Tela Canvas 50x70 cm senza telaio',
@@ -949,7 +949,7 @@
                 }
             ];
 
-            mostraToast('Aggiunta prodotti default...', 'success');
+            window.mostraToast('Aggiunta prodotti default...', 'success');
             
             for (const prod of prodottiDefault) {
                 try {
@@ -966,12 +966,12 @@
                 } catch (e) { console.error(e); }
             }
             
-            mostraToast('Prodotti default aggiunti', 'success');
-            await caricaProdotti();
-            renderizzaProdotti();
-        }
+            window.mostraToast('Prodotti default aggiunti', 'success');
+            await window.caricaProdotti();
+            window.renderizzaProdotti();
+        };
 
-        async function caricaProdotti() {
+        window.caricaProdotti = async function() {
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/negozio/prodotti?token=${token}&studioId=${studioId}`);
                 const data = await response.json();
@@ -982,9 +982,9 @@
                 console.error('Errore:', error);
                 prodotti = [];
             }
-        }
+        };
 
-        function renderizzaProdotti() {
+        window.renderizzaProdotti = function() {
             const grid = document.getElementById('prodottiGrid');
             const loading = document.getElementById('prodottiLoading');
             const empty = document.getElementById('prodottiEmpty');
@@ -1018,14 +1018,14 @@
                     ${p.misura ? `<div class="product-measure">${p.misura}</div>` : ''}
                     ${p.descrizione ? `<div class="product-desc">${p.descrizione}</div>` : ''}
                     <div style="display: flex; gap: 8px; margin-top: 12px;">
-                        <button class="btn btn-info btn-sm" onclick="preparaModificaProdotto('${p.id}')">Modifica</button>
-                        <button class="btn btn-danger btn-sm" onclick="eliminaProdotto('${p.id}')">Elimina</button>
+                        <button class="btn btn-info btn-sm" onclick="window.preparaModificaProdotto('${p.id}')">Modifica</button>
+                        <button class="btn btn-danger btn-sm" onclick="window.eliminaProdotto('${p.id}')">Elimina</button>
                     </div>
                 </div>
             `).join('');
-        }
+        };
 
-        function preparaModificaProdotto(id) {
+        window.preparaModificaProdotto = function(id) {
             const prodotto = prodotti.find(p => p.id === id);
             if (!prodotto) return;
 
@@ -1049,37 +1049,37 @@
 
             const btnSalva = document.getElementById('btnSalvaProdotto');
             btnSalva.textContent = 'AGGIORNA PRODOTTO';
-            btnSalva.onclick = aggiornaProdotto;
+            btnSalva.onclick = window.aggiornaProdotto;
             
             document.getElementById('btnAnnullaModifica').classList.remove('hidden');
             
             document.getElementById('prodottiSection').scrollIntoView({ behavior: 'smooth' });
-        }
+        };
 
-        function annullaModificaProdotto() {
+        window.annullaModificaProdotto = function() {
             isEditing = false;
             editingId = null;
-            pulisciFormProdotto();
+            window.pulisciFormProdotto();
             document.getElementById('formTitolo').textContent = 'Nuovo Prodotto';
             const btnSalva = document.getElementById('btnSalvaProdotto');
             btnSalva.textContent = 'CREA PRODOTTO';
-            btnSalva.onclick = creaProdotto;
+            btnSalva.onclick = window.creaProdotto;
             document.getElementById('btnAnnullaModifica').classList.add('hidden');
-        }
+        };
 
-        async function eliminaProdotto(id) {
+        window.eliminaProdotto = async function(id) {
             if (!confirm('Eliminare questo prodotto?')) return;
             try {
                 await fetch(`${WORKER_URL}/api/studio/negozio/prodotto/${id}?token=${token}`, { method: 'DELETE' });
-                mostraToast('Prodotto eliminato', 'success');
-                await caricaProdotti();
-                renderizzaProdotti();
+                window.mostraToast('Prodotto eliminato', 'success');
+                await window.caricaProdotti();
+                window.renderizzaProdotti();
             } catch (error) {
-                mostraToast('Errore eliminazione', 'error');
+                window.mostraToast('Errore eliminazione', 'error');
             }
-        }
+        };
 
-        function pulisciFormProdotto() {
+        window.pulisciFormProdotto = function() {
             document.getElementById('prodNome').value = '';
             document.getElementById('prodPrezzo').value = '';
             document.getElementById('prodMisura').value = '';
@@ -1089,9 +1089,9 @@
             document.getElementById('prodImmagineFile').value = '';
             document.getElementById('imgPreview').classList.add('hidden');
             immagineProdottoBase64 = null;
-        }
+        };
 
-        async function caricaOrdini() {
+        window.caricaOrdini = async function() {
             const loading = document.getElementById('ordiniLoading');
             const empty = document.getElementById('ordiniEmpty');
             const list = document.getElementById('ordersList');
@@ -1150,10 +1150,10 @@
                             </div>
                             <div class="order-total">Totale: EUR ${parseFloat(o.totale).toFixed(2)}</div>
                             <div class="order-actions">
-                                ${o.stato !== 'pagato' ? `<button class="btn btn-sm btn-success" onclick="cambiaStatoOrdine('${o.id}', 'pagato')">Pagato</button>` : ''}
-                                ${o.stato !== 'in_lavorazione' ? `<button class="btn btn-sm btn-info" onclick="cambiaStatoOrdine('${o.id}', 'in_lavorazione')">In Lavorazione</button>` : ''}
-                                ${o.stato !== 'pronto' ? `<button class="btn btn-sm btn-warning" onclick="cambiaStatoOrdine('${o.id}', 'pronto')">Pronto</button>` : ''}
-                                ${o.stato !== 'ritirato' ? `<button class="btn btn-sm btn-primary" onclick="cambiaStatoOrdine('${o.id}', 'ritirato')">Ritirato</button>` : ''}
+                                ${o.stato !== 'pagato' ? `<button class="btn btn-sm btn-success" onclick="window.cambiaStatoOrdine('${o.id}', 'pagato')">Pagato</button>` : ''}
+                                ${o.stato !== 'in_lavorazione' ? `<button class="btn btn-sm btn-info" onclick="window.cambiaStatoOrdine('${o.id}', 'in_lavorazione')">In Lavorazione</button>` : ''}
+                                ${o.stato !== 'pronto' ? `<button class="btn btn-sm btn-warning" onclick="window.cambiaStatoOrdine('${o.id}', 'pronto')">Pronto</button>` : ''}
+                                ${o.stato !== 'ritirato' ? `<button class="btn btn-sm btn-primary" onclick="window.cambiaStatoOrdine('${o.id}', 'ritirato')">Ritirato</button>` : ''}
                             </div>
                         </div>
                     `).join('');
@@ -1166,23 +1166,23 @@
             document.getElementById('statLav').textContent = stats.lav;
             document.getElementById('statPro').textContent = stats.pro;
             document.getElementById('statRit').textContent = stats.rit;
-        }
+        };
 
-        async function cambiaStatoOrdine(ordineId, nuovoStato) {
+        window.cambiaStatoOrdine = async function(ordineId, nuovoStato) {
             try {
                 await fetch(`${WORKER_URL}/api/studio/negozio/ordine/${ordineId}?token=${token}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ stato: nuovoStato })
                 });
-                mostraToast(`Ordine aggiornato: ${nuovoStato}`, 'success');
-                await caricaOrdini();
+                window.mostraToast(`Ordine aggiornato: ${nuovoStato}`, 'success');
+                await window.caricaOrdini();
             } catch (error) {
-                mostraToast('Errore aggiornamento', 'error');
+                window.mostraToast('Errore aggiornamento', 'error');
             }
-        }
+        };
 
-        function togglePayment(method) {
+        window.togglePayment = function(method) {
             const el = document.getElementById('opt-' + method);
             el.classList.toggle('selected');
             
@@ -1191,9 +1191,9 @@
                 if (document.getElementById('opt-' + m).classList.contains('selected')) selected.push(m);
             });
             document.getElementById('paymentMethods').value = selected.join(',');
-        }
+        };
 
-        async function caricaConfig() {
+        window.caricaConfig = async function() {
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/negozio-config?token=${token}&studioId=${studioId}`);
                 const data = await response.json();
@@ -1217,9 +1217,9 @@
                     }
                 }
             } catch (error) { console.error('Errore:', error); }
-        }
+        };
 
-        async function salvaConfig() {
+        window.salvaConfig = async function() {
             const data = {
                 studio_id: studioId,
                 paypal_email: document.getElementById('paypalEmail').value.trim(),
@@ -1234,7 +1234,7 @@
             };
 
             if (!data.whatsapp_numero) {
-                mostraToast('Inserisci almeno il numero WhatsApp', 'error');
+                window.mostraToast('Inserisci almeno il numero WhatsApp', 'error');
                 return;
             }
 
@@ -1246,29 +1246,29 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    mostraToast('Configurazione salvata', 'success');
-                    await caricaConfig();
+                    window.mostraToast('Configurazione salvata', 'success');
+                    await window.caricaConfig();
                 } else {
-                    mostraToast('Errore nel salvataggio', 'error');
+                    window.mostraToast('Errore nel salvataggio', 'error');
                 }
             } catch (error) {
                 console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
+                window.mostraToast('Errore di connessione', 'error');
             }
-        }
+        };
 
-        function tornaPlancia() {
+        window.tornaPlancia = function() {
             window.location.href = `plancia-studio.html?token=${token}`;
-        }
+        };
 
-        function mostraToast(msg, tipo) {
+        window.mostraToast = function(msg, tipo) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${tipo}`;
             toast.innerHTML = `<div>${msg}</div>`;
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
-        }
+        };
     </script>
 </body>
 </html>
