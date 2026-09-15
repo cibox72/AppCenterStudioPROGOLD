@@ -78,7 +78,7 @@
             transition: all 0.2s;
         }
         .nav-btn:hover { transform: translateY(-2px); }
-        .container { max-width: 1100px; margin: 0 auto; padding: 30px 24px; flex: 1; width: 100%; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; flex: 1; width: 100%; }
         
         .card {
             background: white;
@@ -148,8 +148,21 @@
         .table-container { overflow-x: auto; margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
         th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
-        th { background: #f8f9fa; color: var(--text-main); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-        .status-badge { padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        th {
+            background: #f8f9fa;
+            color: var(--text-main);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
         .status-coperto { background: #eafaf1; color: var(--success); }
         .status-corso { background: #fef9e7; color: var(--warning); }
         .cred-cell { font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.5; }
@@ -229,7 +242,6 @@
         .success-message p { color: var(--text-main); font-size: 16px; margin-bottom: 8px; }
         .success-message .thanks { font-style: italic; color: var(--text-light); margin-top: 16px; font-family: 'Georgia', serif; }
 
-        /* SEZIONE AUGURI DISABILITATA */
         .auguri-disabled {
             background: #f0f0f0;
             padding: 32px;
@@ -454,6 +466,7 @@
                                 <th>Cliente</th>
                                 <th>Evento</th>
                                 <th>Stato</th>
+                                <th>Finanziario</th>
                                 <th>Credenziali</th>
                                 <th>Azioni</th>
                             </tr>
@@ -527,7 +540,6 @@
 
                 <div id="pubPaymentArea"></div>
 
-                <!-- SEZIONE AUGURI DISABILITATA (visibile ma grigia) -->
                 <div id="augurioSectionDisabled" class="auguri-disabled">
                     <div class="card-title">Lascia un Messaggio di Auguri</div>
                     <p style="font-size:14px; color:var(--text-light); margin-bottom:16px;">Completa il pagamento per sbloccare questa sezione.</p>
@@ -546,7 +558,6 @@
                     <button class="btn btn-primary" disabled style="width:100%; margin-top:12px;">Invia Auguri</button>
                 </div>
 
-                <!-- SEZIONE AUGURI ABILITATA (nascosta fino al pagamento) -->
                 <div id="augurioSection" class="hidden">
                     <div class="card" style="background:#f8f9fa; box-shadow:none;">
                         <div class="card-title">Lascia un Messaggio di Auguri</div>
@@ -816,11 +827,8 @@
         }
 
         function confermaPagamento() {
-            // Nasconde sezione disabilitata
             document.getElementById('augurioSectionDisabled').classList.add('hidden');
-            // Mostra sezione abilitata
             document.getElementById('augurioSection').classList.remove('hidden');
-            // Scroll alla sezione
             document.getElementById('augurioSection').scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -983,12 +991,34 @@
             const tbody = document.getElementById('tabellaListe');
             if (data.success && data.lista) {
                 tbody.innerHTML = data.lista.map(l => {
-                    const isCoperto = l.raccolto_attuale >= l.importo_servizio;
+                    const raccolto = parseFloat(l.raccolto_attuale) || 0;
+                    const obiettivo = parseFloat(l.importo_servizio) || 0;
+                    const saldo = obiettivo - raccolto;
+                    const perc = obiettivo > 0 ? Math.min(100, Math.round((raccolto / obiettivo) * 100)) : 0;
+                    const isCoperto = raccolto >= obiettivo;
+                    
                     return `
                     <tr>
                         <td><strong>${l.cliente_nome}</strong></td>
                         <td>${l.tipo_evento}</td>
-                        <td><span class="status-badge ${isCoperto ? 'status-coperto' : 'status-corso'}">${isCoperto ? 'Servizio Coperto' : 'In Corso'}</span></td>
+                        <td>
+                            <span class="status-badge ${isCoperto ? 'status-coperto' : 'status-corso'}">
+                                ${isCoperto ? '✓ Coperto' : 'In Corso'}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-size:12px; line-height:1.6;">
+                                <div><strong>Obiettivo:</strong> EUR ${obiettivo.toFixed(2)}</div>
+                                <div><strong>Raccolto:</strong> <span style="color:var(--success); font-weight:700;">EUR ${raccolto.toFixed(2)}</span></div>
+                                <div><strong>Saldo:</strong> <span style="color:${saldo > 0 ? 'var(--warning)' : 'var(--success)'}; font-weight:700;">EUR ${saldo.toFixed(2)}</span></div>
+                                <div style="margin-top:4px;">
+                                    <div style="background:var(--primary-light); height:6px; border-radius:3px; overflow:hidden;">
+                                        <div style="width:${perc}%; height:100%; background:${isCoperto ? 'var(--success)' : 'var(--warning)'}; transition:width 0.3s;"></div>
+                                    </div>
+                                    <div style="font-size:11px; color:var(--text-light); margin-top:2px;">${perc}% completato</div>
+                                </div>
+                            </div>
+                        </td>
                         <td>
                             <div class="cred-cell">
                                 <div><strong>U:</strong> ${l.username || '-'}</div>
