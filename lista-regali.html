@@ -34,7 +34,7 @@
         }
         .top-bar {
             background: var(--primary-gradient);
-            padding: 16px 24px;
+            padding: 14px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -46,22 +46,21 @@
         .studio-branding {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             color: white;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
         }
         .studio-branding .studio-name {
             font-family: 'Georgia', serif;
             font-style: italic;
-            font-size: 16px;
-        }
-        .studio-branding a {
+            font-size: 15px;
+            font-weight: 700;
             color: white;
             text-decoration: none;
-            transition: opacity 0.2s;
+            letter-spacing: 0.5px;
         }
-        .studio-branding a:hover { opacity: 0.8; }
+        .studio-branding .studio-name:hover { text-decoration: underline; }
+        .studio-branding .separator { opacity: 0.6; }
         .nav-btn {
             background: rgba(255,255,255,0.95);
             border: none;
@@ -74,7 +73,7 @@
             transition: all 0.2s;
         }
         .nav-btn:hover { transform: translateY(-2px); }
-        .container { max-width: 1100px; margin: 0 auto; padding: 30px 24px; flex: 1; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 30px 24px; flex: 1; width: 100%; }
         
         .card {
             background: white;
@@ -212,7 +211,6 @@
         .login-container h2 { font-size: 28px; color: var(--primary-dark); margin-bottom: 24px; font-family: 'Georgia', serif; }
         .login-container .form-group { margin-bottom: 16px; text-align: left; }
 
-        /* CONFERMA AUGURIO */
         .success-message {
             background: var(--primary-light);
             border: 2px solid var(--primary);
@@ -221,36 +219,26 @@
             text-align: center;
             margin: 20px 0;
         }
-        .success-message h3 {
-            color: var(--primary-dark);
-            font-size: 24px;
-            font-family: 'Georgia', serif;
-            margin-bottom: 12px;
-        }
-        .success-message p {
-            color: var(--text-main);
-            font-size: 16px;
-            margin-bottom: 8px;
-        }
-        .success-message .thanks {
-            font-style: italic;
-            color: var(--text-light);
-            margin-top: 16px;
-            font-family: 'Georgia', serif;
-        }
+        .success-message h3 { color: var(--primary-dark); font-size: 24px; font-family: 'Georgia', serif; margin-bottom: 12px; }
+        .success-message p { color: var(--text-main); font-size: 16px; margin-bottom: 8px; }
+        .success-message .thanks { font-style: italic; color: var(--text-light); margin-top: 16px; font-family: 'Georgia', serif; }
 
         /* FOOTER BRANDING */
         .footer-branding {
             text-align: center;
-            padding: 24px;
+            padding: 20px 24px;
             color: var(--text-light);
             font-size: 13px;
             margin-top: auto;
+            background: rgba(255,255,255,0.5);
+            border-top: 1px solid var(--border-color);
         }
         .footer-branding a {
             color: var(--primary-dark);
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
+            font-family: 'Georgia', serif;
+            font-style: italic;
         }
         .footer-branding a:hover { text-decoration: underline; }
 
@@ -274,18 +262,19 @@
             .archive-header { flex-direction: column; align-items: flex-start; }
             .archive-item { flex-direction: column; }
             .archive-item .item-amount { text-align: left; }
-            .studio-branding { font-size: 12px; }
-            .studio-branding .studio-name { font-size: 14px; }
+            .studio-branding { font-size: 11px; }
+            .studio-branding .studio-name { font-size: 13px; }
         }
     </style>
 </head>
 <body>
+    <!-- TOP BAR CON BRANDING -->
     <div id="topBar" class="top-bar hidden">
         <div class="studio-branding">
             <span>Servizio offerto da</span>
             <a href="https://www.glstudio.it" target="_blank" class="studio-name" id="studioBrandName">G&L Studio</a>
         </div>
-        <div>
+        <div id="topBarActions">
             <button class="nav-btn" onclick="tornaPlancia()">Indietro alla Plancia</button>
         </div>
     </div>
@@ -370,7 +359,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Messaggio di Ringraziamento (dopo augurio)</label>
-                        <textarea id="messaggioRingraziamento" rows="3" placeholder="Es. Grazie per il tuo pensiero! I festeggiati apprezzeranno molto.">Grazie per il tuo pensiero gentile! Il tuo augurio è stato registrato e i festeggiati potranno leggerlo.</textarea>
+                        <textarea id="messaggioRingraziamento" rows="3" placeholder="Es. Grazie per il tuo pensiero!">Grazie per il tuo pensiero gentile! Il tuo augurio è stato registrato e i festeggiati potranno leggerlo.</textarea>
                     </div>
                 </div>
                 <button class="btn btn-success" onclick="creaListaRegali()">Genera Lista, Credenziali e QR</button>
@@ -506,7 +495,6 @@
 
                 <div id="pubPaymentArea"></div>
 
-                <!-- SEZIONE AUGURIO (si sblocca dopo pagamento) -->
                 <div id="augurioSection" class="hidden">
                     <div class="card" style="background:#f8f9fa; box-shadow:none;">
                         <div class="card-title">Lascia un Messaggio di Auguri</div>
@@ -528,7 +516,6 @@
                     </div>
                 </div>
 
-                <!-- CONFERMA AUGURIO INVIATO -->
                 <div id="successSection" class="hidden">
                     <div class="success-message">
                         <h3>Augurio Inviato con Successo!</h3>
@@ -546,7 +533,8 @@
         </div>
     </div>
 
-    <div class="footer-branding">
+    <!-- FOOTER CON BRANDING -->
+    <div class="footer-branding" id="footerBranding">
         Servizio offerto da <a href="https://www.glstudio.it" target="_blank" id="footerStudioName">G&L Studio</a> - Lista Regali Digitale
     </div>
 
@@ -554,6 +542,9 @@
 
     <script>
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        const STUDIO_NAME = "G&L Studio";
+        const STUDIO_SITE = "https://www.glstudio.it";
+        
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         const listaId = urlParams.get('id');
@@ -569,12 +560,24 @@
             } else if (dashboardId) {
                 document.getElementById('loadingArea').classList.add('hidden');
                 document.getElementById('loginView').classList.remove('hidden');
+                mostraTopBar(false);
             } else if (listaId) {
                 await initPublicView(listaId);
             } else {
                 document.getElementById('loadingArea').textContent = 'Link non valido. Contatta lo studio.';
             }
         });
+
+        function mostraTopBar(mostraPulsantePlancia) {
+            const topBar = document.getElementById('topBar');
+            const actions = document.getElementById('topBarActions');
+            topBar.classList.remove('hidden');
+            if (mostraPulsantePlancia) {
+                actions.innerHTML = '<button class="nav-btn" onclick="tornaPlancia()">Indietro alla Plancia</button>';
+            } else {
+                actions.innerHTML = '';
+            }
+        }
 
         // ==========================================
         // TEMI GLOBALI
@@ -711,13 +714,8 @@
             }
         }
 
-        function stampaArchivio() {
-            window.print();
-        }
-
-        function logoutCliente() {
-            window.location.href = window.location.pathname;
-        }
+        function stampaArchivio() { window.print(); }
+        function logoutCliente() { window.location.href = window.location.pathname; }
 
         // ==========================================
         // HELPERS METODO PAGAMENTO
@@ -795,9 +793,9 @@
         // VISTA STUDIO
         // ==========================================
         async function initStudioView() {
-            document.getElementById('topBar').classList.remove('hidden');
             document.getElementById('loadingArea').classList.add('hidden');
             document.getElementById('studioView').classList.remove('hidden');
+            mostraTopBar(true);
             
             const res = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
             const data = await res.json();
@@ -1024,6 +1022,9 @@
                     document.getElementById('loadingArea').classList.add('hidden');
                     document.getElementById('publicView').classList.remove('hidden');
                     
+                    // Mostra top bar e footer con branding
+                    mostraTopBar(false);
+                    
                     document.getElementById('pubNomeCliente').textContent = currentLista.cliente_nome;
                     document.getElementById('pubTipoEvento').textContent = currentLista.tipo_evento;
                     document.getElementById('pubMessaggioStudio').textContent = currentLista.messaggio_cortesia || `Con gioia vi invitiamo a contribuire al regalo di ${currentLista.cliente_nome}.`;
@@ -1081,17 +1082,14 @@
                     });
                 }
                 
-                // Mostra conferma
                 document.getElementById('augurioSection').classList.add('hidden');
                 document.getElementById('successSection').classList.remove('hidden');
                 
-                // Messaggio di ringraziamento personalizzato
                 const thanksMsg = currentLista.messaggio_ringraziamento || 'Grazie per il tuo pensiero gentile!';
                 document.getElementById('successMessage').textContent = thanksMsg;
                 
                 document.getElementById('successSection').scrollIntoView({ behavior: 'smooth' });
                 
-                // Ricarica lista auguri
                 setTimeout(() => initPublicView(currentLista.id), 1000);
             } catch (e) { 
                 mostraToast('Errore nell\'invio', 'error'); 
