@@ -522,21 +522,15 @@ export default {
         await env.DB.prepare(`INSERT INTO prodotti_negozio (id, studio_id, nome, categoria, prezzo, misura, descrizione, colori, misure, immagine, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, d.studio_id, d.nome, d.categoria, d.prezzo, d.misura, d.descrizione, d.colori || '', d.misure || '', d.immagine || '', d.data_creazione).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-            if (path.startsWith("/api/studio/negozio/prodotto/") && request.method === "PUT") {
-    const token = url.searchParams.get("token");
-    const sess = await verificaSessione(token);
-    if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-    
-    const id = path.split("/api/studio/negozio/prodotto/")[1];
-    const d = await request.json();
-    
-    await env.DB.prepare(`UPDATE prodotti_negozio SET nome=?, categoria=?, prezzo=?, misura=?, descrizione=?, colori=?, misure=?, immagine=? WHERE id=? AND studio_id=?`).bind(
-        d.nome, d.categoria, d.prezzo, d.misura, d.descrizione, d.colori, d.misure, d.immagine, id, sess.user_id
-    ).run();
-    
-    return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-}
-      
+            
+            if (path.startsWith("/api/studio/negozio/prodotto/") && request.method === "DELETE") {
+        const token = url.searchParams.get("token");
+        const sess = await verificaSessione(token);
+        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+        const id = path.split("/api/studio/negozio/prodotto/")[1];
+        await env.DB.prepare("DELETE FROM prodotti_negozio WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
+        return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+      }
 
       if (path === "/api/studio/negozio/ordini" && request.method === "GET") {
         const token = url.searchParams.get("token");
