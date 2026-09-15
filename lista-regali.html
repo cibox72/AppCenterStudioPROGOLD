@@ -358,6 +358,13 @@
             font-size: 12px;
             color: var(--text-light);
         }
+        .donation-item .donor-delete {
+            margin-top: 8px;
+            font-size: 11px;
+            color: var(--danger);
+            cursor: pointer;
+            text-decoration: underline;
+        }
         
         .whatsapp-buttons {
             display: grid;
@@ -572,15 +579,23 @@
                 </div>
 
                 <div class="card mt-20" style="background:#f8f9fa; box-shadow:none;">
-                    <div class="card-title">Aggiorna Importo Raccolto</div>
-                    <p style="font-size:14px; color:var(--text-light); margin-bottom:16px;">Quando ricevi una donazione, aggiorna manualmente l'importo totale raccolto.</p>
+                    <div class="card-title">Registra Nuova Donazione Ricevuta</div>
+                    <p style="font-size:14px; color:var(--text-light); margin-bottom:16px;">Quando ricevi una donazione, registrala qui. Il totale si aggiornerà automaticamente.</p>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Nuovo Importo Totale Raccolto (EUR)</label>
-                            <input type="number" id="nuovoImportoRaccolto" placeholder="Es. 800">
+                            <label>Nome del Donatore *</label>
+                            <input type="text" id="donatoreNome" placeholder="Es. Zio Mario">
+                        </div>
+                        <div class="form-group">
+                            <label>Importo Ricevuto (EUR) *</label>
+                            <input type="number" id="donatoreImporto" placeholder="Es. 200" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Data Donazione *</label>
+                            <input type="date" id="donatoreData">
                         </div>
                     </div>
-                    <button class="btn btn-success" onclick="aggiornaImportoRaccolto()">Aggiorna Importo</button>
+                    <button class="btn btn-success" onclick="registraDonazione()">Registra Donazione</button>
                 </div>
 
                 <div style="margin-top:40px;">
@@ -762,29 +777,89 @@
             } else {
                 divAuguri.innerHTML = '<p style="color:var(--text-light); text-align:center; padding:20px;">Nessuna donazione o augurio ricevuto ancora.</p>';
             }
+            
+            // Carica anche le donazioni registrate
+            await caricaDonazioni(listaId);
         }
 
-        async function aggiornaImportoRaccolto() {
-            const nuovoImporto = parseFloat(document.getElementById('nuovoImportoRaccolto').value);
-            if (!nuovoImporto || nuovoImporto <= 0) {
-                mostraToast('Inserisci un importo valido', 'error');
+        async function caricaDonazioni(listaId) {
+            try {
+                const res = await fetch(`${WORKER_URL}/api/public/lista-regali/donazioni?listaId=${listaId}`);
+                const data = await res.json();
+                if (data.success && data.donazioni.length > 0) {
+                    const divDonazioni = document.getElementById('dashAuguriList');
+                    const existingContent = divDonazioni.innerHTML;
+                    
+                    const donazioniHTML = data.donazioni.map(d => `
+                        <div class="donation-item">
+                            <div class="donor-name">${d.nome_donatore}</div>
+                            <div class="donor-amount">Donazione: EUR ${parseFloat(d.importo).toFixed(2)}</div>
+                            <div class="donor-date">${d.data_donazione ? new Date(d.data_donazione).toLocaleDateString('it-IT') : ''}</div>
+                            <div class="donor-delete" onclick="eliminaDonazione('${d.id}')">Elimina questa donazione</div>
+                        </div>
+                    `).join('');
+                    
+                    divDonazioni.innerHTML = donazioniHTML + existingContent;
+                }
+            } catch (e) {
+                console.error('Errore nel caricamento donazioni:', e);
+            }
+        }
+
+        async function registraDonazione() {
+            const nome = document.getElementById('donatoreNome').value.trim();
+            const importo = document.getElementById('donatoreImporto').value;
+            const data = document.getElementById('donatoreData').value;
+            
+            if (!nome || !importo || !data) {
+                mostraToast('Compila tutti i campi', 'error');
                 return;
             }
             
             try {
-                const res = await fetch(`${WORKER_URL}/api/public/lista-regali/${currentLista.id}/aggiorna-importo`, {
+                const res = await fetch(`${WORKER_URL}/api/public/lista-regali/donazione`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nuovo_importo: nuovoImporto })
+                    body: JSON.stringify({
+                        lista_id: currentLista.id,
+                        nome_donatore: nome,
+                        importo: parseFloat(importo),
+                        data_donazione: data
+                    })
+                });
+                const dataRes = await res.json();
+                if (dataRes.success) {
+                    // Aggiorna currentLista con il nuovo totale
+                    currentLista.raccolto_attuale = dataRes.totale;
+                    // Ricarica la dashboard
+                    await caricaDashboard(currentLista.id);
+                    // Pulisci form
+                    document.getElementById('donatoreNome').value = '';
+                    document.getElementById('donatoreImporto').value = '';
+                    document.getElementById('donatoreData').value = '';
+                    mostraToast('Donazione registrata con successo', 'success');
+                } else {
+                    mostraToast('Errore nella registrazione', 'error');
+                }
+            } catch (e) {
+                mostraToast('Errore di connessione', 'error');
+            }
+        }
+
+        async function eliminaDonazione(id) {
+            if (!confirm('Sei sicuro di voler eliminare questa donazione?')) return;
+            
+            try {
+                const res = await fetch(`${WORKER_URL}/api/public/lista-regali/donazione/${id}`, {
+                    method: 'DELETE'
                 });
                 const data = await res.json();
                 if (data.success) {
-                    currentLista.raccolto_attuale = nuovoImporto;
+                    // Ricarica la dashboard per aggiornare il totale
                     await caricaDashboard(currentLista.id);
-                    mostraToast('Importo aggiornato con successo', 'success');
-                    document.getElementById('nuovoImportoRaccolto').value = '';
+                    mostraToast('Donazione eliminata', 'success');
                 } else {
-                    mostraToast('Errore nell\'aggiornamento', 'error');
+                    mostraToast('Errore nell\'eliminazione', 'error');
                 }
             } catch (e) {
                 mostraToast('Errore di connessione', 'error');
@@ -995,7 +1070,7 @@
         function inviaWhatsAppCliente() {
             if (!currentLista) return;
             const linkDashboard = `${window.location.origin}${window.location.pathname}?dashboard=${currentLista.id}`;
-            const msg = `Buongiorno ${currentLista.cliente_nome},\n\nlo studio ha creato la tua Lista Regali per il tuo ${currentLista.tipo_evento}.\n\nLE TUE CREDENZIALI PRIVATE:\nUsername: ${currentLista.username}\nPassword: ${currentLista.password}\n\nLINK DASHBOARD (per monitorare lo stato):\n${linkDashboard}\n\nCon la dashboard puoi:\n- Vedere l'importo raccolto in tempo reale\n- Leggere i messaggi e gli auguri ricevuti\n- Sapere quando hai raggiunto l'obiettivo\n\nIl link pubblico da condividere con gli invitati te lo invieremo a parte, insieme al QR code stampabile.\n\nUn cordiale saluto.`;
+            const msg = `Buongiorno ${currentLista.cliente_nome},\n\nlo studio ha creato la tua Lista Regali per il tuo ${currentLista.tipo_evento}.\n\nLE TUE CREDENZIALI PRIVATE:\nUsername: ${currentLista.username}\nPassword: ${currentLista.password}\n\nLINK DASHBOARD (per monitorare lo stato):\n${linkDashboard}\n\nCon la dashboard puoi:\n- Vedere l'importo raccolto in tempo reale\n- Leggere i messaggi e gli auguri ricevuti\n- Registrare ogni singola donazione ricevuta\n- Sapere quando hai raggiunto l'obiettivo\n\nIl link pubblico da condividere con gli invitati te lo invieremo a parte, insieme al QR code stampabile.\n\nUn cordiale saluto.`;
             window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
