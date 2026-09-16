@@ -735,7 +735,7 @@
 
             const username = 'cl-' + Math.random().toString(36).substring(2, 6).toUpperCase();
             const password = Math.random().toString(36).substring(2, 6).toUpperCase() + Math.floor(10+Math.random()*90);
-            const link = window.location.origin + window.location.pathname + '?studioId=' + encodeURIComponent(studioId) + '&cliente=' + username;
+            const link = window.location.origin + '/AppCenterStudioPROGOLD/negozio-cliente.html?studioId=' + encodeURIComponent(studioId) + '&cliente=' + username;
 
             try {
                 const response = await fetch(WORKER_URL + '/api/studio/cliente?token=' + token, {
