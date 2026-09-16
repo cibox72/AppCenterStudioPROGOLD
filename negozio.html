@@ -1166,7 +1166,7 @@
             grid.innerHTML = '';
             
             try {
-                const response = await fetch(WORKER_URL + '/api/studio/clienti?token=' + token + '&studioId=' + studioId);
+               const response = await fetch(WORKER_URL + '/api/studio/clienti?token=' + token + '&studioId=' + encodeURIComponent(studioId));
                 const data = await response.json();
                 const clienti = data.success ? data.clienti : [];
                 
