@@ -508,12 +508,26 @@ export default {
       // NEGOZIO (COMPLETO E CORRETTO)
       // ============================================
       if (path === "/api/studio/negozio/prodotti" && request.method === "GET") {
-        const token = url.searchParams.get("token");
+    const token = url.searchParams.get("token");
+    const studioIdFromParam = url.searchParams.get("studioId");
+    
+    // Se c'è un token valido, usa la sessione
+    if (token) {
         const sess = await verificaSessione(token);
-        if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const result = await env.DB.prepare("SELECT * FROM prodotti_negozio WHERE studio_id=? ORDER BY data_creazione DESC").bind(url.searchParams.get("studioId")).all();
+        if (sess && sess.tipo === 'studio') {
+            const result = await env.DB.prepare("SELECT * FROM prodotti_negozio WHERE studio_id=? ORDER BY data_creazione DESC").bind(sess.user_id).all();
+            return new Response(JSON.stringify({ success: true, prodotti: result.results }), { headers: corsHeaders });
+        }
+    }
+    
+    // Altrimenti usa lo studioId passato come parametro (per il negozio cliente)
+    if (studioIdFromParam) {
+        const result = await env.DB.prepare("SELECT * FROM prodotti_negozio WHERE studio_id=? ORDER BY data_creazione DESC").bind(studioIdFromParam).all();
         return new Response(JSON.stringify({ success: true, prodotti: result.results }), { headers: corsHeaders });
-      }
+    }
+    
+    return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
+}
       
       if (path === "/api/studio/negozio/prodotto" && request.method === "POST") {
         const token = url.searchParams.get("token");
