@@ -1007,7 +1007,7 @@
 
         window.caricaProdotti = async function() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio/prodotti?token=${token}&studioId=${encodeURIComponent(studioId)}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/negozio/prodotti?token=${token}`);
                 const data = await response.json();
                 if (data.success && data.prodotti) {
                     prodotti = data.prodotti;
@@ -1137,7 +1137,7 @@
             let stats = { att: 0, pag: 0, lav: 0, pro: 0, rit: 0 };
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio/ordini?token=${token}&studioId=${encodeURIComponent(studioId)}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/negozio/ordini?token=${token}`);
                 const data = await response.json();
                 const ordini = data.success ? data.ordini : [];
                 
@@ -1229,7 +1229,7 @@
 
         window.caricaConfig = async function() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio-config?token=${token}&studioId=${encodeURIComponent(studioId)}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/negozio-config?token=${token}`);
                 const data = await response.json();
                 if (data.success && data.config) {
                     config = data.config;
