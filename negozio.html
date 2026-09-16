@@ -165,6 +165,12 @@
                     <div class="card-desc">Genera link e credenziali da inviare al cliente tramite WhatsApp.</div>
                 </div>
 
+                <div class="dash-card" onclick="mostraSezione('clienti')">
+                    <span class="card-icon">&#128101;</span>
+                    <div class="card-title">Archivio Clienti</div>
+                    <div class="card-desc">Visualizza tutti i clienti creati con i loro link di accesso al negozio.</div>
+                </div>
+
                 <div class="dash-card" onclick="mostraSezione('prodotti')">
                     <span class="card-icon">&#128230;</span>
                     <div class="card-title">Gestione Prodotti</div>
@@ -270,6 +276,18 @@
                         <button class="btn btn-outline" onclick="copiaLinkCliente()">Copia Link</button>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div id="clientiSection" class="section">
+            <div class="card">
+                <div class="card-title">Archivio Clienti Negozio</div>
+                <div id="clientiLoading" class="loading">
+                    <div class="spinner"></div>
+                    <div>Caricamento clienti...</div>
+                </div>
+                <div id="clientiEmpty" class="empty-state hidden">Nessun cliente trovato.</div>
+                <div class="products-grid" id="clientiGrid"></div>
             </div>
         </div>
 
@@ -507,6 +525,7 @@
                 renderizzaProdotti();
                 caricaProdotti();
             }
+            if (nome === 'clienti') caricaClienti();
             if (nome === 'ordini') caricaOrdini();
             if (nome === 'config') caricaConfig();
         }
@@ -1129,6 +1148,55 @@
             document.getElementById('prodImmagineFile').value = '';
             document.getElementById('imgPreview').classList.add('hidden');
             immagineProdottoBase64 = null;
+        }
+
+        async function caricaClienti() {
+            const loading = document.getElementById('clientiLoading');
+            const empty = document.getElementById('clientiEmpty');
+            const grid = document.getElementById('clientiGrid');
+            
+            loading.style.display = 'block';
+            empty.classList.add('hidden');
+            grid.innerHTML = '';
+            
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/clienti?token=' + token + '&studioId=' + studioId);
+                const data = await response.json();
+                const clienti = data.success ? data.clienti : [];
+                
+                loading.style.display = 'none';
+                
+                if (clienti.length === 0) {
+                    empty.classList.remove('hidden');
+                } else {
+                    grid.innerHTML = clienti.map(function(c) {
+                        const linkCliente = window.location.origin + '/AppCenterStudioPROGOLD/negozio-cliente.html?studioId=' + encodeURIComponent(studioId) + '&cliente=' + c.id;
+                        return '<div class="product-card">' +
+                            '<div class="product-category">Cliente Negozio</div>' +
+                            '<div class="product-name">' + (c.nome_a || '') + ' ' + (c.cognome_a || '') + '</div>' +
+                            '<div style="font-size: 12px; color: var(--text-light); margin-bottom: 8px;">' + (c.email || 'Nessuna email') + ' - ' + (c.telefono || 'Nessun telefono') + '</div>' +
+                            '<div style="font-size: 11px; color: var(--primary-dark); margin-bottom: 12px; font-weight: 600;">ID: ' + c.id + '</div>' +
+                            '<div style="background: var(--primary-light); padding: 10px; border-radius: 6px; margin-bottom: 12px;">' +
+                                '<div style="font-size: 10px; color: var(--text-light); font-weight: 600; margin-bottom: 4px;">Link di accesso al negozio:</div>' +
+                                '<div style="font-size: 11px; word-break: break-all; font-family: monospace; color: var(--text-main);">' + linkCliente + '</div>' +
+                            '</div>' +
+                            '<button class="btn btn-sm btn-outline" onclick="copiaLinkClienteDiretto(\'' + linkCliente + '\')">Copia Link</button>' +
+                        '</div>';
+                    }).join('');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore caricamento clienti', 'error');
+                loading.style.display = 'none';
+            }
+        }
+
+        function copiaLinkClienteDiretto(link) {
+            navigator.clipboard.writeText(link).then(function() {
+                mostraToast('Link copiato negli appunti', 'success');
+            }).catch(function() {
+                mostraToast('Errore nella copia', 'error');
+            });
         }
 
         async function caricaOrdini() {
