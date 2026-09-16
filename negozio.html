@@ -33,8 +33,8 @@
         .dash-card .card-icon { font-size: 48px; margin-bottom: 16px; display: block; }
         .dash-card .card-title { font-size: 18px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
         .dash-card .card-desc { font-size: 13px; color: var(--text-light); line-height: 1.5; }
-        .dash-card .badge-alert { position: absolute; top: 16px; right: 16px; background: var(--danger); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        .dash-card .badge-alert { position: absolute; top: 16px; right: 16px; background: var(--danger); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; animation: pulse 2s infinite; box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4); }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } }
         .section { display: none; }
         .section.active { display: block; }
         .card { background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden; }
@@ -154,40 +154,40 @@
 
             <div class="dashboard-grid">
                 <div class="dash-card" onclick="mostraSezione('anteprima')">
-                    <span class="card-icon">&#128065;</span>
+                    <span class="card-icon"></span>
                     <div class="card-title">Anteprima Negozio</div>
                     <div class="card-desc">Vedi esattamente come appare il negozio ai tuoi clienti. Vetrina, prodotti e carrello.</div>
                 </div>
 
                 <div class="dash-card" onclick="mostraSezione('link')">
-                    <span class="card-icon">&#128279;</span>
+                    <span class="card-icon">🔗</span>
                     <div class="card-title">Link Cliente</div>
-                    <div class="card-desc">Genera link e credenziali da inviare al cliente tramite WhatsApp.</div>
+                    <div class="card-desc">Genera link da inviare al cliente tramite WhatsApp per accedere al negozio.</div>
                 </div>
 
                 <div class="dash-card" onclick="mostraSezione('clienti')">
-                    <span class="card-icon">&#128101;</span>
+                    <span class="card-icon"></span>
                     <div class="card-title">Archivio Clienti</div>
-                    <div class="card-desc">Visualizza tutti i clienti creati con username, password e link di accesso.</div>
+                    <div class="card-desc">Visualizza tutti i clienti con ID, password e link di accesso.</div>
                 </div>
 
                 <div class="dash-card" onclick="mostraSezione('prodotti')">
-                    <span class="card-icon">&#128230;</span>
+                    <span class="card-icon">📦</span>
                     <div class="card-title">Gestione Prodotti</div>
-                    <div class="card-desc">Crea, modifica e archivia i prodotti della vetrina. Aggiungi anche prodotti acconto.</div>
+                    <div class="card-desc">Crea, modifica e archivia i prodotti della vetrina.</div>
                 </div>
 
                 <div class="dash-card" onclick="mostraSezione('ordini')">
                     <span class="badge-alert hidden" id="alertOrdini">0</span>
-                    <span class="card-icon">&#128203;</span>
+                    <span class="card-icon"></span>
                     <div class="card-title">Ordini Ricevuti</div>
                     <div class="card-desc">Visualizza e gestisci gli ordini dei clienti con stato e dettagli.</div>
                 </div>
 
                 <div class="dash-card" onclick="mostraSezione('config')">
-                    <span class="card-icon">&#9881;</span>
+                    <span class="card-icon">⚙</span>
                     <div class="card-title">Configurazioni</div>
-                    <div class="card-desc">Pagamenti anticipati, WhatsApp, messaggi automatici e ritiro in studio.</div>
+                    <div class="card-desc">Pagamenti, WhatsApp, messaggi automatici e ritiro in studio.</div>
                 </div>
             </div>
         </div>
@@ -250,7 +250,7 @@
                         <label>Numero WhatsApp Cliente * (con prefisso)</label>
                         <input type="tel" id="linkClienteTelefono" placeholder="+39 333 1234567" oninput="aggiornaBtnWhatsApp()">
                         <button type="button" class="btn btn-whatsapp" id="btnWhatsAppWeb" onclick="apriWhatsAppWeb()" style="margin-top: 12px; display: none; width: 100%;">
-                            &#128279; Apri WhatsApp Web con questo numero
+                            🔗 Apri WhatsApp Web con questo numero
                         </button>
                     </div>
                 </div>
@@ -322,7 +322,7 @@
                 <div class="form-group">
                     <label>Immagine Prodotto (carica file - verrà ridimensionata automaticamente)</label>
                     <div class="upload-area" onclick="document.getElementById('prodImmagineFile').click()">
-                        <div style="font-size: 32px; margin-bottom: 8px;">&#128247;</div>
+                        <div style="font-size: 32px; margin-bottom: 8px;"></div>
                         <div style="font-size: 13px; color: var(--text-light);">Clicca per caricare l'immagine</div>
                         <input type="file" id="prodImmagineFile" accept="image/*" style="display:none" onchange="previewImmagineProdotto(this)">
                         <img id="imgPreview" class="file-preview hidden">
@@ -469,7 +469,7 @@
 
     <div class="modal-overlay" id="successModal">
         <div class="modal-content" style="text-align: center;">
-            <div style="font-size: 64px; margin-bottom: 16px; color: var(--success);">V</div>
+            <div style="font-size: 64px; margin-bottom: 16px; color: var(--success);">✓</div>
             <h2 style="color: var(--primary-dark); margin-bottom: 16px;">Ordine Confermato</h2>
             <p style="margin-bottom: 24px; color: var(--text-light);">
                 Codice ordine: <strong id="successCode" style="color: var(--primary-dark); font-size: 24px;"></strong>
@@ -556,7 +556,13 @@
                 if (data.success && data.tema && data.tema.tema_attivo) {
                     const temi = {
                         'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
-                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' }
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
                     };
                     const t = temi[data.tema.tema_attivo] || temi['default'];
                     const root = document.documentElement;
@@ -1246,6 +1252,7 @@
                 if (ordini.length === 0) {
                     empty.classList.remove('hidden');
                     document.getElementById('alertNuoviOrdini').classList.add('hidden');
+                    document.getElementById('alertOrdini').classList.add('hidden');
                 } else {
                     const badge = document.getElementById('alertOrdini');
                     const inAttesa = ordini.filter(function(o) { return o.stato === 'in_attesa'; }).length;
