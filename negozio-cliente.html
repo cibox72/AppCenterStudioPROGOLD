@@ -41,8 +41,8 @@
         .btn-success { background: var(--success); color: white; }
         .btn-danger { background: var(--danger); color: white; }
         
-        .cart-float-btn { position: fixed; bottom: 24px; right: 24px; background: var(--primary-gradient); color: white; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; box-shadow: 0 4px 20px rgba(0,0,0,0.2); cursor: pointer; z-index: 1000; border: none; }
-        .cart-count { position: absolute; top: -4px; right: -4px; background: var(--danger); color: white; width: 24px; height: 24px; border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid white; }
+        .cart-float-btn { position: fixed; bottom: 24px; right: 24px; background: var(--primary-gradient); color: white; padding: 16px 24px; border-radius: 50px; display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.2); cursor: pointer; z-index: 1000; border: none; }
+        .cart-count { background: var(--danger); color: white; width: 24px; height: 24px; border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
         
         .cart-sidebar { position: fixed; top: 0; right: -450px; width: 400px; max-width: 90vw; height: 100vh; background: white; box-shadow: -4px 0 20px rgba(0,0,0,0.15); z-index: 2000; transition: right 0.3s ease; display: flex; flex-direction: column; }
         .cart-sidebar.open { right: 0; }
@@ -91,7 +91,7 @@
 </head>
 <body>
     <div class="header">
-        <h1 id="studioNome">Negozio Online</h1>
+        <h1>Negozio Online</h1>
         <p>Prodotti personalizzati - Ritiro in studio</p>
     </div>
 
@@ -110,7 +110,7 @@
     </div>
 
     <button class="cart-float-btn" onclick="toggleCart()" id="cartBtn" style="display:none;">
-        <span></span>
+        <span>🛒 Carrello</span>
         <span class="cart-count" id="cartCount">0</span>
     </button>
 
@@ -146,12 +146,14 @@
                 <input type="tel" id="checkTelefono">
             </div>
             <div class="form-group">
-                <label>Email</label>
+                <label>Email *</label>
                 <input type="email" id="checkEmail">
             </div>
             <div class="form-group">
-                <label>Carica la tua foto (opzionale)</label>
-                <input type="file" id="checkFile" accept="image/*">
+                <label>Carica le tue foto (puoi caricarne più di una)</label>
+                <input type="file" id="checkFile" accept="image/*" multiple onchange="mostraAnteprimaFoto(this)">
+                <div id="anteprimaFotoContainer" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;"></div>
+                <div style="font-size: 12px; color: var(--text-light); margin-top: 4px;">Puoi selezionare più foto contemporaneamente</div>
             </div>
             <div style="margin-top: 20px; padding: 16px; background: var(--primary-light); border-radius: 8px; text-align: center;">
                 <div style="font-weight: 700; font-size: 18px; color: var(--primary-dark);" id="checkTotal">Totale: EUR 0.00</div>
@@ -168,12 +170,16 @@
         <div class="modal-content" style="text-align: center;">
             <div style="font-size: 48px; margin-bottom: 16px; color: var(--success); font-weight: 700;">✓</div>
             <h2 style="color: var(--primary-dark); margin-bottom: 16px;">Ordine Confermato!</h2>
-            <p style="margin-bottom: 24px; color: var(--text-light);">
+            <p style="margin-bottom: 16px; color: var(--text-light);">
                 Il tuo codice ordine è:<br>
                 <strong id="successCode" style="color: var(--primary-dark); font-size: 24px; font-family: monospace;"></strong>
             </p>
+            <div id="pagamentoContainer" style="margin: 20px 0; padding: 16px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #f39c12; text-align: left;">
+                <div style="font-weight: 700; color: #856404; margin-bottom: 12px; font-size: 16px;">💳 Pagamento Anticipato Obbligatorio</div>
+                <div id="pagamentoLinks"></div>
+            </div>
             <p style="margin-bottom: 24px; color: var(--text-light); font-size: 14px;">
-                Ti contatteremo presto per confermare il pagamento e il ritiro in studio.
+                Completa il pagamento per confermare l'ordine. Ti contatteremo per il ritiro in studio.
             </p>
             <button class="btn btn-primary" onclick="location.reload()">Torna al Negozio</button>
         </div>
@@ -192,6 +198,7 @@
         
         let prodotti = [];
         let carrello = [];
+        let fotoCaricate = [];
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!studioId) {
@@ -204,7 +211,7 @@
 
         async function applicaTemaGlobale() {
             try {
-                const res = await fetch(WORKER_URL + '/api/studio/tema?studioId=' + studioId);
+                const res = await fetch(WORKER_URL + '/api/studio/tema?studioId=' + encodeURIComponent(studioId));
                 const data = await res.json();
                 if (data.success && data.tema && data.tema.tema_attivo) {
                     const temi = {
@@ -330,6 +337,29 @@
 
         function chiudiCheckout() {
             document.getElementById('checkoutModal').classList.remove('active');
+            document.getElementById('anteprimaFotoContainer').innerHTML = '';
+            fotoCaricate = [];
+        }
+
+        function mostraAnteprimaFoto(input) {
+            const container = document.getElementById('anteprimaFotoContainer');
+            container.innerHTML = '';
+            fotoCaricate = [];
+            
+            if (input.files) {
+                Array.from(input.files).forEach(function(file, index) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        fotoCaricate.push({ name: file.name, data: e.target.result });
+                        const div = document.createElement('div');
+                        div.style.cssText = 'position: relative; width: 80px; height: 80px; border-radius: 8px; overflow: hidden; border: 2px solid var(--border-color);';
+                        div.innerHTML = '<img src="' + e.target.result + '" style="width: 100%; height: 100%; object-fit: cover;">' +
+                            '<div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: white; font-size: 9px; padding: 2px; text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">' + file.name + '</div>';
+                        container.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
         }
 
         async function confermaOrdine() {
@@ -337,8 +367,8 @@
             const telefono = document.getElementById('checkTelefono').value.trim();
             const email = document.getElementById('checkEmail').value.trim();
 
-            if (!nome || !telefono) {
-                mostraToast('Compila Nome e Telefono', 'error');
+            if (!nome || !telefono || !email) {
+                mostraToast('Compila tutti i campi obbligatori', 'error');
                 return;
             }
 
@@ -346,6 +376,21 @@
             
             const codiceOrdine = 'ORD-' + Date.now().toString().slice(-6);
             const totale = carrello.reduce(function(sum, item) { return sum + (item.prezzo * item.quantita); }, 0);
+
+            // Carica le foto su R2 (se presenti)
+            let fotoUrls = [];
+            for (let i = 0; i < fotoCaricate.length; i++) {
+                const foto = fotoCaricate[i];
+                try {
+                    const response = await fetch(WORKER_URL + '/api/studio/upload?token=dummy&studioId=' + encodeURIComponent(studioId) + '&clienteId=' + codiceOrdine + '&folder=foto-ordine&filename=' + encodeURIComponent(foto.name), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/octet-stream' },
+                        body: atob(foto.data.split(',')[1]).split('').map(c => String.fromCharCode(c.charCodeAt(0) & 0xff)).join('')
+                    });
+                    const result = await response.json();
+                    if (result.success) fotoUrls.push(result.url);
+                } catch (e) { console.error('Errore upload foto:', e); }
+            }
 
             try {
                 await fetch(WORKER_URL + '/api/studio/negozio/ordine', {
@@ -361,10 +406,48 @@
                         totale: totale,
                         stato: 'in_attesa',
                         metodo_pagamento: 'anticipato',
-                        file_url: '',
+                        file_url: fotoUrls.join(','),
                         data_creazione: new Date().toISOString()
                     })
                 });
+
+                // Carica la configurazione per mostrare i link di pagamento
+                try {
+                    const configRes = await fetch(WORKER_URL + '/api/studio/negozio-config?studioId=' + encodeURIComponent(studioId));
+                    const configData = await configRes.json();
+                    const config = configData.success ? configData.config : null;
+                    
+                    let htmlPagamento = '';
+                    if (config) {
+                        if (config.metodi_pagamento) {
+                            const metodi = config.metodi_pagamento.split(',');
+                            metodi.forEach(function(m) {
+                                m = m.trim();
+                                if (m === 'paypal' && config.paypal_email) {
+                                    htmlPagamento += '<div style="margin-bottom: 8px;"><strong>PayPal:</strong> <a href="https://paypal.me/' + config.paypal_email.split('@')[0] + '/' + totale + '" target="_blank" style="color: #0070ba; font-weight: 600;">Paga con PayPal</a> - Email: ' + config.paypal_email + '</div>';
+                                }
+                                if (m === 'iban' && config.iban_numero) {
+                                    htmlPagamento += '<div style="margin-bottom: 8px;"><strong>Bonifico IBAN:</strong><br><code style="background: white; padding: 4px 8px; border-radius: 4px; font-size: 13px;">' + config.iban_numero + '</code><br><span style="font-size: 12px; color: var(--text-light);">Intestato a: G&L Studio - Causale: ' + codiceOrdine + '</span></div>';
+                                }
+                                if (m === 'satispay' && config.satispay_numero) {
+                                    htmlPagamento += '<div style="margin-bottom: 8px;"><strong>Satispay:</strong> Numero: ' + config.satispay_numero + ' - Causale: ' + codiceOrdine + '</div>';
+                                }
+                                if (m === 'stripe' && config.stripe_link) {
+                                    htmlPagamento += '<div style="margin-bottom: 8px;"><strong>Stripe (Carta):</strong> <a href="' + config.stripe_link + '" target="_blank" style="color: #635bff; font-weight: 600;">Paga con Carta</a></div>';
+                                }
+                            });
+                        }
+                        if (!htmlPagamento) {
+                            htmlPagamento = '<div style="color: #856404;">Contatteremo il cliente per il pagamento. Totale: EUR ' + totale.toFixed(2) + '</div>';
+                        }
+                    } else {
+                        htmlPagamento = '<div style="color: #856404;">Totale da pagare: EUR ' + totale.toFixed(2) + '. Ti contatteremo per il pagamento.</div>';
+                    }
+                    
+                    document.getElementById('pagamentoLinks').innerHTML = htmlPagamento;
+                } catch (e) {
+                    document.getElementById('pagamentoLinks').innerHTML = '<div style="color: #856404;">Totale da pagare: EUR ' + totale.toFixed(2) + '. Ti contatteremo per il pagamento.</div>';
+                }
 
                 document.getElementById('checkoutModal').classList.remove('active');
                 document.getElementById('successCode').textContent = codiceOrdine;
