@@ -168,7 +168,7 @@
                 <div class="dash-card" onclick="mostraSezione('clienti')">
                     <span class="card-icon">&#128101;</span>
                     <div class="card-title">Archivio Clienti</div>
-                    <div class="card-desc">Visualizza tutti i clienti creati con i loro link di accesso al negozio.</div>
+                    <div class="card-desc">Visualizza tutti i clienti creati con username, password e link di accesso.</div>
                 </div>
 
                 <div class="dash-card" onclick="mostraSezione('prodotti')">
@@ -1171,16 +1171,27 @@
                 } else {
                     grid.innerHTML = clienti.map(function(c) {
                         const linkCliente = window.location.origin + '/AppCenterStudioPROGOLD/negozio-cliente.html?studioId=' + encodeURIComponent(studioId) + '&cliente=' + c.id;
+                        const passwordDisplay = c.password_plain || 'Non disponibile';
                         return '<div class="product-card">' +
                             '<div class="product-category">Cliente Negozio</div>' +
                             '<div class="product-name">' + (c.nome_a || '') + ' ' + (c.cognome_a || '') + '</div>' +
-                            '<div style="font-size: 12px; color: var(--text-light); margin-bottom: 8px;">' + (c.email || 'Nessuna email') + ' - ' + (c.telefono || 'Nessun telefono') + '</div>' +
-                            '<div style="font-size: 11px; color: var(--primary-dark); margin-bottom: 12px; font-weight: 600;">ID: ' + c.id + '</div>' +
-                            '<div style="background: var(--primary-light); padding: 10px; border-radius: 6px; margin-bottom: 12px;">' +
-                                '<div style="font-size: 10px; color: var(--text-light); font-weight: 600; margin-bottom: 4px;">Link di accesso al negozio:</div>' +
+                            '<div style="font-size: 12px; color: var(--text-light); margin-bottom: 6px;">' + (c.email || 'Nessuna email') + ' - ' + (c.telefono || 'Nessun telefono') + '</div>' +
+                            '<div style="background: #fff3cd; padding: 8px; border-radius: 6px; margin-bottom: 8px;">' +
+                                '<div style="font-size: 10px; color: #856404; font-weight: 600;">Username:</div>' +
+                                '<div style="font-size: 14px; font-weight: 700; font-family: monospace; color: #856404;">' + c.id + '</div>' +
+                            '</div>' +
+                            '<div style="background: #d1ecf1; padding: 8px; border-radius: 6px; margin-bottom: 8px;">' +
+                                '<div style="font-size: 10px; color: #0c5460; font-weight: 600;">Password:</div>' +
+                                '<div style="font-size: 14px; font-weight: 700; font-family: monospace; color: #0c5460;">' + passwordDisplay + '</div>' +
+                            '</div>' +
+                            '<div style="background: var(--primary-light); padding: 8px; border-radius: 6px; margin-bottom: 12px;">' +
+                                '<div style="font-size: 10px; color: var(--text-light); font-weight: 600; margin-bottom: 4px;">Link di accesso:</div>' +
                                 '<div style="font-size: 11px; word-break: break-all; font-family: monospace; color: var(--text-main);">' + linkCliente + '</div>' +
                             '</div>' +
-                            '<button class="btn btn-sm btn-outline" onclick="copiaLinkClienteDiretto(\'' + linkCliente + '\')">Copia Link</button>' +
+                            '<div style="display: flex; gap: 8px;">' +
+                                '<button class="btn btn-sm btn-outline" onclick="copiaLinkClienteDiretto(\'' + linkCliente + '\')">Copia Link</button>' +
+                                '<button class="btn btn-sm btn-danger" onclick="eliminaCliente(\'' + c.id + '\')">Elimina</button>' +
+                            '</div>' +
                         '</div>';
                     }).join('');
                 }
@@ -1188,6 +1199,23 @@
                 console.error('Errore:', error);
                 mostraToast('Errore caricamento clienti', 'error');
                 loading.style.display = 'none';
+            }
+        }
+
+        async function eliminaCliente(clienteId) {
+            if (!confirm('Eliminare definitivamente questo cliente?')) return;
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/cliente/' + clienteId + '?token=' + token, { method: 'DELETE' });
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Cliente eliminato', 'success');
+                    caricaClienti();
+                } else {
+                    mostraToast('Errore: ' + (result.error || ''), 'error');
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore eliminazione cliente', 'error');
             }
         }
 
