@@ -225,7 +225,7 @@
 
         async function caricaProdotti() {
             try {
-                const response = await fetch(WORKER_URL + '/api/studio/negozio/prodotti?studioId=' + studioId);
+                const response = await fetch(WORKER_URL + '/api/studio/negozio/prodotti?studioId=' + encodeURIComponent(studioId));
                 const data = await response.json();
                 const loading = document.getElementById('vetrinaLoading');
                 const empty = document.getElementById('vetrinaEmpty');
