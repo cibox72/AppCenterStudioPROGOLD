@@ -54,7 +54,7 @@
 
         .nav-btn:hover { transform: translateY(-2px); }
 
-        .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
+        .container { max-width: 900px; margin: 0 auto; padding: 30px 24px; }
 
         .page-header {
             text-align: center;
@@ -144,188 +144,20 @@
         .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
         .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-sm { padding: 8px 16px; font-size: 12px; }
 
-        .preview-container {
-            background: #f0f0f0;
-            padding: 30px;
-            border-radius: 12px;
-            margin-top: 20px;
-        }
-
-        /* STILE RICEVUTA BUFFETTI */
-        .ricevuta {
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
+        .toast {
             background: white;
-            border: 2px solid #333;
-            padding: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            color: #000;
-            max-width: 700px;
-            margin: 0 auto;
+            border-radius: 10px;
+            padding: 14px 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
+            border-left: 4px solid var(--success);
+            animation: slideIn 0.3s;
         }
-
-        .ricevuta-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            border-bottom: 2px solid #333;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-
-        .ricevuta-studio {
-            flex: 1;
-        }
-
-        .ricevuta-studio-nome {
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--primary-dark);
-            margin-bottom: 4px;
-        }
-
-        .ricevuta-studio-info {
-            font-size: 10px;
-            color: #555;
-            line-height: 1.4;
-        }
-
-        .ricevuta-numero {
-            text-align: right;
-            border: 2px solid #333;
-            padding: 8px 12px;
-            background: var(--primary-light);
-        }
-
-        .ricevuta-numero-label {
-            font-size: 9px;
-            text-transform: uppercase;
-            color: #666;
-        }
-
-        .ricevuta-numero-valore {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--primary-dark);
-        }
-
-        .ricevuta-data {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            padding: 8px;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-        }
-
-        .ricevuta-data-label {
-            font-weight: bold;
-            font-size: 10px;
-            text-transform: uppercase;
-        }
-
-        .ricevuta-data-valore {
-            font-weight: bold;
-            font-size: 13px;
-            letter-spacing: 2px;
-        }
-
-        .ricevuta-riga {
-            display: flex;
-            margin-bottom: 12px;
-            border-bottom: 1px dotted #999;
-            padding-bottom: 8px;
-        }
-
-        .ricevuta-riga-label {
-            width: 140px;
-            font-weight: bold;
-            font-size: 10px;
-            text-transform: uppercase;
-            color: #555;
-            flex-shrink: 0;
-        }
-
-        .ricevuta-riga-valore {
-            flex: 1;
-            font-size: 12px;
-            padding-left: 10px;
-            min-height: 20px;
-            border-bottom: 1px solid #ccc;
-        }
-
-        .ricevuta-importo {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--primary-light);
-            border: 2px solid var(--primary-dark);
-            padding: 12px;
-            margin: 15px 0;
-        }
-
-        .ricevuta-importo-label {
-            font-weight: bold;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        .ricevuta-importo-valore {
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--primary-dark);
-        }
-
-        .ricevuta-footer {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid #999;
-        }
-
-        .ricevuta-firma {
-            text-align: center;
-            width: 45%;
-        }
-
-        .ricevuta-firma-linea {
-            border-top: 1px solid #333;
-            margin-top: 40px;
-            padding-top: 5px;
-            font-size: 9px;
-            text-transform: uppercase;
-            color: #666;
-        }
-
-        .ricevuta-note {
-            font-size: 9px;
-            color: #888;
-            text-align: center;
-            margin-top: 15px;
-            font-style: italic;
-        }
-
-        /* LINEA TRATTEGGIATA PER IL TAGLIO */
-        .linea-taglio {
-            border-top: 2px dashed #999;
-            margin: 30px 0;
-            position: relative;
-            text-align: center;
-        }
-
-        .linea-taglio::after {
-            content: '✂ TAGLIARE QUI';
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #f0f0f0;
-            padding: 0 10px;
-            font-size: 10px;
-            color: #999;
-            font-weight: bold;
-        }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
 
         /* STAMPA A4 */
         @media print {
@@ -419,39 +251,6 @@
         .print-only {
             display: none;
         }
-
-        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
-        .toast {
-            background: white;
-            border-radius: 10px;
-            padding: 14px 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            margin-bottom: 10px;
-            border-left: 4px solid var(--success);
-            animation: slideIn 0.3s;
-        }
-        .toast.error { border-left-color: var(--danger); }
-        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
-
-        .archivio-item {
-            background: white;
-            border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border-left: 4px solid var(--primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .archivio-info { flex: 1; }
-        .archivio-numero { font-weight: 700; color: var(--primary-dark); font-size: 16px; }
-        .archivio-data { font-size: 12px; color: var(--text-light); }
-        .archivio-cliente { font-size: 13px; margin-top: 4px; }
-        .archivio-importo { font-weight: 700; color: var(--primary-dark); font-size: 16px; margin-right: 16px; }
-
-        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
     </style>
 </head>
 <body>
@@ -477,8 +276,8 @@
                     <input type="text" id="ricNumero" placeholder="001">
                 </div>
                 <div class="form-group">
-                    <label>Data (ggmmaa) *</label>
-                    <input type="text" id="ricData" placeholder="170926" maxlength="6">
+                    <label>Data *</label>
+                    <input type="date" id="ricData">
                 </div>
             </div>
 
@@ -495,12 +294,8 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Importo in cifre (EUR) *</label>
-                    <input type="number" id="ricImporto" step="0.01" placeholder="0.00" oninput="aggiornaImportoLettere()">
-                </div>
-                <div class="form-group">
-                    <label>Importo in lettere</label>
-                    <input type="text" id="ricImportoLettere" placeholder="Zero/00" readonly>
+                    <label>Importo (EUR) *</label>
+                    <input type="number" id="ricImporto" step="0.01" placeholder="0.00">
                 </div>
             </div>
 
@@ -515,24 +310,8 @@
             </div>
 
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <button class="btn btn-primary" onclick="aggiornaAnteprima()">Aggiorna Anteprima</button>
                 <button class="btn btn-success" onclick="stampaRicevuta()">Stampa / Salva PDF</button>
-                <button class="btn btn-outline" onclick="salvaRicevuta()">Salva in Archivio</button>
                 <button class="btn btn-outline" onclick="nuovaRicevuta()">Nuova Ricevuta</button>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">Anteprima Ricevuta</div>
-            <div class="preview-container" id="previewContainer">
-                <div class="empty-state">Compila i campi sopra e clicca "Aggiorna Anteprima"</div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">Archivio Ricevute</div>
-            <div id="archivioContainer">
-                <div class="empty-state">Nessuna ricevuta salvata</div>
             </div>
         </div>
     </div>
@@ -559,7 +338,6 @@
             if (!token) { window.location.href = 'index.html'; return; }
             await verificaSessione();
             await caricaStudio();
-            await caricaArchivio();
             generaNumeroProgressivo();
             impostaDataOdierna();
         });
@@ -597,62 +375,23 @@
 
         function impostaDataOdierna() {
             const oggi = new Date();
-            const gg = String(oggi.getDate()).padStart(2, '0');
+            const yyyy = oggi.getFullYear();
             const mm = String(oggi.getMonth() + 1).padStart(2, '0');
-            const aa = String(oggi.getFullYear()).slice(-2);
-            document.getElementById('ricData').value = gg + mm + aa;
+            const dd = String(oggi.getDate()).padStart(2, '0');
+            document.getElementById('ricData').value = yyyy + '-' + mm + '-' + dd;
         }
 
-        function aggiornaImportoLettere() {
-            const importo = parseFloat(document.getElementById('ricImporto').value) || 0;
-            document.getElementById('ricImportoLettere').value = numeroInLettere(importo);
+        function formataDataGGMMYY(dataISO) {
+            if (!dataISO) return '';
+            const parti = dataISO.split('-');
+            if (parti.length !== 3) return dataISO;
+            const gg = parti[2];
+            const mm = parti[1];
+            const aa = parti[0].slice(-2);
+            return gg + mm + aa;
         }
 
-        function numeroInLettere(num) {
-            const unita = ['', 'uno', 'due', 'tre', 'quattro', 'cinque', 'sei', 'sette', 'otto', 'nove', 'dieci', 'undici', 'dodici', 'tredici', 'quattordici', 'quindici', 'sedici', 'diciassette', 'diciotto', 'diciannove'];
-            const decine = ['', '', 'venti', 'trenta', 'quaranta', 'cinquanta', 'sessanta', 'settanta', 'ottanta', 'novanta'];
-            
-            const interi = Math.floor(num);
-            const centesimi = Math.round((num - interi) * 100);
-            
-            let risultato = '';
-            
-            if (interi === 0) {
-                risultato = 'zero';
-            } else {
-                const migliaia = Math.floor(interi / 1000);
-                const resto = interi % 1000;
-                const centinaia = Math.floor(resto / 100);
-                const decUnita = resto % 100;
-                
-                if (migliaia > 0) {
-                    risultato += migliaia === 1 ? 'unmila' : numeroInLettere(migliaia) + 'mila';
-                }
-                
-                if (centinaia > 0) {
-                    if (centinaia === 1) risultato += 'cento';
-                    else risultato += unita[centinaia] + 'cento';
-                }
-                
-                if (decUnita > 0) {
-                    if (decUnita < 20) {
-                        risultato += unita[decUnita];
-                    } else {
-                        const dec = Math.floor(decUnita / 10);
-                        const uni = decUnita % 10;
-                        let parolaDecine = decine[dec];
-                        if (uni === 1 || uni === 8) {
-                            parolaDecine = parolaDecine.slice(0, -1);
-                        }
-                        risultato += parolaDecine + unita[uni];
-                    }
-                }
-            }
-            
-            return risultato.charAt(0).toUpperCase() + risultato.slice(1) + '/'+ String(centesimi).padStart(2, '0');
-        }
-
-        function generaHTMLRicevuta(numero, data, cliente, indirizzo, importo, importoLettere, descrizione, note) {
+        function generaHTMLRicevuta(numero, dataGGMMYY, cliente, indirizzo, importo, descrizione, note) {
             const nomeStudio = studioData ? (studioData.nome || 'Studio Fotografico') : 'Studio Fotografico';
             const indirizzoStudio = studioData ? (studioData.indirizzo || '') : '';
             const cittaStudio = studioData ? (studioData.citta || '') : '';
@@ -680,7 +419,7 @@
                     <div class="ricevuta-data">
                         <div>
                             <div class="ricevuta-data-label">Data</div>
-                            <div class="ricevuta-data-valore">${data}</div>
+                            <div class="ricevuta-data-valore">${dataGGMMYY}</div>
                         </div>
                         <div style="text-align: right;">
                             <div class="ricevuta-data-label">Luogo</div>
@@ -699,11 +438,6 @@
                         <div class="ricevuta-riga-valore">${indirizzo}</div>
                     </div>
                     ` : ''}
-
-                    <div class="ricevuta-riga">
-                        <div class="ricevuta-riga-label">La somma di Euro</div>
-                        <div class="ricevuta-riga-valore">${importoLettere || 'Zero/00'}</div>
-                    </div>
 
                     <div class="ricevuta-importo">
                         <div class="ricevuta-importo-label">Importo</div>
@@ -738,130 +472,27 @@
             `;
         }
 
-        function aggiornaAnteprima() {
-            const numero = document.getElementById('ricNumero').value;
-            const data = document.getElementById('ricData').value;
-            const cliente = document.getElementById('ricCliente').value;
-            const indirizzo = document.getElementById('ricIndirizzo').value;
-            const importo = document.getElementById('ricImporto').value;
-            const importoLettere = document.getElementById('ricImportoLettere').value;
-            const descrizione = document.getElementById('ricDescrizione').value;
-            const note = document.getElementById('ricNote').value;
-
-            if (!numero || !data || !cliente || !importo) {
-                mostraToast('Compila i campi obbligatori', 'error');
-                return;
-            }
-
-            const html = generaHTMLRicevuta(numero, data, cliente, indirizzo, importo, importoLettere, descrizione, note);
-            document.getElementById('previewContainer').innerHTML = html;
-            mostraToast('Anteprima aggiornata', 'success');
-        }
-
         function stampaRicevuta() {
             const numero = document.getElementById('ricNumero').value;
-            const data = document.getElementById('ricData').value;
+            const dataISO = document.getElementById('ricData').value;
             const cliente = document.getElementById('ricCliente').value;
             const indirizzo = document.getElementById('ricIndirizzo').value;
             const importo = document.getElementById('ricImporto').value;
-            const importoLettere = document.getElementById('ricImportoLettere').value;
             const descrizione = document.getElementById('ricDescrizione').value;
             const note = document.getElementById('ricNote').value;
 
-            if (!numero || !data || !cliente || !importo) {
+            if (!numero || !dataISO || !cliente || !importo) {
                 mostraToast('Compila i campi obbligatori', 'error');
                 return;
             }
 
-            const html = generaHTMLRicevuta(numero, data, cliente, indirizzo, importo, importoLettere, descrizione, note);
+            const dataGGMMYY = formataDataGGMMYY(dataISO);
+            const html = generaHTMLRicevuta(numero, dataGGMMYY, cliente, indirizzo, importo, descrizione, note);
             
             document.getElementById('ricevutaStampa1').innerHTML = html;
             document.getElementById('ricevutaStampa2').innerHTML = html;
 
             window.print();
-        }
-
-        function salvaRicevuta() {
-            const numero = document.getElementById('ricNumero').value;
-            const data = document.getElementById('ricData').value;
-            const cliente = document.getElementById('ricCliente').value;
-            const indirizzo = document.getElementById('ricIndirizzo').value;
-            const importo = document.getElementById('ricImporto').value;
-            const importoLettere = document.getElementById('ricImportoLettere').value;
-            const descrizione = document.getElementById('ricDescrizione').value;
-            const note = document.getElementById('ricNote').value;
-
-            if (!numero || !data || !cliente || !importo) {
-                mostraToast('Compila i campi obbligatori', 'error');
-                return;
-            }
-
-            const ricevuta = {
-                id: 'ric-' + Date.now(),
-                numero, data, cliente, indirizzo, importo, importoLettere, descrizione, note,
-                dataCreazione: new Date().toISOString()
-            };
-
-            const archivio = JSON.parse(localStorage.getItem('ricevute_' + studioId) || '[]');
-            archivio.unshift(ricevuta);
-            localStorage.setItem('ricevute_' + studioId, JSON.stringify(archivio));
-
-            mostraToast('Ricevuta salvata in archivio', 'success');
-            caricaArchivio();
-            generaNumeroProgressivo();
-        }
-
-        async function caricaArchivio() {
-            const container = document.getElementById('archivioContainer');
-            const archivio = JSON.parse(localStorage.getItem('ricevute_' + studioId) || '[]');
-
-            if (archivio.length === 0) {
-                container.innerHTML = '<div class="empty-state">Nessuna ricevuta salvata</div>';
-                return;
-            }
-
-            container.innerHTML = archivio.map(r => `
-                <div class="archivio-item">
-                    <div class="archivio-info">
-                        <div class="archivio-numero">Ricevuta N. ${r.numero}</div>
-                        <div class="archivio-data">Data: ${r.data}</div>
-                        <div class="archivio-cliente">${r.cliente}${r.indirizzo ? ' - ' + r.indirizzo : ''}</div>
-                        <div style="font-size: 11px; color: var(--text-light); margin-top: 4px;">${r.descrizione}</div>
-                    </div>
-                    <div class="archivio-importo">EUR ${parseFloat(r.importo).toFixed(2)}</div>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn btn-sm btn-outline" onclick="caricaRicevuta('${r.id}')">Modifica</button>
-                        <button class="btn btn-sm btn-danger" onclick="eliminaRicevuta('${r.id}')">Elimina</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function caricaRicevuta(id) {
-            const archivio = JSON.parse(localStorage.getItem('ricevute_' + studioId) || '[]');
-            const r = archivio.find(x => x.id === id);
-            if (!r) return;
-
-            document.getElementById('ricNumero').value = r.numero;
-            document.getElementById('ricData').value = r.data;
-            document.getElementById('ricCliente').value = r.cliente;
-            document.getElementById('ricIndirizzo').value = r.indirizzo || '';
-            document.getElementById('ricImporto').value = r.importo;
-            document.getElementById('ricImportoLettere').value = r.importoLettere || '';
-            document.getElementById('ricDescrizione').value = r.descrizione || '';
-            document.getElementById('ricNote').value = r.note || '';
-
-            aggiornaAnteprima();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function eliminaRicevuta(id) {
-            if (!confirm('Eliminare questa ricevuta dall\'archivio?')) return;
-            let archivio = JSON.parse(localStorage.getItem('ricevute_' + studioId) || '[]');
-            archivio = archivio.filter(r => r.id !== id);
-            localStorage.setItem('ricevute_' + studioId, JSON.stringify(archivio));
-            mostraToast('Ricevuta eliminata', 'success');
-            caricaArchivio();
         }
 
         function nuovaRicevuta() {
@@ -870,10 +501,8 @@
             document.getElementById('ricCliente').value = '';
             document.getElementById('ricIndirizzo').value = '';
             document.getElementById('ricImporto').value = '';
-            document.getElementById('ricImportoLettere').value = '';
             document.getElementById('ricDescrizione').value = '';
             document.getElementById('ricNote').value = '';
-            document.getElementById('previewContainer').innerHTML = '<div class="empty-state">Compila i campi sopra e clicca "Aggiorna Anteprima"</div>';
             generaNumeroProgressivo();
             impostaDataOdierna();
         }
