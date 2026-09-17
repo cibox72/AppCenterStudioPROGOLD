@@ -146,33 +146,27 @@
             </div>
             <div class="dashboard-grid">
                 <div class="dash-card" onclick="mostraSezione('anteprima')">
-                    <span class="card-icon">👁️</span>
                     <div class="card-title">Anteprima Negozio</div>
                     <div class="card-desc">Vedi esattamente come appare il negozio ai tuoi clienti.</div>
                 </div>
                 <div class="dash-card" onclick="mostraSezione('link')">
-                    <span class="card-icon">🔗</span>
                     <div class="card-title">Genera Link Cliente</div>
                     <div class="card-desc">Crea un link univoco da inviare al cliente via WhatsApp.</div>
                 </div>
                 <div class="dash-card" onclick="mostraSezione('clienti')">
-                    <span class="card-icon">👥</span>
                     <div class="card-title">Archivio Clienti</div>
                     <div class="card-desc">Visualizza tutti i clienti generati e i loro link di accesso.</div>
                 </div>
                 <div class="dash-card" onclick="mostraSezione('prodotti')">
-                    <span class="card-icon">📦</span>
                     <div class="card-title">Gestione Prodotti</div>
                     <div class="card-desc">Crea, modifica e archivia i prodotti della vetrina.</div>
                 </div>
                 <div class="dash-card" onclick="mostraSezione('ordini')">
                     <span class="badge-alert hidden" id="alertOrdini">0</span>
-                    <span class="card-icon">📋</span>
                     <div class="card-title">Ordini Ricevuti</div>
                     <div class="card-desc">Visualizza e gestisci gli ordini con stato e dettagli.</div>
                 </div>
                 <div class="dash-card" onclick="mostraSezione('config')">
-                    <span class="card-icon">⚙️</span>
                     <div class="card-title">Configurazione</div>
                     <div class="card-desc">Imposta i metodi di pagamento e i dati di ritiro.</div>
                 </div>
@@ -206,7 +200,7 @@
                     <div class="form-group">
                         <label>Numero WhatsApp * (con prefisso)</label>
                         <input type="tel" id="linkClienteTelefono" placeholder="+39 333 1234567" oninput="aggiornaBtnWhatsApp()">
-                        <button type="button" class="btn btn-whatsapp" id="btnWhatsAppWeb" onclick="apriWhatsAppWeb()" style="margin-top: 12px; display: none; width: 100%;">🔗 Apri WhatsApp Web</button>
+                        <button type="button" class="btn btn-whatsapp" id="btnWhatsAppWeb" onclick="apriWhatsAppWeb()" style="margin-top: 12px; display: none; width: 100%;"> Apri WhatsApp Web</button>
                     </div>
                 </div>
                 <button class="btn btn-primary" onclick="generaLinkCliente()">Genera Link</button>
@@ -634,7 +628,7 @@
                                 return '<div class="order-product">' +
                                     '<div class="order-product-info">' +
                                         '<div><strong>• ' + p.nome + ' x' + p.quantita + '</strong> - EUR ' + (p.prezzo * p.quantita).toFixed(2) + '</div>' +
-                                        (fotoUrl ? '<div class="order-product-actions"><a href="' + fotoUrl + '" target="_blank" class="btn btn-sm btn-info" style="text-decoration:none;">️ Vedi Foto</a><button onclick="downloadFoto(\'' + fotoUrl + '\')" class="btn btn-sm btn-success" style="text-decoration:none;">⬇️ Scarica Foto</button></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
+                                        (fotoUrl ? '<div class="order-product-actions"><a href="' + fotoUrl + '" target="_blank" class="btn btn-sm btn-info" style="text-decoration:none;">👁️ Vedi Foto</a><button onclick="downloadFoto(\'' + fotoUrl + '\')" class="btn btn-sm btn-success" style="text-decoration:none;">⬇️ Scarica Foto</button></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
                                     '</div>' +
                                 '</div>';
                             }).join('') +
@@ -642,8 +636,9 @@
                         '<div class="order-total">Totale: EUR ' + parseFloat(o.totale).toFixed(2) + '</div>' +
                         '<div class="order-actions">' +
                             (o.stato !== 'pagato' ? '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'' + o.id + '\', \'pagato\')">Segna Pagato</button>' : '') +
-                            (o.stato !== 'pronto' ? '<button class="btn btn-sm btn-info" onclick="cambiaStato(\'' + o.id + '\', \'pronto\')">Segna Pronto</button>' : '') +
-                            (o.stato !== 'ritirato' ? '<button class="btn btn-sm btn-primary" onclick="cambiaStato(\'' + o.id + '\', \'ritirato\')">Segna Ritirato</button>' : '') +
+                            (o.stato !== 'in_lavorazione' ? '<button class="btn btn-sm btn-info" onclick="cambiaStato(\'' + o.id + '\', \'in_lavorazione\')">Segna In Lavorazione</button>' : '') +
+                            (o.stato !== 'pronto' ? '<button class="btn btn-sm btn-warning" onclick="segnaPronto(\'' + o.id + '\')">Segna Pronto</button>' : '') +
+                            (o.stato !== 'ritirato' ? '<button class="btn btn-sm btn-primary" onclick="segnaRitirato(\'' + o.id + '\')">Segna Ritirato</button>' : '') +
                         '</div></div>';
                 }).join('');
             } catch (e) { loading.style.display = 'none'; }
@@ -688,6 +683,48 @@
             });
             mostraToast('Ordine aggiornato', 'success');
             caricaOrdini();
+        }
+
+        async function segnaPronto(id) {
+            try {
+                // Elimina la foto dal cloud
+                await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + id + '/elimina-foto?token=' + token, {
+                    method: 'DELETE'
+                });
+                
+                // Cambia stato a pronto
+                await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + id + '?token=' + token, {
+                    method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ stato: 'pronto' })
+                });
+                
+                mostraToast('Ordine pronto e foto eliminata dal cloud', 'success');
+                caricaOrdini();
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore nell\'operazione', 'error');
+            }
+        }
+
+        async function segnaRitirato(id) {
+            if (!confirm('Confermi che l\'ordine è stato ritirato? Verrà eliminato dalla lista.')) return;
+            
+            try {
+                // Cambia stato a ritirato
+                await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + id + '?token=' + token, {
+                    method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ stato: 'ritirato' })
+                });
+                
+                // Elimina l'ordine
+                await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + id + '/elimina?token=' + token, {
+                    method: 'DELETE'
+                });
+                
+                mostraToast('Ordine ritirato ed eliminato', 'success');
+                caricaOrdini();
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore nell\'operazione', 'error');
+            }
         }
 
         function togglePayment(method) {
