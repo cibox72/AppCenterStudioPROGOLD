@@ -16,16 +16,20 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease;
         }
         .top-bar {
             background: var(--primary-gradient); padding: 16px 24px;
             display: flex; justify-content: space-between; align-items: center;
             box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100;
+            transition: background 0.3s ease;
         }
         .nav-btn {
             background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
             cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark);
+            transition: all 0.2s ease;
         }
+        .nav-btn:hover { transform: translateY(-2px); }
         .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
         .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
@@ -170,7 +174,7 @@
             <div id="tab-nuovo" class="tab-content active">
                 <div class="card-3d">
                     <div class="card-title">Componi Email</div>
-                    <div class="card-subtitle">Compila i campi. Il sistema salverà una copia nell'archivio cloud e aprira il tuo client di posta per l'invio reale (necessario per firma PEC).</div>
+                    <div class="card-subtitle">Compila i campi. Il sistema salverà una copia nell'archivio cloud e aprirà il tuo client di posta per l'invio reale (necessario per validità firma PEC).</div>
                     <div class="form-row">
                         <div class="form-group"><label>Destinatario *</label><input type="email" id="emDestinatario"></div>
                         <div class="form-group"><label>Oggetto *</label><input type="text" id="emOggetto"></div>
@@ -213,7 +217,8 @@
                     </div>
                 </div>
             </div>
-                        <!-- TAB POSTA IN ARRIVO -->
+
+            <!-- TAB POSTA IN ARRIVO -->
             <div id="tab-inarrivo" class="tab-content">
                 <div class="card-3d">
                     <div class="card-title">Posta in Arrivo</div>
@@ -244,16 +249,29 @@
             <!-- TAB CONFIGURAZIONE -->
             <div id="tab-config" class="tab-content">
                 <div class="card-3d">
-                    <div class="card-title">Configurazione Mittente</div>
-                    <div class="card-subtitle">Questi dati verranno usati come precompilazione per i template e l'archivio.</div>
+                    <div class="card-title">Configurazione Account Email</div>
+                    <div class="card-subtitle">Inserisci la tua email. I parametri del provider (Outlook, Aruba, Libero, ecc.) verranno compilati automaticamente.</div>
                     <div class="form-row">
                         <div class="form-group"><label>Nome Studio (Mittente)</label><input type="text" id="cfgNomeStudio" placeholder="Es. Studio Fotografico Rossi"></div>
-                        <div class="form-group"><label>Email Principale dello Studio</label><input type="email" id="cfgEmail" placeholder="info@studiorossi.it"></div>
+                        <div class="form-group"><label>Email Principale dello Studio *</label><input type="email" id="cfgEmail" placeholder="info@studiorossi.it" oninput="autoConfigEmail()"></div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-row">
+                        <div class="form-group"><label>Password / App Password *</label><input type="password" id="cfgPassword" placeholder="Password dell'account o App Password"></div>
+                        <div class="form-group"><label></label><div style="padding: 12px; font-size: 12px; color: var(--text-light); background: var(--primary-light); border-radius: 10px;">💡 Per Gmail/Outlook, usa una "App Password" generata dalle impostazioni di sicurezza del tuo account.</div></div>
+                    </div>
+                    <div class="card-subtitle" style="margin-top: 20px; margin-bottom: 12px; font-weight: 600; color: var(--primary-dark);">Parametri Server (Auto-compilati)</div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Server IMAP (Ricezione)</label><input type="text" id="cfgImapServer" placeholder="imap.esempio.com"></div>
+                        <div class="form-group"><label>Porta IMAP</label><input type="number" id="cfgImapPort" placeholder="993"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Server SMTP (Invio)</label><input type="text" id="cfgSmtpServer" placeholder="smtp.esempio.com"></div>
+                        <div class="form-group"><label>Porta SMTP</label><input type="number" id="cfgSmtpPort" placeholder="465"></div>
+                    </div>
+                    <div class="form-group" style="margin-top: 16px;">
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                             <input type="checkbox" id="cfgUsaClient" checked style="width: auto;">
-                            Usa client di posta esterno per invio reale (Consigliato per validità firma PEC)
+                            Usa client di posta esterno per invio reale (Consigliato per validità firma PEC e invio diretto)
                         </label>
                     </div>
                     <div class="btn-group">
@@ -317,6 +335,10 @@
                     return;
                 }
                 studioId = data.user.id;
+                
+                // CARICAMENTO TEMA GLOBALE
+                await caricaTemaGlobale();
+                
                 document.getElementById('loadingArea').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
                 
@@ -329,12 +351,76 @@
             }
         }
 
+        // ============================================
+        // SEZIONE TEMA GLOBALE
+        // ============================================
+        async function caricaTemaGlobale() {
+            if (!studioId) return;
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${studioId}&token=${token}`);
+                const data = await response.json();
+                if (data.success && data.tema && data.tema.tema_attivo) {
+                    const temaId = data.tema.tema_attivo;
+                    const temi = {
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' },
+                        'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)' }
+                    };
+                    const t = temi[temaId] || temi['default'];
+                    const root = document.documentElement;
+                    root.style.setProperty('--primary', t.p);
+                    root.style.setProperty('--primary-dark', t.pd);
+                    root.style.setProperty('--primary-light', t.pl);
+                    root.style.setProperty('--primary-gradient', t.pg);
+                    root.style.setProperty('--bg-gradient', t.bg);
+                }
+            } catch (error) {
+                console.error('Errore caricamento tema:', error);
+            }
+        }
+
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            event.target.classList.remove('hidden'); // Fix per il badge
             event.target.classList.add('active');
             document.getElementById('tab-' + tabName).classList.add('active');
+        }
+
+        // ============================================
+        // AUTO-CONFIGURAZIONE EMAIL
+        // ============================================
+        function autoConfigEmail() {
+            const email = document.getElementById('cfgEmail').value.toLowerCase();
+            const imapServer = document.getElementById('cfgImapServer');
+            const imapPort = document.getElementById('cfgImapPort');
+            const smtpServer = document.getElementById('cfgSmtpServer');
+            const smtpPort = document.getElementById('cfgSmtpPort');
+
+            if (email.includes('@hotmail.com') || email.includes('@outlook.com') || email.includes('@live.com') || email.includes('@msn.com')) {
+                imapServer.value = 'imap-mail.outlook.com'; imapPort.value = '993';
+                smtpServer.value = 'smtp-mail.outlook.com'; smtpPort.value = '587';
+            } else if (email.includes('@aruba.it') || email.includes('@pec.aruba.it')) {
+                imapServer.value = 'imaps.pec.aruba.it'; imapPort.value = '993';
+                smtpServer.value = 'smtps.pec.aruba.it'; smtpPort.value = '465';
+            } else if (email.includes('@libero.it')) {
+                imapServer.value = 'imapmail.libero.it'; imapPort.value = '993';
+                smtpServer.value = 'smtp.libero.it'; smtpPort.value = '465';
+            } else if (email.includes('@virgilio.it')) {
+                imapServer.value = 'in.virgilio.it'; imapPort.value = '993';
+                smtpServer.value = 'out.virgilio.it'; smtpPort.value = '465';
+            } else if (email.includes('@gmail.com')) {
+                imapServer.value = 'imap.gmail.com'; imapPort.value = '993';
+                smtpServer.value = 'smtp.gmail.com'; smtpPort.value = '587';
+            } else if (email.includes('@yahoo.it') || email.includes('@yahoo.com')) {
+                imapServer.value = 'imap.mail.yahoo.com'; imapPort.value = '993';
+                smtpServer.value = 'smtp.mail.yahoo.com'; smtpPort.value = '465';
+            }
         }
 
         async function caricaConfig() {
@@ -345,6 +431,11 @@
                     configStudio = data.config;
                     document.getElementById('cfgNomeStudio').value = configStudio.nome_studio || '';
                     document.getElementById('cfgEmail').value = configStudio.email_mittente || '';
+                    document.getElementById('cfgPassword').value = configStudio.email_password || '';
+                    document.getElementById('cfgImapServer').value = configStudio.imap_server || '';
+                    document.getElementById('cfgImapPort').value = configStudio.imap_port || '';
+                    document.getElementById('cfgSmtpServer').value = configStudio.smtp_server || '';
+                    document.getElementById('cfgSmtpPort').value = configStudio.smtp_port || '';
                     document.getElementById('cfgUsaClient').checked = configStudio.usa_client_esterno === 1;
                 }
             } catch (error) { console.error('Errore config:', error); }
@@ -353,18 +444,35 @@
         async function salvaConfig() {
             const nome_studio = document.getElementById('cfgNomeStudio').value.trim();
             const email_mittente = document.getElementById('cfgEmail').value.trim();
+            const email_password = document.getElementById('cfgPassword').value.trim();
+            const imap_server = document.getElementById('cfgImapServer').value.trim();
+            const imap_port = document.getElementById('cfgImapPort').value.trim();
+            const smtp_server = document.getElementById('cfgSmtpServer').value.trim();
+            const smtp_port = document.getElementById('cfgSmtpPort').value.trim();
             const usa_client_esterno = document.getElementById('cfgUsaClient').checked ? 1 : 0;
 
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/email-config?token=${token}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ studio_id: studioId, nome_studio, email_mittente, usa_client_esterno })
+                    body: JSON.stringify({ 
+                        studio_id: studioId, 
+                        nome_studio, 
+                        email_mittente, 
+                        email_password,
+                        imap_server,
+                        imap_port,
+                        smtp_server,
+                        smtp_port,
+                        usa_client_esterno 
+                    })
                 });
                 const result = await response.json();
                 if (result.success) {
-                    mostraToast('Configurazione salvata', 'success');
+                    mostraToast('Configurazione salvata con successo', 'success');
                     await caricaConfig();
+                } else {
+                    mostraToast('Errore: ' + (result.error || ''), 'error');
                 }
             } catch (error) { mostraToast('Errore di connessione', 'error'); }
         }
