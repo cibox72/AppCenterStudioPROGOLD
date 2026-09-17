@@ -3,191 +3,889 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emissione Ricevuta - AppCenterStudioPROGOLD</title>
+    <title>Ricevute - AppCenterStudioPROGOLD</title>
     <style>
-        /* VARIABILI COLORE DINAMICHE (Inizializzate con il tema Default) */
         :root {
-            --primary: #82e0aa; 
-            --primary-dark: #1e8449; 
+            --primary: #82e0aa;
+            --primary-dark: #1e8449;
             --primary-light: #e8f8f5;
             --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --text-main: #2c3e50; 
-            --text-light: #7f8c8d; 
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
             --border-color: #e8e8e8;
-            --success: #27ae60; 
-            --danger: #e74c3c; 
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
             --radius: 16px;
         }
 
-        /* --------------------------------------------------- */
-        /* STILI PER L'INTERFACCIA A SCHERMO (Elegante & Professional) */
-        /* --------------------------------------------------- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg-gradient); 
-            color: var(--text-main); 
-            line-height: 1.6; 
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            line-height: 1.6;
             min-height: 100vh;
         }
+
         .top-bar {
-            background: var(--primary-gradient); 
-            padding: 16px 24px;
-            display: flex; 
-            justify-content: space-between; 
+            background: var(--primary-gradient);
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); 
-            position: sticky; 
-            top: 0; 
-            z-index: 100;
+            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
         }
+
         .nav-btn {
-            background: rgba(255,255,255,0.95); 
-            border: none; 
-            padding: 10px 18px; 
+            background: rgba(255,255,255,0.95);
+            border: none;
+            padding: 10px 18px;
             border-radius: 10px;
-            cursor: pointer; 
-            font-size: 14px; 
-            font-weight: 600; 
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
             color: var(--primary-dark);
+            transition: all 0.2s;
         }
-        .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; }
-        
-        .container { max-width: 800px; margin: 0 auto; padding: 30px 24px; }
-        
+
+        .nav-btn:hover { transform: translateY(-2px); }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
+
         .page-header {
-            text-align: center; padding: 32px; background: white; border-radius: var(--radius);
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
+            text-align: center;
+            padding: 32px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
         }
-        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+        }
         .page-header h1 {
-            font-size: 32px; font-weight: 800; background: var(--primary-gradient);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px;
+            font-size: 32px;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
         }
         .page-header p { color: var(--text-light); font-size: 15px; }
 
-        .card-3d {
-            background: white; border-radius: var(--radius); padding: 32px;
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden;
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
+            position: relative;
+            overflow: hidden;
         }
-        .card-3d::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
-        
-        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 24px; }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; }
-        .form-group.full-width { grid-column: span 2; }
-        
-        label { font-size: 14px; font-weight: 700; color: var(--primary-dark); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        input {
-            padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 10px;
-            font-size: 15px; transition: all 0.3s ease; color: var(--text-main); background: #fdfbfb;
+        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
         }
-        input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 8px rgba(130, 224, 170, 0.3); }
-        
-        .btn-submit {
-            width: 100%; padding: 16px; background: var(--primary-gradient); color: white;
-            border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer;
-            box-shadow: 0 6px 20px rgba(30, 132, 73, 0.2); transition: all 0.3s ease;
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
         }
-        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(30, 132, 73, 0.3); }
 
-        /* --------------------------------------------------- */
-        /* STILI DI STAMPA - GRAFICA PROFESSIONALE (DOPPIA COPIA A4) */
-        /* --------------------------------------------------- */
-        #print-area { display: none; }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
 
+        .preview-container {
+            background: #f0f0f0;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        /* STILE RICEVUTA BUFFETTI */
+        .ricevuta {
+            background: white;
+            border: 2px solid #333;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #000;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .ricevuta-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .ricevuta-studio {
+            flex: 1;
+        }
+
+        .ricevuta-studio-nome {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin-bottom: 4px;
+        }
+
+        .ricevuta-studio-info {
+            font-size: 10px;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .ricevuta-numero {
+            text-align: right;
+            border: 2px solid #333;
+            padding: 8px 12px;
+            background: var(--primary-light);
+        }
+
+        .ricevuta-numero-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: #666;
+        }
+
+        .ricevuta-numero-valore {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .ricevuta-data {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 8px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+
+        .ricevuta-data-label {
+            font-weight: bold;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .ricevuta-data-valore {
+            font-weight: bold;
+            font-size: 13px;
+            letter-spacing: 2px;
+        }
+
+        .ricevuta-riga {
+            display: flex;
+            margin-bottom: 12px;
+            border-bottom: 1px dotted #999;
+            padding-bottom: 8px;
+        }
+
+        .ricevuta-riga-label {
+            width: 140px;
+            font-weight: bold;
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #555;
+            flex-shrink: 0;
+        }
+
+        .ricevuta-riga-valore {
+            flex: 1;
+            font-size: 12px;
+            padding-left: 10px;
+            min-height: 20px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .ricevuta-importo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--primary-light);
+            border: 2px solid var(--primary-dark);
+            padding: 12px;
+            margin: 15px 0;
+        }
+
+        .ricevuta-importo-label {
+            font-weight: bold;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .ricevuta-importo-valore {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .ricevuta-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #999;
+        }
+
+        .ricevuta-firma {
+            text-align: center;
+            width: 45%;
+        }
+
+        .ricevuta-firma-linea {
+            border-top: 1px solid #333;
+            margin-top: 40px;
+            padding-top: 5px;
+            font-size: 9px;
+            text-transform: uppercase;
+            color: #666;
+        }
+
+        .ricevuta-note {
+            font-size: 9px;
+            color: #888;
+            text-align: center;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        /* LINEA TRATTEGGIATA PER IL TAGLIO */
+        .linea-taglio {
+            border-top: 2px dashed #999;
+            margin: 30px 0;
+            position: relative;
+            text-align: center;
+        }
+
+        .linea-taglio::after {
+            content: '✂ TAGLIARE QUI';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f0f0f0;
+            padding: 0 10px;
+            font-size: 10px;
+            color: #999;
+            font-weight: bold;
+        }
+
+        /* STAMPA A4 */
         @media print {
-            body * { visibility: hidden; }
-            #print-area, #print-area * { visibility: visible; }
-            #print-area {
-                display: block; position: absolute; left: 0; top: 0; width: 210mm; height: 297mm;
-                box-sizing: border-box; padding: 12mm 10mm; background: white;
-            }
-            body { background: white; }
-            
-            /* Contenitore Specchietto Ricevuta Elegante */
-            .premium-receipt {
-                width: 100%; height: 128mm; border: 1.5px solid var(--primary-dark);
-                border-radius: 12px; padding: 20px; box-sizing: border-box;
-                position: relative; background: white; display: flex; flex-direction: column; justify-content: space-between;
-                box-shadow: inset 0 0 0 1px var(--primary-light);
+            body {
+                background: white;
+                margin: 0;
+                padding: 0;
             }
 
-            /* Riga di Taglio Centrale */
-            .cut-line {
-                width: 100%; height: 12mm; display: flex; align-items: center; justify-content: center;
-                border-top: 2px dashed var(--text-light); margin: 3mm 0; box-sizing: border-box;
-                color: var(--text-light); font-size: 11px; font-weight: bold; letter-spacing: 1px;
+            .no-print {
+                display: none !important;
             }
 
-            /* Intestazione della Ricevuta */
-            .receipt-header {
-                display: flex; justify-content: space-between; align-items: flex-start;
-                border-bottom: 2px solid var(--primary); padding-bottom: 12px;
-            }
-            .studio-brand h2 { font-size: 18px; font-weight: 800; color: var(--primary-dark); letter-spacing: 0.5px; }
-            .studio-brand p { font-size: 11px; color: var(--text-light); margin-top: 2px; }
-            
-            .receipt-meta { text-align: right; }
-            .receipt-meta h3 { font-size: 22px; font-weight: 900; color: var(--primary-dark); letter-spacing: 1px; }
-            .badge-copia {
-                display: inline-block; padding: 4px 10px; background: var(--primary-light);
-                color: var(--primary-dark); border-radius: 6px; font-size: 10px; font-weight: 700;
-                text-transform: uppercase; margin-top: 4px; border: 1px solid var(--primary);
+            .print-only {
+                display: block !important;
             }
 
-            /* Griglia Dati Ricevuta */
-            .receipt-body { margin-top: 15px; display: flex; flex-direction: column; gap: 12px; }
-            .receipt-row { display: flex; align-items: flex-end; width: 100%; }
-            .receipt-cell-label { font-size: 12px; font-weight: 700; color: var(--text-main); text-transform: uppercase; width: 160px; }
-            .receipt-cell-value { flex-grow: 1; border-bottom: 1px solid var(--border-color); padding-bottom: 2px; font-size: 14px; font-weight: 500; color: #111; }
-            
-            /* Dettaglio Numerazione e Data */
-            .receipt-subgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-
-            /* Blocco Importo in Cifre Evidenziato */
-            .premium-amount-box {
-                background: var(--primary-light); border: 2px dashed var(--primary-dark);
-                border-radius: 8px; padding: 6px 16px; font-size: 16px; font-weight: 800;
-                color: var(--primary-dark); display: flex; align-items: center; justify-content: center; min-width: 160px;
+            @page {
+                size: A4;
+                margin: 10mm;
             }
 
-            /* Piè di pagina Ricevuta e Firme */
-            .receipt-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 15px; }
-            .signature-space { width: 220px; text-align: center; }
-            .signature-line { border-top: 1px dashed var(--text-light); margin-bottom: 4px; height: 35px; }
-            .signature-space p { font-size: 10px; font-weight: 600; color: var(--text-light); text-transform: uppercase; }
-            
-            .watermark {
-                position: absolute; font-size: 70px; font-weight: 900; color: rgba(130, 224, 170, 0.05);
-                top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); text-transform: uppercase; pointer-events: none;
+            .pagina-stampa {
+                width: 190mm;
+                min-height: 277mm;
+                margin: 0 auto;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+
+            .ricevuta-stampa {
+                flex: 1;
+                border: 2px solid #000;
+                padding: 15mm;
+                font-family: 'Courier New', monospace;
+                font-size: 10pt;
+                color: #000;
+                background: white;
+            }
+
+            .ricevuta-stampa .ricevuta-header {
+                border-bottom: 2px solid #000;
+            }
+
+            .ricevuta-stampa .ricevuta-numero {
+                border: 2px solid #000;
+                background: #f0f0f0;
+            }
+
+            .ricevuta-stampa .ricevuta-importo {
+                border: 2px solid #000;
+                background: #f0f0f0;
+            }
+
+            .linea-taglio-stampa {
+                border-top: 2px dashed #000;
+                margin: 5mm 0;
+                position: relative;
+                text-align: center;
+                padding: 2mm 0;
+            }
+
+            .linea-taglio-stampa::after {
+                content: ' TAGLIARE QUI';
+                position: absolute;
+                top: -8pt;
+                left: 50%;
+                transform: translateX(-50%);
+                background: white;
+                padding: 0 5mm;
+                font-size: 8pt;
+                color: #666;
+                font-weight: bold;
+                font-family: Arial, sans-serif;
+            }
+
+            .ricevuta-stampa .ricevuta-studio-nome {
+                color: #000;
+            }
+
+            .ricevuta-stampa .ricevuta-numero-valore {
+                color: #000;
+            }
+
+            .ricevuta-stampa .ricevuta-importo-valore {
+                color: #000;
             }
         }
+
+        .print-only {
+            display: none;
+        }
+
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
+        .toast {
+            background: white;
+            border-radius: 10px;
+            padding: 14px 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
+            border-left: 4px solid var(--success);
+            animation: slideIn 0.3s;
+        }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+
+        .archivio-item {
+            background: white;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .archivio-info { flex: 1; }
+        .archivio-numero { font-weight: 700; color: var(--primary-dark); font-size: 16px; }
+        .archivio-data { font-size: 12px; color: var(--text-light); }
+        .archivio-cliente { font-size: 13px; margin-top: 4px; }
+        .archivio-importo { font-weight: 700; color: var(--primary-dark); font-size: 16px; margin-right: 16px; }
+
+        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
     </style>
 </head>
 <body>
-
-    <div class="top-bar">
-        <button class="nav-btn" onclick="location.href='plancia-studio.html'">Plancia</button>
-        <div class="sync-status"><span class="sync-dot"></span> Cloud Sync Attivo</div>
+    <div class="top-bar no-print">
+        <div style="display: flex; gap: 10px;">
+            <button class="nav-btn" onclick="tornaPlancia()">Indietro alla Plancia</button>
+        </div>
+        <div style="color: white; font-size: 13px;">Ricevute</div>
     </div>
 
-    <div class="container">
+    <div class="container no-print">
         <div class="page-header">
-            <h1>Emissione Ricevuta Cassa</h1>
-            <p>Compila il modulo sottostante. Il documento verrà salvato nel database Cloud e formattato in doppia copia A4.</p>
+            <h1>Ricevute</h1>
+            <p>Crea ricevute stile cartolibreria per i tuoi clienti occasionali</p>
         </div>
 
-        <div class="card-3d">
-            <form id="receiptForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="numero">Ricevuta Numero</label>
-                        <input type="number" id="numero" required placeholder="Es. 102">
+        <div class="card">
+            <div class="card-title">Nuova Ricevuta</div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Numero Ricevuta *</label>
+                    <input type="text" id="ricNumero" placeholder="001">
+                </div>
+                <div class="form-group">
+                    <label>Data (ggmmaa) *</label>
+                    <input type="text" id="ricData" placeholder="170926" maxlength="6">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Ricevuto da (Nome Cliente) *</label>
+                    <input type="text" id="ricCliente" placeholder="Mario Rossi">
+                </div>
+                <div class="form-group">
+                    <label>Indirizzo Cliente</label>
+                    <input type="text" id="ricIndirizzo" placeholder="Via Roma 1, Milano">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Importo in cifre (EUR) *</label>
+                    <input type="number" id="ricImporto" step="0.01" placeholder="0.00" oninput="aggiornaImportoLettere()">
+                </div>
+                <div class="form-group">
+                    <label>Importo in lettere</label>
+                    <input type="text" id="ricImportoLettere" placeholder="Zero/00" readonly>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label>Per (Descrizione servizio/prodotto) *</label>
+                <textarea id="ricDescrizione" rows="2" placeholder="Servizio fotografico matrimonio, stampa foto, ecc."></textarea>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label>Note (opzionale)</label>
+                <textarea id="ricNote" rows="2" placeholder="Eventuali note aggiuntive"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="aggiornaAnteprima()">Aggiorna Anteprima</button>
+                <button class="btn btn-success" onclick="stampaRicevuta()">Stampa / Salva PDF</button>
+                <button class="btn btn-outline" onclick="salvaRicevuta()">Salva in Archivio</button>
+                <button class="btn btn-outline" onclick="nuovaRicevuta()">Nuova Ricevuta</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Anteprima Ricevuta</div>
+            <div class="preview-container" id="previewContainer">
+                <div class="empty-state">Compila i campi sopra e clicca "Aggiorna Anteprima"</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Archivio Ricevute</div>
+            <div id="archivioContainer">
+                <div class="empty-state">Nessuna ricevuta salvata</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VERSIONE STAMPA (duplice copia A4) -->
+    <div class="print-only">
+        <div class="pagina-stampa">
+            <div class="ricevuta-stampa" id="ricevutaStampa1"></div>
+            <div class="linea-taglio-stampa"></div>
+            <div class="ricevuta-stampa" id="ricevutaStampa2"></div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        let studioId = null;
+        let studioData = null;
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!token) { window.location.href = 'index.html'; return; }
+            await verificaSessione();
+            await caricaStudio();
+            await caricaArchivio();
+            generaNumeroProgressivo();
+            impostaDataOdierna();
+        });
+
+        function tornaPlancia() { window.location.href = 'plancia-studio.html?token=' + token; }
+
+        async function verificaSessione() {
+            try {
+                const response = await fetch(WORKER_URL + '/api/auth/verifica?token=' + token);
+                const data = await response.json();
+                if (!data.success || data.tipo !== 'studio') {
+                    mostraToast('Sessione non valida', 'error');
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                    return;
+                }
+                studioId = data.user.id;
+            } catch (error) { mostraToast('Errore di connessione', 'error'); }
+        }
+
+        async function caricaStudio() {
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/profilo?token=' + token + '&studioId=' + studioId);
+                const data = await response.json();
+                if (data.success && data.studio) {
+                    studioData = data.studio;
+                }
+            } catch (error) { console.error('Errore caricamento studio:', error); }
+        }
+
+        function generaNumeroProgressivo() {
+            const archivio = JSON.parse(localStorage.getItem('ricevute_' + studioId) || '[]');
+            const prossimoNumero = archivio.length + 1;
+            document.getElementById('ricNumero').value = String(prossimoNumero).padStart(3, '0');
+        }
+
+        function impostaDataOdierna() {
+            const oggi = new Date();
+            const gg = String(oggi.getDate()).padStart(2, '0');
+            const mm = String(oggi.getMonth() + 1).padStart(2, '0');
+            const aa = String(oggi.getFullYear()).slice(-2);
+            document.getElementById('ricData').value = gg + mm + aa;
+        }
+
+        function aggiornaImportoLettere() {
+            const importo = parseFloat(document.getElementById('ricImporto').value) || 0;
+            document.getElementById('ricImportoLettere').value = numeroInLettere(importo);
+        }
+
+        function numeroInLettere(num) {
+            const unita = ['', 'uno', 'due', 'tre', 'quattro', 'cinque', 'sei', 'sette', 'otto', 'nove', 'dieci', 'undici', 'dodici', 'tredici', 'quattordici', 'quindici', 'sedici', 'diciassette', 'diciotto', 'diciannove'];
+            const decine = ['', '', 'venti', 'trenta', 'quaranta', 'cinquanta', 'sessanta', 'settanta', 'ottanta', 'novanta'];
+            
+            const interi = Math.floor(num);
+            const centesimi = Math.round((num - interi) * 100);
+            
+            let risultato = '';
+            
+            if (interi === 0) {
+                risultato = 'zero';
+            } else {
+                const migliaia = Math.floor(interi / 1000);
+                const resto = interi % 1000;
+                const centinaia = Math.floor(resto / 100);
+                const decUnita = resto % 100;
+                
+                if (migliaia > 0) {
+                    risultato += migliaia === 1 ? 'unmila' : numeroInLettere(migliaia) + 'mila';
+                }
+                
+                if (centinaia > 0) {
+                    if (centinaia === 1) risultato += 'cento';
+                    else risultato += unita[centinaia] + 'cento';
+                }
+                
+                if (decUnita > 0) {
+                    if (decUnita < 20) {
+                        risultato += unita[decUnita];
+                    } else {
+                        const dec = Math.floor(decUnita / 10);
+                        const uni = decUnita % 10;
+                        let parolaDecine = decine[dec];
+                        if (uni === 1 || uni === 8) {
+                            parolaDecine = parolaDecine.slice(0, -1);
+                        }
+                        risultato += parolaDecine + unita[uni];
+                    }
+                }
+            }
+            
+            return risultato.charAt(0).toUpperCase() + risultato.slice(1) + '/'+ String(centesimi).padStart(2, '0');
+        }
+
+        function generaHTMLRicevuta(numero, data, cliente, indirizzo, importo, importoLettere, descrizione, note) {
+            const nomeStudio = studioData ? (studioData.nome || 'Studio Fotografico') : 'Studio Fotografico';
+            const indirizzoStudio = studioData ? (studioData.indirizzo || '') : '';
+            const cittaStudio = studioData ? (studioData.citta || '') : '';
+            const pivaStudio = studioData ? (studioData.piva || '') : '';
+            const telefonoStudio = studioData ? (studioData.telefono || '') : '';
+
+            return `
+                <div class="ricevuta">
+                    <div class="ricevuta-header">
+                        <div class="ricevuta-studio">
+                            <div class="ricevuta-studio-nome">${nomeStudio}</div>
+                            <div class="ricevuta-studio-info">
+                                ${indirizzoStudio ? indirizzoStudio + '<br>' : ''}
+                                ${cittaStudio ? cittaStudio + '<br>' : ''}
+                                ${telefonoStudio ? 'Tel: ' + telefonoStudio + '<br>' : ''}
+                                ${pivaStudio ? 'P.IVA: ' + pivaStudio : ''}
+                            </div>
+                        </div>
+                        <div class="ricevuta-numero">
+                            <div class="ricevuta-numero-label">Ricevuta N.</div>
+                            <div class="ricevuta-numero-valore">${numero}</div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="data">Data Emissione</label>
-                        <input type="date" id="data" required>
+
+                    <div class="ricevuta-data">
+                        <div>
+                            <div class="ricevuta-data-label">Data</div>
+                            <div class="ricevuta-data-valore">${data}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="ricevuta-data-label">Luogo</div>
+                            <div class="ricevuta-data-valore">${cittaStudio || 'Italia'}</div>
+                        </div>
                     </div>
-                    <div class="form-group full-width">
+
+                    <div class="ricevuta-riga">
+                        <div class="ricevuta-riga-label">Ricevuto da</div>
+                        <div class="ricevuta-riga-valore">${cliente || ''}</div>
+                    </div>
+
+                    ${indirizzo ? `
+                    <div class="ricevuta-riga">
+                        <div class="ricevuta-riga-label">Indirizzo</div>
+                        <div class="ricevuta-riga-valore">${indirizzo}</div>
+                    </div>
+                    ` : ''}
+
+                    <div class="ricevuta-riga">
+                        <div class="ricevuta-riga-label">La somma di Euro</div>
+                        <div class="ricevuta-riga-valore">${importoLettere || 'Zero/00'}</div>
+                    </div>
+
+                    <div class="ricevuta-importo">
+                        <div class="ricevuta-importo-label">Importo</div>
+                        <div class="ricevuta-importo-valore">EUR ${parseFloat(importo || 0).toFixed(2)}</div>
+                    </div>
+
+                    <div class="ricevuta-riga">
+                        <div class="ricevuta-riga-label">Per</div>
+                        <div class="ricevuta-riga-valore">${descrizione || ''}</div>
+                    </div>
+
+                    ${note ? `
+                    <div class="ricevuta-riga">
+                        <div class="ricevuta-riga-label">Note</div>
+                        <div class="ricevuta-riga-valore">${note}</div>
+                    </div>
+                    ` : ''}
+
+                    <div class="ricevuta-footer">
+                        <div class="ricevuta-firma">
+                            <div class="ricevuta-firma-linea">Firma del Ricevente</div>
+                        </div>
+                        <div class="ricevuta-firma">
+                            <div class="ricevuta-firma-linea">Firma per Quietanza</div>
+                        </div>
+                    </div>
+
+                    <div class="ricevuta-note">
+                        Documento non fiscale - Ricevuta per clienti occasionali
+                    </div>
+                </div>
+            `;
+        }
+
+        function aggiornaAnteprima() {
+            const numero = document.getElementById('ricNumero').value;
+            const data = document.getElementById('ricData').value;
+            const cliente = document.getElementById('ricCliente').value;
+            const indirizzo = document.getElementById('ricIndirizzo').value;
+            const importo = document.getElementById('ricImporto').value;
+            const importoLettere = document.getElementById('ricImportoLettere').value;
+            const descrizione = document.getElementById('ricDescrizione').value;
+            const note = document.getElementById('ricNote').value;
+
+            if (!numero || !data || !cliente || !importo) {
+                mostraToast('Compila i campi obbligatori', 'error');
+                return;
+            }
+
+            const html = generaHTMLRicevuta(numero, data, cliente, indirizzo, importo, importoLettere, descrizione, note);
+            document.getElementById('previewContainer').innerHTML = html;
+            mostraToast('Anteprima aggiornata', 'success');
+        }
+
+        function stampaRicevuta() {
+            const numero = document.getElementById('ricNumero').value;
+            const data = document.getElementById('ricData').value;
+            const cliente = document.getElementById('ricCliente').value;
+            const indirizzo = document.getElementById('ricIndirizzo').value;
+            const importo = document.getElementById('ricImporto').value;
+            const importoLettere = document.getElementById('ricImportoLettere').value;
+            const descrizione = document.getElementById('ricDescrizione').value;
+            const note = document.getElementById('ricNote').value;
+
+            if (!numero || !data || !cliente || !importo) {
+                mostraToast('Compila i campi obbligatori', 'error');
+                return;
+            }
+
+            const html = generaHTMLRicevuta(numero, data, cliente, indirizzo, importo, importoLettere, descrizione, note);
+            
+            document.getElementById('ricevutaStampa1').innerHTML = html;
+            document.getElementById('ricevutaStampa2').innerHTML = html;
+
+            window.print();
+        }
+
+        function salvaRicevuta() {
+            const numero = document.getElementById('ricNumero').value;
+            const data = document.getElementById('ricData').value;
+            const cliente = document.getElementById('ricCliente').value;
+            const indirizzo = document.getElementById('ricIndirizzo').value;
+            const importo = document.getElementById('ricImporto').value;
+            const importoLettere = document.getElementById('ricImportoLettere').value;
+            const descrizione = document.getElementById('ricDescrizione').value;
+            const note = document.getElementById('ricNote').value;
+
+            if (!numero || !data || !cliente || !importo) {
+                mostraToast('Compila i campi obbligatori', 'error');
+                return;
+            }
+
+            const ricevuta = {
+                id: 'ric-' + Date.now(),
+                numero, data, cliente, indirizzo, importo, importoLettere, descrizione, note,
+                dataCreazione: new Date().toISOString()
+            };
+
+            const archivio = JSON.parse(localStorage.getItem('ricevute_' + studioId) || '[]');
+            archivio.unshift(ricevuta);
+            localStorage.setItem('ricevute_' + studioId, JSON.stringify(archivio));
+
+            mostraToast('Ricevuta salvata in archivio', 'success');
+            caricaArchivio();
+            generaNumeroProgressivo();
+        }
+
+        async function caricaArchivio() {
+            const container = document.getElementById('archivioContainer');
+            const archivio = JSON.parse(localStorage.getItem('ricevute_' + studioId) || '[]');
+
+            if (archivio.length === 0) {
+                container.innerHTML = '<div class="empty-state">Nessuna ricevuta salvata</div>';
+                return;
+            }
+
+            container.innerHTML = archivio.map(r => `
+                <div class="archivio-item">
+                    <div class="archivio-info">
+                        <div class="archivio-numero">Ricevuta N. ${r.numero}</div>
+                        <div class="archivio-data">Data: ${r.data}</div>
+                        <div class="archivio-cliente">${r.cliente}${r.indirizzo ? ' - ' + r.indirizzo : ''}</div>
+                        <div style="font-size: 11px; color: var(--text-light); margin-top: 4px;">${r.descrizione}</div>
+                    </div>
+                    <div class="archivio-importo">EUR ${parseFloat(r.importo).toFixed(2)}</div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-sm btn-outline" onclick="caricaRicevuta('${r.id}')">Modifica</button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminaRicevuta('${r.id}')">Elimina</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function caricaRicevuta(id) {
+            const archivio = JSON.parse(localStorage.getItem('ricevute_' + studioId) || '[]');
+            const r = archivio.find(x => x.id === id);
+            if (!r) return;
+
+            document.getElementById('ricNumero').value = r.numero;
+            document.getElementById('ricData').value = r.data;
+            document.getElementById('ricCliente').value = r.cliente;
+            document.getElementById('ricIndirizzo').value = r.indirizzo || '';
+            document.getElementById('ricImporto').value = r.importo;
+            document.getElementById('ricImportoLettere').value = r.importoLettere || '';
+            document.getElementById('ricDescrizione').value = r.descrizione || '';
+            document.getElementById('ricNote').value = r.note || '';
+
+            aggiornaAnteprima();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function eliminaRicevuta(id) {
+            if (!confirm('Eliminare questa ricevuta dall\'archivio?')) return;
+            let archivio = JSON.parse(localStorage.getItem('ricevute_' + studioId) || '[]');
+            archivio = archivio.filter(r => r.id !== id);
+            localStorage.setItem('ricevute_' + studioId, JSON.stringify(archivio));
+            mostraToast('Ricevuta eliminata', 'success');
+            caricaArchivio();
+        }
+
+        function nuovaRicevuta() {
+            document.getElementById('ricNumero').value = '';
+            document.getElementById('ricData').value = '';
+            document.getElementById('ricCliente').value = '';
+            document.getElementById('ricIndirizzo').value = '';
+            document.getElementById('ricImporto').value = '';
+            document.getElementById('ricImportoLettere').value = '';
+            document.getElementById('ricDescrizione').value = '';
+            document.getElementById('ricNote').value = '';
+            document.getElementById('previewContainer').innerHTML = '<div class="empty-state">Compila i campi sopra e clicca "Aggiorna Anteprima"</div>';
+            generaNumeroProgressivo();
+            impostaDataOdierna();
+        }
+
+        function mostraToast(msg, tipo) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + tipo;
+            toast.textContent = msg;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
