@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ricevute - AppCenterStudioPROGOLD</title>
+    
+    <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
+    <link rel="stylesheet" href="temi.css">
+    <script src="temi.js"></script>
+    
     <style>
         :root {
             --primary: #82e0aa;
@@ -29,6 +34,7 @@
             color: var(--text-main);
             line-height: 1.6;
             min-height: 100vh;
+            transition: background 0.5s ease, color 0.5s ease;
         }
 
         .top-bar {
@@ -38,6 +44,7 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
+            transition: background 0.5s ease;
         }
 
         .nav-btn {
@@ -65,6 +72,7 @@
             margin-bottom: 32px;
             position: relative;
             overflow: hidden;
+            transition: box-shadow 0.5s ease;
         }
         .page-header::before {
             content: '';
@@ -92,6 +100,7 @@
             box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
             position: relative;
             overflow: hidden;
+            transition: border-color 0.5s ease, box-shadow 0.5s ease;
         }
         .card::before {
             content: '';
@@ -120,6 +129,7 @@
             border-radius: 10px;
             font-size: 14px;
             font-family: inherit;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .form-group input:focus, .form-group textarea:focus {
             outline: none;
@@ -496,7 +506,7 @@
 
         async function verificaSessione() {
             try {
-                const response = await fetch(WORKER_URL + '/api/auth/verifica?token=' + token);
+                const response = await fetch(WORKER_URL + '/api/auth/verifica?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 if (!data.success || data.tipo !== 'studio') {
                     mostraToast('Sessione non valida', 'error');
@@ -504,12 +514,60 @@
                     return;
                 }
                 studioId = data.user.id;
+                
+                // CARICAMENTO TEMA GLOBALE
+                await caricaTemaGlobale();
+                
+                // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
+                setInterval(async () => {
+                    await caricaTemaGlobale();
+                }, 10000);
+                
             } catch (error) { mostraToast('Errore di connessione', 'error'); }
+        }
+
+        // ============================================
+        // SEZIONE TEMA GLOBALE AGGIORNATA CON EFFETTI E TEMA ARANCIO
+        // ============================================
+        async function caricaTemaGlobale() {
+            if (!studioId) return;
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
+                const data = await response.json();
+                if (data.success && data.tema && data.tema.tema_attivo) {
+                    const temaId = data.tema.tema_attivo;
+                    const temi = {
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)', effetto: null },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)', effetto: 'neve' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)', effetto: 'coriandoli' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)', effetto: null },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)', effetto: null },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)', effetto: null },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)', effetto: null },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)', effetto: null },
+                        'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)', effetto: null }
+                    };
+                    const t = temi[temaId] || temi['default'];
+                    const root = document.documentElement;
+                    root.style.setProperty('--primary', t.p);
+                    root.style.setProperty('--primary-dark', t.pd);
+                    root.style.setProperty('--primary-light', t.pl);
+                    root.style.setProperty('--primary-gradient', t.pg);
+                    root.style.setProperty('--bg-gradient', t.bg);
+                    
+                    // Attiva effetto speciale se la funzione esiste (caricata da temi.js)
+                    if (typeof attivaEffettoSpeciale === 'function') {
+                        attivaEffettoSpeciale(t.effetto);
+                    }
+                }
+            } catch (error) {
+                console.error('Errore caricamento tema:', error);
+            }
         }
 
         async function caricaStudio() {
             try {
-                const response = await fetch(WORKER_URL + '/api/studio/profilo?token=' + token + '&studioId=' + studioId);
+                const response = await fetch(WORKER_URL + '/api/studio/profilo?token=' + encodeURIComponent(token) + '&studioId=' + encodeURIComponent(studioId));
                 const data = await response.json();
                 if (data.success && data.studio) {
                     studioData = data.studio;
