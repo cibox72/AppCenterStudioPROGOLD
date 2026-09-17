@@ -159,7 +159,7 @@
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
 
-        /* STAMPA A4 ORIZZONTALE - DUE COPIE SU UN FOGLIO */
+        /* STAMPA: A4 VERTICALE CON DUE COPIE ORIZZONTALI (una sopra, una sotto) */
         @media print {
             body {
                 background: white;
@@ -176,30 +176,28 @@
             }
 
             @page {
-                size: A4 landscape;
-                margin: 8mm;
+                size: A4 portrait;
+                margin: 10mm;
             }
 
             .pagina-stampa {
-                width: 281mm;
-                height: 191mm;
+                width: 190mm;
+                height: 277mm;
                 margin: 0 auto;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
-                padding: 0;
             }
 
             .ricevuta-stampa {
                 flex: 1;
                 border: 2px solid #82e0aa;
-                border-radius: 10px;
-                padding: 8mm 12mm;
+                border-radius: 8px;
+                padding: 6mm 10mm;
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                font-size: 9pt;
+                font-size: 8pt;
                 color: #2c3e50;
                 background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-                box-shadow: 0 2px 6px rgba(30, 132, 73, 0.1);
                 position: relative;
                 overflow: hidden;
                 display: flex;
@@ -220,19 +218,19 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-start;
-                margin-bottom: 8px;
-                padding-bottom: 8px;
+                margin-bottom: 4mm;
+                padding-bottom: 3mm;
                 border-bottom: 2px solid #e8f8f5;
             }
 
             .ricevuta-stampa .ricevuta-studio-nome {
-                font-size: 14pt;
+                font-size: 12pt;
                 font-weight: 700;
                 background: linear-gradient(135deg, #1e8449 0%, #82e0aa 100%);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 background-clip: text;
-                margin-bottom: 3px;
+                margin-bottom: 2px;
             }
 
             .ricevuta-stampa .ricevuta-studio-info {
@@ -243,11 +241,11 @@
 
             .ricevuta-stampa .ricevuta-numero {
                 border: 2px solid #82e0aa;
-                padding: 6px 10px;
+                padding: 4px 10px;
                 background: linear-gradient(135deg, #e8f8f5 0%, #d5f4e6 100%);
                 border-radius: 6px;
                 text-align: center;
-                min-width: 90px;
+                min-width: 80px;
             }
 
             .ricevuta-stampa .ricevuta-numero-label {
@@ -255,11 +253,11 @@
                 text-transform: uppercase;
                 color: #7f8c8d;
                 letter-spacing: 1px;
-                margin-bottom: 3px;
+                margin-bottom: 2px;
             }
 
             .ricevuta-stampa .ricevuta-numero-valore {
-                font-size: 16pt;
+                font-size: 14pt;
                 font-weight: 700;
                 color: #1e8449;
             }
@@ -267,8 +265,8 @@
             .ricevuta-stampa .ricevuta-data {
                 display: flex;
                 justify-content: space-between;
-                margin-bottom: 8px;
-                padding: 6px 10px;
+                margin-bottom: 3mm;
+                padding: 3mm 5mm;
                 background: linear-gradient(135deg, #f8f9fa 0%, #e8f8f5 100%);
                 border-radius: 6px;
                 border: 1px solid #e8e8e8;
@@ -276,31 +274,32 @@
 
             .ricevuta-stampa .ricevuta-data-label {
                 font-weight: 600;
-                font-size: 7pt;
+                font-size: 6pt;
                 text-transform: uppercase;
                 color: #7f8c8d;
                 letter-spacing: 0.5px;
-                margin-bottom: 3px;
+                margin-bottom: 2px;
             }
 
             .ricevuta-stampa .ricevuta-data-valore {
                 font-weight: 700;
-                font-size: 10pt;
+                font-size: 9pt;
                 color: #2c3e50;
                 letter-spacing: 2px;
             }
 
             .ricevuta-stampa .ricevuta-riga {
                 display: flex;
-                margin-bottom: 6px;
-                padding: 5px 8px;
+                margin-bottom: 2mm;
+                padding: 2mm 4mm;
                 background: white;
-                border-radius: 5px;
+                border-radius: 4px;
                 border: 1px solid #f0f0f0;
+                align-items: center;
             }
 
             .ricevuta-stampa .ricevuta-riga-label {
-                width: 110px;
+                width: 100px;
                 font-weight: 600;
                 font-size: 7pt;
                 text-transform: uppercase;
@@ -311,8 +310,8 @@
 
             .ricevuta-stampa .ricevuta-riga-valore {
                 flex: 1;
-                font-size: 9pt;
-                padding-left: 8px;
+                font-size: 8pt;
+                padding-left: 6px;
                 color: #2c3e50;
                 font-weight: 500;
             }
@@ -323,22 +322,21 @@
                 align-items: center;
                 background: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 100%);
                 border: 2px solid #1e8449;
-                padding: 8px 14px;
-                margin: 8px 0;
-                border-radius: 8px;
-                box-shadow: 0 2px 6px rgba(30, 132, 73, 0.15);
+                padding: 4mm 8mm;
+                margin: 3mm 0;
+                border-radius: 6px;
             }
 
             .ricevuta-stampa .ricevuta-importo-label {
                 font-weight: 700;
-                font-size: 9pt;
+                font-size: 8pt;
                 text-transform: uppercase;
                 color: #1e8449;
                 letter-spacing: 1px;
             }
 
             .ricevuta-stampa .ricevuta-importo-valore {
-                font-size: 16pt;
+                font-size: 14pt;
                 font-weight: 800;
                 color: #1e8449;
             }
@@ -347,7 +345,7 @@
                 display: flex;
                 justify-content: space-between;
                 margin-top: auto;
-                padding-top: 10px;
+                padding-top: 3mm;
                 border-top: 2px solid #e8f8f5;
             }
 
@@ -358,8 +356,8 @@
 
             .ricevuta-stampa .ricevuta-firma-linea {
                 border-top: 1px solid #bdc3c7;
-                margin-top: 25px;
-                padding-top: 5px;
+                margin-top: 15mm;
+                padding-top: 3px;
                 font-size: 6pt;
                 text-transform: uppercase;
                 color: #95a5a6;
@@ -371,11 +369,8 @@
                 font-size: 6pt;
                 color: #95a5a6;
                 text-align: center;
-                margin-top: 8px;
+                margin-top: 2mm;
                 font-style: italic;
-                padding: 5px;
-                background: #f8f9fa;
-                border-radius: 4px;
             }
 
             .linea-taglio-stampa {
@@ -383,7 +378,7 @@
                 margin: 3mm 0;
                 position: relative;
                 text-align: center;
-                padding: 1mm 0;
+                padding: 2mm 0;
                 flex-shrink: 0;
             }
 
@@ -471,7 +466,7 @@
         </div>
     </div>
 
-    <!-- VERSIONE STAMPA (duplice copia A4 orizzontale) -->
+    <!-- VERSIONE STAMPA: A4 VERTICALE CON DUE COPIE ORIZZONTALI -->
     <div class="print-only">
         <div class="pagina-stampa">
             <div class="ricevuta-stampa" id="ricevutaStampa1"></div>
