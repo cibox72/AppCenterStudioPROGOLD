@@ -306,7 +306,8 @@
             reader.readAsDataURL(file);
             
             try {
-                const response = await fetch(WORKER_URL + '/api/studio/upload?studioId=' + encodeURIComponent(studioId) + '&clienteId=' + (clienteId || 'anon') + '&folder=foto-ordine&filename=' + encodeURIComponent(file.name), {
+                const uploadUrl = WORKER_URL + '/api/studio/upload?studioId=' + encodeURIComponent(studioId) + '&clienteId=' + encodeURIComponent(clienteId || 'anon') + '&folder=foto-ordine&filename=' + encodeURIComponent(file.name);
+                const response = await fetch(uploadUrl, {
                     method: 'POST',
                     body: file
                 });
@@ -315,7 +316,7 @@
                     carrello[index].fotoUrl = result.url;
                     mostraToast('Foto caricata con successo', 'success');
                 } else {
-                    mostraToast('Errore nel caricamento', 'error');
+                    mostraToast('Errore nel caricamento: ' + (result.error || ''), 'error');
                 }
             } catch (e) {
                 console.error(e);
