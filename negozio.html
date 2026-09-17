@@ -306,7 +306,7 @@
 
                 <div class="payment-card" id="card-paypal">
                     <div class="payment-header">
-                        <div class="payment-title">💳 PayPal</div>
+                        <div class="payment-title"> PayPal</div>
                         <label class="toggle-switch">
                             <input type="checkbox" id="check-paypal" onchange="togglePayment('paypal')">
                             <span class="slider"></span>
@@ -634,7 +634,7 @@
                                 return '<div class="order-product">' +
                                     '<div class="order-product-info">' +
                                         '<div><strong>• ' + p.nome + ' x' + p.quantita + '</strong> - EUR ' + (p.prezzo * p.quantita).toFixed(2) + '</div>' +
-                                        (fotoUrl ? '<div class="order-product-actions"><a href="' + fotoUrl + '" target="_blank" class="btn btn-sm btn-info" style="text-decoration:none;">👁️ Vedi Foto</a><a href="' + fotoUrl + '" download class="btn btn-sm btn-success" style="text-decoration:none;">⬇️ Scarica Foto</a></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
+                                        (fotoUrl ? '<div class="order-product-actions"><a href="' + fotoUrl + '" target="_blank" class="btn btn-sm btn-info" style="text-decoration:none;">️ Vedi Foto</a><button onclick="downloadFoto(\'' + fotoUrl + '\')" class="btn btn-sm btn-success" style="text-decoration:none;">⬇️ Scarica Foto</button></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
                                     '</div>' +
                                 '</div>';
                             }).join('') +
@@ -652,6 +652,34 @@
             document.getElementById('statLav').textContent = stats.lav;
             document.getElementById('statPro').textContent = stats.pro;
             document.getElementById('statRit').textContent = stats.rit;
+        }
+
+        async function downloadFoto(url) {
+            try {
+                mostraToast('Download in corso...', 'success');
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                
+                const urlObj = new URL(url);
+                const pathParams = new URLSearchParams(urlObj.search);
+                const percorso = pathParams.get('path');
+                const nomeFile = percorso ? percorso.split('/').pop() : 'foto.jpg';
+                
+                link.download = nomeFile;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(blobUrl);
+                
+                mostraToast('Foto scaricata con successo', 'success');
+            } catch (error) {
+                console.error('Errore download:', error);
+                mostraToast('Errore nel download', 'error');
+            }
         }
 
         async function cambiaStato(id, stato) {
