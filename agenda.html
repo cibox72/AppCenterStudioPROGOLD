@@ -13,90 +13,121 @@
             --success: #27ae60; --danger: #c0392b; --warning: #d35400; --radius: 12px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh; transition: background 0.3s ease; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh; }
         
         .top-bar { background: var(--primary-gradient); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
         .nav-btn { background: rgba(255,255,255,0.95); border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--primary-dark); margin-right: 8px; }
         .nav-btn:hover { background: white; }
         
-        .container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
+        .container { max-width: 1600px; margin: 0 auto; padding: 30px 20px; }
         .page-header { text-align: center; padding: 24px; background: white; border-radius: var(--radius); box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 24px; }
-        .page-header h1 { font-size: 24px; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; }
+        .page-header h1 { font-size: 28px; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; }
         .page-header p { color: var(--text-light); font-size: 13px; }
+
+        /* LAYOUT A 3 COLONNE */
+        .three-columns {
+            display: grid;
+            grid-template-columns: 280px 1fr 300px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .card { background: white; border-radius: var(--radius); padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border-color); }
+        .card-title { font-size: 14px; font-weight: 700; color: var(--primary-dark); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .card { background: white; border-radius: var(--radius); padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border-color); }
-        .card-title { font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px; }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--text-main); }
-        .form-group input { padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; font-family: inherit; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 11px; font-weight: 600; margin-bottom: 4px; color: var(--text-main); text-transform: uppercase; }
+        .form-group input { width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 12px; font-family: inherit; }
         .form-group input:focus { outline: none; border-color: var(--primary); }
         
-        .btn { padding: 10px 20px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-right: 8px; }
+        .btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-right: 6px; margin-bottom: 6px; display: inline-block; }
         .btn-primary { background: var(--primary-dark); color: white; }
         .btn-primary:hover { background: #145a32; }
         .btn-success { background: var(--success); color: white; }
         .btn-danger { background: var(--danger); color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary-dark); }
-        .btn-sm { padding: 6px 12px; font-size: 11px; }
-        
-        /* STILE AGENDA CARTACEA */
+        .btn-sm { padding: 6px 10px; font-size: 11px; }
+        .btn-block { width: 100%; margin-right: 0; }
+
+        /* AGENDA CARTACEA CENTRALE */
+        .agenda-container {
+            background: white;
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border: 2px solid var(--primary-light);
+        }
         .agenda-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--primary-light);
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            border-left: 4px solid var(--primary-dark);
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 3px solid var(--primary);
         }
-        .agenda-data-grande {
-            font-size: 28px;
+        .agenda-data-titolo {
+            font-size: 32px;
             font-weight: 800;
             color: var(--primary-dark);
             line-height: 1;
         }
-        .agenda-giorno-settimana {
-            font-size: 14px;
+        .agenda-giorno {
+            font-size: 16px;
             font-weight: 600;
             color: var(--text-light);
             text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .agenda-totale {
+            background: var(--primary-light);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary-dark);
         }
 
         .agenda-grid {
             display: flex;
             flex-direction: column;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
         }
         .agenda-row {
             display: flex;
             border-bottom: 1px solid var(--border-color);
-            min-height: 60px;
+            min-height: 55px;
         }
         .agenda-row:last-child { border-bottom: none; }
+        .agenda-row:hover { background: #fafafa; }
+        
         .agenda-time {
-            width: 70px;
-            padding: 12px 8px;
-            font-size: 13px;
+            width: 80px;
+            padding: 12px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--text-light);
+            background: #f8f9fa;
             border-right: 2px solid var(--primary-light);
-            background: #fafafa;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
+            justify-content: center;
         }
-        .agenda-events {
+        
+        .agenda-content {
             flex: 1;
-            padding: 8px;
+            padding: 8px 12px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
+            min-height: 55px;
         }
+
         .event-item {
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -114,31 +145,32 @@
             color: #145a32;
             border-left: 3px solid var(--success);
         }
-        .event-desc { font-weight: 500; }
+        .event-desc { font-weight: 500; flex: 1; }
         .event-badge {
-            font-size: 10px;
+            font-size: 9px;
             padding: 2px 6px;
             border-radius: 4px;
             background: rgba(0,0,0,0.1);
             font-weight: 700;
             text-transform: uppercase;
             margin-left: 8px;
+            white-space: nowrap;
         }
         .btn-delete-event {
             background: none;
             border: none;
             color: var(--danger);
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             margin-left: 8px;
             opacity: 0.6;
+            padding: 0 4px;
         }
         .btn-delete-event:hover { opacity: 1; }
 
-        .empty-day {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-light);
+        .empty-slot {
+            color: var(--border-color);
+            font-size: 11px;
             font-style: italic;
         }
 
@@ -147,10 +179,16 @@
         .toast.error { border-left-color: var(--danger); }
         .hidden { display: none !important; }
         .loading { text-align: center; padding: 40px; color: var(--text-light); }
+
+        @media print {
+            .no-print { display: none !important; }
+            .three-columns { display: block; }
+            .agenda-container { box-shadow: none; border: 2px solid #000; }
+        }
     </style>
 </head>
 <body>
-    <div class="top-bar">
+    <div class="top-bar no-print">
         <div>
             <button class="nav-btn" onclick="tornaPlancia()">Indietro alla Plancia</button>
         </div>
@@ -158,7 +196,7 @@
     </div>
 
     <div class="container">
-        <div class="page-header">
+        <div class="page-header no-print">
             <h1>Agenda Studio</h1>
             <p>Gestione appuntamenti, servizi e promemoria automatici.</p>
         </div>
@@ -166,57 +204,73 @@
         <div id="loadingArea" class="loading">Caricamento agenda...</div>
 
         <div id="mainContent" class="hidden">
-            <!-- IMPOSTAZIONI WHATSAPP -->
-            <div class="card">
-                <div class="card-title">Promemoria WhatsApp Automatici</div>
-                <p style="font-size: 13px; color: var(--text-light); margin-bottom: 16px;">
-                    Inserisci fino a 3 numeri WhatsApp (con prefisso, es. +393331234567). 
-                    Ogni mattina riceverai un messaggio con il riepilogo degli impegni del giorno successivo.
-                </p>
-                <div class="form-row">
-                    <div class="form-group"><label>Numero WhatsApp 1</label><input type="text" id="waNum1" placeholder="+39..."></div>
-                    <div class="form-group"><label>Numero WhatsApp 2</label><input type="text" id="waNum2" placeholder="+39... (opzionale)"></div>
-                    <div class="form-group"><label>Numero WhatsApp 3</label><input type="text" id="waNum3" placeholder="+39... (opzionale)"></div>
+            <div class="three-columns">
+                <!-- COLONNA SINISTRA: IMPOSTAZIONI WHATSAPP -->
+                <div class="no-print">
+                    <div class="card">
+                        <div class="card-title">📱 Promemoria WhatsApp</div>
+                        <p style="font-size: 11px; color: var(--text-light); margin-bottom: 12px; line-height: 1.4;">
+                            Inserisci fino a 3 numeri WhatsApp (con prefisso, es. +393331234567). Ogni mattina riceverai un messaggio con il riepilogo degli impegni del giorno successivo.
+                        </p>
+                        <div class="form-group">
+                            <label>Numero WhatsApp 1 *</label>
+                            <input type="text" id="waNum1" placeholder="+39...">
+                        </div>
+                        <div class="form-group">
+                            <label>Numero WhatsApp 2</label>
+                            <input type="text" id="waNum2" placeholder="+39... (opzionale)">
+                        </div>
+                        <div class="form-group">
+                            <label>Numero WhatsApp 3</label>
+                            <input type="text" id="waNum3" placeholder="+39... (opzionale)">
+                        </div>
+                        <button class="btn btn-primary btn-block" onclick="salvaNumeriWA()">💾 Salva Numeri</button>
+                        <button class="btn btn-success btn-block" onclick="testaPromemoria()">📤 Testa Invio Domani</button>
+                    </div>
                 </div>
-                <div style="display: flex; gap: 10px; margin-top: 8px;">
-                    <button class="btn btn-primary" onclick="salvaNumeriWA()">Salva Numeri</button>
-                    <button class="btn btn-success" onclick="testaPromemoria()">Testa Invio Promemoria Domani</button>
-                </div>
-            </div>
 
-            <!-- NAVIGAZIONE E AGGIUNTA -->
-            <div class="card">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Vai alla data</label>
-                        <div style="display: flex; gap: 8px;">
-                            <input type="date" id="agendaDate" style="flex: 1;">
-                            <button class="btn btn-primary" onclick="caricaGiorno()">Vai</button>
+                <!-- COLONNA CENTRALE: AGENDA CARTACEA -->
+                <div>
+                    <div class="agenda-container">
+                        <div class="agenda-header">
+                            <div>
+                                <div class="agenda-giorno" id="giornoSettimana">--</div>
+                                <div class="agenda-data-titolo" id="dataGrande">--/--</div>
+                            </div>
+                            <div class="agenda-totale" id="totaleImpegni">0 impegni</div>
+                        </div>
+                        <div id="agendaGrid" class="agenda-grid">
+                            <!-- Righe generate via JS -->
                         </div>
                     </div>
-                    <div class="form-group" style="grid-column: span 2;">
-                        <label>Scrivi appuntamento (es. "ore 9,00 appuntamento rossi")</label>
-                        <div style="display: flex; gap: 8px;">
-                            <input type="text" id="nuovoAppuntamento" placeholder="Es: ore 11,30 appuntamento giorgi" style="flex: 1;">
-                            <button class="btn btn-success" onclick="aggiungiAppuntamento()">Aggiungi</button>
+                </div>
+
+                <!-- COLONNA DESTRA: NAVIGAZIONE E AGGIUNTA -->
+                <div class="no-print">
+                    <div class="card">
+                        <div class="card-title">📅 Navigazione</div>
+                        <div class="form-group">
+                            <label>Vai alla data</label>
+                            <div style="display: flex; gap: 6px;">
+                                <input type="date" id="agendaDate" style="flex: 1;">
+                                <button class="btn btn-primary" onclick="caricaGiorno()">Vai</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- VISUALIZZAZIONE AGENDA -->
-            <div class="card">
-                <div class="agenda-header">
-                    <div>
-                        <div class="agenda-giorno-settimana" id="giornoSettimana">--</div>
-                        <div class="agenda-data-grande" id="dataGrande">--/--</div>
+                    <div class="card">
+                        <div class="card-title">️ Nuovo Appuntamento</div>
+                        <div class="form-group">
+                            <label>Descrizione (es. "ore 9,00 appuntamento rossi")</label>
+                            <input type="text" id="nuovoAppuntamento" placeholder="Es: ore 11,30 appuntamento giorgi">
+                        </div>
+                        <button class="btn btn-success btn-block" onclick="aggiungiAppuntamento()">➕ Aggiungi</button>
                     </div>
-                    <div style="text-align: right; font-size: 13px; color: var(--text-light);">
-                        <div id="totaleImpegni">0 impegni</div>
+
+                    <div class="card">
+                        <div class="card-title">️ Stampa</div>
+                        <button class="btn btn-outline btn-block" onclick="stampaGiornata()"> Stampa Giornata PDF</button>
                     </div>
-                </div>
-                <div id="agendaGrid" class="agenda-grid">
-                    <!-- Righe generate via JS -->
                 </div>
             </div>
         </div>
@@ -317,8 +371,9 @@
             // Aggiorna header
             const dataObj = new Date(dataStr + 'T00:00:00');
             const giorni = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+            const mesi = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
             document.getElementById('giornoSettimana').textContent = giorni[dataObj.getDay()];
-            document.getElementById('dataGrande').textContent = dataObj.toLocaleDateString('it-IT', { day: '2-digit', month: 'long' });
+            document.getElementById('dataGrande').textContent = `${dataObj.getDate()} ${mesi[dataObj.getMonth()]}`;
 
             // Carica appuntamenti manuali
             const tuttiAppuntamenti = JSON.parse(localStorage.getItem(`agenda_app_${studioId}`) || '[]');
@@ -365,18 +420,15 @@
                 timeDiv.textContent = ora;
                 
                 const eventsDiv = document.createElement('div');
-                eventsDiv.className = 'agenda-events';
+                eventsDiv.className = 'agenda-content';
                 
                 // Trova appuntamenti manuali per quest'ora
                 const appManuali = appuntamentiManuali.filter(a => a.ora === ora);
                 // Trova servizi programmati per quest'ora
                 const appServizi = serviziProgrammati.filter(s => s.ora === ora);
                 
-                totaleImpegni += appManuali.length + appServizi.length;
-
-                if (appManuali.length === 0 && appServizi.length === 0 && ora !== '09:00') {
-                    // Lascia vuoto o con placeholder
-                }
+                const totaleOra = appManuali.length + appServizi.length;
+                totaleImpegni += totaleOra;
 
                 // Renderizza servizi (priorità)
                 appServizi.forEach(s => {
@@ -405,16 +457,20 @@
                     eventsDiv.appendChild(el);
                 });
 
+                // Se vuoto, mostra placeholder
+                if (totaleOra === 0) {
+                    const empty = document.createElement('div');
+                    empty.className = 'empty-slot';
+                    empty.textContent = '—';
+                    eventsDiv.appendChild(empty);
+                }
+
                 row.appendChild(timeDiv);
                 row.appendChild(eventsDiv);
                 grid.appendChild(row);
             });
 
-            document.getElementById('totaleImpegni').textContent = `${totaleImpegni} impegni`;
-            
-            if (totaleImpegni === 0) {
-                grid.innerHTML = '<div class="empty-day">Nessun impegno registrato per questa giornata.</div>';
-            }
+            document.getElementById('totaleImpegni').textContent = `${totaleImpegni} imp${totaleImpegni === 1 ? 'egno' : 'egni'}`;
         }
 
         async function aggiungiAppuntamento() {
@@ -471,6 +527,10 @@
             mostraToast('Appuntamento eliminato', 'success');
         }
 
+        function stampaGiornata() {
+            window.print();
+        }
+
         function testaPromemoria() {
             const numeri = JSON.parse(localStorage.getItem(`agenda_wa_${studioId}`) || '[]');
             if (numeri.length === 0) {
@@ -483,10 +543,11 @@
             domani.setDate(domani.getDate() + 1);
             const dataDomaniStr = domani.toISOString().split('T')[0];
             const giorni = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+            const mesi = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
             const nomeGiorno = giorni[domani.getDay()];
-            const dataFormattata = domani.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const dataFormattata = `${domani.getDate()} ${mesi[domani.getMonth()]}`;
 
-            // Raccogli impegni di domani (simulazione)
+            // Raccogli impegni di domani
             const tuttiApp = JSON.parse(localStorage.getItem(`agenda_app_${studioId}`) || '[]');
             const appDomani = tuttiApp.filter(a => a.data === dataDomaniStr).sort((a,b) => a.ora.localeCompare(b.ora));
             
@@ -501,8 +562,7 @@
                 messaggio += `Nessun appuntamento manuale registrato.\n`;
             }
             
-            // Aggiungi nota sui servizi (semplificata per il test)
-            messaggio += `\n⚠️ Ricorda di verificare anche i servizi/contratti programmati per questa data nel sistema.`;
+            messaggio += `\n⚠️ Ricorda di verificare anche i servizi/contratti programmati.`;
 
             messaggio = encodeURIComponent(messaggio);
 
@@ -510,7 +570,7 @@
             numeri.forEach((num, index) => {
                 setTimeout(() => {
                     window.open(`https://wa.me/${num.replace(/\D/g, '')}?text=${messaggio}`, '_blank');
-                }, index * 1000); // Delay di 1 secondo tra l'apertura delle tab
+                }, index * 1000);
             });
 
             mostraToast(`Promemoria inviato a ${numeri.length} numero/i!`, 'success');
