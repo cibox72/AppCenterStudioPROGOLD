@@ -267,7 +267,7 @@
 
         <div id="ordiniSection" class="section">
             <div id="alertNuoviOrdini" class="alert-box hidden">
-                <div style="font-size: 24px;">️</div>
+                <div style="font-size: 24px;">⚠️</div>
                 <div>
                     <div style="font-weight: 700; color: var(--danger); margin-bottom: 4px;">Nuovi Ordini in Attesa</div>
                     <div>Hai <strong id="countNuoviOrdini">0</strong> ordini da processare</div>
@@ -352,7 +352,7 @@
 
                 <div class="payment-card" id="card-iban">
                     <div class="payment-header">
-                        <div class="payment-title"> Bonifico Bancario (IBAN)</div>
+                        <div class="payment-title">🏦 Bonifico Bancario (IBAN)</div>
                         <label class="toggle-switch">
                             <input type="checkbox" id="check-iban" onchange="togglePayment('iban')">
                             <span class="slider"></span>
@@ -626,11 +626,15 @@
                         '</div>' +
                         '<div class="order-products">' +
                             prods.map(p => {
-                                const fotoUrl = p.fotoUrl ? p.fotoUrl.replace('https://appcenter-studio-foto.r2.dev/', WORKER_URL + '/api/studio/file?token=' + token + '&path=') : null;
+                                let fotoUrl = null;
+                                if (p.fotoUrl) {
+                                    const relativePath = p.fotoUrl.replace('https://appcenter-studio-foto.r2.dev/', '');
+                                    fotoUrl = WORKER_URL + '/api/studio/file?token=' + encodeURIComponent(token) + '&path=' + encodeURIComponent(relativePath);
+                                }
                                 return '<div class="order-product">' +
                                     '<div class="order-product-info">' +
                                         '<div><strong>• ' + p.nome + ' x' + p.quantita + '</strong> - EUR ' + (p.prezzo * p.quantita).toFixed(2) + '</div>' +
-                                        (fotoUrl ? '<div class="order-product-actions"><a href="' + fotoUrl + '" target="_blank" class="btn btn-sm btn-info" style="text-decoration:none;">️ Vedi Foto</a><a href="' + fotoUrl + '" download class="btn btn-sm btn-success" style="text-decoration:none;">⬇️ Scarica Foto</a></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
+                                        (fotoUrl ? '<div class="order-product-actions"><a href="' + fotoUrl + '" target="_blank" class="btn btn-sm btn-info" style="text-decoration:none;">👁️ Vedi Foto</a><a href="' + fotoUrl + '" download class="btn btn-sm btn-success" style="text-decoration:none;">⬇️ Scarica Foto</a></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
                                     '</div>' +
                                 '</div>';
                             }).join('') +
