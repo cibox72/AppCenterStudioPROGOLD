@@ -83,7 +83,9 @@
         .order-code { font-size: 16px; font-weight: 700; color: var(--primary-dark); }
         .order-date { font-size: 12px; color: var(--text-light); }
         .order-products { margin-bottom: 12px; }
-        .order-product { padding: 8px 0; border-bottom: 1px solid var(--border-color); font-size: 13px; display: flex; justify-content: space-between; }
+        .order-product { padding: 8px 0; border-bottom: 1px solid var(--border-color); font-size: 13px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .order-product-info { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+        .order-product-actions { display: flex; gap: 8px; align-items: center; }
         .order-total { font-size: 18px; font-weight: 700; color: var(--primary-dark); text-align: right; margin-top: 12px; }
         .order-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
         .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
@@ -144,7 +146,7 @@
             </div>
             <div class="dashboard-grid">
                 <div class="dash-card" onclick="mostraSezione('anteprima')">
-                    <span class="card-icon">👁️</span>
+                    <span class="card-icon">️</span>
                     <div class="card-title">Anteprima Negozio</div>
                     <div class="card-desc">Vedi esattamente come appare il negozio ai tuoi clienti.</div>
                 </div>
@@ -170,7 +172,7 @@
                     <div class="card-desc">Visualizza e gestisci gli ordini con stato e dettagli.</div>
                 </div>
                 <div class="dash-card" onclick="mostraSezione('config')">
-                    <span class="card-icon">⚙️</span>
+                    <span class="card-icon">️</span>
                     <div class="card-title">Configurazione</div>
                     <div class="card-desc">Imposta i metodi di pagamento e i dati di ritiro.</div>
                 </div>
@@ -204,7 +206,7 @@
                     <div class="form-group">
                         <label>Numero WhatsApp * (con prefisso)</label>
                         <input type="tel" id="linkClienteTelefono" placeholder="+39 333 1234567" oninput="aggiornaBtnWhatsApp()">
-                        <button type="button" class="btn btn-whatsapp" id="btnWhatsAppWeb" onclick="apriWhatsAppWeb()" style="margin-top: 12px; display: none; width: 100%;"> Apri WhatsApp Web</button>
+                        <button type="button" class="btn btn-whatsapp" id="btnWhatsAppWeb" onclick="apriWhatsAppWeb()" style="margin-top: 12px; display: none; width: 100%;">🔗 Apri WhatsApp Web</button>
                     </div>
                 </div>
                 <button class="btn btn-primary" onclick="generaLinkCliente()">Genera Link</button>
@@ -623,9 +625,12 @@
                             '<span class="badge ' + badgeClass + '">' + statoText + '</span>' +
                         '</div>' +
                         '<div class="order-products">' +
-                            prods.map(p => '<div class="order-product"><span>• ' + p.nome + ' x' + p.quantita + '</span>' + 
-                            (p.fotoUrl ? '<a href="' + p.fotoUrl + '" target="_blank" style="font-size:11px;color:var(--info);">📷 Vedi Foto</a>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') + 
-                            '<span>EUR ' + (p.prezzo * p.quantita).toFixed(2) + '</span></div>').join('') +
+                            prods.map(p => '<div class="order-product">' +
+                                '<div class="order-product-info">' +
+                                    '<div><strong>• ' + p.nome + ' x' + p.quantita + '</strong> - EUR ' + (p.prezzo * p.quantita).toFixed(2) + '</div>' +
+                                    (p.fotoUrl ? '<div class="order-product-actions"><a href="' + p.fotoUrl + '" target="_blank" class="btn btn-sm btn-info" style="text-decoration:none;">👁️ Vedi Foto</a><a href="' + p.fotoUrl + '" download class="btn btn-sm btn-success" style="text-decoration:none;">⬇️ Scarica Foto</a></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
+                                '</div>' +
+                            '</div>').join('') +
                         '</div>' +
                         '<div class="order-total">Totale: EUR ' + parseFloat(o.totale).toFixed(2) + '</div>' +
                         '<div class="order-actions">' +
