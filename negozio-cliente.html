@@ -14,17 +14,13 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh; }
-        
         .header { background: var(--primary-gradient); color: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .header h1 { font-size: 24px; margin-bottom: 4px; font-weight: 700; }
         .header p { font-size: 14px; opacity: 0.9; }
-        
         .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
-        
         .hero { background: white; padding: 40px 24px; text-align: center; border-radius: var(--radius); margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .hero h2 { font-size: 28px; font-weight: 800; color: var(--primary-dark); margin-bottom: 8px; }
         .hero p { font-size: 16px; color: var(--text-light); }
-        
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
         .product-card { background: white; border-radius: var(--radius); padding: 20px; border: 1px solid var(--border-color); transition: all 0.3s; display: flex; flex-direction: column; }
         .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); border-color: var(--primary); }
@@ -33,60 +29,50 @@
         .product-name { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
         .product-price { font-size: 24px; font-weight: 800; color: var(--primary-dark); margin-bottom: 12px; }
         .product-desc { font-size: 14px; color: var(--text-light); margin-bottom: 16px; flex-grow: 1; }
-        .product-measure { font-size: 12px; color: var(--text-light); margin-bottom: 16px; font-style: italic; }
-        
         .btn { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
         .btn:hover { transform: translateY(-2px); }
         .btn-primary { background: var(--primary-gradient); color: white; width: 100%; }
         .btn-success { background: var(--success); color: white; }
-        .btn-danger { background: var(--danger); color: white; }
-        
         .cart-float-btn { position: fixed; bottom: 24px; right: 24px; background: var(--primary-gradient); color: white; padding: 16px 24px; border-radius: 50px; display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.2); cursor: pointer; z-index: 1000; border: none; }
         .cart-count { background: var(--danger); color: white; width: 24px; height: 24px; border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-        
         .cart-sidebar { position: fixed; top: 0; right: -450px; width: 400px; max-width: 90vw; height: 100vh; background: white; box-shadow: -4px 0 20px rgba(0,0,0,0.15); z-index: 2000; transition: right 0.3s ease; display: flex; flex-direction: column; }
         .cart-sidebar.open { right: 0; }
         .cart-header { padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--primary-light); }
         .cart-header h3 { font-size: 20px; font-weight: 700; color: var(--primary-dark); }
         .cart-items { flex: 1; overflow-y: auto; padding: 20px; }
         .cart-footer { padding: 20px; border-top: 1px solid var(--border-color); background: #f8f9fa; }
-        
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: white; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border-color); }
-        .cart-item-info { flex: 1; }
-        .cart-item-name { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
-        .cart-item-details { font-size: 12px; color: var(--text-light); }
-        .cart-item-price { font-weight: 700; color: var(--primary-dark); margin-left: 12px; font-size: 16px; }
-        .cart-item-remove { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 18px; margin-left: 8px; font-weight: 700; }
-        
+        .cart-item { display: flex; flex-direction: column; gap: 8px; padding: 12px; background: white; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border-color); }
+        .cart-item-top { display: flex; justify-content: space-between; align-items: center; }
+        .cart-item-name { font-weight: 700; font-size: 14px; }
+        .cart-item-price { font-weight: 700; color: var(--primary-dark); font-size: 16px; }
+        .cart-item-actions { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+        .qty-controls { display: flex; align-items: center; gap: 8px; }
+        .qty-btn { width: 28px; height: 28px; border: 1px solid var(--border-color); background: white; border-radius: 4px; cursor: pointer; font-weight: 700; }
+        .foto-upload-label { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background: var(--primary-light); color: var(--primary-dark); border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; border: 1px dashed var(--primary); }
+        .foto-upload-label.has-foto { background: #d5f4e6; color: #27ae60; border-color: #27ae60; }
+        .cart-item-remove { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 18px; font-weight: 700; }
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2500; align-items: center; justify-content: center; }
         .modal-overlay.active { display: flex; }
         .modal-content { background: white; border-radius: var(--radius); padding: 32px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid var(--primary-light); padding-bottom: 16px; }
         .modal-header h2 { font-size: 22px; color: var(--primary-dark); font-weight: 700; }
         .close-modal { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--text-light); line-height: 1; }
-        
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; color: var(--text-main); }
         .form-group input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; }
         .form-group input:focus { outline: none; border-color: var(--primary); }
-        
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
         .toast { background: white; border-radius: 8px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s; font-size: 14px; }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        
         .hidden { display: none !important; }
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-light); font-size: 16px; }
         .loading { text-align: center; padding: 60px 20px; color: var(--text-light); }
         .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        .footer { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
-        
-        @media (max-width: 768px) { 
-            .products-grid { grid-template-columns: 1fr; } 
-            .cart-sidebar { width: 100%; right: -100%; } 
-        }
+        .payment-info { background: #fff3cd; border-left: 4px solid #f39c12; padding: 16px; border-radius: 8px; margin-top: 16px; font-size: 14px; line-height: 1.6; }
+        .payment-info strong { display: block; margin-bottom: 8px; font-size: 16px; color: #856404; }
+        @media (max-width: 768px) { .products-grid { grid-template-columns: 1fr; } .cart-sidebar { width: 100%; right: -100%; } }
     </style>
 </head>
 <body>
@@ -94,17 +80,12 @@
         <h1>Negozio Online</h1>
         <p>Prodotti personalizzati - Ritiro in studio</p>
     </div>
-
     <div class="container">
         <div class="hero">
             <h2>Benvenuto nel nostro negozio</h2>
-            <p>Sfoglia i prodotti, personalizzali con le tue foto e completa l'ordine. Ritiro presso lo studio.</p>
+            <p>Sfoglia i prodotti, personalizzali con le tue foto e completa l'ordine.</p>
         </div>
-
-        <div id="vetrinaLoading" class="loading">
-            <div class="spinner"></div>
-            <div>Caricamento prodotti...</div>
-        </div>
+        <div id="vetrinaLoading" class="loading"><div class="spinner"></div><div>Caricamento prodotti...</div></div>
         <div id="vetrinaEmpty" class="empty-state hidden">Nessun prodotto disponibile al momento.</div>
         <div class="products-grid" id="vetrinaGrid"></div>
     </div>
@@ -149,12 +130,6 @@
                 <label>Email *</label>
                 <input type="email" id="checkEmail">
             </div>
-            <div class="form-group">
-                <label>Carica le tue foto (puoi caricarne più di una)</label>
-                <input type="file" id="checkFile" accept="image/*" multiple onchange="mostraAnteprimaFoto(this)">
-                <div id="anteprimaFotoContainer" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;"></div>
-                <div style="font-size: 12px; color: var(--text-light); margin-top: 4px;">Puoi selezionare più foto contemporaneamente</div>
-            </div>
             <div style="margin-top: 20px; padding: 16px; background: var(--primary-light); border-radius: 8px; text-align: center;">
                 <div style="font-weight: 700; font-size: 18px; color: var(--primary-dark);" id="checkTotal">Totale: EUR 0.00</div>
                 <div style="font-size: 12px; color: var(--text-light); margin-top: 4px;">Pagamento anticipato - Ritiro in studio</div>
@@ -174,11 +149,11 @@
                 Il tuo codice ordine è:<br>
                 <strong id="successCode" style="color: var(--primary-dark); font-size: 24px; font-family: monospace;"></strong>
             </p>
-            <div id="pagamentoContainer" style="margin: 20px 0; padding: 16px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #f39c12; text-align: left;">
-                <div style="font-weight: 700; color: #856404; margin-bottom: 12px; font-size: 16px;">💳 Pagamento Anticipato Obbligatorio</div>
+            <div id="pagamentoContainer" class="payment-info">
+                <strong>💳 Istruzioni per il Pagamento</strong>
                 <div id="pagamentoLinks"></div>
             </div>
-            <p style="margin-bottom: 24px; color: var(--text-light); font-size: 14px;">
+            <p style="margin-top: 16px; margin-bottom: 24px; color: var(--text-light); font-size: 14px;">
                 Completa il pagamento per confermare l'ordine. Ti contatteremo per il ritiro in studio.
             </p>
             <button class="btn btn-primary" onclick="location.reload()">Torna al Negozio</button>
@@ -186,8 +161,7 @@
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-
-    <div class="footer">
+    <div style="text-align: center; padding: 24px; color: var(--text-light); font-size: 13px;">
         Servizio offerto da <strong style="color: var(--primary-dark);">G&L Studio</strong>
     </div>
 
@@ -195,16 +169,13 @@
         const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         const urlParams = new URLSearchParams(window.location.search);
         const studioId = urlParams.get('studioId');
+        const clienteId = urlParams.get('clienteId');
         
         let prodotti = [];
         let carrello = [];
-        let fotoCaricate = [];
 
         document.addEventListener('DOMContentLoaded', async function() {
-            if (!studioId) {
-                mostraToast('Link non valido', 'error');
-                return;
-            }
+            if (!studioId) { mostraToast('Link non valido', 'error'); return; }
             await applicaTemaGlobale();
             await caricaProdotti();
         });
@@ -215,9 +186,7 @@
                 const data = await res.json();
                 if (data.success && data.tema && data.tema.tema_attivo) {
                     const temi = {
-                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
-                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
-                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #85c1e9 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' }
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' }
                     };
                     const t = temi[data.tema.tema_attivo] || temi['default'];
                     const root = document.documentElement;
@@ -234,62 +203,42 @@
             try {
                 const response = await fetch(WORKER_URL + '/api/studio/negozio/prodotti?studioId=' + encodeURIComponent(studioId));
                 const data = await response.json();
-                const loading = document.getElementById('vetrinaLoading');
-                const empty = document.getElementById('vetrinaEmpty');
-                const grid = document.getElementById('vetrinaGrid');
-                const cartBtn = document.getElementById('cartBtn');
-                
-                loading.style.display = 'none';
-                
+                document.getElementById('vetrinaLoading').style.display = 'none';
                 if (!data.success || !data.prodotti || data.prodotti.length === 0) {
-                    empty.classList.remove('hidden');
-                    cartBtn.style.display = 'none';
+                    document.getElementById('vetrinaEmpty').classList.remove('hidden');
                     return;
                 }
-                
-                cartBtn.style.display = 'flex';
+                document.getElementById('cartBtn').style.display = 'flex';
                 prodotti = data.prodotti;
-                
-                const categorieMap = { 'canvas': 'Canvas', 'poster': 'Poster', 'album': 'Album', 'cornice': 'Cornice', 'cuscino': 'Cuscino', 'tazza': 'Tazza', 'acconto': 'Acconto', 'altro': 'Altro' };
-
-                grid.innerHTML = prodotti.map(function(p) {
-                    return '<div class="product-card">' +
-                        (p.immagine ? '<img src="' + p.immagine + '" class="product-image" alt="' + p.nome + '">' : '<div class="product-image" style="display:flex;align-items:center;justify-content:center;color:var(--text-light);">Nessuna immagine</div>') +
-                        '<div class="product-category">' + (categorieMap[p.categoria] || p.categoria) + '</div>' +
-                        '<div class="product-name">' + p.nome + '</div>' +
-                        '<div class="product-price">EUR ' + parseFloat(p.prezzo).toFixed(2) + '</div>' +
-                        (p.misura ? '<div class="product-measure">' + p.misura + '</div>' : '') +
-                        (p.descrizione ? '<div class="product-desc">' + p.descrizione + '</div>' : '') +
-                        '<button class="btn btn-primary" onclick="aggiungiAlCarrello(\'' + p.id + '\')">Aggiungi al Carrello</button>' +
-                    '</div>';
-                }).join('');
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore caricamento prodotti', 'error');
-            }
+                const categorieMap = { 'canvas': 'Canvas', 'poster': 'Poster', 'tazza': 'Tazza', 'cuscino': 'Cuscino', 'acconto': 'Acconto', 'altro': 'Altro' };
+                document.getElementById('vetrinaGrid').innerHTML = prodotti.map(p => 
+                    '<div class="product-card">' +
+                    (p.immagine ? '<img src="' + p.immagine + '" class="product-image">' : '<div class="product-image" style="display:flex;align-items:center;justify-content:center;color:var(--text-light);">No Img</div>') +
+                    '<div class="product-category">' + (categorieMap[p.categoria] || p.categoria) + '</div>' +
+                    '<div class="product-name">' + p.nome + '</div>' +
+                    '<div class="product-price">EUR ' + parseFloat(p.prezzo).toFixed(2) + '</div>' +
+                    (p.descrizione ? '<div class="product-desc">' + p.descrizione + '</div>' : '') +
+                    '<button class="btn btn-primary" onclick="aggiungiAlCarrello(\'' + p.id + '\')">Aggiungi al Carrello</button>' +
+                    '</div>'
+                ).join('');
+            } catch (error) { mostraToast('Errore caricamento prodotti', 'error'); }
         }
 
         function aggiungiAlCarrello(prodId) {
-            const prodotto = prodotti.find(function(p) { return p.id === prodId; });
+            const prodotto = prodotti.find(p => p.id === prodId);
             if (!prodotto) return;
-            
-            const esistente = carrello.find(function(item) { return item.id === prodId; });
-            if (esistente) {
-                esistente.quantita++;
-            } else {
-                carrello.push({ id: prodotto.id, nome: prodotto.nome, prezzo: prodotto.prezzo, quantita: 1 });
-            }
-            
+            const esistente = carrello.find(item => item.id === prodId);
+            if (esistente) { esistente.quantita++; } 
+            else { carrello.push({ id: prodotto.id, nome: prodotto.nome, prezzo: prodotto.prezzo, quantita: 1, fotoUrl: null }); }
             aggiornaCarrelloUI();
-            mostraToast('Prodotto aggiunto al carrello', 'success');
+            mostraToast('Prodotto aggiunto', 'success');
         }
 
         function aggiornaCarrelloUI() {
             const container = document.getElementById('cartItems');
             const countBadge = document.getElementById('cartCount');
             const totalEl = document.getElementById('cartTotal');
-            
-            const totaleItems = carrello.reduce(function(sum, item) { return sum + item.quantita; }, 0);
+            const totaleItems = carrello.reduce((sum, item) => sum + item.quantita, 0);
             countBadge.textContent = totaleItems;
             
             if (carrello.length === 0) {
@@ -299,20 +248,35 @@
             }
 
             let totale = 0;
-            container.innerHTML = carrello.map(function(item, index) {
+            container.innerHTML = carrello.map((item, index) => {
                 const subtotale = item.prezzo * item.quantita;
                 totale += subtotale;
                 return '<div class="cart-item">' +
-                    '<div class="cart-item-info">' +
+                    '<div class="cart-item-top">' +
                         '<div class="cart-item-name">' + item.nome + '</div>' +
-                        '<div class="cart-item-details">Qty: ' + item.quantita + '</div>' +
+                        '<div class="cart-item-price">EUR ' + subtotale.toFixed(2) + '</div>' +
                     '</div>' +
-                    '<div class="cart-item-price">EUR ' + subtotale.toFixed(2) + '</div>' +
-                    '<button class="cart-item-remove" onclick="rimuoviDalCarrello(' + index + ')">×</button>' +
+                    '<div class="cart-item-actions">' +
+                        '<div class="qty-controls">' +
+                            '<button class="qty-btn" onclick="cambiaQty(' + index + ', -1)">-</button>' +
+                            '<span>Qty: ' + item.quantita + '</span>' +
+                            '<button class="qty-btn" onclick="cambiaQty(' + index + ', 1)">+</button>' +
+                        '</div>' +
+                        '<label class="foto-upload-label ' + (item.fotoUrl ? 'has-foto' : '') + '">' +
+                            (item.fotoUrl ? '✅ Foto caricata' : '📷 Carica Foto') +
+                            '<input type="file" accept="image/*" style="display:none" onchange="caricaFotoProdotto(' + index + ', this)">' +
+                        '</label>' +
+                        '<button class="cart-item-remove" onclick="rimuoviDalCarrello(' + index + ')">×</button>' +
+                    '</div>' +
                 '</div>';
             }).join('');
-            
             totalEl.textContent = 'EUR ' + totale.toFixed(2);
+        }
+
+        function cambiaQty(index, delta) {
+            carrello[index].quantita += delta;
+            if (carrello[index].quantita <= 0) carrello.splice(index, 1);
+            aggiornaCarrelloUI();
         }
 
         function rimuoviDalCarrello(index) {
@@ -320,77 +284,53 @@
             aggiornaCarrelloUI();
         }
 
-        function toggleCart() {
-            document.getElementById('cartSidebar').classList.toggle('open');
+        async function caricaFotoProdotto(index, input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            mostraToast('Caricamento foto...', 'success');
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                // Usiamo l'endpoint di upload passando studioId e un ID temporaneo per il cliente
+                const response = await fetch(WORKER_URL + '/api/studio/upload?studioId=' + encodeURIComponent(studioId) + '&clienteId=' + (clienteId || 'anon') + '&folder=foto-ordine&filename=' + encodeURIComponent(file.name), {
+                    method: 'POST',
+                    body: file
+                });
+                const result = await response.json();
+                if (result.success) {
+                    carrello[index].fotoUrl = result.url;
+                    mostraToast('Foto caricata con successo', 'success');
+                } else {
+                    mostraToast('Errore nel caricamento', 'error');
+                }
+            } catch (e) {
+                console.error(e);
+                mostraToast('Errore di connessione', 'error');
+            }
+            aggiornaCarrelloUI();
         }
 
+        function toggleCart() { document.getElementById('cartSidebar').classList.toggle('open'); }
+
         function apriCheckout() {
-            if (carrello.length === 0) {
-                mostraToast('Il carrello è vuoto', 'error');
-                return;
-            }
-            const totale = carrello.reduce(function(sum, item) { return sum + (item.prezzo * item.quantita); }, 0);
+            if (carrello.length === 0) { mostraToast('Il carrello è vuoto', 'error'); return; }
+            const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
             document.getElementById('checkTotal').textContent = 'Totale: EUR ' + totale.toFixed(2);
             document.getElementById('checkoutModal').classList.add('active');
             toggleCart();
         }
 
-        function chiudiCheckout() {
-            document.getElementById('checkoutModal').classList.remove('active');
-            document.getElementById('anteprimaFotoContainer').innerHTML = '';
-            fotoCaricate = [];
-        }
-
-        function mostraAnteprimaFoto(input) {
-            const container = document.getElementById('anteprimaFotoContainer');
-            container.innerHTML = '';
-            fotoCaricate = [];
-            
-            if (input.files) {
-                Array.from(input.files).forEach(function(file, index) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        fotoCaricate.push({ name: file.name, data: e.target.result });
-                        const div = document.createElement('div');
-                        div.style.cssText = 'position: relative; width: 80px; height: 80px; border-radius: 8px; overflow: hidden; border: 2px solid var(--border-color);';
-                        div.innerHTML = '<img src="' + e.target.result + '" style="width: 100%; height: 100%; object-fit: cover;">' +
-                            '<div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: white; font-size: 9px; padding: 2px; text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">' + file.name + '</div>';
-                        container.appendChild(div);
-                    };
-                    reader.readAsDataURL(file);
-                });
-            }
-        }
+        function chiudiCheckout() { document.getElementById('checkoutModal').classList.remove('active'); }
 
         async function confermaOrdine() {
             const nome = document.getElementById('checkNome').value.trim();
             const telefono = document.getElementById('checkTelefono').value.trim();
             const email = document.getElementById('checkEmail').value.trim();
-
-            if (!nome || !telefono || !email) {
-                mostraToast('Compila tutti i campi obbligatori', 'error');
-                return;
-            }
+            if (!nome || !telefono || !email) { mostraToast('Compila tutti i campi', 'error'); return; }
 
             mostraToast('Elaborazione ordine...', 'success');
-            
             const codiceOrdine = 'ORD-' + Date.now().toString().slice(-6);
-            const totale = carrello.reduce(function(sum, item) { return sum + (item.prezzo * item.quantita); }, 0);
-
-            // Carica le foto su R2 (se presenti)
-            let fotoUrls = [];
-            for (let i = 0; i < fotoCaricate.length; i++) {
-                const foto = fotoCaricate[i];
-                try {
-                    const response = await fetch(WORKER_URL + '/api/studio/upload?token=dummy&studioId=' + encodeURIComponent(studioId) + '&clienteId=' + codiceOrdine + '&folder=foto-ordine&filename=' + encodeURIComponent(foto.name), {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/octet-stream' },
-                        body: atob(foto.data.split(',')[1]).split('').map(c => String.fromCharCode(c.charCodeAt(0) & 0xff)).join('')
-                    });
-                    const result = await response.json();
-                    if (result.success) fotoUrls.push(result.url);
-                } catch (e) { console.error('Errore upload foto:', e); }
-            }
+            const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
 
             try {
                 await fetch(WORKER_URL + '/api/studio/negozio/ordine', {
@@ -406,47 +346,40 @@
                         totale: totale,
                         stato: 'in_attesa',
                         metodo_pagamento: 'anticipato',
-                        file_url: fotoUrls.join(','),
+                        file_url: '',
                         data_creazione: new Date().toISOString()
                     })
                 });
 
-                // Carica la configurazione per mostrare i link di pagamento
+                // Carica configurazioni per mostrare i pagamenti
                 try {
                     const configRes = await fetch(WORKER_URL + '/api/studio/negozio-config?studioId=' + encodeURIComponent(studioId));
                     const configData = await configRes.json();
                     const config = configData.success ? configData.config : null;
+                    let htmlPagamento = '<p>Contatteremo il cliente per il pagamento. Totale: <strong>EUR ' + totale.toFixed(2) + '</strong></p>';
                     
-                    let htmlPagamento = '';
-                    if (config) {
-                        if (config.metodi_pagamento) {
-                            const metodi = config.metodi_pagamento.split(',');
-                            metodi.forEach(function(m) {
-                                m = m.trim();
-                                if (m === 'paypal' && config.paypal_email) {
-                                    htmlPagamento += '<div style="margin-bottom: 8px;"><strong>PayPal:</strong> <a href="https://paypal.me/' + config.paypal_email.split('@')[0] + '/' + totale + '" target="_blank" style="color: #0070ba; font-weight: 600;">Paga con PayPal</a> - Email: ' + config.paypal_email + '</div>';
-                                }
-                                if (m === 'iban' && config.iban_numero) {
-                                    htmlPagamento += '<div style="margin-bottom: 8px;"><strong>Bonifico IBAN:</strong><br><code style="background: white; padding: 4px 8px; border-radius: 4px; font-size: 13px;">' + config.iban_numero + '</code><br><span style="font-size: 12px; color: var(--text-light);">Intestato a: G&L Studio - Causale: ' + codiceOrdine + '</span></div>';
-                                }
-                                if (m === 'satispay' && config.satispay_numero) {
-                                    htmlPagamento += '<div style="margin-bottom: 8px;"><strong>Satispay:</strong> Numero: ' + config.satispay_numero + ' - Causale: ' + codiceOrdine + '</div>';
-                                }
-                                if (m === 'stripe' && config.stripe_link) {
-                                    htmlPagamento += '<div style="margin-bottom: 8px;"><strong>Stripe (Carta):</strong> <a href="' + config.stripe_link + '" target="_blank" style="color: #635bff; font-weight: 600;">Paga con Carta</a></div>';
-                                }
-                            });
+                    if (config && config.metodi_pagamento) {
+                        htmlPagamento = '<ul style="list-style: none; padding: 0; margin: 0;">';
+                        const metodi = config.metodi_pagamento.split(',');
+                        if (metodi.includes('paypal') && config.paypal_email) {
+                            const email = config.paypal_email.includes('http') ? '' : config.paypal_email;
+                            const link = config.paypal_email.includes('http') ? config.paypal_email : 'https://paypal.me/' + email.split('@')[0] + '/' + totale;
+                            htmlPagamento += '<li style="margin-bottom: 12px;"><strong>💳 PayPal:</strong> <a href="' + link + '" target="_blank" style="color: #0070ba; font-weight: 600;">Clicca qui per pagare con PayPal</a></li>';
                         }
-                        if (!htmlPagamento) {
-                            htmlPagamento = '<div style="color: #856404;">Contatteremo il cliente per il pagamento. Totale: EUR ' + totale.toFixed(2) + '</div>';
+                        if (metodi.includes('stripe') && config.stripe_link) {
+                            htmlPagamento += '<li style="margin-bottom: 12px;"><strong>💳 Carta di Credito (Stripe):</strong> <a href="' + config.stripe_link + '" target="_blank" style="color: #635bff; font-weight: 600;">Clicca qui per pagare con Carta</a></li>';
                         }
-                    } else {
-                        htmlPagamento = '<div style="color: #856404;">Totale da pagare: EUR ' + totale.toFixed(2) + '. Ti contatteremo per il pagamento.</div>';
+                        if (metodi.includes('satispay') && config.satispay_numero) {
+                            htmlPagamento += '<li style="margin-bottom: 12px;"><strong>📱 Satispay:</strong> Invia l\'importo al numero <strong>' + config.satispay_numero + '</strong> con causale: <strong>' + codiceOrdine + '</strong></li>';
+                        }
+                        if (metodi.includes('iban') && config.iban_numero) {
+                            htmlPagamento += '<li style="margin-bottom: 12px;"><strong>🏦 Bonifico IBAN:</strong><br><code style="background: white; padding: 4px 8px; border-radius: 4px; font-size: 13px;">' + config.iban_numero + '</code><br>Causale: <strong>' + codiceOrdine + '</strong></li>';
+                        }
+                        htmlPagamento += '</ul>';
                     }
-                    
                     document.getElementById('pagamentoLinks').innerHTML = htmlPagamento;
                 } catch (e) {
-                    document.getElementById('pagamentoLinks').innerHTML = '<div style="color: #856404;">Totale da pagare: EUR ' + totale.toFixed(2) + '. Ti contatteremo per il pagamento.</div>';
+                    document.getElementById('pagamentoLinks').innerHTML = '<p>Totale da pagare: <strong>EUR ' + totale.toFixed(2) + '</strong>. Ti contatteremo per il pagamento.</p>';
                 }
 
                 document.getElementById('checkoutModal').classList.remove('active');
@@ -455,7 +388,7 @@
                 carrello = [];
                 aggiornaCarrelloUI();
             } catch (error) {
-                console.error('Errore:', error);
+                console.error(error);
                 mostraToast('Errore durante l\'ordine', 'error');
             }
         }
@@ -466,7 +399,7 @@
             toast.className = 'toast ' + tipo;
             toast.textContent = msg;
             container.appendChild(toast);
-            setTimeout(function() { toast.remove(); }, 3000);
+            setTimeout(() => toast.remove(), 3000);
         }
     </script>
 </body>
