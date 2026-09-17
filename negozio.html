@@ -146,7 +146,7 @@
             </div>
             <div class="dashboard-grid">
                 <div class="dash-card" onclick="mostraSezione('anteprima')">
-                    <span class="card-icon">️</span>
+                    <span class="card-icon">👁️</span>
                     <div class="card-title">Anteprima Negozio</div>
                     <div class="card-desc">Vedi esattamente come appare il negozio ai tuoi clienti.</div>
                 </div>
@@ -161,7 +161,7 @@
                     <div class="card-desc">Visualizza tutti i clienti generati e i loro link di accesso.</div>
                 </div>
                 <div class="dash-card" onclick="mostraSezione('prodotti')">
-                    <span class="card-icon">📦</span>
+                    <span class="card-icon"></span>
                     <div class="card-title">Gestione Prodotti</div>
                     <div class="card-desc">Crea, modifica e archivia i prodotti della vetrina.</div>
                 </div>
@@ -206,7 +206,7 @@
                     <div class="form-group">
                         <label>Numero WhatsApp * (con prefisso)</label>
                         <input type="tel" id="linkClienteTelefono" placeholder="+39 333 1234567" oninput="aggiornaBtnWhatsApp()">
-                        <button type="button" class="btn btn-whatsapp" id="btnWhatsAppWeb" onclick="apriWhatsAppWeb()" style="margin-top: 12px; display: none; width: 100%;">🔗 Apri WhatsApp Web</button>
+                        <button type="button" class="btn btn-whatsapp" id="btnWhatsAppWeb" onclick="apriWhatsAppWeb()" style="margin-top: 12px; display: none; width: 100%;"> Apri WhatsApp Web</button>
                     </div>
                 </div>
                 <button class="btn btn-primary" onclick="generaLinkCliente()">Genera Link</button>
@@ -365,7 +365,7 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary" style="margin-top: 24px; width: 100%;" onclick="salvaConfig()">💾 SALVA CONFIGURAZIONE</button>
+                <button class="btn btn-primary" style="margin-top: 24px; width: 100%;" onclick="salvaConfig()"> SALVA CONFIGURAZIONE</button>
             </div>
         </div>
     </div>
@@ -625,12 +625,15 @@
                             '<span class="badge ' + badgeClass + '">' + statoText + '</span>' +
                         '</div>' +
                         '<div class="order-products">' +
-                            prods.map(p => '<div class="order-product">' +
-                                '<div class="order-product-info">' +
-                                    '<div><strong>• ' + p.nome + ' x' + p.quantita + '</strong> - EUR ' + (p.prezzo * p.quantita).toFixed(2) + '</div>' +
-                                    (p.fotoUrl ? '<div class="order-product-actions"><a href="' + p.fotoUrl + '" target="_blank" class="btn btn-sm btn-info" style="text-decoration:none;">👁️ Vedi Foto</a><a href="' + p.fotoUrl + '" download class="btn btn-sm btn-success" style="text-decoration:none;">⬇️ Scarica Foto</a></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
-                                '</div>' +
-                            '</div>').join('') +
+                            prods.map(p => {
+                                const fotoUrl = p.fotoUrl ? p.fotoUrl.replace('https://appcenter-studio-foto.r2.dev/', WORKER_URL + '/api/studio/file/?token=' + token + '&path=') : null;
+                                return '<div class="order-product">' +
+                                    '<div class="order-product-info">' +
+                                        '<div><strong>• ' + p.nome + ' x' + p.quantita + '</strong> - EUR ' + (p.prezzo * p.quantita).toFixed(2) + '</div>' +
+                                        (fotoUrl ? '<div class="order-product-actions"><a href="' + fotoUrl + '" target="_blank" class="btn btn-sm btn-info" style="text-decoration:none;">👁️ Vedi Foto</a><a href="' + fotoUrl + '" download class="btn btn-sm btn-success" style="text-decoration:none;">⬇️ Scarica Foto</a></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
+                                    '</div>' +
+                                '</div>';
+                            }).join('') +
                         '</div>' +
                         '<div class="order-total">Totale: EUR ' + parseFloat(o.totale).toFixed(2) + '</div>' +
                         '<div class="order-actions">' +
