@@ -51,6 +51,7 @@
         .foto-upload-label { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background: var(--primary-light); color: var(--primary-dark); border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; border: 1px dashed var(--primary); }
         .foto-upload-label.has-foto { background: #d5f4e6; color: #27ae60; border-color: #27ae60; }
         .cart-item-remove { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 18px; font-weight: 700; }
+        .foto-preview { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 2px solid var(--primary); margin-top: 8px; }
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2500; align-items: center; justify-content: center; }
         .modal-overlay.active { display: flex; }
         .modal-content { background: white; border-radius: var(--radius); padding: 32px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
@@ -235,7 +236,7 @@
             if (!prodotto) return;
             const esistente = carrello.find(item => item.id === prodId);
             if (esistente) { esistente.quantita++; } 
-            else { carrello.push({ id: prodotto.id, nome: prodotto.nome, prezzo: prodotto.prezzo, quantita: 1, fotoUrl: null }); }
+            else { carrello.push({ id: prodotto.id, nome: prodotto.nome, prezzo: prodotto.prezzo, quantita: 1, fotoUrl: null, fotoPreview: null }); }
             aggiornaCarrelloUI();
             mostraToast('Prodotto aggiunto', 'success');
         }
@@ -274,6 +275,7 @@
                         '</label>' +
                         '<button class="cart-item-remove" onclick="rimuoviDalCarrello(' + index + ')">×</button>' +
                     '</div>' +
+                    (item.fotoPreview ? '<img src="' + item.fotoPreview + '" class="foto-preview" alt="Anteprima">' : '') +
                 '</div>';
             }).join('');
             totalEl.textContent = 'EUR ' + totale.toFixed(2);
@@ -294,6 +296,15 @@
             if (!input.files || !input.files[0]) return;
             const file = input.files[0];
             mostraToast('Caricamento foto...', 'success');
+            
+            // Crea anteprima locale immediata
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                carrello[index].fotoPreview = e.target.result;
+                aggiornaCarrelloUI();
+            };
+            reader.readAsDataURL(file);
+            
             try {
                 const response = await fetch(WORKER_URL + '/api/studio/upload?studioId=' + encodeURIComponent(studioId) + '&clienteId=' + (clienteId || 'anon') + '&folder=foto-ordine&filename=' + encodeURIComponent(file.name), {
                     method: 'POST',
@@ -310,7 +321,6 @@
                 console.error(e);
                 mostraToast('Errore di connessione', 'error');
             }
-            aggiornaCarrelloUI();
         }
 
         function toggleCart() { document.getElementById('cartSidebar').classList.toggle('open'); }
