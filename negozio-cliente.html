@@ -297,7 +297,6 @@
             const file = input.files[0];
             mostraToast('Caricamento foto...', 'success');
             
-            // Crea anteprima locale immediata
             const reader = new FileReader();
             reader.onload = function(e) {
                 carrello[index].fotoPreview = e.target.result;
@@ -347,7 +346,7 @@
             const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
 
             try {
-                await fetch(WORKER_URL + '/api/studio/negozio/ordine', {
+                const ordineResponse = await fetch(WORKER_URL + '/api/studio/negozio/ordine', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -364,6 +363,9 @@
                         data_creazione: new Date().toISOString()
                     })
                 });
+                
+                const ordineResult = await ordineResponse.json();
+                console.log('Risultato ordine:', ordineResult);
 
                 try {
                     const configRes = await fetch(WORKER_URL + '/api/studio/negozio-config?studioId=' + encodeURIComponent(studioId));
@@ -375,8 +377,8 @@
                         htmlPagamento = '<ul>';
                         const metodi = config.metodi_pagamento.split(',');
                         if (metodi.includes('paypal') && config.paypal_email) {
-                            const email = config.paypal_email.includes('http') ? '' : config.paypal_email;
-                            const link = config.paypal_email.includes('http') ? config.paypal_email : 'https://paypal.me/' + email.split('@')[0] + '/' + totale;
+                            const emailPaypal = config.paypal_email.includes('http') ? '' : config.paypal_email;
+                            const link = config.paypal_email.includes('http') ? config.paypal_email : 'https://paypal.me/' + emailPaypal.split('@')[0] + '/' + totale;
                             htmlPagamento += '<li><strong>PayPal:</strong> <a href="' + link + '" target="_blank">Clicca qui per pagare con PayPal</a></li>';
                         }
                         if (metodi.includes('stripe') && config.stripe_link) {
