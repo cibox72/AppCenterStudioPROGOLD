@@ -45,7 +45,7 @@
         .cart-item-top { display: flex; justify-content: space-between; align-items: center; }
         .cart-item-name { font-weight: 700; font-size: 14px; }
         .cart-item-price { font-weight: 700; color: var(--primary-dark); font-size: 16px; }
-        .cart-item-actions { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+        .cart-item-actions { display: flex; justify-content: space-between; align-items: center; font-size: 12px; flex-wrap: wrap; gap: 8px; }
         .qty-controls { display: flex; align-items: center; gap: 8px; }
         .qty-btn { width: 28px; height: 28px; border: 1px solid var(--border-color); background: white; border-radius: 4px; cursor: pointer; font-weight: 700; }
         .foto-upload-label { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background: var(--primary-light); color: var(--primary-dark); border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; border: 1px dashed var(--primary); }
@@ -72,6 +72,12 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         .payment-info { background: #fff3cd; border-left: 4px solid #f39c12; padding: 16px; border-radius: 8px; margin-top: 16px; font-size: 14px; line-height: 1.6; }
         .payment-info strong { display: block; margin-bottom: 8px; font-size: 16px; color: #856404; }
+        .payment-info ul { list-style: none; padding: 0; margin: 0; }
+        .payment-info li { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.1); }
+        .payment-info li:last-child { border-bottom: none; }
+        .payment-info a { color: #0070ba; font-weight: 600; text-decoration: none; }
+        .payment-info a:hover { text-decoration: underline; }
+        .payment-info code { background: white; padding: 4px 8px; border-radius: 4px; font-size: 13px; display: inline-block; margin: 4px 0; word-break: break-all; }
         @media (max-width: 768px) { .products-grid { grid-template-columns: 1fr; } .cart-sidebar { width: 100%; right: -100%; } }
     </style>
 </head>
@@ -91,7 +97,7 @@
     </div>
 
     <button class="cart-float-btn" onclick="toggleCart()" id="cartBtn" style="display:none;">
-        <span>🛒 Carrello</span>
+        <span>Carrello</span>
         <span class="cart-count" id="cartCount">0</span>
     </button>
 
@@ -150,7 +156,7 @@
                 <strong id="successCode" style="color: var(--primary-dark); font-size: 24px; font-family: monospace;"></strong>
             </p>
             <div id="pagamentoContainer" class="payment-info">
-                <strong>💳 Istruzioni per il Pagamento</strong>
+                <strong>Istruzioni per il Pagamento</strong>
                 <div id="pagamentoLinks"></div>
             </div>
             <p style="margin-top: 16px; margin-bottom: 24px; color: var(--text-light); font-size: 14px;">
@@ -263,7 +269,7 @@
                             '<button class="qty-btn" onclick="cambiaQty(' + index + ', 1)">+</button>' +
                         '</div>' +
                         '<label class="foto-upload-label ' + (item.fotoUrl ? 'has-foto' : '') + '">' +
-                            (item.fotoUrl ? '✅ Foto caricata' : '📷 Carica Foto') +
+                            (item.fotoUrl ? 'Foto caricata' : 'Carica Foto') +
                             '<input type="file" accept="image/*" style="display:none" onchange="caricaFotoProdotto(' + index + ', this)">' +
                         '</label>' +
                         '<button class="cart-item-remove" onclick="rimuoviDalCarrello(' + index + ')">×</button>' +
@@ -289,9 +295,6 @@
             const file = input.files[0];
             mostraToast('Caricamento foto...', 'success');
             try {
-                const formData = new FormData();
-                formData.append('file', file);
-                // Usiamo l'endpoint di upload passando studioId e un ID temporaneo per il cliente
                 const response = await fetch(WORKER_URL + '/api/studio/upload?studioId=' + encodeURIComponent(studioId) + '&clienteId=' + (clienteId || 'anon') + '&folder=foto-ordine&filename=' + encodeURIComponent(file.name), {
                     method: 'POST',
                     body: file
@@ -351,7 +354,6 @@
                     })
                 });
 
-                // Carica configurazioni per mostrare i pagamenti
                 try {
                     const configRes = await fetch(WORKER_URL + '/api/studio/negozio-config?studioId=' + encodeURIComponent(studioId));
                     const configData = await configRes.json();
@@ -359,21 +361,21 @@
                     let htmlPagamento = '<p>Contatteremo il cliente per il pagamento. Totale: <strong>EUR ' + totale.toFixed(2) + '</strong></p>';
                     
                     if (config && config.metodi_pagamento) {
-                        htmlPagamento = '<ul style="list-style: none; padding: 0; margin: 0;">';
+                        htmlPagamento = '<ul>';
                         const metodi = config.metodi_pagamento.split(',');
                         if (metodi.includes('paypal') && config.paypal_email) {
                             const email = config.paypal_email.includes('http') ? '' : config.paypal_email;
                             const link = config.paypal_email.includes('http') ? config.paypal_email : 'https://paypal.me/' + email.split('@')[0] + '/' + totale;
-                            htmlPagamento += '<li style="margin-bottom: 12px;"><strong>💳 PayPal:</strong> <a href="' + link + '" target="_blank" style="color: #0070ba; font-weight: 600;">Clicca qui per pagare con PayPal</a></li>';
+                            htmlPagamento += '<li><strong>PayPal:</strong> <a href="' + link + '" target="_blank">Clicca qui per pagare con PayPal</a></li>';
                         }
                         if (metodi.includes('stripe') && config.stripe_link) {
-                            htmlPagamento += '<li style="margin-bottom: 12px;"><strong>💳 Carta di Credito (Stripe):</strong> <a href="' + config.stripe_link + '" target="_blank" style="color: #635bff; font-weight: 600;">Clicca qui per pagare con Carta</a></li>';
+                            htmlPagamento += '<li><strong>Carta di Credito (Stripe):</strong> <a href="' + config.stripe_link + '" target="_blank">Clicca qui per pagare con Carta</a></li>';
                         }
                         if (metodi.includes('satispay') && config.satispay_numero) {
-                            htmlPagamento += '<li style="margin-bottom: 12px;"><strong>📱 Satispay:</strong> Invia l\'importo al numero <strong>' + config.satispay_numero + '</strong> con causale: <strong>' + codiceOrdine + '</strong></li>';
+                            htmlPagamento += '<li><strong>Satispay:</strong> Invia l\'importo al numero <strong>' + config.satispay_numero + '</strong> con causale: <strong>' + codiceOrdine + '</strong></li>';
                         }
                         if (metodi.includes('iban') && config.iban_numero) {
-                            htmlPagamento += '<li style="margin-bottom: 12px;"><strong>🏦 Bonifico IBAN:</strong><br><code style="background: white; padding: 4px 8px; border-radius: 4px; font-size: 13px;">' + config.iban_numero + '</code><br>Causale: <strong>' + codiceOrdine + '</strong></li>';
+                            htmlPagamento += '<li><strong>Bonifico IBAN:</strong><br><code>' + config.iban_numero + '</code><br>Causale: <strong>' + codiceOrdine + '</strong></li>';
                         }
                         htmlPagamento += '</ul>';
                     }
