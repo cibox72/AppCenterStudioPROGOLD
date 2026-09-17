@@ -141,7 +141,7 @@
             </div>
             <div class="dashboard-grid">
                 <div class="dash-card" onclick="mostraSezione('anteprima')">
-                    <span class="card-icon">👁️</span>
+                    <span class="card-icon">️</span>
                     <div class="card-title">Anteprima Negozio</div>
                     <div class="card-desc">Vedi esattamente come appare il negozio ai tuoi clienti.</div>
                 </div>
@@ -156,7 +156,7 @@
                     <div class="card-desc">Visualizza tutti i clienti generati e i loro link di accesso.</div>
                 </div>
                 <div class="dash-card" onclick="mostraSezione('prodotti')">
-                    <span class="card-icon">📦</span>
+                    <span class="card-icon"></span>
                     <div class="card-title">Gestione Prodotti</div>
                     <div class="card-desc">Crea, modifica e archivia i prodotti della vetrina.</div>
                 </div>
@@ -658,23 +658,25 @@
         }
 
         async function caricaConfig() {
-            const res = await fetch(WORKER_URL + '/api/studio/negozio-config?token=' + token);
-            const data = await res.json();
-            if (data.success && data.config) {
-                config = data.config;
-                document.getElementById('whatsappNumero').value = config.whatsapp_numero || '';
-                document.getElementById('studioIndirizzo').value = config.studio_indirizzo || '';
-                ['paypal', 'stripe', 'satispay', 'iban'].forEach(m => {
-                    if (config.metodi_pagamento && config.metodi_pagamento.includes(m)) {
-                        document.getElementById('check-' + m).checked = true;
-                        togglePayment(m);
-                        if (m === 'paypal') document.getElementById('paypalEmail').value = config.paypal_email || '';
-                        if (m === 'stripe') document.getElementById('stripeLink').value = config.stripe_link || '';
-                        if (m === 'satispay') document.getElementById('satispayNumero').value = config.satispay_numero || '';
-                        if (m === 'iban') document.getElementById('ibanNumero').value = config.iban_numero || '';
-                    }
-                });
-            }
+            try {
+                const res = await fetch(WORKER_URL + '/api/studio/negozio-config?token=' + token);
+                const data = await res.json();
+                if (data.success && data.config) {
+                    config = data.config;
+                    document.getElementById('whatsappNumero').value = config.whatsapp_numero || '';
+                    document.getElementById('studioIndirizzo').value = config.studio_indirizzo || '';
+                    ['paypal', 'stripe', 'satispay', 'iban'].forEach(m => {
+                        if (config.metodi_pagamento && config.metodi_pagamento.includes(m)) {
+                            document.getElementById('check-' + m).checked = true;
+                            togglePayment(m);
+                            if (m === 'paypal') document.getElementById('paypalEmail').value = config.paypal_email || '';
+                            if (m === 'stripe') document.getElementById('stripeLink').value = config.stripe_link || '';
+                            if (m === 'satispay') document.getElementById('satispayNumero').value = config.satispay_numero || '';
+                            if (m === 'iban') document.getElementById('ibanNumero').value = config.iban_numero || '';
+                        }
+                    });
+                }
+            } catch (e) { console.error('Errore caricamento config:', e); }
         }
 
         async function salvaConfig() {
