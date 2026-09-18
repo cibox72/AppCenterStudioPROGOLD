@@ -445,7 +445,7 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        // NOTA: WORKER_URL è già definito globalmente in temi.js.
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let currentStudioId = '';
@@ -460,7 +460,7 @@
 
         async function verificaSessione() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`);
                 const data = await response.json();
 
                 if (!data.success || data.tipo !== 'studio') {
@@ -506,11 +506,13 @@
             }
         }
 
-        // FUNZIONE TEMA GLOBALE AGGIORNATA CON EFFETTI E TEMA ARANCIO
+        // ============================================
+        // SEZIONE TEMA GLOBALE AGGIORNATA CON EFFETTI E TEMA ARANCIO
+        // ============================================
         async function caricaTemaGlobale() {
             if (!currentStudioId) return;
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${currentStudioId}&token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(currentStudioId)}&token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 if (data.success && data.tema && data.tema.tema_attivo) {
                     const temaId = data.tema.tema_attivo;
@@ -546,7 +548,7 @@
         // FUNZIONE ALERT SELEZIONI
         async function controllaAlertSelezioni() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/selezioni-album?token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/selezioni-album?token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 
                 if (data.success && data.selezioni) {
@@ -569,7 +571,7 @@
         // FUNZIONE ALERT ORDINI NEGOZIO
         async function controllaAlertOrdini() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio/ordini?token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/negozio/ordini?token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 
                 if (data.success && data.ordini) {
@@ -626,7 +628,7 @@
             const container = document.getElementById('listaLinkContainer');
             container.innerHTML = '<div class="loading" style="padding: 20px;"><div class="spinner" style="width: 30px; height: 30px;"></div><div>Caricamento...</div></div>';
             try {
-                const res = await fetch(`${WORKER_URL}/api/studio/link-utili?token=${token}`);
+                const res = await fetch(`${WORKER_URL}/api/studio/link-utili?token=${encodeURIComponent(token)}`);
                 const data = await res.json();
                 if (data.success) {
                     if (data.links.length === 0) {
@@ -664,7 +666,7 @@
             }
 
             try {
-                const res = await fetch(`${WORKER_URL}/api/studio/link-utili?token=${token}`, {
+                const res = await fetch(`${WORKER_URL}/api/studio/link-utili?token=${encodeURIComponent(token)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ descrizione: desc, url: url })
@@ -687,7 +689,7 @@
         async function eliminaLink(id) {
             if (!confirm('Sei sicuro di voler eliminare questo link dall\'archivio?')) return;
             try {
-                const res = await fetch(`${WORKER_URL}/api/studio/link-utili/${id}?token=${token}`, {
+                const res = await fetch(`${WORKER_URL}/api/studio/link-utili/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, {
                     method: 'DELETE'
                 });
                 const data = await res.json();
