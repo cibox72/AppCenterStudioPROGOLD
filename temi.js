@@ -12,7 +12,7 @@ var TEMI = {
     'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)', effetto: null }
 };
 
-function attivaEffetti(tipo) {
+   function attivaEffettoSpeciale(tipo) {
     document.querySelectorAll('.neve-container, .coriandoli-container').forEach(function(el) { el.remove(); });
     if (tipo === 'neve') {
         var c = document.createElement('div'); c.className = 'neve-container'; document.body.appendChild(c);
