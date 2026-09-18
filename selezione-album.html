@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seleziona Cartelle Clienti - AppCenterStudioPROGOLD</title>
+    
+    <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
+    <link rel="stylesheet" href="temi.css">
+    <script src="temi.js"></script>
+    
     <style>
         :root {
             --primary: #82e0aa;
@@ -29,7 +34,7 @@
             color: var(--text-main);
             line-height: 1.6;
             min-height: 100vh;
-            transition: background 0.3s ease, color 0.3s ease;
+            transition: background 0.5s ease, color 0.5s ease;
         }
 
         .top-bar {
@@ -42,7 +47,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            transition: background 0.3s ease;
+            transition: background 0.5s ease;
         }
 
         .nav-left { display: flex; gap: 10px; align-items: center; }
@@ -75,6 +80,7 @@
             margin-bottom: 32px;
             position: relative;
             overflow: hidden;
+            transition: box-shadow 0.5s ease;
         }
         .page-header::before {
             content: '';
@@ -82,6 +88,7 @@
             top: 0; left: 0; right: 0;
             height: 5px;
             background: var(--primary-gradient);
+            transition: background 0.5s ease;
         }
         .page-header h1 {
             font-size: 28px;
@@ -91,6 +98,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 8px;
+            transition: background 0.5s ease;
         }
         .page-header p { color: var(--text-light); font-size: 15px; }
 
@@ -102,6 +110,7 @@
             margin-bottom: 24px;
             text-align: center;
             box-shadow: 0 4px 12px rgba(231, 76, 60, 0.1);
+            transition: background 0.5s ease, border-color 0.5s ease;
         }
         .warning-box h3 {
             color: var(--danger);
@@ -135,11 +144,12 @@
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 24px;
+            transition: background 0.5s ease, border-color 0.5s ease;
         }
-        .instruction-box h3 { color: var(--primary-dark); font-size: 14px; margin-bottom: 12px; text-transform: uppercase; font-weight: 700; }
+        .instruction-box h3 { color: var(--primary-dark); font-size: 14px; margin-bottom: 12px; text-transform: uppercase; font-weight: 700; transition: color 0.5s ease; }
         .instruction-box ol { font-size: 14px; color: var(--text-main); padding-left: 20px; line-height: 1.8; }
         .instruction-box li { margin-bottom: 6px; }
-        .instruction-box strong { color: var(--primary-dark); }
+        .instruction-box strong { color: var(--primary-dark); transition: color 0.5s ease; }
 
         .card {
             background: white;
@@ -148,6 +158,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
             border: 1px solid var(--border-color);
             margin-bottom: 24px;
+            transition: border-color 0.5s ease, box-shadow 0.5s ease;
         }
         .card-title {
             font-size: 18px;
@@ -156,6 +167,7 @@
             margin-bottom: 20px;
             padding-bottom: 12px;
             border-bottom: 2px solid var(--primary-light);
+            transition: color 0.5s ease, border-color 0.5s ease;
         }
 
         .step {
@@ -165,7 +177,7 @@
             margin-bottom: 20px;
             opacity: 0.4;
             pointer-events: none;
-            transition: all 0.3s ease;
+            transition: all 0.5s ease;
             background: #fafafa;
         }
         .step.active {
@@ -185,17 +197,18 @@
         .step-number {
             width: 36px; height: 36px; border-radius: 50%; background: var(--border-color);
             color: var(--text-light); display: flex; align-items: center; justify-content: center;
-            font-weight: 800; font-size: 16px; transition: all 0.3s ease;
+            font-weight: 800; font-size: 16px; transition: all 0.5s ease;
         }
         .step.active .step-number { background: var(--primary); color: white; }
         .step.completed .step-number { background: var(--success); color: white; }
-        .step-title { font-size: 16px; font-weight: 700; color: var(--text-main); }
+        .step-title { font-size: 16px; font-weight: 700; color: var(--text-main); transition: color 0.5s ease; }
 
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
         .form-group input {
             padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; font-family: inherit;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .form-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
         
@@ -218,7 +231,7 @@
         .table-container { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
         th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
-        th { background: #f8f9fa; color: var(--text-main); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        th { background: #f8f9fa; color: var(--text-main); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; transition: background 0.5s ease, color 0.5s ease; }
         tr:hover td { background: #fafafa; }
         
         .status-badge {
@@ -239,6 +252,7 @@
         .cred-box {
             background: #f8f9fa; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 14px; font-weight: 700;
             display: inline-block; margin-right: 4px; border: 1px solid var(--border-color); color: var(--primary-dark);
+            transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease;
         }
         
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
@@ -265,21 +279,23 @@
         }
         .search-result-item { padding: 12px; cursor: pointer; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
         .search-result-item:hover { background: var(--primary-light); }
-        .search-result-item strong { color: var(--primary-dark); }
+        .search-result-item strong { color: var(--primary-dark); transition: color 0.5s ease; }
         .cliente-search-box { position: relative; margin-bottom: 16px; }
 
         .folder-list { margin-top: 16px; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
         .folder-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 14px 16px; background: #f8f9fa; border-bottom: 1px solid var(--border-color);
+            transition: background 0.5s ease;
         }
         .folder-item:last-child { border-bottom: none; }
         .folder-info { display: flex; align-items: center; gap: 12px; }
         .folder-icon-small { 
             width: 36px; height: 36px; background: var(--primary-light); border-radius: 8px; 
             display: flex; align-items: center; justify-content: center; color: var(--primary-dark); font-size: 18px;
+            transition: background 0.5s ease, color 0.5s ease;
         }
-        .folder-name { font-weight: 600; font-size: 14px; color: var(--text-main); }
+        .folder-name { font-weight: 600; font-size: 14px; color: var(--text-main); transition: color 0.5s ease; }
         .folder-count { font-size: 12px; color: var(--text-light); background: white; padding: 4px 10px; border-radius: 12px; border: 1px solid var(--border-color); }
         .folder-actions { display: flex; gap: 8px; }
 
@@ -295,8 +311,9 @@
         .modal-content {
             background: white; border-radius: var(--radius); padding: 32px; width: 90%; max-width: 500px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            transition: background 0.5s ease;
         }
-        .modal-content h3 { color: var(--warning); margin-bottom: 16px; font-size: 20px; }
+        .modal-content h3 { color: var(--warning); margin-bottom: 16px; font-size: 20px; transition: color 0.5s ease; }
         .modal-content p { margin-bottom: 20px; color: var(--text-main); line-height: 1.6; }
         .modal-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
     </style>
@@ -474,7 +491,9 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        // NOTA: WORKER_URL è già definito globalmente in temi.js. 
+        // Rimuovendolo da qui evitiamo l'errore "Identifier has already been declared" che bloccava tutto lo script.
+        
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
@@ -502,7 +521,13 @@
                 }
                 studioId = data.user.id;
                 
+                // CARICAMENTO TEMA GLOBALE
                 await caricaTemaGlobale();
+                
+                // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
+                setInterval(async () => {
+                    await caricaTemaGlobale();
+                }, 10000);
                 
                 if (data.user.nome) {
                     document.getElementById('studioNomeTop').textContent = data.user.nome;
@@ -518,23 +543,26 @@
             }
         }
 
-        // TEMA GLOBALE (ereditato dalla Plancia Admin)
+        // ============================================
+        // SEZIONE TEMA GLOBALE AGGIORNATA CON EFFETTI E TEMA ARANCIO
+        // ============================================
         async function caricaTemaGlobale() {
             if (!studioId) return;
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${studioId}&token=${encodeURIComponent(token)}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 if (data.success && data.tema && data.tema.tema_attivo) {
                     const temaId = data.tema.tema_attivo;
                     const temi = {
-                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
-                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
-                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
-                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
-                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
-                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
-                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
-                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)', effetto: null },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)', effetto: 'neve' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)', effetto: 'coriandoli' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)', effetto: null },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)', effetto: null },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)', effetto: null },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)', effetto: null },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)', effetto: null },
+                        'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)', effetto: null }
                     };
                     const t = temi[temaId] || temi['default'];
                     const root = document.documentElement;
@@ -543,6 +571,11 @@
                     root.style.setProperty('--primary-light', t.pl);
                     root.style.setProperty('--primary-gradient', t.pg);
                     root.style.setProperty('--bg-gradient', t.bg);
+                    
+                    // Attiva effetto speciale se la funzione esiste (caricata da temi.js)
+                    if (typeof attivaEffettoSpeciale === 'function') {
+                        attivaEffettoSpeciale(t.effetto);
+                    }
                 }
             } catch (error) { console.error('[TEMA] Errore:', error); }
         }
