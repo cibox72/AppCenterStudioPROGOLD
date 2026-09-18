@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista Regali - AppCenterStudioPROGOLD</title>
+    
+    <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
+    <link rel="stylesheet" href="temi.css">
+    <script src="temi.js"></script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
@@ -31,6 +36,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            transition: background 0.5s ease, color 0.5s ease;
         }
         
         .branding-header {
@@ -41,6 +47,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: background 0.5s ease;
         }
         .branding-header .studio-name {
             font-family: 'Georgia', serif;
@@ -65,6 +72,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: background 0.5s ease;
         }
         .nav-btn {
             background: rgba(255,255,255,0.95);
@@ -88,6 +96,7 @@
             box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
             position: relative;
             overflow: hidden;
+            transition: border-color 0.5s ease, box-shadow 0.5s ease;
         }
         .card::before {
             content: '';
@@ -95,6 +104,7 @@
             top: 0; left: 0; right: 0;
             height: 4px;
             background: var(--primary-gradient);
+            transition: background 0.5s ease;
         }
         .card-title {
             font-size: 20px;
@@ -105,6 +115,7 @@
             letter-spacing: 0.5px;
             padding-bottom: 12px;
             border-bottom: 2px solid var(--primary-light);
+            transition: color 0.5s ease, border-color 0.5s ease;
         }
         
         .form-row {
@@ -117,6 +128,7 @@
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
         .form-group input, .form-group select, .form-group textarea {
             padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
@@ -140,9 +152,10 @@
         .cred-box {
             background: var(--primary-light); padding: 20px; border-radius: 10px;
             border: 1px solid var(--primary); text-align: center; margin-top: 16px;
+            transition: background 0.5s ease, border-color 0.5s ease;
         }
         .cred-box .label { font-size: 11px; color: var(--text-light); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
-        .cred-box .value { font-size: 20px; font-weight: 800; color: var(--primary-dark); margin: 8px 0; font-family: 'Courier New', monospace; letter-spacing: 1px; }
+        .cred-box .value { font-size: 20px; font-weight: 800; color: var(--primary-dark); margin: 8px 0; font-family: 'Courier New', monospace; letter-spacing: 1px; transition: color 0.5s ease; }
         .cred-box .value.small { font-size: 13px; font-family: -apple-system, sans-serif; word-break: break-all; font-weight: 500; }
 
         .table-container { overflow-x: auto; margin-top: 20px; }
@@ -155,6 +168,7 @@
             text-transform: uppercase;
             font-size: 11px;
             letter-spacing: 0.5px;
+            transition: background 0.5s ease, color 0.5s ease;
         }
         .status-badge {
             padding: 6px 14px;
@@ -166,38 +180,39 @@
         .status-coperto { background: #eafaf1; color: var(--success); }
         .status-corso { background: #fef9e7; color: var(--warning); }
         .cred-cell { font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.5; }
-        .cred-cell strong { color: var(--primary-dark); }
+        .cred-cell strong { color: var(--primary-dark); transition: color 0.5s ease; }
 
         .public-header { text-align: center; padding: 40px 20px; }
-        .public-header h1 { font-size: 42px; color: var(--primary-dark); font-style: italic; margin-bottom: 12px; font-family: 'Georgia', serif; font-weight: 400; }
+        .public-header h1 { font-size: 42px; color: var(--primary-dark); font-style: italic; margin-bottom: 12px; font-family: 'Georgia', serif; font-weight: 400; transition: color 0.5s ease; }
         .public-header .sottotitolo { font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
         .public-header p { font-size: 16px; color: var(--text-light); }
 
         .archive-section { margin-top: 40px; padding-top: 30px; border-top: 2px solid var(--border-color); }
         .archive-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
-        .archive-header h3 { color: var(--primary-dark); font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
-        .archive-summary { background: var(--primary-light); padding: 20px; border-radius: 10px; margin-bottom: 24px; text-align: center; }
-        .archive-summary .total { font-size: 36px; font-weight: 800; color: var(--primary-dark); font-family: 'Georgia', serif; }
+        .archive-header h3 { color: var(--primary-dark); font-size: 18px; text-transform: uppercase; letter-spacing: 1px; transition: color 0.5s ease; }
+        .archive-summary { background: var(--primary-light); padding: 20px; border-radius: 10px; margin-bottom: 24px; text-align: center; transition: background 0.5s ease; }
+        .archive-summary .total { font-size: 36px; font-weight: 800; color: var(--primary-dark); font-family: 'Georgia', serif; transition: color 0.5s ease; }
         .archive-summary .label { font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; }
         .archive-summary .count { font-size: 14px; color: var(--text-main); margin-top: 8px; }
         .archive-item {
             background: white; padding: 18px; border-radius: 10px; margin-bottom: 12px;
             border-left: 4px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             page-break-inside: avoid; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
+            transition: border-color 0.5s ease;
         }
         .archive-item .item-content { flex: 1; }
-        .archive-item .item-name { font-weight: 700; color: var(--primary-dark); font-size: 15px; }
+        .archive-item .item-name { font-weight: 700; color: var(--primary-dark); font-size: 15px; transition: color 0.5s ease; }
         .archive-item .item-msg { font-style: italic; color: var(--text-main); margin-top: 4px; font-size: 14px; }
         .archive-item .item-date { font-size: 12px; color: var(--text-light); margin-top: 6px; }
         .archive-item .item-amount { font-weight: 800; color: var(--success); font-size: 18px; font-family: 'Georgia', serif; white-space: nowrap; min-width: 100px; text-align: right; }
 
-        .wish-card { background: #f8f9fa; padding: 18px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--primary); page-break-inside: avoid; }
-        .wish-card .name { font-weight: 700; color: var(--primary-dark); font-size: 14px; }
+        .wish-card { background: #f8f9fa; padding: 18px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--primary); page-break-inside: avoid; transition: border-color 0.5s ease; }
+        .wish-card .name { font-weight: 700; color: var(--primary-dark); font-size: 14px; transition: color 0.5s ease; }
         .wish-card .msg { font-style: italic; color: var(--text-main); margin-top: 4px; font-size: 14px; }
         .wish-card .date { font-size: 12px; color: var(--text-light); margin-top: 6px; }
 
-        .progress-container { background: var(--primary-light); height: 24px; border-radius: 12px; overflow: hidden; margin: 20px 0; border: 1px solid var(--border-color); }
-        .progress-bar { height: 100%; background: var(--primary-gradient); transition: width 0.5s ease; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 12px; }
+        .progress-container { background: var(--primary-light); height: 24px; border-radius: 12px; overflow: hidden; margin: 20px 0; border: 1px solid var(--border-color); transition: background 0.5s ease, border-color 0.5s ease; }
+        .progress-bar { height: 100%; background: var(--primary-gradient); transition: width 0.5s ease, background 0.5s ease; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 12px; }
         .progress-bar.full { background: linear-gradient(135deg, #f1c40f, #f39c12); }
 
         .hidden { display: none !important; }
@@ -209,25 +224,25 @@
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
         
-        .info-box { background: #f8f9fa; border-left: 4px solid var(--info); padding: 16px 20px; border-radius: 8px; margin: 16px 0; font-size: 14px; color: var(--text-main); }
-        .info-box strong { color: var(--primary-dark); }
+        .info-box { background: #f8f9fa; border-left: 4px solid var(--info); padding: 16px 20px; border-radius: 8px; margin: 16px 0; font-size: 14px; color: var(--text-main); transition: background 0.5s ease, border-color 0.5s ease; }
+        .info-box strong { color: var(--primary-dark); transition: color 0.5s ease; }
         
         .center-text { text-align: center; }
         .mt-20 { margin-top: 20px; }
         .mb-16 { margin-bottom: 16px; }
         
-        .qr-container { text-align: center; padding: 24px; background: white; border-radius: 12px; border: 2px dashed var(--primary); margin: 20px 0; }
+        .qr-container { text-align: center; padding: 24px; background: white; border-radius: 12px; border: 2px dashed var(--primary); margin: 20px 0; transition: border-color 0.5s ease; }
         .qr-container #qrcode { display: inline-block; padding: 16px; background: white; }
         .qr-container .qr-label { margin-top: 12px; font-size: 13px; color: var(--text-light); font-style: italic; }
         
-        .payment-box { background: var(--primary-light); padding: 28px; border-radius: 12px; margin: 20px 0; text-align: center; }
+        .payment-box { background: var(--primary-light); padding: 28px; border-radius: 12px; margin: 20px 0; text-align: center; transition: background 0.5s ease; }
         .payment-box .payment-method { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); margin-bottom: 8px; }
-        .payment-box .payment-data { font-size: 16px; font-weight: 600; color: var(--primary-dark); word-break: break-all; padding: 12px; background: white; border-radius: 8px; margin: 12px 0; font-family: 'Courier New', monospace; }
+        .payment-box .payment-data { font-size: 16px; font-weight: 600; color: var(--primary-dark); word-break: break-all; padding: 12px; background: white; border-radius: 8px; margin: 12px 0; font-family: 'Courier New', monospace; transition: color 0.5s ease; }
         
         .whatsapp-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
         
         .login-container { max-width: 400px; margin: 100px auto; text-align: center; }
-        .login-container h2 { font-size: 28px; color: var(--primary-dark); margin-bottom: 24px; font-family: 'Georgia', serif; }
+        .login-container h2 { font-size: 28px; color: var(--primary-dark); margin-bottom: 24px; font-family: 'Georgia', serif; transition: color 0.5s ease; }
         .login-container .form-group { margin-bottom: 16px; text-align: left; }
 
         .success-message {
@@ -237,8 +252,9 @@
             padding: 32px;
             text-align: center;
             margin: 20px 0;
+            transition: background 0.5s ease, border-color 0.5s ease;
         }
-        .success-message h3 { color: var(--primary-dark); font-size: 24px; font-family: 'Georgia', serif; margin-bottom: 12px; }
+        .success-message h3 { color: var(--primary-dark); font-size: 24px; font-family: 'Georgia', serif; margin-bottom: 12px; transition: color 0.5s ease; }
         .success-message p { color: var(--text-main); font-size: 16px; margin-bottom: 8px; }
         .success-message .thanks { font-style: italic; color: var(--text-light); margin-top: 16px; font-family: 'Georgia', serif; }
 
@@ -282,6 +298,7 @@
             font-weight: 700;
             font-family: 'Georgia', serif;
             font-style: italic;
+            transition: color 0.5s ease;
         }
         .footer-branding a:hover { text-decoration: underline; }
 
@@ -603,7 +620,9 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        // NOTA: WORKER_URL è già definito globalmente in temi.js. 
+        // Rimuovendolo da qui evitiamo l'errore "Identifier has already been declared" che bloccava tutto lo script.
+        
         const STUDIO_NAME = "G&L Studio";
         const STUDIO_SITE = "https://www.glstudio.it";
         
@@ -631,29 +650,39 @@
             }
         });
 
+        // ============================================
+        // SEZIONE TEMA GLOBALE AGGIORNATA CON EFFETTI E TEMA ARANCIO
+        // ============================================
         async function applicaTemaGlobale(sId) {
             if (!sId) return;
             try {
-                const res = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${sId}`);
+                const res = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(sId)}`);
                 const data = await res.json();
                 if (data.success && data.tema && data.tema.tema_attivo) {
+                    const temaId = data.tema.tema_attivo;
                     const temi = {
-                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
-                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
-                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
-                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
-                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
-                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
-                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
-                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' }
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)', effetto: null },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)', effetto: 'neve' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)', effetto: 'coriandoli' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)', effetto: null },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)', effetto: null },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)', effetto: null },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)', effetto: null },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)', effetto: null },
+                        'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)', effetto: null }
                     };
-                    const t = temi[data.tema.tema_attivo] || temi['default'];
+                    const t = temi[temaId] || temi['default'];
                     const root = document.documentElement;
                     root.style.setProperty('--primary', t.p);
                     root.style.setProperty('--primary-dark', t.pd);
                     root.style.setProperty('--primary-light', t.pl);
                     root.style.setProperty('--primary-gradient', t.pg);
                     root.style.setProperty('--bg-gradient', t.bg);
+                    
+                    // Attiva effetto speciale se la funzione esiste (caricata da temi.js)
+                    if (typeof attivaEffettoSpeciale === 'function') {
+                        attivaEffettoSpeciale(t.effetto);
+                    }
                 }
             } catch (e) { console.error('Errore tema:', e); }
         }
@@ -676,7 +705,12 @@
                 if (data.success && data.lista) {
                     studioId = data.lista.studio_id;
                     currentLista = data.lista;
-                    applicaTemaGlobale(studioId);
+                    await applicaTemaGlobale(studioId);
+                    
+                    // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
+                    setInterval(async () => {
+                        await applicaTemaGlobale(studioId);
+                    }, 10000);
                     
                     document.getElementById('loginView').classList.add('hidden');
                     document.getElementById('clientView').classList.remove('hidden');
@@ -838,11 +872,17 @@
             document.getElementById('topBar').classList.remove('hidden');
             document.getElementById('topBarTitle').textContent = 'Gestione Liste Regali';
             
-            const res = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+            const res = await fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`);
             const data = await res.json();
             if(data.success) studioId = data.user.id;
             
-            applicaTemaGlobale(studioId);
+            await applicaTemaGlobale(studioId);
+            
+            // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
+            setInterval(async () => {
+                await applicaTemaGlobale(studioId);
+            }, 10000);
+            
             caricaArchivioListe();
         }
 
@@ -852,7 +892,7 @@
             const div = document.getElementById('resultsCliente');
             if (query.length < 2) { div.style.display = 'none'; return; }
             debounceTimer = setTimeout(async () => {
-                const res = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti/ricerca?q=${encodeURIComponent(query)}&token=${token}`);
+                const res = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti/ricerca?q=${encodeURIComponent(query)}&token=${encodeURIComponent(token)}`);
                 const data = await res.json();
                 if (data.success && data.clienti.length > 0) {
                     div.innerHTML = data.clienti.map(c => `
@@ -893,7 +933,7 @@
             const linkPubblico = `${window.location.origin}${window.location.pathname}?id=${id}`;
 
             try {
-                const res = await fetch(`${WORKER_URL}/api/studio/lista-regali?token=${token}`, {
+                const res = await fetch(`${WORKER_URL}/api/studio/lista-regali?token=${encodeURIComponent(token)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -986,7 +1026,7 @@
         }
 
         async function caricaArchivioListe() {
-            const res = await fetch(`${WORKER_URL}/api/studio/lista-regali?token=${token}`);
+            const res = await fetch(`${WORKER_URL}/api/studio/lista-regali?token=${encodeURIComponent(token)}`);
             const data = await res.json();
             const tbody = document.getElementById('tabellaListe');
             if (data.success && data.lista) {
@@ -1065,19 +1105,24 @@
 
         async function eliminaLista(id) {
             if (!confirm('Eliminare questa lista?')) return;
-            await fetch(`${WORKER_URL}/api/studio/lista-regali/${id}?token=${token}`, { method: 'DELETE' });
+            await fetch(`${WORKER_URL}/api/studio/lista-regali/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, { method: 'DELETE' });
             caricaArchivioListe();
             mostraToast('Lista eliminata', 'success');
         }
 
         async function initPublicView(id) {
             try {
-                const res = await fetch(`${WORKER_URL}/api/public/lista-regali/${id}`);
+                const res = await fetch(`${WORKER_URL}/api/public/lista-regali/${encodeURIComponent(id)}`);
                 const data = await res.json();
                 if (data.success && data.lista) {
                     studioId = data.lista.studio_id;
                     currentLista = data.lista;
-                    applicaTemaGlobale(studioId);
+                    await applicaTemaGlobale(studioId);
+                    
+                    // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
+                    setInterval(async () => {
+                        await applicaTemaGlobale(studioId);
+                    }, 10000);
                     
                     document.getElementById('loadingArea').classList.add('hidden');
                     document.getElementById('publicView').classList.remove('hidden');
@@ -1088,7 +1133,7 @@
                     
                     renderPaymentArea(currentLista);
 
-                    const resAuguri = await fetch(`${WORKER_URL}/api/public/lista-regali/messaggi?listaId=${id}`);
+                    const resAuguri = await fetch(`${WORKER_URL}/api/public/lista-regali/messaggi?listaId=${encodeURIComponent(id)}`);
                     const dataAuguri = await resAuguri.json();
                     const divAuguri = document.getElementById('pubAuguriList');
                     if (dataAuguri.success && dataAuguri.messaggi.length > 0) {
@@ -1154,7 +1199,7 @@
         }
 
         function tornaPlancia() {
-            window.location.href = `plancia-studio.html?token=${token}`;
+            window.location.href = `plancia-studio.html?token=${encodeURIComponent(token)}`;
         }
 
         function mostraToast(msg, tipo) {
