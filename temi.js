@@ -1,7 +1,7 @@
 var WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
 
 var TEMI = {
-    '   'default': { p: '#2c3e50', pd: '#1a252f', pl: '#34495e', pg: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)', bg: 'linear-gradient(135deg, #0f1419 0%, #1a252f 40%, #2c3e50 100%)', effetto: null },
+    'default': { p: '#2c3e50', pd: '#1a252f', pl: '#34495e', pg: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)', bg: 'linear-gradient(135deg, #0f1419 0%, #1a252f 40%, #2c3e50 100%)', effetto: null },
     'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)', effetto: 'neve' },
     'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)', effetto: 'coriandoli' },
     'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)', effetto: 'neve' },
@@ -12,7 +12,7 @@ var TEMI = {
     'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)', effetto: null }
 };
 
-   function attivaEffettoSpeciale(tipo) {
+function attivaEffettoSpeciale(tipo) {
     document.querySelectorAll('.neve-container, .coriandoli-container').forEach(function(el) { el.remove(); });
     if (tipo === 'neve') {
         var c = document.createElement('div'); c.className = 'neve-container'; document.body.appendChild(c);
@@ -45,7 +45,9 @@ async function caricaTemaGlobale(studioId, token) {
             r.style.setProperty('--primary-light', t.pl);
             r.style.setProperty('--primary-gradient', t.pg);
             r.style.setProperty('--bg-gradient', t.bg);
-            if (t.effetto) attivaEffetti(t.effetto);
+            
+            // CORRETTO: ora chiama la funzione con il nome giusto
+            if (t.effetto) attivaEffettoSpeciale(t.effetto);
             else document.querySelectorAll('.neve-container, .coriandoli-container').forEach(function(el) { el.remove(); });
         }
     } catch(e) { console.error('Errore tema:', e); }
