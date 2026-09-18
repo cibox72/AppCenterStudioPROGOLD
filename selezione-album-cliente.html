@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Selezione Album - AppCenterStudioPROGOLD</title>
+    
+    <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
+    <link rel="stylesheet" href="temi.css">
+    <script src="temi.js"></script>
+    
     <style>
         :root {
             --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
@@ -16,31 +21,35 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
-            transition: background 0.3s ease;
+            transition: background 0.5s ease, color 0.5s ease;
         }
         
         /* LOGIN SCREEN */
         .login-container {
             max-width: 400px; margin: 60px auto; padding: 24px;
             background: white; border-radius: var(--radius); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: background 0.5s ease, box-shadow 0.5s ease;
         }
         .login-logo {
             width: 120px; height: 120px; margin: 0 auto 20px; border-radius: 50%;
             background: var(--primary-gradient); display: flex; align-items: center; justify-content: center;
             font-size: 48px; font-weight: 800; color: white;
+            transition: background 0.5s ease;
         }
         .login-logo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .login-title { text-align: center; font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; }
+        .login-title { text-align: center; font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; transition: color 0.5s ease; }
         .login-subtitle { text-align: center; font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
         .login-form .form-group { margin-bottom: 16px; }
         .login-form label { font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block; }
         .login-form input {
             width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
-        .login-form input:focus { outline: none; border-color: var(--primary); }
+        .login-form input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
         .login-btn {
             width: 100%; padding: 14px; background: var(--primary-gradient); color: white;
             border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer;
+            transition: opacity 0.3s ease, background 0.5s ease;
         }
         .login-btn:hover { opacity: 0.9; }
         .login-error { color: var(--danger); font-size: 13px; text-align: center; margin-top: 12px; display: none; }
@@ -50,12 +59,14 @@
             background: var(--primary-gradient); padding: 16px 20px; color: white;
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: background 0.5s ease;
         }
         .app-logo { font-size: 18px; font-weight: 700; }
         .app-logo img { height: 32px; border-radius: 4px; }
         .counter-badge {
             background: white; color: var(--primary-dark); padding: 6px 12px; border-radius: 20px;
             font-size: 13px; font-weight: 700;
+            transition: background 0.5s ease, color 0.5s ease;
         }
         
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
@@ -63,12 +74,14 @@
         .welcome-box {
             background: white; padding: 24px; border-radius: var(--radius); margin-bottom: 20px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center;
+            transition: background 0.5s ease, box-shadow 0.5s ease;
         }
-        .welcome-box h1 { font-size: 22px; color: var(--primary-dark); margin-bottom: 8px; }
+        .welcome-box h1 { font-size: 22px; color: var(--primary-dark); margin-bottom: 8px; transition: color 0.5s ease; }
         .welcome-box p { font-size: 14px; color: var(--text-light); line-height: 1.5; }
         .warning-box {
             background: #fef9e7; border-left: 4px solid var(--warning); padding: 12px 16px;
             border-radius: 8px; margin-top: 16px; font-size: 13px; color: var(--warning);
+            transition: background 0.5s ease, border-color 0.5s ease;
         }
         
         .folder-menu {
@@ -76,7 +89,8 @@
         }
         .folder-item {
             background: white; padding: 20px; border-radius: var(--radius); text-align: center;
-            cursor: pointer; transition: all 0.2s; border: 2px solid transparent;
+            cursor: pointer; transition: all 0.3s ease, border-color 0.5s ease, background 0.5s ease;
+            border: 2px solid transparent;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         .folder-item:hover { transform: translateY(-4px); border-color: var(--primary); }
@@ -88,9 +102,10 @@
             height: 40px;
             margin: 0 auto 12px auto;
             color: var(--primary-dark);
+            transition: color 0.5s ease;
         }
         
-        .folder-name { font-size: 13px; font-weight: 600; color: var(--text-main); }
+        .folder-name { font-size: 13px; font-weight: 600; color: var(--text-main); transition: color 0.5s ease; }
         
         .photo-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px;
@@ -147,6 +162,7 @@
             background: var(--success); color: white; padding: 16px 32px; border: none;
             border-radius: 30px; font-size: 16px; font-weight: 700; cursor: pointer;
             box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+            transition: background 0.3s ease;
         }
         .submit-btn:hover { background: #229954; }
         
@@ -155,6 +171,7 @@
             display: none; max-width: 500px; margin: 60px auto; padding: 40px 24px;
             background: white; border-radius: var(--radius); text-align: center;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: background 0.5s ease, box-shadow 0.5s ease;
         }
         .thankyou-container.active { display: block; }
         .thankyou-icon {
@@ -162,7 +179,7 @@
             background: var(--success); color: white; display: flex; align-items: center; justify-content: center;
             font-size: 40px;
         }
-        .thankyou-container h1 { font-size: 24px; color: var(--success); margin-bottom: 16px; }
+        .thankyou-container h1 { font-size: 24px; color: var(--success); margin-bottom: 16px; transition: color 0.5s ease; }
         .thankyou-container p { font-size: 15px; color: var(--text-main); line-height: 1.6; margin-bottom: 12px; }
         
         .loading { text-align: center; padding: 40px; color: var(--text-light); }
@@ -245,7 +262,9 @@
     </div>
 
     <script>
-        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        // NOTA: WORKER_URL è già definito globalmente in temi.js. 
+        // Rimuovendolo da qui evitiamo l'errore "Identifier has already been declared" che bloccava tutto lo script.
+        
         const urlParams = new URLSearchParams(window.location.search);
         const selezioneId = urlParams.get('id');
         
@@ -256,6 +275,44 @@
         let fotoCorrenti = [];
         let fotoIndex = 0;
         let preferiti = new Set();
+        let currentStudioId = null;
+
+        // ============================================
+        // SEZIONE TEMA GLOBALE SPECIFICA PER CLIENTE
+        // ============================================
+        async function applicaTemaCliente(sId) {
+            if (!sId) return;
+            try {
+                const res = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(sId)}`);
+                const data = await res.json();
+                if (data.success && data.tema && data.tema.tema_attivo) {
+                    const temaId = data.tema.tema_attivo;
+                    const temi = {
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)', effetto: null },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)', effetto: 'neve' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)', effetto: 'coriandoli' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)', effetto: null },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)', effetto: null },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)', effetto: null },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)', effetto: null },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)', effetto: null },
+                        'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)', effetto: null }
+                    };
+                    const t = temi[temaId] || temi['default'];
+                    const root = document.documentElement;
+                    root.style.setProperty('--primary', t.p);
+                    root.style.setProperty('--primary-dark', t.pd);
+                    root.style.setProperty('--primary-light', t.pl);
+                    root.style.setProperty('--primary-gradient', t.pg);
+                    root.style.setProperty('--bg-gradient', t.bg);
+                    
+                    // Attiva effetto speciale se la funzione esiste (caricata da temi.js)
+                    if (typeof attivaEffettoSpeciale === 'function') {
+                        attivaEffettoSpeciale(t.effetto);
+                    }
+                }
+            } catch (e) { console.error('Errore tema:', e); }
+        }
 
         async function effettuaLogin(event) {
             event.preventDefault();
@@ -276,10 +333,19 @@
                 if (data.success) {
                     cartelle = data.cartelle;
                     clienteNome = data.cliente_nome || 'Cliente';
+                    currentStudioId = data.studio_id; // Assumendo che l'API restituisca studio_id
                     
                     document.getElementById('loginScreen').classList.add('hidden');
                     document.getElementById('mainApp').classList.remove('hidden');
                     document.getElementById('clienteNome').textContent = clienteNome;
+                    
+                    // Applica tema e avvia polling
+                    if (currentStudioId) {
+                        await applicaTemaCliente(currentStudioId);
+                        setInterval(async () => {
+                            await applicaTemaCliente(currentStudioId);
+                        }, 10000);
+                    }
                     
                     renderizzaCartelle();
                 } else {
