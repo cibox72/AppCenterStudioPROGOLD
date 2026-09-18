@@ -26,11 +26,11 @@
         .nav-btn:hover { background: white; }
         .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
         .page-header { text-align: center; padding: 24px; background: white; border-radius: var(--radius); box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 24px; transition: box-shadow 0.5s ease; }
-        .page-header h1 { font-size: 24px; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; }
+        .page-header h1 { font-size: 24px; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; transition: color 0.5s ease; }
         .page-header p { color: var(--text-light); font-size: 13px; }
         
         .card { background: white; border-radius: var(--radius); padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border-color); transition: border-color 0.5s ease, box-shadow 0.5s ease; }
-        .card-title { font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center; }
+        .card-title { font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center; transition: color 0.5s ease, border-color 0.5s ease; }
         
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; }
@@ -39,7 +39,7 @@
         .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
         
         .btn { padding: 10px 20px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-right: 8px; }
-        .btn-primary { background: var(--primary-dark); color: white; }
+        .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-primary:hover { background: #145a32; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary-dark); }
         .btn-outline:hover { background: var(--primary-light); }
@@ -57,7 +57,7 @@
         .table-container { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 12px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        th { background: #f8f9fa; color: var(--text-main); font-weight: 600; text-transform: uppercase; font-size: 10px; }
+        th { background: #f8f9fa; color: var(--text-main); font-weight: 600; text-transform: uppercase; font-size: 10px; transition: background 0.5s ease, color 0.5s ease; }
         tr:hover td { background: #fafafa; }
         .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
         .badge-bozza { background: #f4f6f7; color: #7f8c8d; }
@@ -69,21 +69,25 @@
         .hidden { display: none !important; }
         .loading { text-align: center; padding: 40px; color: var(--text-light); }
         .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border-color); }
-        .tab { padding: 12px 24px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-light); }
+        .tab { padding: 12px 24px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-light); transition: color 0.3s ease, border-color 0.3s ease; }
         .tab.active { color: var(--primary-dark); border-bottom-color: var(--primary); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .service-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--border-color); }
-        .totals-box { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 20px; }
+        .totals-box { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 20px; transition: background 0.5s ease; }
         .total-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
-        .total-row.final { font-size: 18px; font-weight: 800; color: var(--primary-dark); border-top: 2px solid var(--border-color); margin-top: 10px; padding-top: 15px; }
-        .total-row.saldo { background: var(--primary-light); padding: 12px; border-radius: 8px; margin-top: 10px; font-weight: 700; }
+        .total-row.final { font-size: 18px; font-weight: 800; color: var(--primary-dark); border-top: 2px solid var(--border-color); margin-top: 10px; padding-top: 15px; transition: color 0.5s ease, border-color 0.5s ease; }
+        .total-row.saldo { background: var(--primary-light); padding: 12px; border-radius: 8px; margin-top: 10px; font-weight: 700; transition: background 0.5s ease; }
         
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center;
         }
         .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white; border-radius: 12px; padding: 24px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;
+            transition: background 0.5s ease;
+        }
     </style>
 </head>
 <body>
@@ -254,7 +258,7 @@
 
     <!-- Modale Servizi -->
     <div id="modalServizi" class="modal-overlay">
-        <div class="modal-content" style="background:white; border-radius:12px; padding:24px; max-width:600px; width:90%; max-height:80vh; overflow-y:auto;">
+        <div class="modal-content">
             <div style="display:flex; justify-content:space-between; margin-bottom:20px;"><h2 style="font-size:18px; color:var(--primary-dark);">Seleziona Servizi</h2><button onclick="chiudiModalServizi()" style="background:none; border:none; font-size:24px; cursor:pointer;">×</button></div>
             <div id="modalServiziContent"></div>
             <div style="margin-top:20px; text-align:right;"><button class="btn btn-primary" onclick="confermaSelezioneServizi()">Conferma Selezione</button></div>
@@ -263,7 +267,9 @@
 
     <div class="toast-container" id="toastContainer"></div>
     <script>
-        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        // NOTA: WORKER_URL è già definito globalmente in temi.js. 
+        // Rimuovendolo da qui evitiamo l'errore "Identifier has already been declared" che bloccava tutto lo script.
+        
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
@@ -288,16 +294,19 @@
                     return;
                 }
                 studioId = data.user.id;
+                
+                // CARICAMENTO TEMA GLOBALE
                 await caricaTemaGlobale();
-                document.getElementById('loadingArea').classList.add('hidden');
-                document.getElementById('mainContent').classList.remove('hidden');
-                await caricaArchivioPreventivi();
-                await caricaArchivioContratti();
                 
                 // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
                 setInterval(async () => {
                     await caricaTemaGlobale();
                 }, 10000);
+                
+                document.getElementById('loadingArea').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                await caricaArchivioPreventivi();
+                await caricaArchivioContratti();
             } catch (error) {
                 console.error('Errore:', error);
                 mostraToast('Errore di connessione', 'error');
