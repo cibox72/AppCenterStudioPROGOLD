@@ -31,8 +31,8 @@ export default {
     async function creaNotifica(tipo, titolo, messaggio, dati) {
       const id = 'not-' + Date.now();
       await env.DB.prepare(
-        "INSERT INTO notifiche (id, tipo, titolo, messaggio, dati, letto, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?)"
-      ).bind(id, tipo, titolo, messaggio, JSON.stringify(dati), 0, new Date().toISOString()).run();
+        "INSERT INTO notifiche (id, tipo, titolo, messaggio, dati, letto, archiviata, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+      ).bind(id, tipo, titolo, messaggio, JSON.stringify(dati), 0, 0, new Date().toISOString()).run();
     }
 
     async function generaIdCliente(studioId) {
@@ -301,7 +301,7 @@ export default {
             else await bucket.delete(obj.key);
         }
         await bucket.put(`${prefix}SELEZIONE_${Date.now()}.txt`, fileTestoContenuto);
-        await env.DB.prepare("INSERT INTO notifiche (id, tipo, titolo, messaggio, dati, letto, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?)").bind('not-' + Date.now(), 'selezione_foto', 'Nuova Selezione Foto Completata', JSON.stringify({ clienteId, studioId: cliente.studio_id }), 0, new Date().toISOString()).run();
+        await env.DB.prepare("INSERT INTO notifiche (id, tipo, titolo, messaggio, dati, letto, archiviata, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?)").bind('not-' + Date.now(), 'selezione_foto', 'Nuova Selezione Foto Completata', JSON.stringify({ clienteId, studioId: cliente.studio_id }), 0, 0, new Date().toISOString()).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
@@ -748,10 +748,19 @@ export default {
         return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
       }
 
+      // === MODIFICA APPLICATA QUI: FALLBACK AL TEMA GLOBALE ===
       if (path === "/api/studio/tema" && request.method === "GET") {
-        const result = await env.DB.prepare("SELECT * FROM temi_colori WHERE studio_id=?").bind(url.searchParams.get("studioId")).first();
+        const studioId = url.searchParams.get("studioId");
+        // 1. Prova a prendere il tema specifico dello studio
+        let result = await env.DB.prepare("SELECT * FROM temi_colori WHERE studio_id=?").bind(studioId).first();
+        // 2. SE NON TROVATO, prendi il tema GLOBALE impostato dall'Admin
+        if (!result) {
+            result = await env.DB.prepare("SELECT * FROM temi_colori WHERE studio_id=?").bind('global').first();
+        }
         return new Response(JSON.stringify({ success: true, tema: result }), { headers: corsHeaders });
       }
+      // ========================================================
+
       if (path === "/api/studio/tema" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
