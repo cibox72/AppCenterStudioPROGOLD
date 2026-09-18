@@ -17,7 +17,7 @@
             --primary-gradient: linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%);
             --bg-gradient: linear-gradient(135deg, #0f1419 0%, #1a252f 40%, #2c3e50 100%);
             --text-main: #ecf0f1;
-            --text-light: #95a5a6;
+            --text-light: #bdc3c7;
             --border-color: #34495e;
             --danger: #e74c3c;
             --radius: 16px;
@@ -51,21 +51,23 @@
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient);
         }
         .logo-container { text-align: center; margin-bottom: 32px; }
+        
+        /* LOGO PIÙ GRANDE */
         .logo {
-            width: 100px;
-            height: 100px;
+            width: 160px;
+            height: 160px;
             object-fit: contain;
-            margin-bottom: 16px;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
         }
+        
+        /* SCRITTA SOTTO LOGO BIANCA */
         .logo-text {
             font-size: 24px;
             font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #ffffff;
             margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         .logo-subtext { font-size: 13px; color: var(--text-light); }
         .login-title { text-align: center; font-size: 20px; font-weight: 700; margin-bottom: 24px; color: var(--text-main); }
@@ -141,16 +143,17 @@
             padding-top: 20px;
             border-top: 1px solid var(--border-color);
         }
+        /* SCRITTA REGISTRA BIANCA */
         .register-link button {
             background: none;
             border: none;
-            color: var(--primary-light);
+            color: #ffffff;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             text-decoration: underline;
         }
-        .register-link button:hover { color: white; }
+        .register-link button:hover { color: #ecf0f1; text-decoration: none; }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast {
             background: var(--primary);
