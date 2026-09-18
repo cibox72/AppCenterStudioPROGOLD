@@ -287,7 +287,9 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        // NOTA: WORKER_URL è già definito globalmente in temi.js. 
+        // Rimuovendolo da qui evitiamo l'errore "Identifier has already been declared" che bloccava tutto lo script.
+        
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
