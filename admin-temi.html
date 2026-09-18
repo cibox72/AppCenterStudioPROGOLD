@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestione Temi - AppCenterStudioPROGOLD</title>
+    
+    <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
+    <link rel="stylesheet" href="temi.css">
+    <script src="temi.js"></script>
+    
     <style>
         :root {
             --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
@@ -16,16 +21,20 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
+            transition: background 0.5s ease, color 0.5s ease;
         }
         .top-bar {
             background: var(--primary-gradient); padding: 16px 24px;
             display: flex; justify-content: space-between; align-items: center;
             box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100;
+            transition: background 0.5s ease;
         }
         .nav-btn {
             background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
             cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark);
+            transition: all 0.2s ease;
         }
+        .nav-btn:hover { transform: translateY(-2px); }
         .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
         .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
@@ -33,6 +42,7 @@
         .page-header {
             text-align: center; padding: 32px; background: white; border-radius: var(--radius);
             box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
+            transition: box-shadow 0.5s ease;
         }
         .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
         .page-header h1 {
@@ -43,6 +53,7 @@
         .card-3d {
             background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
             box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden;
+            transition: border-color 0.5s ease, box-shadow 0.5s ease;
         }
         .card-3d::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
         .card-title {
@@ -67,12 +78,14 @@
             height: 80px; border-radius: 10px; margin-bottom: 16px;
             display: flex; align-items: center; justify-content: center;
             color: white; font-weight: 700; font-size: 14px;
+            transition: background 0.5s ease;
         }
         .tema-nome { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
         .tema-desc { font-size: 12px; color: var(--text-light); }
         .tema-attuale {
             background: var(--primary-light); padding: 20px; border-radius: 12px; margin-bottom: 24px;
             border-left: 4px solid var(--primary);
+            transition: background 0.5s ease, border-color 0.5s ease;
         }
         .tema-attuale-title { font-size: 14px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; }
         .tema-attuale-nome { font-size: 20px; font-weight: 800; color: var(--primary-dark); }
@@ -132,7 +145,9 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        // NOTA: WORKER_URL è già definito globalmente in temi.js. 
+        // Rimuovendolo da qui evitiamo l'errore "Identifier has already been declared" che bloccava tutto lo script.
+        
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
@@ -146,7 +161,8 @@
             'pasqua': { nome: 'Pasqua (Rosa & Giallo)', primary: '#f1948a', primary_dark: '#c0392b', primary_light: '#fadbd8' },
             'estate': { nome: 'Estate (Azzurro & Giallo)', primary: '#5dade2', primary_dark: '#1a5276', primary_light: '#d6eaf8' },
             'halloween': { nome: 'Halloween (Arancio & Nero)', primary: '#f39c12', primary_dark: '#7d6608', primary_light: '#fdebd0' },
-            'san_valentino': { nome: 'San Valentino (Rosa & Rosso)', primary: '#e91e63', primary_dark: '#880e4f', primary_light: '#fce4ec' }
+            'san_valentino': { nome: 'San Valentino (Rosa & Rosso)', primary: '#e91e63', primary_dark: '#880e4f', primary_light: '#fce4ec' },
+            'arancio': { nome: 'Arancio (Energia)', primary: '#f39c12', primary_dark: '#d35400', primary_light: '#fdebd0' }
         };
 
         document.addEventListener('DOMContentLoaded', async function() {
@@ -156,7 +172,7 @@
 
         async function verificaSessione() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 if (!data.success || data.tipo !== 'studio') {
                     mostraToast('Sessione non valida', 'error');
@@ -176,7 +192,7 @@
 
         async function caricaTemaAttuale() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${studioId}&token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 if (data.success && data.tema) {
                     temaAttivo = data.tema.tema_attivo || 'default';
@@ -210,7 +226,7 @@
 
         async function selezionaTema(temaId) {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/tema?token=${token}`, {
+                const response = await fetch(`${WORKER_URL}/api/studio/tema?token=${encodeURIComponent(token)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ studio_id: studioId, tema_attivo: temaId })
@@ -220,6 +236,10 @@
                     temaAttivo = temaId;
                     document.getElementById('temaAttualeNome').textContent = TEMI_PRESET[temaId].nome;
                     renderizzaTemi();
+                    
+                    // Forza l'aggiornamento immediato del tema nella pagina corrente
+                    await caricaTemaGlobale();
+                    
                     mostraToast(`Tema "${TEMI_PRESET[temaId].nome}" applicato!`, 'success');
                 } else {
                     mostraToast('Errore nel salvataggio', 'error');
@@ -231,7 +251,7 @@
         }
 
         function tornaPlancia() {
-            window.location.href = `plancia-studio.html?token=${token}`;
+            window.location.href = `plancia-studio.html?token=${encodeURIComponent(token)}`;
         }
 
         function mostraToast(msg, tipo) {
