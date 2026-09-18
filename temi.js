@@ -1,7 +1,9 @@
 /* ============================================
    TEMI GLOBALI - SISTEMA CENTRALIZZATO
+   AppCenterStudioPROGOLD
    ============================================ */
 
+// URL del Worker (definito una volta sola per tutti i file)
 const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
 
 // Definizione di tutti i temi disponibili
@@ -36,7 +38,7 @@ const TEMI_DEFINIZIONI = {
         pl: '#eaeded', 
         pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', 
         bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)',
-        effetto: null 
+        effetto: 'neve' 
     },
     'pasqua': { 
         p: '#f1948a', 
@@ -77,10 +79,28 @@ const TEMI_DEFINIZIONI = {
         pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', 
         bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)',
         effetto: null 
+    },
+    'autunno': { 
+        p: '#d35400', 
+        pd: '#6e2c00', 
+        pl: '#fdebd0', 
+        pg: 'linear-gradient(135deg, #f39c12 0%, #d35400 50%, #6e2c00 100%)', 
+        bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #f5cba7 100%)',
+        effetto: null 
+    },
+    'primavera': { 
+        p: '#58d68d', 
+        pd: '#1e8449', 
+        pl: '#e8f8f5', 
+        pg: 'linear-gradient(135deg, #a9dfbf 0%, #58d68d 50%, #1e8449 100%)', 
+        bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #fadbd8 100%)',
+        effetto: null 
     }
 };
 
-// Funzione per attivare effetti speciali
+// ============================================
+// FUNZIONE EFFETTI SPECIALI (NEVE / CORIANDOLI)
+// ============================================
 function attivaEffettoSpeciale(tipo) {
     // Rimuovi effetti precedenti
     document.querySelectorAll('.neve-container, .coriandoli-container').forEach(el => el.remove());
@@ -123,9 +143,14 @@ function attivaEffettoSpeciale(tipo) {
     }
 }
 
-// Funzione principale per caricare il tema
+// ============================================
+// FUNZIONE PRINCIPALE PER CARICARE IL TEMA
+// ============================================
 async function caricaTemaGlobale(studioId, token) {
-    if (!studioId || !token) return;
+    if (!studioId || !token) {
+        console.warn('[TEMI] studioId o token mancanti');
+        return;
+    }
     
     try {
         const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
@@ -146,39 +171,53 @@ async function caricaTemaGlobale(studioId, token) {
             // Attiva effetto speciale se presente
             if (t.effetto) {
                 attivaEffettoSpeciale(t.effetto);
+                console.log('[TEMI] Effetto speciale attivato:', t.effetto);
             } else {
                 document.querySelectorAll('.neve-container, .coriandoli-container').forEach(el => el.remove());
             }
             
-            console.log('Tema applicato:', temaId);
+            console.log('[TEMI] Tema applicato:', temaId);
+        } else {
+            console.log('[TEMI] Nessun tema attivo, uso default');
         }
     } catch (error) {
-        console.error('Errore caricamento tema:', error);
+        console.error('[TEMI] Errore caricamento tema:', error);
     }
 }
 
-// Funzione di inizializzazione automatica
+// ============================================
+// INIZIALIZZAZIONE AUTOMATICA ALL'APERTURA PAGINA
+// ============================================
 function inizializzaTemiGlobali() {
-    // Estrai token e studioId dall'URL
+    // Estrai token dall'URL
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     
-    if (!token) return;
+    if (!token) {
+        console.log('[TEMI] Nessun token trovato, skip inizializzazione');
+        return;
+    }
     
-    // Carica il tema immediatamente
+    // Verifica sessione per ottenere studioId
     fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`)
         .then(res => res.json())
         .then(data => {
             if (data.success && data.user && data.user.id) {
-                caricaTemaGlobale(data.user.id, token);
+                const studioId = data.user.id;
+                console.log('[TEMI] Inizializzazione per studio:', studioId);
                 
-                // Polling ogni 10 secondi per aggiornamenti in tempo reale
+                // Carica tema subito
+                caricaTemaGlobale(studioId, token);
+                
+                // Polling ogni 10 secondi
                 setInterval(() => {
-                    caricaTemaGlobale(data.user.id, token);
+                    caricaTemaGlobale(studioId, token);
                 }, 10000);
+            } else {
+                console.warn('[TEMI] Sessione non valida:', data);
             }
         })
-        .catch(err => console.error('Errore verifica sessione per temi:', err));
+        .catch(err => console.error('[TEMI] Errore verifica sessione:', err));
 }
 
 // Avvia automaticamente quando il DOM è pronto
