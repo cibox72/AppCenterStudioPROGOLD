@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Cliente - AppCenterStudioPROGOLD</title>
+    
+    <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
+    <link rel="stylesheet" href="temi.css">
+    <script src="temi.js"></script>
+    
     <style>
         :root {
             --primary: #5dade2;
@@ -29,6 +34,7 @@
             color: var(--text-main);
             line-height: 1.6;
             min-height: 100vh;
+            transition: background 0.5s ease, color 0.5s ease;
         }
 
         .top-bar {
@@ -41,6 +47,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: background 0.5s ease;
         }
 
         .nav-btn {
@@ -52,7 +59,9 @@
             font-size: 14px;
             font-weight: 600;
             color: var(--primary-dark);
+            transition: all 0.2s ease;
         }
+        .nav-btn:hover { transform: translateY(-2px); }
 
         .user-info { color: white; font-size: 14px; font-weight: 600; }
 
@@ -67,6 +76,7 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            transition: box-shadow 0.5s ease;
         }
 
         .welcome-card::before {
@@ -75,6 +85,7 @@
             top: 0; left: 0; right: 0;
             height: 5px;
             background: var(--primary-gradient);
+            transition: background 0.5s ease;
         }
 
         .welcome-card h1 {
@@ -85,6 +96,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 8px;
+            transition: background 0.5s ease;
         }
 
         .welcome-card .subtitle {
@@ -105,7 +117,7 @@
             padding: 28px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
             border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
+            transition: all 0.3s ease, border-color 0.5s ease, box-shadow 0.5s ease;
             cursor: pointer;
             position: relative;
             overflow: hidden;
@@ -117,6 +129,7 @@
             top: 0; left: 0; right: 0;
             height: 4px;
             background: var(--primary-gradient);
+            transition: background 0.5s ease;
         }
 
         .service-card:hover {
@@ -142,6 +155,7 @@
             font-weight: 800;
             color: white;
             margin-bottom: 16px;
+            transition: background 0.5s ease;
         }
 
         .service-title {
@@ -149,6 +163,7 @@
             font-weight: 700;
             color: var(--primary-dark);
             margin-bottom: 8px;
+            transition: color 0.5s ease;
         }
 
         .service-description {
@@ -178,6 +193,7 @@
             font-size: 12px;
             font-weight: 600;
             color: var(--primary-dark);
+            transition: background 0.5s ease, color 0.5s ease;
         }
 
         .countdown.urgent {
@@ -191,6 +207,7 @@
             background: #f8f9fa;
             border-radius: 8px;
             font-size: 13px;
+            transition: background 0.5s ease;
         }
         .lista-regali-preview .lr-stat {
             display: flex;
@@ -221,6 +238,7 @@
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
+            transition: background 0.3s ease;
         }
         .btn-copy-link:hover { background: var(--primary-dark); }
 
@@ -230,6 +248,7 @@
             background: #f8f9fa;
             border-radius: 8px;
             font-size: 13px;
+            transition: background 0.5s ease;
         }
         .galleria-preview .gal-stat {
             display: flex;
@@ -304,7 +323,9 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        const WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+        // NOTA: WORKER_URL è già definito globalmente in temi.js. 
+        // Rimuovendolo da qui evitiamo l'errore "Identifier has already been declared" che bloccava tutto lo script.
+        
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let clienteData = null;
@@ -321,7 +342,7 @@
 
         async function verificaSessione() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`);
                 const data = await response.json();
 
                 if (!data.success || data.tipo !== 'cliente') {
@@ -339,13 +360,23 @@
 
         async function caricaDashboard() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/cliente/dashboard?token=${token}`);
+                const response = await fetch(`${WORKER_URL}/api/cliente/dashboard?token=${encodeURIComponent(token)}`);
                 const data = await response.json();
 
                 if (data.success && data.cliente) {
                     clienteData = data.cliente;
                     document.getElementById('userInfo').textContent = `${data.cliente.nome_a} ${data.cliente.cognome_a}`;
                     
+                    // Carica il tema dello studio associato a questo cliente
+                    if (clienteData.studio_id) {
+                        await caricaTemaCliente(clienteData.studio_id);
+                        
+                        // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
+                        setInterval(async () => {
+                            await caricaTemaCliente(clienteData.studio_id);
+                        }, 10000);
+                    }
+
                     // Carica anche i dati della lista regali se esiste
                     await caricaListaRegaliCliente();
                     
@@ -364,10 +395,49 @@
             document.getElementById('loadingServices').style.display = 'none';
         }
 
+        // ============================================
+        // SEZIONE TEMA GLOBALE SPECIFICA PER CLIENTE
+        // ============================================
+        async function caricaTemaCliente(studioId) {
+            if (!studioId) return;
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
+                const data = await response.json();
+                if (data.success && data.tema && data.tema.tema_attivo) {
+                    const temaId = data.tema.tema_attivo;
+                    const temi = {
+                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)', effetto: null },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)', effetto: 'neve' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)', effetto: 'coriandoli' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)', effetto: null },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)', effetto: null },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)', effetto: null },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)', effetto: null },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)', effetto: null },
+                        'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)', effetto: null }
+                    };
+                    const t = temi[temaId] || temi['default'];
+                    const root = document.documentElement;
+                    root.style.setProperty('--primary', t.p);
+                    root.style.setProperty('--primary-dark', t.pd);
+                    root.style.setProperty('--primary-light', t.pl);
+                    root.style.setProperty('--primary-gradient', t.pg);
+                    root.style.setProperty('--bg-gradient', t.bg);
+                    
+                    // Attiva effetto speciale se la funzione esiste (caricata da temi.js)
+                    if (typeof attivaEffettoSpeciale === 'function') {
+                        attivaEffettoSpeciale(t.effetto);
+                    }
+                }
+            } catch (error) {
+                console.error('Errore caricamento tema:', error);
+            }
+        }
+
         async function caricaListaRegaliCliente() {
             try {
                 // Cerca la lista regali associata a questo cliente
-                const response = await fetch(`${WORKER_URL}/api/public/lista-regali?id=${clienteData.id}`);
+                const response = await fetch(`${WORKER_URL}/api/public/lista-regali?id=${encodeURIComponent(clienteData.id)}`);
                 const data = await response.json();
                 if (data.success && data.lista) {
                     listaRegaliData = data.lista;
@@ -411,7 +481,7 @@
                 const raccolto = parseFloat(listaRegaliData.raccolto_attuale || 0);
                 const obiettivo = parseFloat(listaRegaliData.costo_totale || 1);
                 const percentuale = Math.min(100, Math.round((raccolto / obiettivo) * 100));
-                const linkPubblico = `${window.location.origin}/lista-regali-pubblica.html?clienteId=${cliente.id}`;
+                const linkPubblico = `${window.location.origin}/lista-regali-pubblica.html?clienteId=${encodeURIComponent(cliente.id)}`;
                 
                 listaRegaliExtraHtml = `
                     <div class="lista-regali-preview">
@@ -443,7 +513,7 @@
             }
 
             const galleriaAttiva = galleriaData && galleriaData.stato === 'pronta';
-            const galleriaUrl = galleriaData ? `galleria-cliente.html?id=${galleriaData.id}` : '#';
+            const galleriaUrl = galleriaData ? `galleria-cliente.html?id=${encodeURIComponent(galleriaData.id)}` : '#';
 
             const servizi = [
                 {
@@ -464,7 +534,7 @@
                     active: listaRegaliAttiva,
                     countdown: giorniRimastiLista,
                     countdownText: 'giorni rimanenti',
-                    url: `lista-regali-pubblica.html?clienteId=${cliente.id}`,
+                    url: `lista-regali-pubblica.html?clienteId=${encodeURIComponent(cliente.id)}`,
                     extraHtml: listaRegaliExtraHtml
                 },
                 {
@@ -475,7 +545,7 @@
                     active: selezioneAttiva,
                     countdown: giorniRimastiSelezione,
                     countdownText: 'giorni rimanenti',
-                    url: `selezione-album-cliente.html?token=${token}`,
+                    url: `selezione-album-cliente.html?token=${encodeURIComponent(token)}`,
                     extraHtml: ''
                 },
                 {
