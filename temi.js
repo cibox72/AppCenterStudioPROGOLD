@@ -1,4 +1,9 @@
 // ============================================
+// VARIABILE GLOBALE WORKER_URL
+// ============================================
+var WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
+
+// ============================================
 // SISTEMA TEMI GLOBALI - AppCenterStudioPROGOLD
 // ============================================
 
