@@ -4,413 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ricevute - AppCenterStudioPROGOLD</title>
-    
-    <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
-    
     <style>
         :root {
-            --primary: #82e0aa;
-            --primary-dark: #1e8449;
-            --primary-light: #e8f8f5;
+            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
             --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --text-main: #2c3e50;
-            --text-light: #7f8c8d;
-            --border-color: #e8e8e8;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --info: #3498db;
+            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
+            --success: #27ae60; --warning: #f39c12; --danger: #e74c3c; --info: #3498db;
             --radius: 16px;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text-main);
-            line-height: 1.6;
-            min-height: 100vh;
-            transition: background 0.5s ease, color 0.5s ease;
-        }
-
-        .top-bar {
-            background: var(--primary-gradient);
-            padding: 14px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
-            transition: background 0.5s ease;
-        }
-
-        .nav-btn {
-            background: rgba(255,255,255,0.95);
-            border: none;
-            padding: 10px 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--primary-dark);
-            transition: all 0.2s;
-        }
-
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh; transition: background 0.5s ease, color 0.5s ease; }
+        .top-bar { background: var(--primary-gradient); padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); transition: background 0.5s ease; }
+        .nav-btn { background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark); transition: all 0.2s; }
         .nav-btn:hover { transform: translateY(-2px); }
-
         .container { max-width: 900px; margin: 0 auto; padding: 30px 24px; }
-
-        .page-header {
-            text-align: center;
-            padding: 32px;
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
-            margin-bottom: 32px;
-            position: relative;
-            overflow: hidden;
-            transition: box-shadow 0.5s ease;
-        }
-        .page-header::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 5px;
-            background: var(--primary-gradient);
-        }
-        .page-header h1 {
-            font-size: 32px;
-            font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
-        }
+        .page-header { text-align: center; padding: 32px; background: white; border-radius: var(--radius); box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden; transition: box-shadow 0.5s ease; }
+        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
+        .page-header h1 { font-size: 32px; font-weight: 800; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
         .page-header p { color: var(--text-light); font-size: 15px; }
-
-        .card {
-            background: white;
-            border-radius: var(--radius);
-            padding: 32px;
-            margin-bottom: 24px;
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
-            position: relative;
-            overflow: hidden;
-            transition: border-color 0.5s ease, box-shadow 0.5s ease;
-        }
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 4px;
-            background: var(--primary-gradient);
-        }
-        .card-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--primary-light);
-        }
-
+        .card { background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden; transition: border-color 0.5s ease, box-shadow 0.5s ease; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
+        .card-title { font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px; padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); }
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
-        .form-group input, .form-group select, .form-group textarea {
-            padding: 12px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: inherit;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            margin-right: 8px;
-            margin-bottom: 8px;
-        }
+        .form-group input, .form-group select, .form-group textarea { padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
+        .btn { padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-right: 8px; margin-bottom: 8px; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
         .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
         .btn-sm { padding: 8px 16px; font-size: 12px; }
-
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
-        .toast {
-            background: white;
-            border-radius: 10px;
-            padding: 14px 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            margin-bottom: 10px;
-            border-left: 4px solid var(--success);
-            animation: slideIn 0.3s;
-        }
+        .toast { background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s; }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
-
-        /* STAMPA: A4 VERTICALE CON DUE COPIE ORIZZONTALI (una sopra, una sotto) */
         @media print {
-            body {
-                background: white;
-                margin: 0;
-                padding: 0;
-            }
-
-            .no-print {
-                display: none !important;
-            }
-
-            .print-only {
-                display: block !important;
-            }
-
-            @page {
-                size: A4 portrait;
-                margin: 10mm;
-            }
-
-            .pagina-stampa {
-                width: 190mm;
-                height: 277mm;
-                margin: 0 auto;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-            }
-
-            .ricevuta-stampa {
-                flex: 1;
-                border: 2px solid #82e0aa;
-                border-radius: 8px;
-                padding: 6mm 10mm;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                font-size: 8pt;
-                color: #2c3e50;
-                background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-                position: relative;
-                overflow: hidden;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .ricevuta-stampa::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 4px;
-                background: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
-            }
-
-            .ricevuta-stampa .ricevuta-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-                margin-bottom: 4mm;
-                padding-bottom: 3mm;
-                border-bottom: 2px solid #e8f8f5;
-            }
-
-            .ricevuta-stampa .ricevuta-studio-nome {
-                font-size: 12pt;
-                font-weight: 700;
-                background: linear-gradient(135deg, #1e8449 0%, #82e0aa 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-                margin-bottom: 2px;
-            }
-
-            .ricevuta-stampa .ricevuta-studio-info {
-                font-size: 7pt;
-                color: #7f8c8d;
-                line-height: 1.4;
-            }
-
-            .ricevuta-stampa .ricevuta-numero {
-                border: 2px solid #82e0aa;
-                padding: 4px 10px;
-                background: linear-gradient(135deg, #e8f8f5 0%, #d5f4e6 100%);
-                border-radius: 6px;
-                text-align: center;
-                min-width: 80px;
-            }
-
-            .ricevuta-stampa .ricevuta-numero-label {
-                font-size: 6pt;
-                text-transform: uppercase;
-                color: #7f8c8d;
-                letter-spacing: 1px;
-                margin-bottom: 2px;
-            }
-
-            .ricevuta-stampa .ricevuta-numero-valore {
-                font-size: 14pt;
-                font-weight: 700;
-                color: #1e8449;
-            }
-
-            .ricevuta-stampa .ricevuta-data {
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 3mm;
-                padding: 3mm 5mm;
-                background: linear-gradient(135deg, #f8f9fa 0%, #e8f8f5 100%);
-                border-radius: 6px;
-                border: 1px solid #e8e8e8;
-            }
-
-            .ricevuta-stampa .ricevuta-data-label {
-                font-weight: 600;
-                font-size: 6pt;
-                text-transform: uppercase;
-                color: #7f8c8d;
-                letter-spacing: 0.5px;
-                margin-bottom: 2px;
-            }
-
-            .ricevuta-stampa .ricevuta-data-valore {
-                font-weight: 700;
-                font-size: 9pt;
-                color: #2c3e50;
-                letter-spacing: 2px;
-            }
-
-            .ricevuta-stampa .ricevuta-riga {
-                display: flex;
-                margin-bottom: 2mm;
-                padding: 2mm 4mm;
-                background: white;
-                border-radius: 4px;
-                border: 1px solid #f0f0f0;
-                align-items: center;
-            }
-
-            .ricevuta-stampa .ricevuta-riga-label {
-                width: 100px;
-                font-weight: 600;
-                font-size: 7pt;
-                text-transform: uppercase;
-                color: #7f8c8d;
-                flex-shrink: 0;
-                letter-spacing: 0.5px;
-            }
-
-            .ricevuta-stampa .ricevuta-riga-valore {
-                flex: 1;
-                font-size: 8pt;
-                padding-left: 6px;
-                color: #2c3e50;
-                font-weight: 500;
-            }
-
-            .ricevuta-stampa .ricevuta-importo {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                background: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 100%);
-                border: 2px solid #1e8449;
-                padding: 4mm 8mm;
-                margin: 3mm 0;
-                border-radius: 6px;
-            }
-
-            .ricevuta-stampa .ricevuta-importo-label {
-                font-weight: 700;
-                font-size: 8pt;
-                text-transform: uppercase;
-                color: #1e8449;
-                letter-spacing: 1px;
-            }
-
-            .ricevuta-stampa .ricevuta-importo-valore {
-                font-size: 14pt;
-                font-weight: 800;
-                color: #1e8449;
-            }
-
-            .ricevuta-stampa .ricevuta-footer {
-                display: flex;
-                justify-content: space-between;
-                margin-top: auto;
-                padding-top: 3mm;
-                border-top: 2px solid #e8f8f5;
-            }
-
-            .ricevuta-stampa .ricevuta-firma {
-                text-align: center;
-                width: 45%;
-            }
-
-            .ricevuta-stampa .ricevuta-firma-linea {
-                border-top: 1px solid #bdc3c7;
-                margin-top: 15mm;
-                padding-top: 3px;
-                font-size: 6pt;
-                text-transform: uppercase;
-                color: #95a5a6;
-                letter-spacing: 0.5px;
-                font-weight: 600;
-            }
-
-            .ricevuta-stampa .ricevuta-note {
-                font-size: 6pt;
-                color: #95a5a6;
-                text-align: center;
-                margin-top: 2mm;
-                font-style: italic;
-            }
-
-            .linea-taglio-stampa {
-                border-top: 2px dashed #82e0aa;
-                margin: 3mm 0;
-                position: relative;
-                text-align: center;
-                padding: 2mm 0;
-                flex-shrink: 0;
-            }
-
-            .linea-taglio-stampa::after {
-                content: '✂ TAGLIARE QUI';
-                position: absolute;
-                top: -7pt;
-                left: 50%;
-                transform: translateX(-50%);
-                background: white;
-                padding: 0 5mm;
-                font-size: 7pt;
-                color: #82e0aa;
-                font-weight: 700;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                letter-spacing: 2px;
-            }
+            body { background: white; margin: 0; padding: 0; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            @page { size: A4 portrait; margin: 10mm; }
+            .pagina-stampa { width: 190mm; height: 277mm; margin: 0 auto; display: flex; flex-direction: column; justify-content: space-between; }
+            .ricevuta-stampa { flex: 1; border: 2px solid #82e0aa; border-radius: 8px; padding: 6mm 10mm; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 8pt; color: #2c3e50; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); position: relative; overflow: hidden; display: flex; flex-direction: column; }
+            .ricevuta-stampa::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%); }
+            .ricevuta-stampa .ricevuta-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4mm; padding-bottom: 3mm; border-bottom: 2px solid #e8f8f5; }
+            .ricevuta-stampa .ricevuta-studio-nome { font-size: 12pt; font-weight: 700; background: linear-gradient(135deg, #1e8449 0%, #82e0aa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 2px; }
+            .ricevuta-stampa .ricevuta-studio-info { font-size: 7pt; color: #7f8c8d; line-height: 1.4; }
+            .ricevuta-stampa .ricevuta-numero { border: 2px solid #82e0aa; padding: 4px 10px; background: linear-gradient(135deg, #e8f8f5 0%, #d5f4e6 100%); border-radius: 6px; text-align: center; min-width: 80px; }
+            .ricevuta-stampa .ricevuta-numero-label { font-size: 6pt; text-transform: uppercase; color: #7f8c8d; letter-spacing: 1px; margin-bottom: 2px; }
+            .ricevuta-stampa .ricevuta-numero-valore { font-size: 14pt; font-weight: 700; color: #1e8449; }
+            .ricevuta-stampa .ricevuta-data { display: flex; justify-content: space-between; margin-bottom: 3mm; padding: 3mm 5mm; background: linear-gradient(135deg, #f8f9fa 0%, #e8f8f5 100%); border-radius: 6px; border: 1px solid #e8e8e8; }
+            .ricevuta-stampa .ricevuta-data-label { font-weight: 600; font-size: 6pt; text-transform: uppercase; color: #7f8c8d; letter-spacing: 0.5px; margin-bottom: 2px; }
+            .ricevuta-stampa .ricevuta-data-valore { font-weight: 700; font-size: 9pt; color: #2c3e50; letter-spacing: 2px; }
+            .ricevuta-stampa .ricevuta-riga { display: flex; margin-bottom: 2mm; padding: 2mm 4mm; background: white; border-radius: 4px; border: 1px solid #f0f0f0; align-items: center; }
+            .ricevuta-stampa .ricevuta-riga-label { width: 100px; font-weight: 600; font-size: 7pt; text-transform: uppercase; color: #7f8c8d; flex-shrink: 0; letter-spacing: 0.5px; }
+            .ricevuta-stampa .ricevuta-riga-valore { flex: 1; font-size: 8pt; padding-left: 6px; color: #2c3e50; font-weight: 500; }
+            .ricevuta-stampa .ricevuta-importo { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 100%); border: 2px solid #1e8449; padding: 4mm 8mm; margin: 3mm 0; border-radius: 6px; }
+            .ricevuta-stampa .ricevuta-importo-label { font-weight: 700; font-size: 8pt; text-transform: uppercase; color: #1e8449; letter-spacing: 1px; }
+            .ricevuta-stampa .ricevuta-importo-valore { font-size: 14pt; font-weight: 800; color: #1e8449; }
+            .ricevuta-stampa .ricevuta-footer { display: flex; justify-content: space-between; margin-top: auto; padding-top: 3mm; border-top: 2px solid #e8f8f5; }
+            .ricevuta-stampa .ricevuta-firma { text-align: center; width: 45%; }
+            .ricevuta-stampa .ricevuta-firma-linea { border-top: 1px solid #bdc3c7; margin-top: 15mm; padding-top: 3px; font-size: 6pt; text-transform: uppercase; color: #95a5a6; letter-spacing: 0.5px; font-weight: 600; }
+            .ricevuta-stampa .ricevuta-note { font-size: 6pt; color: #95a5a6; text-align: center; margin-top: 2mm; font-style: italic; }
+            .linea-taglio-stampa { border-top: 2px dashed #82e0aa; margin: 3mm 0; position: relative; text-align: center; padding: 2mm 0; flex-shrink: 0; }
+            .linea-taglio-stampa::after { content: '✂ TAGLIARE QUI'; position: absolute; top: -7pt; left: 50%; transform: translateX(-50%); background: white; padding: 0 5mm; font-size: 7pt; color: #82e0aa; font-weight: 700; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; letter-spacing: 2px; }
         }
-
-        .print-only {
-            display: none;
-        }
+        .print-only { display: none; }
     </style>
 </head>
 <body>
@@ -423,13 +87,12 @@
 
     <div class="container no-print">
         <div class="page-header">
-            <h1>Ricevute</h1>
+            <h1>Ricevute - <span class="studio-nome">Caricamento...</span></h1>
             <p>Crea ricevute stile cartolibreria per i tuoi clienti occasionali</p>
         </div>
 
         <div class="card">
             <div class="card-title">Nuova Ricevuta</div>
-            
             <div class="form-row">
                 <div class="form-group">
                     <label>Numero Ricevuta *</label>
@@ -440,7 +103,6 @@
                     <input type="date" id="ricData">
                 </div>
             </div>
-
             <div class="form-row">
                 <div class="form-group">
                     <label>Ricevuto da (Nome Cliente) *</label>
@@ -451,24 +113,20 @@
                     <input type="text" id="ricIndirizzo" placeholder="Via Roma 1, Milano">
                 </div>
             </div>
-
             <div class="form-row">
                 <div class="form-group">
                     <label>Importo (EUR) *</label>
                     <input type="number" id="ricImporto" step="0.01" placeholder="0.00">
                 </div>
             </div>
-
             <div class="form-group" style="margin-bottom: 16px;">
                 <label>Per (Descrizione servizio/prodotto) *</label>
                 <textarea id="ricDescrizione" rows="2" placeholder="Servizio fotografico matrimonio, stampa foto, ecc."></textarea>
             </div>
-
             <div class="form-group" style="margin-bottom: 16px;">
                 <label>Note (opzionale)</label>
                 <textarea id="ricNote" rows="2" placeholder="Eventuali note aggiuntive"></textarea>
             </div>
-
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <button class="btn btn-success" onclick="stampaRicevuta()">Stampa / Salva PDF</button>
                 <button class="btn btn-outline" onclick="nuovaRicevuta()">Nuova Ricevuta</button>
@@ -476,7 +134,6 @@
         </div>
     </div>
 
-    <!-- VERSIONE STAMPA: A4 VERTICALE CON DUE COPIE ORIZZONTALI -->
     <div class="print-only">
         <div class="pagina-stampa">
             <div class="ricevuta-stampa" id="ricevutaStampa1"></div>
@@ -486,16 +143,11 @@
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-
-    <!-- MODIFICATO: Ora usa classe e ID per il nome dinamico dello studio -->
     <div class="footer-branding" style="text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px;">
-        Piattaforma sviluppata da <strong class="studio-nome" id="footerStudioName">Caricamento...</strong>
+        Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong>
     </div>
 
     <script>
-        // NOTA: WORKER_URL è già definito globalmente in temi.js. 
-        // Rimuovendolo da qui evitiamo l'errore "Identifier has already been declared" che bloccava tutto lo script.
-        
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
@@ -521,21 +173,11 @@
                     return;
                 }
                 studioId = data.user.id;
-                
-                // CARICAMENTO TEMA GLOBALE
                 await caricaTemaGlobale();
-                
-                // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
-                setInterval(async () => {
-                    await caricaTemaGlobale();
-                }, 10000);
-                
+                setInterval(async () => { await caricaTemaGlobale(); }, 10000);
             } catch (error) { mostraToast('Errore di connessione', 'error'); }
         }
 
-        // ============================================
-        // SEZIONE TEMA GLOBALE AGGIORNATA CON EFFETTI E TEMA ARANCIO
-        // ============================================
         async function caricaTemaGlobale() {
             if (!studioId) return;
             try {
@@ -561,24 +203,16 @@
                     root.style.setProperty('--primary-light', t.pl);
                     root.style.setProperty('--primary-gradient', t.pg);
                     root.style.setProperty('--bg-gradient', t.bg);
-                    
-                    // Attiva effetto speciale se la funzione esiste (caricata da temi.js)
-                    if (typeof attivaEffettoSpeciale === 'function') {
-                        attivaEffettoSpeciale(t.effetto);
-                    }
+                    if (typeof attivaEffettoSpeciale === 'function') { attivaEffettoSpeciale(t.effetto); }
                 }
-            } catch (error) {
-                console.error('Errore caricamento tema:', error);
-            }
+            } catch (error) { console.error('Errore caricamento tema:', error); }
         }
 
         async function caricaStudio() {
             try {
                 const response = await fetch(WORKER_URL + '/api/studio/profilo?token=' + encodeURIComponent(token) + '&studioId=' + encodeURIComponent(studioId));
                 const data = await response.json();
-                if (data.success && data.studio) {
-                    studioData = data.studio;
-                }
+                if (data.success && data.studio) { studioData = data.studio; }
             } catch (error) { console.error('Errore caricamento studio:', error); }
         }
 
@@ -612,7 +246,6 @@
             const cittaStudio = studioData ? (studioData.citta || '') : '';
             const pivaStudio = studioData ? (studioData.piva || '') : '';
             const telefonoStudio = studioData ? (studioData.telefono || '') : '';
-
             return `
                 <div class="ricevuta">
                     <div class="ricevuta-header">
@@ -630,7 +263,6 @@
                             <div class="ricevuta-numero-valore">${numero}</div>
                         </div>
                     </div>
-
                     <div class="ricevuta-data">
                         <div>
                             <div class="ricevuta-data-label">Data</div>
@@ -641,48 +273,25 @@
                             <div class="ricevuta-data-valore">${cittaStudio || 'Italia'}</div>
                         </div>
                     </div>
-
                     <div class="ricevuta-riga">
                         <div class="ricevuta-riga-label">Ricevuto da</div>
                         <div class="ricevuta-riga-valore">${cliente || ''}</div>
                     </div>
-
-                    ${indirizzo ? `
-                    <div class="ricevuta-riga">
-                        <div class="ricevuta-riga-label">Indirizzo</div>
-                        <div class="ricevuta-riga-valore">${indirizzo}</div>
-                    </div>
-                    ` : ''}
-
+                    ${indirizzo ? `<div class="ricevuta-riga"><div class="ricevuta-riga-label">Indirizzo</div><div class="ricevuta-riga-valore">${indirizzo}</div></div>` : ''}
                     <div class="ricevuta-importo">
                         <div class="ricevuta-importo-label">Importo</div>
                         <div class="ricevuta-importo-valore">EUR ${parseFloat(importo || 0).toFixed(2)}</div>
                     </div>
-
                     <div class="ricevuta-riga">
                         <div class="ricevuta-riga-label">Per</div>
                         <div class="ricevuta-riga-valore">${descrizione || ''}</div>
                     </div>
-
-                    ${note ? `
-                    <div class="ricevuta-riga">
-                        <div class="ricevuta-riga-label">Note</div>
-                        <div class="ricevuta-riga-valore">${note}</div>
-                    </div>
-                    ` : ''}
-
+                    ${note ? `<div class="ricevuta-riga"><div class="ricevuta-riga-label">Note</div><div class="ricevuta-riga-valore">${note}</div></div>` : ''}
                     <div class="ricevuta-footer">
-                        <div class="ricevuta-firma">
-                            <div class="ricevuta-firma-linea">Firma del Ricevente</div>
-                        </div>
-                        <div class="ricevuta-firma">
-                            <div class="ricevuta-firma-linea">Firma per Quietanza</div>
-                        </div>
+                        <div class="ricevuta-firma"><div class="ricevuta-firma-linea">Firma del Ricevente</div></div>
+                        <div class="ricevuta-firma"><div class="ricevuta-firma-linea">Firma per Quietanza</div></div>
                     </div>
-
-                    <div class="ricevuta-note">
-                        Documento non fiscale - Ricevuta per clienti occasionali
-                    </div>
+                    <div class="ricevuta-note">Documento non fiscale - Ricevuta per clienti occasionali</div>
                 </div>
             `;
         }
@@ -695,18 +304,14 @@
             const importo = document.getElementById('ricImporto').value;
             const descrizione = document.getElementById('ricDescrizione').value;
             const note = document.getElementById('ricNote').value;
-
             if (!numero || !dataISO || !cliente || !importo) {
                 mostraToast('Compila i campi obbligatori', 'error');
                 return;
             }
-
             const dataGGMMYY = formataDataGGMMYY(dataISO);
             const html = generaHTMLRicevuta(numero, dataGGMMYY, cliente, indirizzo, importo, descrizione, note);
-            
             document.getElementById('ricevutaStampa1').innerHTML = html;
             document.getElementById('ricevutaStampa2').innerHTML = html;
-
             window.print();
         }
 
