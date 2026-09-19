@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Negozio - AppCenterStudioPROGOLD</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     
     <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
     <link rel="stylesheet" href="temi.css">
@@ -15,13 +17,11 @@
             --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
             --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
-            --success: #27ae60; --warning: #f39c12; --danger: #e74c3c; --info: #3498db;
-            --radius: 16px;
+            --success: #27ae60; --danger: #c0392b; --warning: #d35400; --radius: 12px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh; transition: background 0.5s ease, color 0.5s ease; }
         .branding-header { background: var(--primary-gradient); padding: 12px 24px; text-align: center; box-shadow: 0 2px 10px rgba(30, 132, 73, 0.15); transition: background 0.5s ease; }
-        .branding-header span { font-family: 'Georgia', serif; font-style: italic; font-size: 16px; font-weight: 700; color: white; text-decoration: none; }
         .branding-header .tagline { font-size: 13px; opacity: 0.9; color: white; margin-left: 8px; }
         .top-bar { background: var(--primary-gradient); padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); transition: background 0.5s ease; }
         .nav-btn { background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark); transition: all 0.2s; }
@@ -49,7 +49,7 @@
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
         .form-group input, .form-group select, .form-group textarea { padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-        .form-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
         .btn { padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-right: 8px; margin-bottom: 8px; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .btn-primary { background: var(--primary-gradient); color: white; }
@@ -132,8 +132,7 @@
 </head>
 <body>
     <div class="branding-header">
-        <!-- MODIFICATO: Ora usa classe e ID per il nome dinamico -->
-        <span id="headerStudioName" class="studio-nome">Caricamento...</span>
+        <span class="studio-nome" id="headerStudioName" style="font-family: 'Georgia', serif; font-style: italic; font-size: 16px; font-weight: 700; color: white; text-decoration: none;">Caricamento...</span>
         <span class="tagline">| Negozio Online Professionale</span>
     </div>
     <div class="top-bar">
@@ -181,8 +180,7 @@
 
         <div id="anteprimaSection" class="section">
             <div class="vetrina-header">
-                <!-- MODIFICATO: Ora usa classe e ID per il nome dinamico -->
-                <h2>Negozio <span id="vetrinaNomeStudio" class="studio-nome">Caricamento...</span></h2>
+                <h2>Negozio <span class="studio-nome" id="vetrinaNomeStudio">Caricamento...</span></h2>
                 <p>Benvenuto! Scegli i tuoi prodotti personalizzati. Ritiro merce presso lo studio.</p>
             </div>
             <div class="card">
@@ -208,7 +206,7 @@
                         <label>Numero WhatsApp * (con prefisso)</label>
                         <input type="tel" id="linkClienteTelefono" placeholder="+39 333 1234567" oninput="aggiornaBtnWhatsApp()">
                         <button type="button" class="btn btn-whatsapp" id="btnWhatsAppWeb" onclick="apriWhatsAppWeb()" style="margin-top: 12px; display: none; width: 100%;"> Apri WhatsApp Web</button>
-            </div>
+                    </div>
                 </div>
                 <button class="btn btn-primary" onclick="generaLinkCliente()">Genera Link</button>
                 <div id="linkGenerato" class="hidden" style="margin-top: 24px;">
@@ -256,7 +254,6 @@
                 </div>
                 <div class="form-group"><label>Descrizione</label><textarea id="prodDescrizione" rows="2"></textarea></div>
                 
-                <!-- AGGIUNTA CAMPO IMMAGINE -->
                 <div class="form-group" style="margin-top: 16px;">
                     <label>Immagine Prodotto</label>
                     <input type="file" id="prodImmagine" accept="image/*" onchange="anteprimaImmagine(this)">
@@ -384,13 +381,10 @@
 
     <div class="toast-container" id="toastContainer"></div>
     <div class="footer-branding" style="text-align: center; padding: 24px; color: var(--text-light); font-size: 13px;">
-        <!-- MODIFICATO: Ora usa classe e ID per il nome dinamico -->
-        Servizio offerto da <strong style="color: var(--primary-dark);" id="footerStudioName" class="studio-nome">Caricamento...</strong>
+        Servizio offerto da <strong class="studio-nome" id="footerStudioName" style="color: var(--primary-dark);">Caricamento...</strong>
     </div>
 
     <script>
-        // NOTA: WORKER_URL è già definito globalmente in temi.js. 
-        
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
@@ -401,27 +395,13 @@
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) { window.location.href = 'index.html'; return; }
+            document.getElementById('pvData').valueAsDate = new Date();
             await verificaSessione();
         });
 
-        function tornaPlancia() { window.location.href = 'plancia-studio.html?token=' + token; }
-        function mostraDashboard() {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById('dashboardSection').classList.add('active');
-        }
-        function mostraSezione(nome) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(nome + 'Section').classList.add('active');
-            if (nome === 'anteprima') renderizzaVetrina();
-            if (nome === 'prodotti') { renderizzaProdotti(); caricaProdotti(); }
-            if (nome === 'clienti') caricaClienti();
-            if (nome === 'ordini') caricaOrdini();
-            if (nome === 'config') caricaConfig();
-        }
-
         async function verificaSessione() {
             try {
-                const response = await fetch(WORKER_URL + '/api/auth/verifica?token=' + token);
+                const response = await fetch(WORKER_URL + '/api/auth/verifica?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 if (!data.success || data.tipo !== 'studio') {
                     mostraToast('Sessione non valida', 'error');
@@ -431,19 +411,19 @@
                 studioId = data.user.id;
                 studioNome = data.user.nome || 'Studio';
                 
-                // Aggiorna il nome dello studio in tutti i punti della pagina (Doppia sicurezza con temi.js)
-                document.getElementById('headerStudioName').textContent = studioNome;
-                document.getElementById('vetrinaNomeStudio').textContent = studioNome;
-                document.getElementById('footerStudioName').textContent = studioNome;
-                
                 await caricaTemaGlobale();
                 
                 setInterval(async () => {
                     await caricaTemaGlobale();
                 }, 10000);
                 
+                document.getElementById('loadingArea').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
                 await caricaDatiIniziali();
-            } catch (error) { mostraToast('Errore di connessione', 'error'); }
+            } catch (error) {
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
         }
 
         async function caricaTemaGlobale() {
@@ -477,6 +457,13 @@
                     }
                 }
             } catch (error) { console.error('Errore tema:', error); }
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
         }
 
         async function caricaDatiIniziali() {
@@ -585,7 +572,6 @@
             caricaClienti();
         }
 
-        // --- FUNZIONI AGGIUNTE PER GESTIONE IMMAGINI E MODIFICA PRODOTTI ---
         function anteprimaImmagine(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -670,7 +656,6 @@
             
             document.getElementById('prodottiSection').scrollIntoView({ behavior: 'smooth' });
         }
-        // -------------------------------------------------------------------
 
         async function aggiungiProdottiDefault() {
             const defaults = [
@@ -753,7 +738,7 @@
                     return '<div class="order-item">' +
                         '<div class="order-header">' +
                             '<div><div class="order-code">Ordine #' + o.codice_ordine + '</div>' +
-                            '<div class="order-date">' + new Date(o.data_creazione).toLocaleString('it-IT') + ' - ' + o.cliente_nome + ' (' + o.cliente_telefono + ')</div></div>' +
+                            '<div class="order-date">' + new Date(o.data_creazione).toLocaleDateString('it-IT') + ' - ' + o.cliente_nome + ' (' + o.cliente_telefono + ')</div></div>' +
                             '<span class="badge ' + badgeClass + '">' + statoText + '</span>' +
                         '</div>' +
                         '<div class="order-products">' +
@@ -913,6 +898,8 @@
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
+
+        function tornaPlancia() { window.location.href = 'plancia-studio.html?token=' + token; }
     </script>
 </body>
 </html>
