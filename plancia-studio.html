@@ -11,14 +11,14 @@
     
     <style>
         :root {
-            --primary: #82e0aa;
-            --primary-dark: #1e8449;
-            --primary-light: #e8f8f5;
-            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --text-main: #2c3e50;
-            --text-light: #7f8c8d;
-            --border-color: #e8e8e8;
+            --primary: #2c3e50;
+            --primary-dark: #1a252f;
+            --primary-light: #34495e;
+            --primary-gradient: linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%);
+            --bg-gradient: linear-gradient(135deg, #0f1419 0%, #1a252f 40%, #2c3e50 100%);
+            --text-main: #ecf0f1;
+            --text-light: #95a5a6;
+            --border-color: #34495e;
             --success: #27ae60;
             --warning: #f39c12;
             --danger: #e74c3c;
@@ -75,7 +75,7 @@
         .page-header {
             text-align: center;
             padding: 32px;
-            background: white;
+            background: rgba(44, 62, 80, 0.6);
             border-radius: var(--radius);
             box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
             margin-bottom: 32px;
@@ -125,7 +125,7 @@
         }
 
         .module-card {
-            background: white;
+            background: rgba(44, 62, 80, 0.8);
             border-radius: var(--radius);
             padding: 28px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
@@ -180,7 +180,7 @@
         .module-title {
             font-size: 18px;
             font-weight: 700;
-            color: var(--primary-dark);
+            color: var(--text-main);
             margin-bottom: 8px;
         }
 
@@ -188,19 +188,6 @@
             font-size: 13px;
             color: var(--text-light);
             line-height: 1.5;
-        }
-
-        .module-badge {
-            display: inline-block;
-            margin-top: 16px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            background: var(--danger);
-            color: white;
-            align-self: flex-start;
         }
 
         .alert-badge {
@@ -224,6 +211,35 @@
             100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
         }
 
+        /* CARD PERSONALIZZA TEMA */
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .theme-btn {
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .theme-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+        .theme-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
         .footer-branding {
             text-align: center;
             padding: 24px;
@@ -234,13 +250,14 @@
 
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast {
-            background: white;
+            background: var(--primary);
             border-radius: 10px;
             padding: 14px 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
             margin-bottom: 10px;
             border-left: 4px solid var(--success);
             animation: slideIn 0.3s ease;
+            color: white;
         }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
@@ -261,34 +278,6 @@
             .dashboard-grid { grid-template-columns: 1fr; }
             .page-header h1 { font-size: 24px; }
         }
-
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 3000; align-items: center; justify-content: center;
-        }
-        .modal-overlay.active { display: flex; }
-        .modal-content {
-            background: white; border-radius: var(--radius); padding: 32px; width: 90%; max-width: 600px;
-            max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .modal-header h2 { font-size: 22px; color: var(--primary-dark); }
-        .close-modal { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-light); }
-        .link-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px;
-            border-left: 3px solid var(--primary);
-        }
-        .link-info { flex: 1; margin-right: 12px; }
-        .link-desc { font-weight: 600; font-size: 14px; color: var(--text-main); margin-bottom: 4px; }
-        .link-url { font-size: 12px; color: var(--text-light); word-break: break-all; }
-        .link-url a { color: var(--primary-dark); text-decoration: none; }
-        .link-url a:hover { text-decoration: underline; }
-        .link-actions { display: flex; gap: 8px; }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; }
-        .form-group input { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; }
-        .form-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
     </style>
 </head>
 <body>
@@ -296,7 +285,6 @@
     <div class="top-bar">
         <div class="nav-left">
             <button class="nav-btn" onclick="logout()">Logout</button>
-            <button class="nav-btn" onclick="window.location.href='admin.html?token=' + token">Admin Panel</button>
         </div>
         <div class="nav-right">
             <div class="sync-status"><span class="sync-dot"></span> Sync Cloud: OK</div>
@@ -306,7 +294,7 @@
     <div class="container">
         <div class="page-header">
             <h1>Plancia di Controllo Studio</h1>
-            <p>Gestisci tutte le funzionalita del tuo studio fotografico. Dati sincronizzati in tempo reale sul cloud.</p>
+            <p>Gestisci tutte le funzionalità del tuo studio fotografico. Dati sincronizzati in tempo reale sul cloud.</p>
         </div>
 
         <div id="loadingArea" class="loading">
@@ -323,6 +311,24 @@
             </div>
 
             <div class="dashboard-grid">
+                <!-- CARD PERSONALIZZA TEMA -->
+                <div class="module-card" style="grid-column: 1 / -1;">
+                    <div class="module-icon">🎨</div>
+                    <div class="module-title">Personalizza Tema</div>
+                    <div class="module-description">Scegli il colore della tua dashboard</div>
+                    <div class="theme-grid" id="themeGrid">
+                        <button class="theme-btn" onclick="cambiaTema('default')">Default (Scuro)</button>
+                        <button class="theme-btn" onclick="cambiaTema('natale')">Natale (Rosso)</button>
+                        <button class="theme-btn" onclick="cambiaTema('carnevale')">Carnevale (Viola)</button>
+                        <button class="theme-btn" onclick="cambiaTema('inverno')">Inverno (Grigio)</button>
+                        <button class="theme-btn" onclick="cambiaTema('pasqua')">Pasqua (Rosa)</button>
+                        <button class="theme-btn" onclick="cambiaTema('estate')">Estate (Azzurro)</button>
+                        <button class="theme-btn" onclick="cambiaTema('halloween')">Halloween (Arancio)</button>
+                        <button class="theme-btn" onclick="cambiaTema('san_valentino')">San Valentino (Rosa)</button>
+                        <button class="theme-btn" onclick="cambiaTema('arancio')">Arancio (Energia)</button>
+                    </div>
+                </div>
+
                 <a href="#" class="module-card" onclick="navigaConToken('scheda-anagrafica.html')">
                     <div class="module-icon">IM</div>
                     <div class="module-title">Impostazioni</div>
@@ -347,19 +353,6 @@
                     <div class="module-description">Crea preventivi, invia via WhatsApp e trasforma in contratti.</div>
                 </a>
 
-                <a href="#" class="module-card" id="cardSA" onclick="navigaConToken('selezione-album.html')">
-                    <div class="module-icon">SA</div>
-                    <div class="module-title">Seleziona Cartelle Clienti</div>
-                    <div class="module-description">Gestione caricamento gallerie e selezione album.</div>
-                    <div id="alertBadgeSA" class="alert-badge hidden">SELEZIONE IN ATTESA</div>
-                </a>
-
-                <a href="#" class="module-card" onclick="navigaConToken('gru.html')">
-                    <div class="module-icon">GR</div>
-                    <div class="module-title">GRU</div>
-                    <div class="module-description">Gestione risorse e utility dello studio.</div>
-                </a>
-
                 <a href="#" class="module-card" onclick="navigaConToken('workflow.html')">
                     <div class="module-icon">WF</div>
                     <div class="module-title">Workflow</div>
@@ -370,20 +363,12 @@
                     <div class="module-icon">GC</div>
                     <div class="module-title">Gallerie Clienti</div>
                     <div class="module-description">Crea gallerie esterne MEGA con link brandizzati per i clienti.</div>
-                    <span class="module-badge">NUOVO</span>
                 </a>
 
-                <a href="#" class="module-card" onclick="navigaConToken('lista-regali.html')">
-                    <div class="module-icon">LR</div>
-                    <div class="module-title">Lista Regali</div>
-                    <div class="module-description">Crowdfunding e messaggi di auguri per eventi.</div>
-                </a>
-
-                <a href="#" class="module-card" id="cardNZ" onclick="navigaConToken('negozio.html')">
+                <a href="#" class="module-card" onclick="navigaConToken('negozio.html')">
                     <div class="module-icon">NZ</div>
                     <div class="module-title">Negozio Online</div>
                     <div class="module-description">Prodotti, ordini e configurazione pagamenti.</div>
-                    <div id="alertBadgeNZ" class="alert-badge hidden">0 ORDINI IN ATTESA</div>
                 </a>
 
                 <a href="#" class="module-card" onclick="navigaConToken('ricevute.html')">
@@ -392,22 +377,10 @@
                     <div class="module-description">Gestisci le ricevute fiscali e i pagamenti dei clienti.</div>
                 </a>
 
-                <a href="#" class="module-card" onclick="navigaConToken('email.html')">
-                    <div class="module-icon">EM</div>
-                    <div class="module-title">Email</div>
-                    <div class="module-description">Invio email e archivio comunicazioni.</div>
-                </a>
-
                 <a href="#" class="module-card" onclick="navigaConToken('agenda.html')">
                     <div class="module-icon">AG</div>
                     <div class="module-title">Agenda</div>
                     <div class="module-description">Calendario eventi e appuntamenti dello studio.</div>
-                </a>
-
-                <a href="#" class="module-card" onclick="navigaConToken('link-utili.html')">
-                    <div class="module-icon">LN</div>
-                    <div class="module-title">Link Utili</div>
-                    <div class="module-description">Archivio personale di link, fornitori e risorse rapide.</div>
                 </a>
             </div>
         </div>
@@ -416,39 +389,14 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="modalLinkUtili">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Archivio Link Utili</h2>
-                <button class="close-modal" onclick="chiudiLinkUtili()">X</button>
-            </div>
-            
-            <div style="background: var(--primary-light); padding: 20px; border-radius: 10px; margin-bottom: 24px;">
-                <div class="form-group">
-                    <label>Descrizione (es. Rivenditore Carta Fotografica)</label>
-                    <input type="text" id="linkDescrizione" placeholder="Inserisci una descrizione chiara...">
-                </div>
-                <div class="form-group">
-                    <label>URL del Link (https://...)</label>
-                    <input type="url" id="linkUrl" placeholder="https://www.esempio.com">
-                </div>
-                <button class="nav-btn" style="width: 100%; background: var(--primary-gradient); color: white; font-weight: 700;" onclick="aggiungiLink()">Salva nell'Archivio</button>
-            </div>
-
-            <h3 style="font-size: 16px; margin-bottom: 12px; color: var(--text-main);">I tuoi link salvati:</h3>
-            <div id="listaLinkContainer">
-                <div class="loading" style="padding: 20px;"><div class="spinner" style="width: 30px; height: 30px;"></div></div>
-            </div>
-        </div>
-    </div>
-
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        // NOTA: WORKER_URL è già definito globalmente in temi.js.
+        var WORKER_URL = "https://appcenter-backend.mairaluigi-b2f.workers.dev";
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let currentStudioId = '';
+        let currentTemaAttivo = '';
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) {
@@ -471,34 +419,14 @@
 
                 currentStudioId = data.user.id;
                 
-                // CARICAMENTO TEMA GLOBALE
-                await caricaTemaGlobale();
-
-                // CONTROLLO SCHEDA COMPLETATA - se non completata, reindirizza
-                if (data.user.scheda_completata !== 1) {
-                    mostraToast('Completa la scheda anagrafica per accedere', 'error');
-                    setTimeout(() => {
-                        window.location.href = `scheda-anagrafica.html?token=${token}`;
-                    }, 1000);
-                    return;
-                }
-
+                // Carica il tema corrente dello studio
+                await caricaTemaCorrente();
+                
                 document.getElementById('studioNome').textContent = data.user.nome || 'Studio';
                 document.getElementById('studioIdDisplay').textContent = 'ID: ' + currentStudioId;
                 
                 document.getElementById('loadingArea').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
-
-                // CONTROLLA ALERT SELEZIONI
-                await controllaAlertSelezioni();
-                
-                // CONTROLLA ALERT ORDINI NEGOZIO
-                await controllaAlertOrdini();
-
-                // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
-                setInterval(async () => {
-                    await caricaTemaGlobale();
-                }, 10000);
 
             } catch (error) {
                 console.error('Errore:', error);
@@ -506,88 +434,48 @@
             }
         }
 
-        // ============================================
-        // SEZIONE TEMA GLOBALE AGGIORNATA CON EFFETTI E TEMA ARANCIO
-        // ============================================
-        async function caricaTemaGlobale() {
-            if (!currentStudioId) return;
+        async function caricaTemaCorrente() {
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(currentStudioId)}&token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 if (data.success && data.tema && data.tema.tema_attivo) {
-                    const temaId = data.tema.tema_attivo;
-                    const temi = {
-                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)', effetto: null },
-                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)', effetto: 'neve' },
-                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)', effetto: 'coriandoli' },
-                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)', effetto: null },
-                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)', effetto: null },
-                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)', effetto: null },
-                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)', effetto: null },
-                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)', effetto: null },
-                        'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)', effetto: null }
-                    };
-                    const t = temi[temaId] || temi['default'];
-                    const root = document.documentElement;
-                    root.style.setProperty('--primary', t.p);
-                    root.style.setProperty('--primary-dark', t.pd);
-                    root.style.setProperty('--primary-light', t.pl);
-                    root.style.setProperty('--primary-gradient', t.pg);
-                    root.style.setProperty('--bg-gradient', t.bg);
-                    
-                    // Attiva effetto speciale se la funzione esiste (caricata da temi.js)
-                    if (typeof attivaEffettoSpeciale === 'function') {
-                        attivaEffettoSpeciale(t.effetto);
-                    }
+                    currentTemaAttivo = data.tema.tema_attivo;
+                    // Evidenzia il bottone attivo
+                    document.querySelectorAll('.theme-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                        if (btn.textContent.toLowerCase().includes(currentTemaAttivo.replace('_', ' '))) {
+                            btn.classList.add('active');
+                        }
+                    });
                 }
             } catch (error) {
                 console.error('Errore caricamento tema:', error);
             }
         }
 
-        // FUNZIONE ALERT SELEZIONI
-        async function controllaAlertSelezioni() {
+        async function cambiaTema(temaId) {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/selezioni-album?token=${encodeURIComponent(token)}`);
+                const response = await fetch(`${WORKER_URL}/api/studio/tema?token=${encodeURIComponent(token)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        studio_id: currentStudioId,
+                        tema_attivo: temaId
+                    })
+                });
                 const data = await response.json();
-                
-                if (data.success && data.selezioni) {
-                    const selezioniInAttesa = data.selezioni.filter(s => s.stato === 'selezione_ricevuta');
-                    
-                    if (selezioniInAttesa.length > 0) {
-                        const badge = document.getElementById('alertBadgeSA');
-                        const card = document.getElementById('cardSA');
-                        
-                        badge.textContent = `${selezioniInAttesa.length} SELEZION${selezioniInAttesa.length === 1 ? 'E' : 'I'} IN ATTESA`;
-                        badge.classList.remove('hidden');
-                        card.classList.add('alert-active');
-                    }
+                if (data.success) {
+                    currentTemaAttivo = temaId;
+                    // Aggiorna UI
+                    document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+                    event.target.classList.add('active');
+                    mostraToast('Tema applicato con successo!', 'success');
+                    // Applica immediatamente il tema
+                    await caricaTemaGlobale(currentStudioId, token);
                 }
             } catch (error) {
-                console.error('Errore controllo alert:', error);
-            }
-        }
-
-        // FUNZIONE ALERT ORDINI NEGOZIO
-        async function controllaAlertOrdini() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/negozio/ordini?token=${encodeURIComponent(token)}`);
-                const data = await response.json();
-                
-                if (data.success && data.ordini) {
-                    const ordiniInAttesa = data.ordini.filter(o => o.stato === 'in_attesa');
-                    
-                    if (ordiniInAttesa.length > 0) {
-                        const badge = document.getElementById('alertBadgeNZ');
-                        const card = document.getElementById('cardNZ');
-                        
-                        badge.textContent = `${ordiniInAttesa.length} ORDIN${ordiniInAttesa.length === 1 ? 'E' : 'I'} IN ATTESA`;
-                        badge.classList.remove('hidden');
-                        card.classList.add('alert-active');
-                    }
-                }
-            } catch (error) {
-                console.error('Errore controllo alert ordini:', error);
+                console.error('Errore cambio tema:', error);
+                mostraToast('Errore nel cambio tema', 'error');
             }
         }
 
@@ -613,96 +501,6 @@
             toast.innerHTML = `<div>${msg}</div>`;
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
-        }
-
-        function apriLinkUtili() {
-            document.getElementById('modalLinkUtili').classList.add('active');
-            caricaLinkUtili();
-        }
-
-        function chiudiLinkUtili() {
-            document.getElementById('modalLinkUtili').classList.remove('active');
-        }
-
-        async function caricaLinkUtili() {
-            const container = document.getElementById('listaLinkContainer');
-            container.innerHTML = '<div class="loading" style="padding: 20px;"><div class="spinner" style="width: 30px; height: 30px;"></div><div>Caricamento...</div></div>';
-            try {
-                const res = await fetch(`${WORKER_URL}/api/studio/link-utili?token=${encodeURIComponent(token)}`);
-                const data = await res.json();
-                if (data.success) {
-                    if (data.links.length === 0) {
-                        container.innerHTML = '<p style="text-align:center; color:var(--text-light); padding:20px;">Nessun link salvato. Aggiungi il tuo primo link sopra!</p>';
-                        return;
-                    }
-                    container.innerHTML = data.links.map(link => `
-                        <div class="link-item">
-                            <div class="link-info">
-                                <div class="link-desc">${link.descrizione}</div>
-                                <div class="link-url"><a href="${link.url}" target="_blank">${link.url}</a></div>
-                            </div>
-                            <div class="link-actions">
-                                <a href="${link.url}" target="_blank" class="nav-btn" style="text-decoration:none; font-size:12px; padding:6px 12px; background:var(--primary); color:white;">Vai</a>
-                                <button class="nav-btn" style="background:var(--danger); color:white; font-size:12px; padding:6px 12px;" onclick="eliminaLink('${link.id}')">Elimina</button>
-                            </div>
-                        </div>
-                    `).join('');
-                } else {
-                    container.innerHTML = '<p style="text-align:center; color:var(--danger); padding:20px;">Errore nel caricamento.</p>';
-                }
-            } catch (e) {
-                console.error(e);
-                container.innerHTML = '<p style="text-align:center; color:var(--danger); padding:20px;">Errore di connessione.</p>';
-            }
-        }
-
-        async function aggiungiLink() {
-            const desc = document.getElementById('linkDescrizione').value.trim();
-            const url = document.getElementById('linkUrl').value.trim();
-            
-            if (!desc || !url) {
-                mostraToast('Compila sia la descrizione che l\'URL', 'error');
-                return;
-            }
-
-            try {
-                const res = await fetch(`${WORKER_URL}/api/studio/link-utili?token=${encodeURIComponent(token)}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ descrizione: desc, url: url })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    mostraToast('Link salvato con successo!', 'success');
-                    document.getElementById('linkDescrizione').value = '';
-                    document.getElementById('linkUrl').value = '';
-                    await caricaLinkUtili();
-                } else {
-                    mostraToast('Errore nel salvataggio', 'error');
-                }
-            } catch (e) {
-                console.error(e);
-                mostraToast('Errore di connessione', 'error');
-            }
-        }
-
-        async function eliminaLink(id) {
-            if (!confirm('Sei sicuro di voler eliminare questo link dall\'archivio?')) return;
-            try {
-                const res = await fetch(`${WORKER_URL}/api/studio/link-utili/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, {
-                    method: 'DELETE'
-                });
-                const data = await res.json();
-                if (data.success) {
-                    mostraToast('Link eliminato', 'success');
-                    await caricaLinkUtili();
-                } else {
-                    mostraToast('Errore nell\'eliminazione', 'error');
-                }
-            } catch (e) {
-                console.error(e);
-                mostraToast('Errore di connessione', 'error');
-            }
         }
     </script>
 </body>
