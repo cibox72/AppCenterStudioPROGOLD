@@ -11,14 +11,14 @@
     
     <style>
         :root {
-            --primary: #82e0aa;
-            --primary-dark: #1e8449;
-            --primary-light: #e8f8f5;
-            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --text-main: #000000;
-            --text-light: #333333;
-            --border-color: #e8e8e8;
+            --primary: #2c3e50;
+            --primary-dark: #1a252f;
+            --primary-light: #34495e;
+            --primary-gradient: linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%);
+            --bg-gradient: linear-gradient(135deg, #0f1419 0%, #1a252f 40%, #2c3e50 100%);
+            --text-main: #ecf0f1;
+            --text-light: #95a5a6;
+            --border-color: #34495e;
             --success: #27ae60;
             --warning: #f39c12;
             --danger: #e74c3c;
@@ -65,7 +65,7 @@
         .page-header {
             text-align: center;
             padding: 32px;
-            background: white;
+            background: rgba(44, 62, 80, 0.6);
             border-radius: var(--radius);
             box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
             margin-bottom: 32px;
@@ -83,12 +83,15 @@
         .page-header h1 {
             font-size: 32px;
             font-weight: 800;
-            color: var(--primary-dark);
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 8px;
         }
-        .page-header p { color: var(--text-main); font-size: 15px; }
+        .page-header p { color: var(--text-light); font-size: 15px; }
         .card-3d {
-            background: white;
+            background: rgba(44, 62, 80, 0.8);
             border-radius: var(--radius);
             padding: 32px;
             margin-bottom: 24px;
@@ -96,6 +99,7 @@
             position: relative;
             overflow: hidden;
             transition: border-color 0.5s ease, box-shadow 0.5s ease;
+            border: 1px solid var(--border-color);
         }
         .card-3d::before {
             content: '';
@@ -107,7 +111,7 @@
         .card-title {
             font-size: 20px;
             font-weight: 700;
-            color: var(--primary-dark);
+            color: var(--text-main);
             margin-bottom: 8px;
             padding-bottom: 12px;
             border-bottom: 2px solid var(--primary-light);
@@ -115,7 +119,7 @@
             letter-spacing: 0.5px;
             transition: color 0.5s ease, border-color 0.5s ease;
         }
-        .card-subtitle { font-size: 13px; color: var(--text-main); margin-bottom: 24px; }
+        .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
         .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border-color); flex-wrap: wrap; }
         .tab {
             padding: 12px 24px;
@@ -125,13 +129,13 @@
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
-            color: var(--text-main);
+            color: var(--text-light);
             transition: all 0.2s ease;
         }
-        .tab:hover { color: var(--primary-dark); }
+        .tab:hover { color: var(--text-main); }
         .tab.active {
-            color: var(--primary-dark);
-            border-bottom-color: var(--primary);
+            color: var(--text-main);
+            border-bottom-color: var(--primary-light);
         }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
@@ -143,12 +147,14 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 13px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-main);
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .form-group input:focus, .form-group select:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(52, 73, 94, 0.3);
         }
         .btn {
             padding: 10px 20px;
@@ -164,13 +170,13 @@
         .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
         .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
         .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
-        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-outline { background: transparent; color: var(--primary-light); border: 1px solid var(--primary-light); }
         .btn-sm { padding: 6px 12px; font-size: 12px; }
-        .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); background: white; margin-top: 20px; }
+        .table-container { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border-color); background: rgba(44, 62, 80, 0.6); margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; color: var(--text-main); }
-        th { background: var(--primary-light); color: var(--primary-dark); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; transition: background 0.5s ease, color 0.5s ease; }
-        tr:hover td { background: #fafafa; }
+        th { background: var(--primary-light); color: white; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; transition: background 0.5s ease, color 0.5s ease; }
+        tr:hover td { background: rgba(255,255,255,0.05); }
         .badge {
             display: inline-block;
             padding: 4px 12px;
@@ -209,22 +215,23 @@
             transition: .4s;
             border-radius: 50%;
         }
-        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider { background-color: var(--primary-light); }
         input:checked + .slider:before { transform: translateX(26px); }
         
         /* Notifiche Professionali */
         .notification-item {
-            background: white;
-            border-left: 4px solid var(--primary);
+            background: rgba(44, 62, 80, 0.6);
+            border-left: 4px solid var(--primary-light);
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 16px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
             transition: all 0.3s ease, border-color 0.5s ease, background 0.5s ease;
+            border: 1px solid var(--border-color);
         }
         .notification-item.unread {
             border-left-color: var(--warning);
-            background: #fef9e7;
+            background: rgba(243, 156, 18, 0.1);
         }
         .notification-item:hover {
             transform: translateX(4px);
@@ -256,7 +263,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 12px;
-            background: white;
+            background: rgba(255,255,255,0.05);
             padding: 16px;
             border-radius: 8px;
             margin-bottom: 16px;
@@ -270,24 +277,24 @@
         .footer-branding {
             text-align: center;
             padding: 24px;
-            color: var(--text-main);
+            color: var(--text-light);
             font-size: 13px;
             margin-top: 40px;
         }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast {
-            background: white;
+            background: var(--primary);
             border-radius: 10px;
             padding: 14px 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
             margin-bottom: 10px;
             border-left: 4px solid var(--success);
             animation: slideIn 0.3s ease;
-            color: var(--text-main);
+            color: white;
         }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
-        .loading { text-align: center; padding: 40px; color: var(--text-main); }
+        .loading { text-align: center; padding: 40px; color: var(--text-light); }
         .spinner {
             width: 40px; height: 40px;
             border: 3px solid var(--primary-light);
@@ -298,34 +305,34 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         .hidden { display: none !important; }
-        .edit-row { background: #f4f6f7; }
+        .edit-row { background: rgba(244, 246, 247, 0.1); }
         .password-wrapper { position: relative; display: flex; align-items: center; }
         .password-wrapper input { flex: 1; }
         .toggle-password {
             position: absolute;
             right: 8px;
-            background: none;
+            background: var(--primary);
             border: 1px solid var(--border-color);
             border-radius: 6px;
             cursor: pointer;
             font-size: 12px;
             font-weight: 600;
-            color: var(--primary-dark);
+            color: white;
             padding: 4px 8px;
         }
-        .toggle-password:hover { background: var(--primary-light); }
+        .toggle-password:hover { background: var(--primary-dark); }
 
         /* --- STILI TEMI COLORI --- */
         .tema-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
         .tema-card {
-            background: white; border-radius: 12px; padding: 24px; border: 3px solid var(--border-color);
+            background: rgba(44, 62, 80, 0.6); border-radius: 12px; padding: 24px; border: 3px solid var(--border-color);
             transition: all 0.3s ease, border-color 0.5s ease; cursor: pointer; position: relative;
         }
         .tema-card:hover { transform: translateY(-6px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
-        .tema-card.active { border-color: var(--primary); box-shadow: 0 8px 24px rgba(30, 132, 73, 0.2); }
+        .tema-card.active { border-color: var(--primary-light); box-shadow: 0 8px 24px rgba(30, 132, 73, 0.2); }
         .tema-card.active::after {
             content: '✓'; position: absolute; top: 12px; right: 12px;
-            width: 30px; height: 30px; background: var(--primary); color: white;
+            width: 30px; height: 30px; background: var(--success); color: white;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             font-size: 18px; font-weight: 700;
         }
@@ -339,11 +346,11 @@
         .tema-desc { font-size: 12px; color: var(--text-light); }
         .tema-attuale-box {
             background: var(--primary-light); padding: 20px; border-radius: 12px; margin-bottom: 24px;
-            border-left: 4px solid var(--primary);
+            border-left: 4px solid var(--success);
             transition: background 0.5s ease, border-color 0.5s ease;
         }
-        .tema-attuale-title { font-size: 14px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; }
-        .tema-attuale-nome { font-size: 20px; font-weight: 800; color: var(--primary-dark); }
+        .tema-attuale-title { font-size: 14px; font-weight: 700; color: white; margin-bottom: 8px; }
+        .tema-attuale-nome { font-size: 20px; font-weight: 800; color: white; }
     </style>
 </head>
 <body>
@@ -362,7 +369,7 @@
     <div class="container">
         <div class="page-header">
             <h1>Admin Panel - CRM</h1>
-            <p>Gestione studi, notifiche e personalizzazione globale</p>
+            <p>Gestione studi, notifiche e personalizzazione della tua dashboard</p>
         </div>
 
         <div id="loadingArea" class="loading">
@@ -375,7 +382,7 @@
                 <button class="tab active" onclick="switchTab('studi')">📊 Studi</button>
                 <button class="tab" onclick="switchTab('notifiche')">🔔 Notifiche <span id="badgeNotifiche" class="notification-badge hidden">0</span></button>
                 <button class="tab" onclick="window.location.href='admin-archivio-studi.html?token=' + token">📁 Archivio Studi</button>
-                <button class="tab" onclick="switchTab('temi')">🎨 Temi Colori</button>
+                <button class="tab" onclick="switchTab('temi')">🎨 Tema Admin</button>
                 <button class="tab" onclick="switchTab('creaStudio')">➕ Crea Studio</button>
             </div>
 
@@ -427,14 +434,14 @@
                 </div>
             </div>
 
-            <!-- TAB TEMI COLORI -->
+            <!-- TAB TEMI COLORI (SOLO ADMIN) -->
             <div id="tab-temi" class="tab-content">
                 <div class="card-3d">
-                    <div class="card-title">🎨 GESTIONE TEMI COLORI (GLOBALE)</div>
-                    <div class="card-subtitle">Personalizza i colori dell'intera piattaforma. La modifica si applica a tutti gli utenti.</div>
+                    <div class="card-title">🎨 PERSONALIZZA TEMA ADMIN</div>
+                    <div class="card-subtitle">Scegli il colore della tua dashboard di amministrazione. Ogni studio fotografico potrà scegliere il proprio tema dalla sua plancia.</div>
                     
                     <div class="tema-attuale-box">
-                        <div class="tema-attuale-title">TEMA ATTUALMENTE ATTIVO</div>
+                        <div class="tema-attuale-title">IL TUO TEMA ADMIN ATTUALE</div>
                         <div class="tema-attuale-nome" id="temaAttualeNome">Caricamento...</div>
                     </div>
 
@@ -524,25 +531,21 @@
     <div class="toast-container" id="toastContainer"></div>
     <script>
         // NOTA: WORKER_URL è già definito globalmente in temi.js. 
-        // Rimuovendolo da qui evitiamo l'errore "Identifier has already been declared" che bloccava tutto lo script.
-        
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studi = [];
         let notifiche = [];
-        let temaAttivoGlobale = 'default';
+        let temaAttivoAdmin = 'default';
 
         const TEMI_PRESET = {
-            'default': { nome: 'Default (Verde Salvia)', primary: '#82e0aa', primary_dark: '#1e8449', primary_light: '#e8f8f5', primary_gradient: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg_gradient: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)' },
+            'default': { nome: 'Default (Scuro Elegante)', primary: '#2c3e50', primary_dark: '#1a252f', primary_light: '#34495e', primary_gradient: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)', bg_gradient: 'linear-gradient(135deg, #0f1419 0%, #1a252f 40%, #2c3e50 100%)' },
             'natale': { nome: 'Natale (Rosso & Oro)', primary: '#e74c3c', primary_dark: '#922b21', primary_light: '#fadbd8', primary_gradient: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg_gradient: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)' },
             'carnevale': { nome: 'Carnevale (Viola & Fucsia)', primary: '#af7ac5', primary_dark: '#6c3483', primary_light: '#e8daef', primary_gradient: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg_gradient: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)' },
-            'inverno': { nome: 'Inverno (Nero & Argento)', primary: '#5d6d7e', primary_dark: '#1c2833', primary_light: '#eaeded', primary_gradient: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg_gradient: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
+            'inverno': { nome: 'Inverno (Grigio & Argento)', primary: '#5d6d7e', primary_dark: '#1c2833', primary_light: '#eaeded', primary_gradient: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg_gradient: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)' },
             'pasqua': { nome: 'Pasqua (Rosa & Giallo)', primary: '#f1948a', primary_dark: '#c0392b', primary_light: '#fadbd8', primary_gradient: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg_gradient: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)' },
             'estate': { nome: 'Estate (Azzurro & Giallo)', primary: '#5dade2', primary_dark: '#1a5276', primary_light: '#d6eaf8', primary_gradient: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg_gradient: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)' },
             'halloween': { nome: 'Halloween (Arancio & Nero)', primary: '#f39c12', primary_dark: '#7d6608', primary_light: '#fdebd0', primary_gradient: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg_gradient: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)' },
             'san_valentino': { nome: 'San Valentino (Rosa & Rosso)', primary: '#e91e63', primary_dark: '#880e4f', primary_light: '#fce4ec', primary_gradient: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg_gradient: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)' },
-            'autunno': { nome: 'Autunno (Marrone & Arancio)', primary: '#d35400', primary_dark: '#6e2c00', primary_light: '#fdebd0', primary_gradient: 'linear-gradient(135deg, #f39c12 0%, #d35400 50%, #6e2c00 100%)', bg_gradient: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #f5cba7 100%)' },
-            'primavera': { nome: 'Primavera (Verde Chiaro & Rosa)', primary: '#58d68d', primary_dark: '#1e8449', primary_light: '#e8f8f5', primary_gradient: 'linear-gradient(135deg, #a9dfbf 0%, #58d68d 50%, #1e8449 100%)', bg_gradient: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #fadbd8 100%)' },
             'arancio': { nome: 'Arancio (Energia)', primary: '#f39c12', primary_dark: '#d35400', primary_light: '#fdebd0', primary_gradient: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg_gradient: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)' }
         };
 
@@ -562,8 +565,8 @@
                 const response = await fetch(`${WORKER_URL}/api/admin/tema?token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 if (data.success && data.tema) {
-                    temaAttivoGlobale = data.tema.tema_attivo || 'default';
-                    applicaTema(temaAttivoGlobale);
+                    temaAttivoAdmin = data.tema.tema_attivo || 'default';
+                    applicaTema(temaAttivoAdmin);
                     renderizzaTemi();
                 }
             } catch (error) {
@@ -575,14 +578,14 @@
             const grid = document.getElementById('temaGrid');
             grid.innerHTML = Object.keys(TEMI_PRESET).map(key => {
                 const tema = TEMI_PRESET[key];
-                const isActive = key === temaAttivoGlobale;
+                const isActive = key === temaAttivoAdmin;
                 return `
                     <div class="tema-card ${isActive ? 'active' : ''}" onclick="selezionaTema('${key}')">
                         <div class="tema-preview" style="background: ${tema.primary_gradient};">
                             ${tema.nome}
                         </div>
                         <div class="tema-nome">${tema.nome}</div>
-                        <div class="tema-desc">Clicca per applicare globalmente</div>
+                        <div class="tema-desc">Clicca per applicare alla tua dashboard</div>
                     </div>
                 `;
             }).join('');
@@ -597,16 +600,10 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    temaAttivoGlobale = temaId;
+                    temaAttivoAdmin = temaId;
                     applicaTema(temaId);
                     renderizzaTemi();
-                    
-                    // Forza l'aggiornamento globale (inclusi eventuali effetti speciali)
-                    if (typeof caricaTemaGlobale === 'function') {
-                        await caricaTemaGlobale();
-                    }
-                    
-                    mostraToast(`Tema "${TEMI_PRESET[temaId].nome}" applicato globalmente!`, 'success');
+                    mostraToast(`Tema Admin applicato con successo!`, 'success');
                 } else {
                     mostraToast('Errore nel salvataggio del tema', 'error');
                 }
@@ -771,7 +768,7 @@
                             </div>
                         `;
                     } else {
-                        datiHtml = `<div style="font-size: 12px; color: var(--text-light); background: #f8f9fa; padding: 12px; border-radius: 6px; margin-bottom: 12px;">${JSON.stringify(parsed, null, 2)}</div>`;
+                        datiHtml = `<div style="font-size: 12px; color: var(--text-light); background: rgba(255,255,255,0.05); padding: 12px; border-radius: 6px; margin-bottom: 12px;">${JSON.stringify(parsed, null, 2)}</div>`;
                     }
                 } catch(e) {
                     datiHtml = `<div style="font-size: 12px; color: var(--text-light); margin-bottom: 12px;">${n.dati || ''}</div>`;
@@ -840,9 +837,9 @@
             const modal = document.createElement('div');
             modal.style.cssText = 'display:flex; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:3000; align-items:center; justify-content:center;';
             modal.innerHTML = `
-                <div style="background:white; border-radius:16px; padding:32px; max-width:600px; width:90%; max-height:90vh; overflow-y:auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-                    <h3 style="color:var(--primary-dark); margin-bottom:16px; font-weight:700;">Dettagli Notifica</h3>
-                    <pre style="background:#f4f6f7; padding:16px; border-radius:8px; font-size:13px; overflow-x:auto; white-space: pre-wrap; word-wrap: break-word; color: var(--text-main);">${datiStr}</pre>
+                <div style="background:var(--primary); border-radius:16px; padding:32px; max-width:600px; width:90%; max-height:90vh; overflow-y:auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 1px solid var(--border-color);">
+                    <h3 style="color:white; margin-bottom:16px; font-weight:700;">Dettagli Notifica</h3>
+                    <pre style="background:rgba(255,255,255,0.1); padding:16px; border-radius:8px; font-size:13px; overflow-x:auto; white-space: pre-wrap; word-wrap: break-word; color: var(--text-main);">${datiStr}</pre>
                     <div style="margin-top:20px; text-align:right;">
                         <button class="btn btn-outline" onclick="this.closest('div[style*=\\'position:fixed\\']').remove()">Chiudi</button>
                     </div>
