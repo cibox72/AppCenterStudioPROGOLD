@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registra Clienti ID - AppCenterStudioPROGOLD</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
-    
     <style>
         :root {
             --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
@@ -19,57 +16,22 @@
             --success: #27ae60; --danger: #c0392b; --warning: #d35400; --radius: 12px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
-            transition: background 0.5s ease, color 0.5s ease;
-        }
-        .top-bar {
-            background: var(--primary-gradient); padding: 16px 24px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;
-            transition: background 0.5s ease;
-        }
-        .nav-btn {
-            background: rgba(255,255,255,0.95); border: none; padding: 8px 16px; border-radius: 8px;
-            cursor: pointer; font-size: 13px; font-weight: 600; color: var(--primary-dark); margin-right: 8px;
-            transition: all 0.2s ease;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh; transition: background 0.5s ease, color 0.5s ease; }
+        .top-bar { background: var(--primary-gradient); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; transition: background 0.5s ease; }
+        .nav-btn { background: rgba(255,255,255,0.95); border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--primary-dark); margin-right: 8px; transition: all 0.2s ease; }
         .nav-btn:hover { background: white; }
         .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
-        .page-header {
-            text-align: center; padding: 24px; background: white; border-radius: var(--radius);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 24px;
-            transition: box-shadow 0.5s ease;
-        }
+        .page-header { text-align: center; padding: 24px; background: white; border-radius: var(--radius); box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 24px; transition: box-shadow 0.5s ease; }
         .page-header h1 { font-size: 24px; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; transition: color 0.5s ease; }
         .page-header p { color: var(--text-light); font-size: 13px; }
-        
-        .card {
-            background: white; border-radius: var(--radius); padding: 24px; margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border-color);
-            transition: border-color 0.5s ease, box-shadow 0.5s ease;
-        }
-        .card-title {
-            font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 16px;
-            padding-bottom: 8px; border-bottom: 1px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
-            display: flex; justify-content: space-between; align-items: center;
-            transition: color 0.5s ease, border-color 0.5s ease;
-        }
-        
+        .card { background: white; border-radius: var(--radius); padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border-color); transition: border-color 0.5s ease, box-shadow 0.5s ease; }
+        .card-title { font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center; transition: color 0.5s ease, border-color 0.5s ease; }
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--text-main); }
-        .form-group input, .form-group textarea {
-            padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; font-family: inherit;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
+        .form-group input, .form-group textarea { padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; font-family: inherit; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
         .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
-        
-        .btn {
-            padding: 10px 20px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600;
-            cursor: pointer; transition: all 0.2s;
-        }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
         .btn-primary { background: var(--primary-dark); color: white; }
         .btn-primary:hover { background: #145a32; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary-dark); }
@@ -77,58 +39,26 @@
         .btn-danger { background: var(--danger); color: white; }
         .btn-danger:hover { background: #922b21; }
         .btn-sm { padding: 6px 12px; font-size: 11px; }
-        
         .table-container { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 12px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
         th { background: #f8f9fa; color: var(--text-main); font-weight: 600; text-transform: uppercase; font-size: 10px; transition: background 0.5s ease, color 0.5s ease; }
         tr:hover td { background: #fafafa; }
-        
-        .cred-box {
-            background: #f8f9fa; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 11px;
-            display: inline-block; margin-right: 4px;
-            transition: background 0.5s ease;
-        }
-        
-        .cliente-id {
-            font-weight: 700; color: var(--primary-dark); font-family: monospace;
-            transition: color 0.5s ease;
-        }
-        
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;
-        }
+        .cred-box { background: #f8f9fa; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 11px; display: inline-block; margin-right: 4px; transition: background 0.5s ease; }
+        .cliente-id { font-weight: 700; color: var(--primary-dark); font-family: monospace; transition: color 0.5s ease; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
         .modal-overlay.active { display: flex; }
-        .modal-content {
-            background: white; border-radius: var(--radius); padding: 24px; max-width: 600px; width: 90%;
-            max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            transition: background 0.5s ease;
-        }
-        .modal-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);
-        }
+        .modal-content { background: white; border-radius: var(--radius); padding: 24px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); transition: background 0.5s ease; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
         .modal-header h2 { font-size: 18px; color: var(--primary-dark); transition: color 0.5s ease; }
-        .close-modal {
-            background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-light);
-        }
-        
+        .close-modal { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-light); }
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 3000; }
-        .toast {
-            background: white; border-radius: 6px; padding: 12px 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            margin-bottom: 8px; border-left: 4px solid var(--success); font-size: 13px;
-        }
+        .toast { background: white; border-radius: 6px; padding: 12px 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-bottom: 8px; border-left: 4px solid var(--success); font-size: 13px; }
         .toast.error { border-left-color: var(--danger); }
         .hidden { display: none !important; }
         .loading { text-align: center; padding: 40px; color: var(--text-light); }
-        
-        .search-box {
-            display: flex; gap: 8px; margin-bottom: 16px;
-        }
-        .search-box input {
-            flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px;
-        }
+        .search-box { display: flex; gap: 8px; margin-bottom: 16px; }
+        .search-box input { flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -142,15 +72,13 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>Registrazione Clienti con ID</h1>
+            <h1>Registrazione Clienti con ID - <span class="studio-nome">Caricamento...</span></h1>
             <p>Registra nuovi clienti con ID univoco permanente. Le altre card richiameranno i clienti da qui.</p>
         </div>
 
         <div id="loadingArea" class="loading">Caricamento dati...</div>
 
         <div id="mainContent" class="hidden">
-            
-            <!-- CARD 1: REGISTRAZIONE NUOVO CLIENTE -->
             <div class="card">
                 <div class="card-title">Registra Nuovo Cliente</div>
                 <div class="form-row">
@@ -178,17 +106,14 @@
                 <button class="btn btn-primary" onclick="registraCliente()">Registra Cliente e Genera ID</button>
             </div>
 
-            <!-- CARD 2: ARCHIVIO CLIENTI -->
             <div class="card">
                 <div class="card-title">
                     <span>Archivio Clienti Registrati</span>
                     <span id="countClienti" style="font-size: 12px; color: var(--text-light); font-weight: 400; text-transform: none;">0 clienti</span>
                 </div>
-                
                 <div class="search-box">
                     <input type="text" id="searchInput" placeholder="Cerca per nome, cognome, email o ID..." oninput="filtraClienti()">
                 </div>
-
                 <div class="table-container">
                     <table>
                         <thead>
@@ -208,16 +133,13 @@
                 </div>
                 <div id="emptyState" class="hidden" style="text-align: center; padding: 40px; color: var(--text-light);">Nessun cliente registrato.</div>
             </div>
-
         </div>
 
-        <!-- MODIFICATO: Ora usa classe e ID per il nome dinamico dello studio -->
         <div class="footer-branding" style="text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px;">
-            Piattaforma sviluppata da <strong class="studio-nome" id="footerStudioName">Caricamento...</strong>
+            Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong>
         </div>
     </div>
 
-    <!-- MODALE MODIFICA CLIENTE -->
     <div id="modalModifica" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -258,11 +180,7 @@
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-
     <script>
-        // NOTA: WORKER_URL è già definito globalmente in temi.js. 
-        // Rimuovendolo da qui evitiamo l'errore "Identifier has already been declared" che bloccava tutto lo script.
-        
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
@@ -283,15 +201,8 @@
                     return;
                 }
                 studioId = data.user.id;
-                
-                // CARICAMENTO TEMA GLOBALE
                 await caricaTemaGlobale();
-                
-                // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
-                setInterval(async () => {
-                    await caricaTemaGlobale();
-                }, 10000);
-                
+                setInterval(async () => { await caricaTemaGlobale(); }, 10000);
                 document.getElementById('loadingArea').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
                 await caricaClienti();
@@ -301,9 +212,6 @@
             }
         }
 
-        // ============================================
-        // SEZIONE TEMA GLOBALE AGGIORNATA CON EFFETTI E TEMA ARANCIO
-        // ============================================
         async function caricaTemaGlobale() {
             if (!studioId) return;
             try {
@@ -329,11 +237,7 @@
                     root.style.setProperty('--primary-light', t.pl);
                     root.style.setProperty('--primary-gradient', t.pg);
                     root.style.setProperty('--bg-gradient', t.bg);
-                    
-                    // Attiva effetto speciale se la funzione esiste (caricata da temi.js)
-                    if (typeof attivaEffettoSpeciale === 'function') {
-                        attivaEffettoSpeciale(t.effetto);
-                    }
+                    if (typeof attivaEffettoSpeciale === 'function') { attivaEffettoSpeciale(t.effetto); }
                 }
             } catch (error) { console.error('[TEMA] Errore:', error); }
         }
@@ -342,12 +246,10 @@
             const nome = document.getElementById('c_nome').value.trim();
             const cognome = document.getElementById('c_cognome').value.trim();
             const email = document.getElementById('c_email').value.trim();
-            
             if (!nome || !cognome || !email) {
                 mostraToast('Compila Nome, Cognome ed Email', 'error');
                 return;
             }
-
             const dati = {
                 nome, cognome, email,
                 telefono: document.getElementById('c_tel').value,
@@ -357,7 +259,6 @@
                 provincia: document.getElementById('c_provincia').value,
                 note: document.getElementById('c_note').value
             };
-
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti?token=${encodeURIComponent(token)}`, {
                     method: 'POST',
@@ -404,14 +305,12 @@
         function renderizzaTabella(clienti) {
             const tbody = document.getElementById('tabellaClienti');
             const emptyState = document.getElementById('emptyState');
-            
             if (clienti.length === 0) {
                 emptyState.classList.remove('hidden');
                 tbody.innerHTML = '';
                 return;
             }
             emptyState.classList.add('hidden');
-            
             tbody.innerHTML = clienti.map(c => `
                 <tr>
                     <td><span class="cliente-id">${c.id}</span></td>
@@ -432,10 +331,7 @@
 
         function filtraClienti() {
             const q = document.getElementById('searchInput').value.toLowerCase().trim();
-            if (!q) {
-                renderizzaTabella(listaClienti);
-                return;
-            }
+            if (!q) { renderizzaTabella(listaClienti); return; }
             const filtrati = listaClienti.filter(c => 
                 (c.nome || '').toLowerCase().includes(q) ||
                 (c.cognome || '').toLowerCase().includes(q) ||
@@ -490,7 +386,6 @@
                 password: document.getElementById('mod_password').value,
                 note: document.getElementById('mod_note').value
             };
-
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, {
                     method: 'PUT',
@@ -533,40 +428,33 @@
         async function stampaScheda(id) {
             const cliente = listaClienti.find(c => c.id === id);
             if (!cliente) { mostraToast('Cliente non trovato', 'error'); return; }
-
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
             const pageWidth = doc.internal.pageSize.getWidth();
             const margin = 20;
             let y = margin;
-
             let datiStudio = { nome: 'Studio', indirizzo: '', telefono: '', email: '', piva: '' };
             try {
                 const res = await fetch(`${WORKER_URL}/api/studio/profilo?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
                 const data = await res.json();
                 if (data.success && data.studio) datiStudio = data.studio;
             } catch (error) { console.error('Errore:', error); }
-
             doc.setFontSize(18); doc.setFont(undefined, 'bold');
             doc.text(datiStudio.nome || 'Studio', pageWidth / 2, y, { align: 'center' }); y += 7;
             doc.setFontSize(9); doc.setFont(undefined, 'normal');
             doc.text(datiStudio.indirizzo || '', pageWidth / 2, y, { align: 'center' }); y += 5;
             doc.text(`Tel: ${datiStudio.telefono || '-'} | Email: ${datiStudio.email || '-'} | P.IVA: ${datiStudio.piva || '-'}`, pageWidth / 2, y, { align: 'center' }); y += 4;
             doc.setDrawColor(0); doc.setLineWidth(0.5); doc.line(margin, y, pageWidth - margin, y); y += 12;
-
             doc.setFontSize(16); doc.setFont(undefined, 'bold');
             doc.text('SCHEDA CLIENTE', pageWidth / 2, y, { align: 'center' }); y += 10;
-
             doc.setFontSize(11); doc.setFont(undefined, 'bold');
             doc.text('ID Cliente:', margin, y);
             doc.setFont(undefined, 'normal');
             doc.text(cliente.id || '', margin + 30, y); y += 8;
-
             doc.setFont(undefined, 'bold');
             doc.text('Dati Anagrafici', margin, y); y += 2;
             doc.setDrawColor(200); doc.line(margin, y, pageWidth - margin, y); y += 6;
             doc.setFont(undefined, 'normal'); doc.setFontSize(10);
-            
             const righe = [
                 ['Nome:', cliente.nome || ''],
                 ['Cognome:', cliente.cognome || ''],
@@ -576,7 +464,6 @@
                 ['CAP / Città:', `${cliente.cap || ''} ${cliente.citta || ''}`],
                 ['Provincia:', cliente.provincia || '']
             ];
-            
             righe.forEach(([label, valore]) => {
                 doc.setFont(undefined, 'bold');
                 doc.text(label, margin, y);
@@ -584,9 +471,7 @@
                 doc.text(valore, margin + 35, y);
                 y += 6;
             });
-
             y += 4;
-
             doc.setFont(undefined, 'bold');
             doc.text('Credenziali di Accesso', margin, y); y += 2;
             doc.setDrawColor(200); doc.line(margin, y, pageWidth - margin, y); y += 6;
@@ -595,7 +480,6 @@
             doc.text(cliente.username || '-', margin + 35, y); y += 6;
             doc.text('Password:', margin, y);
             doc.text(cliente.password || '-', margin + 35, y); y += 10;
-
             if (cliente.note) {
                 doc.setFont(undefined, 'bold');
                 doc.text('Note Interne', margin, y); y += 2;
@@ -608,11 +492,9 @@
                     y += 5;
                 });
             }
-
             y = 280;
             doc.setFontSize(8); doc.setFont(undefined, 'italic');
             doc.text(`Scheda generata il ${new Date().toLocaleDateString('it-IT')} - AppCenterStudioPROGOLD`, pageWidth / 2, y, { align: 'center' });
-
             const filename = `Scheda_${cliente.id}_${(cliente.cognome || 'cliente')}.pdf`;
             doc.save(filename);
             mostraToast('Scheda PDF generata', 'success');
