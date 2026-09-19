@@ -132,7 +132,7 @@
 </head>
 <body>
     <div class="branding-header">
-        <a href="https://www.glstudio.it" target="_blank">G&L Studio</a>
+        <a href="https://www.glstudio.it" target="_blank" id="headerStudioName">G&L Studio</a>
         <span class="tagline">| Negozio Online Professionale</span>
     </div>
     <div class="top-bar">
@@ -382,7 +382,7 @@
 
     <div class="toast-container" id="toastContainer"></div>
     <div class="footer-branding" style="text-align: center; padding: 24px; color: var(--text-light); font-size: 13px;">
-        Servizio offerto da <strong style="color: var(--primary-dark);">G&L Studio</strong>
+        Servizio offerto da <strong style="color: var(--primary-dark);" id="footerStudioName">G&L Studio</strong>
     </div>
 
     <script>
@@ -391,9 +391,10 @@
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
+        let studioNome = '';
         let prodotti = [];
         let config = null;
-        let currentImageBase64 = ''; // Variabile per gestire l'immagine in base64
+        let currentImageBase64 = '';
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) { window.location.href = 'index.html'; return; }
@@ -425,6 +426,12 @@
                     return;
                 }
                 studioId = data.user.id;
+                studioNome = data.user.nome || 'Studio';
+                
+                // Aggiorna il nome dello studio in tutti i punti della pagina
+                document.getElementById('headerStudioName').textContent = studioNome;
+                document.getElementById('vetrinaNomeStudio').textContent = 'Negozio ' + studioNome;
+                document.getElementById('footerStudioName').textContent = studioNome;
                 
                 await caricaTemaGlobale();
                 
