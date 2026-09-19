@@ -269,7 +269,7 @@
 
             <!-- TABELLA ARCHIVIO -->
             <div class="card-3d">
-                <div class="card-title">📋 Archivio Servizi</div>
+                <div class="card-title"> Archivio Servizi</div>
                 <div id="loadingServizi" class="loading" style="padding: 20px;">
                     <div class="spinner"></div>
                     <div>Caricamento servizi...</div>
@@ -401,7 +401,7 @@
             <!-- SEZIONE 4: PRODUZIONE ALBUM -->
             <div class="workflow-section">
                 <div class="section-header">
-                    <span> 4. Produzione & Stampa Album</span>
+                    <span>📚 4. Produzione & Stampa Album</span>
                     <span class="section-progress" id="prog4">0/2</span>
                 </div>
                 <div class="section-body">
@@ -454,7 +454,7 @@
             <!-- SEZIONE 6: FLUSSO VIDEO -->
             <div class="workflow-section">
                 <div class="section-header" style="background: linear-gradient(135deg, #3498db, #2980b9);">
-                    <span> 6. Flusso di Lavoro Video</span>
+                    <span>🎬 6. Flusso di Lavoro Video</span>
                     <span class="section-progress" id="prog6">0/3</span>
                 </div>
                 <div class="section-body">
@@ -496,15 +496,11 @@
             </div>
         </div>
 
-        <!-- MODIFICATO: Ora usa classe e ID per il nome dinamico dello studio -->
-        <div class="footer-branding">Piattaforma sviluppata da <strong class="studio-nome" id="footerStudioName">Caricamento...</strong></div>
+        <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-
     <script>
-        // NOTA: WORKER_URL è già definito globalmente in temi.js. 
-        
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
@@ -536,10 +532,8 @@
                 }
                 studioId = data.user.id;
                 
-                // CARICAMENTO TEMA GLOBALE
                 await caricaTemaGlobale();
                 
-                // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
                 setInterval(async () => {
                     await caricaTemaGlobale();
                 }, 10000);
@@ -553,9 +547,6 @@
             }
         }
 
-        // ============================================
-        // SEZIONE TEMA GLOBALE AGGIORNATA CON EFFETTI E TEMA ARANCIO
-        // ============================================
         async function caricaTemaGlobale() {
             if (!studioId) return;
             try {
@@ -582,7 +573,6 @@
                     root.style.setProperty('--primary-gradient', t.pg);
                     root.style.setProperty('--bg-gradient', t.bg);
                     
-                    // Attiva effetto speciale se la funzione esiste (caricata da temi.js)
                     if (typeof attivaEffettoSpeciale === 'function') {
                         attivaEffettoSpeciale(t.effetto);
                     }
@@ -635,7 +625,6 @@
                 if (perc === 100) { statoClass = 'status-completed'; statoText = 'Completato'; }
                 else if (perc > 0) { statoClass = 'status-progress'; statoText = 'In corso'; }
 
-                // Estrai ID e nome dal campo cliente (formato: "CLI-00001 - Nome Cognome")
                 const clienteParts = (s.cliente || '').split(' - ');
                 const clienteId = clienteParts[0] || '-';
                 const clienteNome = clienteParts[1] || 'Senza nome';
@@ -770,7 +759,6 @@
             const comp = ALL_TASKS.filter(tid => tasks[tid] && tasks[tid].completed).length;
             const perc = Math.round((comp / ALL_TASKS.length) * 100);
 
-            // Estrai ID e nome dal campo cliente
             const clienteParts = (servizio.cliente || '').split(' - ');
             const clienteId = clienteParts[0] || 'ID Non specificato';
             const clienteNome = clienteParts[1] || servizio.nome_cliente || 'Senza nome';
