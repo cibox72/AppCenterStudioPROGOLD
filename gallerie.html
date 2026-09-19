@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestione Gallerie Clienti - AppCenterStudioPROGOLD</title>
-    
-    <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
-    
     <style>
         :root {
             --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
@@ -47,11 +44,9 @@
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
         .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-        
         .mega-guide { background: #f8f9fa; border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; margin-bottom: 20px; transition: background 0.5s ease, border-color 0.5s ease; }
         .mega-guide h4 { color: var(--primary-dark); margin-bottom: 12px; font-size: 15px; }
         .mega-guide ol { margin-left: 20px; color: var(--text-main); font-size: 14px; line-height: 1.8; }
-        
         .gallery-list-item { background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; margin-bottom: 16px; transition: all 0.3s ease; }
         .gallery-list-item:hover { box-shadow: 0 8px 24px rgba(30, 132, 73, 0.12); border-color: var(--primary); }
         .gallery-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
@@ -60,12 +55,10 @@
         .gallery-status { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
         .status-prep { background: #fef9e7; color: #f39c12; }
         .status-ready { background: #d5f4e6; color: #27ae60; }
-        
         .gallery-credentials { background: #f4f6f7; padding: 12px; border-radius: 8px; font-size: 13px; margin: 12px 0; font-family: monospace; color: var(--text-main); transition: background 0.5s ease; }
         .gallery-link { background: #e8f8f5; padding: 12px; border-radius: 8px; font-size: 13px; word-break: break-all; margin: 12px 0; font-family: monospace; color: var(--primary-dark); transition: background 0.5s ease, color 0.5s ease; }
         .gallery-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
         .gallery-actions .btn { padding: 8px 16px; font-size: 12px; }
-
         .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast { background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease; }
@@ -89,7 +82,7 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>Gestione Gallerie Clienti</h1>
+            <h1>Gestione Gallerie Clienti - <span class="studio-nome">Caricamento...</span></h1>
             <p>Crea gallerie esterne gestite tramite cloud MEGA. Archivio centralizzato e link brandizzati.</p>
         </div>
 
@@ -102,7 +95,6 @@
             <div class="card-3d">
                 <div class="card-title">Nuova Galleria Cliente</div>
                 <div class="card-subtitle">Compila i dati del cliente. Segui la guida per creare l'account MEGA.</div>
-                
                 <div class="mega-guide">
                     <h4>Guida Operativa per l'Operatore:</h4>
                     <ol>
@@ -113,7 +105,6 @@
                         <li>Copia Email, Password provvisoria e Link di MEGA nei campi sottostanti.</li>
                     </ol>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group"><label>Nome Cliente *</label><input type="text" id="galClienteNome" placeholder="es. Mario e Giulia Rossi"></div>
                     <div class="form-group"><label>Email Cliente *</label><input type="email" id="galClienteEmail" placeholder="cliente@email.com"></div>
@@ -123,13 +114,11 @@
                     <div class="form-group"><label>Tipo Evento *</label><input type="text" id="galTipoEvento" placeholder="es. Matrimonio"></div>
                 </div>
                 <div class="form-group"><label>Messaggio di Benvenuto *</label><textarea id="galMessaggio" rows="3" placeholder="Cari Mario e Giulia, siamo felici di consegnarvi..."></textarea></div>
-                
                 <div class="form-row" style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 16px;">
                     <div class="form-group"><label>Email Account MEGA</label><input type="email" id="galMegaEmail" placeholder="emailcliente@email.com"></div>
                     <div class="form-group"><label>Password Account MEGA</label><input type="text" id="galMegaPassword" placeholder="Password provvisoria"></div>
                 </div>
                 <div class="form-group"><label>Link Condivisione MEGA</label><input type="url" id="galMegaLink" placeholder="https://mega.nz/folder/..."></div>
-
                 <div class="btn-group">
                     <button class="btn btn-primary" onclick="creaGalleria()">SALVA E GENERA LINK PUBBLICO</button>
                 </div>
@@ -147,15 +136,11 @@
             </div>
         </div>
 
-        <!-- MODIFICATO: Ora usa classe e ID per il nome dinamico dello studio -->
-        <div class="footer-branding">Piattaforma sviluppata da <strong class="studio-nome" id="footerStudioName">Caricamento...</strong></div>
+        <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
     <script>
-        // NOTA: WORKER_URL è già definito globalmente in temi.js. 
-        // Rimuovendolo da qui evitiamo l'errore "Identifier has already been declared" che bloccava tutto lo script.
-        
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
@@ -176,15 +161,8 @@
                     return;
                 }
                 studioId = data.user.id;
-                
-                // CARICAMENTO TEMA GLOBALE
                 await caricaTemaGlobale();
-                
-                // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
-                setInterval(async () => {
-                    await caricaTemaGlobale();
-                }, 10000);
-                
+                setInterval(async () => { await caricaTemaGlobale(); }, 10000);
                 document.getElementById('loadingArea').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
                 await caricaGallerie();
@@ -194,9 +172,6 @@
             }
         }
 
-        // ============================================
-        // SEZIONE TEMA GLOBALE AGGIORNATA CON EFFETTI E TEMA ARANCIO
-        // ============================================
         async function caricaTemaGlobale() {
             if (!studioId) return;
             try {
@@ -222,15 +197,9 @@
                     root.style.setProperty('--primary-light', t.pl);
                     root.style.setProperty('--primary-gradient', t.pg);
                     root.style.setProperty('--bg-gradient', t.bg);
-                    
-                    // Attiva effetto speciale se la funzione esiste (caricata da temi.js)
-                    if (typeof attivaEffettoSpeciale === 'function') {
-                        attivaEffettoSpeciale(t.effetto);
-                    }
+                    if (typeof attivaEffettoSpeciale === 'function') { attivaEffettoSpeciale(t.effetto); }
                 }
-            } catch (error) {
-                console.error('Errore caricamento tema:', error);
-            }
+            } catch (error) { console.error('Errore caricamento tema:', error); }
         }
 
         async function creaGalleria() {
@@ -274,20 +243,15 @@
             document.getElementById('loadingList').style.display = 'block';
             document.getElementById('emptyList').classList.add('hidden');
             document.getElementById('gallerieContainer').innerHTML = '';
-
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/gallerie?token=${encodeURIComponent(token)}`);
                 const data = await response.json();
-                if (data.success && data.gallerie) {
-                    gallerie = data.gallerie;
-                } else {
-                    gallerie = [];
-                }
+                if (data.success && data.gallerie) { gallerie = data.gallerie; }
+                else { gallerie = []; }
             } catch (error) {
                 console.error('Errore:', error);
                 gallerie = [];
             }
-
             document.getElementById('loadingList').style.display = 'none';
             renderizzaGallerie();
         }
@@ -295,19 +259,15 @@
         function renderizzaGallerie() {
             const container = document.getElementById('gallerieContainer');
             const emptyState = document.getElementById('emptyList');
-            
             if (gallerie.length === 0) {
                 emptyState.classList.remove('hidden');
                 container.innerHTML = '';
                 return;
             }
-
             emptyState.classList.add('hidden');
-            
             container.innerHTML = gallerie.map(gal => {
                 const statusClass = gal.stato === 'pronta' ? 'status-ready' : 'status-prep';
                 const statusText = gal.stato === 'pronta' ? 'PRONTA PER INVIO' : 'IN PREPARAZIONE';
-                
                 return `
                     <div class="gallery-list-item">
                         <div class="gallery-header">
@@ -317,18 +277,15 @@
                             </div>
                             <span class="gallery-status ${statusClass}">${statusText}</span>
                         </div>
-                        
                         <div class="gallery-credentials">
                             <strong>Archivio MEGA:</strong><br>
                             Email: ${gal.mega_email || 'Non inserita'} | Password: ${gal.mega_password || 'Non inserita'}<br>
                             Link MEGA: ${gal.mega_link || 'Non inserito'}
                         </div>
-
                         <div class="gallery-link">
                             <strong>Link Pubblico Brandizzato:</strong><br>
                             ${gal.link_pubblico}
                         </div>
-                        
                         <div class="gallery-actions">
                             <button class="btn btn-success" onclick="copiaLink('${gal.link_pubblico}')">Copia Link Pubblico</button>
                             <button class="btn btn-outline" onclick="inviaWhatsApp('${gal.cliente_telefono}', '${gal.link_pubblico}', '${gal.cliente_nome}')">Invia WhatsApp</button>
