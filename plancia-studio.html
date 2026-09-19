@@ -211,35 +211,6 @@
             100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
         }
 
-        /* CARD PERSONALIZZA TEMA */
-        .theme-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-            margin-top: 16px;
-        }
-        .theme-btn {
-            padding: 12px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            background: rgba(255,255,255,0.05);
-            color: var(--text-main);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .theme-btn:hover {
-            transform: translateY(-2px);
-            border-color: var(--primary);
-        }
-        .theme-btn.active {
-            background: var(--primary-gradient);
-            color: white;
-            border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
         .footer-branding {
             text-align: center;
             padding: 24px;
@@ -311,22 +282,22 @@
             </div>
 
             <div class="dashboard-grid">
-                <!-- CARD PERSONALIZZA TEMA -->
-                <div class="module-card" style="grid-column: 1 / -1;">
+                <!-- CARD CAMBIA TEMA (COMPATTA E PROFESSIONALE) -->
+                <div class="module-card">
                     <div class="module-icon">🎨</div>
-                    <div class="module-title">Personalizza Tema</div>
-                    <div class="module-description">Scegli il colore della tua dashboard</div>
-                    <div class="theme-grid" id="themeGrid">
-                        <button class="theme-btn" onclick="cambiaTema('default')">Default (Scuro)</button>
-                        <button class="theme-btn" onclick="cambiaTema('natale')">Natale (Rosso)</button>
-                        <button class="theme-btn" onclick="cambiaTema('carnevale')">Carnevale (Viola)</button>
-                        <button class="theme-btn" onclick="cambiaTema('inverno')">Inverno (Grigio)</button>
-                        <button class="theme-btn" onclick="cambiaTema('pasqua')">Pasqua (Rosa)</button>
-                        <button class="theme-btn" onclick="cambiaTema('estate')">Estate (Azzurro)</button>
-                        <button class="theme-btn" onclick="cambiaTema('halloween')">Halloween (Arancio)</button>
-                        <button class="theme-btn" onclick="cambiaTema('san_valentino')">San Valentino (Rosa)</button>
-                        <button class="theme-btn" onclick="cambiaTema('arancio')">Arancio (Energia)</button>
-                    </div>
+                    <div class="module-title">Cambia Tema</div>
+                    <div class="module-description">Personalizza i colori della tua dashboard.</div>
+                    <select id="themeSelect" onchange="cambiaTema(this.value)" style="width: 100%; margin-top: 16px; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.05); color: var(--text-main); font-size: 14px; cursor: pointer;" onclick="event.stopPropagation()">
+                        <option value="default">Default (Scuro)</option>
+                        <option value="natale">Natale (Rosso)</option>
+                        <option value="carnevale">Carnevale (Viola)</option>
+                        <option value="inverno">Inverno (Grigio)</option>
+                        <option value="pasqua">Pasqua (Rosa)</option>
+                        <option value="estate">Estate (Azzurro)</option>
+                        <option value="halloween">Halloween (Arancio)</option>
+                        <option value="san_valentino">San Valentino (Rosa)</option>
+                        <option value="arancio">Arancio (Energia)</option>
+                    </select>
                 </div>
 
                 <a href="#" class="module-card" onclick="navigaConToken('scheda-anagrafica.html')">
@@ -440,13 +411,11 @@
                 const data = await response.json();
                 if (data.success && data.tema && data.tema.tema_attivo) {
                     currentTemaAttivo = data.tema.tema_attivo;
-                    // Evidenzia il bottone attivo
-                    document.querySelectorAll('.theme-btn').forEach(btn => {
-                        btn.classList.remove('active');
-                        if (btn.textContent.toLowerCase().includes(currentTemaAttivo.replace('_', ' '))) {
-                            btn.classList.add('active');
-                        }
-                    });
+                    // Aggiorna il valore della select invece di cercare i bottoni
+                    const select = document.getElementById('themeSelect');
+                    if (select) {
+                        select.value = currentTemaAttivo;
+                    }
                 }
             } catch (error) {
                 console.error('Errore caricamento tema:', error);
@@ -455,6 +424,10 @@
 
         async function cambiaTema(temaId) {
             try {
+                // Aggiorna immediatamente la select per feedback visivo sicuro
+                const select = document.getElementById('themeSelect');
+                if (select) select.value = temaId;
+
                 const response = await fetch(`${WORKER_URL}/api/studio/tema?token=${encodeURIComponent(token)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -466,12 +439,13 @@
                 const data = await response.json();
                 if (data.success) {
                     currentTemaAttivo = temaId;
-                    // Aggiorna UI
-                    document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
-                    event.target.classList.add('active');
                     mostraToast('Tema applicato con successo!', 'success');
-                    // Applica immediatamente il tema
-                    await caricaTemaGlobale(currentStudioId, token);
+                    // Applica immediatamente il tema usando la funzione globale
+                    if (typeof caricaTemaGlobale === 'function') {
+                        await caricaTemaGlobale(currentStudioId, token);
+                    }
+                } else {
+                    mostraToast('Errore nel salvataggio del tema', 'error');
                 }
             } catch (error) {
                 console.error('Errore cambio tema:', error);
