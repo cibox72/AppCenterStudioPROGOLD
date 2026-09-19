@@ -80,11 +80,6 @@ const TEMAS = {
         bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)', 
         effetto: null 
     },
-    
-    // ============================================
-    // NUOVI TEMI ELEGANTI
-    // ============================================
-    
     'elegante_beige': { 
         p: '#8b7355', 
         pd: '#5d4e37', 
@@ -93,7 +88,6 @@ const TEMAS = {
         bg: 'linear-gradient(135deg, #faf8f5 0%, #f0ebe3 40%, #e8e0d5 100%)', 
         effetto: null 
     },
-    
     'notte_arancio': { 
         p: '#ff6b35', 
         pd: '#c9451a', 
@@ -102,7 +96,6 @@ const TEMAS = {
         bg: 'linear-gradient(135deg, #0a0a0a 0%, #1a0f0a 40%, #2e1a0f 100%)', 
         effetto: null 
     },
-    
     'caldo_professionale': { 
         p: '#e67e50', 
         pd: '#a04020', 
@@ -111,7 +104,6 @@ const TEMAS = {
         bg: 'linear-gradient(135deg, #1c1410 0%, #2a1f1a 40%, #3d2820 100%)', 
         effetto: null 
     },
-    
     'minimal_luxury': { 
         p: '#c9a87c', 
         pd: '#8b7355', 
@@ -120,7 +112,6 @@ const TEMAS = {
         bg: 'linear-gradient(135deg, #ffffff 0%, #f8f6f2 40%, #f0ebe3 100%)', 
         effetto: null 
     },
-    
     'tramonto_moderno': { 
         p: '#ff512f', 
         pd: '#c93820', 
@@ -129,7 +120,6 @@ const TEMAS = {
         bg: 'linear-gradient(135deg, #0f0c0a 0%, #1a1210 40%, #2e1a15 100%)', 
         effetto: null 
     },
-    
     'oro_nero': { 
         p: '#d4af37', 
         pd: '#996515', 
@@ -138,7 +128,6 @@ const TEMAS = {
         bg: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 40%, #2a2a2a 100%)', 
         effetto: null 
     },
-    
     'ardesia_elegante': { 
         p: '#6c7a89', 
         pd: '#34495e', 
@@ -147,7 +136,6 @@ const TEMAS = {
         bg: 'linear-gradient(135deg, #1a1f2e 0%, #242b3a 40%, #2e3748 100%)', 
         effetto: null 
     },
-    
     'corallo_professional': { 
         p: '#ff6b6b', 
         pd: '#c94545', 
@@ -156,7 +144,6 @@ const TEMAS = {
         bg: 'linear-gradient(135deg, #fafafa 0%, #f5f0f0 40%, #ebe5e5 100%)', 
         effetto: null 
     },
-    
     'bronzo_scuro': { 
         p: '#cd7f32', 
         pd: '#8b4513', 
@@ -165,7 +152,6 @@ const TEMAS = {
         bg: 'linear-gradient(135deg, #0f0e0d 0%, #1a1614 40%, #2a2218 100%)', 
         effetto: null 
     },
-    
     'platino': { 
         p: '#9e9e9e', 
         pd: '#616161', 
@@ -174,7 +160,6 @@ const TEMAS = {
         bg: 'linear-gradient(135deg, #121212 0%, #1e1e1e 40%, #2a2a2a 100%)', 
         effetto: null 
     },
-    
     'lavanda_professional': { 
         p: '#9b7cb6', 
         pd: '#6c5b7b', 
@@ -183,7 +168,6 @@ const TEMAS = {
         bg: 'linear-gradient(135deg, #f8f6fc 0%, #f0ecf5 40%, #e8e0f0 100%)', 
         effetto: null 
     },
-    
     'rame_caldo': { 
         p: '#b87333', 
         pd: '#8b4513', 
@@ -195,18 +179,16 @@ const TEMAS = {
 };
 
 // ============================================
-// FUNZIONE PRINCIPALE - APPLICAZIONE AUTOMATICA TEMA
+// FUNZIONE PRINCIPALE - APPLICAZIONE AUTOMATICA
 // ============================================
 
 async function applicaTemaAutomatico() {
-    // Estrai token dall'URL
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     
-    if (!token) return; // Nessun token, niente tema
+    if (!token) return;
     
     try {
-        // Verifica sessione per ottenere studioId
         const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`);
         const data = await response.json();
         
@@ -214,7 +196,6 @@ async function applicaTemaAutomatico() {
         
         const studioId = data.user.id;
         
-        // Carica il tema dello studio
         const temaResponse = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
         const temaData = await temaResponse.json();
         
@@ -222,43 +203,74 @@ async function applicaTemaAutomatico() {
             const temaId = temaData.tema.tema_attivo;
             const tema = TEMAS[temaId] || TEMAS['default'];
             
-            // Applica le variabili CSS a TUTTA la pagina
+            // Applica variabili CSS con !important
             const root = document.documentElement;
-            root.style.setProperty('--primary', tema.p);
-            root.style.setProperty('--primary-dark', tema.pd);
-            root.style.setProperty('--primary-light', tema.pl);
-            root.style.setProperty('--primary-gradient', tema.pg);
-            root.style.setProperty('--bg-gradient', tema.bg);
+            root.style.setProperty('--primary', tema.p, 'important');
+            root.style.setProperty('--primary-dark', tema.pd, 'important');
+            root.style.setProperty('--primary-light', tema.pl, 'important');
+            root.style.setProperty('--primary-gradient', tema.pg, 'important');
+            root.style.setProperty('--bg-gradient', tema.bg, 'important');
             
-            // Aggiorna anche i nomi degli studi se presenti
+            // FORZA applicazione diretta agli elementi
+            forzaApplicazioneTema(tema);
+            
+            // Aggiorna nomi studio
             aggiornaNomiStudio(data.user.nome || 'Studio');
             
-            // Attiva effetti speciali se presenti
+            // Effetti speciali
             if (typeof attivaEffettoSpeciale === 'function') {
                 attivaEffettoSpeciale(tema.effetto);
             }
             
-            console.log(`[TEMI] Tema "${temaId}" applicato automaticamente a ${window.location.pathname}`);
+            console.log(`[TEMI] Tema "${temaId}" applicato a ${window.location.pathname}`);
         }
     } catch (error) {
-        console.error('[TEMI] Errore applicazione automatica:', error);
+        console.error('[TEMI] Errore:', error);
     }
 }
 
-// Funzione helper per aggiornare i nomi studio
+// Funzione che applica i colori DIRETTAMENTE a tutti gli elementi
+function forzaApplicazioneTema(tema) {
+    setTimeout(() => {
+        // Top bar e header
+        document.querySelectorAll('.top-bar, .branding-header').forEach(el => {
+            el.style.background = tema.pg;
+        });
+        
+        // Body background
+        document.body.style.background = tema.bg;
+        
+        // Bottoni primari
+        document.querySelectorAll('.btn-primary').forEach(el => {
+            el.style.background = tema.pg;
+        });
+        
+        // Card e moduli
+        document.querySelectorAll('.card, .module-card, .dash-card, .page-header').forEach(el => {
+            el.style.borderColor = tema.p;
+        });
+        
+        // Titoli
+        document.querySelectorAll('.card-title, .module-title, .dash-card .card-title, h1, h2').forEach(el => {
+            el.style.color = tema.pd;
+        });
+        
+        // Link e elementi attivi
+        document.querySelectorAll('a:hover, .module-card:hover').forEach(el => {
+            el.style.borderColor = tema.p;
+        });
+        
+        console.log('[TEMI] Applicazione forzata completata');
+    }, 300);
+}
+
 function aggiornaNomiStudio(nomeStudio) {
-    // Aggiorna tutti gli elementi con classe studio-nome
     document.querySelectorAll('.studio-nome').forEach(el => {
         el.textContent = nomeStudio;
     });
 }
 
-// ============================================
-// EFFETTI SPECIALI (neve, coriandoli, ecc.)
-// ============================================
-
 function attivaEffettoSpeciale(tipo) {
-    // Rimuovi effetti precedenti
     document.querySelectorAll('.effetto-speciale').forEach(el => el.remove());
     
     if (tipo === 'neve') {
@@ -335,24 +347,22 @@ function creaEffettoCoriandoli() {
 }
 
 // ============================================
-// ESECUZIONE AUTOMATICA AL CARICAMENTO PAGINA
+// ESECUZIONE AUTOMATICA
 // ============================================
 
-// Esegui automaticamente quando il DOM è pronto
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', applicaTemaAutomatico);
 } else {
-    // DOM già pronto
     setTimeout(applcaTemaAutomatico, 100);
 }
 
 // ============================================
-// FUNZIONI GLOBALI DISPONIBILI
+// ESPORTAZIONI GLOBALI
 // ============================================
 
 if (typeof window !== 'undefined') {
     window.TEMAS = TEMAS;
     window.applicaTemaAutomatico = applicaTemaAutomatico;
-    window.caricaTemaGlobale = applicaTemaAutomatico; // Alias per compatibilità
+    window.caricaTemaGlobale = applicaTemaAutomatico;
     window.attivaEffettoSpeciale = attivaEffettoSpeciale;
 }
