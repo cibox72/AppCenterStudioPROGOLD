@@ -82,7 +82,7 @@ const TEMAS = {
     },
     
     // ============================================
-    // NUOVI TEMI ELEGANTI (basati sulle tue immagini)
+    // NUOVI TEMI ELEGANTI
     // ============================================
     
     'elegante_beige': { 
