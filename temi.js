@@ -194,18 +194,35 @@ const TEMAS = {
     }
 };
 
-// Funzione per applicare il tema globalmente
-async function caricaTemaGlobale(studioId = null, token = null) {
-    if (!studioId || !token) return;
+// ============================================
+// FUNZIONE PRINCIPALE - APPLICAZIONE AUTOMATICA TEMA
+// ============================================
+
+async function applicaTemaAutomatico() {
+    // Estrai token dall'URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    
+    if (!token) return; // Nessun token, niente tema
     
     try {
-        const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
+        // Verifica sessione per ottenere studioId
+        const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`);
         const data = await response.json();
         
-        if (data.success && data.tema && data.tema.tema_attivo) {
-            const temaId = data.tema.tema_attivo;
+        if (!data.success || !data.user || !data.user.id) return;
+        
+        const studioId = data.user.id;
+        
+        // Carica il tema dello studio
+        const temaResponse = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
+        const temaData = await temaResponse.json();
+        
+        if (temaData.success && temaData.tema && temaData.tema.tema_attivo) {
+            const temaId = temaData.tema.tema_attivo;
             const tema = TEMAS[temaId] || TEMAS['default'];
             
+            // Applica le variabili CSS a TUTTA la pagina
             const root = document.documentElement;
             root.style.setProperty('--primary', tema.p);
             root.style.setProperty('--primary-dark', tema.pd);
@@ -213,17 +230,33 @@ async function caricaTemaGlobale(studioId = null, token = null) {
             root.style.setProperty('--primary-gradient', tema.pg);
             root.style.setProperty('--bg-gradient', tema.bg);
             
-            // Attiva effetto speciale se esiste
+            // Aggiorna anche i nomi degli studi se presenti
+            aggiornaNomiStudio(data.user.nome || 'Studio');
+            
+            // Attiva effetti speciali se presenti
             if (typeof attivaEffettoSpeciale === 'function') {
                 attivaEffettoSpeciale(tema.effetto);
             }
+            
+            console.log(`[TEMI] Tema "${temaId}" applicato automaticamente a ${window.location.pathname}`);
         }
     } catch (error) {
-        console.error('Errore caricamento tema:', error);
+        console.error('[TEMI] Errore applicazione automatica:', error);
     }
 }
 
-// Effetti speciali (neve, coriandoli, ecc.)
+// Funzione helper per aggiornare i nomi studio
+function aggiornaNomiStudio(nomeStudio) {
+    // Aggiorna tutti gli elementi con classe studio-nome
+    document.querySelectorAll('.studio-nome').forEach(el => {
+        el.textContent = nomeStudio;
+    });
+}
+
+// ============================================
+// EFFETTI SPECIALI (neve, coriandoli, ecc.)
+// ============================================
+
 function attivaEffettoSpeciale(tipo) {
     // Rimuovi effetti precedenti
     document.querySelectorAll('.effetto-speciale').forEach(el => el.remove());
@@ -301,9 +334,25 @@ function creaEffettoCoriandoli() {
     document.head.appendChild(style);
 }
 
-// Esporta per uso globale
+// ============================================
+// ESECUZIONE AUTOMATICA AL CARICAMENTO PAGINA
+// ============================================
+
+// Esegui automaticamente quando il DOM è pronto
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applicaTemaAutomatico);
+} else {
+    // DOM già pronto
+    setTimeout(applcaTemaAutomatico, 100);
+}
+
+// ============================================
+// FUNZIONI GLOBALI DISPONIBILI
+// ============================================
+
 if (typeof window !== 'undefined') {
     window.TEMAS = TEMAS;
-    window.caricaTemaGlobale = caricaTemaGlobale;
+    window.applicaTemaAutomatico = applicaTemaAutomatico;
+    window.caricaTemaGlobale = applicaTemaAutomatico; // Alias per compatibilità
     window.attivaEffettoSpeciale = attivaEffettoSpeciale;
 }
