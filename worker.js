@@ -65,9 +65,6 @@ export default {
     }
 
     try {
-      // ============================================
-      // 1. LOGIN
-      // ============================================
       if (path === "/api/auth/login" && request.method === "POST") {
         const { tipo, id, password } = await request.json();
         const hashedPassword = await hashPassword(password);
@@ -90,9 +87,6 @@ export default {
         return new Response(JSON.stringify({ error: "Credenziali non valide o account disattivato" }), { status: 401, headers: corsHeaders });
       }
 
-      // ============================================
-      // 2. VERIFICA SESSIONE
-      // ============================================
       if (path === "/api/auth/verifica" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -105,18 +99,12 @@ export default {
         return new Response(JSON.stringify({ error: "Sessione scaduta" }), { status: 401, headers: corsHeaders });
       }
 
-      // ============================================
-      // 3. LOGOUT
-      // ============================================
       if (path === "/api/auth/logout" && request.method === "POST") {
         const { token } = await request.json();
         await env.DB.prepare("DELETE FROM sessioni WHERE token=?").bind(token).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
-      // ============================================
-      // 4-16. CRM, NOTIFICHE, CLIENTI FOTO (Admin/Studio)
-      // ============================================
       if (path === "/api/admin/crm/studi" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -305,9 +293,6 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
-      // ============================================
-      // SERVIZI, PREVENTIVI, WORKFLOW, RICEVUTE, AGENDA, CLIENTI, EMAIL
-      // ============================================
       if (path === "/api/studio/servizi" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -471,9 +456,6 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
-      // ============================================
-      // CLIENTI NEGOZIO (LISTA, CREA, ELIMINA)
-      // ============================================
       if (path === "/api/studio/clienti" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const studioIdParam = url.searchParams.get("studioId");
@@ -521,9 +503,6 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
-      // ============================================
-      // NEGOZIO (COMPLETO E CORRETTO)
-      // ============================================
       if (path === "/api/studio/negozio/prodotti" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const studioIdFromParam = url.searchParams.get("studioId");
@@ -629,9 +608,6 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
-      // ============================================
-      // LISTA REGALI (CORRETTO E COMPLETO)
-      // ============================================
       if (path === "/api/studio/lista-regali" && request.method === "GET") {
           const token = url.searchParams.get("token");
           const sess = await verificaSessione(token);
@@ -731,9 +707,6 @@ export default {
           }
       }
 
-      // ============================================
-      // UPLOAD, TEMI, PROFILO, LINK UTILI, GALLERIE, CONTRATTI, EMAIL, ANAGRAFICA, SELEZIONE ALBUM
-      // ============================================
       if (path === "/api/studio/upload" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -748,19 +721,14 @@ export default {
         return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
       }
 
-      // === MODIFICA APPLICATA QUI: FALLBACK AL TEMA GLOBALE ===
       if (path === "/api/studio/tema" && request.method === "GET") {
         const studioId = url.searchParams.get("studioId");
-        // 1. Prova a prendere il tema specifico dello studio
         let result = await env.DB.prepare("SELECT * FROM temi_colori WHERE studio_id=?").bind(studioId).first();
-        // 2. SE NON TROVATO, prendi il tema GLOBALE impostato dall'Admin
         if (!result) {
             result = await env.DB.prepare("SELECT * FROM temi_colori WHERE studio_id=?").bind('global').first();
         }
         return new Response(JSON.stringify({ success: true, tema: result }), { headers: corsHeaders });
       }
-      // ========================================================
-
       if (path === "/api/studio/tema" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -771,11 +739,13 @@ export default {
         else await env.DB.prepare(`INSERT INTO temi_colori (studio_id, tema_attivo) VALUES (?, ?)`).bind(d.studio_id, d.tema_attivo).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
+      // === MODIFICA CRUCIALE: SALVA IL TEMA DELL'ADMIN CON ID 'admin' INVECE DI 'global' ===
       if (path === "/api/admin/tema" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const result = await env.DB.prepare("SELECT tema_attivo FROM temi_colori WHERE studio_id=?").bind('global').first();
+        const result = await env.DB.prepare("SELECT tema_attivo FROM temi_colori WHERE studio_id=?").bind('admin').first();
         return new Response(JSON.stringify({ success: true, tema: { tema_attivo: result ? result.tema_attivo : 'default' } }), { headers: corsHeaders });
       }
       if (path === "/api/admin/tema" && request.method === "POST") {
@@ -783,11 +753,12 @@ export default {
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'admin') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
         const d = await request.json();
-        const existing = await env.DB.prepare("SELECT id FROM temi_colori WHERE studio_id=?").bind('global').first();
-        if (existing) await env.DB.prepare(`UPDATE temi_colori SET tema_attivo=?, data_aggiornamento=? WHERE studio_id=?`).bind(d.tema_attivo, new Date().toISOString(), 'global').run();
-        else await env.DB.prepare(`INSERT INTO temi_colori (studio_id, tema_attivo, data_aggiornamento) VALUES (?, ?, ?)`).bind('global', d.tema_attivo, new Date().toISOString()).run();
+        const existing = await env.DB.prepare("SELECT id FROM temi_colori WHERE studio_id=?").bind('admin').first();
+        if (existing) await env.DB.prepare(`UPDATE temi_colori SET tema_attivo=?, data_aggiornamento=? WHERE studio_id=?`).bind(d.tema_attivo, new Date().toISOString(), 'admin').run();
+        else await env.DB.prepare(`INSERT INTO temi_colori (studio_id, tema_attivo, data_aggiornamento) VALUES (?, ?, ?)`).bind('admin', d.tema_attivo, new Date().toISOString()).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+      // ========================================================================================
 
       if (path === "/api/studio/profilo" && request.method === "PUT") {
         const token = url.searchParams.get("token");
@@ -1322,9 +1293,6 @@ export default {
         return new Response(JSON.stringify({ success: true, eliminated: eliminatedCount, count: daEliminare.results.length }), { headers: corsHeaders });
       }
 
-      // ============================================
-      // ROUTE NON TROVATA
-      // ============================================
       return new Response(JSON.stringify({ error: "Endpoint non trovato", path: path }), { status: 404, headers: corsHeaders });
 
     } catch (error) {
