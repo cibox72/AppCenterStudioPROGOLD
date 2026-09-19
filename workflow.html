@@ -496,14 +496,14 @@
             </div>
         </div>
 
-        <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
+        <!-- MODIFICATO: Ora usa classe e ID per il nome dinamico dello studio -->
+        <div class="footer-branding">Piattaforma sviluppata da <strong class="studio-nome" id="footerStudioName">Caricamento...</strong></div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
         // NOTA: WORKER_URL è già definito globalmente in temi.js. 
-        // Rimuovendolo da qui evitiamo l'errore "Identifier has already been declared" che bloccava tutto lo script.
         
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
