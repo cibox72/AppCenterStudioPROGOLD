@@ -162,6 +162,16 @@
         }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+        
+        /* NASCONDI CAMPI ESCA */
+        .fake-field {
+            position: absolute;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
@@ -179,48 +189,58 @@
                 <button class="login-type-btn" onclick="switchLoginType('cliente')">Cliente</button>
             </div>
             
-            <!-- FORM STUDIO con anti-autofill -->
+            <!-- FORM STUDIO con anti-autofill AGGRESSIVO -->
             <div class="login-form active" id="formStudio">
+                <!-- Campo esca per ingannare Chrome -->
+                <input type="text" class="fake-field" tabindex="-1" autocomplete="username" aria-hidden="true">
+                <input type="password" class="fake-field" tabindex="-1" autocomplete="current-password" aria-hidden="true">
+                
                 <div class="form-group">
                     <label>ID Studio</label>
-                    <input type="text" id="studioId" autocomplete="off" spellcheck="false" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')">
+                    <input type="text" id="studioId" autocomplete="off" spellcheck="false" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')" onblur="if(this.value==='')this.setAttribute('readonly','')">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="studioPassword" autocomplete="new-password" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')">
+                        <input type="password" id="studioPassword" autocomplete="new-password" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')" onblur="if(this.value==='')this.setAttribute('readonly','')">
                         <button type="button" class="toggle-password" onclick="togglePassword('studioPassword', this)">Mostra</button>
                     </div>
                 </div>
                 <button class="btn" onclick="login('studio', 'studioId', 'studioPassword')">ACCEDI</button>
             </div>
             
-            <!-- FORM ADMIN con anti-autofill -->
+            <!-- FORM ADMIN con anti-autofill AGGRESSIVO -->
             <div class="login-form" id="formAdmin">
+                <input type="text" class="fake-field" tabindex="-1" autocomplete="username" aria-hidden="true">
+                <input type="password" class="fake-field" tabindex="-1" autocomplete="current-password" aria-hidden="true">
+                
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" id="adminId" autocomplete="off" spellcheck="false" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')">
+                    <input type="text" id="adminId" autocomplete="off" spellcheck="false" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')" onblur="if(this.value==='')this.setAttribute('readonly','')">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="adminPassword" autocomplete="new-password" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')">
+                        <input type="password" id="adminPassword" autocomplete="new-password" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')" onblur="if(this.value==='')this.setAttribute('readonly','')">
                         <button type="button" class="toggle-password" onclick="togglePassword('adminPassword', this)">Mostra</button>
                     </div>
                 </div>
                 <button class="btn" onclick="login('admin', 'adminId', 'adminPassword')">ACCEDI</button>
             </div>
             
-            <!-- FORM CLIENTE con anti-autofill -->
+            <!-- FORM CLIENTE con anti-autofill AGGRESSIVO -->
             <div class="login-form" id="formCliente">
+                <input type="text" class="fake-field" tabindex="-1" autocomplete="username" aria-hidden="true">
+                <input type="password" class="fake-field" tabindex="-1" autocomplete="current-password" aria-hidden="true">
+                
                 <div class="form-group">
                     <label>ID Cliente</label>
-                    <input type="text" id="clienteId" autocomplete="off" spellcheck="false" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')">
+                    <input type="text" id="clienteId" autocomplete="off" spellcheck="false" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')" onblur="if(this.value==='')this.setAttribute('readonly','')">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="clientePassword" autocomplete="new-password" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')">
+                        <input type="password" id="clientePassword" autocomplete="new-password" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')" onblur="if(this.value==='')this.setAttribute('readonly','')">
                         <button type="button" class="toggle-password" onclick="togglePassword('clientePassword', this)">Mostra</button>
                     </div>
                 </div>
@@ -303,8 +323,11 @@
             document.querySelectorAll('.login-form').forEach(form => form.classList.remove('active'));
             document.getElementById('form' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('active');
             
-            document.querySelectorAll('input').forEach(input => {
-                input.value = '';
+            // Svuota tutti i campi quando cambi tipo di login
+            document.querySelectorAll('input[type="text"], input[type="password"]').forEach(input => {
+                if (!input.classList.contains('fake-field')) {
+                    input.value = '';
+                }
             });
         }
 
