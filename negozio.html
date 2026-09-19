@@ -395,7 +395,6 @@
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) { window.location.href = 'index.html'; return; }
-            document.getElementById('pvData').valueAsDate = new Date();
             await verificaSessione();
         });
 
@@ -459,11 +458,28 @@
             } catch (error) { console.error('Errore tema:', error); }
         }
 
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById('tab-' + tabName).classList.add('active');
+        function mostraDashboard() {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('dashboardSection').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function mostraSezione(nomeSezione) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(nomeSezione + 'Section').classList.add('active');
+            window.scrollTo(0, 0);
+            
+            if (nomeSezione === 'anteprima') {
+                renderizzaVetrina();
+            } else if (nomeSezione === 'clienti') {
+                caricaClienti();
+            } else if (nomeSezione === 'prodotti') {
+                caricaProdotti();
+            } else if (nomeSezione === 'ordini') {
+                caricaOrdini();
+            } else if (nomeSezione === 'config') {
+                caricaConfig();
+            }
         }
 
         async function caricaDatiIniziali() {
@@ -751,7 +767,7 @@
                                 return '<div class="order-product">' +
                                     '<div class="order-product-info">' +
                                         '<div><strong>• ' + p.nome + ' x' + p.quantita + '</strong> - EUR ' + (p.prezzo * p.quantita).toFixed(2) + '</div>' +
-                                        (fotoUrl ? '<div class="order-product-actions"><a href="' + fotoUrl + '" target="_blank" class="btn btn-sm btn-info" style="text-decoration:none;">👁️ Vedi Foto</a><button onclick="downloadFoto(\'' + fotoUrl + '\')" class="btn btn-sm btn-success" style="text-decoration:none;">⬇️ Scarica Foto</button></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
+                                        (fotoUrl ? '<div class="order-product-actions"><a href="' + fotoUrl + '" target="_blank" class="btn btn-sm btn-info" style="text-decoration:none;">👁️ Vedi Foto</a><button onclick="downloadFoto(\'' + fotoUrl + '\')" class="btn btn-sm btn-success" style="text-decoration:none;">️ Scarica Foto</button></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
                                     '</div>' +
                                 '</div>';
                             }).join('') +
