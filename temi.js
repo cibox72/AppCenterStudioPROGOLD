@@ -32,6 +32,37 @@ function attivaEffettoSpeciale(tipo) {
     }
 }
 
+// ============================================
+// NUOVA FUNZIONE: AGGIORNA NOME STUDIO IN TUTTE LE PAGINE
+// ============================================
+async function aggiornaDatiStudio(studioId, studioNome) {
+    if (!studioId || !studioNome) return;
+    
+    // Aggiorna tutti gli elementi con classe 'studio-nome'
+    document.querySelectorAll('.studio-nome').forEach(function(el) {
+        el.textContent = studioNome;
+    });
+    
+    // Aggiorna tutti gli elementi con classe 'studio-id'
+    document.querySelectorAll('.studio-id').forEach(function(el) {
+        el.textContent = studioId;
+    });
+    
+    // Aggiorna header con ID specifico (per backward compatibility)
+    var headerEl = document.getElementById('headerStudioName');
+    if (headerEl) headerEl.textContent = studioNome;
+    
+    // Aggiorna footer con ID specifico
+    var footerEl = document.getElementById('footerStudioName');
+    if (footerEl) footerEl.textContent = studioNome;
+    
+    // Aggiorna titolo vetrina negozio
+    var vetrinaEl = document.getElementById('vetrinaNomeStudio');
+    if (vetrinaEl) vetrinaEl.textContent = 'Negozio ' + studioNome;
+    
+    console.log('[TEMI] Dati studio aggiornati:', studioNome, studioId);
+}
+
 async function caricaTemaGlobale(studioId, token) {
     if (!studioId || !token) return;
     try {
@@ -57,12 +88,27 @@ function inizializzaTemi() {
     var params = new URLSearchParams(window.location.search);
     var token = params.get('token');
     if (!token) return;
+    
     fetch(WORKER_URL + '/api/auth/verifica?token=' + encodeURIComponent(token))
         .then(function(r) { return r.json(); })
         .then(function(d) {
             if (d.success && d.user && d.user.id) {
+                // Carica il tema
                 caricaTemaGlobale(d.user.id, token);
-                setInterval(function() { caricaTemaGlobale(d.user.id, token); }, 10000);
+                
+                // AGGIUNTA: Aggiorna automaticamente il nome dello studio in tutta la pagina
+                if (d.user.nome) {
+                    aggiornaDatiStudio(d.user.id, d.user.nome);
+                }
+                
+                // Polling ogni 10 secondi
+                setInterval(function() { 
+                    caricaTemaGlobale(d.user.id, token);
+                    // Aggiorna anche i dati studio periodicamente
+                    if (d.user.nome) {
+                        aggiornaDatiStudio(d.user.id, d.user.nome);
+                    }
+                }, 10000);
             }
         });
 }
