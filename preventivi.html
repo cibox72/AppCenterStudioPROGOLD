@@ -46,7 +46,6 @@
         .btn-danger { background: var(--danger); color: white; }
         .btn-sm { padding: 6px 12px; font-size: 11px; }
         
-        /* Stili Ricerca Cliente */
         .cliente-search-box { position: relative; margin-bottom: 16px; }
         .cliente-search-box input { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; background: #f8f9fa; }
         .search-results { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid var(--border-color); border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10; max-height: 200px; overflow-y: auto; display: none; }
@@ -101,7 +100,7 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>Preventivi & Contratti</h1>
+            <h1>Preventivi & Contratti - <span class="studio-nome">Caricamento...</span></h1>
             <p>Gestione preventivi, contratti e generazione PDF professionale.</p>
         </div>
 
@@ -123,7 +122,6 @@
                     </div>
                 </div>
 
-                <!-- CLIENTE A CON RICERCA -->
                 <div class="card">
                     <div class="card-title">Anagrafica Cliente A (Intestatario Principale)</div>
                     <div class="cliente-search-box">
@@ -148,7 +146,6 @@
                     </div>
                 </div>
 
-                <!-- CLIENTE B CON RICERCA -->
                 <div class="card">
                     <div class="card-title">Anagrafica Cliente B (Secondo Intestatario)</div>
                     <div class="cliente-search-box">
@@ -254,14 +251,8 @@
                 </div>
             </div>
         </div>
-        
-        <!-- MODIFICATO: Ora usa classe e ID per il nome dinamico dello studio -->
-        <div class="footer-branding" style="text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px;">
-            Piattaforma sviluppata da <strong class="studio-nome" id="footerStudioName">Caricamento...</strong>
-        </div>
     </div>
 
-    <!-- Modale Servizi -->
     <div id="modalServizi" class="modal-overlay">
         <div class="modal-content">
             <div style="display:flex; justify-content:space-between; margin-bottom:20px;"><h2 style="font-size:18px; color:var(--primary-dark);">Seleziona Servizi</h2><button onclick="chiudiModalServizi()" style="background:none; border:none; font-size:24px; cursor:pointer;">×</button></div>
@@ -271,10 +262,10 @@
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
+    <div class="footer-branding" style="text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px;">
+        Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong>
+    </div>
     <script>
-        // NOTA: WORKER_URL è già definito globalmente in temi.js. 
-        // Rimuovendolo da qui evitiamo l'errore "Identifier has already been declared" che bloccava tutto lo script.
-        
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
@@ -299,15 +290,8 @@
                     return;
                 }
                 studioId = data.user.id;
-                
-                // CARICAMENTO TEMA GLOBALE
                 await caricaTemaGlobale();
-                
-                // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
-                setInterval(async () => {
-                    await caricaTemaGlobale();
-                }, 10000);
-                
+                setInterval(async () => { await caricaTemaGlobale(); }, 10000);
                 document.getElementById('loadingArea').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
                 await caricaArchivioPreventivi();
@@ -318,9 +302,6 @@
             }
         }
 
-        // ============================================
-        // SEZIONE TEMA GLOBALE AGGIORNATA CON EFFETTI E TEMA ARANCIO
-        // ============================================
         async function caricaTemaGlobale() {
             if (!studioId) return;
             try {
@@ -346,11 +327,7 @@
                     root.style.setProperty('--primary-light', t.pl);
                     root.style.setProperty('--primary-gradient', t.pg);
                     root.style.setProperty('--bg-gradient', t.bg);
-                    
-                    // Attiva effetto speciale se la funzione esiste (caricata da temi.js)
-                    if (typeof attivaEffettoSpeciale === 'function') {
-                        attivaEffettoSpeciale(t.effetto);
-                    }
+                    if (typeof attivaEffettoSpeciale === 'function') { attivaEffettoSpeciale(t.effetto); }
                 }
             } catch (error) { console.error('Errore tema:', error); }
         }
@@ -362,19 +339,11 @@
             document.getElementById('tab-' + tabName).classList.add('active');
         }
 
-        // ============================================
-        // RICERCA CLIENTI DALL'ANAGRAFICA
-        // ============================================
         let debounceTimer;
         function cercaCliente(tipo, query) {
             clearTimeout(debounceTimer);
             const resultsDiv = document.getElementById(`resultsCliente${tipo}`);
-            
-            if (query.length < 2) {
-                resultsDiv.style.display = 'none';
-                return;
-            }
-
+            if (query.length < 2) { resultsDiv.style.display = 'none'; return; }
             debounceTimer = setTimeout(async () => {
                 try {
                     const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti/ricerca?q=${encodeURIComponent(query)}&token=${encodeURIComponent(token)}`);
@@ -387,9 +356,7 @@
                             </div>
                         `).join('');
                         resultsDiv.style.display = 'block';
-                    } else {
-                        resultsDiv.style.display = 'none';
-                    }
+                    } else { resultsDiv.style.display = 'none'; }
                 } catch (error) { console.error('Errore ricerca:', error); }
             }, 300);
         }
@@ -408,16 +375,12 @@
             mostraToast(`Cliente ${nome} ${cognome} selezionato`, 'success');
         }
 
-        // Chiudi dropdown se si clicca fuori
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.cliente-search-box')) {
                 document.querySelectorAll('.search-results').forEach(el => el.style.display = 'none');
             }
         });
 
-        // ============================================
-        // GESTIONE SERVIZI
-        // ============================================
         async function apriModalServizi() {
             const modal = document.getElementById('modalServizi');
             const content = document.getElementById('modalServiziContent');
@@ -669,9 +632,6 @@
             generaPDF(dati, tipo);
         }
 
-        // ============================================
-        // GENERA PDF CON JSPDF (PROFESSIONALE)
-        // ============================================
         async function generaPDF(dati, tipo) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
