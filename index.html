@@ -51,8 +51,6 @@
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient);
         }
         .logo-container { text-align: center; margin-bottom: 32px; }
-        
-        /* LOGO PIÙ GRANDE */
         .logo {
             width: 160px;
             height: 160px;
@@ -60,8 +58,6 @@
             margin-bottom: 20px;
             filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
         }
-        
-        /* SCRITTA SOTTO LOGO BIANCA */
         .logo-text {
             font-size: 24px;
             font-weight: 800;
@@ -143,7 +139,6 @@
             padding-top: 20px;
             border-top: 1px solid var(--border-color);
         }
-        /* SCRITTA REGISTRA BIANCA */
         .register-link button {
             background: none;
             border: none;
@@ -183,48 +178,55 @@
                 <button class="login-type-btn" onclick="switchLoginType('admin')">Admin</button>
                 <button class="login-type-btn" onclick="switchLoginType('cliente')">Cliente</button>
             </div>
+            
+            <!-- FORM STUDIO con anti-autofill -->
             <div class="login-form active" id="formStudio">
                 <div class="form-group">
                     <label>ID Studio</label>
-                    <input type="text" id="studioId" autocomplete="off" spellcheck="false">
+                    <input type="text" id="studioId" autocomplete="off" spellcheck="false" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="studioPassword" autocomplete="new-password">
+                        <input type="password" id="studioPassword" autocomplete="new-password" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')">
                         <button type="button" class="toggle-password" onclick="togglePassword('studioPassword', this)">Mostra</button>
                     </div>
                 </div>
                 <button class="btn" onclick="login('studio', 'studioId', 'studioPassword')">ACCEDI</button>
             </div>
+            
+            <!-- FORM ADMIN con anti-autofill -->
             <div class="login-form" id="formAdmin">
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" id="adminId" autocomplete="off" spellcheck="false">
+                    <input type="text" id="adminId" autocomplete="off" spellcheck="false" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="adminPassword" autocomplete="new-password">
+                        <input type="password" id="adminPassword" autocomplete="new-password" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')">
                         <button type="button" class="toggle-password" onclick="togglePassword('adminPassword', this)">Mostra</button>
                     </div>
                 </div>
                 <button class="btn" onclick="login('admin', 'adminId', 'adminPassword')">ACCEDI</button>
             </div>
+            
+            <!-- FORM CLIENTE con anti-autofill -->
             <div class="login-form" id="formCliente">
                 <div class="form-group">
                     <label>ID Cliente</label>
-                    <input type="text" id="clienteId" autocomplete="off" spellcheck="false">
+                    <input type="text" id="clienteId" autocomplete="off" spellcheck="false" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="clientePassword" autocomplete="new-password">
+                        <input type="password" id="clientePassword" autocomplete="new-password" data-lpignore="true" readonly onfocus="this.removeAttribute('readonly')">
                         <button type="button" class="toggle-password" onclick="togglePassword('clientePassword', this)">Mostra</button>
                     </div>
                 </div>
                 <button class="btn" onclick="login('cliente', 'clienteId', 'clientePassword')">ACCEDI</button>
             </div>
+            
             <div class="register-link">
                 <button onclick="showRegistration()">Registra il tuo studio - Prova 30 giorni</button>
             </div>
