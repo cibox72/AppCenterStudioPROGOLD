@@ -389,9 +389,7 @@
                 const result = await response.json();
                 if (result.success) {
                     alert('Preventivo salvato con successo!');
-                    // AGGIUNGI IN AGENDA
                     await aggiungiInAgenda(dati, stato);
-                    // SE CONTRATTO, CREA ANCHE CONTRATTO
                     if (stato === 'accettato') {
                         const datiContratto = { ...dati, id: 'contr-' + Date.now(), numero_contratto: numero, data_contratto: new Date().toISOString().split('T')[0] };
                         await fetch(WORKER_URL + '/api/studio/contratti', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datiContratto) });
