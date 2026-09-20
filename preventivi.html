@@ -1000,9 +1000,6 @@
     </div>
 
     <script>
-        // ============================================
-        // CONFIGURAZIONE
-        // ============================================
         const WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
         let token = '';
         let studioId = '';
@@ -1014,9 +1011,6 @@
         let modalAccontoMode = 'aggiungi';
         let accontoIndexModifica = -1;
 
-        // ============================================
-        // INIZIALIZZAZIONE
-        // ============================================
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             token = urlParams.get('token');
@@ -1051,9 +1045,6 @@
             }
         }
 
-        // ============================================
-        // GESTIONE TAB
-        // ============================================
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
             document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
@@ -1062,9 +1053,6 @@
             document.getElementById('tab-' + tabName).classList.add('active');
         }
 
-        // ============================================
-        // MAPS BUTTONS
-        // ============================================
         function apriMaps(tipo) {
             var indirizzo = '';
             
@@ -1107,9 +1095,6 @@
             }
         }
 
-        // ============================================
-        // SERVIZI
-        // ============================================
         async function caricaServizi() {
             try {
                 const response = await fetch(WORKER_URL + '/api/studio/servizi?token=' + encodeURIComponent(token));
@@ -1198,9 +1183,6 @@
             chiudiModale('modal-servizi');
         }
 
-        // ============================================
-        // ACCONTI
-        // ============================================
         function aggiungiAcconto() {
             modalAccontoMode = 'aggiungi';
             accontoIndexModifica = -1;
@@ -1274,9 +1256,6 @@
             div.innerHTML = html;
         }
 
-        // ============================================
-        // PIANO PAGAMENTO
-        // ============================================
         function aggiungiRata() {
             const importo = prompt('Importo rata (EUR):');
             if (importo && parseFloat(importo) > 0) {
@@ -1311,9 +1290,6 @@
             aggiornaPianoUI();
         }
 
-        // ============================================
-        // CALCOLI
-        // ============================================
         function calcolaTotali() {
             const totaleServizi = serviziSelezionati.reduce(function(sum, s) { return sum + s.prezzo; }, 0);
             const scontoPerc = parseFloat(document.getElementById('sconto_perc').value) || 0;
@@ -1331,9 +1307,6 @@
             document.getElementById('saldo_residuo').textContent = saldoResiduo.toFixed(2) + ' EUR';
         }
 
-        // ============================================
-        // SALVATAGGIO
-        // ============================================
         async function salvaPreventivo(stato) {
             const numero = document.getElementById('numero').value;
             const dataEmissione = document.getElementById('data_emissione').value;
@@ -1408,10 +1381,7 @@
                 
                 if (result.success) {
                     alert('Preventivo salvato con successo!');
-                    
-                    // Aggiunge automaticamente in agenda
                     await aggiungiInAgenda(dati, stato);
-                    
                     resetForm();
                     caricaPreventivi();
                     caricaContratti();
@@ -1490,9 +1460,6 @@
             calcolaTotali();
         }
 
-        // ============================================
-        // CARICAMENTO ARCHIVI
-        // ============================================
         async function caricaPreventivi() {
             try {
                 const response = await fetch(WORKER_URL + '/api/studio/preventivi?token=' + encodeURIComponent(token));
@@ -1570,9 +1537,6 @@
             }
         }
 
-        // ============================================
-        // MODIFICA PREVENTIVO/CONTRATTO
-        // ============================================
         async function modificaPreventivo(id) {
             try {
                 const response = await fetch(WORKER_URL + '/api/studio/preventivi?token=' + encodeURIComponent(token));
@@ -1694,9 +1658,6 @@
             }
         }
 
-        // ============================================
-        // ELIMINAZIONE
-        // ============================================
         async function eliminaPreventivo(id) {
             if (!confirm('Eliminare questo preventivo?')) return;
             
@@ -1739,9 +1700,6 @@
             }
         }
 
-        // ============================================
-        // PDF
-        // ============================================
         function generaPDF() {
             alert('Funzione generazione PDF in sviluppo.');
         }
@@ -1750,9 +1708,6 @@
             alert('Funzione generazione PDF in sviluppo per ID: ' + id);
         }
 
-        // ============================================
-        // UTILITIES
-        // ============================================
         function chiudiModale(modalId) {
             document.getElementById(modalId).classList.remove('active');
         }
