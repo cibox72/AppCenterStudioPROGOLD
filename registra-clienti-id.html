@@ -250,6 +250,13 @@
                 mostraToast('Compila Nome, Cognome ed Email', 'error');
                 return;
             }
+            
+            // Disabilita il bottone per evitare doppi click (race condition)
+            const btn = document.querySelector('.btn-primary');
+            const originalText = btn.innerText;
+            btn.innerText = 'Registrazione in corso...';
+            btn.disabled = true;
+
             const dati = {
                 nome, cognome, email,
                 telefono: document.getElementById('c_tel').value,
@@ -279,11 +286,20 @@
                     document.getElementById('c_note').value = '';
                     await caricaClienti();
                 } else {
-                    mostraToast('Errore: ' + (result.error || 'Riprova'), 'error');
+                    // Gestione specifica per l'errore di ID duplicato
+                    if (result.error && result.error.includes('UNIQUE constraint')) {
+                        mostraToast('Errore: ID cliente già esistente nel database. Riprova.', 'error');
+                    } else {
+                        mostraToast('Errore: ' + (result.error || 'Riprova'), 'error');
+                    }
                 }
             } catch (error) {
                 console.error('Errore:', error);
                 mostraToast('Errore di connessione', 'error');
+            } finally {
+                // Riabilita il bottone
+                btn.innerText = originalText;
+                btn.disabled = false;
             }
         }
 
