@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Preventivi & Contratti - AppCenterStudioPROGOLD</title>
+    <link rel="stylesheet" href="temi.css">
+    <script src="temi.js"></script>
     <style>
         :root {
             --primary: #82e0aa;
@@ -280,13 +282,14 @@
         }
         
         .section-title {
-            color: var(--primary-dark);
+            color: var(--text-main);
             font-size: 1.1em;
             margin: 25px 0 15px 0;
             padding: 10px 15px;
             background: var(--primary-light);
             border-radius: 8px;
             font-weight: 600;
+            border-left: 4px solid var(--primary);
         }
         
         .services-list {
@@ -409,8 +412,8 @@
         }
         
         th {
-            background: var(--primary-light);
-            color: var(--primary-dark);
+            background: var(--primary);
+            color: #ffffff;
             font-weight: 600;
         }
         
@@ -573,6 +576,17 @@
             color: var(--primary-dark);
         }
         
+        .evento-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            align-items: end;
+        }
+        
+        .evento-row .form-group {
+            margin-bottom: 0;
+        }
+        
         @media (max-width: 768px) {
             .form-grid {
                 grid-template-columns: 1fr;
@@ -603,12 +617,16 @@
             .top-bar h1 {
                 font-size: 1.1em;
             }
+            
+            .evento-row {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="top-bar">
-        <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">← Indietro</button>
+        <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Indietro</button>
         <h1>Preventivi & Contratti</h1>
         <div class="sync-status">
             <div class="sync-dot"></div>
@@ -618,7 +636,7 @@
 
     <div class="container">
         <div class="page-header">
-            <h2>📋 Preventivi & Contratti</h2>
+            <h2>Preventivi & Contratti</h2>
             <p>Gestione preventivi, contratti e generazione PDF professionale. Crea, modifica e traccia tutti i tuoi preventivi e contratti.</p>
         </div>
 
@@ -631,7 +649,7 @@
         <!-- TAB: NUOVO PREVENTIVO -->
         <div id="tab-nuovo" class="tab-content active">
             <div class="card">
-                <h3 class="card-title">📝 Preventivo / Contratto Nuovo</h3>
+                <h3 class="card-title">Preventivo / Contratto Nuovo</h3>
                 
                 <div class="form-grid">
                     <div class="form-group">
@@ -644,7 +662,7 @@
                     </div>
                 </div>
 
-                <div class="section-title">👤 Anagrafica Cliente A (Intestatario Principale)</div>
+                <div class="section-title">Anagrafica Cliente A (Intestatario Principale)</div>
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Nome *</label>
@@ -668,8 +686,8 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Città</label>
-                            <input type="text" id="cliente_a_citta" placeholder="Città">
+                            <label>Citta</label>
+                            <input type="text" id="cliente_a_citta" placeholder="Citta">
                         </div>
                         <div class="form-group">
                             <label>CAP</label>
@@ -683,12 +701,12 @@
                     <div class="form-group">
                         <label>&nbsp;</label>
                         <button class="btn btn-maps" onclick="apriMaps('cliente_a')">
-                            🗺️ Apri su Maps
+                            Apri su Maps
                         </button>
                     </div>
                 </div>
 
-                <div class="section-title">👥 Anagrafica Cliente B (Secondo Intestatario)</div>
+                <div class="section-title">Anagrafica Cliente B (Secondo Intestatario)</div>
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Nome</label>
@@ -712,8 +730,8 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Città</label>
-                            <input type="text" id="cliente_b_citta" placeholder="Città">
+                            <label>Citta</label>
+                            <input type="text" id="cliente_b_citta" placeholder="Citta">
                         </div>
                         <div class="form-group">
                             <label>CAP</label>
@@ -727,13 +745,13 @@
                     <div class="form-group">
                         <label>&nbsp;</label>
                         <button class="btn btn-maps" onclick="apriMaps('cliente_b')">
-                            🗺️ Apri su Maps
+                            Apri su Maps
                         </button>
                     </div>
                 </div>
 
-                <div class="section-title">🎉 Dettagli Evento</div>
-                <div class="form-grid">
+                <div class="section-title">Dettagli Evento</div>
+                <div class="evento-row">
                     <div class="form-group">
                         <label>Tipo di Servizio *</label>
                         <select id="tipo_servizio">
@@ -748,25 +766,31 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label>Data Evento *</label>
+                        <input type="date" id="data_evento">
+                    </div>
+                    <div class="form-group">
                         <label>Luogo Cerimonia</label>
                         <input type="text" id="luogo_cerimonia" placeholder="Nome e indirizzo chiesa/luogo">
                         <button class="btn btn-maps" onclick="apriMapsLuogo('cerimonia')">
-                            🗺️ Apri su Maps
+                            Apri su Maps
                         </button>
                     </div>
+                </div>
+                <div class="form-grid" style="margin-top: 15px;">
                     <div class="form-group">
                         <label>Luogo Ricevimento</label>
                         <input type="text" id="luogo_ricevimento" placeholder="Nome e indirizzo ristorante/luogo">
                         <button class="btn btn-maps" onclick="apriMapsLuogo('ricevimento')">
-                            🗺️ Apri su Maps
+                            Apri su Maps
                         </button>
                     </div>
                 </div>
 
-                <div class="section-title">💰 Servizi & Costi</div>
+                <div class="section-title">Servizi & Costi</div>
                 <div class="form-group">
                     <button class="btn btn-outline" onclick="apriSelezioneServizi()">
-                        📦 Seleziona da Listino
+                        Seleziona da Listino
                     </button>
                 </div>
                 <div id="servizi_selezionati" class="services-list">
@@ -779,12 +803,12 @@
                         <input type="number" id="sconto_perc" value="0" min="0" max="100" step="1" onchange="calcolaTotali()">
                     </div>
                     <div class="form-group">
-                        <label>Buono / promozione (€)</label>
+                        <label>Buono / promozione (EUR)</label>
                         <input type="number" id="sconto_fisso" value="0" min="0" step="1" onchange="calcolaTotali()">
                     </div>
                 </div>
 
-                <div class="section-title">💵 Acconti Ricevuti</div>
+                <div class="section-title">Acconti Ricevuti</div>
                 <div id="acconti_selezionati" class="acconti-list">
                     <p style="color: var(--text-light);">Nessun acconto.</p>
                 </div>
@@ -792,7 +816,7 @@
                     + Aggiungi Acconto
                 </button>
 
-                <div class="section-title">📅 Piano di Pagamento (Promemoria per il cliente)</div>
+                <div class="section-title">Piano di Pagamento (Promemoria per il cliente)</div>
                 <div id="piano_selezionato" class="piano-list">
                     <p style="color: var(--text-light);">Nessuna rata impostata.</p>
                 </div>
@@ -803,27 +827,27 @@
                 <div class="totals-box">
                     <div class="total-row">
                         <span>Totale servizi:</span>
-                        <span id="totale_servizi">0,00 €</span>
+                        <span id="totale_servizi">0,00 EUR</span>
                     </div>
                     <div class="total-row">
                         <span>Sconto applicato:</span>
-                        <span id="totale_sconto">-0,00 €</span>
+                        <span id="totale_sconto">-0,00 EUR</span>
                     </div>
                     <div class="total-row final">
                         <span>IMPORTO TOTALE:</span>
-                        <span id="importo_totale">0,00 €</span>
+                        <span id="importo_totale">0,00 EUR</span>
                     </div>
                     <div class="total-row">
                         <span>Totale acconti versati:</span>
-                        <span id="totale_acconti">0,00 €</span>
+                        <span id="totale_acconti">0,00 EUR</span>
                     </div>
                     <div class="total-row saldo">
                         <span>SALDO RESIDUO:</span>
-                        <span id="saldo_residuo">0,00 €</span>
+                        <span id="saldo_residuo">0,00 EUR</span>
                     </div>
                 </div>
 
-                <div class="section-title">✅ Accettazione e Note</div>
+                <div class="section-title">Accettazione e Note</div>
                 <div class="checkbox-group">
                     <input type="checkbox" id="accettato">
                     <label for="accettato">ACCETTATO E FIRMATO DAL CLIENTE</label>
@@ -834,9 +858,9 @@
                 </div>
 
                 <div class="modal-actions">
-                    <button class="btn btn-primary" onclick="salvaPreventivo('bozza')">💾 SALVA PREVENTIVO</button>
-                    <button class="btn btn-success" onclick="salvaPreventivo('accettato')">✅ CONVERTI IN CONTRATTO</button>
-                    <button class="btn btn-warning" onclick="generaPDF()">📄 GENERAZIONE PDF</button>
+                    <button class="btn btn-primary" onclick="salvaPreventivo('bozza')">SALVA PREVENTIVO</button>
+                    <button class="btn btn-success" onclick="salvaPreventivo('accettato')">CONVERTI IN CONTRATTO</button>
+                    <button class="btn btn-warning" onclick="generaPDF()">GENERAZIONE PDF</button>
                 </div>
             </div>
         </div>
@@ -844,7 +868,7 @@
         <!-- TAB: ARCHIVIO PREVENTIVI -->
         <div id="tab-archivio-preventivi" class="tab-content">
             <div class="card">
-                <h3 class="card-title">📁 Archivio Preventivi</h3>
+                <h3 class="card-title">Archivio Preventivi</h3>
                 <div id="loading-preventivi" class="loading">
                     <div class="spinner"></div>
                     <p>Caricamento dati...</p>
@@ -866,7 +890,7 @@
                     </table>
                 </div>
                 <div id="empty-preventivi" class="empty-state" style="display: none;">
-                    <div class="empty-state-icon">📋</div>
+                    <div class="empty-state-icon">--</div>
                     <p>Nessun preventivo trovato.</p>
                 </div>
             </div>
@@ -875,7 +899,7 @@
         <!-- TAB: ARCHIVIO CONTRATTI -->
         <div id="tab-archivio-contratti" class="tab-content">
             <div class="card">
-                <h3 class="card-title">📄 Archivio Contratti</h3>
+                <h3 class="card-title">Archivio Contratti</h3>
                 <div id="loading-contratti" class="loading">
                     <div class="spinner"></div>
                     <p>Caricamento dati...</p>
@@ -897,7 +921,7 @@
                     </table>
                 </div>
                 <div id="empty-contratti" class="empty-state" style="display: none;">
-                    <div class="empty-state-icon">📄</div>
+                    <div class="empty-state-icon">--</div>
                     <p>Nessun contratto trovato.</p>
                 </div>
             </div>
@@ -908,7 +932,7 @@
     <div id="modal-servizi" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>📦 Seleziona Servizi</h3>
+                <h3>Seleziona Servizi</h3>
                 <button class="close-modal" onclick="chiudiModale('modal-servizi')">×</button>
             </div>
             <div id="lista-servizi">
@@ -927,14 +951,13 @@
     <div id="modal-modifica" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modal-modifica-titolo">✏️ Modifica Preventivo</h3>
+                <h3 id="modal-modifica-titolo">Modifica Preventivo</h3>
                 <button class="close-modal" onclick="chiudiModale('modal-modifica')">×</button>
             </div>
             <div id="form-modifica">
-                <!-- Il form viene popolato dinamicamente -->
             </div>
             <div class="modal-actions">
-                <button class="btn btn-primary" onclick="salvaModifiche()">💾 Salva Modifiche</button>
+                <button class="btn btn-primary" onclick="salvaModifiche()">Salva Modifiche</button>
                 <button class="btn btn-outline" onclick="chiudiModale('modal-modifica')">Annulla</button>
             </div>
         </div>
@@ -944,7 +967,7 @@
     <div id="modal-acconto" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modal-acconto-titolo">💵 Aggiungi Acconto</h3>
+                <h3 id="modal-acconto-titolo">Aggiungi Acconto</h3>
                 <button class="close-modal" onclick="chiudiModale('modal-acconto')">×</button>
             </div>
             <div class="form-group">
@@ -952,7 +975,7 @@
                 <input type="date" id="acconto_data">
             </div>
             <div class="form-group">
-                <label>Importo (€)</label>
+                <label>Importo (EUR)</label>
                 <input type="number" id="acconto_importo" step="0.01" min="0">
             </div>
             <div class="form-group">
@@ -976,7 +999,6 @@
         <p>Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></p>
     </div>
 
-    <script src="temi.js"></script>
     <script>
         // ============================================
         // CONFIGURAZIONE
@@ -989,7 +1011,7 @@
         let acconti = [];
         let pianoPagamento = [];
         let preventivoCorrente = null;
-        let modalAccontoMode = 'aggiungi'; // 'aggiungi' o 'modifica'
+        let modalAccontoMode = 'aggiungi';
         let accontoIndexModifica = -1;
 
         // ============================================
@@ -1011,7 +1033,7 @@
 
         async function verificaSessione() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`);
+                const response = await fetch(WORKER_URL + '/api/auth/verifica?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 
                 if (!data.success) {
@@ -1033,35 +1055,35 @@
         // GESTIONE TAB
         // ============================================
         function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
             
             event.target.classList.add('active');
-            document.getElementById(`tab-${tabName}`).classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
         }
 
         // ============================================
         // MAPS BUTTONS
         // ============================================
         function apriMaps(tipo) {
-            let indirizzo = '';
+            var indirizzo = '';
             
             if (tipo === 'cliente_a') {
-                const via = document.getElementById('cliente_a_indirizzo').value;
-                const citta = document.getElementById('cliente_a_citta').value;
-                const cap = document.getElementById('cliente_a_cap').value;
-                const prov = document.getElementById('cliente_a_provincia').value;
-                indirizzo = `${via}, ${cap} ${citta} ${prov}`.trim();
+                var via = document.getElementById('cliente_a_indirizzo').value;
+                var citta = document.getElementById('cliente_a_citta').value;
+                var cap = document.getElementById('cliente_a_cap').value;
+                var prov = document.getElementById('cliente_a_provincia').value;
+                indirizzo = (via + ', ' + cap + ' ' + citta + ' ' + prov).trim();
             } else if (tipo === 'cliente_b') {
-                const via = document.getElementById('cliente_b_indirizzo').value;
-                const citta = document.getElementById('cliente_b_citta').value;
-                const cap = document.getElementById('cliente_b_cap').value;
-                const prov = document.getElementById('cliente_b_provincia').value;
-                indirizzo = `${via}, ${cap} ${citta} ${prov}`.trim();
+                var via = document.getElementById('cliente_b_indirizzo').value;
+                var citta = document.getElementById('cliente_b_citta').value;
+                var cap = document.getElementById('cliente_b_cap').value;
+                var prov = document.getElementById('cliente_b_provincia').value;
+                indirizzo = (via + ', ' + cap + ' ' + citta + ' ' + prov).trim();
             }
             
             if (indirizzo) {
-                const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(indirizzo)}`;
+                var url = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(indirizzo);
                 window.open(url, '_blank');
             } else {
                 alert('Inserisci prima l\'indirizzo completo.');
@@ -1069,7 +1091,7 @@
         }
 
         function apriMapsLuogo(tipo) {
-            let luogo = '';
+            var luogo = '';
             
             if (tipo === 'cerimonia') {
                 luogo = document.getElementById('luogo_cerimonia').value;
@@ -1078,7 +1100,7 @@
             }
             
             if (luogo) {
-                const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(luogo)}`;
+                var url = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(luogo);
                 window.open(url, '_blank');
             } else {
                 alert('Inserisci prima il nome del luogo.');
@@ -1090,7 +1112,7 @@
         // ============================================
         async function caricaServizi() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/servizi?token=${encodeURIComponent(token)}`);
+                const response = await fetch(WORKER_URL + '/api/studio/servizi?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 
                 if (data.success) {
@@ -1105,34 +1127,23 @@
             const listaDiv = document.getElementById('lista-servizi');
             let html = '<div class="services-list">';
             
-            // Raggruppa per categoria
             const categorie = {};
-            serviziDisponibili.forEach(s => {
+            serviziDisponibili.forEach(function(s) {
                 if (!categorie[s.categoria]) categorie[s.categoria] = [];
                 categorie[s.categoria].push(s);
             });
             
-            for (const [cat, servizi] of Object.entries(categorie)) {
-                html += `<h4 style="color: var(--primary-dark); margin: 15px 0 10px 0;">${cat}</h4>`;
-                servizi.forEach(s => {
-                    const isSelected = serviziSelezionati.some(sel => sel.id === s.id);
-                    html += `
-                        <div class="service-item">
-                            <div>
-                                <strong>${s.descrizione}</strong>
-                                <div style="color: var(--text-light); font-size: 0.9em;">${s.categoria}</div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <span style="font-weight: 600; color: var(--primary-dark);">${parseFloat(s.prezzo).toFixed(2)} €</span>
-                                <input type="checkbox" 
-                                       data-id="${s.id}" 
-                                       data-desc="${s.descrizione}" 
-                                       data-prezzo="${s.prezzo}"
-                                       ${isSelected ? 'checked' : ''}
-                                       onchange="toggleServizio(this)">
-                            </div>
-                        </div>
-                    `;
+            for (const cat in categorie) {
+                const servizi = categorie[cat];
+                html += '<h4 style="color: var(--primary-dark); margin: 15px 0 10px 0;">' + cat + '</h4>';
+                servizi.forEach(function(s) {
+                    const isSelected = serviziSelezionati.some(function(sel) { return sel.id === s.id; });
+                    html += '<div class="service-item">' +
+                        '<div><strong>' + s.descrizione + '</strong><div style="color: var(--text-light); font-size: 0.9em;">' + s.categoria + '</div></div>' +
+                        '<div style="display: flex; align-items: center; gap: 10px;">' +
+                        '<span style="font-weight: 600; color: var(--primary-dark);">' + parseFloat(s.prezzo).toFixed(2) + ' EUR</span>' +
+                        '<input type="checkbox" data-id="' + s.id + '" data-desc="' + s.descrizione + '" data-prezzo="' + s.prezzo + '" ' + (isSelected ? 'checked' : '') + ' onchange="toggleServizio(this)">' +
+                        '</div></div>';
                 });
             }
             
@@ -1147,9 +1158,9 @@
             const prezzo = parseFloat(checkbox.dataset.prezzo);
             
             if (checkbox.checked) {
-                serviziSelezionati.push({ id, descrizione: desc, prezzo });
+                serviziSelezionati.push({ id: id, descrizione: desc, prezzo: prezzo });
             } else {
-                serviziSelezionati = serviziSelezionati.filter(s => s.id !== id);
+                serviziSelezionati = serviziSelezionati.filter(function(s) { return s.id !== id; });
             }
             
             aggiornaServiziSelezionatiUI();
@@ -1165,16 +1176,13 @@
             }
             
             let html = '';
-            serviziSelezionati.forEach((s, index) => {
-                html += `
-                    <div class="service-item">
-                        <span>${s.descrizione}</span>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <span style="font-weight: 600;">${parseFloat(s.prezzo).toFixed(2)} €</span>
-                            <button class="btn btn-danger btn-sm" onclick="rimuoviServizio(${index})">✕</button>
-                        </div>
-                    </div>
-                `;
+            serviziSelezionati.forEach(function(s, index) {
+                html += '<div class="service-item">' +
+                    '<span>' + s.descrizione + '</span>' +
+                    '<div style="display: flex; align-items: center; gap: 10px;">' +
+                    '<span style="font-weight: 600;">' + parseFloat(s.prezzo).toFixed(2) + ' EUR</span>' +
+                    '<button class="btn btn-danger btn-sm" onclick="rimuoviServizio(' + index + ')">X</button>' +
+                    '</div></div>';
             });
             
             div.innerHTML = html;
@@ -1196,7 +1204,7 @@
         function aggiungiAcconto() {
             modalAccontoMode = 'aggiungi';
             accontoIndexModifica = -1;
-            document.getElementById('modal-acconto-titolo').textContent = '💵 Aggiungi Acconto';
+            document.getElementById('modal-acconto-titolo').textContent = 'Aggiungi Acconto';
             document.getElementById('acconto_data').value = new Date().toISOString().split('T')[0];
             document.getElementById('acconto_importo').value = '';
             document.getElementById('acconto_metodo').value = 'Contanti';
@@ -1208,7 +1216,7 @@
             accontoIndexModifica = index;
             const acconto = acconti[index];
             
-            document.getElementById('modal-acconto-titolo').textContent = '✏️ Modifica Acconto';
+            document.getElementById('modal-acconto-titolo').textContent = 'Modifica Acconto';
             document.getElementById('acconto_data').value = acconto.data;
             document.getElementById('acconto_importo').value = acconto.importo;
             document.getElementById('acconto_metodo').value = acconto.metodo;
@@ -1234,9 +1242,9 @@
             }
             
             if (modalAccontoMode === 'aggiungi') {
-                acconti.push({ data, importo, metodo });
+                acconti.push({ data: data, importo: importo, metodo: metodo });
             } else if (accontoIndexModifica >= 0) {
-                acconti[accontoIndexModifica] = { data, importo, metodo };
+                acconti[accontoIndexModifica] = { data: data, importo: importo, metodo: metodo };
             }
             
             aggiornaAccontiUI();
@@ -1253,17 +1261,14 @@
             }
             
             let html = '';
-            acconti.forEach((a, index) => {
-                html += `
-                    <div class="acconto-item">
-                        <span>${new Date(a.data).toLocaleDateString('it-IT')} - ${a.metodo}</span>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <span style="font-weight: 600; color: var(--primary-dark);">${a.importo.toFixed(2)} €</span>
-                            <button class="btn btn-outline btn-sm" onclick="modificaAcconto(${index})">✏️</button>
-                            <button class="btn btn-danger btn-sm" onclick="rimuoviAcconto(${index})">✕</button>
-                        </div>
-                    </div>
-                `;
+            acconti.forEach(function(a, index) {
+                html += '<div class="acconto-item">' +
+                    '<span>' + new Date(a.data).toLocaleDateString('it-IT') + ' - ' + a.metodo + '</span>' +
+                    '<div style="display: flex; align-items: center; gap: 10px;">' +
+                    '<span style="font-weight: 600; color: var(--primary-dark);">' + a.importo.toFixed(2) + ' EUR</span>' +
+                    '<button class="btn btn-outline btn-sm" onclick="modificaAcconto(' + index + ')">Modifica</button>' +
+                    '<button class="btn btn-danger btn-sm" onclick="rimuoviAcconto(' + index + ')">X</button>' +
+                    '</div></div>';
             });
             
             div.innerHTML = html;
@@ -1273,7 +1278,7 @@
         // PIANO PAGAMENTO
         // ============================================
         function aggiungiRata() {
-            const importo = prompt('Importo rata (€):');
+            const importo = prompt('Importo rata (EUR):');
             if (importo && parseFloat(importo) > 0) {
                 pianoPagamento.push({ importo: parseFloat(importo), descrizione: 'Rata' });
                 aggiornaPianoUI();
@@ -1289,16 +1294,13 @@
             }
             
             let html = '';
-            pianoPagamento.forEach((r, index) => {
-                html += `
-                    <div class="piano-item">
-                        <span>${r.descrizione}</span>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <span style="font-weight: 600;">${r.importo.toFixed(2)} €</span>
-                            <button class="btn btn-danger btn-sm" onclick="rimuoviRata(${index})">✕</button>
-                        </div>
-                    </div>
-                `;
+            pianoPagamento.forEach(function(r, index) {
+                html += '<div class="piano-item">' +
+                    '<span>' + r.descrizione + '</span>' +
+                    '<div style="display: flex; align-items: center; gap: 10px;">' +
+                    '<span style="font-weight: 600;">' + r.importo.toFixed(2) + ' EUR</span>' +
+                    '<button class="btn btn-danger btn-sm" onclick="rimuoviRata(' + index + ')">X</button>' +
+                    '</div></div>';
             });
             
             div.innerHTML = html;
@@ -1313,20 +1315,20 @@
         // CALCOLI
         // ============================================
         function calcolaTotali() {
-            const totaleServizi = serviziSelezionati.reduce((sum, s) => sum + s.prezzo, 0);
+            const totaleServizi = serviziSelezionati.reduce(function(sum, s) { return sum + s.prezzo; }, 0);
             const scontoPerc = parseFloat(document.getElementById('sconto_perc').value) || 0;
             const scontoFisso = parseFloat(document.getElementById('sconto_fisso').value) || 0;
-            const totaleAcconti = acconti.reduce((sum, a) => sum + a.importo, 0);
+            const totaleAcconti = acconti.reduce(function(sum, a) { return sum + a.importo; }, 0);
             
             const scontoTotale = (totaleServizi * scontoPerc / 100) + scontoFisso;
             const importoTotale = totaleServizi - scontoTotale;
             const saldoResiduo = importoTotale - totaleAcconti;
             
-            document.getElementById('totale_servizi').textContent = totaleServizi.toFixed(2) + ' €';
-            document.getElementById('totale_sconto').textContent = '-' + scontoTotale.toFixed(2) + ' €';
-            document.getElementById('importo_totale').textContent = importoTotale.toFixed(2) + ' €';
-            document.getElementById('totale_acconti').textContent = totaleAcconti.toFixed(2) + ' €';
-            document.getElementById('saldo_residuo').textContent = saldoResiduo.toFixed(2) + ' €';
+            document.getElementById('totale_servizi').textContent = totaleServizi.toFixed(2) + ' EUR';
+            document.getElementById('totale_sconto').textContent = '-' + scontoTotale.toFixed(2) + ' EUR';
+            document.getElementById('importo_totale').textContent = importoTotale.toFixed(2) + ' EUR';
+            document.getElementById('totale_acconti').textContent = totaleAcconti.toFixed(2) + ' EUR';
+            document.getElementById('saldo_residuo').textContent = saldoResiduo.toFixed(2) + ' EUR';
         }
 
         // ============================================
@@ -1336,6 +1338,7 @@
             const numero = document.getElementById('numero').value;
             const dataEmissione = document.getElementById('data_emissione').value;
             const tipoServizio = document.getElementById('tipo_servizio').value;
+            const dataEvento = document.getElementById('data_evento').value;
             
             if (!numero || !dataEmissione) {
                 alert('Compila i campi obbligatori.');
@@ -1364,7 +1367,7 @@
                 provincia: document.getElementById('cliente_b_provincia').value
             };
             
-            const totaleServizi = serviziSelezionati.reduce((sum, s) => sum + s.prezzo, 0);
+            const totaleServizi = serviziSelezionati.reduce(function(sum, s) { return sum + s.prezzo; }, 0);
             const scontoPerc = parseFloat(document.getElementById('sconto_perc').value) || 0;
             const scontoFisso = parseFloat(document.getElementById('sconto_fisso').value) || 0;
             const scontoTotale = (totaleServizi * scontoPerc / 100) + scontoFisso;
@@ -1375,7 +1378,7 @@
                 studio_id: studioId,
                 numero: numero,
                 data_emissione: dataEmissione,
-                data_servizio: null,
+                data_servizio: dataEvento || null,
                 tipo_servizio: tipoServizio,
                 luogo_cerimonia: document.getElementById('luogo_cerimonia').value,
                 luogo_ricevimento: document.getElementById('luogo_ricevimento').value,
@@ -1395,7 +1398,7 @@
             };
             
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/preventivo`, {
+                const response = await fetch(WORKER_URL + '/api/studio/preventivo', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dati)
@@ -1405,6 +1408,10 @@
                 
                 if (result.success) {
                     alert('Preventivo salvato con successo!');
+                    
+                    // Aggiunge automaticamente in agenda
+                    await aggiungiInAgenda(dati, stato);
+                    
                     resetForm();
                     caricaPreventivi();
                     caricaContratti();
@@ -1414,6 +1421,37 @@
             } catch (error) {
                 console.error('Errore salvataggio:', error);
                 alert('Errore di connessione.');
+            }
+        }
+
+        async function aggiungiInAgenda(dati, stato) {
+            const statoAgenda = stato === 'accettato' ? 'Confermato' : 'Da Confermare';
+            const clienteNome = dati.cliente_a ? (dati.cliente_a.nome + ' ' + dati.cliente_a.cognome) : 'N/A';
+            
+            const agendaData = {
+                id: 'agg-' + Date.now(),
+                studio_id: studioId,
+                titolo: 'Preventivo/Contratto ' + dati.numero,
+                data: dati.data_servizio || dati.data_emissione,
+                ora_inizio: null,
+                ora_fine: null,
+                descrizione: dati.tipo_servizio || '',
+                luogo: dati.luogo_cerimonia || dati.luogo_ricevimento || '',
+                tipo_servizio: dati.tipo_servizio || 'Servizio Fotografico',
+                squadra: 'Squadra 1',
+                cliente: clienteNome,
+                note: statoAgenda + ' - ' + (dati.note || ''),
+                data_creazione: new Date().toISOString()
+            };
+            
+            try {
+                await fetch(WORKER_URL + '/api/studio/agenda', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(agendaData)
+                });
+            } catch (error) {
+                console.error('Errore aggiunta agenda:', error);
             }
         }
 
@@ -1436,6 +1474,7 @@
             document.getElementById('cliente_b_cap').value = '';
             document.getElementById('cliente_b_provincia').value = '';
             document.getElementById('tipo_servizio').value = '';
+            document.getElementById('data_evento').value = '';
             document.getElementById('luogo_cerimonia').value = '';
             document.getElementById('luogo_ricevimento').value = '';
             document.getElementById('sconto_perc').value = '0';
@@ -1456,7 +1495,7 @@
         // ============================================
         async function caricaPreventivi() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/preventivi?token=${encodeURIComponent(token)}`);
+                const response = await fetch(WORKER_URL + '/api/studio/preventivi?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 
                 document.getElementById('loading-preventivi').style.display = 'none';
@@ -1468,24 +1507,21 @@
                     const tbody = document.getElementById('tabella-preventivi');
                     tbody.innerHTML = '';
                     
-                    data.preventivi.forEach(p => {
-                        const clienteNome = p.cliente_a ? `${p.cliente_a.nome} ${p.cliente_a.cognome}` : 'N/A';
+                    data.preventivi.forEach(function(p) {
+                        const clienteNome = p.cliente_a ? (p.cliente_a.nome + ' ' + p.cliente_a.cognome) : 'N/A';
                         const statoClass = p.stato === 'accettato' ? 'badge-accettato' : 'badge-bozza';
                         
-                        tbody.innerHTML += `
-                            <tr>
-                                <td>${p.numero}</td>
-                                <td>${clienteNome}</td>
-                                <td>${new Date(p.data_emissione).toLocaleDateString('it-IT')}</td>
-                                <td>${parseFloat(p.totale_finale).toFixed(2)} €</td>
-                                <td><span class="badge ${statoClass}">${p.stato}</span></td>
-                                <td class="actions-cell">
-                                    <button class="btn btn-outline btn-sm" onclick="modificaPreventivo('${p.id}')">✏️ Modifica</button>
-                                    <button class="btn btn-primary btn-sm" onclick="generaPDFFromId('${p.id}')">📄 PDF</button>
-                                    <button class="btn btn-danger btn-sm" onclick="eliminaPreventivo('${p.id}')">🗑️</button>
-                                </td>
-                            </tr>
-                        `;
+                        tbody.innerHTML += '<tr>' +
+                            '<td>' + p.numero + '</td>' +
+                            '<td>' + clienteNome + '</td>' +
+                            '<td>' + new Date(p.data_emissione).toLocaleDateString('it-IT') + '</td>' +
+                            '<td>' + parseFloat(p.totale_finale).toFixed(2) + ' EUR</td>' +
+                            '<td><span class="badge ' + statoClass + '">' + p.stato + '</span></td>' +
+                            '<td class="actions-cell">' +
+                            '<button class="btn btn-outline btn-sm" onclick="modificaPreventivo(\'' + p.id + '\')">Modifica</button>' +
+                            '<button class="btn btn-primary btn-sm" onclick="generaPDFFromId(\'' + p.id + '\')">PDF</button>' +
+                            '<button class="btn btn-danger btn-sm" onclick="eliminaPreventivo(\'' + p.id + '\')">Elimina</button>' +
+                            '</td></tr>';
                     });
                 } else {
                     document.getElementById('empty-preventivi').style.display = 'block';
@@ -1497,7 +1533,7 @@
 
         async function caricaContratti() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/contratti?token=${encodeURIComponent(token)}`);
+                const response = await fetch(WORKER_URL + '/api/studio/contratti?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 
                 document.getElementById('loading-contratti').style.display = 'none';
@@ -1509,25 +1545,22 @@
                     const tbody = document.getElementById('tabella-contratti');
                     tbody.innerHTML = '';
                     
-                    data.contratti.forEach(c => {
-                        const clienteNome = c.cliente_a ? `${c.cliente_a.nome} ${c.cliente_a.cognome}` : 'N/A';
-                        const totaleAcconti = c.acconti ? c.acconti.reduce((sum, a) => sum + (parseFloat(a.importo) || 0), 0) : 0;
+                    data.contratti.forEach(function(c) {
+                        const clienteNome = c.cliente_a ? (c.cliente_a.nome + ' ' + c.cliente_a.cognome) : 'N/A';
+                        const totaleAcconti = c.acconti ? c.acconti.reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0) : 0;
                         const saldo = (parseFloat(c.totale_finale) || 0) - totaleAcconti;
                         
-                        tbody.innerHTML += `
-                            <tr>
-                                <td>${c.numero_contratto || c.numero}</td>
-                                <td>${clienteNome}</td>
-                                <td>${new Date(c.data_emissione).toLocaleDateString('it-IT')}</td>
-                                <td>${parseFloat(c.totale_finale).toFixed(2)} €</td>
-                                <td>${saldo.toFixed(2)} €</td>
-                                <td class="actions-cell">
-                                    <button class="btn btn-outline btn-sm" onclick="modificaContratto('${c.id}')">✏️ Modifica</button>
-                                    <button class="btn btn-primary btn-sm" onclick="generaPDFFromId('${c.id}')">📄 PDF</button>
-                                    <button class="btn btn-danger btn-sm" onclick="eliminaContratto('${c.id}')">🗑️</button>
-                                </td>
-                            </tr>
-                        `;
+                        tbody.innerHTML += '<tr>' +
+                            '<td>' + (c.numero_contratto || c.numero) + '</td>' +
+                            '<td>' + clienteNome + '</td>' +
+                            '<td>' + new Date(c.data_emissione).toLocaleDateString('it-IT') + '</td>' +
+                            '<td>' + parseFloat(c.totale_finale).toFixed(2) + ' EUR</td>' +
+                            '<td>' + saldo.toFixed(2) + ' EUR</td>' +
+                            '<td class="actions-cell">' +
+                            '<button class="btn btn-outline btn-sm" onclick="modificaContratto(\'' + c.id + '\')">Modifica</button>' +
+                            '<button class="btn btn-primary btn-sm" onclick="generaPDFFromId(\'' + c.id + '\')">PDF</button>' +
+                            '<button class="btn btn-danger btn-sm" onclick="eliminaContratto(\'' + c.id + '\')">Elimina</button>' +
+                            '</td></tr>';
                     });
                 } else {
                     document.getElementById('empty-contratti').style.display = 'block';
@@ -1542,11 +1575,11 @@
         // ============================================
         async function modificaPreventivo(id) {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/preventivi?token=${encodeURIComponent(token)}`);
+                const response = await fetch(WORKER_URL + '/api/studio/preventivi?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 
                 if (data.success) {
-                    const preventivo = data.preventivi.find(p => p.id === id);
+                    const preventivo = data.preventivi.find(function(p) { return p.id === id; });
                     if (preventivo) {
                         preventivoCorrente = preventivo;
                         popolaFormModifica(preventivo, 'Preventivo');
@@ -1560,11 +1593,11 @@
 
         async function modificaContratto(id) {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/contratti?token=${encodeURIComponent(token)}`);
+                const response = await fetch(WORKER_URL + '/api/studio/contratti?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 
                 if (data.success) {
-                    const contratto = data.contratti.find(c => c.id === id);
+                    const contratto = data.contratti.find(function(c) { return c.id === id; });
                     if (contratto) {
                         preventivoCorrente = contratto;
                         popolaFormModifica(contratto, 'Contratto');
@@ -1577,45 +1610,42 @@
         }
 
         function popolaFormModifica(dati, tipo) {
-            document.getElementById('modal-modifica-titolo').textContent = `✏️ Modifica ${tipo}`;
+            document.getElementById('modal-modifica-titolo').textContent = 'Modifica ' + tipo;
             
             const formDiv = document.getElementById('form-modifica');
             
-            // Carica acconti esistenti per modifica
             acconti = dati.acconti || [];
             aggiornaAccontiUI();
             
-            formDiv.innerHTML = `
-                <div class="form-group">
-                    <label>Numero</label>
-                    <input type="text" id="mod_numero" value="${dati.numero || ''}">
-                </div>
-                <div class="form-group">
-                    <label>Data emissione</label>
-                    <input type="date" id="mod_data_emissione" value="${dati.data_emissione || ''}">
-                </div>
-                <div class="form-group">
-                    <label>Totale Acconti (€)</label>
-                    <input type="number" id="mod_totale_acconti" step="0.01" value="${dati.acconti ? dati.acconti.reduce((sum, a) => sum + (parseFloat(a.importo) || 0), 0).toFixed(2) : '0.00'}">
-                    <small style="color: var(--text-light);">Modifica questo valore per aggiornare gli acconti</small>
-                </div>
-                <div class="form-group">
-                    <label>Stato</label>
-                    <select id="mod_stato">
-                        <option value="bozza" ${dati.stato === 'bozza' ? 'selected' : ''}>Bozza</option>
-                        <option value="accettato" ${dati.stato === 'accettato' ? 'selected' : ''}>Accettato</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Note</label>
-                    <textarea id="mod_note" rows="3">${dati.note || ''}</textarea>
-                </div>
-                <div style="margin-top: 15px; padding: 15px; background: var(--primary-light); border-radius: 8px;">
-                    <strong>Cliente:</strong> ${dati.cliente_a ? `${dati.cliente_a.nome} ${dati.cliente_a.cognome}` : 'N/A'}<br>
-                    <strong>Totale:</strong> ${parseFloat(dati.totale_finale).toFixed(2)} €<br>
-                    <strong>Saldo:</strong> ${(parseFloat(dati.totale_finale) - (dati.acconti ? dati.acconti.reduce((sum, a) => sum + (parseFloat(a.importo) || 0), 0) : 0)).toFixed(2)} €
-                </div>
-            `;
+            formDiv.innerHTML = '<div class="form-group">' +
+                '<label>Numero</label>' +
+                '<input type="text" id="mod_numero" value="' + (dati.numero || '') + '">' +
+                '</div>' +
+                '<div class="form-group">' +
+                '<label>Data emissione</label>' +
+                '<input type="date" id="mod_data_emissione" value="' + (dati.data_emissione || '') + '">' +
+                '</div>' +
+                '<div class="form-group">' +
+                '<label>Totale Acconti (EUR)</label>' +
+                '<input type="number" id="mod_totale_acconti" step="0.01" value="' + (dati.acconti ? dati.acconti.reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0).toFixed(2) : '0.00') + '">' +
+                '<small style="color: var(--text-light);">Modifica questo valore per aggiornare gli acconti</small>' +
+                '</div>' +
+                '<div class="form-group">' +
+                '<label>Stato</label>' +
+                '<select id="mod_stato">' +
+                '<option value="bozza" ' + (dati.stato === 'bozza' ? 'selected' : '') + '>Bozza</option>' +
+                '<option value="accettato" ' + (dati.stato === 'accettato' ? 'selected' : '') + '>Accettato</option>' +
+                '</select>' +
+                '</div>' +
+                '<div class="form-group">' +
+                '<label>Note</label>' +
+                '<textarea id="mod_note" rows="3">' + (dati.note || '') + '</textarea>' +
+                '</div>' +
+                '<div style="margin-top: 15px; padding: 15px; background: var(--primary-light); border-radius: 8px;">' +
+                '<strong>Cliente:</strong> ' + (dati.cliente_a ? (dati.cliente_a.nome + ' ' + dati.cliente_a.cognome) : 'N/A') + '<br>' +
+                '<strong>Totale:</strong> ' + parseFloat(dati.totale_finale).toFixed(2) + ' EUR<br>' +
+                '<strong>Saldo:</strong> ' + (parseFloat(dati.totale_finale) - (dati.acconti ? dati.acconti.reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0) : 0)).toFixed(2) + ' EUR' +
+                '</div>';
         }
 
         async function salvaModifiche() {
@@ -1627,26 +1657,22 @@
             const note = document.getElementById('mod_note').value;
             const nuovoTotaleAcconti = parseFloat(document.getElementById('mod_totale_acconti').value) || 0;
             
-            // Aggiorna acconti con il nuovo totale
             if (acconti.length > 0) {
-                // Ridistribuisci il nuovo totale tra gli acconti esistenti
-                const rapporto = nuovoTotaleAcconti / acconti.reduce((sum, a) => sum + (parseFloat(a.importo) || 0), 0);
-                acconti = acconti.map(a => ({
-                    ...a,
-                    importo: parseFloat((a.importo * rapporto).toFixed(2))
-                }));
+                const vecchioTotale = acconti.reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0);
+                if (vecchioTotale > 0) {
+                    const rapporto = nuovoTotaleAcconti / vecchioTotale;
+                    acconti = acconti.map(function(a) {
+                        return { data: a.data, importo: parseFloat((a.importo * rapporto).toFixed(2)), metodo: a.metodo };
+                    });
+                } else if (nuovoTotaleAcconti > 0) {
+                    acconti = [{ data: new Date().toISOString().split('T')[0], importo: nuovoTotaleAcconti, metodo: 'Contanti' }];
+                }
             } else if (nuovoTotaleAcconti > 0) {
                 acconti = [{ data: new Date().toISOString().split('T')[0], importo: nuovoTotaleAcconti, metodo: 'Contanti' }];
             }
             
             try {
-                // Aggiorna acconti nel preventivo/contratto
-                const endpoint = preventivoCorrente.numero_contratto ? 
-                    `${WORKER_URL}/api/studio/contratti/${preventivoCorrente.id}` :
-                    `${WORKER_URL}/api/studio/preventivo/${preventivoCorrente.id}`;
-                
-                // Per ora aggiorniamo solo gli acconti
-                const response = await fetch(`${WORKER_URL}/api/studio/contratti/${preventivoCorrente.id}`, {
+                const response = await fetch(WORKER_URL + '/api/studio/contratti/' + preventivoCorrente.id, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ acconti: acconti })
@@ -1675,7 +1701,7 @@
             if (!confirm('Eliminare questo preventivo?')) return;
             
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/preventivo/${id}?token=${encodeURIComponent(token)}`, {
+                const response = await fetch(WORKER_URL + '/api/studio/preventivo/' + id + '?token=' + encodeURIComponent(token), {
                     method: 'DELETE'
                 });
                 
@@ -1696,7 +1722,7 @@
             if (!confirm('Eliminare questo contratto?')) return;
             
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/contratti/${id}?token=${encodeURIComponent(token)}`, {
+                const response = await fetch(WORKER_URL + '/api/studio/contratti/' + id + '?token=' + encodeURIComponent(token), {
                     method: 'DELETE'
                 });
                 
@@ -1714,7 +1740,7 @@
         }
 
         // ============================================
-        // PDF (placeholder)
+        // PDF
         // ============================================
         function generaPDF() {
             alert('Funzione generazione PDF in sviluppo.');
@@ -1731,8 +1757,7 @@
             document.getElementById(modalId).classList.remove('active');
         }
 
-        // Chiudi modali cliccando fuori
-        document.querySelectorAll('.modal-overlay').forEach(modal => {
+        document.querySelectorAll('.modal-overlay').forEach(function(modal) {
             modal.addEventListener('click', function(e) {
                 if (e.target === this) {
                     this.classList.remove('active');
