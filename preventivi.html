@@ -1508,13 +1508,13 @@
                         const statoClass = p.stato === 'accettato' ? 'badge-accettato' : 'badge-bozza';
                         
                         tbody.innerHTML += '<tr>' +
-                            '<td>' + p.numero + '</td>' +
+                            '<td>' + (p.numero || '-') + '</td>' +
                             '<td>' + clienteNome + '</td>' +
                             '<td>' + new Date(p.data_emissione).toLocaleDateString('it-IT') + '</td>' +
                             '<td>' + parseFloat(p.totale_finale).toFixed(2) + ' EUR</td>' +
                             '<td><span class="badge ' + statoClass + '">' + p.stato + '</span></td>' +
                             '<td class="actions-cell">' +
-                            '<button class="btn btn-outline btn-sm" onclick="modificaPreventivo(\'' + p.id + '\')">Modifica</button>' +
+                            '<button class="btn btn-outline btn-sm" onclick="modificaPreventivo(\'' + p.id + '\')" style="color: #000000; background: #ffffff; border: 1px solid var(--border-color);">Modifica</button>' +
                             '<button class="btn btn-primary btn-sm" onclick="generaPDFFromId(\'' + p.id + '\')">PDF</button>' +
                             '<button class="btn btn-danger btn-sm" onclick="eliminaPreventivo(\'' + p.id + '\')">Elimina</button>' +
                             '</td></tr>';
@@ -1543,17 +1543,25 @@
                     
                     data.contratti.forEach(function(c) {
                         const clienteNome = c.cliente_a ? (c.cliente_a.nome + ' ' + c.cliente_a.cognome) : 'N/A';
-                        const totaleAcconti = c.acconti ? c.acconti.reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0) : 0;
+                        
+                        // FIX: Gestione corretta di acconti (potrebbe non essere un array)
+                        let totaleAcconti = 0;
+                        if (c.acconti && Array.isArray(c.acconti)) {
+                            totaleAcconti = c.acconti.reduce(function(sum, a) { 
+                                return sum + (parseFloat(a.importo) || 0); 
+                            }, 0);
+                        }
+                        
                         const saldo = (parseFloat(c.totale_finale) || 0) - totaleAcconti;
                         
                         tbody.innerHTML += '<tr>' +
-                            '<td>' + (c.numero_contratto || c.numero) + '</td>' +
+                            '<td>' + (c.numero_contratto || c.numero || '-') + '</td>' +
                             '<td>' + clienteNome + '</td>' +
                             '<td>' + new Date(c.data_emissione).toLocaleDateString('it-IT') + '</td>' +
                             '<td>' + parseFloat(c.totale_finale).toFixed(2) + ' EUR</td>' +
                             '<td>' + saldo.toFixed(2) + ' EUR</td>' +
                             '<td class="actions-cell">' +
-                            '<button class="btn btn-outline btn-sm" onclick="modificaContratto(\'' + c.id + '\')">Modifica</button>' +
+                            '<button class="btn btn-outline btn-sm" onclick="modificaContratto(\'' + c.id + '\')" style="color: #000000; background: #ffffff; border: 1px solid var(--border-color);">Modifica</button>' +
                             '<button class="btn btn-primary btn-sm" onclick="generaPDFFromId(\'' + c.id + '\')">PDF</button>' +
                             '<button class="btn btn-danger btn-sm" onclick="eliminaContratto(\'' + c.id + '\')">Elimina</button>' +
                             '</td></tr>';
@@ -1610,7 +1618,8 @@
             
             const formDiv = document.getElementById('form-modifica');
             
-            acconti = dati.acconti || [];
+            // FIX: Gestione corretta di acconti
+            acconti = (dati.acconti && Array.isArray(dati.acconti)) ? dati.acconti : [];
             aggiornaAccontiUI();
             
             formDiv.innerHTML = '<div class="form-group">' +
@@ -1623,7 +1632,10 @@
                 '</div>' +
                 '<div class="form-group">' +
                 '<label>Totale Acconti (EUR)</label>' +
-                '<input type="number" id="mod_totale_acconti" step="0.01" value="' + (dati.acconti ? dati.acconti.reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0).toFixed(2) : '0.00') + '">' +
+                '<input type="number" id="mod_totale_acconti" step="0.01" value="' + 
+                    ((dati.acconti && Array.isArray(dati.acconti)) ? 
+                        dati.acconti.reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0).toFixed(2) 
+                        : '0.00') + '">' +
                 '<small style="color: var(--text-light);">Modifica questo valore per aggiornare gli acconti</small>' +
                 '</div>' +
                 '<div class="form-group">' +
@@ -1640,7 +1652,7 @@
                 '<div style="margin-top: 15px; padding: 15px; background: var(--primary-light); border-radius: 8px;">' +
                 '<strong>Cliente:</strong> ' + (dati.cliente_a ? (dati.cliente_a.nome + ' ' + dati.cliente_a.cognome) : 'N/A') + '<br>' +
                 '<strong>Totale:</strong> ' + parseFloat(dati.totale_finale).toFixed(2) + ' EUR<br>' +
-                '<strong>Saldo:</strong> ' + (parseFloat(dati.totale_finale) - (dati.acconti ? dati.acconti.reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0) : 0)).toFixed(2) + ' EUR' +
+                '<strong>Saldo:</strong> ' + (parseFloat(dati.totale_finale) - ((dati.acconti && Array.isArray(dati.acconti)) ? dati.acconti.reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0) : 0)).toFixed(2) + ' EUR' +
                 '</div>';
         }
 
@@ -1653,6 +1665,7 @@
             const note = document.getElementById('mod_note').value;
             const nuovoTotaleAcconti = parseFloat(document.getElementById('mod_totale_acconti').value) || 0;
             
+            // FIX: Gestione corretta di acconti
             if (acconti.length > 0) {
                 const vecchioTotale = acconti.reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0);
                 if (vecchioTotale > 0) {
