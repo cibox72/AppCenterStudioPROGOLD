@@ -4,495 +4,171 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plancia Studio - AppCenterStudioPROGOLD</title>
-    
-    <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
-    
     <style>
-        :root {
-            --primary: #82e0aa;
-            --primary-dark: #1e8449;
-            --primary-light: #e8f8f5;
-            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --text-main: #2c3e50;
-            --text-light: #7f8c8d;
-            --border-color: #e8e8e8;
-            --success: #27ae60;
-            --danger: #c0392b;
-            --warning: #d35400;
-            --radius: 12px;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text-main);
-            line-height: 1.6;
-            min-height: 100vh;
-            transition: background 0.5s ease, color 0.5s ease;
-        }
-        .top-bar {
-            background: var(--primary-gradient);
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            transition: background 0.5s ease;
-        }
-        .nav-btn {
-            background: rgba(255,255,255,0.95);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--primary-dark);
-            margin-left: 8px;
-            transition: all 0.2s ease;
-        }
-        .nav-btn:hover { background: white; transform: translateY(-1px); }
-        .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #ffffff; min-height: 100vh; color: #000000; }
+        .top-bar { background: linear-gradient(135deg, #d4af37, #996515); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .top-bar h1 { color: #ffffff; font-size: 1.4em; }
+        .sync-status { display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9em; }
+        .sync-dot { width: 10px; height: 10px; background: #ffffff; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        
-        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
-        
-        .page-header {
-            text-align: center;
-            padding: 32px;
-            background: var(--card-bg, #ffffff);
-            border-radius: var(--radius);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            margin-bottom: 32px;
-            transition: all 0.5s ease;
-            border: 1px solid var(--border-color);
-        }
-        .page-header h1 {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--text-main);
-            margin-bottom: 8px;
-            transition: color 0.5s ease;
-        }
-        .page-header p { color: var(--text-light); font-size: 14px; }
-        
-        /* SELEZIONE TEMA RAPIDA */
-        .tema-selector {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 20px;
-            padding: 16px;
-            background: var(--card-bg, #ffffff);
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-        }
-        .tema-btn {
-            padding: 8px 16px;
-            border: 2px solid var(--border-color);
-            border-radius: 20px;
-            background: var(--card-bg, #ffffff);
-            color: var(--text-main);
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .tema-btn:hover { border-color: var(--primary); }
-        .tema-btn.active {
-            background: var(--primary-gradient);
-            color: white;
-            border-color: var(--primary);
-        }
-        
-        /* GRIGLIA DASHBOARD */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-        
-        .dash-card {
-            background: var(--card-bg, #ffffff);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .dash-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 4px;
-            background: var(--primary-gradient);
-            transition: background 0.5s ease;
-        }
-        .dash-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.08);
-            border-color: var(--primary);
-        }
-        .module-icon {
-            font-size: 20px;
-            font-weight: 800;
-            margin-bottom: 16px;
-            background: var(--primary-light);
-            width: 56px;
-            height: 56px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            color: var(--primary-dark);
-            transition: background 0.5s ease, color 0.5s ease;
-            letter-spacing: 1px;
-        }
-        .module-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 8px;
-            transition: color 0.5s ease;
-        }
-        .module-desc {
-            font-size: 13px;
-            color: var(--text-light);
-            line-height: 1.5;
-            transition: color 0.5s ease;
-        }
-        .badge-status {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            background: var(--primary-light);
-            color: var(--primary-dark);
-            transition: all 0.5s ease;
-        }
-        .badge-status.alert {
-            background: #fadbd8;
-            color: #c0392b;
-        }
-        
-        .loading { text-align: center; padding: 60px; color: var(--text-light); font-size: 16px; }
-        .hidden { display: none !important; }
-        
-        .footer-branding {
-            text-align: center;
-            padding: 24px;
-            color: var(--text-light);
-            font-size: 13px;
-            margin-top: 40px;
-            border-top: 1px solid var(--border-color);
-        }
-        .footer-branding strong { color: var(--primary-dark); }
+        .nav-btn { background: rgba(255,255,255,0.2); border: none; color: #ffffff; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9em; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .welcome-section { background: #ffffff; padding: 30px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 5px solid #d4af37; }
+        .welcome-section h2 { color: #000000; margin-bottom: 10px; font-size: 1.8em; }
+        .welcome-section p { color: #666666; font-size: 1em; }
+        .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
+        .module-card { background: #ffffff; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .module-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(135deg, #d4af37, #996515); }
+        .module-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(212,175,55,0.3); border-color: #d4af37; }
+        .module-icon { width: 50px; height: 50px; background: linear-gradient(135deg, #d4af37, #996515); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; font-size: 1.5em; }
+        .module-card h3 { color: #000000; font-size: 1.2em; margin-bottom: 8px; }
+        .module-card p { color: #666666; font-size: 0.9em; line-height: 1.4; }
+        .footer-branding { text-align: center; padding: 30px 20px; color: #666666; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
+        .footer-branding strong { color: #996515; }
+        @media (max-width: 768px) { .modules-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <div class="top-bar">
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <span style="color: white; font-weight: 700; font-size: 16px;">AppCenterStudioPROGOLD</span>
+        <h1>AppCenterStudioPROGOLD</h1>
+        <div class="sync-status">
+            <div class="sync-dot"></div>
+            <span>Cloud Sync: OK</span>
         </div>
-        <div style="display: flex; align-items: center;">
-            <div class="sync-status" style="margin-right: 16px;">
-                <span class="sync-dot"></span>
-                Cloud Sync: OK
-            </div>
-            <button class="nav-btn" onclick="window.location.href='admin.html?token=' + encodeURIComponent(token)">Admin Panel</button>
+        <div>
+            <button class="nav-btn" onclick="window.location.href='admin-panel.html'">Admin Panel</button>
             <button class="nav-btn" onclick="logout()">Logout</button>
-            <button class="nav-btn" onclick="location.reload()">Aggiorna</button>
         </div>
     </div>
 
     <div class="container">
-        <div id="loadingArea" class="loading">
-            <div>Verifica sessione cloud e caricamento plancia...</div>
+        <div class="welcome-section">
+            <h2 id="benvenuto">Benvenuto</h2>
+            <p>Gestisci il tuo studio fotografico in modo professionale e organizzato.</p>
         </div>
 
-        <div id="mainContent" class="hidden">
-            <div class="page-header">
-                <h1>Plancia di Controllo Studio - <span class="studio-nome">Caricamento...</span></h1>
-                <p>Gestisci tutte le funzionalita del tuo studio fotografico. Dati sincronizzati in tempo reale sul cloud.</p>
-                <div style="margin-top: 12px; font-size: 12px; color: var(--text-light);">
-                    ID Studio: <strong id="studioIdDisplay">-</strong>
-                </div>
-                
-                <!-- SELEZIONE RAPIDA TEMA -->
-                <div class="tema-selector" id="temaSelector">
-                    <button class="tema-btn" onclick="cambiaTema('default', event)">Default</button>
-                    <button class="tema-btn" onclick="cambiaTema('natale', event)">Natale</button>
-                    <button class="tema-btn" onclick="cambiaTema('carnevale', event)">Carnevale</button>
-                    <button class="tema-btn" onclick="cambiaTema('inverno', event)">Inverno</button>
-                    <button class="tema-btn" onclick="cambiaTema('pasqua', event)">Pasqua</button>
-                    <button class="tema-btn" onclick="cambiaTema('estate', event)">Estate</button>
-                    <button class="tema-btn" onclick="cambiaTema('halloween', event)">Halloween</button>
-                    <button class="tema-btn" onclick="cambiaTema('san_valentino', event)">San Valentino</button>
-                    <button class="tema-btn" onclick="cambiaTema('arancio', event)">Arancio</button>
-                    <button class="tema-btn" onclick="cambiaTema('elegante_beige', event)">Beige</button>
-                    <button class="tema-btn" onclick="cambiaTema('notte_arancio', event)">Notte</button>
-                    <button class="tema-btn" onclick="cambiaTema('caldo_professionale', event)">Caldo</button>
-                    <button class="tema-btn" onclick="cambiaTema('minimal_luxury', event)">Luxury</button>
-                    <button class="tema-btn" onclick="cambiaTema('tramonto_moderno', event)">Tramonto</button>
-                    <button class="tema-btn" onclick="cambiaTema('oro_nero', event)">Oro Nero</button>
-                    <button class="tema-btn" onclick="cambiaTema('ardesia_elegante', event)">Ardesia</button>
-                    <button class="tema-btn" onclick="cambiaTema('corallo_professional', event)">Corallo</button>
-                    <button class="tema-btn" onclick="cambiaTema('bronzo_scuro', event)">Bronzo</button>
-                    <button class="tema-btn" onclick="cambiaTema('platino', event)">Platino</button>
-                    <button class="tema-btn" onclick="cambiaTema('lavanda_professional', event)">Lavanda</button>
-                    <button class="tema-btn" onclick="cambiaTema('rame_caldo', event)">Rame</button>
-                </div>
+        <div class="modules-grid">
+            <div class="module-card" onclick="apriModulo('anagrafica-clienti.html')">
+                <div class="module-icon">👥</div>
+                <h3>Anagrafica Clienti</h3>
+                <p>Gestisci l'anagrafica dei tuoi clienti con ID univoci e credenziali di accesso.</p>
             </div>
-
-            <div class="dashboard-grid">
-                <!-- 1. IMPOSTAZIONI -->
-                <div class="dash-card" onclick="navigateTo('scheda-anagrafica.html')">
-                    <div class="module-icon">IM</div>
-                    <div class="module-title">Impostazioni</div>
-                    <div class="module-desc">Scheda anagrafica, logo, messaggi automatici e configurazione studio.</div>
-                </div>
-
-                <!-- 2. REGISTRA CLIENTI ID -->
-                <div class="dash-card" onclick="navigateTo('registra-clienti-id.html')">
-                    <div class="module-icon">ID</div>
-                    <div class="module-title">Registra Clienti ID</div>
-                    <div class="module-desc">Registrazione anagrafica clienti con ID univoco permanente e credenziali.</div>
-                </div>
-
-                <!-- 3. LISTINI & CATEGORIE -->
-                <div class="dash-card" onclick="navigateTo('listini-categorie.html')">
-                    <div class="module-icon">LC</div>
-                    <div class="module-title">Listini, Categorie & Contratti</div>
-                    <div class="module-desc">Crea listini, gestisci categorie e archivio contratti standard.</div>
-                </div>
-
-                <!-- 4. PREVENTIVI & CONTRATTI -->
-                <div class="dash-card" onclick="navigateTo('preventivi.html')">
-                    <div class="module-icon">PV</div>
-                    <div class="module-title">Preventivi & Contratti</div>
-                    <div class="module-desc">Crea preventivi, invia via WhatsApp e trasforma in contratti.</div>
-                </div>
-
-                <!-- 5. SELEZIONE ALBUM -->
-                <div class="dash-card" onclick="navigateTo('selezione-album.html')">
-                    <div class="module-icon">SA</div>
-                    <div class="module-title">Seleziona Cartelle Clienti</div>
-                    <div class="module-desc">Gestione caricamento gallerie e selezione album.</div>
-                    <span class="badge-status" id="badgeSelezione">0 IN ATTESA</span>
-                </div>
-
-                <!-- 6. GRU -->
-                <div class="dash-card" onclick="navigateTo('gru.html')">
-                    <div class="module-icon">GRU</div>
-                    <div class="module-title">Gestione Risorse & Utility</div>
-                    <div class="module-desc">Strumenti professionali per la gestione dello studio e selezione foto.</div>
-                </div>
-
-                <!-- 7. WORKFLOW -->
-                <div class="dash-card" onclick="navigateTo('workflow.html')">
-                    <div class="module-icon">WF</div>
-                    <div class="module-title">Workflow</div>
-                    <div class="module-desc">Stato avanzamento foto e video per ogni cliente.</div>
-                </div>
-
-                <!-- 8. GALLERIE CLIENTI -->
-                <div class="dash-card" onclick="navigateTo('gallerie.html')">
-                    <div class="module-icon">GC</div>
-                    <div class="module-title">Gallerie Clienti</div>
-                    <div class="module-desc">Crea gallerie esterne MEGA con link brandizzati per i clienti.</div>
-                    <span class="badge-status">NUOVO</span>
-                </div>
-
-                <!-- 9. LISTA REGALI -->
-                <div class="dash-card" onclick="navigateTo('lista-regali.html')">
-                    <div class="module-icon">LR</div>
-                    <div class="module-title">Lista Regali</div>
-                    <div class="module-desc">Crowdfunding e messaggi di auguri per eventi.</div>
-                </div>
-
-                <!-- 10. NEGOZIO ONLINE -->
-                <div class="dash-card" onclick="navigateTo('negozio.html')">
-                    <div class="module-icon">NZ</div>
-                    <div class="module-title">Negozio Online</div>
-                    <div class="module-desc">Prodotti, ordini e configurazione pagamenti.</div>
-                    <span class="badge-status" id="badgeOrdini">0 ORDINI</span>
-                </div>
-
-                <!-- 11. RICEVUTE -->
-                <div class="dash-card" onclick="navigateTo('ricevute.html')">
-                    <div class="module-icon">RC</div>
-                    <div class="module-title">Ricevute</div>
-                    <div class="module-desc">Gestisci le ricevute fiscali e i pagamenti dei clienti.</div>
-                </div>
-
-                <!-- 12. AGENDA -->
-                <div class="dash-card" onclick="navigateTo('agenda.html')">
-                    <div class="module-icon">AG</div>
-                    <div class="module-title">Agenda</div>
-                    <div class="module-desc">Calendario eventi e appuntamenti dello studio.</div>
-                </div>
-
-                <!-- 13. LINK UTILI -->
-                <div class="dash-card" onclick="navigateTo('link-utili.html')">
-                    <div class="module-icon">LN</div>
-                    <div class="module-title">Link Utili</div>
-                    <div class="module-desc">Archivio personale di link, fornitori e risorse rapide.</div>
-                </div>
+            <div class="module-card" onclick="apriModulo('preventivi.html')">
+                <div class="module-icon">📋</div>
+                <h3>Preventivi & Contratti</h3>
+                <p>Crea preventivi professionali e convertili in contratti con un click.</p>
             </div>
-        </div>
-
-        <div class="footer-branding">
-            Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong>
+            <div class="module-card" onclick="apriModulo('agenda.html')">
+                <div class="module-icon">📅</div>
+                <h3>Agenda</h3>
+                <p>Organizza gli appuntamenti e i servizi fotografici nel calendario.</p>
+            </div>
+            <div class="module-card" onclick="apriModulo('workflow.html')">
+                <div class="module-icon"></div>
+                <h3>Workflow</h3>
+                <p>Traccia lo stato di avanzamento di ogni servizio fotografico.</p>
+            </div>
+            <div class="module-card" onclick="apriModulo('gallerie.html')">
+                <div class="module-icon">️</div>
+                <h3>Gallerie</h3>
+                <p>Gestisci le gallerie foto da consegnare ai clienti.</p>
+            </div>
+            <div class="module-card" onclick="apriModulo('selezioni-album.html')">
+                <div class="module-icon">📸</div>
+                <h3>Selezioni Album</h3>
+                <p>Permetti ai clienti di selezionare le foto per l'album.</p>
+            </div>
+            <div class="module-card" onclick="apriModulo('negozio.html')">
+                <div class="module-icon">🛒</div>
+                <h3>Negozio Online</h3>
+                <p>Gestisci il catalogo prodotti e gli ordini online.</p>
+            </div>
+            <div class="module-card" onclick="apriModulo('lista-regali.html')">
+                <div class="module-icon">🎁</div>
+                <h3>Lista Regali</h3>
+                <p>Crea liste regali digitali per matrimoni ed eventi.</p>
+            </div>
+            <div class="module-card" onclick="apriModulo('ricevute.html')">
+                <div class="module-icon"></div>
+                <h3>Ricevute</h3>
+                <p>Emetti e gestisci le ricevute dei pagamenti.</p>
+            </div>
+            <div class="module-card" onclick="apriModulo('servizi.html')">
+                <div class="module-icon">📦</div>
+                <h3>Listini & Categorie</h3>
+                <p>Gestisci i servizi offerti e i prezzi.</p>
+            </div>
+            <div class="module-card" onclick="apriModulo('email.html')">
+                <div class="module-icon">✉️</div>
+                <h3>Email</h3>
+                <p>Invia email professionali ai clienti.</p>
+            </div>
+            <div class="module-card" onclick="apriModulo('impostazioni.html')">
+                <div class="module-icon">⚙️</div>
+                <h3>Impostazioni</h3>
+                <p>Configura il tuo studio e le preferenze.</p>
+            </div>
         </div>
     </div>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        let studioId = null;
+    <div class="footer-branding">
+        <p>Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></p>
+    </div>
 
-        document.addEventListener('DOMContentLoaded', async function() {
+    <script>
+        var token = '';
+        var studioId = '';
+        var studioNome = '';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            token = urlParams.get('token');
+            
             if (!token) {
+                alert('Token non trovato. Effettua il login.');
                 window.location.href = 'index.html';
                 return;
             }
-            await verificaSessione();
+            
+            verificaSessione();
         });
 
         async function verificaSessione() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`);
+                const response = await fetch(WORKER_URL + '/api/auth/verifica?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 
-                if (!data.success || data.tipo !== 'studio') {
-                    mostraToast('Sessione non valida o scaduta', 'error');
-                    setTimeout(() => window.location.href = 'index.html', 1500);
+                if (!data.success) {
+                    alert('Sessione scaduta. Effettua il login.');
+                    window.location.href = 'index.html';
                     return;
                 }
                 
                 studioId = data.user.id;
-                document.getElementById('studioIdDisplay').textContent = studioId;
-                
-                // Applica tema globale
-                await applicaTemaAutomatico();
-                
-                // Aggiorna nome studio
-                if (data.user.nome) {
-                    document.querySelectorAll('.studio-nome').forEach(el => {
-                        el.textContent = data.user.nome;
-                    });
-                }
-
-                // Carica badge dinamici
-                caricaBadgeDinamici();
-
-                // Mostra contenuto
-                document.getElementById('loadingArea').classList.add('hidden');
-                document.getElementById('mainContent').classList.remove('hidden');
+                studioNome = data.user.nome || 'Studio';
+                document.getElementById('benvenuto').textContent = 'Benvenuto, ' + studioNome;
                 
             } catch (error) {
                 console.error('Errore verifica sessione:', error);
-                mostraToast('Errore di connessione al server', 'error');
             }
         }
 
-        function navigateTo(page) {
-            window.location.href = `${page}?token=${encodeURIComponent(token)}`;
+        function apriModulo(url) {
+            window.location.href = url + '?token=' + encodeURIComponent(token);
         }
 
-        // ✅ CORREZIONE: Passa event come parametro
-        async function cambiaTema(temaId, event) {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/tema?token=${encodeURIComponent(token)}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ studio_id: studioId, tema_attivo: temaId })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    // Aggiorna UI pulsanti
-                    document.querySelectorAll('.tema-btn').forEach(btn => btn.classList.remove('active'));
-                    if (event && event.target) {
-                        event.target.classList.add('active');
-                    }
-                    // Riapplica tema
-                    await applicaTemaAutomatico();
-                    mostraToast('Tema applicato con successo!', 'success');
-                }
-            } catch (error) {
-                console.error('Errore cambio tema:', error);
-                mostraToast('Errore nel salvataggio del tema', 'error');
-            }
-        }
-
-        async function caricaBadgeDinamici() {
-            try {
-                // Conteggio selezioni in attesa
-                const selRes = await fetch(`${WORKER_URL}/api/studio/selezioni-album?token=${encodeURIComponent(token)}`);
-                const selData = await selRes.json();
-                if (selData.success) {
-                    const inAttesa = selData.selezioni.filter(s => s.stato === 'in_attesa').length;
-                    const badge = document.getElementById('badgeSelezione');
-                    if (badge) {
-                        badge.textContent = `${inAttesa} IN ATTESA`;
-                        if (inAttesa > 0) badge.classList.add('alert');
-                    }
-                }
-
-                // Conteggio ordini in attesa
-                const ordRes = await fetch(`${WORKER_URL}/api/studio/negozio/ordini?token=${encodeURIComponent(token)}`);
-                const ordData = await ordRes.json();
-                if (ordData.success) {
-                    const inAttesa = ordData.ordini.filter(o => o.stato === 'in_attesa').length;
-                    const badge = document.getElementById('badgeOrdini');
-                    if (badge) {
-                        badge.textContent = `${inAttesa} ORDINI`;
-                        if (inAttesa > 0) badge.classList.add('alert');
-                    }
-                }
-            } catch (error) {
-                console.error('Errore caricamento badge:', error);
-            }
-        }
-
-        async function logout() {
-            try {
-                await fetch(`${WORKER_URL}/api/auth/logout`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token })
-                });
-            } catch(e) {}
-            window.location.href = 'index.html';
-        }
-
-        function mostraToast(msg, tipo) {
-            const container = document.getElementById('toastContainer') || document.body;
-            const toast = document.createElement('div');
-            toast.style.cssText = `position: fixed; top: 20px; right: 20px; background: var(--card-bg, white); border-radius: 8px; padding: 12px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-left: 4px solid ${tipo === 'error' ? '#c0392b' : 'var(--primary, #27ae60)'}; font-size: 14px; z-index: 9999; color: var(--text-main, #2c3e50); animation: slideIn 0.3s ease;`;
-            toast.innerHTML = `<div>${msg}</div>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        function logout() {
+            fetch(WORKER_URL + '/api/auth/logout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: token })
+            }).finally(() => {
+                window.location.href = 'index.html';
+            });
         }
     </script>
 </body>
 </html>
-
