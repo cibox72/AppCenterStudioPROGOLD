@@ -194,7 +194,7 @@ async function applicaTemaAutomatico() {
 }
 
 // ============================================
-// INIEZIONE CSS GLOBALE
+// INIEZIONE CSS GLOBALE - FIX DEFINITIVO CONTRASTO
 // ============================================
 function iniettaCSSGlobale(tema) {
   var vecchio = document.getElementById('temi-globale-inject');
@@ -337,17 +337,20 @@ function iniettaCSSGlobale(tema) {
   css += '.modal-overlay { background: rgba(0,0,0,0.6) !important; }';
   css += '.search-box input { border-color: ' + tema.pl + ' !important; background: ' + (tema.cardBg === '#ffffff' ? '#f8f9fa' : '#34495e') + ' !important; color: ' + tema.textMain + ' !important; }';
   css += '.cred-box .label, .cred-box .value { color: ' + tema.pd + ' !important; }';
+  
+  // === FIX DEFINITIVO TABELLE ===
   css += 'table th { background: ' + tema.p + ' !important; color: #ffffff !important; font-weight: 700 !important; text-shadow: 0 1px 2px rgba(0,0,0,0.3) !important; padding: 12px 8px !important; }';
   css += 'table td { color: ' + tema.textMain + ' !important; padding: 10px 8px !important; border-bottom: 1px solid ' + tema.pl + ' !important; }';
   css += 'table tr { background: ' + tema.cardBg + ' !important; }';
   css += 'table tr:hover td { background: ' + tema.pl + ' !important; }';
-  css += 'table input, table select, table textarea { background: ' + (tema.cardBg === '#ffffff' ? '#ffffff' : '#34495e') + ' !important; color: ' + tema.textMain + ' !important; border: 1px solid ' + tema.pl + ' !important; padding: 6px 8px !important; border-radius: 4px !important; }';
-  css += 'table input::placeholder, table textarea::placeholder { color: ' + tema.textMain + ' !important; opacity: 0.6 !important; }';
-  css += 'table input[type="text"], table input[type="email"], table input[type="tel"], table input[type="password"] { background: ' + (tema.cardBg === '#ffffff' ? '#f8f9fa' : '#2c3e50') + ' !important; color: ' + tema.textMain + ' !important; }';
+  css += 'table input, table select, table textarea { background: #ffffff !important; color: #000000 !important; border: 1px solid ' + tema.pl + ' !important; padding: 6px 8px !important; border-radius: 4px !important; }';
+  css += 'table input::placeholder, table textarea::placeholder { color: #666666 !important; opacity: 0.8 !important; }';
+  css += 'table input[type="text"], table input[type="email"], table input[type="tel"], table input[type="password"] { background: #ffffff !important; color: #000000 !important; }';
   css += 'table td input { min-width: 100px !important; }';
   css += 'table tr:nth-child(even) td { background: ' + (tema.cardBg === '#ffffff' ? '#f8f9fa' : '#242b3a') + ' !important; }';
   css += 'thead th { background: ' + tema.p + ' !important; color: #ffffff !important; }';
   css += 'tr:first-child td, tr:first-child th { background: ' + tema.p + ' !important; color: #ffffff !important; }';
+  
   css += '.email-item { border-left-color: ' + tema.pl + ' !important; background: ' + tema.cardBg + ' !important; }';
   css += '.email-subject, .email-to { color: ' + tema.pd + ' !important; }';
   css += '.email-body { background: ' + tema.pl + ' !important; color: ' + tema.textMain + ' !important; }';
