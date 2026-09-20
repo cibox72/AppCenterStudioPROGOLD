@@ -35,17 +35,15 @@ export default {
       ).bind(id, tipo, titolo, messaggio, JSON.stringify(dati), 0, 0, new Date().toISOString()).run();
     }
 
+    // === MODIFICA CRUCIALE: GENERAZIONE ID CLIENTE UNIVOCO GLOBALE ===
     async function generaIdCliente(studioId) {
-      const result = await env.DB.prepare(
-        "SELECT id FROM anagrafica_clienti WHERE studio_id=? ORDER BY CAST(SUBSTR(id, 5) AS INTEGER) DESC LIMIT 1"
-      ).bind(studioId).first();
-      let prossimoNumero = 1;
-      if (result && result.id) {
-        const numeroEsistente = parseInt(result.id.replace('CLI-', ''));
-        prossimoNumero = numeroEsistente + 1;
-      }
-      return 'CLI-' + String(prossimoNumero).padStart(5, '0');
+      // Genera un UUID univoco globale per evitare collisioni tra studi diversi
+      // che registrano clienti contemporaneamente
+      const uuid = crypto.randomUUID().toLowerCase();
+      const shortId = uuid.replace(/-/g, '').substring(0, 8); // Prende primi 8 caratteri senza trattini
+      return "CLI-" + shortId.toUpperCase();
     }
+    // ==================================================================
 
     function generaUsername(nome, cognome) {
       const base = (nome + '.' + cognome).toLowerCase()
