@@ -5,12 +5,14 @@ export default {
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
     };
-
     if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
     const url = new URL(request.url);
     const path = url.pathname;
 
+    // ============================================
+    // FUNZIONI DI SUPPORTO GLOBALI
+    // ============================================
     function generaToken() {
       return 'tok-' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     }
@@ -35,15 +37,12 @@ export default {
       ).bind(id, tipo, titolo, messaggio, JSON.stringify(dati), 0, 0, new Date().toISOString()).run();
     }
 
-    // === MODIFICA CRUCIALE: GENERAZIONE ID CLIENTE UNIVOCO GLOBALE ===
+    // ✅ ID CLIENTE UNIVOCO GLOBALE - EVITA COLLISIONI TRA STUDI
     async function generaIdCliente(studioId) {
-      // Genera un UUID univoco globale per evitare collisioni tra studi diversi
-      // che registrano clienti contemporaneamente
       const uuid = crypto.randomUUID().toLowerCase();
-      const shortId = uuid.replace(/-/g, '').substring(0, 8); // Prende primi 8 caratteri senza trattini
+      const shortId = uuid.replace(/-/g, '').substring(0, 8);
       return "CLI-" + shortId.toUpperCase();
     }
-    // ==================================================================
 
     function generaUsername(nome, cognome) {
       const base = (nome + '.' + cognome).toLowerCase()
@@ -63,6 +62,9 @@ export default {
     }
 
     try {
+      // ============================================
+      // SEZIONE 1: AUTENTICAZIONE
+      // ============================================
       if (path === "/api/auth/login" && request.method === "POST") {
         const { tipo, id, password } = await request.json();
         const hashedPassword = await hashPassword(password);
@@ -103,6 +105,9 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 2: ADMIN - CRM STUDI
+      // ============================================
       if (path === "/api/admin/crm/studi" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -178,6 +183,9 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 3: ADMIN - NOTIFICHE
+      // ============================================
       if (path === "/api/admin/crm/clienti" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -221,6 +229,9 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 4: PUBBLICO - REGISTRA STUDIO
+      // ============================================
       if (path === "/api/public/registra-studio" && request.method === "POST") {
         const d = await request.json();
         const hashed = await hashPassword(d.password);
@@ -230,6 +241,9 @@ export default {
         return new Response(JSON.stringify({ success: true, studioId }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 5: CLIENTE - DASHBOARD E FOTO
+      // ============================================
       if (path === "/api/cliente/dashboard" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -291,6 +305,9 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 6: STUDIO - SERVIZI
+      // ============================================
       if (path === "/api/studio/servizi" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -298,6 +315,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM servizi WHERE studio_id=? ORDER BY categoria, descrizione").bind(sess.user_id).all();
         return new Response(JSON.stringify({ success: true, servizi: result.results }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/servizio" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -306,6 +324,7 @@ export default {
         await env.DB.prepare(`INSERT INTO servizi (id, studio_id, categoria, descrizione, prezzo, data_creazione) VALUES (?, ?, ?, ?, ?, ?)`).bind(d.id, sess.user_id, d.categoria, d.descrizione, d.prezzo, d.data_creazione || new Date().toISOString()).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/studio/servizio/") && request.method === "PUT") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -315,6 +334,7 @@ export default {
         await env.DB.prepare(`UPDATE servizi SET categoria=?, descrizione=?, prezzo=? WHERE id=? AND studio_id=?`).bind(d.categoria, d.descrizione, d.prezzo, id, sess.user_id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/studio/servizio/") && request.method === "DELETE") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -324,6 +344,9 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 7: STUDIO - PREVENTIVI
+      // ============================================
       if (path === "/api/studio/preventivi" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -331,6 +354,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM preventivi WHERE studio_id=? ORDER BY data_creazione DESC").bind(sess.user_id).all();
         return new Response(JSON.stringify({ success: true, preventivi: result.results }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/preventivo" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -343,6 +367,7 @@ export default {
         ).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/studio/preventivo/") && request.method === "DELETE") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -362,6 +387,9 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 8: STUDIO - WORKFLOW
+      // ============================================
       if (path === "/api/studio/workflow" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -370,6 +398,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM workflow WHERE studio_id=? ORDER BY data_creazione DESC").bind(studioIdQuery).all();
         return new Response(JSON.stringify({ success: true, workflow: result.results.map(w => ({ ...w, tasks: JSON.parse(w.note || '{}') })) }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/workflow" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -381,6 +410,7 @@ export default {
         ).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/studio/workflow/") && request.method === "PUT") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -390,6 +420,7 @@ export default {
         await env.DB.prepare(`UPDATE workflow SET note=?, ultimo_aggiornamento=? WHERE id=? AND studio_id=?`).bind(JSON.stringify(d.tasks || {}), new Date().toISOString(), id, sess.user_id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/studio/workflow/") && request.method === "DELETE") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -399,6 +430,9 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 9: STUDIO - RICEVUTE
+      // ============================================
       if (path === "/api/studio/ricevute" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -406,6 +440,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM ricevute WHERE studio_id=? ORDER BY data_creazione DESC").bind(sess.user_id).all();
         return new Response(JSON.stringify({ success: true, ricevute: result.results }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/ricevuta" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -415,6 +450,9 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 10: STUDIO - AGENDA
+      // ============================================
       if (path === "/api/studio/agenda" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -422,6 +460,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM agenda WHERE studio_id=? ORDER BY data DESC").bind(sess.user_id).all();
         return new Response(JSON.stringify({ success: true, eventi: result.results }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/agenda" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -430,6 +469,7 @@ export default {
         await env.DB.prepare(`INSERT INTO agenda (id, studio_id, titolo, data, ora_inizio, ora_fine, descrizione, luogo, tipo_servizio, squadra, cliente, note, creato_il) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, sess.user_id, d.titolo, d.data, d.ora_inizio || null, d.ora_fine || null, d.descrizione || null, d.luogo || null, d.tipo_servizio || null, d.squadra || 'Squadra 1', d.cliente || null, d.note || null, d.data_creazione || new Date().toISOString()).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/studio/agenda/") && request.method === "PUT") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -445,6 +485,7 @@ export default {
         await env.DB.prepare(`UPDATE agenda SET ${updates.join(', ')} WHERE id=? AND studio_id=?`).bind(...params).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/studio/agenda/") && request.method === "DELETE") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -454,6 +495,9 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 11: STUDIO - CLIENTI NEGOZIO
+      // ============================================
       if (path === "/api/studio/clienti" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const studioIdParam = url.searchParams.get("studioId");
@@ -485,6 +529,9 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 12: STUDIO - EMAIL ARCHIVIO
+      // ============================================
       if (path === "/api/studio/email-archivio" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -492,6 +539,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM email_archivio WHERE studio_id=? ORDER BY data_invio DESC").bind(sess.user_id).all();
         return new Response(JSON.stringify({ success: true, archivio: result.results }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/email-archivio" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -501,10 +549,12 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 13: STUDIO - NEGOZIO
+      // ============================================
       if (path === "/api/studio/negozio/prodotti" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const studioIdFromParam = url.searchParams.get("studioId");
-        
         if (token) {
             const sess = await verificaSessione(token);
             if (sess && sess.tipo === 'studio') {
@@ -512,15 +562,13 @@ export default {
                 return new Response(JSON.stringify({ success: true, prodotti: result.results }), { headers: corsHeaders });
             }
         }
-        
         if (studioIdFromParam) {
             const result = await env.DB.prepare("SELECT * FROM prodotti_negozio WHERE studio_id=? ORDER BY data_creazione DESC").bind(studioIdFromParam).all();
             return new Response(JSON.stringify({ success: true, prodotti: result.results }), { headers: corsHeaders });
         }
-        
         return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
       }
-      
+
       if (path === "/api/studio/negozio/prodotto" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -541,7 +589,7 @@ export default {
         ).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-            
+
       if (path.startsWith("/api/studio/negozio/prodotto/") && request.method === "DELETE") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -558,7 +606,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM ordini_negozio WHERE studio_id=? ORDER BY data_creazione DESC").bind(sess.user_id).all();
         return new Response(JSON.stringify({ success: true, ordini: result.results }), { headers: corsHeaders });
       }
-      
+
       if (path === "/api/studio/negozio/ordine" && request.method === "POST") {
         const d = await request.json();
         const studioId = d.studio_id || url.searchParams.get("studioId");
@@ -569,7 +617,7 @@ export default {
         ).run();
         return new Response(JSON.stringify({ success: true, id: orderId }), { headers: corsHeaders });
       }
-      
+
       if (path.startsWith("/api/studio/negozio/ordine/") && request.method === "PUT") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -587,7 +635,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM negozi_config WHERE studio_id=?").bind(sess.user_id).first();
         return new Response(JSON.stringify({ success: true, config: result }), { headers: corsHeaders });
       }
-      
+
       if (path === "/api/studio/negozio-config" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -606,6 +654,9 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 14: STUDIO - LISTA REGALI
+      // ============================================
       if (path === "/api/studio/lista-regali" && request.method === "GET") {
           const token = url.searchParams.get("token");
           const sess = await verificaSessione(token);
@@ -613,6 +664,7 @@ export default {
           const result = await env.DB.prepare("SELECT * FROM lista_regali WHERE studio_id=? ORDER BY data_creazione DESC").bind(sess.user_id).all();
           return new Response(JSON.stringify({ success: true, lista: result.results }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/lista-regali" && request.method === "POST") {
           const token = url.searchParams.get("token");
           const sess = await verificaSessione(token);
@@ -623,6 +675,7 @@ export default {
           ).run();
           return new Response(JSON.stringify({ success: true, id: d.id }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/studio/lista-regali/") && request.method === "DELETE") {
           const token = url.searchParams.get("token");
           const sess = await verificaSessione(token);
@@ -631,12 +684,17 @@ export default {
           await env.DB.prepare("DELETE FROM lista_regali WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
           return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
+      // ============================================
+      // SEZIONE 15: PUBBLICO - LISTA REGALI
+      // ============================================
       if (path.startsWith("/api/public/lista-regali/") && request.method === "GET" && !path.includes("findByCredentials") && !path.includes("donazioni") && !path.includes("messaggi") && !path.includes("messaggio") && !path.includes("aggiorna-totale")) {
           const id = path.split("/api/public/lista-regali/")[1].split('?')[0];
           const result = await env.DB.prepare("SELECT * FROM lista_regali WHERE id=?").bind(id).first();
           if (!result) return new Response(JSON.stringify({ error: "Lista non trovata" }), { status: 404, headers: corsHeaders });
           return new Response(JSON.stringify({ success: true, lista: result }), { headers: corsHeaders });
       }
+
       if (path === "/api/public/lista-regali/findByCredentials" && request.method === "GET") {
           const username = url.searchParams.get("username");
           const password = url.searchParams.get("password");
@@ -645,6 +703,7 @@ export default {
           if (!result) return new Response(JSON.stringify({ error: "Credenziali non valide" }), { status: 401, headers: corsHeaders });
           return new Response(JSON.stringify({ success: true, lista: result }), { headers: corsHeaders });
       }
+
       if (path === "/api/public/lista-regali/donazione" && request.method === "POST") {
           const d = await request.json();
           const id = 'don-' + Date.now();
@@ -655,12 +714,14 @@ export default {
           await env.DB.prepare("UPDATE lista_regali SET raccolto_attuale=? WHERE id=?").bind(totalResult.totale, d.lista_id).run();
           return new Response(JSON.stringify({ success: true, id, totale: totalResult.totale }), { headers: corsHeaders });
       }
+
       if (path === "/api/public/lista-regali/donazioni" && request.method === "GET") {
           const listaId = url.searchParams.get("listaId");
           if (!listaId) return new Response(JSON.stringify({ error: "Parametro mancante" }), { status: 400, headers: corsHeaders });
           const result = await env.DB.prepare("SELECT * FROM donazioni_lista WHERE lista_id=? ORDER BY data_donazione DESC").bind(listaId).all();
           return new Response(JSON.stringify({ success: true, donazioni: result.results }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/public/lista-regali/donazione/") && request.method === "DELETE") {
           const id = path.split("/api/public/lista-regali/donazione/")[1].split('?')[0];
           const donazione = await env.DB.prepare("SELECT lista_id FROM donazioni_lista WHERE id=?").bind(id).first();
@@ -671,6 +732,7 @@ export default {
           }
           return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
       if (path === "/api/public/lista-regali/messaggio" && request.method === "POST") {
           const d = await request.json();
           try {
@@ -683,6 +745,7 @@ export default {
               return new Response(JSON.stringify({ error: "Errore nel salvataggio del messaggio", details: error.message }), { status: 500, headers: corsHeaders });
           }
       }
+
       if (path === "/api/public/lista-regali/messaggi" && request.method === "GET") {
           const listaId = url.searchParams.get("listaId");
           try {
@@ -693,6 +756,7 @@ export default {
               return new Response(JSON.stringify({ error: "Errore nella lettura dei messaggi" }), { status: 500, headers: corsHeaders });
           }
       }
+
       if (path === "/api/public/lista-regali/aggiorna-totale" && request.method === "POST") {
           const d = await request.json();
           try {
@@ -705,6 +769,9 @@ export default {
           }
       }
 
+      // ============================================
+      // SEZIONE 16: STUDIO - UPLOAD, TEMI, PROFILO
+      // ============================================
       if (path === "/api/studio/upload" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -727,6 +794,7 @@ export default {
         }
         return new Response(JSON.stringify({ success: true, tema: result }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/tema" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -738,7 +806,6 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
-      // === MODIFICA CRUCIALE: SALVA IL TEMA DELL'ADMIN CON ID 'admin' INVECE DI 'global' ===
       if (path === "/api/admin/tema" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -746,6 +813,7 @@ export default {
         const result = await env.DB.prepare("SELECT tema_attivo FROM temi_colori WHERE studio_id=?").bind('admin').first();
         return new Response(JSON.stringify({ success: true, tema: { tema_attivo: result ? result.tema_attivo : 'default' } }), { headers: corsHeaders });
       }
+
       if (path === "/api/admin/tema" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -756,7 +824,6 @@ export default {
         else await env.DB.prepare(`INSERT INTO temi_colori (studio_id, tema_attivo, data_aggiornamento) VALUES (?, ?, ?)`).bind('admin', d.tema_attivo, new Date().toISOString()).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-      // ========================================================================================
 
       if (path === "/api/studio/profilo" && request.method === "PUT") {
         const token = url.searchParams.get("token");
@@ -775,6 +842,7 @@ export default {
         }
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/profilo" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -782,6 +850,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM studi WHERE id=?").bind(url.searchParams.get("studioId") || sess.user_id).first();
         return new Response(JSON.stringify({ success: true, studio: result }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/upload-logo" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -795,6 +864,7 @@ export default {
         }
         return new Response(JSON.stringify({ error: "Bucket non configurato" }), { status: 500, headers: corsHeaders });
       }
+
       if (path === "/api/admin/scheda-studio" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -805,6 +875,7 @@ export default {
         if (!result) return new Response(JSON.stringify({ error: "Studio non trovato" }), { status: 404, headers: corsHeaders });
         return new Response(JSON.stringify({ success: true, studio: result }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/logo" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const studioId = url.searchParams.get("studioId");
@@ -822,6 +893,9 @@ export default {
         }
       }
 
+      // ============================================
+      // SEZIONE 17: STUDIO - LINK UTILI
+      // ============================================
       if (path === "/api/studio/link-utili" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -829,6 +903,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM link_utili WHERE studio_id=? ORDER BY data_creazione DESC").bind(sess.user_id).all();
         return new Response(JSON.stringify({ success: true, links: result.results }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/link-utili" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -838,6 +913,7 @@ export default {
         await env.DB.prepare(`INSERT INTO link_utili (id, studio_id, descrizione, url, data_creazione) VALUES (?, ?, ?, ?, ?)`).bind(linkId, sess.user_id, d.descrizione, d.url, new Date().toISOString()).run();
         return new Response(JSON.stringify({ success: true, id: linkId }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/studio/link-utili/") && request.method === "DELETE") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -847,6 +923,9 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 18: STUDIO - GALLERIE
+      // ============================================
       if (path === "/api/studio/gallerie" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -854,6 +933,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM gallerie WHERE studio_id=? ORDER BY data_creazione DESC").bind(sess.user_id).all();
         return new Response(JSON.stringify({ success: true, gallerie: result.results }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/galleria" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -864,6 +944,7 @@ export default {
         await env.DB.prepare(`INSERT INTO gallerie (id, studio_id, cliente_nome, cliente_email, cliente_telefono, tipo_evento, data_evento, messaggio_benvenuto, mega_email, mega_password, mega_link, stato, link_pubblico, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(id, sess.user_id, d.cliente_nome, d.cliente_email, d.cliente_telefono, d.tipo_evento, d.data_evento, d.messaggio_benvenuto, d.mega_email || '', d.mega_password || '', d.mega_link || '', d.stato || 'preparazione', linkPubblico, new Date().toISOString()).run();
         return new Response(JSON.stringify({ success: true, id: id, link_pubblico: linkPubblico }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/studio/galleria/") && request.method === "PUT") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -879,6 +960,7 @@ export default {
         await env.DB.prepare(`UPDATE gallerie SET ${updates.join(', ')} WHERE id=? AND studio_id=?`).bind(...params).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/studio/galleria/") && request.method === "DELETE") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -887,12 +969,16 @@ export default {
         await env.DB.prepare("DELETE FROM gallerie WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
       if (path === "/api/public/galleria" && request.method === "GET") {
         const result = await env.DB.prepare("SELECT * FROM gallerie WHERE id=?").bind(url.searchParams.get("id")).first();
         if (!result) return new Response(JSON.stringify({ error: "Galleria non trovata" }), { status: 404, headers: corsHeaders });
         return new Response(JSON.stringify({ success: true, galleria: result }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 19: STUDIO - CONTRATTI
+      // ============================================
       if (path === "/api/studio/contratti" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -900,6 +986,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM contratti WHERE studio_id=? ORDER BY data_creazione DESC").bind(sess.user_id).all();
         return new Response(JSON.stringify({ success: true, contratti: result.results }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/contratti" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -914,6 +1001,7 @@ export default {
         ).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/studio/contratti/") && request.method === "PUT") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -925,6 +1013,7 @@ export default {
         }
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/studio/contratti/") && request.method === "DELETE") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -934,6 +1023,9 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 20: STUDIO - EMAIL CONFIG
+      // ============================================
       if (path === "/api/studio/email-config" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -941,6 +1033,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM email_config WHERE studio_id=?").bind(sess.user_id).first();
         return new Response(JSON.stringify({ success: true, config: result }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/email-config" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -954,6 +1047,7 @@ export default {
         }
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/email-inbox" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -961,6 +1055,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM email_inbox WHERE studio_id=? ORDER BY data_ricezione DESC").bind(sess.user_id).all();
         return new Response(JSON.stringify({ success: true, inbox: result.results }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/email-inbox/read" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -978,6 +1073,9 @@ export default {
         return new Response(JSON.stringify({ success: true, galleria: result }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 21: ADMIN - ARCHIVIO
+      // ============================================
       if (path === "/api/admin/archivia-notifica" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -995,6 +1093,9 @@ export default {
         return new Response(JSON.stringify({ success: true, studi: result.results }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 22: STUDIO - ANAGRAFICA CLIENTI
+      // ============================================
       if (path === "/api/studio/anagrafica-clienti" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -1002,6 +1103,7 @@ export default {
         const result = await env.DB.prepare("SELECT * FROM anagrafica_clienti WHERE studio_id=? ORDER BY CAST(SUBSTR(id, 5) AS INTEGER) ASC").bind(sess.user_id).all();
         return new Response(JSON.stringify({ success: true, clienti: result.results }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/anagrafica-clienti" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -1015,6 +1117,7 @@ export default {
         ).run();
         return new Response(JSON.stringify({ success: true, cliente: { id, username, password } }), { headers: corsHeaders });
       }
+
       if (path === "/api/studio/anagrafica-clienti/ricerca" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -1025,6 +1128,7 @@ export default {
         ).bind(sess.user_id, `%${q}%`, `%${q}%`, `%${q}%`, `%${q}%`).all();
         return new Response(JSON.stringify({ success: true, clienti: result.results }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/studio/anagrafica-clienti/") && request.method === "GET") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -1034,6 +1138,7 @@ export default {
         if (!result) return new Response(JSON.stringify({ error: "Cliente non trovato" }), { status: 404, headers: corsHeaders });
         return new Response(JSON.stringify({ success: true, cliente: result }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/studio/anagrafica-clienti/") && request.method === "PUT") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -1049,6 +1154,7 @@ export default {
         await env.DB.prepare(`UPDATE anagrafica_clienti SET ${updates.join(', ')} WHERE id=? AND studio_id=?`).bind(...params).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
+
       if (path.startsWith("/api/studio/anagrafica-clienti/") && request.method === "DELETE") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -1058,6 +1164,9 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // SEZIONE 23: STUDIO - SELEZIONE ALBUM
+      // ============================================
       if (path === "/api/studio/selezione-album/elimina-cartella" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
@@ -1291,6 +1400,9 @@ export default {
         return new Response(JSON.stringify({ success: true, eliminated: eliminatedCount, count: daEliminare.results.length }), { headers: corsHeaders });
       }
 
+      // ============================================
+      // ROUTE NON TROVATA
+      // ============================================
       return new Response(JSON.stringify({ error: "Endpoint non trovato", path: path }), { status: 404, headers: corsHeaders });
 
     } catch (error) {
