@@ -238,27 +238,27 @@
                 
                 <!-- SELEZIONE RAPIDA TEMA -->
                 <div class="tema-selector" id="temaSelector">
-                    <button class="tema-btn" onclick="cambiaTema('default')">Default</button>
-                    <button class="tema-btn" onclick="cambiaTema('natale')">Natale</button>
-                    <button class="tema-btn" onclick="cambiaTema('carnevale')">Carnevale</button>
-                    <button class="tema-btn" onclick="cambiaTema('inverno')">Inverno</button>
-                    <button class="tema-btn" onclick="cambiaTema('pasqua')">Pasqua</button>
-                    <button class="tema-btn" onclick="cambiaTema('estate')">Estate</button>
-                    <button class="tema-btn" onclick="cambiaTema('halloween')">Halloween</button>
-                    <button class="tema-btn" onclick="cambiaTema('san_valentino')">San Valentino</button>
-                    <button class="tema-btn" onclick="cambiaTema('arancio')">Arancio</button>
-                    <button class="tema-btn" onclick="cambiaTema('elegante_beige')">Beige</button>
-                    <button class="tema-btn" onclick="cambiaTema('notte_arancio')">Notte</button>
-                    <button class="tema-btn" onclick="cambiaTema('caldo_professionale')">Caldo</button>
-                    <button class="tema-btn" onclick="cambiaTema('minimal_luxury')">Luxury</button>
-                    <button class="tema-btn" onclick="cambiaTema('tramonto_moderno')">Tramonto</button>
-                    <button class="tema-btn" onclick="cambiaTema('oro_nero')">Oro Nero</button>
-                    <button class="tema-btn" onclick="cambiaTema('ardesia_elegante')">Ardesia</button>
-                    <button class="tema-btn" onclick="cambiaTema('corallo_professional')">Corallo</button>
-                    <button class="tema-btn" onclick="cambiaTema('bronzo_scuro')">Bronzo</button>
-                    <button class="tema-btn" onclick="cambiaTema('platino')">Platino</button>
-                    <button class="tema-btn" onclick="cambiaTema('lavanda_professional')">Lavanda</button>
-                    <button class="tema-btn" onclick="cambiaTema('rame_caldo')">Rame</button>
+                    <button class="tema-btn" onclick="cambiaTema('default', event)">Default</button>
+                    <button class="tema-btn" onclick="cambiaTema('natale', event)">Natale</button>
+                    <button class="tema-btn" onclick="cambiaTema('carnevale', event)">Carnevale</button>
+                    <button class="tema-btn" onclick="cambiaTema('inverno', event)">Inverno</button>
+                    <button class="tema-btn" onclick="cambiaTema('pasqua', event)">Pasqua</button>
+                    <button class="tema-btn" onclick="cambiaTema('estate', event)">Estate</button>
+                    <button class="tema-btn" onclick="cambiaTema('halloween', event)">Halloween</button>
+                    <button class="tema-btn" onclick="cambiaTema('san_valentino', event)">San Valentino</button>
+                    <button class="tema-btn" onclick="cambiaTema('arancio', event)">Arancio</button>
+                    <button class="tema-btn" onclick="cambiaTema('elegante_beige', event)">Beige</button>
+                    <button class="tema-btn" onclick="cambiaTema('notte_arancio', event)">Notte</button>
+                    <button class="tema-btn" onclick="cambiaTema('caldo_professionale', event)">Caldo</button>
+                    <button class="tema-btn" onclick="cambiaTema('minimal_luxury', event)">Luxury</button>
+                    <button class="tema-btn" onclick="cambiaTema('tramonto_moderno', event)">Tramonto</button>
+                    <button class="tema-btn" onclick="cambiaTema('oro_nero', event)">Oro Nero</button>
+                    <button class="tema-btn" onclick="cambiaTema('ardesia_elegante', event)">Ardesia</button>
+                    <button class="tema-btn" onclick="cambiaTema('corallo_professional', event)">Corallo</button>
+                    <button class="tema-btn" onclick="cambiaTema('bronzo_scuro', event)">Bronzo</button>
+                    <button class="tema-btn" onclick="cambiaTema('platino', event)">Platino</button>
+                    <button class="tema-btn" onclick="cambiaTema('lavanda_professional', event)">Lavanda</button>
+                    <button class="tema-btn" onclick="cambiaTema('rame_caldo', event)">Rame</button>
                 </div>
             </div>
 
@@ -418,7 +418,8 @@
             window.location.href = `${page}?token=${encodeURIComponent(token)}`;
         }
 
-        async function cambiaTema(temaId) {
+        // ✅ CORREZIONE: Passa event come parametro
+        async function cambiaTema(temaId, event) {
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/tema?token=${encodeURIComponent(token)}`, {
                     method: 'POST',
@@ -429,7 +430,9 @@
                 if (result.success) {
                     // Aggiorna UI pulsanti
                     document.querySelectorAll('.tema-btn').forEach(btn => btn.classList.remove('active'));
-                    event.target.classList.add('active');
+                    if (event && event.target) {
+                        event.target.classList.add('active');
+                    }
                     // Riapplica tema
                     await applicaTemaAutomatico();
                     mostraToast('Tema applicato con successo!', 'success');
@@ -492,3 +495,4 @@
     </script>
 </body>
 </html>
+
