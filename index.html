@@ -8,7 +8,7 @@
     <script src="temi.js"></script>
     
     <!-- ============================================ -->
-    <!-- SEZIONE 1: CSS STYLES (righe 1-150) -->
+    <!-- SEZIONE 1: CSS STYLES -->
     <!-- ============================================ -->
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
@@ -43,12 +43,13 @@
         .info-box { background: #fff9e6; padding: 15px; border-radius: 8px; border-left: 4px solid #d4af37; margin-bottom: 20px; }
         .footer-branding { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #d5d8dc; color: #666666; font-size: 0.85em; }
         .footer-branding strong { color: #996515; }
+        .hidden-field { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
     </style>
 </head>
 <body>
     
     <!-- ============================================ -->
-    <!-- SEZIONE 2: HTML LOGIN FORM (righe 151-200) -->
+    <!-- SEZIONE 2: HTML LOGIN FORM -->
     <!-- ============================================ -->
     <div class="login-container">
         <div class="login-header">
@@ -59,10 +60,14 @@
         <div id="error-message" class="error-message"></div>
         <div id="success-message" class="success-message"></div>
 
-        <form id="login-form" onsubmit="effettuaLogin(event)">
+        <form id="login-form" onsubmit="effettuaLogin(event)" autocomplete="off">
+            <!-- Campi nascosti per bloccare autocompletamento browser -->
+            <input type="text" class="hidden-field" tabindex="-1" autocomplete="username">
+            <input type="password" class="hidden-field" tabindex="-1" autocomplete="current-password">
+
             <div class="form-group">
                 <label>Tipo Account *</label>
-                <select id="tipo" required>
+                <select id="tipo" required autocomplete="off">
                     <option value="">-- Seleziona --</option>
                     <option value="admin">Amministratore</option>
                     <option value="studio">Studio Fotografico</option>
@@ -72,13 +77,13 @@
 
             <div class="form-group">
                 <label>ID / Username *</label>
-                <input type="text" id="id" required>
+                <input type="text" id="id" required autocomplete="off" value="">
             </div>
 
             <div class="form-group">
                 <label>Password *</label>
                 <div class="password-wrapper">
-                    <input type="password" id="password" required>
+                    <input type="password" id="password" required autocomplete="new-password" value="">
                     <button type="button" class="toggle-password" onclick="togglePassword()">👁️</button>
                 </div>
             </div>
@@ -98,7 +103,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 3: HTML MODALE (righe 201-250) -->
+    <!-- SEZIONE 3: HTML MODALE REGISTRAZIONE -->
     <!-- ============================================ -->
     <div id="modal-registrazione" class="modal-overlay">
         <div class="modal-content">
@@ -111,27 +116,31 @@
                 Compila il form per richiedere un account di prova
             </div>
             
-            <form id="form-registrazione" onsubmit="registraStudio(event)">
+            <form id="form-registrazione" onsubmit="registraStudio(event)" autocomplete="off">
+                <!-- Campi nascosti per bloccare autocompletamento -->
+                <input type="text" class="hidden-field" tabindex="-1" autocomplete="username">
+                <input type="password" class="hidden-field" tabindex="-1" autocomplete="current-password">
+
                 <div class="form-group">
                     <label>Nome Studio *</label>
-                    <input type="text" id="reg_nome" required>
+                    <input type="text" id="reg_nome" required autocomplete="off" value="">
                 </div>
                 <div class="form-group">
                     <label>Email *</label>
-                    <input type="email" id="reg_email" required>
+                    <input type="email" id="reg_email" required autocomplete="off" value="">
                 </div>
                 <div class="form-group">
                     <label>Telefono</label>
-                    <input type="tel" id="reg_telefono">
+                    <input type="tel" id="reg_telefono" autocomplete="off" value="">
                 </div>
                 <div class="form-group">
                     <label>Partita IVA</label>
-                    <input type="text" id="reg_piva">
+                    <input type="text" id="reg_piva" autocomplete="off" value="">
                 </div>
                 <div class="form-group">
                     <label>Password *</label>
                     <div class="password-wrapper">
-                        <input type="password" id="reg_password" required>
+                        <input type="password" id="reg_password" required autocomplete="new-password" value="">
                         <button type="button" class="toggle-password" onclick="toggleRegPassword()">👁️</button>
                     </div>
                 </div>
@@ -142,10 +151,22 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 4: JAVASCRIPT (righe 251-350) -->
+    <!-- SEZIONE 4: JAVASCRIPT FUNCTIONS -->
     <!-- ============================================ -->
     <script>
         var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
+
+        // Svuota campi al caricamento pagina
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('id').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('tipo').value = '';
+            setTimeout(function() {
+                document.getElementById('id').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('tipo').value = '';
+            }, 100);
+        });
 
         function mostraErrore(msg) {
             var el = document.getElementById('error-message');
