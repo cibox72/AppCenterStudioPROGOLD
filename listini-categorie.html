@@ -302,11 +302,11 @@
                     document.getElementById('mod_descrizione').value = s.descrizione || '';
                     document.getElementById('modal-modifica').classList.add('active');
                 } else {
-                    alert('Errore nel caricamento del servizio');
+                    alert('Errore nel caricamento del servizio: ' + (data.error || 'Sconosciuto'));
                 }
             } catch (error) {
                 console.error('Errore caricamento servizio:', error);
-                alert('Errore di connessione');
+                alert('Errore di connessione durante il caricamento del servizio.');
             }
         }
 
