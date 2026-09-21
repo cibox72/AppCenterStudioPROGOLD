@@ -41,26 +41,18 @@
         .btn-danger { background: linear-gradient(135deg, #f1948a, #e74c3c); color: #ffffff; }
         .btn-sm { padding: 6px 12px; font-size: 0.8em; }
         .actions-bar { display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap; }
-        .service-item { background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #d4af37; }
+        .service-item { background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #d4af37; transition: all 0.3s ease; }
         .service-item:hover { border-color: #d4af37; background: #fff9e6; }
-        .service-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
+        .service-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
         .service-header h4 { color: #000000; font-size: 1.1em; flex: 1; }
         .service-price { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; padding: 8px 15px; border-radius: 20px; font-weight: 700; white-space: nowrap; }
-        .service-category { display: inline-block; background: #fff9e6; color: #996515; padding: 4px 12px; border-radius: 12px; font-size: 0.8em; font-weight: 600; margin-bottom: 10px; }
-        .service-description { color: #666666; font-size: 0.9em; margin-bottom: 10px; }
+        .service-category { display: inline-block; background: #fff9e6; color: #996515; padding: 4px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 600; margin-bottom: 10px; border: 1px solid #d4af37; }
+        .service-description { color: #666666; font-size: 0.9em; margin-bottom: 15px; line-height: 1.5; }
         .service-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-        .category-section { margin-bottom: 30px; }
-        .category-header { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; padding: 15px 20px; border-radius: 10px; margin-bottom: 15px; }
-        .category-header h3 { color: #ffffff; font-size: 1.2em; }
-        .category-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid #d5d8dc; border-radius: 10px; margin-bottom: 10px; background: #ffffff; border-left: 4px solid #d4af37; }
-        .category-item:hover { background: #fff9e6; }
-        .category-item h4 { color: #000000; }
-        .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
-        .tab { padding: 12px 25px; background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; cursor: pointer; font-weight: 600; color: #000000; }
-        .tab:hover { background: #fff9e6; }
-        .tab.active { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; border-color: #996515; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-box { background: #fff9e6; padding: 15px; border-radius: 10px; border-left: 4px solid #d4af37; text-align: center; }
+        .stat-box h4 { color: #000000; font-size: 2em; margin-bottom: 5px; }
+        .stat-box p { color: #666666; font-size: 0.85em; }
         .footer-branding { text-align: center; padding: 30px 20px; color: #666666; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
         .footer-branding strong { color: #996515; }
         .loading { text-align: center; padding: 40px; color: #666666; }
@@ -73,10 +65,7 @@
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #fff9e6; }
         .modal-header h2 { color: #000000; font-size: 1.4em; }
         .close-modal { background: none; border: none; font-size: 1.8em; cursor: pointer; color: #666666; }
-        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-box { background: #fff9e6; padding: 15px; border-radius: 10px; border-left: 4px solid #d4af37; text-align: center; }
-        .stat-box h4 { color: #000000; font-size: 1.8em; margin-bottom: 5px; }
-        .stat-box p { color: #666666; font-size: 0.85em; }
+        .close-modal:hover { color: #c0392b; }
         @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .actions-bar { flex-direction: column; } .actions-bar .btn { width: 100%; justify-content: center; } .service-header { flex-direction: column; align-items: flex-start; } }
     </style>
 </head>
@@ -103,118 +92,75 @@
         </div>
 
         <!-- ============================================ -->
-        <!-- SEZIONE 4: TABS (SOLO 2: SERVIZI E CATEGORIE) -->
+        <!-- SEZIONE 4: FORM AGGIUNTA SERVIZIO -->
         <!-- ============================================ -->
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab('servizi')">Servizi</div>
-            <div class="tab" onclick="switchTab('categorie')">Categorie</div>
-        </div>
-
-        <!-- ============================================ -->
-        <!-- SEZIONE 5: TAB SERVIZI (FORM + ARCHIVIO) -->
-        <!-- ============================================ -->
-        <div id="tab-servizi" class="tab-content active">
+        <div class="section">
+            <h3 class="section-title">AGGIUNGI NUOVO SERVIZIO</h3>
+            <p class="section-subtitle">Crea un servizio che potrai selezionare nei preventivi.</p>
             
-            <!-- Form aggiunta nuovo servizio -->
-            <div class="section">
-                <h3 class="section-title">AGGIUNGI NUOVO SERVIZIO</h3>
-                <p class="section-subtitle">Crea un servizio che potrai selezionare nei preventivi.</p>
-                
-                <form id="form-servizio" onsubmit="salvaServizio(event)">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Categoria <span class="required">*</span></label>
-                            <select id="servizio_categoria" required>
-                                <option value="">-- Seleziona --</option>
-                                <option value="Matrimonio">Matrimonio</option>
-                                <option value="Comunione">Comunione</option>
-                                <option value="Cresima">Cresima</option>
-                                <option value="Battesimo">Battesimo</option>
-                                <option value="Ritratto">Ritratto</option>
-                                <option value="Evento Aziendale">Evento Aziendale</option>
-                                <option value="Compleanno">Compleanno</option>
-                                <option value="Altro">Altro</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Prezzo Base (EUR) <span class="required">*</span></label>
-                            <input type="number" id="servizio_prezzo" required step="0.01" min="0" placeholder="0.00" autocomplete="off" value="">
-                        </div>
-                        <div class="form-group" style="grid-column: 1 / -1;">
-                            <label>Descrizione Servizio <span class="required">*</span></label>
-                            <textarea id="servizio_descrizione" required rows="3" placeholder="Es. Matrimonio con album digitale 30x40 cm, 40 interni, 100 foto, Copertina inclusa e valigia" autocomplete="off"></textarea>
-                        </div>
+            <form id="form-servizio" onsubmit="salvaServizio(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Categoria <span class="required">*</span></label>
+                        <select id="servizio_categoria" required>
+                            <option value="">-- Seleziona --</option>
+                            <option value="Matrimonio">Matrimonio</option>
+                            <option value="Comunione">Comunione</option>
+                            <option value="Cresima">Cresima</option>
+                            <option value="Battesimo">Battesimo</option>
+                            <option value="Ritratto">Ritratto</option>
+                            <option value="Evento Aziendale">Evento Aziendale</option>
+                            <option value="Compleanno">Compleanno</option>
+                            <option value="Servizio Fotografico">Servizio Fotografico</option>
+                            <option value="Book Fotografico">Book Fotografico</option>
+                            <option value="Altro">Altro</option>
+                        </select>
                     </div>
-                    <div class="actions-bar">
-                        <button type="submit" class="btn btn-primary">SALVA SERVIZIO</button>
-                        <button type="button" class="btn btn-outline" onclick="pulisciFormServizio()">Pulisci</button>
+                    <div class="form-group">
+                        <label>Prezzo Base (EUR) <span class="required">*</span></label>
+                        <input type="number" id="servizio_prezzo" required step="0.01" min="0" placeholder="0.00" autocomplete="off" value="">
                     </div>
-                </form>
-            </div>
-
-            <!-- Archivio servizi esistenti (per modificarli) -->
-            <div class="section">
-                <h3 class="section-title">ARCHIVIO LISTINI SERVIZI</h3>
-                <p class="section-subtitle">Modifica o elimina i servizi esistenti.</p>
-                
-                <div id="stats-servizi" class="stats-row" style="display: none;">
-                    <div class="stat-box">
-                        <h4 id="stat-totale-servizi">0</h4>
-                        <p>Servizi Totali</p>
-                    </div>
-                    <div class="stat-box">
-                        <h4 id="stat-totale-categorie">0</h4>
-                        <p>Categorie</p>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Descrizione Servizio <span class="required">*</span></label>
+                        <textarea id="servizio_descrizione" required rows="3" placeholder="Es. Matrimonio con album digitale 30x40 cm, 40 interni, 100 foto, Copertina inclusa e valigia" autocomplete="off"></textarea>
                     </div>
                 </div>
-                
-                <div id="loading-servizi" class="loading">
-                    <div class="spinner"></div>
-                    <p>Caricamento servizi...</p>
+                <div class="actions-bar">
+                    <button type="submit" class="btn btn-primary">SALVA SERVIZIO</button>
+                    <button type="button" class="btn btn-outline" onclick="pulisciFormServizio()">Pulisci</button>
                 </div>
-                
-                <div id="archivio-servizi"></div>
-                
-                <div id="empty-servizi" class="empty-state" style="display: none;">
-                    <p>Nessun servizio in archivio. Aggiungi il primo servizio qui sopra.</p>
-                </div>
-            </div>
+            </form>
         </div>
 
         <!-- ============================================ -->
-        <!-- SEZIONE 6: TAB CATEGORIE -->
+        <!-- SEZIONE 5: ARCHIVIO SERVIZI (MODIFICABILE) -->
         <!-- ============================================ -->
-        <div id="tab-categorie" class="tab-content">
-            <div class="section">
-                <h3 class="section-title">AGGIUNGI NUOVA CATEGORIA</h3>
-                <p class="section-subtitle">Crea una categoria per organizzare i servizi.</p>
-                
-                <form id="form-categoria" onsubmit="salvaCategoria(event)">
-                    <div class="form-group">
-                        <label>Nome Categoria <span class="required">*</span></label>
-                        <input type="text" id="categoria_nome" required placeholder="Es. Matrimonio" autocomplete="off" value="">
-                    </div>
-                    <div class="actions-bar">
-                        <button type="submit" class="btn btn-primary">SALVA CATEGORIA</button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="section">
-                <h3 class="section-title">CATEGORIE ESISTENTI</h3>
-                <p class="section-subtitle">Gestisci le categorie dei tuoi servizi.</p>
-                
-                <div id="loading-categorie" class="loading">
-                    <div class="spinner"></div>
-                    <p>Caricamento categorie...</p>
+        <div class="section">
+            <h3 class="section-title">ARCHIVIO LISTINI SERVIZI</h3>
+            <p class="section-subtitle">Modifica o elimina i servizi esistenti. Questi servizi saranno disponibili nei preventivi.</p>
+            
+            <div id="stats-servizi" class="stats-row" style="display: none;">
+                <div class="stat-box">
+                    <h4 id="stat-totale-servizi">0</h4>
+                    <p>Servizi Totali</p>
                 </div>
-                <div id="archivio-categorie"></div>
+            </div>
+            
+            <div id="loading-servizi" class="loading">
+                <div class="spinner"></div>
+                <p>Caricamento servizi...</p>
+            </div>
+            
+            <div id="archivio-servizi"></div>
+            
+            <div id="empty-servizi" class="empty-state" style="display: none;">
+                <p>Nessun servizio in archivio. Aggiungi il primo servizio qui sopra.</p>
             </div>
         </div>
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 7: MODALE MODIFICA SERVIZIO -->
+    <!-- SEZIONE 6: MODALE MODIFICA SERVIZIO -->
     <!-- ============================================ -->
     <div id="modal-servizio" class="modal-overlay">
         <div class="modal-content">
@@ -235,6 +181,8 @@
                         <option value="Ritratto">Ritratto</option>
                         <option value="Evento Aziendale">Evento Aziendale</option>
                         <option value="Compleanno">Compleanno</option>
+                        <option value="Servizio Fotografico">Servizio Fotografico</option>
+                        <option value="Book Fotografico">Book Fotografico</option>
                         <option value="Altro">Altro</option>
                     </select>
                 </div>
@@ -259,7 +207,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 8: JAVASCRIPT -->
+    <!-- SEZIONE 7: JAVASCRIPT -->
     <!-- ============================================ -->
     <script>
         var token = '';
@@ -286,15 +234,10 @@
                 if (!data.success) { alert('Sessione scaduta. Effettua il login.'); window.location.href = 'index.html'; return; }
                 studioId = data.user.id;
                 caricaServizi();
-                caricaCategorie();
-            } catch (error) { console.error('Errore verifica sessione:', error); }
-        }
-
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
-            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
-            event.target.classList.add('active');
-            document.getElementById('tab-' + tabName).classList.add('active');
+            } catch (error) { 
+                console.error('Errore verifica sessione:', error);
+                document.getElementById('loading-servizi').innerHTML = '<p style="color: #e74c3c;">Errore di connessione</p>';
+            }
         }
 
         async function caricaServizi() {
@@ -306,9 +249,12 @@
                 if (data.success && data.servizi && data.servizi.length > 0) {
                     document.getElementById('empty-servizi').style.display = 'none';
                     document.getElementById('stats-servizi').style.display = 'grid';
+                    document.getElementById('stat-totale-servizi').textContent = data.servizi.length;
+                    
                     const archivio = document.getElementById('archivio-servizi');
                     archivio.innerHTML = '';
                     
+                    // Raggruppa per categoria
                     const categorie = {};
                     data.servizi.forEach(function(s) {
                         const cat = s.categoria || 'Altro';
@@ -316,18 +262,21 @@
                         categorie[cat].push(s);
                     });
                     
-                    const numCategorie = Object.keys(categorie).length;
-                    document.getElementById('stat-totale-servizi').textContent = data.servizi.length;
-                    document.getElementById('stat-totale-categorie').textContent = numCategorie;
-                    
+                    // Mostra servizi raggruppati per categoria
                     for (const cat in categorie) {
                         const servizi = categorie[cat];
-                        const catDiv = document.createElement('div');
-                        catDiv.className = 'category-section';
-                        catDiv.innerHTML = '<div class="category-header"><h3>' + cat + ' (' + servizi.length + ' servizi)</h3></div>';
                         
+                        // Header categoria
+                        const catHeader = document.createElement('div');
+                        catHeader.style.cssText = 'background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; padding: 12px 20px; border-radius: 10px; margin: 20px 0 15px 0;';
+                        catHeader.innerHTML = '<h3 style="color: #ffffff; font-size: 1.1em; margin: 0;">' + cat + ' (' + servizi.length + ' servizi)</h3>';
+                        archivio.appendChild(catHeader);
+                        
+                        // Servizi della categoria
                         servizi.forEach(function(s) {
-                            catDiv.innerHTML += '<div class="service-item">' +
+                            const serviceDiv = document.createElement('div');
+                            serviceDiv.className = 'service-item';
+                            serviceDiv.innerHTML = '' +
                                 '<div class="service-header">' +
                                     '<h4>' + (s.descrizione || 'Servizio senza descrizione') + '</h4>' +
                                     '<span class="service-price">' + (parseFloat(s.prezzo) || 0).toFixed(2) + ' EUR</span>' +
@@ -336,11 +285,9 @@
                                 '<div class="service-actions">' +
                                     '<button class="btn btn-sm btn-outline" onclick="apriModaleModifica(\'' + s.id + '\')">Modifica</button>' +
                                     '<button class="btn btn-sm btn-danger" onclick="eliminaServizio(\'' + s.id + '\')">Elimina</button>' +
-                                '</div>' +
-                            '</div>';
+                                '</div>';
+                            archivio.appendChild(serviceDiv);
                         });
-                        
-                        archivio.appendChild(catDiv);
                     }
                 } else {
                     document.getElementById('empty-servizi').style.display = 'block';
@@ -348,12 +295,13 @@
                 }
             } catch (error) {
                 console.error('Errore caricamento servizi:', error);
-                document.getElementById('loading-servizi').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento</p>';
+                document.getElementById('loading-servizi').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento dei servizi</p>';
             }
         }
 
         async function salvaServizio(event) {
             event.preventDefault();
+            
             const dati = {
                 categoria: document.getElementById('servizio_categoria').value,
                 prezzo: parseFloat(document.getElementById('servizio_prezzo').value),
@@ -367,8 +315,9 @@
                     body: JSON.stringify(dati)
                 });
                 const result = await response.json();
+                
                 if (result.success) {
-                    alert('Servizio salvato con successo!');
+                    alert('Servizio salvato con successo! Ora e\' disponibile nei preventivi.');
                     pulisciFormServizio();
                     caricaServizi();
                 } else {
@@ -388,6 +337,7 @@
             try {
                 const response = await fetch(WORKER_URL + '/api/studio/servizio/' + id + '?token=' + encodeURIComponent(token));
                 const data = await response.json();
+                
                 if (data.success && data.servizio) {
                     const s = data.servizio;
                     document.getElementById('mod_servizio_id').value = s.id;
@@ -395,8 +345,13 @@
                     document.getElementById('mod_servizio_prezzo').value = s.prezzo || 0;
                     document.getElementById('mod_servizio_descrizione').value = s.descrizione || '';
                     document.getElementById('modal-servizio').classList.add('active');
+                } else {
+                    alert('Errore nel caricamento del servizio');
                 }
-            } catch (error) { console.error('Errore caricamento servizio:', error); }
+            } catch (error) {
+                console.error('Errore caricamento servizio:', error);
+                alert('Errore di connessione');
+            }
         }
 
         function chiudiModalServizio() {
@@ -405,6 +360,7 @@
 
         async function aggiornaServizio(event) {
             event.preventDefault();
+            
             const id = document.getElementById('mod_servizio_id').value;
             const dati = {
                 categoria: document.getElementById('mod_servizio_categoria').value,
@@ -419,8 +375,9 @@
                     body: JSON.stringify(dati)
                 });
                 const result = await response.json();
+                
                 if (result.success) {
-                    alert('Servizio aggiornato!');
+                    alert('Servizio aggiornato con successo!');
                     chiudiModalServizio();
                     caricaServizi();
                 } else {
@@ -433,61 +390,30 @@
         }
 
         async function eliminaServizio(id) {
-            if (!confirm('Eliminare questo servizio?')) return;
+            if (!confirm('Eliminare questo servizio? Non sara\' piu\' disponibile nei preventivi.')) return;
+            
             try {
-                const response = await fetch(WORKER_URL + '/api/studio/servizio/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
-                const result = await response.json();
-                if (result.success) { alert('Servizio eliminato.'); caricaServizi(); }
-                else { alert('Errore: ' + result.error); }
-            } catch (error) { console.error('Errore eliminazione:', error); }
-        }
-
-        async function caricaCategorie() {
-            try {
-                const response = await fetch(WORKER_URL + '/api/studio/categorie?token=' + encodeURIComponent(token));
-                const data = await response.json();
-                document.getElementById('loading-categorie').style.display = 'none';
-                const archivio = document.getElementById('archivio-categorie');
-                archivio.innerHTML = '';
-                if (data.success && data.categorie && data.categorie.length > 0) {
-                    data.categorie.forEach(function(c) {
-                        archivio.innerHTML += '<div class="category-item">' +
-                            '<h4>' + (c.nome || 'Categoria') + '</h4>' +
-                            '<div class="service-actions"><button class="btn btn-sm btn-danger" onclick="eliminaCategoria(\'' + c.id + '\')">Elimina</button></div>' +
-                        '</div>';
-                    });
-                } else {
-                    archivio.innerHTML = '<p class="empty-state">Nessuna categoria personalizzata. Le categorie predefinite sono disponibili nel form Servizi.</p>';
-                }
-            } catch (error) { console.error('Errore caricamento categorie:', error); }
-        }
-
-        async function salvaCategoria(event) {
-            event.preventDefault();
-            const dati = { nome: document.getElementById('categoria_nome').value };
-            try {
-                const response = await fetch(WORKER_URL + '/api/studio/categoria', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dati)
+                const response = await fetch(WORKER_URL + '/api/studio/servizio/' + id + '?token=' + encodeURIComponent(token), { 
+                    method: 'DELETE' 
                 });
                 const result = await response.json();
-                if (result.success) { alert('Categoria salvata!'); document.getElementById('form-categoria').reset(); caricaCategorie(); }
-                else { alert('Errore: ' + result.error); }
-            } catch (error) { console.error('Errore salvataggio categoria:', error); }
+                
+                if (result.success) { 
+                    alert('Servizio eliminato.'); 
+                    caricaServizi(); 
+                } else { 
+                    alert('Errore: ' + result.error); 
+                }
+            } catch (error) { 
+                console.error('Errore eliminazione:', error);
+                alert('Errore di connessione');
+            }
         }
 
-        async function eliminaCategoria(id) {
-            if (!confirm('Eliminare questa categoria?')) return;
-            try {
-                const response = await fetch(WORKER_URL + '/api/studio/categoria/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
-                const result = await response.json();
-                if (result.success) { alert('Categoria eliminata.'); caricaCategorie(); }
-                else { alert('Errore: ' + result.error); }
-            } catch (error) { console.error('Errore eliminazione:', error); }
-        }
-
-        document.getElementById('modal-servizio')?.addEventListener('click', function(e) { if (e.target === this) chiudiModalServizio(); });
+        // Chiudi modale cliccando fuori
+        document.getElementById('modal-servizio')?.addEventListener('click', function(e) { 
+            if (e.target === this) chiudiModalServizio(); 
+        });
     </script>
 </body>
 </html>
