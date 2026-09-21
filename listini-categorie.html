@@ -6,398 +6,503 @@
     <title>Listini & Categorie - AppCenterStudioPROGOLD</title>
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
+    
+    <!-- ============================================ -->
+    <!-- SEZIONE 1: CSS STYLES (Tema Oro/Nero/Bianco) -->
+    <!-- ============================================ -->
     <style>
-        :root {
-            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
-            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
-            --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; --radius: 16px;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh; transition: background 0.5s ease, color 0.5s ease; }
-        .top-bar { background: var(--primary-gradient); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100; transition: background 0.5s ease; }
-        .nav-btn { background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark); transition: all 0.2s ease; }
-        .nav-btn:hover { transform: translateY(-2px); }
-        .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #ffffff; min-height: 100vh; color: #000000; }
+        .top-bar { background: linear-gradient(135deg, #d4af37, #996515); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .top-bar h1 { color: #ffffff; font-size: 1.4em; font-weight: 600; }
+        .sync-status { display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9em; }
+        .sync-dot { width: 10px; height: 10px; background: #ffffff; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
-        .page-header { text-align: center; padding: 32px; background: white; border-radius: var(--radius); box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden; transition: box-shadow 0.5s ease; }
-        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); transition: background 0.5s ease; }
-        .page-header h1 { font-size: 32px; font-weight: 800; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; transition: background 0.5s ease; }
-        .page-header p { color: var(--text-light); font-size: 15px; }
-        .card-3d { background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden; transition: border-color 0.5s ease, box-shadow 0.5s ease; }
-        .card-3d::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); transition: background 0.5s ease; }
-        .card-title { font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.5s ease, border-color 0.5s ease; }
-        .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
-        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-        .form-group input, .form-group select, .form-group textarea { padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
-        .btn { padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .btn-primary { background: var(--primary-gradient); color: white; }
-        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
-        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
-        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
-        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
-        .btn-sm { padding: 6px 12px; font-size: 12px; }
-        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-        .service-item { background: white; border-left: 4px solid var(--primary); border-radius: 12px; padding: 20px 24px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); transition: all 0.3s ease, border-color 0.5s ease, box-shadow 0.5s ease; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-        .service-item:hover { transform: translateX(6px); box-shadow: 0 8px 24px rgba(30, 132, 73, 0.15); }
-        .service-info { flex: 1; min-width: 200px; }
-        .service-name { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
-        .service-category { font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
-        .service-price { background: var(--primary-light); padding: 8px 16px; border-radius: 20px; font-size: 18px; font-weight: 700; color: var(--primary-dark); transition: background 0.5s ease, color 0.5s ease; }
-        .category-section { margin-bottom: 32px; }
-        .category-title { font-size: 18px; font-weight: 700; color: var(--primary-dark); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border-color); transition: color 0.5s ease, border-color 0.5s ease; }
-        .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
-        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
-        .toast { background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease; }
-        .toast.error { border-left-color: var(--danger); }
-        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
-        .loading { text-align: center; padding: 40px; color: var(--text-light); }
-        .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
-        .hidden { display: none !important; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3000; align-items: center; justify-content: center; }
-        .modal-content { background: white; border-radius: var(--radius); padding: 32px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); transition: background 0.5s ease; }
-        .modal-title { font-size: 24px; font-weight: 700; color: var(--primary-dark); margin-bottom: 24px; transition: color 0.5s ease; }
+        .nav-btn { background: rgba(255,255,255,0.2); border: none; color: #ffffff; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9em; margin-left: 10px; }
+        .nav-btn:hover { background: rgba(255,255,255,0.3); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .page-header { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 5px solid #d4af37; }
+        .page-header h2 { color: #000000; margin-bottom: 10px; font-size: 1.6em; }
+        .page-header p { color: #666666; font-size: 0.95em; }
+        .section { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; border-top: 4px solid #d4af37; }
+        .section-title { color: #000000; font-size: 1.3em; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #fff9e6; font-weight: 600; }
+        .section-subtitle { color: #666666; font-size: 0.9em; margin-bottom: 20px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #000000; font-weight: 600; font-size: 0.9em; }
+        .form-group label .required { color: #c0392b; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 15px; border: 2px solid #d5d8dc; border-radius: 10px; font-size: 0.95em; background: #f8f9fa; color: #000000; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #d4af37; background: #ffffff; }
+        .btn { padding: 12px 25px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.95em; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(212,175,55,0.3); }
+        .btn-outline { background: transparent; border: 2px solid #d4af37; color: #996515; }
+        .btn-outline:hover { background: #fff9e6; }
+        .btn-danger { background: linear-gradient(135deg, #f1948a, #e74c3c); color: #ffffff; }
+        .btn-success { background: linear-gradient(135deg, #58d68d, #28b463); color: #ffffff; }
+        .btn-sm { padding: 6px 12px; font-size: 0.8em; }
+        .actions-bar { display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap; }
+        .info-box { background: #fff9e6; padding: 15px; border-radius: 8px; border-left: 4px solid #d4af37; margin-bottom: 20px; }
+        .info-box strong { color: #000000; }
+        .info-box p { color: #000000; font-size: 0.9em; margin-top: 5px; }
+        .service-item { background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #d4af37; }
+        .service-item:hover { border-color: #d4af37; background: #fff9e6; }
+        .service-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .service-header h4 { color: #000000; font-size: 1.1em; }
+        .service-price { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; padding: 8px 15px; border-radius: 20px; font-weight: 700; }
+        .service-category { display: inline-block; background: #fff9e6; color: #996515; padding: 4px 12px; border-radius: 12px; font-size: 0.8em; font-weight: 600; margin-bottom: 10px; }
+        .service-description { color: #666666; font-size: 0.9em; margin-bottom: 10px; }
+        .service-actions { display: flex; gap: 8px; }
+        .category-section { margin-bottom: 30px; }
+        .category-header { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; padding: 15px 20px; border-radius: 10px; margin-bottom: 15px; }
+        .category-header h3 { color: #ffffff; font-size: 1.2em; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .tab { padding: 12px 25px; background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; cursor: pointer; font-weight: 600; color: #000000; }
+        .tab:hover { background: #fff9e6; }
+        .tab.active { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; border-color: #996515; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .footer-branding { text-align: center; padding: 30px 20px; color: #666666; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
+        .footer-branding strong { color: #996515; }
+        .loading { text-align: center; padding: 40px; color: #666666; }
+        .spinner { border: 4px solid #fff9e6; border-top: 4px solid #d4af37; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .empty-state { text-align: center; padding: 40px; color: #666666; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: #ffffff; padding: 40px; border-radius: 15px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; border-top: 5px solid #d4af37; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #fff9e6; }
+        .modal-header h2 { color: #000000; font-size: 1.4em; }
+        .close-modal { background: none; border: none; font-size: 1.8em; cursor: pointer; color: #666666; }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .actions-bar { flex-direction: column; } .actions-bar .btn { width: 100%; justify-content: center; } .service-header { flex-direction: column; align-items: flex-start; gap: 10px; } }
     </style>
 </head>
 <body>
+    <!-- ============================================ -->
+    <!-- SEZIONE 2: TOP BAR -->
+    <!-- ============================================ -->
     <div class="top-bar">
-        <div style="display: flex; gap: 10px;">
-            <button class="nav-btn" onclick="tornaPlancia()">Indietro</button>
-            <button class="nav-btn" onclick="tornaPlancia()">Plancia</button>
+        <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Indietro</button>
+        <h1>Listini & Categorie</h1>
+        <div class="sync-status">
+            <div class="sync-dot"></div>
+            <span>Cloud Sync: OK</span>
         </div>
-        <div class="sync-status"><span class="sync-dot"></span> Cloud Sync: OK</div>
     </div>
 
     <div class="container">
+        <!-- ============================================ -->
+        <!-- SEZIONE 3: PAGE HEADER -->
+        <!-- ============================================ -->
         <div class="page-header">
-            <h1>Listini & Categorie Servizi - <span class="studio-nome">Caricamento...</span></h1>
+            <h2>Listini & Categorie Servizi</h2>
             <p>Gestisci l'archivio dei tuoi servizi con prezzi. Questi appariranno nei preventivi.</p>
         </div>
 
-        <div id="loadingArea" class="loading">
-            <div class="spinner"></div>
-            <div>Caricamento listini...</div>
+        <!-- ============================================ -->
+        <!-- SEZIONE 4: TABS -->
+        <!-- ============================================ -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('servizi')">Servizi</div>
+            <div class="tab" onclick="switchTab('categorie')">Categorie</div>
+            <div class="tab" onclick="switchTab('archivio')">Archivio Contratti</div>
         </div>
 
-        <div id="mainContent" class="hidden">
-            <div class="card-3d">
-                <div class="card-title">Aggiungi Nuovo Servizio</div>
-                <div class="card-subtitle">Crea un servizio che potrai selezionare nei preventivi.</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Categoria *</label>
-                        <select id="svcCategoria">
-                            <option value="Matrimonio">Matrimonio</option>
-                            <option value="Battesimo">Battesimo</option>
-                            <option value="Comunione">Comunione</option>
-                            <option value="Compleanno">Compleanno</option>
-                            <option value="Ritratto">Ritratto</option>
-                            <option value="Evento Aziendale">Evento Aziendale</option>
-                            <option value="Video">Video</option>
-                            <option value="Altro">Altro</option>
-                        </select>
+        <!-- ============================================ -->
+        <!-- SEZIONE 5: TAB SERVIZI -->
+        <!-- ============================================ -->
+        <div id="tab-servizi" class="tab-content active">
+            <div class="section">
+                <h3 class="section-title">AGGIUNGI NUOVO SERVIZIO</h3>
+                <p class="section-subtitle">Crea un servizio che potrai selezionare nei preventivi.</p>
+                
+                <form id="form-servizio" onsubmit="salvaServizio(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Categoria <span class="required">*</span></label>
+                            <select id="servizio_categoria" required>
+                                <option value="">-- Seleziona --</option>
+                                <option value="Matrimonio">Matrimonio</option>
+                                <option value="Comunione">Comunione</option>
+                                <option value="Cresima">Cresima</option>
+                                <option value="Battesimo">Battesimo</option>
+                                <option value="Ritratto">Ritratto</option>
+                                <option value="Evento Aziendale">Evento Aziendale</option>
+                                <option value="Compleanno">Compleanno</option>
+                                <option value="Altro">Altro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Prezzo Base (EUR) <span class="required">*</span></label>
+                            <input type="number" id="servizio_prezzo" required step="0.01" min="0" placeholder="0.00" autocomplete="off" value="">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Descrizione Servizio <span class="required">*</span></label>
+                            <textarea id="servizio_descrizione" required rows="3" placeholder="Es. Matrimonio con album digitale 30x40 cm, 40 interni, 100 foto, Copertina inclusa e valigia" autocomplete="off"></textarea>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Prezzo Base (€) *</label>
-                        <input type="number" id="svcPrezzo" min="0" step="0.01" placeholder="0.00">
+                    <div class="actions-bar">
+                        <button type="submit" class="btn btn-primary">SALVA SERVIZIO</button>
+                        <button type="button" class="btn btn-outline" onclick="pulisciFormServizio()">Pulisci</button>
                     </div>
+                </form>
+            </div>
+
+            <div class="section">
+                <h3 class="section-title">ARCHIVIO SERVIZI</h3>
+                <p class="section-subtitle">Modifica o elimina i servizi esistenti.</p>
+                
+                <div id="loading-servizi" class="loading">
+                    <div class="spinner"></div>
+                    <p>Caricamento servizi...</p>
+                </div>
+                
+                <div id="archivio-servizi"></div>
+                
+                <div id="empty-servizi" class="empty-state" style="display: none;">
+                    <p>Nessun servizio in archivio.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SEZIONE 6: TAB CATEGORIE -->
+        <!-- ============================================ -->
+        <div id="tab-categorie" class="tab-content">
+            <div class="section">
+                <h3 class="section-title">GESTIONE CATEGORIE</h3>
+                <p class="section-subtitle">Crea e gestisci le categorie per organizzare i servizi.</p>
+                
+                <form id="form-categoria" onsubmit="salvaCategoria(event)">
+                    <div class="form-group">
+                        <label>Nome Categoria <span class="required">*</span></label>
+                        <input type="text" id="categoria_nome" required placeholder="Es. Matrimonio" autocomplete="off" value="">
+                    </div>
+                    <div class="actions-bar">
+                        <button type="submit" class="btn btn-primary">SALVA CATEGORIA</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="section">
+                <h3 class="section-title">CATEGORIE ESISTENTI</h3>
+                <div id="loading-categorie" class="loading">
+                    <div class="spinner"></div>
+                    <p>Caricamento categorie...</p>
+                </div>
+                <div id="archivio-categorie"></div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SEZIONE 7: TAB ARCHIVIO CONTRATTI -->
+        <!-- ============================================ -->
+        <div id="tab-archivio" class="tab-content">
+            <div class="section">
+                <h3 class="section-title">ARCHIVIO CONTRATTI</h3>
+                <p class="section-subtitle">Visualizza e gestisci i contratti salvati.</p>
+                
+                <div id="loading-contratti" class="loading">
+                    <div class="spinner"></div>
+                    <p>Caricamento contratti...</p>
+                </div>
+                <div id="archivio-contratti"></div>
+                <div id="empty-contratti" class="empty-state" style="display: none;">
+                    <p>Nessun contratto in archivio.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEZIONE 8: MODALE MODIFICA SERVIZIO -->
+    <!-- ============================================ -->
+    <div id="modal-servizio" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Modifica Servizio</h2>
+                <button class="close-modal" onclick="chiudiModalServizio()">x</button>
+            </div>
+            
+            <form id="form-modifica-servizio" onsubmit="aggiornaServizio(event)">
+                <input type="hidden" id="mod_servizio_id">
+                <div class="form-group">
+                    <label>Categoria <span class="required">*</span></label>
+                    <select id="mod_servizio_categoria" required>
+                        <option value="Matrimonio">Matrimonio</option>
+                        <option value="Comunione">Comunione</option>
+                        <option value="Cresima">Cresima</option>
+                        <option value="Battesimo">Battesimo</option>
+                        <option value="Ritratto">Ritratto</option>
+                        <option value="Evento Aziendale">Evento Aziendale</option>
+                        <option value="Compleanno">Compleanno</option>
+                        <option value="Altro">Altro</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label>Descrizione Servizio *</label>
-                    <textarea id="svcDescrizione" rows="3" placeholder="Es. Matrimonio con album digitale 30x40 cm, 40 interni, 100 foto, Copertina inclusa e valigia"></textarea>
+                    <label>Prezzo Base (EUR) <span class="required">*</span></label>
+                    <input type="number" id="mod_servizio_prezzo" required step="0.01" min="0" autocomplete="off" value="">
                 </div>
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="aggiungiServizio()">SALVA SERVIZIO</button>
-                    <button class="btn btn-outline" onclick="pulisciFormServizio()">Pulisci</button>
+                <div class="form-group">
+                    <label>Descrizione Servizio <span class="required">*</span></label>
+                    <textarea id="mod_servizio_descrizione" required rows="3" autocomplete="off"></textarea>
                 </div>
-            </div>
-
-            <div class="card-3d">
-                <div class="card-title">Archivio Servizi</div>
-                <div class="card-subtitle">Modifica o elimina i servizi esistenti.</div>
-                <div id="loadingServizi" class="loading" style="padding: 20px;">
-                    <div class="spinner"></div>
-                    <div>Caricamento servizi...</div>
+                <div class="actions-bar">
+                    <button type="submit" class="btn btn-primary">SALVA MODIFICHE</button>
+                    <button type="button" class="btn btn-outline" onclick="chiudiModalServizio()">Annulla</button>
                 </div>
-                <div id="emptyServizi" class="empty-state hidden">Nessun servizio archiviato.</div>
-                <div id="serviziContainer"></div>
-            </div>
-        </div>
-
-        <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
-    </div>
-
-    <div id="modalModifica" class="modal-overlay">
-        <div class="modal-content">
-            <h3 class="modal-title">Modifica Servizio</h3>
-            <input type="hidden" id="modId">
-            <div class="form-group" style="margin-bottom: 16px;">
-                <label>Categoria</label>
-                <select id="modCategoria">
-                    <option value="Matrimonio">Matrimonio</option>
-                    <option value="Battesimo">Battesimo</option>
-                    <option value="Comunione">Comunione</option>
-                    <option value="Compleanno">Compleanno</option>
-                    <option value="Ritratto">Ritratto</option>
-                    <option value="Evento Aziendale">Evento Aziendale</option>
-                    <option value="Video">Video</option>
-                    <option value="Altro">Altro</option>
-                </select>
-            </div>
-            <div class="form-group" style="margin-bottom: 16px;">
-                <label>Prezzo (€)</label>
-                <input type="number" id="modPrezzo" min="0" step="0.01">
-            </div>
-            <div class="form-group" style="margin-bottom: 24px;">
-                <label>Descrizione</label>
-                <textarea id="modDescrizione" rows="3"></textarea>
-            </div>
-            <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                <button class="btn btn-outline" onclick="chiudiModal()">Annulla</button>
-                <button class="btn btn-success" onclick="salvaModificaServizio()">Salva Modifiche</button>
-            </div>
+            </form>
         </div>
     </div>
 
-    <div class="toast-container" id="toastContainer"></div>
+    <div class="footer-branding">
+        <p>Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></p>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEZIONE 9: JAVASCRIPT -->
+    <!-- ============================================ -->
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        let studioId = null;
-        let servizi = [];
+        var token = '';
+        var studioId = '';
+        var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
 
-        document.addEventListener('DOMContentLoaded', async function() {
-            if (!token) { window.location.href = 'index.html'; return; }
-            await verificaSessione();
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            token = urlParams.get('token');
+            if (!token) { alert('Token non trovato. Effettua il login.'); window.location.href = 'index.html'; return; }
+            verificaSessione();
         });
 
         async function verificaSessione() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`);
+                const response = await fetch(WORKER_URL + '/api/auth/verifica?token=' + encodeURIComponent(token));
                 const data = await response.json();
-                if (!data.success || data.tipo !== 'studio') {
-                    mostraToast('Sessione non valida', 'error');
-                    setTimeout(() => window.location.href = 'index.html', 1500);
-                    return;
-                }
+                if (!data.success) { alert('Sessione scaduta. Effettua il login.'); window.location.href = 'index.html'; return; }
                 studioId = data.user.id;
-                await caricaTemaGlobale();
-                setInterval(async () => { await caricaTemaGlobale(); }, 10000);
-                document.getElementById('loadingArea').classList.add('hidden');
-                document.getElementById('mainContent').classList.remove('hidden');
-                await caricaServizi();
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
-            }
+                caricaServizi();
+                caricaCategorie();
+                caricaContratti();
+            } catch (error) { console.error('Errore verifica sessione:', error); }
         }
 
-        async function caricaTemaGlobale() {
-            if (!studioId) return;
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
-                const data = await response.json();
-                if (data.success && data.tema && data.tema.tema_attivo) {
-                    const temaId = data.tema.tema_attivo;
-                    const temi = {
-                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)', effetto: null },
-                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)', effetto: 'neve' },
-                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)', effetto: 'coriandoli' },
-                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)', effetto: null },
-                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)', effetto: null },
-                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)', effetto: null },
-                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)', effetto: null },
-                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)', effetto: null },
-                        'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)', effetto: null }
-                    };
-                    const t = temi[temaId] || temi['default'];
-                    const root = document.documentElement;
-                    root.style.setProperty('--primary', t.p);
-                    root.style.setProperty('--primary-dark', t.pd);
-                    root.style.setProperty('--primary-light', t.pl);
-                    root.style.setProperty('--primary-gradient', t.pg);
-                    root.style.setProperty('--bg-gradient', t.bg);
-                    if (typeof attivaEffettoSpeciale === 'function') { attivaEffettoSpeciale(t.effetto); }
-                }
-            } catch (error) { console.error('Errore caricamento tema:', error); }
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
         }
 
         async function caricaServizi() {
-            document.getElementById('loadingServizi').style.display = 'block';
-            document.getElementById('emptyServizi').classList.add('hidden');
-            document.getElementById('serviziContainer').innerHTML = '';
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/servizi?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
+                const response = await fetch(WORKER_URL + '/api/studio/servizi?token=' + encodeURIComponent(token));
                 const data = await response.json();
-                if (data.success && data.servizi) { servizi = data.servizi; }
-                else { servizi = []; }
+                document.getElementById('loading-servizi').style.display = 'none';
+                
+                if (data.success && data.servizi && data.servizi.length > 0) {
+                    document.getElementById('empty-servizi').style.display = 'none';
+                    const archivio = document.getElementById('archivio-servizi');
+                    archivio.innerHTML = '';
+                    
+                    const categorie = {};
+                    data.servizi.forEach(function(s) {
+                        if (!categorie[s.categoria]) categorie[s.categoria] = [];
+                        categorie[s.categoria].push(s);
+                    });
+                    
+                    for (const cat in categorie) {
+                        const servizi = categorie[cat];
+                        const catDiv = document.createElement('div');
+                        catDiv.className = 'category-section';
+                        catDiv.innerHTML = '<div class="category-header"><h3>' + cat + '</h3></div>';
+                        
+                        servizi.forEach(function(s) {
+                            catDiv.innerHTML += '<div class="service-item">' +
+                                '<div class="service-header">' +
+                                    '<h4>' + s.descrizione + '</h4>' +
+                                    '<span class="service-price">' + parseFloat(s.prezzo).toFixed(2) + ' EUR</span>' +
+                                '</div>' +
+                                '<span class="service-category">' + s.categoria + '</span>' +
+                                '<div class="service-actions">' +
+                                    '<button class="btn btn-sm btn-outline" onclick="apriModaleModifica(\'' + s.id + '\')">Modifica</button>' +
+                                    '<button class="btn btn-sm btn-danger" onclick="eliminaServizio(\'' + s.id + '\')">Elimina</button>' +
+                                '</div>' +
+                            '</div>';
+                        });
+                        
+                        archivio.appendChild(catDiv);
+                    }
+                } else {
+                    document.getElementById('empty-servizi').style.display = 'block';
+                }
             } catch (error) {
                 console.error('Errore caricamento servizi:', error);
-                servizi = [];
+                document.getElementById('loading-servizi').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento</p>';
             }
-            document.getElementById('loadingServizi').style.display = 'none';
-            renderizzaServizi();
         }
 
-        function renderizzaServizi() {
-            const container = document.getElementById('serviziContainer');
-            const emptyState = document.getElementById('emptyServizi');
-            if (servizi.length === 0) {
-                emptyState.classList.remove('hidden');
-                container.innerHTML = '';
-                return;
-            }
-            emptyState.classList.add('hidden');
-            const categorie = {};
-            servizi.forEach(s => {
-                if (!categorie[s.categoria]) categorie[s.categoria] = [];
-                categorie[s.categoria].push(s);
-            });
-            let html = '';
-            Object.keys(categorie).sort().forEach(cat => {
-                html += `<div class="category-section">
-                    <div class="category-title">${cat}</div>
-                    ${categorie[cat].map(s => `
-                        <div class="service-item">
-                            <div class="service-info">
-                                <div class="service-name">${s.descrizione}</div>
-                                <div class="service-category">${s.categoria}</div>
-                            </div>
-                            <div class="service-price">€ ${parseFloat(s.prezzo).toFixed(2)}</div>
-                            <div style="display: flex; gap: 8px;">
-                                <button class="btn btn-warning btn-sm" onclick="modificaServizio('${s.id}')">Modifica</button>
-                                <button class="btn btn-danger btn-sm" onclick="eliminaServizio('${s.id}')">Elimina</button>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>`;
-            });
-            container.innerHTML = html;
-        }
-
-        async function aggiungiServizio() {
-            const categoria = document.getElementById('svcCategoria').value;
-            const prezzo = parseFloat(document.getElementById('svcPrezzo').value);
-            const descrizione = document.getElementById('svcDescrizione').value.trim();
-            if (!descrizione || isNaN(prezzo)) {
-                mostraToast('Compila tutti i campi obbligatori', 'error');
-                return;
-            }
-            const servizio = {
-                id: 'svc-' + Date.now(),
-                studio_id: studioId,
-                categoria, descrizione, prezzo,
-                data_creazione: new Date().toISOString()
+        async function salvaServizio(event) {
+            event.preventDefault();
+            const dati = {
+                categoria: document.getElementById('servizio_categoria').value,
+                prezzo: parseFloat(document.getElementById('servizio_prezzo').value),
+                descrizione: document.getElementById('servizio_descrizione').value
             };
+            
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/servizio?token=${encodeURIComponent(token)}`, {
+                const response = await fetch(WORKER_URL + '/api/studio/servizio', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(servizio)
+                    body: JSON.stringify(dati)
                 });
                 const result = await response.json();
                 if (result.success) {
-                    mostraToast('Servizio salvato nell\'archivio!', 'success');
+                    alert('Servizio salvato con successo!');
                     pulisciFormServizio();
-                    await caricaServizi();
+                    caricaServizi();
                 } else {
-                    mostraToast('Errore: ' + (result.error || 'Riprova'), 'error');
+                    alert('Errore: ' + result.error);
                 }
             } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
-            }
-        }
-
-        function modificaServizio(id) {
-            const svc = servizi.find(s => s.id === id);
-            if (!svc) return;
-            document.getElementById('modId').value = svc.id;
-            document.getElementById('modCategoria').value = svc.categoria;
-            document.getElementById('modPrezzo').value = svc.prezzo;
-            document.getElementById('modDescrizione').value = svc.descrizione;
-            document.getElementById('modalModifica').style.display = 'flex';
-        }
-
-        async function salvaModificaServizio() {
-            const id = document.getElementById('modId').value;
-            const categoria = document.getElementById('modCategoria').value;
-            const prezzo = parseFloat(document.getElementById('modPrezzo').value);
-            const descrizione = document.getElementById('modDescrizione').value.trim();
-            if (!descrizione || isNaN(prezzo)) {
-                mostraToast('Compila tutti i campi', 'error');
-                return;
-            }
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/servizio/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ categoria, descrizione, prezzo })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    mostraToast('Servizio aggiornato!', 'success');
-                    chiudiModal();
-                    await caricaServizi();
-                } else {
-                    mostraToast('Errore: ' + (result.error || 'Riprova'), 'error');
-                }
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
-            }
-        }
-
-        async function eliminaServizio(id) {
-            if (!confirm('Sei sicuro di voler eliminare questo servizio dall\'archivio?')) return;
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/servizio/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, {
-                    method: 'DELETE'
-                });
-                const result = await response.json();
-                if (result.success) {
-                    mostraToast('Servizio eliminato', 'success');
-                    await caricaServizi();
-                } else {
-                    mostraToast('Errore: ' + (result.error || 'Riprova'), 'error');
-                }
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
+                console.error('Errore salvataggio:', error);
+                alert('Errore di connessione.');
             }
         }
 
         function pulisciFormServizio() {
-            document.getElementById('svcCategoria').value = 'Matrimonio';
-            document.getElementById('svcPrezzo').value = '';
-            document.getElementById('svcDescrizione').value = '';
+            document.getElementById('form-servizio').reset();
         }
 
-        function chiudiModal() {
-            document.getElementById('modalModifica').style.display = 'none';
+        async function apriModaleModifica(id) {
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/servizio/' + id + '?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (data.success) {
+                    const s = data.servizio;
+                    document.getElementById('mod_servizio_id').value = s.id;
+                    document.getElementById('mod_servizio_categoria').value = s.categoria;
+                    document.getElementById('mod_servizio_prezzo').value = s.prezzo;
+                    document.getElementById('mod_servizio_descrizione').value = s.descrizione;
+                    document.getElementById('modal-servizio').classList.add('active');
+                }
+            } catch (error) { console.error('Errore caricamento servizio:', error); }
         }
 
-        function tornaPlancia() {
-            window.location.href = `plancia-studio.html?token=${encodeURIComponent(token)}`;
+        function chiudiModalServizio() {
+            document.getElementById('modal-servizio').classList.remove('active');
         }
 
-        function mostraToast(msg, tipo) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div>${msg}</div>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        async function aggiornaServizio(event) {
+            event.preventDefault();
+            const id = document.getElementById('mod_servizio_id').value;
+            const dati = {
+                categoria: document.getElementById('mod_servizio_categoria').value,
+                prezzo: parseFloat(document.getElementById('mod_servizio_prezzo').value),
+                descrizione: document.getElementById('mod_servizio_descrizione').value
+            };
+            
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/servizio/' + id, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dati)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Servizio aggiornato!');
+                    chiudiModalServizio();
+                    caricaServizi();
+                } else {
+                    alert('Errore: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Errore aggiornamento:', error);
+                alert('Errore di connessione.');
+            }
         }
+
+        async function eliminaServizio(id) {
+            if (!confirm('Eliminare questo servizio?')) return;
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/servizio/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
+                const result = await response.json();
+                if (result.success) { alert('Servizio eliminato.'); caricaServizi(); }
+                else { alert('Errore: ' + result.error); }
+            } catch (error) { console.error('Errore eliminazione:', error); }
+        }
+
+        async function caricaCategorie() {
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/categorie?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                document.getElementById('loading-categorie').style.display = 'none';
+                const archivio = document.getElementById('archivio-categorie');
+                archivio.innerHTML = '';
+                if (data.success && data.categorie && data.categorie.length > 0) {
+                    data.categorie.forEach(function(c) {
+                        archivio.innerHTML += '<div class="service-item">' +
+                            '<div class="service-header"><h4>' + c.nome + '</h4></div>' +
+                            '<div class="service-actions"><button class="btn btn-sm btn-danger" onclick="eliminaCategoria(\'' + c.id + '\')">Elimina</button></div>' +
+                        '</div>';
+                    });
+                } else {
+                    archivio.innerHTML = '<p class="empty-state">Nessuna categoria.</p>';
+                }
+            } catch (error) { console.error('Errore caricamento categorie:', error); }
+        }
+
+        async function salvaCategoria(event) {
+            event.preventDefault();
+            const dati = { nome: document.getElementById('categoria_nome').value };
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/categoria', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dati)
+                });
+                const result = await response.json();
+                if (result.success) { alert('Categoria salvata!'); document.getElementById('form-categoria').reset(); caricaCategorie(); }
+                else { alert('Errore: ' + result.error); }
+            } catch (error) { console.error('Errore salvataggio categoria:', error); }
+        }
+
+        async function eliminaCategoria(id) {
+            if (!confirm('Eliminare questa categoria?')) return;
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/categoria/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
+                const result = await response.json();
+                if (result.success) { alert('Categoria eliminata.'); caricaCategorie(); }
+                else { alert('Errore: ' + result.error); }
+            } catch (error) { console.error('Errore eliminazione:', error); }
+        }
+
+        async function caricaContratti() {
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/contratti?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                document.getElementById('loading-contratti').style.display = 'none';
+                const archivio = document.getElementById('archivio-contratti');
+                archivio.innerHTML = '';
+                if (data.success && data.contratti && data.contratti.length > 0) {
+                    document.getElementById('empty-contratti').style.display = 'none';
+                    data.contratti.forEach(function(c) {
+                        archivio.innerHTML += '<div class="service-item">' +
+                            '<div class="service-header"><h4>Contratto ' + (c.numero_contratto || c.numero || '') + '</h4><span class="service-price">' + parseFloat(c.totale_finale).toFixed(2) + ' EUR</span></div>' +
+                            '<div class="service-description">' + (c.cliente_a ? (c.cliente_a.nome + ' ' + c.cliente_a.cognome) : '') + '</div>' +
+                            '<div class="service-actions"><button class="btn btn-sm btn-primary" onclick="visualizzaContratto(\'' + c.id + '\')">Visualizza</button></div>' +
+                        '</div>';
+                    });
+                } else {
+                    document.getElementById('empty-contratti').style.display = 'block';
+                }
+            } catch (error) { console.error('Errore caricamento contratti:', error); }
+        }
+
+        function visualizzaContratto(id) {
+            alert('Visualizza contratto - ID: ' + id);
+        }
+
+        document.getElementById('modal-servizio')?.addEventListener('click', function(e) { if (e.target === this) chiudiModalServizio(); });
     </script>
 </body>
 </html>
