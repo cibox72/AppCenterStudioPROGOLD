@@ -39,8 +39,6 @@
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(212,175,55,0.3); }
         .btn-outline { background: transparent; border: 2px solid #d4af37; color: #996515; }
         .btn-outline:hover { background: #fff9e6; }
-        .btn-danger { background: linear-gradient(135deg, #f1948a, #e74c3c); color: #ffffff; }
-        .btn-sm { padding: 6px 12px; font-size: 0.8em; }
         .actions-bar { display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap; }
         .info-box { background: #fff9e6; padding: 15px; border-radius: 8px; border-left: 4px solid #d4af37; margin-bottom: 20px; }
         .info-box strong { color: #000000; }
@@ -66,7 +64,7 @@
     <!-- SEZIONE 2: TOP BAR -->
     <!-- ============================================ -->
     <div class="top-bar">
-        <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Indietro</button>
+        <button class="nav-btn" onclick="tornaAllaPlancia()">Indietro</button>
         <h1>Scheda Anagrafica Studio</h1>
         <div class="sync-status">
             <div class="sync-dot"></div>
@@ -286,6 +284,12 @@
             if (!token) { alert('Token non trovato. Effettua il login.'); window.location.href = 'index.html'; return; }
             caricaScheda();
         });
+
+        function tornaAllaPlancia() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            window.location.href = 'plancia-studio.html?token=' + encodeURIComponent(token);
+        }
 
         async function caricaScheda() {
             try {
