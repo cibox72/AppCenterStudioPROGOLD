@@ -4,530 +4,539 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registra Clienti ID - AppCenterStudioPROGOLD</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
+    
+    <!-- ============================================ -->
+    <!-- SEZIONE 1: CSS STYLES (Tema Oro/Nero/Bianco) -->
+    <!-- ============================================ -->
     <style>
-        :root {
-            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
-            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
-            --success: #27ae60; --danger: #c0392b; --warning: #d35400; --radius: 12px;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh; transition: background 0.5s ease, color 0.5s ease; }
-        .top-bar { background: var(--primary-gradient); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; transition: background 0.5s ease; }
-        .nav-btn { background: rgba(255,255,255,0.95); border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--primary-dark); margin-right: 8px; transition: all 0.2s ease; }
-        .nav-btn:hover { background: white; }
-        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
-        .page-header { text-align: center; padding: 24px; background: white; border-radius: var(--radius); box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 24px; transition: box-shadow 0.5s ease; }
-        .page-header h1 { font-size: 24px; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; transition: color 0.5s ease; }
-        .page-header p { color: var(--text-light); font-size: 13px; }
-        .card { background: white; border-radius: var(--radius); padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border-color); transition: border-color 0.5s ease, box-shadow 0.5s ease; }
-        .card-title { font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center; transition: color 0.5s ease, border-color 0.5s ease; }
-        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px; }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--text-main); }
-        .form-group input, .form-group textarea { padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; font-family: inherit; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
-        .btn { padding: 10px 20px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .btn-primary { background: var(--primary-dark); color: white; }
-        .btn-primary:hover { background: #145a32; }
-        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary-dark); }
-        .btn-outline:hover { background: var(--primary-light); }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-danger:hover { background: #922b21; }
-        .btn-sm { padding: 6px 12px; font-size: 11px; }
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
-        th { background: #f8f9fa; color: var(--text-main); font-weight: 600; text-transform: uppercase; font-size: 10px; transition: background 0.5s ease, color 0.5s ease; }
-        tr:hover td { background: #fafafa; }
-        .cred-box { background: #f8f9fa; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 11px; display: inline-block; margin-right: 4px; transition: background 0.5s ease; }
-        .cliente-id { font-weight: 700; color: var(--primary-dark); font-family: monospace; transition: color 0.5s ease; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #ffffff; min-height: 100vh; color: #000000; }
+        .top-bar { background: linear-gradient(135deg, #d4af37, #996515); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .top-bar h1 { color: #ffffff; font-size: 1.4em; font-weight: 600; }
+        .sync-status { display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9em; }
+        .nav-btn { background: rgba(255,255,255,0.2); border: none; color: #ffffff; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9em; margin-left: 10px; }
+        .nav-btn:hover { background: rgba(255,255,255,0.3); }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .page-header { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 5px solid #d4af37; }
+        .page-header h2 { color: #000000; margin-bottom: 10px; font-size: 1.6em; }
+        .page-header p { color: #666666; font-size: 0.95em; }
+        .section { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; border-top: 4px solid #d4af37; }
+        .section-title { color: #000000; font-size: 1.3em; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #fff9e6; font-weight: 600; }
+        .section-subtitle { color: #666666; font-size: 0.9em; margin-bottom: 20px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #000000; font-weight: 600; font-size: 0.9em; }
+        .form-group label .required { color: #c0392b; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 15px; border: 2px solid #d5d8dc; border-radius: 10px; font-size: 0.95em; background: #f8f9fa; color: #000000; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #d4af37; background: #ffffff; }
+        .btn { padding: 12px 25px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.95em; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(212,175,55,0.3); }
+        .btn-outline { background: transparent; border: 2px solid #d4af37; color: #996515; }
+        .btn-outline:hover { background: #fff9e6; }
+        .btn-danger { background: linear-gradient(135deg, #f1948a, #e74c3c); color: #ffffff; }
+        .btn-warning { background: linear-gradient(135deg, #f9e79f, #f1c40f); color: #000000; }
+        .btn-sm { padding: 6px 12px; font-size: 0.8em; }
+        .actions-bar { display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap; }
+        .info-box { background: #fff9e6; padding: 15px; border-radius: 8px; border-left: 4px solid #d4af37; margin-bottom: 20px; }
+        .info-box strong { color: #000000; }
+        .info-box p { color: #000000; font-size: 0.9em; margin-top: 5px; }
+        .warning-box { background: #fdebd0; padding: 15px; border-radius: 8px; border-left: 4px solid #f39c12; margin-bottom: 20px; display: none; }
+        .warning-box strong { color: #000000; }
+        .warning-box p { color: #000000; font-size: 0.9em; margin-top: 5px; }
+        .warning-box .btn { margin-top: 10px; }
+        .duplicate-item { padding: 10px; background: #ffffff; border: 1px solid #d5d8dc; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .duplicate-item:hover { background: #fff9e6; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { background: #d4af37; color: #ffffff; font-weight: 600; padding: 12px; text-align: left; }
+        td { padding: 12px; text-align: left; border-bottom: 1px solid #d5d8dc; color: #000000; background: #ffffff; }
+        tr:hover td { background: #fff9e6; }
+        .footer-branding { text-align: center; padding: 30px 20px; color: #666666; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
+        .footer-branding strong { color: #996515; }
+        .loading { text-align: center; padding: 40px; color: #666666; }
+        .spinner { border: 4px solid #fff9e6; border-top: 4px solid #d4af37; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .empty-state { text-align: center; padding: 40px; color: #666666; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
         .modal-overlay.active { display: flex; }
-        .modal-content { background: white; border-radius: var(--radius); padding: 24px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); transition: background 0.5s ease; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
-        .modal-header h2 { font-size: 18px; color: var(--primary-dark); transition: color 0.5s ease; }
-        .close-modal { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-light); }
-        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 3000; }
-        .toast { background: white; border-radius: 6px; padding: 12px 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-bottom: 8px; border-left: 4px solid var(--success); font-size: 13px; }
-        .toast.error { border-left-color: var(--danger); }
-        .hidden { display: none !important; }
-        .loading { text-align: center; padding: 40px; color: var(--text-light); }
-        .search-box { display: flex; gap: 8px; margin-bottom: 16px; }
-        .search-box input { flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; }
+        .modal-content { background: #ffffff; padding: 40px; border-radius: 15px; max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto; border-top: 5px solid #d4af37; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #fff9e6; }
+        .modal-header h2 { color: #000000; font-size: 1.4em; }
+        .close-modal { background: none; border: none; font-size: 1.8em; cursor: pointer; color: #666666; }
+        .close-modal:hover { color: #c0392b; }
+        .id-badge { display: inline-block; background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; padding: 4px 10px; border-radius: 12px; font-size: 0.85em; font-weight: 700; }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .actions-bar { flex-direction: column; } .actions-bar .btn { width: 100%; justify-content: center; } }
     </style>
 </head>
 <body>
+    <!-- ============================================ -->
+    <!-- SEZIONE 2: TOP BAR -->
+    <!-- ============================================ -->
     <div class="top-bar">
-        <div>
-            <button class="nav-btn" onclick="tornaPlancia()">Indietro</button>
-            <button class="nav-btn" onclick="tornaPlancia()">Plancia</button>
-        </div>
-        <div style="color: white; font-size: 13px; font-weight: 500;">Cloud Sync: OK</div>
+        <button class="nav-btn" onclick="tornaAllaPlancia()">Indietro</button>
+        <h1>Registra Clienti ID</h1>
+        <div class="sync-status"><span>Cloud Sync: OK</span></div>
     </div>
 
     <div class="container">
+        <!-- ============================================ -->
+        <!-- SEZIONE 3: PAGE HEADER -->
+        <!-- ============================================ -->
         <div class="page-header">
-            <h1>Registrazione Clienti con ID - <span class="studio-nome">Caricamento...</span></h1>
+            <h2>Registrazione Clienti con ID</h2>
             <p>Registra nuovi clienti con ID univoco permanente. Le altre card richiameranno i clienti da qui.</p>
         </div>
 
-        <div id="loadingArea" class="loading">Caricamento dati...</div>
+        <!-- ============================================ -->
+        <!-- SEZIONE 4: RICERCA DUPLICATI -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h3 class="section-title">VERIFICA CLIENTE ESISTENTE</h3>
+            <p class="section-subtitle">Prima di registrare un nuovo cliente, verifica che non esista gia' nel sistema.</p>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Cognome da cercare</label>
+                    <input type="text" id="ricerca_cognome" placeholder="Digita il cognome..." autocomplete="off" value="" oninput="cercaDuplicati()">
+                </div>
+                <div class="form-group">
+                    <label>Telefono (opzionale, piu' preciso)</label>
+                    <input type="tel" id="ricerca_telefono" placeholder="+39 333 1234567" autocomplete="off" value="" oninput="cercaDuplicati()">
+                </div>
+            </div>
+            
+            <div id="warning-duplicati" class="warning-box">
+                <strong>Attenzione: cliente gia' presente nel sistema!</strong>
+                <p>Sono stati trovati clienti con dati simili. Per mantenere la fidelizzazione, usa l'ID esistente.</p>
+                <div id="lista-duplicati"></div>
+                <button type="button" class="btn btn-warning" onclick="usaClienteEsistente()" id="btn-usa-esistente" style="display: none;">Usa questo cliente esistente</button>
+            </div>
+        </div>
 
-        <div id="mainContent" class="hidden">
-            <div class="card">
-                <div class="card-title">Registra Nuovo Cliente</div>
-                <div class="form-row">
-                    <div class="form-group"><label>Nome *</label><input type="text" id="c_nome"></div>
-                    <div class="form-group"><label>Cognome *</label><input type="text" id="c_cognome"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Email *</label><input type="email" id="c_email"></div>
-                    <div class="form-group"><label>Telefono</label><input type="tel" id="c_tel"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Indirizzo</label><input type="text" id="c_indirizzo"></div>
-                    <div class="form-group"><label>CAP</label><input type="text" id="c_cap"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Città</label><input type="text" id="c_citta"></div>
-                    <div class="form-group"><label>Provincia</label><input type="text" id="c_provincia"></div>
-                </div>
-                <div class="form-row">
+        <!-- ============================================ -->
+        <!-- SEZIONE 5: FORM REGISTRAZIONE CLIENTE -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h3 class="section-title">REGISTRA NUOVO CLIENTE</h3>
+            
+            <div id="info-cliente-esistente" class="info-box" style="display: none;">
+                <strong>Cliente esistente selezionato:</strong>
+                <p id="info-cliente-testo"></p>
+            </div>
+            
+            <form id="form-cliente" onsubmit="registraCliente(event)">
+                <input type="hidden" id="cliente_id_esistente" value="">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nome *</label>
+                        <input type="text" id="cliente_nome" required placeholder="Nome" autocomplete="off" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Cognome *</label>
+                        <input type="text" id="cliente_cognome" required placeholder="Cognome" autocomplete="off" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" id="cliente_email" required placeholder="email@esempio.it" autocomplete="off" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Telefono</label>
+                        <input type="tel" id="cliente_telefono" placeholder="+39 333 1234567" autocomplete="off" value="">
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Indirizzo</label>
+                        <input type="text" id="cliente_indirizzo" placeholder="Via, numero civico" autocomplete="off" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>CAP</label>
+                        <input type="text" id="cliente_cap" placeholder="00100" autocomplete="off" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Citta</label>
+                        <input type="text" id="cliente_citta" placeholder="Citta" autocomplete="off" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Provincia</label>
+                        <input type="text" id="cliente_provincia" placeholder="RM" autocomplete="off" value="">
+                    </div>
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label>Note interne</label>
-                        <textarea id="c_note" rows="2" placeholder="Note riservate allo studio..."></textarea>
+                        <textarea id="cliente_note" rows="3" placeholder="Note interne sullo studio..." autocomplete="off"></textarea>
                     </div>
                 </div>
-                <button class="btn btn-primary" onclick="registraCliente()">Registra Cliente e Genera ID</button>
-            </div>
-
-            <div class="card">
-                <div class="card-title">
-                    <span>Archivio Clienti Registrati</span>
-                    <span id="countClienti" style="font-size: 12px; color: var(--text-light); font-weight: 400; text-transform: none;">0 clienti</span>
+                
+                <div class="actions-bar">
+                    <button type="submit" class="btn btn-primary" id="btn-submit">REGISTRA CLIENTE E GENERA ID</button>
+                    <button type="button" class="btn btn-outline" onclick="pulisciForm()">Pulisci</button>
                 </div>
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Cerca per nome, cognome, email o ID..." oninput="filtraClienti()">
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>Cognome</th>
-                                <th>Email</th>
-                                <th>Telefono</th>
-                                <th>Username</th>
-                                <th>Password</th>
-                                <th>Azioni</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabellaClienti"></tbody>
-                    </table>
-                </div>
-                <div id="emptyState" class="hidden" style="text-align: center; padding: 40px; color: var(--text-light);">Nessun cliente registrato.</div>
-            </div>
+            </form>
         </div>
 
-        <div class="footer-branding" style="text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px;">
-            Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong>
+        <!-- ============================================ -->
+        <!-- SEZIONE 6: ARCHIVIO CLIENTI -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h3 class="section-title">Archivio Clienti Registrati</h3>
+            <div id="loading-clienti" class="loading">
+                <div class="spinner"></div>
+                <p>Caricamento clienti...</p>
+            </div>
+            <div id="tabella-clienti" style="display: none; overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Cognome</th>
+                            <th>Email</th>
+                            <th>Telefono</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-clienti"></tbody>
+                </table>
+            </div>
+            <div id="empty-clienti" class="empty-state" style="display: none;">
+                <p>Nessun cliente registrato.</p>
+            </div>
         </div>
     </div>
 
-    <div id="modalModifica" class="modal-overlay">
+    <!-- ============================================ -->
+    <!-- SEZIONE 7: MODALE MODIFICA CLIENTE -->
+    <!-- ============================================ -->
+    <div id="modal-modifica" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Modifica Cliente <span id="mod_id" style="color: var(--text-light); font-size: 14px;"></span></h2>
-                <button class="close-modal" onclick="chiudiModale()">×</button>
+                <h2>Modifica Cliente</h2>
+                <button class="close-modal" onclick="chiudiModale()">x</button>
             </div>
-            <div class="form-row">
-                <div class="form-group"><label>Nome</label><input type="text" id="mod_nome"></div>
-                <div class="form-group"><label>Cognome</label><input type="text" id="mod_cognome"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-group"><label>Email</label><input type="email" id="mod_email"></div>
-                <div class="form-group"><label>Telefono</label><input type="tel" id="mod_tel"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-group"><label>Indirizzo</label><input type="text" id="mod_indirizzo"></div>
-                <div class="form-group"><label>CAP</label><input type="text" id="mod_cap"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-group"><label>Città</label><input type="text" id="mod_citta"></div>
-                <div class="form-group"><label>Provincia</label><input type="text" id="mod_provincia"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-group"><label>Username</label><input type="text" id="mod_username"></div>
-                <div class="form-group"><label>Password</label><input type="text" id="mod_password"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-group" style="grid-column: 1 / -1;">
-                    <label>Note interne</label>
-                    <textarea id="mod_note" rows="3"></textarea>
+            <form id="form-modifica" onsubmit="aggiornaCliente(event)">
+                <input type="hidden" id="mod_id">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nome</label>
+                        <input type="text" id="mod_nome" required autocomplete="off" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Cognome</label>
+                        <input type="text" id="mod_cognome" required autocomplete="off" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="mod_email" required autocomplete="off" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Telefono</label>
+                        <input type="tel" id="mod_telefono" autocomplete="off" value="">
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Indirizzo</label>
+                        <input type="text" id="mod_indirizzo" autocomplete="off" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>CAP</label>
+                        <input type="text" id="mod_cap" autocomplete="off" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Citta</label>
+                        <input type="text" id="mod_citta" autocomplete="off" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Provincia</label>
+                        <input type="text" id="mod_provincia" autocomplete="off" value="">
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Note interne</label>
+                        <textarea id="mod_note" rows="3" autocomplete="off"></textarea>
+                    </div>
                 </div>
-            </div>
-            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
-                <button class="btn btn-outline" onclick="chiudiModale()">Annulla</button>
-                <button class="btn btn-primary" onclick="salvaModifica()">Salva Modifiche</button>
-            </div>
+                <div class="actions-bar">
+                    <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+                    <button type="button" class="btn btn-outline" onclick="chiudiModale()">Annulla</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <div class="toast-container" id="toastContainer"></div>
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        let studioId = null;
-        let listaClienti = [];
+    <div class="footer-branding">
+        <p>Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></p>
+    </div>
 
-        document.addEventListener('DOMContentLoaded', async function() {
-            if (!token) { window.location.href = 'index.html'; return; }
-            await verificaSessione();
+    <!-- ============================================ -->
+    <!-- SEZIONE 8: JAVASCRIPT -->
+    <!-- ============================================ -->
+    <script>
+        var token = '';
+        var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
+        var clientiEsistenti = [];
+        var duplicatoSelezionato = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            token = urlParams.get('token');
+            if (!token) { alert('Token non trovato. Effettua il login.'); window.location.href = 'index.html'; return; }
+            caricaClienti();
         });
 
-        async function verificaSessione() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`);
-                const data = await response.json();
-                if (!data.success || data.tipo !== 'studio') {
-                    mostraToast('Sessione non valida', 'error');
-                    setTimeout(() => window.location.href = 'index.html', 1500);
-                    return;
-                }
-                studioId = data.user.id;
-                await caricaTemaGlobale();
-                setInterval(async () => { await caricaTemaGlobale(); }, 10000);
-                document.getElementById('loadingArea').classList.add('hidden');
-                document.getElementById('mainContent').classList.remove('hidden');
-                await caricaClienti();
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
-            }
-        }
-
-        async function caricaTemaGlobale() {
-            if (!studioId) return;
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
-                const data = await response.json();
-                if (data.success && data.tema && data.tema.tema_attivo) {
-                    const temaId = data.tema.tema_attivo;
-                    const temi = {
-                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)', effetto: null },
-                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)', effetto: 'neve' },
-                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)', effetto: 'coriandoli' },
-                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)', effetto: null },
-                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)', effetto: null },
-                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)', effetto: null },
-                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)', effetto: null },
-                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)', effetto: null },
-                        'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)', effetto: null }
-                    };
-                    const t = temi[temaId] || temi['default'];
-                    const root = document.documentElement;
-                    root.style.setProperty('--primary', t.p);
-                    root.style.setProperty('--primary-dark', t.pd);
-                    root.style.setProperty('--primary-light', t.pl);
-                    root.style.setProperty('--primary-gradient', t.pg);
-                    root.style.setProperty('--bg-gradient', t.bg);
-                    if (typeof attivaEffettoSpeciale === 'function') { attivaEffettoSpeciale(t.effetto); }
-                }
-            } catch (error) { console.error('[TEMA] Errore:', error); }
-        }
-
-        async function registraCliente() {
-            const nome = document.getElementById('c_nome').value.trim();
-            const cognome = document.getElementById('c_cognome').value.trim();
-            const email = document.getElementById('c_email').value.trim();
-            if (!nome || !cognome || !email) {
-                mostraToast('Compila Nome, Cognome ed Email', 'error');
-                return;
-            }
-            
-            // Disabilita il bottone per evitare doppi click (race condition)
-            const btn = document.querySelector('.btn-primary');
-            const originalText = btn.innerText;
-            btn.innerText = 'Registrazione in corso...';
-            btn.disabled = true;
-
-            const dati = {
-                nome, cognome, email,
-                telefono: document.getElementById('c_tel').value,
-                indirizzo: document.getElementById('c_indirizzo').value,
-                cap: document.getElementById('c_cap').value,
-                citta: document.getElementById('c_citta').value,
-                provincia: document.getElementById('c_provincia').value,
-                note: document.getElementById('c_note').value
-            };
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti?token=${encodeURIComponent(token)}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dati)
-                });
-                const result = await response.json();
-                if (result.success) {
-                    mostraToast(`Cliente registrato. ID: ${result.cliente.id}`, 'success');
-                    document.getElementById('c_nome').value = '';
-                    document.getElementById('c_cognome').value = '';
-                    document.getElementById('c_email').value = '';
-                    document.getElementById('c_tel').value = '';
-                    document.getElementById('c_indirizzo').value = '';
-                    document.getElementById('c_cap').value = '';
-                    document.getElementById('c_citta').value = '';
-                    document.getElementById('c_provincia').value = '';
-                    document.getElementById('c_note').value = '';
-                    await caricaClienti();
-                } else {
-                    // Gestione specifica per l'errore di ID duplicato
-                    if (result.error && result.error.includes('UNIQUE constraint')) {
-                        mostraToast('Errore: ID cliente già esistente nel database. Riprova.', 'error');
-                    } else {
-                        mostraToast('Errore: ' + (result.error || 'Riprova'), 'error');
-                    }
-                }
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
-            } finally {
-                // Riabilita il bottone
-                btn.innerText = originalText;
-                btn.disabled = false;
-            }
+        function tornaAllaPlancia() {
+            window.location.href = 'plancia-studio.html?token=' + encodeURIComponent(token);
         }
 
         async function caricaClienti() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti?token=${encodeURIComponent(token)}`);
+                const response = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti?token=' + encodeURIComponent(token));
                 const data = await response.json();
-                if (data.success) {
-                    listaClienti = data.clienti || [];
-                    renderizzaTabella(listaClienti);
-                    document.getElementById('countClienti').textContent = listaClienti.length + ' clienti';
+                document.getElementById('loading-clienti').style.display = 'none';
+                
+                if (data.success && data.clienti && data.clienti.length > 0) {
+                    clientiEsistenti = data.clienti;
+                    document.getElementById('empty-clienti').style.display = 'none';
+                    document.getElementById('tabella-clienti').style.display = 'block';
+                    const tbody = document.getElementById('tbody-clienti');
+                    tbody.innerHTML = '';
+                    
+                    data.clienti.forEach(function(c) {
+                        tbody.innerHTML += '<tr>' +
+                            '<td><span class="id-badge">' + (c.id || '-') + '</span></td>' +
+                            '<td>' + (c.nome || '-') + '</td>' +
+                            '<td>' + (c.cognome || '-') + '</td>' +
+                            '<td>' + (c.email || '-') + '</td>' +
+                            '<td>' + (c.telefono || '-') + '</td>' +
+                            '<td>' +
+                                '<button class="btn btn-sm btn-warning" onclick="apriModale(\'' + c.id + '\')">Modifica</button> ' +
+                                '<button class="btn btn-sm btn-danger" onclick="eliminaCliente(\'' + c.id + '\')">Elimina</button>' +
+                            '</td>' +
+                        '</tr>';
+                    });
+                } else {
+                    document.getElementById('empty-clienti').style.display = 'block';
                 }
             } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore caricamento clienti', 'error');
+                console.error('Errore caricamento clienti:', error);
+                document.getElementById('loading-clienti').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento</p>';
             }
         }
 
-        function renderizzaTabella(clienti) {
-            const tbody = document.getElementById('tabellaClienti');
-            const emptyState = document.getElementById('emptyState');
-            if (clienti.length === 0) {
-                emptyState.classList.remove('hidden');
-                tbody.innerHTML = '';
+        async function cercaDuplicati() {
+            const cognome = document.getElementById('ricerca_cognome').value.trim().toLowerCase();
+            const telefono = document.getElementById('ricerca_telefono').value.trim();
+            
+            if (cognome.length < 2 && telefono.length < 5) {
+                document.getElementById('warning-duplicati').style.display = 'none';
                 return;
             }
-            emptyState.classList.add('hidden');
-            tbody.innerHTML = clienti.map(c => `
-                <tr>
-                    <td><span class="cliente-id">${c.id}</span></td>
-                    <td>${c.nome || ''}</td>
-                    <td>${c.cognome || ''}</td>
-                    <td>${c.email || ''}</td>
-                    <td>${c.telefono || ''}</td>
-                    <td><span class="cred-box">${c.username || '-'}</span></td>
-                    <td><span class="cred-box">${c.password || '-'}</span></td>
-                    <td>
-                        <button class="btn btn-sm btn-outline" onclick="apriModifica('${c.id}')">Modifica</button>
-                        <button class="btn btn-sm btn-outline" onclick="stampaScheda('${c.id}')">PDF</button>
-                        <button class="btn btn-sm btn-danger" onclick="eliminaCliente('${c.id}')">Elimina</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function filtraClienti() {
-            const q = document.getElementById('searchInput').value.toLowerCase().trim();
-            if (!q) { renderizzaTabella(listaClienti); return; }
-            const filtrati = listaClienti.filter(c => 
-                (c.nome || '').toLowerCase().includes(q) ||
-                (c.cognome || '').toLowerCase().includes(q) ||
-                (c.email || '').toLowerCase().includes(q) ||
-                (c.id || '').toLowerCase().includes(q)
-            );
-            renderizzaTabella(filtrati);
-        }
-
-        async function apriModifica(id) {
+            
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`);
+                let query = cognome;
+                if (telefono) query = telefono;
+                
+                const response = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti/ricerca?q=' + encodeURIComponent(query) + '&token=' + encodeURIComponent(token));
                 const data = await response.json();
-                if (data.success) {
+                
+                if (data.success && data.clienti && data.clienti.length > 0) {
+                    const lista = document.getElementById('lista-duplicati');
+                    lista.innerHTML = '';
+                    
+                    data.clienti.forEach(function(c, index) {
+                        const div = document.createElement('div');
+                        div.className = 'duplicate-item';
+                        div.innerHTML = '<div><span class="id-badge">' + (c.id || '-') + '</span> <strong>' + (c.nome || '') + ' ' + (c.cognome || '') + '</strong><br><small style="color: #666666;">' + (c.telefono || '') + ' - ' + (c.email || '') + '</small></div>';
+                        div.onclick = function() { selezionaDuplicato(c, div); };
+                        div.style.cursor = 'pointer';
+                        lista.appendChild(div);
+                    });
+                    
+                    document.getElementById('warning-duplicati').style.display = 'block';
+                    document.getElementById('btn-usa-esistente').style.display = 'none';
+                    duplicatoSelezionato = null;
+                } else {
+                    document.getElementById('warning-duplicati').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Errore ricerca duplicati:', error);
+            }
+        }
+
+        function selezionaDuplicato(cliente, element) {
+            document.querySelectorAll('.duplicate-item').forEach(function(el) { el.style.background = '#ffffff'; });
+            element.style.background = '#fff9e6';
+            element.style.borderColor = '#d4af37';
+            duplicatoSelezionato = cliente;
+            document.getElementById('btn-usa-esistente').style.display = 'inline-flex';
+        }
+
+        function usaClienteEsistente() {
+            if (!duplicatoSelezionato) return;
+            
+            const c = duplicatoSelezionato;
+            document.getElementById('cliente_id_esistente').value = c.id;
+            document.getElementById('cliente_nome').value = c.nome || '';
+            document.getElementById('cliente_cognome').value = c.cognome || '';
+            document.getElementById('cliente_email').value = c.email || '';
+            document.getElementById('cliente_telefono').value = c.telefono || '';
+            document.getElementById('cliente_indirizzo').value = c.indirizzo || '';
+            document.getElementById('cliente_cap').value = c.cap || '';
+            document.getElementById('cliente_citta').value = c.citta || '';
+            document.getElementById('cliente_provincia').value = c.provincia || '';
+            document.getElementById('cliente_note').value = c.note || '';
+            
+            document.getElementById('info-cliente-esistente').style.display = 'block';
+            document.getElementById('info-cliente-testo').textContent = 'ID: ' + c.id + ' - ' + c.nome + ' ' + c.cognome + ' (cliente fidelizzato, i dati verranno aggiornati)';
+            document.getElementById('btn-submit').textContent = 'AGGIORNA DATI CLIENTE ESISTENTE';
+            document.getElementById('warning-duplicati').style.display = 'none';
+            
+            window.scrollTo({ top: document.getElementById('form-cliente').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        async function registraCliente(event) {
+            event.preventDefault();
+            
+            const idEsistente = document.getElementById('cliente_id_esistente').value;
+            
+            const dati = {
+                nome: document.getElementById('cliente_nome').value,
+                cognome: document.getElementById('cliente_cognome').value,
+                email: document.getElementById('cliente_email').value,
+                telefono: document.getElementById('cliente_telefono').value,
+                indirizzo: document.getElementById('cliente_indirizzo').value,
+                cap: document.getElementById('cliente_cap').value,
+                citta: document.getElementById('cliente_citta').value,
+                provincia: document.getElementById('cliente_provincia').value,
+                note: document.getElementById('cliente_note').value
+            };
+            
+            try {
+                let response, result;
+                
+                if (idEsistente) {
+                    // Aggiorna cliente esistente
+                    response = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti/' + idEsistente + '?token=' + encodeURIComponent(token), {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(dati)
+                    });
+                    result = await response.json();
+                    if (result.success) {
+                        alert('Dati cliente aggiornati con successo! ID: ' + idEsistente);
+                    } else {
+                        alert('Errore: ' + result.error);
+                        return;
+                    }
+                } else {
+                    // Crea nuovo cliente
+                    response = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(dati)
+                    });
+                    result = await response.json();
+                    if (result.success) {
+                        alert('Cliente registrato con successo! ID: ' + result.cliente.id + '\nUsername: ' + result.cliente.username + '\nPassword: ' + result.cliente.password);
+                    } else {
+                        alert('Errore: ' + result.error);
+                        return;
+                    }
+                }
+                
+                pulisciForm();
+                caricaClienti();
+            } catch (error) {
+                console.error('Errore registrazione:', error);
+                alert('Errore di connessione.');
+            }
+        }
+
+        function pulisciForm() {
+            document.getElementById('form-cliente').reset();
+            document.getElementById('cliente_id_esistente').value = '';
+            document.getElementById('info-cliente-esistente').style.display = 'none';
+            document.getElementById('btn-submit').textContent = 'REGISTRA CLIENTE E GENERA ID';
+            document.getElementById('warning-duplicati').style.display = 'none';
+            document.getElementById('ricerca_cognome').value = '';
+            document.getElementById('ricerca_telefono').value = '';
+            duplicatoSelezionato = null;
+        }
+
+        async function apriModale(id) {
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti/' + id + '?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (data.success && data.cliente) {
                     const c = data.cliente;
-                    document.getElementById('mod_id').textContent = '(' + c.id + ')';
+                    document.getElementById('mod_id').value = c.id;
                     document.getElementById('mod_nome').value = c.nome || '';
                     document.getElementById('mod_cognome').value = c.cognome || '';
                     document.getElementById('mod_email').value = c.email || '';
-                    document.getElementById('mod_tel').value = c.telefono || '';
+                    document.getElementById('mod_telefono').value = c.telefono || '';
                     document.getElementById('mod_indirizzo').value = c.indirizzo || '';
                     document.getElementById('mod_cap').value = c.cap || '';
                     document.getElementById('mod_citta').value = c.citta || '';
                     document.getElementById('mod_provincia').value = c.provincia || '';
-                    document.getElementById('mod_username').value = c.username || '';
-                    document.getElementById('mod_password').value = c.password || '';
                     document.getElementById('mod_note').value = c.note || '';
-                    document.getElementById('modalModifica').classList.add('active');
+                    document.getElementById('modal-modifica').classList.add('active');
                 }
             } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore caricamento cliente', 'error');
+                console.error('Errore caricamento cliente:', error);
+                alert('Errore di connessione');
             }
         }
 
         function chiudiModale() {
-            document.getElementById('modalModifica').classList.remove('active');
+            document.getElementById('modal-modifica').classList.remove('active');
         }
 
-        async function salvaModifica() {
-            const id = document.getElementById('mod_id').textContent.replace(/[()]/g, '');
+        async function aggiornaCliente(event) {
+            event.preventDefault();
+            const id = document.getElementById('mod_id').value;
             const dati = {
                 nome: document.getElementById('mod_nome').value,
                 cognome: document.getElementById('mod_cognome').value,
                 email: document.getElementById('mod_email').value,
-                telefono: document.getElementById('mod_tel').value,
+                telefono: document.getElementById('mod_telefono').value,
                 indirizzo: document.getElementById('mod_indirizzo').value,
                 cap: document.getElementById('mod_cap').value,
                 citta: document.getElementById('mod_citta').value,
                 provincia: document.getElementById('mod_provincia').value,
-                username: document.getElementById('mod_username').value,
-                password: document.getElementById('mod_password').value,
                 note: document.getElementById('mod_note').value
             };
+            
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, {
+                const response = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti/' + id + '?token=' + encodeURIComponent(token), {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dati)
                 });
                 const result = await response.json();
                 if (result.success) {
-                    mostraToast('Cliente aggiornato', 'success');
+                    alert('Cliente aggiornato!');
                     chiudiModale();
-                    await caricaClienti();
+                    caricaClienti();
                 } else {
-                    mostraToast('Errore: ' + (result.error || ''), 'error');
+                    alert('Errore: ' + result.error);
                 }
             } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
+                console.error('Errore aggiornamento:', error);
+                alert('Errore di connessione.');
             }
         }
 
         async function eliminaCliente(id) {
-            if (!confirm('Eliminare definitivamente questo cliente?')) return;
+            if (!confirm('Eliminare questo cliente?')) return;
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, {
-                    method: 'DELETE'
-                });
+                const response = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
                 const result = await response.json();
-                if (result.success) {
-                    mostraToast('Cliente eliminato', 'success');
-                    await caricaClienti();
-                } else {
-                    mostraToast('Errore: ' + (result.error || ''), 'error');
-                }
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
-            }
+                if (result.success) { alert('Cliente eliminato.'); caricaClienti(); }
+                else { alert('Errore: ' + result.error); }
+            } catch (error) { console.error('Errore eliminazione:', error); }
         }
 
-        async function stampaScheda(id) {
-            const cliente = listaClienti.find(c => c.id === id);
-            if (!cliente) { mostraToast('Cliente non trovato', 'error'); return; }
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-            const pageWidth = doc.internal.pageSize.getWidth();
-            const margin = 20;
-            let y = margin;
-            let datiStudio = { nome: 'Studio', indirizzo: '', telefono: '', email: '', piva: '' };
-            try {
-                const res = await fetch(`${WORKER_URL}/api/studio/profilo?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
-                const data = await res.json();
-                if (data.success && data.studio) datiStudio = data.studio;
-            } catch (error) { console.error('Errore:', error); }
-            doc.setFontSize(18); doc.setFont(undefined, 'bold');
-            doc.text(datiStudio.nome || 'Studio', pageWidth / 2, y, { align: 'center' }); y += 7;
-            doc.setFontSize(9); doc.setFont(undefined, 'normal');
-            doc.text(datiStudio.indirizzo || '', pageWidth / 2, y, { align: 'center' }); y += 5;
-            doc.text(`Tel: ${datiStudio.telefono || '-'} | Email: ${datiStudio.email || '-'} | P.IVA: ${datiStudio.piva || '-'}`, pageWidth / 2, y, { align: 'center' }); y += 4;
-            doc.setDrawColor(0); doc.setLineWidth(0.5); doc.line(margin, y, pageWidth - margin, y); y += 12;
-            doc.setFontSize(16); doc.setFont(undefined, 'bold');
-            doc.text('SCHEDA CLIENTE', pageWidth / 2, y, { align: 'center' }); y += 10;
-            doc.setFontSize(11); doc.setFont(undefined, 'bold');
-            doc.text('ID Cliente:', margin, y);
-            doc.setFont(undefined, 'normal');
-            doc.text(cliente.id || '', margin + 30, y); y += 8;
-            doc.setFont(undefined, 'bold');
-            doc.text('Dati Anagrafici', margin, y); y += 2;
-            doc.setDrawColor(200); doc.line(margin, y, pageWidth - margin, y); y += 6;
-            doc.setFont(undefined, 'normal'); doc.setFontSize(10);
-            const righe = [
-                ['Nome:', cliente.nome || ''],
-                ['Cognome:', cliente.cognome || ''],
-                ['Email:', cliente.email || ''],
-                ['Telefono:', cliente.telefono || ''],
-                ['Indirizzo:', cliente.indirizzo || ''],
-                ['CAP / Città:', `${cliente.cap || ''} ${cliente.citta || ''}`],
-                ['Provincia:', cliente.provincia || '']
-            ];
-            righe.forEach(([label, valore]) => {
-                doc.setFont(undefined, 'bold');
-                doc.text(label, margin, y);
-                doc.setFont(undefined, 'normal');
-                doc.text(valore, margin + 35, y);
-                y += 6;
-            });
-            y += 4;
-            doc.setFont(undefined, 'bold');
-            doc.text('Credenziali di Accesso', margin, y); y += 2;
-            doc.setDrawColor(200); doc.line(margin, y, pageWidth - margin, y); y += 6;
-            doc.setFont(undefined, 'normal'); doc.setFontSize(10);
-            doc.text('Username:', margin, y);
-            doc.text(cliente.username || '-', margin + 35, y); y += 6;
-            doc.text('Password:', margin, y);
-            doc.text(cliente.password || '-', margin + 35, y); y += 10;
-            if (cliente.note) {
-                doc.setFont(undefined, 'bold');
-                doc.text('Note Interne', margin, y); y += 2;
-                doc.setDrawColor(200); doc.line(margin, y, pageWidth - margin, y); y += 6;
-                doc.setFont(undefined, 'normal'); doc.setFontSize(9);
-                const noteLines = doc.splitTextToSize(cliente.note, pageWidth - margin * 2);
-                noteLines.forEach(line => {
-                    if (y > 270) { doc.addPage(); y = margin; }
-                    doc.text(line, margin, y);
-                    y += 5;
-                });
-            }
-            y = 280;
-            doc.setFontSize(8); doc.setFont(undefined, 'italic');
-            doc.text(`Scheda generata il ${new Date().toLocaleDateString('it-IT')} - AppCenterStudioPROGOLD`, pageWidth / 2, y, { align: 'center' });
-            const filename = `Scheda_${cliente.id}_${(cliente.cognome || 'cliente')}.pdf`;
-            doc.save(filename);
-            mostraToast('Scheda PDF generata', 'success');
-        }
-
-        function tornaPlancia() {
-            window.location.href = 'plancia-studio.html?token=' + encodeURIComponent(token);
-        }
-
-        function mostraToast(msg, tipo) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = 'toast ' + tipo;
-            toast.innerHTML = '<div>' + msg + '</div>';
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
+        document.getElementById('modal-modifica').addEventListener('click', function(e) {
+            if (e.target === this) chiudiModale();
+        });
     </script>
 </body>
 </html>
