@@ -8,7 +8,7 @@
     <script src="temi.js"></script>
     
     <!-- ============================================ -->
-    <!-- SEZIONE 1: CSS STYLES -->
+    <!-- SEZIONE 1: CSS STYLES (Tema Oro/Nero/Bianco) -->
     <!-- ============================================ -->
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
@@ -70,14 +70,14 @@
         .close-modal { background: none; border: none; font-size: 1.8em; cursor: pointer; color: #666666; }
         .message-preview { background: #fff9e6; padding: 15px; border-radius: 8px; border-left: 4px solid #d4af37; margin: 20px 0; }
         .message-preview h4 { color: #000000; margin-bottom: 10px; }
-        .message-preview p { color: #000000; white-space: pre-wrap; font-family: monospace; }
+        .message-preview p { color: #000000; white-space: pre-wrap; font-family: monospace; font-size: 0.9em; }
         .info-box { background: #fff9e6; padding: 15px; border-radius: 8px; border-left: 4px solid #d4af37; margin-bottom: 20px; }
         @media (max-width: 768px) { .form-grid, .stats-grid { grid-template-columns: 1fr; } .section-header { flex-direction: column; align-items: flex-start; gap: 15px; } .modal-content { padding: 25px; } }
     </style>
 </head>
 <body>
     <!-- ============================================ -->
-    <!-- SEZIONE 2: TOP BAR -->
+    <!-- SEZIONE 2: TOP BAR & HEADER -->
     <!-- ============================================ -->
     <div class="top-bar">
         <h1>Admin Panel - CRM</h1>
@@ -94,35 +94,14 @@
             <p>Gestione studi, notifiche e personalizzazione della tua dashboard</p>
         </div>
 
+        <!-- ============================================ -->
+        <!-- SEZIONE 3: STATS & TABS -->
+        <!-- ============================================ -->
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">📊</div>
-                <div class="stat-info">
-                    <h3 id="count-studi">0</h3>
-                    <p>Studi Registrati</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">🔔</div>
-                <div class="stat-info">
-                    <h3 id="count-notifiche">0</h3>
-                    <p>Notifiche</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">📁</div>
-                <div class="stat-info">
-                    <h3 id="count-archivio">0</h3>
-                    <p>Archivio Studi</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">🎨</div>
-                <div class="stat-info">
-                    <h3>Tema</h3>
-                    <p>Admin</p>
-                </div>
-            </div>
+            <div class="stat-card"><div class="stat-icon">S</div><div class="stat-info"><h3 id="count-studi">0</h3><p>Studi Registrati</p></div></div>
+            <div class="stat-card"><div class="stat-icon">N</div><div class="stat-info"><h3 id="count-notifiche">0</h3><p>Notifiche</p></div></div>
+            <div class="stat-card"><div class="stat-icon">A</div><div class="stat-info"><h3 id="count-archivio">0</h3><p>Archivio Studi</p></div></div>
+            <div class="stat-card"><div class="stat-icon">T</div><div class="stat-info"><h3>Tema</h3><p>Admin</p></div></div>
         </div>
 
         <div class="tabs">
@@ -134,7 +113,7 @@
         </div>
 
         <!-- ============================================ -->
-        <!-- SEZIONE 3: TAB STUDI -->
+        <!-- SEZIONE 4: TAB CONTENUTI -->
         <!-- ============================================ -->
         <div id="tab-studi" class="tab-content active">
             <div class="section">
@@ -142,36 +121,17 @@
                     <h3>Elenco Studi Registrati</h3>
                     <p style="color: #666666;">Gestisci credenziali, stato abbonamento e invia messaggi WhatsApp</p>
                 </div>
-                <div id="loading-studi" class="loading">
-                    <div class="spinner"></div>
-                    <p>Caricamento studi...</p>
-                </div>
+                <div id="loading-studi" class="loading"><div class="spinner"></div><p>Caricamento studi...</p></div>
                 <div id="tabella-studi" style="display: none; overflow-x: auto;">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>ID Studio</th>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Password</th>
-                                <th>Abbonamento</th>
-                                <th>Scadenza</th>
-                                <th>Stato</th>
-                                <th>Azioni</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>ID Studio</th><th>Nome</th><th>Email</th><th>Password</th><th>Abbonamento</th><th>Scadenza</th><th>Stato</th><th>Azioni</th></tr></thead>
                         <tbody id="tbody-studi"></tbody>
                     </table>
                 </div>
-                <div id="empty-studi" class="empty-state" style="display: none;">
-                    <p>Nessuno studio registrato.</p>
-                </div>
+                <div id="empty-studi" class="empty-state" style="display: none;"><p>Nessuno studio registrato.</p></div>
             </div>
         </div>
 
-        <!-- ============================================ -->
-        <!-- SEZIONE 4: TAB NOTIFICHE -->
-        <!-- ============================================ -->
         <div id="tab-notifiche" class="tab-content">
             <div class="section">
                 <div class="section-header">
@@ -179,45 +139,28 @@
                     <p style="color: #666666;">Schede di registrazione e eventi del sistema</p>
                     <button class="btn btn-outline btn-sm" onclick="segnaTutteLetture()">Segna tutte come lette</button>
                 </div>
-                <div id="loading-notifiche" class="loading">
-                    <div class="spinner"></div>
-                    <p>Caricamento notifiche...</p>
-                </div>
+                <div id="loading-notifiche" class="loading"><div class="spinner"></div><p>Caricamento notifiche...</p></div>
                 <div id="lista-notifiche"></div>
-                <div id="empty-notifiche" class="empty-state" style="display: none;">
-                    <p>Nessuna notifica presente.</p>
-                </div>
+                <div id="empty-notifiche" class="empty-state" style="display: none;"><p>Nessuna notifica presente.</p></div>
             </div>
         </div>
 
-        <!-- ============================================ -->
-        <!-- SEZIONE 5: TAB ARCHIVIO -->
-        <!-- ============================================ -->
         <div id="tab-archivio" class="tab-content">
             <div class="section">
                 <div class="section-header">
                     <h3>Archivio Studi Completati</h3>
                     <p style="color: #666666;">Visualizza studi con scheda anagrafica completata</p>
                 </div>
-                <div id="loading-archivio" class="loading">
-                    <div class="spinner"></div>
-                    <p>Caricamento archivio...</p>
-                </div>
+                <div id="loading-archivio" class="loading"><div class="spinner"></div><p>Caricamento archivio...</p></div>
                 <div id="lista-archivio"></div>
-                <div id="empty-archivio" class="empty-state" style="display: none;">
-                    <p>Nessuno studio archiviato.</p>
-                </div>
+                <div id="empty-archivio" class="empty-state" style="display: none;"><p>Nessuno studio archiviato.</p></div>
             </div>
         </div>
 
-        <!-- ============================================ -->
-        <!-- SEZIONE 6: TAB TEMA -->
-        <!-- ============================================ -->
         <div id="tab-tema" class="tab-content">
             <div class="section">
                 <h3>PERSONALIZZA TEMA ADMIN</h3>
-                <p style="color: #666666; margin-bottom: 20px;">Scegli il colore della tua dashboard di amministrazione. Ogni studio fotografico potrà scegliere il proprio tema dalla sua plancia.</p>
-                
+                <p style="color: #666666; margin-bottom: 20px;">Scegli il colore della tua dashboard di amministrazione.</p>
                 <div class="form-group">
                     <label>IL TUO TEMA ADMIN ATTUALE</label>
                     <div id="tema-attuale" style="padding: 15px; background: #fff9e6; border-radius: 8px; border-left: 4px solid #d4af37;">
@@ -227,62 +170,24 @@
             </div>
         </div>
 
-        <!-- ============================================ -->
-        <!-- SEZIONE 7: TAB CREA STUDIO -->
-        <!-- ============================================ -->
         <div id="tab-crea" class="tab-content">
             <div class="section">
                 <h3>Crea Nuovo Studio</h3>
                 <p style="color: #666666; margin-bottom: 20px;">Registra un nuovo studio fotografico sulla piattaforma</p>
-                
                 <form id="form-crea-studio" onsubmit="creaStudio(event)">
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label>ID Studio (unico) *</label>
-                            <input type="text" id="studio_id" required placeholder="Es. studio-001">
-                        </div>
-                        <div class="form-group">
-                            <label>Password *</label>
-                            <input type="password" id="studio_password" required placeholder="Password di accesso">
-                        </div>
-                        <div class="form-group">
-                            <label>Mostra Password</label>
-                            <input type="checkbox" id="show_password" onchange="togglePassword()">
-                        </div>
-                        <div class="form-group">
-                            <label>Nome Studio *</label>
-                            <input type="text" id="studio_nome" required placeholder="Nome dello studio">
-                        </div>
-                        <div class="form-group">
-                            <label>Partita IVA</label>
-                            <input type="text" id="studio_piva" placeholder="Partita IVA">
-                        </div>
-                        <div class="form-group">
-                            <label>Email *</label>
-                            <input type="email" id="studio_email" required placeholder="email@studio.it">
-                        </div>
-                        <div class="form-group">
-                            <label>Telefono</label>
-                            <input type="tel" id="studio_telefono" placeholder="+39 333 1234567">
-                        </div>
-                        <div class="form-group">
-                            <label>Indirizzo</label>
-                            <input type="text" id="studio_indirizzo" placeholder="Via Roma 123">
-                        </div>
-                        <div class="form-group">
-                            <label>Città</label>
-                            <input type="text" id="studio_citta" placeholder="Roma">
-                        </div>
-                        <div class="form-group">
-                            <label>Stato/Provincia</label>
-                            <input type="text" id="studio_stato" placeholder="RM">
-                        </div>
-                        <div class="form-group">
-                            <label>Scadenza Abbonamento</label>
-                            <input type="date" id="studio_scadenza">
-                        </div>
-                        <div class="form-group">
-                            <label>Stato Abbonamento</label>
+                        <div class="form-group"><label>ID Studio (unico) *</label><input type="text" id="studio_id" required placeholder="Es. studio-001"></div>
+                        <div class="form-group"><label>Password *</label><input type="password" id="studio_password" required placeholder="Password di accesso"></div>
+                        <div class="form-group"><label>Mostra Password</label><input type="checkbox" id="show_password" onchange="togglePassword()"></div>
+                        <div class="form-group"><label>Nome Studio *</label><input type="text" id="studio_nome" required placeholder="Nome dello studio"></div>
+                        <div class="form-group"><label>Partita IVA</label><input type="text" id="studio_piva" placeholder="Partita IVA"></div>
+                        <div class="form-group"><label>Email *</label><input type="email" id="studio_email" required placeholder="email@studio.it"></div>
+                        <div class="form-group"><label>Telefono</label><input type="tel" id="studio_telefono" placeholder="+39 333 1234567"></div>
+                        <div class="form-group"><label>Indirizzo</label><input type="text" id="studio_indirizzo" placeholder="Via Roma 123"></div>
+                        <div class="form-group"><label>Citta</label><input type="text" id="studio_citta" placeholder="Roma"></div>
+                        <div class="form-group"><label>Stato/Provincia</label><input type="text" id="studio_stato" placeholder="RM"></div>
+                        <div class="form-group"><label>Scadenza Abbonamento</label><input type="date" id="studio_scadenza"></div>
+                        <div class="form-group"><label>Stato Abbonamento</label>
                             <select id="studio_stato_abbonamento">
                                 <option value="Attivo">Attivo</option>
                                 <option value="Trial">Trial</option>
@@ -300,7 +205,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 8: MODALE WHATSAPP -->
+    <!-- SEZIONE 5: MODALE WHATSAPP -->
     <!-- ============================================ -->
     <div id="modal-whatsapp" class="modal-overlay">
         <div class="modal-content">
@@ -331,7 +236,7 @@
             </div>
 
             <div style="display: flex; gap: 15px; margin-top: 25px;">
-                <button class="btn btn-whatsapp" onclick="inviaWhatsApp()" style="flex: 1;">📱 APRI WHATSAPP WEB</button>
+                <button class="btn btn-whatsapp" onclick="inviaWhatsApp()" style="flex: 1;">APRI WHATSAPP WEB</button>
                 <button class="btn btn-outline" onclick="chiudiModalWhatsApp()" style="flex: 1;">ANNULLA</button>
             </div>
         </div>
@@ -342,7 +247,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 9: JAVASCRIPT -->
+    <!-- SEZIONE 6: JAVASCRIPT -->
     <!-- ============================================ -->
     <script>
         var token = '';
@@ -352,22 +257,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             token = urlParams.get('token');
-            
-            if (!token) {
-                alert('Token non trovato. Effettua il login.');
-                window.location.href = 'index.html';
-                return;
-            }
-            
+            if (!token) { alert('Token non trovato. Effettua il login.'); window.location.href = 'index.html'; return; }
             caricaDati();
         });
 
-        async function caricaDati() {
-            await caricaStudi();
-            await caricaNotifiche();
-            await caricaArchivio();
-            await caricaTema();
-        }
+        async function caricaDati() { await caricaStudi(); await caricaNotifiche(); await caricaArchivio(); await caricaTema(); }
 
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -380,21 +274,16 @@
             try {
                 const response = await fetch(WORKER_URL + '/api/admin/crm/studi?token=' + encodeURIComponent(token));
                 const data = await response.json();
-                
                 document.getElementById('loading-studi').style.display = 'none';
-                
                 if (data.success && data.studi.length > 0) {
                     document.getElementById('tabella-studi').style.display = 'block';
                     document.getElementById('empty-studi').style.display = 'none';
                     document.getElementById('count-studi').textContent = data.studi.length;
-                    
                     const tbody = document.getElementById('tbody-studi');
                     tbody.innerHTML = '';
-                    
                     data.studi.forEach(function(studio) {
                         const statoClass = studio.stato_abbonamento === 'Attivo' ? 'badge-attivo' : (studio.stato_abbonamento === 'Trial' ? 'badge-trial' : 'badge-scaduto');
                         const attivoClass = studio.attivo === 1 ? 'badge-attivo' : 'badge-scaduto';
-                        
                         tbody.innerHTML += '<tr>' +
                             '<td><strong>' + studio.id + '</strong></td>' +
                             '<td>' + (studio.nome || '-') + '</td>' +
@@ -407,8 +296,7 @@
                                 '<button class="btn btn-sm btn-whatsapp" onclick="apriModalWhatsApp(\'' + studio.id + '\', \'' + (studio.nome || '').replace(/'/g, "\\'") + '\', \'' + (studio.password_plain || '') + '\')">WhatsApp</button> ' +
                                 '<button class="btn btn-sm btn-outline" onclick="modificaStudio(\'' + studio.id + '\')">Modifica</button> ' +
                                 '<button class="btn btn-sm btn-primary" onclick="visualizzaScheda(\'' + studio.id + '\')">Scheda</button>' +
-                            '</td>' +
-                        '</tr>';
+                            '</td></tr>';
                     });
                 } else {
                     document.getElementById('empty-studi').style.display = 'block';
@@ -422,13 +310,11 @@
 
         function apriModalWhatsApp(studioId, studioNome, password) {
             studioCorrenteWhatsApp = { id: studioId, nome: studioNome, password: password };
-            
             document.getElementById('wa-studio-nome').textContent = studioNome;
             document.getElementById('wa-studio-id').textContent = studioId;
             document.getElementById('wa-studio-password').textContent = password;
             document.getElementById('wa-telefono').value = '';
             document.getElementById('wa-messaggio-personale').value = '';
-            
             aggiornaAnteprimaWhatsApp();
             document.getElementById('modal-whatsapp').classList.add('active');
         }
@@ -443,46 +329,19 @@
 
         function aggiornaAnteprimaWhatsApp() {
             if (!studioCorrenteWhatsApp) return;
-            
-            const telefono = document.getElementById('wa-telefono').value || '39XXXXXXXXXX';
             const messaggioPersonalizzato = document.getElementById('wa-messaggio-personale').value;
-            
-            const appLink = 'https://cibox72.github.io/AppCenterStudioPROGOLD/';
-            const messaggioBase = `Ciao ${studioCorrenteWhatsApp.nome}! 🎉\n\nBenvenuto in AppCenterStudioPROGOLD!\n\nEcco le tue credenziali di accesso:\n🔹 ID Studio: ${studioCorrenteWhatsApp.id}\n🔹 Password: ${studioCorrenteWhatsApp.password}\n🔹 Link app: ${appLink}\n\nHai 30 giorni di prova gratuita per testare tutte le funzionalità!\n\n${messaggioPersonalizzato ? messaggioPersonalizzato + '\n\n' : ''}Per informazioni sull'abbonamento annuale e offerte personalizzate, contatta il numero 3447507656.\n\nBuon lavoro! 📸`;
-            
+            const messaggioBase = `Ciao ${studioCorrenteWhatsApp.nome}!\n\nBenvenuto in AppCenterStudioPROGOLD!\n\nEcco le tue credenziali di accesso:\n- ID Studio: ${studioCorrenteWhatsApp.id}\n- Password: ${studioCorrenteWhatsApp.password}\n- Link app: https://cibox72.github.io/AppCenterStudioPROGOLD/\n\nHai 30 giorni di prova gratuita per testare il software.\n\n${messaggioPersonalizzato ? messaggioPersonalizzato + '\n\n' : ''}Per informazioni sull'abbonamento annuale e offerte personalizzate, contatta il numero 3447507656.\n\nBuon lavoro!`;
             document.getElementById('wa-anteprima').textContent = messaggioBase;
         }
 
         function inviaWhatsApp() {
             if (!studioCorrenteWhatsApp) return;
-            
             const telefono = document.getElementById('wa-telefono').value.trim();
-            if (!telefono) {
-                alert('Inserisci il numero WhatsApp del cliente');
-                return;
-            }
-            
+            if (!telefono) { alert('Inserisci il numero WhatsApp del cliente'); return; }
             const messaggioPersonalizzato = document.getElementById('wa-messaggio-personale').value;
-            const appLink = 'https://cibox72.github.io/AppCenterStudioPROGOLD/';
-            
-            const messaggio = `Ciao ${studioCorrenteWhatsApp.nome}! 🎉
-
-Benvenuto in AppCenterStudioPROGOLD!
-
-Ecco le tue credenziali di accesso:
-🔹 ID Studio: ${studioCorrenteWhatsApp.id}
-🔹 Password: ${studioCorrenteWhatsApp.password}
-🔹 Link app: ${appLink}
-
-Hai 30 giorni di prova gratuita per testare tutte le funzionalità!
-
-${messaggioPersonalizzato ? messaggioPersonalizzato + '\n\n' : ''}Per informazioni sull'abbonamento annuale e offerte personalizzate, contatta il numero 3447507656.
-
-Buon lavoro! 📸`;
-            
+            const messaggio = `Ciao ${studioCorrenteWhatsApp.nome}!\n\nBenvenuto in AppCenterStudioPROGOLD!\n\nEcco le tue credenziali di accesso:\n- ID Studio: ${studioCorrenteWhatsApp.id}\n- Password: ${studioCorrenteWhatsApp.password}\n- Link app: https://cibox72.github.io/AppCenterStudioPROGOLD/\n\nHai 30 giorni di prova gratuita per testare il software.\n\n${messaggioPersonalizzato ? messaggioPersonalizzato + '\n\n' : ''}Per informazioni sull'abbonamento annuale e offerte personalizzate, contatta il numero 3447507656.\n\nBuon lavoro!`;
             const whatsappUrl = `https://web.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(messaggio)}`;
             window.open(whatsappUrl, '_blank');
-            
             chiudiModalWhatsApp();
         }
 
@@ -490,26 +349,14 @@ Buon lavoro! 📸`;
             try {
                 const response = await fetch(WORKER_URL + '/api/admin/notifiche?token=' + encodeURIComponent(token));
                 const data = await response.json();
-                
                 document.getElementById('loading-notifiche').style.display = 'none';
-                
                 if (data.success && data.notifiche.length > 0) {
                     document.getElementById('count-notifiche').textContent = data.nonLette;
-                    
                     const lista = document.getElementById('lista-notifiche');
                     lista.innerHTML = '';
-                    
                     data.notifiche.forEach(function(notif) {
                         const unreadClass = notif.letto === 0 ? 'unread' : '';
-                        lista.innerHTML += '<div class="notification-item ' + unreadClass + '">' +
-                            '<h4>' + notif.titolo + '</h4>' +
-                            '<p>' + notif.messaggio + '</p>' +
-                            '<small>' + new Date(notif.data_creazione).toLocaleString('it-IT') + '</small>' +
-                            '<div style="margin-top: 10px;">' +
-                                '<button class="btn btn-sm btn-outline" onclick="segnaLetta(\'' + notif.id + '\')">Segna come letta</button> ' +
-                                '<button class="btn btn-sm btn-primary" onclick="archiviaNotifica(\'' + notif.id + '\')">Archivia</button>' +
-                            '</div>' +
-                        '</div>';
+                        lista.innerHTML += '<div class="notification-item ' + unreadClass + '"><h4>' + notif.titolo + '</h4><p>' + notif.messaggio + '</p><small>' + new Date(notif.data_creazione).toLocaleString('it-IT') + '</small><div style="margin-top: 10px;"><button class="btn btn-sm btn-outline" onclick="segnaLetta(\'' + notif.id + '\')">Segna come letta</button> <button class="btn btn-sm btn-primary" onclick="archiviaNotifica(\'' + notif.id + '\')">Archivia</button></div></div>';
                     });
                 } else {
                     document.getElementById('empty-notifiche').style.display = 'block';
@@ -525,28 +372,14 @@ Buon lavoro! 📸`;
             try {
                 const response = await fetch(WORKER_URL + '/api/admin/archivio-studi?token=' + encodeURIComponent(token));
                 const data = await response.json();
-                
                 document.getElementById('loading-archivio').style.display = 'none';
-                
                 if (data.success && data.studi.length > 0) {
                     document.getElementById('count-archivio').textContent = data.studi.length;
-                    
                     const lista = document.getElementById('lista-archivio');
-                    lista.innerHTML = '<div style="overflow-x: auto;"><table>' +
-                        '<thead><tr><th>ID Studio</th><th>Nome</th><th>Email</th><th>P.IVA</th><th>Telefono</th><th>Azioni</th></tr></thead>' +
-                        '<tbody>';
-                    
+                    lista.innerHTML = '<div style="overflow-x: auto;"><table><thead><tr><th>ID Studio</th><th>Nome</th><th>Email</th><th>P.IVA</th><th>Telefono</th><th>Azioni</th></tr></thead><tbody>';
                     data.studi.forEach(function(studio) {
-                        lista.innerHTML += '<tr>' +
-                            '<td><strong>' + studio.id + '</strong></td>' +
-                            '<td>' + (studio.nome || '-') + '</td>' +
-                            '<td>' + (studio.email || '-') + '</td>' +
-                            '<td>' + (studio.piva || '-') + '</td>' +
-                            '<td>' + (studio.telefono || '-') + '</td>' +
-                            '<td><button class="btn btn-sm btn-primary" onclick="visualizzaScheda(\'' + studio.id + '\')">Visualizza Scheda</button></td>' +
-                        '</tr>';
+                        lista.innerHTML += '<tr><td><strong>' + studio.id + '</strong></td><td>' + (studio.nome || '-') + '</td><td>' + (studio.email || '-') + '</td><td>' + (studio.piva || '-') + '</td><td>' + (studio.telefono || '-') + '</td><td><button class="btn btn-sm btn-primary" onclick="visualizzaScheda(\'' + studio.id + '\')">Visualizza Scheda</button></td></tr>';
                     });
-                    
                     lista.innerHTML += '</tbody></table></div>';
                 } else {
                     document.getElementById('empty-archivio').style.display = 'block';
@@ -562,51 +395,25 @@ Buon lavoro! 📸`;
             try {
                 const response = await fetch(WORKER_URL + '/api/admin/tema?token=' + encodeURIComponent(token));
                 const data = await response.json();
-                
                 if (data.success && data.tema) {
                     document.getElementById('tema-attuale').innerHTML = '<p style="color: #000000; font-weight: 600;">Tema attuale: <span style="color: #996515;">' + data.tema.tema_attivo + '</span></p>';
                 }
-            } catch (error) {
-                console.error('Errore caricamento tema:', error);
-            }
+            } catch (error) { console.error('Errore caricamento tema:', error); }
         }
 
         async function segnaLetta(id) {
-            try {
-                await fetch(WORKER_URL + '/api/admin/notifica/letta', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: id })
-                });
-                caricaNotifiche();
-            } catch (error) {
-                console.error('Errore segna letta:', error);
-            }
+            try { await fetch(WORKER_URL + '/api/admin/notifica/letta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: id }) }); caricaNotifiche(); } 
+            catch (error) { console.error('Errore segna letta:', error); }
         }
 
         async function segnaTutteLetture() {
-            try {
-                await fetch(WORKER_URL + '/api/admin/notifiche/lette', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                caricaNotifiche();
-            } catch (error) {
-                console.error('Errore segna tutte lette:', error);
-            }
+            try { await fetch(WORKER_URL + '/api/admin/notifiche/lette', { method: 'POST', headers: { 'Content-Type': 'application/json' } }); caricaNotifiche(); } 
+            catch (error) { console.error('Errore segna tutte lette:', error); }
         }
 
         async function archiviaNotifica(id) {
-            try {
-                await fetch(WORKER_URL + '/api/admin/archivia-notifica', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ notifica_id: id })
-                });
-                caricaNotifiche();
-            } catch (error) {
-                console.error('Errore archivia notifica:', error);
-            }
+            try { await fetch(WORKER_URL + '/api/admin/archivia-notifica', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ notifica_id: id }) }); caricaNotifiche(); } 
+            catch (error) { console.error('Errore archivia notifica:', error); }
         }
 
         function togglePassword() {
@@ -617,68 +424,29 @@ Buon lavoro! 📸`;
 
         async function creaStudio(event) {
             event.preventDefault();
-            
             const dati = {
-                id: document.getElementById('studio_id').value,
-                password: document.getElementById('studio_password').value,
-                nome: document.getElementById('studio_nome').value,
-                piva: document.getElementById('studio_piva').value,
-                email: document.getElementById('studio_email').value,
-                telefono: document.getElementById('studio_telefono').value,
-                indirizzo: document.getElementById('studio_indirizzo').value,
-                citta: document.getElementById('studio_citta').value,
-                stato: document.getElementById('studio_stato').value,
-                scadenza: document.getElementById('studio_scadenza').value,
-                stato_abbonamento: document.getElementById('studio_stato_abbonamento').value,
+                id: document.getElementById('studio_id').value, password: document.getElementById('studio_password').value, nome: document.getElementById('studio_nome').value,
+                piva: document.getElementById('studio_piva').value, email: document.getElementById('studio_email').value, telefono: document.getElementById('studio_telefono').value,
+                indirizzo: document.getElementById('studio_indirizzo').value, citta: document.getElementById('studio_citta').value, stato: document.getElementById('studio_stato').value,
+                scadenza: document.getElementById('studio_scadenza').value, stato_abbonamento: document.getElementById('studio_stato_abbonamento').value,
                 data_registrazione: new Date().toISOString().split('T')[0]
             };
-            
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/crm/studio', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dati)
-                });
-                
+                const response = await fetch(WORKER_URL + '/api/admin/crm/studio', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati) });
                 const result = await response.json();
-                
-                if (result.success) {
-                    alert('Studio creato con successo!');
-                    document.getElementById('form-crea-studio').reset();
-                    caricaStudi();
-                } else {
-                    alert('Errore: ' + result.error);
-                }
-            } catch (error) {
-                console.error('Errore creazione studio:', error);
-                alert('Errore di connessione.');
-            }
+                if (result.success) { alert('Studio creato con successo!'); document.getElementById('form-crea-studio').reset(); caricaStudi(); } 
+                else { alert('Errore: ' + result.error); }
+            } catch (error) { console.error('Errore creazione studio:', error); alert('Errore di connessione.'); }
         }
 
-        function modificaStudio(id) {
-            alert('Funzione di modifica studio - ID: ' + id);
-        }
-
-        function visualizzaScheda(id) {
-            window.location.href = 'admin-scheda-studio.html?studioId=' + id + '&token=' + encodeURIComponent(token);
-        }
-
+        function modificaStudio(id) { alert('Funzione di modifica studio - ID: ' + id); }
+        function visualizzaScheda(id) { window.location.href = 'admin-scheda-studio.html?studioId=' + id + '&token=' + encodeURIComponent(token); }
         function logout() {
-            fetch(WORKER_URL + '/api/auth/logout', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: token })
-            }).finally(function() {
-                window.location.href = 'index.html';
-            });
+            fetch(WORKER_URL + '/api/auth/logout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: token }) })
+            .finally(function() { window.location.href = 'index.html'; });
         }
 
-        // Chiudi modale cliccando fuori
-        document.getElementById('modal-whatsapp')?.addEventListener('click', function(e) {
-            if (e.target === this) {
-                chiudiModalWhatsApp();
-            }
-        });
+        document.getElementById('modal-whatsapp')?.addEventListener('click', function(e) { if (e.target === this) chiudiModalWhatsApp(); });
     </script>
 </body>
 </html>
