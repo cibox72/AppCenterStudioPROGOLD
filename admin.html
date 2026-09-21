@@ -40,12 +40,15 @@
         .badge-attivo { background: #d5f5e3; color: #1e8449; }
         .badge-trial { background: #fdebd0; color: #d35400; }
         .badge-scaduto { background: #fadbd8; color: #c0392b; }
+        .badge-bozza { background: #fdebd0; color: #d35400; }
+        .badge-attiva { background: #d5f5e3; color: #1e8449; }
         .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9em; display: inline-flex; align-items: center; gap: 8px; }
         .btn-primary { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; }
         .btn-outline { background: transparent; border: 2px solid #d4af37; color: #996515; }
         .btn-outline:hover { background: #fff9e6; }
         .btn-danger { background: linear-gradient(135deg, #f1948a, #e74c3c); color: #ffffff; }
-        .btn-success { background: linear-gradient(135deg, #58d68d, #28b463); color: #ffffff; }
+        .btn-success { background: linear-gradient(135deg, #25d366, #128c7e); color: #ffffff; }
+        .btn-warning { background: linear-gradient(135deg, #f9e79f, #f1c40f); color: #000000; }
         .btn-sm { padding: 6px 12px; font-size: 0.8em; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .form-group { margin-bottom: 18px; }
@@ -88,6 +91,19 @@
         .notification-item small { color: #666666; font-size: 0.85em; }
         .notification-actions { display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
         .actions-cell { display: flex; gap: 8px; flex-wrap: wrap; }
+        .offerta-card { background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #d4af37; transition: all 0.3s ease; }
+        .offerta-card:hover { border-color: #d4af37; background: #fff9e6; }
+        .offerta-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
+        .offerta-header h4 { color: #000000; font-size: 1.2em; margin: 0; }
+        .offerta-tipo { background: #fff9e6; color: #996515; padding: 4px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 600; border: 1px solid #d4af37; }
+        .offerta-descrizione { color: #666666; font-size: 0.95em; margin-bottom: 10px; line-height: 1.5; }
+        .offerta-dettagli { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 15px; font-size: 0.9em; }
+        .offerta-dettagli span { color: #000000; }
+        .offerta-dettagli strong { color: #996515; }
+        .offerta-actions { display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid #d5d8dc; padding-top: 15px; }
+        .whatsapp-preview { background: #e5ddd5; padding: 15px; border-radius: 10px; margin-top: 15px; border-left: 4px solid #25d366; }
+        .whatsapp-preview h5 { color: #000000; margin-bottom: 10px; }
+        .whatsapp-preview p { color: #000000; font-size: 0.95em; line-height: 1.5; white-space: pre-wrap; }
         @media (max-width: 768px) { .form-grid, .stats-grid { grid-template-columns: 1fr; } .section-header { flex-direction: column; align-items: flex-start; gap: 15px; } .modal-content { padding: 25px; } .actions-cell { flex-direction: column; } .scheda-riga { flex-direction: column; } .scheda-riga label { min-width: auto; } }
     </style>
 </head>
@@ -107,7 +123,7 @@
     <div class="container">
         <div class="page-header">
             <h2>Admin Panel - CRM & Notifiche</h2>
-            <p>Gestione studi, notifiche e personalizzazione della tua dashboard</p>
+            <p>Gestione studi, notifiche, offerte promozionali e personalizzazione della dashboard</p>
         </div>
 
         <!-- ============================================ -->
@@ -117,13 +133,14 @@
             <div class="stat-card"><div class="stat-icon">S</div><div class="stat-info"><h3 id="count-studi">0</h3><p>Studi Registrati</p></div></div>
             <div class="stat-card"><div class="stat-icon">N</div><div class="stat-info"><h3 id="count-notifiche">0</h3><p>Notifiche</p></div></div>
             <div class="stat-card"><div class="stat-icon">A</div><div class="stat-info"><h3 id="count-archivio">0</h3><p>Archivio Studi</p></div></div>
-            <div class="stat-card"><div class="stat-icon">T</div><div class="stat-info"><h3>Tema</h3><p>Admin</p></div></div>
+            <div class="stat-card"><div class="stat-icon">O</div><div class="stat-info"><h3 id="count-offerte">0</h3><p>Offerte Attive</p></div></div>
         </div>
 
         <div class="tabs">
             <div class="tab active" onclick="switchTab('studi')">Elenco Studi</div>
             <div class="tab" onclick="switchTab('notifiche')">Notifiche</div>
             <div class="tab" onclick="switchTab('archivio')">Archivio Studi</div>
+            <div class="tab" onclick="switchTab('offerte')">Offerte Promo</div>
             <div class="tab" onclick="switchTab('tema')">Tema Admin</div>
             <div class="tab" onclick="switchTab('crea')">Crea Studio</div>
         </div>
@@ -202,7 +219,88 @@
         </div>
 
         <!-- ============================================ -->
-        <!-- SEZIONE 7: TAB TEMA -->
+        <!-- SEZIONE 7: TAB OFFERTE PROMO -->
+        <!-- ============================================ -->
+        <div id="tab-offerte" class="tab-content">
+            <div class="section">
+                <div class="section-header">
+                    <h3>Crea Nuova Offerta Promozionale</h3>
+                    <p style="color: #666666;">Le offerte verranno inviate agli studi tramite WhatsApp</p>
+                </div>
+                
+                <form id="form-offerta" onsubmit="salvaOfferta(event)">
+                    <input type="hidden" id="offerta_id" value="">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Titolo Offerta *</label>
+                            <input type="text" id="offerta_titolo" required placeholder="Es. Sconto 20% Abbonamento Annuale" autocomplete="off" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo Offerta *</label>
+                            <select id="offerta_tipo" required>
+                                <option value="">-- Seleziona --</option>
+                                <option value="Abbonamento Anticipato">Abbonamento Anticipato</option>
+                                <option value="Promo Lancio">Promo Lancio</option>
+                                <option value="Sconto Fedelta">Sconto Fedelta</option>
+                                <option value="Offerta Stagionale">Offerta Stagionale</option>
+                                <option value="Pacchetto Speciale">Pacchetto Speciale</option>
+                                <option value="Altro">Altro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Sconto / Importo Promo</label>
+                            <input type="text" id="offerta_sconto" placeholder="Es. 20% oppure 100 EUR" autocomplete="off" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Stato</label>
+                            <select id="offerta_stato">
+                                <option value="attiva">Attiva</option>
+                                <option value="bozza">Bozza</option>
+                                <option value="scaduta">Scaduta</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Data Inizio Validita</label>
+                            <input type="date" id="offerta_data_inizio" autocomplete="off" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Data Fine Validita</label>
+                            <input type="date" id="offerta_data_fine" autocomplete="off" value="">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Descrizione Offerta *</label>
+                            <textarea id="offerta_descrizione" required rows="4" placeholder="Descrivi i dettagli dell'offerta..." autocomplete="off"></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Condizioni e Note</label>
+                            <textarea id="offerta_condizioni" rows="3" placeholder="Condizioni, limitazioni, note..." autocomplete="off"></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Messaggio WhatsApp (verra' inviato agli studi)</label>
+                            <textarea id="offerta_messaggio" rows="4" placeholder="Ciao [NOME_STUDIO],&#10;&#10;[TITOLO_OFFERTA]&#10;&#10;[DESCRIZIONE]&#10;&#10;Contattaci per maggiori informazioni!" autocomplete="off"></textarea>
+                            <p style="color: #666666; font-size: 0.85em; margin-top: 5px;">Usa [NOME_STUDIO], [TITOLO_OFFERTA], [DESCRIZIONE], [SCONTO] come segnaposto</p>
+                        </div>
+                    </div>
+                    <div style="margin-top: 25px; display: flex; gap: 15px; flex-wrap: wrap;">
+                        <button type="submit" class="btn btn-primary" id="btn-salva-offerta">SALVA OFFERTA</button>
+                        <button type="button" class="btn btn-outline" onclick="pulisciFormOfferta()">PULISCI</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3>Archivio Offerte</h3>
+                    <p style="color: #666666;">Gestisci tutte le offerte promozionali create</p>
+                </div>
+                <div id="loading-offerte" class="loading"><div class="spinner"></div><p>Caricamento offerte...</p></div>
+                <div id="lista-offerte"></div>
+                <div id="empty-offerte" class="empty-state" style="display: none;"><p>Nessuna offerta creata.</p></div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SEZIONE 8: TAB TEMA -->
         <!-- ============================================ -->
         <div id="tab-tema" class="tab-content">
             <div class="section">
@@ -218,7 +316,7 @@
         </div>
 
         <!-- ============================================ -->
-        <!-- SEZIONE 8: TAB CREA STUDIO -->
+        <!-- SEZIONE 9: TAB CREA STUDIO -->
         <!-- ============================================ -->
         <div id="tab-crea" class="tab-content">
             <div class="section">
@@ -255,7 +353,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 9: MODALE SCHEDA COMPLETA STUDIO -->
+    <!-- SEZIONE 10: MODALE SCHEDA COMPLETA STUDIO -->
     <!-- ============================================ -->
     <div id="modal-scheda-studio" class="modal-overlay">
         <div class="modal-content">
@@ -263,16 +361,11 @@
                 <h2>Scheda Completa Studio</h2>
                 <button class="close-modal" onclick="chiudiModalScheda()">x</button>
             </div>
-            
             <div class="info-box">
                 <strong>ID Studio:</strong> <span id="scheda-id"></span><br>
                 <strong>Nome:</strong> <span id="scheda-nome"></span>
             </div>
-
-            <div id="scheda-dettagli">
-                <!-- Popolato dinamicamente -->
-            </div>
-
+            <div id="scheda-dettagli"></div>
             <div style="display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
                 <button class="btn btn-primary" onclick="stampaScheda()" style="flex: 1;">Stampa Scheda</button>
                 <button class="btn btn-outline" onclick="chiudiModalScheda()" style="flex: 1;">Chiudi</button>
@@ -281,7 +374,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 10: MODALE DETTAGLIO NOTIFICA -->
+    <!-- SEZIONE 11: MODALE DETTAGLIO NOTIFICA -->
     <!-- ============================================ -->
     <div id="modal-notifica" class="modal-overlay">
         <div class="modal-content">
@@ -289,15 +382,50 @@
                 <h2>Dettaglio Notifica</h2>
                 <button class="close-modal" onclick="chiudiModalNotifica()">x</button>
             </div>
-            
-            <div id="notifica-dettagli">
-                <!-- Popolato dinamicamente -->
-            </div>
-
+            <div id="notifica-dettagli"></div>
             <div style="display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
                 <button class="btn btn-success" onclick="segnaNotificaLettaCorrente()" style="flex: 1;">Segna come Letta</button>
                 <button class="btn btn-outline" onclick="archiviaNotificaCorrente()" style="flex: 1;">Archivia</button>
                 <button class="btn btn-outline" onclick="chiudiModalNotifica()" style="flex: 1;">Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SEZIONE 12: MODALE INVIO WHATSAPP -->
+    <!-- ============================================ -->
+    <div id="modal-whatsapp" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Invia Offerta via WhatsApp</h2>
+                <button class="close-modal" onclick="chiudiModalWhatsApp()">x</button>
+            </div>
+            
+            <div class="info-box">
+                <strong>Studio:</strong> <span id="wa-studio-nome"></span><br>
+                <strong>Telefono:</strong> <span id="wa-studio-telefono"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Seleziona Offerta dall'Archivio *</label>
+                <select id="wa-offerta-select" onchange="aggiornaAnteprimaWhatsApp()">
+                    <option value="">-- Seleziona un'offerta --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Messaggio da Inviare (modificabile)</label>
+                <textarea id="wa-messaggio" rows="8" autocomplete="off"></textarea>
+            </div>
+
+            <div class="whatsapp-preview">
+                <h5>Anteprima Messaggio</h5>
+                <p id="wa-anteprima">Seleziona un'offerta per vedere l'anteprima...</p>
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
+                <button class="btn btn-success" onclick="inviaWhatsApp()" style="flex: 1;">APRI WHATSAPP E INVIA</button>
+                <button class="btn btn-outline" onclick="chiudiModalWhatsApp()" style="flex: 1;">Annulla</button>
             </div>
         </div>
     </div>
@@ -307,12 +435,14 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 11: JAVASCRIPT -->
+    <!-- SEZIONE 13: JAVASCRIPT -->
     <!-- ============================================ -->
     <script>
         var token = '';
         var studioCorrenteScheda = null;
         var notificaCorrente = null;
+        var studioWhatsAppCorrente = null;
+        var offerteDisponibili = [];
         var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -322,7 +452,13 @@
             caricaDati();
         });
 
-        async function caricaDati() { await caricaStudi(); await caricaNotifiche(); await caricaArchivio(); await caricaTema(); }
+        async function caricaDati() { 
+            await caricaStudi(); 
+            await caricaNotifiche(); 
+            await caricaArchivio(); 
+            await caricaOfferte(); 
+            await caricaTema(); 
+        }
 
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -352,6 +488,7 @@
                             '<td><span class="badge ' + statoClass + '">' + stato + '</span></td>' +
                             '<td class="actions-cell">' +
                                 '<button class="btn btn-sm btn-primary" onclick="apriSchedaCompleta(\'' + studio.id + '\')">Vedi Scheda</button>' +
+                                '<button class="btn btn-sm btn-success" onclick="apriWhatsApp(\'' + studio.id + '\', \'' + (studio.nome || '').replace(/'/g, "\\'") + '\', \'' + (studio.telefono || '').replace(/'/g, "\\'") + '\')">WhatsApp</button>' +
                             '</td>' +
                         '</tr>';
                     });
@@ -369,65 +506,54 @@
             try {
                 const response = await fetch(WORKER_URL + '/api/admin/crm/studio/' + studioId + '?token=' + encodeURIComponent(token));
                 const data = await response.json();
-                
                 if (data.success && data.studio) {
                     const s = data.studio;
                     studioCorrenteScheda = s;
-                    
                     document.getElementById('scheda-id').textContent = s.id;
                     document.getElementById('scheda-nome').textContent = s.nome || '-';
-                    
                     const dettagli = document.getElementById('scheda-dettagli');
                     dettagli.innerHTML = '' +
-                        '<div class="scheda-sezione">' +
-                            '<h4>Dati Aziendali</h4>' +
-                            '<div class="scheda-riga"><label>Email</label><span>' + (s.email || '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Telefono</label><span>' + (s.telefono || '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Password</label><span>' + (s.password_plain || 'Nascosta') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Partita IVA</label><span>' + (s.piva || '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>PEC</label><span>' + (s.pec || '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Codice SDI</label><span>' + (s.sdi || '-') + '</span></div>' +
+                        '<div class="scheda-sezione"><h4>Dati Aziendali</h4>' +
+                        '<div class="scheda-riga"><label>Email</label><span>' + (s.email || '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Telefono</label><span>' + (s.telefono || '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Password</label><span>' + (s.password_plain || 'Nascosta') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Partita IVA</label><span>' + (s.piva || '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>PEC</label><span>' + (s.pec || '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Codice SDI</label><span>' + (s.sdi || '-') + '</span></div>' +
                         '</div>' +
-                        '<div class="scheda-sezione">' +
-                            '<h4>Indirizzo Sede Legale</h4>' +
-                            '<div class="scheda-riga"><label>Indirizzo</label><span>' + (s.indirizzo || '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>CAP</label><span>' + (s.cap || '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Citta</label><span>' + (s.citta || '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Provincia</label><span>' + (s.provincia || s.stato || '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Stato</label><span>' + (s.stato || 'Italia') + '</span></div>' +
+                        '<div class="scheda-sezione"><h4>Indirizzo Sede Legale</h4>' +
+                        '<div class="scheda-riga"><label>Indirizzo</label><span>' + (s.indirizzo || '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>CAP</label><span>' + (s.cap || '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Citta</label><span>' + (s.citta || '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Provincia</label><span>' + (s.provincia || s.stato || '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Stato</label><span>' + (s.stato || 'Italia') + '</span></div>' +
                         '</div>' +
-                        '<div class="scheda-sezione">' +
-                            '<h4>Rappresentante Legale</h4>' +
-                            '<div class="scheda-riga"><label>Nome e Cognome</label><span>' + (s.rappresentante_nome || s.legale || '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Codice Fiscale</label><span>' + (s.rappresentante_cf || s.cf_legale || '-') + '</span></div>' +
+                        '<div class="scheda-sezione"><h4>Rappresentante Legale</h4>' +
+                        '<div class="scheda-riga"><label>Nome e Cognome</label><span>' + (s.rappresentante_nome || s.legale || '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Codice Fiscale</label><span>' + (s.rappresentante_cf || s.cf_legale || '-') + '</span></div>' +
                         '</div>' +
-                        '<div class="scheda-sezione">' +
-                            '<h4>Dati Bancari</h4>' +
-                            '<div class="scheda-riga"><label>IBAN</label><span>' + (s.iban || '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Intestato a</label><span>' + (s.iban_intestato || '-') + '</span></div>' +
+                        '<div class="scheda-sezione"><h4>Dati Bancari</h4>' +
+                        '<div class="scheda-riga"><label>IBAN</label><span>' + (s.iban || '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Intestato a</label><span>' + (s.iban_intestato || '-') + '</span></div>' +
                         '</div>' +
-                        '<div class="scheda-sezione">' +
-                            '<h4>Abbonamento</h4>' +
-                            '<div class="scheda-riga"><label>Stato Abbonamento</label><span>' + (s.stato_abbonamento || '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Scadenza</label><span>' + (s.scadenza ? new Date(s.scadenza).toLocaleDateString('it-IT') : '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Attivo</label><span>' + (s.attivo === 1 ? 'Si' : 'No') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Data Registrazione</label><span>' + (s.data_registrazione ? new Date(s.data_registrazione).toLocaleDateString('it-IT') : '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Scheda Completata</label><span>' + (s.scheda_completata === 1 ? 'Si' : 'No') + '</span></div>' +
+                        '<div class="scheda-sezione"><h4>Abbonamento</h4>' +
+                        '<div class="scheda-riga"><label>Stato Abbonamento</label><span>' + (s.stato_abbonamento || '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Scadenza</label><span>' + (s.scadenza ? new Date(s.scadenza).toLocaleDateString('it-IT') : '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Attivo</label><span>' + (s.attivo === 1 ? 'Si' : 'No') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Data Registrazione</label><span>' + (s.data_registrazione ? new Date(s.data_registrazione).toLocaleDateString('it-IT') : '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Scheda Completata</label><span>' + (s.scheda_completata === 1 ? 'Si' : 'No') + '</span></div>' +
                         '</div>' +
-                        '<div class="scheda-sezione">' +
-                            '<h4>Messaggi Automatici</h4>' +
-                            '<div class="scheda-riga"><label>Messaggio Benvenuto</label><span>' + (s.msg_benvenuto || '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Messaggio Ringraziamento</label><span>' + (s.msg_ringraziamento || '-') + '</span></div>' +
+                        '<div class="scheda-sezione"><h4>Messaggi Automatici</h4>' +
+                        '<div class="scheda-riga"><label>Messaggio Benvenuto</label><span>' + (s.msg_benvenuto || '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Messaggio Ringraziamento</label><span>' + (s.msg_ringraziamento || '-') + '</span></div>' +
                         '</div>' +
-                        '<div class="scheda-sezione">' +
-                            '<h4>Link e Social</h4>' +
-                            '<div class="scheda-riga"><label>Sito Web</label><span>' + (s.website || s.link_sito || '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Facebook</label><span>' + (s.link_facebook || '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Instagram</label><span>' + (s.link_instagram || '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>Portfolio</label><span>' + (s.link_portfolio || '-') + '</span></div>' +
-                            '<div class="scheda-riga"><label>QR Code</label><span>' + (s.link_qrcode || '-') + '</span></div>' +
+                        '<div class="scheda-sezione"><h4>Link e Social</h4>' +
+                        '<div class="scheda-riga"><label>Sito Web</label><span>' + (s.website || s.link_sito || '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Facebook</label><span>' + (s.link_facebook || '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Instagram</label><span>' + (s.link_instagram || '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>Portfolio</label><span>' + (s.link_portfolio || '-') + '</span></div>' +
+                        '<div class="scheda-riga"><label>QR Code</label><span>' + (s.link_qrcode || '-') + '</span></div>' +
                         '</div>';
-                    
                     document.getElementById('modal-scheda-studio').classList.add('active');
                 } else {
                     alert('Errore: ' + (data.error || 'Studio non trovato'));
@@ -485,11 +611,9 @@
             try {
                 const response = await fetch(WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token));
                 const data = await response.json();
-                
                 if (data.success && data.notifica) {
                     const n = data.notifica;
                     notificaCorrente = n;
-                    
                     const dettagli = document.getElementById('notifica-dettagli');
                     let datiHtml = '';
                     try {
@@ -502,28 +626,17 @@
                             datiHtml += '</div>';
                         }
                     } catch (e) {}
-                    
                     dettagli.innerHTML = '' +
                         '<div class="info-box">' +
                             '<strong>Tipo:</strong> ' + (n.tipo || '-') + '<br>' +
                             '<strong>Data:</strong> ' + new Date(n.data_creazione).toLocaleString('it-IT') + '<br>' +
                             '<strong>Stato:</strong> ' + (n.letto === 1 ? 'Letta' : 'Non letta') +
                         '</div>' +
-                        '<div class="scheda-sezione">' +
-                            '<h4>Titolo</h4>' +
-                            '<p style="color: #000000; font-weight: 600;">' + (n.titolo || '-') + '</p>' +
-                        '</div>' +
-                        '<div class="scheda-sezione">' +
-                            '<h4>Messaggio</h4>' +
-                            '<p style="color: #000000; line-height: 1.6;">' + (n.messaggio || '-') + '</p>' +
-                        '</div>' +
+                        '<div class="scheda-sezione"><h4>Titolo</h4><p style="color: #000000; font-weight: 600;">' + (n.titolo || '-') + '</p></div>' +
+                        '<div class="scheda-sezione"><h4>Messaggio</h4><p style="color: #000000; line-height: 1.6;">' + (n.messaggio || '-') + '</p></div>' +
                         datiHtml;
-                    
                     document.getElementById('modal-notifica').classList.add('active');
-                    
-                    if (n.letto === 0) {
-                        await segnaLetta(id);
-                    }
+                    if (n.letto === 0) { await segnaLetta(id); }
                 } else {
                     alert('Errore: ' + (data.error || 'Notifica non trovata'));
                 }
@@ -596,6 +709,196 @@
             }
         }
 
+        async function caricaOfferte() {
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/offerte?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                document.getElementById('loading-offerte').style.display = 'none';
+                if (data.success && data.offerte) {
+                    offerteDisponibili = data.offerte;
+                    const offerteAttive = offerteDisponibili.filter(function(o) { return o.stato === 'attiva'; });
+                    document.getElementById('count-offerte').textContent = offerteAttive.length;
+                    const lista = document.getElementById('lista-offerte');
+                    lista.innerHTML = '';
+                    if (offerteDisponibili.length === 0) {
+                        document.getElementById('empty-offerte').style.display = 'block';
+                    } else {
+                        document.getElementById('empty-offerte').style.display = 'none';
+                        offerteDisponibili.forEach(function(o) {
+                            const statoClass = 'badge-' + (o.stato || 'bozza');
+                            const div = document.createElement('div');
+                            div.className = 'offerta-card';
+                            div.innerHTML = '' +
+                                '<div class="offerta-header">' +
+                                    '<h4>' + (o.titolo || 'Offerta') + '</h4>' +
+                                    '<span class="offerta-tipo">' + (o.tipo || '-') + '</span>' +
+                                    '<span class="badge ' + statoClass + '">' + (o.stato || 'bozza') + '</span>' +
+                                '</div>' +
+                                '<div class="offerta-descrizione">' + (o.descrizione || '') + '</div>' +
+                                '<div class="offerta-dettagli">' +
+                                    (o.sconto ? '<span><strong>Sconto:</strong> ' + o.sconto + '</span>' : '') +
+                                    (o.data_inizio ? '<span><strong>Dal:</strong> ' + new Date(o.data_inizio).toLocaleDateString('it-IT') + '</span>' : '') +
+                                    (o.data_fine ? '<span><strong>Al:</strong> ' + new Date(o.data_fine).toLocaleDateString('it-IT') + '</span>' : '') +
+                                '</div>' +
+                                '<div class="offerta-actions">' +
+                                    '<button class="btn btn-sm btn-outline" onclick="modificaOfferta(\'' + o.id + '\')">Modifica</button>' +
+                                    '<button class="btn btn-sm btn-outline" onclick="duplicaOfferta(\'' + o.id + '\')">Duplica</button>' +
+                                    '<button class="btn btn-sm btn-danger" onclick="eliminaOfferta(\'' + o.id + '\')">Elimina</button>' +
+                                '</div>';
+                            lista.appendChild(div);
+                        });
+                    }
+                } else {
+                    document.getElementById('empty-offerte').style.display = 'block';
+                    document.getElementById('count-offerte').textContent = '0';
+                }
+            } catch (error) {
+                console.error('Errore caricamento offerte:', error);
+                document.getElementById('loading-offerte').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento</p>';
+            }
+        }
+
+        async function salvaOfferta(event) {
+            event.preventDefault();
+            const idEsistente = document.getElementById('offerta_id').value;
+            const dati = {
+                id: idEsistente || ('off-' + Date.now()),
+                titolo: document.getElementById('offerta_titolo').value,
+                tipo: document.getElementById('offerta_tipo').value,
+                sconto: document.getElementById('offerta_sconto').value,
+                stato: document.getElementById('offerta_stato').value,
+                data_inizio: document.getElementById('offerta_data_inizio').value,
+                data_fine: document.getElementById('offerta_data_fine').value,
+                descrizione: document.getElementById('offerta_descrizione').value,
+                condizioni: document.getElementById('offerta_condizioni').value,
+                messaggio: document.getElementById('offerta_messaggio').value,
+                data_creazione: idEsistente ? undefined : new Date().toISOString()
+            };
+            try {
+                const method = idEsistente ? 'PUT' : 'POST';
+                const url = idEsistente ? WORKER_URL + '/api/admin/offerte/' + idEsistente + '?token=' + encodeURIComponent(token) : WORKER_URL + '/api/admin/offerte?token=' + encodeURIComponent(token);
+                const response = await fetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati) });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Offerta salvata con successo!');
+                    pulisciFormOfferta();
+                    await caricaOfferte();
+                } else {
+                    alert('Errore: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Errore salvataggio offerta:', error);
+                alert('Errore di connessione.');
+            }
+        }
+
+        function modificaOfferta(id) {
+            const offerta = offerteDisponibili.find(function(o) { return o.id === id; });
+            if (!offerta) { alert('Offerta non trovata'); return; }
+            document.getElementById('offerta_id').value = offerta.id;
+            document.getElementById('offerta_titolo').value = offerta.titolo || '';
+            document.getElementById('offerta_tipo').value = offerta.tipo || '';
+            document.getElementById('offerta_sconto').value = offerta.sconto || '';
+            document.getElementById('offerta_stato').value = offerta.stato || 'bozza';
+            document.getElementById('offerta_data_inizio').value = offerta.data_inizio || '';
+            document.getElementById('offerta_data_fine').value = offerta.data_fine || '';
+            document.getElementById('offerta_descrizione').value = offerta.descrizione || '';
+            document.getElementById('offerta_condizioni').value = offerta.condizioni || '';
+            document.getElementById('offerta_messaggio').value = offerta.messaggio || '';
+            document.getElementById('btn-salva-offerta').textContent = 'AGGIORNA OFFERTA';
+            window.scrollTo({ top: document.getElementById('form-offerta').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        function duplicaOfferta(id) {
+            const offerta = offerteDisponibili.find(function(o) { return o.id === id; });
+            if (!offerta) { alert('Offerta non trovata'); return; }
+            document.getElementById('offerta_id').value = '';
+            document.getElementById('offerta_titolo').value = (offerta.titolo || '') + ' (copia)';
+            document.getElementById('offerta_tipo').value = offerta.tipo || '';
+            document.getElementById('offerta_sconto').value = offerta.sconto || '';
+            document.getElementById('offerta_stato').value = 'bozza';
+            document.getElementById('offerta_data_inizio').value = '';
+            document.getElementById('offerta_data_fine').value = '';
+            document.getElementById('offerta_descrizione').value = offerta.descrizione || '';
+            document.getElementById('offerta_condizioni').value = offerta.condizioni || '';
+            document.getElementById('offerta_messaggio').value = offerta.messaggio || '';
+            document.getElementById('btn-salva-offerta').textContent = 'SALVA OFFERTA';
+            window.scrollTo({ top: document.getElementById('form-offerta').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        async function eliminaOfferta(id) {
+            if (!confirm('Eliminare questa offerta?')) return;
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/offerte/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
+                const result = await response.json();
+                if (result.success) { alert('Offerta eliminata.'); await caricaOfferte(); }
+                else { alert('Errore: ' + result.error); }
+            } catch (error) { console.error('Errore eliminazione:', error); }
+        }
+
+        function pulisciFormOfferta() {
+            document.getElementById('form-offerta').reset();
+            document.getElementById('offerta_id').value = '';
+            document.getElementById('btn-salva-offerta').textContent = 'SALVA OFFERTA';
+        }
+
+        function apriWhatsApp(studioId, studioNome, studioTelefono) {
+            studioWhatsAppCorrente = { id: studioId, nome: studioNome, telefono: studioTelefono };
+            document.getElementById('wa-studio-nome').textContent = studioNome || '-';
+            document.getElementById('wa-studio-telefono').textContent = studioTelefono || '-';
+            
+            const select = document.getElementById('wa-offerta-select');
+            select.innerHTML = '<option value="">-- Seleziona un\'offerta --</option>';
+            offerteDisponibili.filter(function(o) { return o.stato === 'attiva'; }).forEach(function(o) {
+                const option = document.createElement('option');
+                option.value = o.id;
+                option.textContent = o.titolo + ' - ' + (o.tipo || '');
+                select.appendChild(option);
+            });
+            
+            document.getElementById('wa-messaggio').value = '';
+            document.getElementById('wa-anteprima').textContent = 'Seleziona un\'offerta per vedere l\'anteprima...';
+            document.getElementById('modal-whatsapp').classList.add('active');
+        }
+
+        function aggiornaAnteprimaWhatsApp() {
+            const offertaId = document.getElementById('wa-offerta-select').value;
+            if (!offertaId || !studioWhatsAppCorrente) return;
+            
+            const offerta = offerteDisponibili.find(function(o) { return o.id === offertaId; });
+            if (!offerta) return;
+            
+            let messaggio = offerta.messaggio || '';
+            messaggio = messaggio.replace(/\[NOME_STUDIO\]/g, studioWhatsAppCorrente.nome || 'Studio');
+            messaggio = messaggio.replace(/\[TITOLO_OFFERTA\]/g, offerta.titolo || '');
+            messaggio = messaggio.replace(/\[DESCRIZIONE\]/g, offerta.descrizione || '');
+            messaggio = messaggio.replace(/\[SCONTO\]/g, offerta.sconto || '');
+            
+            document.getElementById('wa-messaggio').value = messaggio;
+            document.getElementById('wa-anteprima').textContent = messaggio;
+        }
+
+        function inviaWhatsApp() {
+            const messaggio = document.getElementById('wa-messaggio').value;
+            if (!messaggio) { alert('Inserisci un messaggio'); return; }
+            
+            let telefono = studioWhatsAppCorrente.telefono || '';
+            telefono = telefono.replace(/\s+/g, '').replace(/\+/g, '');
+            if (!telefono) {
+                telefono = prompt('Numero telefono non trovato. Inserisci il numero WhatsApp (con prefisso internazionale, es. 393331234567):');
+                if (!telefono) return;
+            }
+            
+            const url = 'https://wa.me/' + telefono + '?text=' + encodeURIComponent(messaggio);
+            window.open(url, '_blank');
+            chiudiModalWhatsApp();
+        }
+
+        function chiudiModalWhatsApp() {
+            document.getElementById('modal-whatsapp').classList.remove('active');
+            studioWhatsAppCorrente = null;
+        }
+
         async function caricaTema() {
             try {
                 const response = await fetch(WORKER_URL + '/api/admin/tema?token=' + encodeURIComponent(token));
@@ -636,6 +939,7 @@
 
         document.getElementById('modal-scheda-studio')?.addEventListener('click', function(e) { if (e.target === this) chiudiModalScheda(); });
         document.getElementById('modal-notifica')?.addEventListener('click', function(e) { if (e.target === this) chiudiModalNotifica(); });
+        document.getElementById('modal-whatsapp')?.addEventListener('click', function(e) { if (e.target === this) chiudiModalWhatsApp(); });
     </script>
 </body>
 </html>
