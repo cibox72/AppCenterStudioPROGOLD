@@ -189,7 +189,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             token = urlParams.get('token');
-            if (!token) { alert('Token non trovato. Effettua il login.'); window.location.href = 'index.html'; return; }
+            if (!token) { 
+                alert('Token non trovato. Effettua il login.'); 
+                window.location.href = 'index.html'; 
+                return; 
+            }
             caricaServizi();
         });
 
@@ -200,6 +204,9 @@
         async function caricaServizi() {
             try {
                 const response = await fetch(WORKER_URL + '/api/studio/servizi?token=' + encodeURIComponent(token));
+                if (!response.ok) {
+                    throw new Error('HTTP error! status: ' + response.status);
+                }
                 const data = await response.json();
                 
                 document.getElementById('loading-servizi').style.display = 'none';
@@ -249,7 +256,7 @@
                 }
             } catch (error) {
                 console.error('Errore caricamento servizi:', error);
-                document.getElementById('loading-servizi').innerHTML = '<p style="color: #e74c3c;">Errore di connessione al server</p>';
+                document.getElementById('loading-servizi').innerHTML = '<p style="color: #e74c3c;">Errore di connessione al server: ' + error.message + '</p>';
             }
         }
 
