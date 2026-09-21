@@ -29,21 +29,23 @@
         .stat-icon { width: 50px; height: 50px; background: linear-gradient(135deg, #d4af37, #996515); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 1.2em; font-weight: 700; }
         .stat-info h3 { color: #000000; font-size: 1.8em; margin-bottom: 5px; }
         .stat-info p { color: #666666; font-size: 0.9em; }
-        .section { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .section { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; border-top: 4px solid #d4af37; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
         .section-header h3 { color: #000000; font-size: 1.2em; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th { background: #d4af37; color: #ffffff; font-weight: 600; padding: 12px; text-align: left; }
         td { padding: 12px; text-align: left; border-bottom: 1px solid #d5d8dc; color: #000000; background: #ffffff; }
         tr:hover td { background: #fff9e6; }
-        .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; }
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; display: inline-block; }
         .badge-attivo { background: #d5f5e3; color: #1e8449; }
         .badge-trial { background: #fdebd0; color: #d35400; }
         .badge-scaduto { background: #fadbd8; color: #c0392b; }
-        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9em; }
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9em; display: inline-flex; align-items: center; gap: 8px; }
         .btn-primary { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; }
         .btn-outline { background: transparent; border: 2px solid #d4af37; color: #996515; }
-        .btn-whatsapp { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; }
+        .btn-outline:hover { background: #fff9e6; }
+        .btn-danger { background: linear-gradient(135deg, #f1948a, #e74c3c); color: #ffffff; }
+        .btn-success { background: linear-gradient(135deg, #58d68d, #28b463); color: #ffffff; }
         .btn-sm { padding: 6px 12px; font-size: 0.8em; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .form-group { margin-bottom: 18px; }
@@ -64,21 +66,29 @@
         .footer-branding strong { color: #996515; }
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
         .modal-overlay.active { display: flex; }
-        .modal-content { background: #ffffff; padding: 40px; border-radius: 15px; max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto; border-top: 5px solid #d4af37; }
+        .modal-content { background: #ffffff; padding: 40px; border-radius: 15px; max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto; border-top: 5px solid #d4af37; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #fff9e6; }
         .modal-header h2 { color: #000000; font-size: 1.4em; }
         .close-modal { background: none; border: none; font-size: 1.8em; cursor: pointer; color: #666666; }
-        .scheda-dettaglio { background: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #d5d8dc; }
-        .scheda-riga { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #d5d8dc; }
+        .close-modal:hover { color: #c0392b; }
+        .scheda-riga { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #d5d8dc; flex-wrap: wrap; gap: 10px; }
         .scheda-riga:last-child { border-bottom: none; }
-        .scheda-riga label { color: #666666; font-weight: 600; font-size: 0.9em; }
-        .scheda-riga span { color: #000000; font-weight: 600; }
+        .scheda-riga label { color: #666666; font-weight: 600; font-size: 0.9em; min-width: 200px; }
+        .scheda-riga span { color: #000000; font-weight: 600; flex: 1; word-break: break-word; }
+        .scheda-sezione { margin-bottom: 25px; }
+        .scheda-sezione h4 { color: #000000; font-size: 1.1em; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #d4af37; }
         .info-box { background: #fff9e6; padding: 15px; border-radius: 8px; border-left: 4px solid #d4af37; margin-bottom: 20px; }
-        .message-preview { background: #fff9e6; padding: 15px; border-radius: 8px; border-left: 4px solid #d4af37; margin: 20px 0; }
-        .message-preview h4 { color: #000000; margin-bottom: 10px; }
-        .message-preview p { color: #000000; white-space: pre-wrap; font-family: monospace; font-size: 0.9em; }
+        .info-box strong { color: #000000; }
+        .info-box p { color: #000000; font-size: 0.9em; margin-top: 5px; }
+        .notification-item { background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #d4af37; transition: all 0.3s ease; }
+        .notification-item:hover { border-color: #d4af37; background: #fff9e6; }
+        .notification-item.unread { border-left: 4px solid #996515; background: #fff9e6; }
+        .notification-item h4 { color: #000000; margin-bottom: 10px; font-size: 1.1em; }
+        .notification-item p { color: #000000; margin-bottom: 10px; line-height: 1.5; }
+        .notification-item small { color: #666666; font-size: 0.85em; }
+        .notification-actions { display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
         .actions-cell { display: flex; gap: 8px; flex-wrap: wrap; }
-        @media (max-width: 768px) { .form-grid, .stats-grid { grid-template-columns: 1fr; } .section-header { flex-direction: column; align-items: flex-start; gap: 15px; } .modal-content { padding: 25px; } .actions-cell { flex-direction: column; } }
+        @media (max-width: 768px) { .form-grid, .stats-grid { grid-template-columns: 1fr; } .section-header { flex-direction: column; align-items: flex-start; gap: 15px; } .modal-content { padding: 25px; } .actions-cell { flex-direction: column; } .scheda-riga { flex-direction: column; } .scheda-riga label { min-width: auto; } }
     </style>
 </head>
 <body>
@@ -119,7 +129,7 @@
         </div>
 
         <!-- ============================================ -->
-        <!-- SEZIONE 4: TAB ELENCO STUDI (TABELLA SEMPLIFICATA) -->
+        <!-- SEZIONE 4: TAB ELENCO STUDI -->
         <!-- ============================================ -->
         <div id="tab-studi" class="tab-content active">
             <div class="section">
@@ -135,6 +145,7 @@
                                 <th>ID Studio</th>
                                 <th>Nome</th>
                                 <th>Telefono</th>
+                                <th>Stato</th>
                                 <th>Azioni</th>
                             </tr>
                         </thead>
@@ -171,7 +182,21 @@
                     <p style="color: #666666;">Visualizza studi con scheda anagrafica completata</p>
                 </div>
                 <div id="loading-archivio" class="loading"><div class="spinner"></div><p>Caricamento archivio...</p></div>
-                <div id="lista-archivio"></div>
+                <div id="tabella-archivio" style="display: none; overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID Studio</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefono</th>
+                                <th>P.IVA</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-archivio"></tbody>
+                    </table>
+                </div>
                 <div id="empty-archivio" class="empty-state" style="display: none;"><p>Nessuno studio archiviato.</p></div>
             </div>
         </div>
@@ -244,12 +269,11 @@
                 <strong>Nome:</strong> <span id="scheda-nome"></span>
             </div>
 
-            <div class="scheda-dettaglio" id="scheda-dettagli">
+            <div id="scheda-dettagli">
                 <!-- Popolato dinamicamente -->
             </div>
 
             <div style="display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
-                <button class="btn btn-whatsapp" onclick="apriModalWhatsAppDaScheda()" style="flex: 1;">WhatsApp</button>
                 <button class="btn btn-primary" onclick="stampaScheda()" style="flex: 1;">Stampa Scheda</button>
                 <button class="btn btn-outline" onclick="chiudiModalScheda()" style="flex: 1;">Chiudi</button>
             </div>
@@ -257,39 +281,23 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 10: MODALE WHATSAPP -->
+    <!-- SEZIONE 10: MODALE DETTAGLIO NOTIFICA -->
     <!-- ============================================ -->
-    <div id="modal-whatsapp" class="modal-overlay">
+    <div id="modal-notifica" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Invia Messaggio WhatsApp</h2>
-                <button class="close-modal" onclick="chiudiModalWhatsApp()">x</button>
+                <h2>Dettaglio Notifica</h2>
+                <button class="close-modal" onclick="chiudiModalNotifica()">x</button>
             </div>
             
-            <div class="info-box">
-                <strong>Studio:</strong> <span id="wa-studio-nome"></span><br>
-                <strong>ID:</strong> <span id="wa-studio-id"></span> | <strong>Password:</strong> <span id="wa-studio-password"></span>
+            <div id="notifica-dettagli">
+                <!-- Popolato dinamicamente -->
             </div>
 
-            <div class="form-group">
-                <label>Numero WhatsApp del cliente (con prefisso)</label>
-                <input type="tel" id="wa-telefono" placeholder="Es. 393331234567" autocomplete="off" value="">
-                <small style="color: #666666;">Inserisci il numero con prefisso internazionale (es. 39 per Italia)</small>
-            </div>
-
-            <div class="form-group">
-                <label>Messaggio Personalizzato (opzionale)</label>
-                <textarea id="wa-messaggio-personale" rows="4" placeholder="Aggiungi un messaggio personalizzato, offerte speciali, ecc..." autocomplete="off"></textarea>
-            </div>
-
-            <div class="message-preview">
-                <h4>Anteprima Messaggio:</h4>
-                <p id="wa-anteprima"></p>
-            </div>
-
-            <div style="display: flex; gap: 15px; margin-top: 25px;">
-                <button class="btn btn-whatsapp" onclick="inviaWhatsApp()" style="flex: 1;">APRI WHATSAPP WEB</button>
-                <button class="btn btn-outline" onclick="chiudiModalWhatsApp()" style="flex: 1;">ANNULLA</button>
+            <div style="display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
+                <button class="btn btn-success" onclick="segnaNotificaLettaCorrente()" style="flex: 1;">Segna come Letta</button>
+                <button class="btn btn-outline" onclick="archiviaNotificaCorrente()" style="flex: 1;">Archivia</button>
+                <button class="btn btn-outline" onclick="chiudiModalNotifica()" style="flex: 1;">Chiudi</button>
             </div>
         </div>
     </div>
@@ -303,8 +311,8 @@
     <!-- ============================================ -->
     <script>
         var token = '';
-        var studioCorrenteWhatsApp = null;
         var studioCorrenteScheda = null;
+        var notificaCorrente = null;
         var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -335,13 +343,15 @@
                     const tbody = document.getElementById('tbody-studi');
                     tbody.innerHTML = '';
                     data.studi.forEach(function(studio) {
+                        const stato = studio.stato_abbonamento || 'Attivo';
+                        const statoClass = 'badge-' + stato.toLowerCase();
                         tbody.innerHTML += '<tr>' +
                             '<td><strong>' + studio.id + '</strong></td>' +
                             '<td>' + (studio.nome || '-') + '</td>' +
                             '<td>' + (studio.telefono || '-') + '</td>' +
+                            '<td><span class="badge ' + statoClass + '">' + stato + '</span></td>' +
                             '<td class="actions-cell">' +
                                 '<button class="btn btn-sm btn-primary" onclick="apriSchedaCompleta(\'' + studio.id + '\')">Vedi Scheda</button>' +
-                                '<button class="btn btn-sm btn-whatsapp" onclick="apriModalWhatsApp(\'' + studio.id + '\', \'' + (studio.nome || '').replace(/'/g, "\\'") + '\', \'' + (studio.password_plain || '') + '\')">WhatsApp</button>' +
                             '</td>' +
                         '</tr>';
                     });
@@ -369,23 +379,62 @@
                     
                     const dettagli = document.getElementById('scheda-dettagli');
                     dettagli.innerHTML = '' +
-                        '<div class="scheda-riga"><label>Email</label><span>' + (s.email || '-') + '</span></div>' +
-                        '<div class="scheda-riga"><label>Telefono</label><span>' + (s.telefono || '-') + '</span></div>' +
-                        '<div class="scheda-riga"><label>Password</label><span>' + (s.password_plain || 'Nascosta') + '</span></div>' +
-                        '<div class="scheda-riga"><label>Partita IVA</label><span>' + (s.piva || '-') + '</span></div>' +
-                        '<div class="scheda-riga"><label>Indirizzo</label><span>' + (s.indirizzo || '-') + '</span></div>' +
-                        '<div class="scheda-riga"><label>Citta</label><span>' + (s.citta || '-') + '</span></div>' +
-                        '<div class="scheda-riga"><label>Provincia</label><span>' + (s.stato || '-') + '</span></div>' +
-                        '<div class="scheda-riga"><label>Stato Abbonamento</label><span>' + (s.stato_abbonamento || '-') + '</span></div>' +
-                        '<div class="scheda-riga"><label>Scadenza</label><span>' + (s.scadenza ? new Date(s.scadenza).toLocaleDateString('it-IT') : '-') + '</span></div>' +
-                        '<div class="scheda-riga"><label>Data Registrazione</label><span>' + (s.data_registrazione ? new Date(s.data_registrazione).toLocaleDateString('it-IT') : '-') + '</span></div>' +
-                        '<div class="scheda-riga"><label>Attivo</label><span>' + (s.attivo === 1 ? 'Si' : 'No') + '</span></div>';
+                        '<div class="scheda-sezione">' +
+                            '<h4>Dati Aziendali</h4>' +
+                            '<div class="scheda-riga"><label>Email</label><span>' + (s.email || '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Telefono</label><span>' + (s.telefono || '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Password</label><span>' + (s.password_plain || 'Nascosta') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Partita IVA</label><span>' + (s.piva || '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>PEC</label><span>' + (s.pec || '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Codice SDI</label><span>' + (s.sdi || '-') + '</span></div>' +
+                        '</div>' +
+                        '<div class="scheda-sezione">' +
+                            '<h4>Indirizzo Sede Legale</h4>' +
+                            '<div class="scheda-riga"><label>Indirizzo</label><span>' + (s.indirizzo || '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>CAP</label><span>' + (s.cap || '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Citta</label><span>' + (s.citta || '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Provincia</label><span>' + (s.provincia || s.stato || '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Stato</label><span>' + (s.stato || 'Italia') + '</span></div>' +
+                        '</div>' +
+                        '<div class="scheda-sezione">' +
+                            '<h4>Rappresentante Legale</h4>' +
+                            '<div class="scheda-riga"><label>Nome e Cognome</label><span>' + (s.rappresentante_nome || s.legale || '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Codice Fiscale</label><span>' + (s.rappresentante_cf || s.cf_legale || '-') + '</span></div>' +
+                        '</div>' +
+                        '<div class="scheda-sezione">' +
+                            '<h4>Dati Bancari</h4>' +
+                            '<div class="scheda-riga"><label>IBAN</label><span>' + (s.iban || '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Intestato a</label><span>' + (s.iban_intestato || '-') + '</span></div>' +
+                        '</div>' +
+                        '<div class="scheda-sezione">' +
+                            '<h4>Abbonamento</h4>' +
+                            '<div class="scheda-riga"><label>Stato Abbonamento</label><span>' + (s.stato_abbonamento || '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Scadenza</label><span>' + (s.scadenza ? new Date(s.scadenza).toLocaleDateString('it-IT') : '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Attivo</label><span>' + (s.attivo === 1 ? 'Si' : 'No') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Data Registrazione</label><span>' + (s.data_registrazione ? new Date(s.data_registrazione).toLocaleDateString('it-IT') : '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Scheda Completata</label><span>' + (s.scheda_completata === 1 ? 'Si' : 'No') + '</span></div>' +
+                        '</div>' +
+                        '<div class="scheda-sezione">' +
+                            '<h4>Messaggi Automatici</h4>' +
+                            '<div class="scheda-riga"><label>Messaggio Benvenuto</label><span>' + (s.msg_benvenuto || '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Messaggio Ringraziamento</label><span>' + (s.msg_ringraziamento || '-') + '</span></div>' +
+                        '</div>' +
+                        '<div class="scheda-sezione">' +
+                            '<h4>Link e Social</h4>' +
+                            '<div class="scheda-riga"><label>Sito Web</label><span>' + (s.website || s.link_sito || '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Facebook</label><span>' + (s.link_facebook || '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Instagram</label><span>' + (s.link_instagram || '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>Portfolio</label><span>' + (s.link_portfolio || '-') + '</span></div>' +
+                            '<div class="scheda-riga"><label>QR Code</label><span>' + (s.link_qrcode || '-') + '</span></div>' +
+                        '</div>';
                     
                     document.getElementById('modal-scheda-studio').classList.add('active');
+                } else {
+                    alert('Errore: ' + (data.error || 'Studio non trovato'));
                 }
             } catch (error) {
                 console.error('Errore caricamento scheda:', error);
-                alert('Errore nel caricamento della scheda');
+                alert('Errore di connessione: ' + error.message);
             }
         }
 
@@ -399,49 +448,6 @@
             window.print();
         }
 
-        function apriModalWhatsAppDaScheda() {
-            if (!studioCorrenteScheda) return;
-            apriModalWhatsApp(studioCorrenteScheda.id, studioCorrenteScheda.nome || '', studioCorrenteScheda.password_plain || '');
-            chiudiModalScheda();
-        }
-
-        function apriModalWhatsApp(studioId, studioNome, password) {
-            studioCorrenteWhatsApp = { id: studioId, nome: studioNome, password: password };
-            document.getElementById('wa-studio-nome').textContent = studioNome;
-            document.getElementById('wa-studio-id').textContent = studioId;
-            document.getElementById('wa-studio-password').textContent = password;
-            document.getElementById('wa-telefono').value = '';
-            document.getElementById('wa-messaggio-personale').value = '';
-            aggiornaAnteprimaWhatsApp();
-            document.getElementById('modal-whatsapp').classList.add('active');
-        }
-
-        function chiudiModalWhatsApp() {
-            document.getElementById('modal-whatsapp').classList.remove('active');
-            studioCorrenteWhatsApp = null;
-        }
-
-        document.getElementById('wa-telefono')?.addEventListener('input', aggiornaAnteprimaWhatsApp);
-        document.getElementById('wa-messaggio-personale')?.addEventListener('input', aggiornaAnteprimaWhatsApp);
-
-        function aggiornaAnteprimaWhatsApp() {
-            if (!studioCorrenteWhatsApp) return;
-            const messaggioPersonalizzato = document.getElementById('wa-messaggio-personale').value;
-            const messaggioBase = 'Ciao ' + studioCorrenteWhatsApp.nome + '!\n\nBenvenuto in AppCenterStudioPROGOLD!\n\nEcco le tue credenziali di accesso:\n- ID Studio: ' + studioCorrenteWhatsApp.id + '\n- Password: ' + studioCorrenteWhatsApp.password + '\n- Link app: https://cibox72.github.io/AppCenterStudioPROGOLD/\n\nHai 30 giorni di prova gratuita per testare il software.\n\n' + (messaggioPersonalizzato ? messaggioPersonalizzato + '\n\n' : '') + 'Per informazioni sull\'abbonamento annuale e offerte personalizzate, contatta il numero 3447507656.\n\nBuon lavoro!';
-            document.getElementById('wa-anteprima').textContent = messaggioBase;
-        }
-
-        function inviaWhatsApp() {
-            if (!studioCorrenteWhatsApp) return;
-            const telefono = document.getElementById('wa-telefono').value.trim();
-            if (!telefono) { alert('Inserisci il numero WhatsApp del cliente'); return; }
-            const messaggioPersonalizzato = document.getElementById('wa-messaggio-personale').value;
-            const messaggio = 'Ciao ' + studioCorrenteWhatsApp.nome + '!\n\nBenvenuto in AppCenterStudioPROGOLD!\n\nEcco le tue credenziali di accesso:\n- ID Studio: ' + studioCorrenteWhatsApp.id + '\n- Password: ' + studioCorrenteWhatsApp.password + '\n- Link app: https://cibox72.github.io/AppCenterStudioPROGOLD/\n\nHai 30 giorni di prova gratuita per testare il software.\n\n' + (messaggioPersonalizzato ? messaggioPersonalizzato + '\n\n' : '') + 'Per informazioni sull\'abbonamento annuale e offerte personalizzate, contatta il numero 3447507656.\n\nBuon lavoro!';
-            const whatsappUrl = 'https://web.whatsapp.com/send?phone=' + telefono + '&text=' + encodeURIComponent(messaggio);
-            window.open(whatsappUrl, '_blank');
-            chiudiModalWhatsApp();
-        }
-
         async function caricaNotifiche() {
             try {
                 const response = await fetch(WORKER_URL + '/api/admin/notifiche?token=' + encodeURIComponent(token));
@@ -453,7 +459,17 @@
                     lista.innerHTML = '';
                     data.notifiche.forEach(function(notif) {
                         const unreadClass = notif.letto === 0 ? 'unread' : '';
-                        lista.innerHTML += '<div class="notification-item ' + unreadClass + '"><h4>' + notif.titolo + '</h4><p>' + notif.messaggio + '</p><small>' + new Date(notif.data_creazione).toLocaleString('it-IT') + '</small><div style="margin-top: 10px;"><button class="btn btn-sm btn-outline" onclick="segnaLetta(\'' + notif.id + '\')">Segna come letta</button> <button class="btn btn-sm btn-primary" onclick="archiviaNotifica(\'' + notif.id + '\')">Archivia</button></div></div>';
+                        const div = document.createElement('div');
+                        div.className = 'notification-item ' + unreadClass;
+                        div.innerHTML = '<h4>' + (notif.titolo || 'Notifica') + '</h4>' +
+                            '<p>' + (notif.messaggio || '') + '</p>' +
+                            '<small>' + new Date(notif.data_creazione).toLocaleString('it-IT') + '</small>' +
+                            '<div class="notification-actions">' +
+                                '<button class="btn btn-sm btn-primary" onclick="apriDettaglioNotifica(\'' + notif.id + '\')">Leggi Notifica</button>' +
+                                '<button class="btn btn-sm btn-outline" onclick="segnaLetta(\'' + notif.id + '\')">Segna come letta</button>' +
+                                '<button class="btn btn-sm btn-outline" onclick="archiviaNotifica(\'' + notif.id + '\')">Archivia</button>' +
+                            '</div>';
+                        lista.appendChild(div);
                     });
                 } else {
                     document.getElementById('empty-notifiche').style.display = 'block';
@@ -465,6 +481,90 @@
             }
         }
 
+        async function apriDettaglioNotifica(id) {
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                
+                if (data.success && data.notifica) {
+                    const n = data.notifica;
+                    notificaCorrente = n;
+                    
+                    const dettagli = document.getElementById('notifica-dettagli');
+                    let datiHtml = '';
+                    try {
+                        const dati = JSON.parse(n.dati || '{}');
+                        if (Object.keys(dati).length > 0) {
+                            datiHtml = '<div class="scheda-sezione"><h4>Dati Associati</h4>';
+                            for (const key in dati) {
+                                datiHtml += '<div class="scheda-riga"><label>' + key + '</label><span>' + (typeof dati[key] === 'object' ? JSON.stringify(dati[key]) : dati[key]) + '</span></div>';
+                            }
+                            datiHtml += '</div>';
+                        }
+                    } catch (e) {}
+                    
+                    dettagli.innerHTML = '' +
+                        '<div class="info-box">' +
+                            '<strong>Tipo:</strong> ' + (n.tipo || '-') + '<br>' +
+                            '<strong>Data:</strong> ' + new Date(n.data_creazione).toLocaleString('it-IT') + '<br>' +
+                            '<strong>Stato:</strong> ' + (n.letto === 1 ? 'Letta' : 'Non letta') +
+                        '</div>' +
+                        '<div class="scheda-sezione">' +
+                            '<h4>Titolo</h4>' +
+                            '<p style="color: #000000; font-weight: 600;">' + (n.titolo || '-') + '</p>' +
+                        '</div>' +
+                        '<div class="scheda-sezione">' +
+                            '<h4>Messaggio</h4>' +
+                            '<p style="color: #000000; line-height: 1.6;">' + (n.messaggio || '-') + '</p>' +
+                        '</div>' +
+                        datiHtml;
+                    
+                    document.getElementById('modal-notifica').classList.add('active');
+                    
+                    if (n.letto === 0) {
+                        await segnaLetta(id);
+                    }
+                } else {
+                    alert('Errore: ' + (data.error || 'Notifica non trovata'));
+                }
+            } catch (error) {
+                console.error('Errore caricamento notifica:', error);
+                alert('Errore di connessione: ' + error.message);
+            }
+        }
+
+        function chiudiModalNotifica() {
+            document.getElementById('modal-notifica').classList.remove('active');
+            notificaCorrente = null;
+        }
+
+        async function segnaNotificaLettaCorrente() {
+            if (!notificaCorrente) return;
+            await segnaLetta(notificaCorrente.id);
+            chiudiModalNotifica();
+        }
+
+        async function archiviaNotificaCorrente() {
+            if (!notificaCorrente) return;
+            await archiviaNotifica(notificaCorrente.id);
+            chiudiModalNotifica();
+        }
+
+        async function segnaLetta(id) {
+            try { await fetch(WORKER_URL + '/api/admin/notifica/letta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: id }) }); caricaNotifiche(); } 
+            catch (error) { console.error('Errore segna letta:', error); }
+        }
+
+        async function segnaTutteLetture() {
+            try { await fetch(WORKER_URL + '/api/admin/notifiche/lette', { method: 'POST', headers: { 'Content-Type': 'application/json' } }); caricaNotifiche(); } 
+            catch (error) { console.error('Errore segna tutte lette:', error); }
+        }
+
+        async function archiviaNotifica(id) {
+            try { await fetch(WORKER_URL + '/api/admin/archivia-notifica', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ notifica_id: id }) }); caricaNotifiche(); } 
+            catch (error) { console.error('Errore archivia notifica:', error); }
+        }
+
         async function caricaArchivio() {
             try {
                 const response = await fetch(WORKER_URL + '/api/admin/archivio-studi?token=' + encodeURIComponent(token));
@@ -472,12 +572,20 @@
                 document.getElementById('loading-archivio').style.display = 'none';
                 if (data.success && data.studi.length > 0) {
                     document.getElementById('count-archivio').textContent = data.studi.length;
-                    const lista = document.getElementById('lista-archivio');
-                    lista.innerHTML = '<div style="overflow-x: auto;"><table><thead><tr><th>ID Studio</th><th>Nome</th><th>Email</th><th>P.IVA</th><th>Telefono</th><th>Azioni</th></tr></thead><tbody>';
+                    document.getElementById('tabella-archivio').style.display = 'block';
+                    document.getElementById('empty-archivio').style.display = 'none';
+                    const tbody = document.getElementById('tbody-archivio');
+                    tbody.innerHTML = '';
                     data.studi.forEach(function(studio) {
-                        lista.innerHTML += '<tr><td><strong>' + studio.id + '</strong></td><td>' + (studio.nome || '-') + '</td><td>' + (studio.email || '-') + '</td><td>' + (studio.piva || '-') + '</td><td>' + (studio.telefono || '-') + '</td><td><button class="btn btn-sm btn-primary" onclick="apriSchedaCompleta(\'' + studio.id + '\')">Visualizza Scheda</button></td></tr>';
+                        tbody.innerHTML += '<tr>' +
+                            '<td><strong>' + studio.id + '</strong></td>' +
+                            '<td>' + (studio.nome || '-') + '</td>' +
+                            '<td>' + (studio.email || '-') + '</td>' +
+                            '<td>' + (studio.telefono || '-') + '</td>' +
+                            '<td>' + (studio.piva || '-') + '</td>' +
+                            '<td class="actions-cell"><button class="btn btn-sm btn-primary" onclick="apriSchedaCompleta(\'' + studio.id + '\')">Visualizza Scheda</button></td>' +
+                        '</tr>';
                     });
-                    lista.innerHTML += '</tbody></table></div>';
                 } else {
                     document.getElementById('empty-archivio').style.display = 'block';
                     document.getElementById('count-archivio').textContent = '0';
@@ -496,21 +604,6 @@
                     document.getElementById('tema-attuale').innerHTML = '<p style="color: #000000; font-weight: 600;">Tema attuale: <span style="color: #996515;">' + data.tema.tema_attivo + '</span></p>';
                 }
             } catch (error) { console.error('Errore caricamento tema:', error); }
-        }
-
-        async function segnaLetta(id) {
-            try { await fetch(WORKER_URL + '/api/admin/notifica/letta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: id }) }); caricaNotifiche(); } 
-            catch (error) { console.error('Errore segna letta:', error); }
-        }
-
-        async function segnaTutteLetture() {
-            try { await fetch(WORKER_URL + '/api/admin/notifiche/lette', { method: 'POST', headers: { 'Content-Type': 'application/json' } }); caricaNotifiche(); } 
-            catch (error) { console.error('Errore segna tutte lette:', error); }
-        }
-
-        async function archiviaNotifica(id) {
-            try { await fetch(WORKER_URL + '/api/admin/archivia-notifica', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ notifica_id: id }) }); caricaNotifiche(); } 
-            catch (error) { console.error('Errore archivia notifica:', error); }
         }
 
         function togglePassword() {
@@ -542,7 +635,7 @@
         }
 
         document.getElementById('modal-scheda-studio')?.addEventListener('click', function(e) { if (e.target === this) chiudiModalScheda(); });
-        document.getElementById('modal-whatsapp')?.addEventListener('click', function(e) { if (e.target === this) chiudiModalWhatsApp(); });
+        document.getElementById('modal-notifica')?.addEventListener('click', function(e) { if (e.target === this) chiudiModalNotifica(); });
     </script>
 </body>
 </html>
