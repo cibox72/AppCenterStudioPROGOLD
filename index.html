@@ -6,6 +6,10 @@
     <title>Login - AppCenterStudioPROGOLD</title>
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
+    
+    <!-- ============================================ -->
+    <!-- SEZIONE 1: CSS STYLES -->
+    <!-- ============================================ -->
     <style>
         * {
             margin: 0;
@@ -81,6 +85,31 @@
             outline: none;
             border-color: #d4af37;
             background: #ffffff;
+        }
+        
+        .password-wrapper {
+            position: relative;
+        }
+        
+        .password-wrapper input {
+            padding-right: 50px;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666666;
+            font-size: 1.2em;
+            padding: 5px;
+        }
+        
+        .toggle-password:hover {
+            color: #d4af37;
         }
         
         .btn {
@@ -270,6 +299,9 @@
     </style>
 </head>
 <body>
+    <!-- ============================================ -->
+    <!-- SEZIONE 2: HTML STRUCTURE - LOGIN FORM -->
+    <!-- ============================================ -->
     <div class="login-container">
         <div class="login-header">
             <h1>AppCenterStudioPROGOLD</h1>
@@ -297,7 +329,10 @@
 
             <div class="form-group">
                 <label>Password *</label>
-                <input type="password" id="password" required placeholder="Inserisci la password">
+                <div class="password-wrapper">
+                    <input type="password" id="password" required placeholder="Inserisci la password">
+                    <button type="button" class="toggle-password" onclick="togglePassword()">👁️</button>
+                </div>
             </div>
 
             <button type="submit" class="btn btn-primary">ACCEDI</button>
@@ -314,7 +349,9 @@
         </div>
     </div>
 
-    <!-- MODALE REGISTRAZIONE -->
+    <!-- ============================================ -->
+    <!-- SEZIONE 3: HTML STRUCTURE - MODALE REGISTRAZIONE -->
+    <!-- ============================================ -->
     <div id="modal-registrazione" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -364,7 +401,10 @@
                 
                 <div class="form-group">
                     <label>Password *</label>
-                    <input type="password" id="reg_password" required placeholder="Scegli una password">
+                    <div class="password-wrapper">
+                        <input type="password" id="reg_password" required placeholder="Scegli una password">
+                        <button type="button" class="toggle-password" onclick="toggleRegPassword()">👁️</button>
+                    </div>
                 </div>
                 
                 <div class="modal-actions">
@@ -375,6 +415,9 @@
         </div>
     </div>
 
+    <!-- ============================================ -->
+    <!-- SEZIONE 4: JAVASCRIPT FUNCTIONS -->
+    <!-- ============================================ -->
     <script>
         var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
 
@@ -438,6 +481,24 @@
                 mostraErrore('Errore di connessione. Riprova.');
                 document.getElementById('login-form').style.display = 'block';
                 document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function togglePassword() {
+            var passwordField = document.getElementById('password');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        }
+
+        function toggleRegPassword() {
+            var passwordField = document.getElementById('reg_password');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
             }
         }
 
