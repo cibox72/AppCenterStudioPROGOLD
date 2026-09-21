@@ -39,7 +39,10 @@
         .btn-outline:hover { background: #fff9e6; }
         .btn-danger { background: linear-gradient(135deg, #f1948a, #e74c3c); color: #ffffff; }
         .btn-success { background: linear-gradient(135deg, #58d68d, #28b463); color: #ffffff; }
+        .btn-warning { background: linear-gradient(135deg, #f9e79f, #f1c40f); color: #000000; }
         .btn-sm { padding: 6px 12px; font-size: 0.8em; }
+        .btn-maps { background: #ffffff; border: 2px solid #d4af37; color: #996515; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85em; }
+        .btn-maps:hover { background: #fff9e6; }
         .actions-bar { display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap; }
         .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
         .tab { padding: 12px 25px; background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; cursor: pointer; font-weight: 600; color: #000000; }
@@ -48,8 +51,8 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .sub-section { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #d5d8dc; }
-        .sub-section h4 { color: #000000; margin-bottom: 15px; font-size: 1.1em; border-bottom: 2px solid #d4af37; padding-bottom: 8px; }
-        .clienti-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .sub-section h4 { color: #000000; margin-bottom: 15px; font-size: 1.1em; border-bottom: 2px solid #d4af37; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .sub-section h4 .maps-btn { font-size: 0.8em; }
         .totals-box { background: linear-gradient(135deg, #fff9e6, #ffffff); padding: 20px; border-radius: 10px; border: 2px solid #d4af37; margin-top: 20px; }
         .totals-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #d5d8dc; font-size: 1em; }
         .totals-row:last-child { border-bottom: none; }
@@ -64,18 +67,20 @@
         .servizio-info h5 { color: #000000; margin-bottom: 3px; }
         .servizio-info p { color: #666666; font-size: 0.85em; }
         .servizio-prezzo { color: #996515; font-weight: 700; margin-right: 15px; }
-        .acconto-item, .piano-item { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
-        .acconto-item input, .piano-item input { flex: 1; }
+        .acconto-item, .piano-item { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+        .acconto-item input, .piano-item input { flex: 1; min-width: 120px; }
         .empty-state { text-align: center; padding: 40px; color: #666666; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th { background: #d4af37; color: #ffffff; font-weight: 600; padding: 12px; text-align: left; }
         td { padding: 12px; text-align: left; border-bottom: 1px solid #d5d8dc; color: #000000; background: #ffffff; }
         tr:hover td { background: #fff9e6; }
-        .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; }
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; display: inline-block; }
         .badge-bozza { background: #fdebd0; color: #d35400; }
         .badge-inviato { background: #d5f5e3; color: #1e8449; }
         .badge-accettato { background: #d4efdf; color: #1e8449; }
         .badge-rifiutato { background: #fadbd8; color: #c0392b; }
+        .badge-confermato { background: #d4efdf; color: #1e8449; }
+        .badge-da-confermare { background: #fdebd0; color: #d35400; }
         .footer-branding { text-align: center; padding: 30px 20px; color: #666666; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
         .footer-branding strong { color: #996515; }
         .loading { text-align: center; padding: 40px; color: #666666; }
@@ -83,7 +88,7 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
         .modal-overlay.active { display: flex; }
-        .modal-content { background: #ffffff; padding: 40px; border-radius: 15px; max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto; border-top: 5px solid #d4af37; }
+        .modal-content { background: #ffffff; padding: 40px; border-radius: 15px; max-width: 900px; width: 90%; max-height: 90vh; overflow-y: auto; border-top: 5px solid #d4af37; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #fff9e6; }
         .modal-header h2 { color: #000000; font-size: 1.4em; }
         .close-modal { background: none; border: none; font-size: 1.8em; cursor: pointer; color: #666666; }
@@ -95,7 +100,36 @@
         .servizio-select-item .price { color: #996515; font-weight: 700; font-size: 1.1em; }
         .checkbox-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
         .checkbox-wrapper input[type="checkbox"] { width: 20px; height: 20px; accent-color: #d4af37; }
-        @media (max-width: 768px) { .form-grid, .form-grid-2, .clienti-grid { grid-template-columns: 1fr; } .actions-bar { flex-direction: column; } .actions-bar .btn { width: 100%; justify-content: center; } }
+        .checkbox-wrapper label { margin: 0; font-weight: 600; }
+        .info-box { background: #fff9e6; padding: 15px; border-radius: 8px; border-left: 4px solid #d4af37; margin-bottom: 20px; }
+        .info-box strong { color: #000000; }
+        .info-box p { color: #000000; font-size: 0.9em; margin-top: 5px; }
+        
+        /* STILI PER STAMPA PDF */
+        .pdf-preview { display: none; }
+        @media print {
+            body * { visibility: hidden; }
+            #pdf-preview, #pdf-preview * { visibility: visible; }
+            #pdf-preview {
+                display: block;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 40px;
+                background: #ffffff;
+                color: #000000;
+            }
+            #pdf-preview .pdf-header { border-bottom: 3px solid #d4af37; padding-bottom: 20px; margin-bottom: 30px; }
+            #pdf-preview .pdf-header h1 { color: #000000; font-size: 2em; margin-bottom: 10px; }
+            #pdf-preview .pdf-header p { color: #666666; margin: 5px 0; }
+            #pdf-preview .pdf-section { margin-bottom: 25px; }
+            #pdf-preview .pdf-section h3 { color: #000000; border-bottom: 2px solid #d4af37; padding-bottom: 8px; margin-bottom: 15px; }
+            #pdf-preview .pdf-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #d5d8dc; }
+            #pdf-preview .pdf-total { font-size: 1.3em; font-weight: 700; color: #996515; border-top: 3px solid #d4af37; padding-top: 15px; margin-top: 15px; }
+        }
+        
+        @media (max-width: 768px) { .form-grid, .form-grid-2 { grid-template-columns: 1fr; } .actions-bar { flex-direction: column; } .actions-bar .btn { width: 100%; justify-content: center; } }
     </style>
 </head>
 <body>
@@ -154,7 +188,7 @@
 
                     <!-- ANAGRAFICA CLIENTE A -->
                     <div class="sub-section">
-                        <h4>Anagrafica Cliente A (Intestatario Principale)</h4>
+                        <h4>Anagrafica Cliente A (Intestatario Principale) <button type="button" class="btn-maps" onclick="apriMapsClienteA()">Maps</button></h4>
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>Nome *</label>
@@ -193,7 +227,7 @@
 
                     <!-- ANAGRAFICA CLIENTE B -->
                     <div class="sub-section">
-                        <h4>Anagrafica Cliente B (Secondo Intestatario)</h4>
+                        <h4>Anagrafica Cliente B (Secondo Intestatario) <button type="button" class="btn-maps" onclick="apriMapsClienteB()">Maps</button></h4>
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>Nome</label>
@@ -249,12 +283,18 @@
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label>Data Evento *</label>
+                                <input type="date" id="evento_data" required autocomplete="off" value="">
+                            </div>
+                            <div class="form-group">
                                 <label>Luogo Cerimonia</label>
                                 <input type="text" id="evento_luogo_cerimonia" placeholder="Chiesa, location..." autocomplete="off" value="">
+                                <button type="button" class="btn-maps" style="margin-top: 8px;" onclick="apriMapsCerimonia()">Maps</button>
                             </div>
-                            <div class="form-group" style="grid-column: 1 / -1;">
+                            <div class="form-group">
                                 <label>Luogo Ricevimento</label>
                                 <input type="text" id="evento_luogo_ricevimento" placeholder="Ristorante, villa..." autocomplete="off" value="">
+                                <button type="button" class="btn-maps" style="margin-top: 8px;" onclick="apriMapsRicevimento()">Maps</button>
                             </div>
                         </div>
                     </div>
@@ -287,9 +327,10 @@
                         <button type="button" class="btn btn-outline btn-sm" onclick="aggiungiAcconto()">+ Aggiungi Acconto</button>
                     </div>
 
-                    <!-- PIANO DI PAGAMENTO -->
+                    <!-- PIANO DI PAGAMENTO (solo promemoria) -->
                     <div class="sub-section">
                         <h4>Piano di Pagamento (Promemoria per il cliente)</h4>
+                        <p style="color: #666666; font-size: 0.85em; margin-bottom: 15px;">Questo e' un promemoria visivo per il cliente. Non influenza i totali.</p>
                         <div id="piano-list"></div>
                         <button type="button" class="btn btn-outline btn-sm" onclick="aggiungiPianoVoce()">+ Aggiungi Voce</button>
                     </div>
@@ -323,7 +364,7 @@
                         <h4>Accettazione e Note</h4>
                         <div class="checkbox-wrapper">
                             <input type="checkbox" id="prev_accettato">
-                            <label for="prev_accettato" style="margin: 0; font-weight: 600;">ACCETTATO E FIRMATO DAL CLIENTE</label>
+                            <label for="prev_accettato">ACCETTATO E FIRMATO DAL CLIENTE</label>
                         </div>
                         <div class="form-group" style="margin-top: 15px;">
                             <label>Note aggiuntive</label>
@@ -334,7 +375,7 @@
                     <!-- AZIONI -->
                     <div class="actions-bar">
                         <button type="submit" class="btn btn-primary">SALVA PREVENTIVO</button>
-                        <button type="button" class="btn btn-outline" onclick="generaPDF()">GENERAZIONE PDF</button>
+                        <button type="button" class="btn btn-outline" onclick="generaPDF()">STAMPA PDF</button>
                         <button type="button" class="btn btn-success" onclick="convertiInContratto()">CONVERTI IN CONTRATTO</button>
                     </div>
                 </form>
@@ -421,12 +462,64 @@
         </div>
     </div>
 
+    <!-- ============================================ -->
+    <!-- SEZIONE 9: ANTEPRIMA PDF -->
+    <!-- ============================================ -->
+    <div id="pdf-preview" class="pdf-preview">
+        <div class="pdf-header">
+            <h1 id="pdf-nome-studio">Nome Studio</h1>
+            <p id="pdf-indirizzo-studio"></p>
+            <p id="pdf-telefono-studio"></p>
+            <p id="pdf-email-studio"></p>
+        </div>
+        <div class="pdf-section">
+            <h3 id="pdf-titolo-doc">PREVENTIVO</h3>
+            <div class="pdf-row"><label>Numero:</label><span id="pdf-numero"></span></div>
+            <div class="pdf-row"><label>Data:</label><span id="pdf-data"></span></div>
+        </div>
+        <div class="pdf-section">
+            <h3>Cliente A</h3>
+            <div class="pdf-row"><label>Nome:</label><span id="pdf-cliente-a"></span></div>
+            <div class="pdf-row"><label>Indirizzo:</label><span id="pdf-cliente-a-indirizzo"></span></div>
+            <div class="pdf-row"><label>Telefono:</label><span id="pdf-cliente-a-tel"></span></div>
+            <div class="pdf-row"><label>Email:</label><span id="pdf-cliente-a-email"></span></div>
+        </div>
+        <div class="pdf-section">
+            <h3>Cliente B</h3>
+            <div class="pdf-row"><label>Nome:</label><span id="pdf-cliente-b"></span></div>
+            <div class="pdf-row"><label>Indirizzo:</label><span id="pdf-cliente-b-indirizzo"></span></div>
+        </div>
+        <div class="pdf-section">
+            <h3>Dettagli Evento</h3>
+            <div class="pdf-row"><label>Tipo:</label><span id="pdf-tipo"></span></div>
+            <div class="pdf-row"><label>Data Evento:</label><span id="pdf-data-evento"></span></div>
+            <div class="pdf-row"><label>Cerimonia:</label><span id="pdf-cerimonia"></span></div>
+            <div class="pdf-row"><label>Ricevimento:</label><span id="pdf-ricevimento"></span></div>
+        </div>
+        <div class="pdf-section">
+            <h3>Servizi</h3>
+            <div id="pdf-servizi-list"></div>
+        </div>
+        <div class="pdf-section">
+            <h3>Totali</h3>
+            <div class="pdf-row"><label>Totale servizi:</label><span id="pdf-totale-servizi"></span></div>
+            <div class="pdf-row"><label>Sconto:</label><span id="pdf-sconto"></span></div>
+            <div class="pdf-row pdf-total"><label>IMPORTO TOTALE:</label><span id="pdf-totale"></span></div>
+            <div class="pdf-row"><label>Acconti:</label><span id="pdf-acconti"></span></div>
+            <div class="pdf-row pdf-total"><label>SALDO RESIDUO:</label><span id="pdf-saldo"></span></div>
+        </div>
+        <div class="pdf-section">
+            <h3>Note</h3>
+            <p id="pdf-note"></p>
+        </div>
+    </div>
+
     <div class="footer-branding">
         <p>Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></p>
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 9: JAVASCRIPT -->
+    <!-- SEZIONE 10: JAVASCRIPT -->
     <!-- ============================================ -->
     <script>
         var token = '';
@@ -436,6 +529,9 @@
         var acconti = [];
         var pianoPagamento = [];
         var serviziDisponibili = [];
+        var datiStudio = null;
+        var preventivoCorrenteId = null;
+        var agendaEventId = null;
 
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -460,12 +556,25 @@
                 studioId = data.user.id;
                 document.getElementById('loading-dati').style.display = 'none';
                 document.getElementById('tabs-container').style.display = 'flex';
+                caricaDatiStudio();
                 caricaServiziDisponibili();
                 caricaPreventivi();
                 caricaContratti();
             } catch (error) {
                 console.error('Errore verifica sessione:', error);
                 document.getElementById('loading-dati').innerHTML = '<p style="color: #e74c3c;">Errore di connessione</p>';
+            }
+        }
+
+        async function caricaDatiStudio() {
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/profilo?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (data.success && data.studio) {
+                    datiStudio = data.studio;
+                }
+            } catch (error) {
+                console.error('Errore caricamento dati studio:', error);
             }
         }
 
@@ -488,6 +597,44 @@
             }
         }
 
+        // ==========================================
+        // FUNZIONI MAPS
+        // ==========================================
+        function apriMapsClienteA() {
+            const indirizzo = document.getElementById('cliente_a_indirizzo').value;
+            const citta = document.getElementById('cliente_a_citta').value;
+            const cap = document.getElementById('cliente_a_cap').value;
+            const provincia = document.getElementById('cliente_a_provincia').value;
+            const query = [indirizzo, cap + ' ' + citta, provincia].filter(Boolean).join(', ');
+            if (!query) { alert('Inserisci almeno l\'indirizzo del cliente'); return; }
+            window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query), '_blank');
+        }
+
+        function apriMapsClienteB() {
+            const indirizzo = document.getElementById('cliente_b_indirizzo').value;
+            const citta = document.getElementById('cliente_b_citta').value;
+            const cap = document.getElementById('cliente_b_cap').value;
+            const provincia = document.getElementById('cliente_b_provincia').value;
+            const query = [indirizzo, cap + ' ' + citta, provincia].filter(Boolean).join(', ');
+            if (!query) { alert('Inserisci almeno l\'indirizzo del cliente'); return; }
+            window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query), '_blank');
+        }
+
+        function apriMapsCerimonia() {
+            const luogo = document.getElementById('evento_luogo_cerimonia').value;
+            if (!luogo) { alert('Inserisci il luogo della cerimonia'); return; }
+            window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(luogo), '_blank');
+        }
+
+        function apriMapsRicevimento() {
+            const luogo = document.getElementById('evento_luogo_ricevimento').value;
+            if (!luogo) { alert('Inserisci il luogo del ricevimento'); return; }
+            window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(luogo), '_blank');
+        }
+
+        // ==========================================
+        // MODALE SERVIZI
+        // ==========================================
         function apriModaleServizi() {
             const lista = document.getElementById('lista-servizi-disponibili');
             lista.innerHTML = '';
@@ -555,7 +702,7 @@
             serviziSelezionati.forEach(function(s, index) {
                 const div = document.createElement('div');
                 div.className = 'servizio-item';
-                div.innerHTML = '<div class="servizio-info"><h5>' + s.descrizione + '</h5><p>' + (s.categoria || '') + '</p></div><span class="servizio-prezzo">' + s.prezzo.toFixed(2) + ' EUR</span><button class="btn btn-sm btn-danger" onclick="rimuoviServizio(' + index + ')">Rimuovi</button>';
+                div.innerHTML = '<div class="servizio-info"><h5>' + s.descrizione + '</h5><p>' + (s.categoria || '') + '</p></div><span class="servizio-prezzo">' + s.prezzo.toFixed(2) + ' EUR</span><button type="button" class="btn btn-sm btn-danger" onclick="rimuoviServizio(' + index + ')">Rimuovi</button>';
                 container.appendChild(div);
             });
         }
@@ -566,6 +713,9 @@
             calcolaTotali();
         }
 
+        // ==========================================
+        // ACCONTI
+        // ==========================================
         function aggiungiAcconto() {
             acconti.push({ data: '', importo: 0, metodo: 'Bonifico', note: '' });
             renderAcconti();
@@ -578,10 +728,10 @@
             acconti.forEach(function(a, index) {
                 const div = document.createElement('div');
                 div.className = 'acconto-item';
-                div.innerHTML = '<input type="date" value="' + a.data + '" onchange="acconti[' + index + '].data=this.value" placeholder="Data">' +
-                    '<input type="number" step="0.01" min="0" value="' + a.importo + '" onchange="acconti[' + index + '].importo=parseFloat(this.value); calcolaTotali();" placeholder="Importo">' +
-                    '<select onchange="acconti[' + index + '].metodo=this.value"><option value="Bonifico">Bonifico</option><option value="Contanti">Contanti</option><option value="Carta">Carta</option><option value="Altro">Altro</option></select>' +
-                    '<input type="text" value="' + a.note + '" onchange="acconti[' + index + '].note=this.value" placeholder="Note">' +
+                div.innerHTML = '<input type="date" value="' + (a.data || '') + '" onchange="acconti[' + index + '].data=this.value" placeholder="Data">' +
+                    '<input type="number" step="0.01" min="0" value="' + (a.importo || 0) + '" onchange="acconti[' + index + '].importo=parseFloat(this.value); calcolaTotali();" placeholder="Importo">' +
+                    '<select onchange="acconti[' + index + '].metodo=this.value"><option value="Bonifico"' + (a.metodo === 'Bonifico' ? ' selected' : '') + '>Bonifico</option><option value="Contanti"' + (a.metodo === 'Contanti' ? ' selected' : '') + '>Contanti</option><option value="Carta"' + (a.metodo === 'Carta' ? ' selected' : '') + '>Carta</option><option value="Altro"' + (a.metodo === 'Altro' ? ' selected' : '') + '>Altro</option></select>' +
+                    '<input type="text" value="' + (a.note || '') + '" onchange="acconti[' + index + '].note=this.value" placeholder="Note">' +
                     '<button type="button" class="btn btn-sm btn-danger" onclick="rimuoviAcconto(' + index + ')">X</button>';
                 container.appendChild(div);
             });
@@ -594,6 +744,9 @@
             renderAcconti();
         }
 
+        // ==========================================
+        // PIANO DI PAGAMENTO (solo promemoria)
+        // ==========================================
         function aggiungiPianoVoce() {
             pianoPagamento.push({ data: '', importo: 0, descrizione: '' });
             renderPiano();
@@ -606,9 +759,9 @@
             pianoPagamento.forEach(function(p, index) {
                 const div = document.createElement('div');
                 div.className = 'piano-item';
-                div.innerHTML = '<input type="date" value="' + p.data + '" onchange="pianoPagamento[' + index + '].data=this.value" placeholder="Data">' +
-                    '<input type="number" step="0.01" min="0" value="' + p.importo + '" onchange="pianoPagamento[' + index + '].importo=parseFloat(this.value)" placeholder="Importo">' +
-                    '<input type="text" value="' + p.descrizione + '" onchange="pianoPagamento[' + index + '].descrizione=this.value" placeholder="Descrizione">' +
+                div.innerHTML = '<input type="date" value="' + (p.data || '') + '" onchange="pianoPagamento[' + index + '].data=this.value" placeholder="Data">' +
+                    '<input type="number" step="0.01" min="0" value="' + (p.importo || 0) + '" onchange="pianoPagamento[' + index + '].importo=parseFloat(this.value)" placeholder="Importo">' +
+                    '<input type="text" value="' + (p.descrizione || '') + '" onchange="pianoPagamento[' + index + '].descrizione=this.value" placeholder="Descrizione (es. Acconto, Saldo)">' +
                     '<button type="button" class="btn btn-sm btn-danger" onclick="rimuoviPianoVoce(' + index + ')">X</button>';
                 container.appendChild(div);
             });
@@ -619,6 +772,9 @@
             renderPiano();
         }
 
+        // ==========================================
+        // CALCOLI TOTALI
+        // ==========================================
         function calcolaTotali() {
             let totaleServizi = 0;
             serviziSelezionati.forEach(function(s) { totaleServizi += s.prezzo; });
@@ -643,19 +799,27 @@
             document.getElementById('saldo_residuo').textContent = saldoResiduo.toFixed(2) + ' EUR';
         }
 
+        // ==========================================
+        // SALVA PREVENTIVO + AGENDA
+        // ==========================================
         async function salvaPreventivo(event) {
             event.preventDefault();
             
+            const cognomeCliente = document.getElementById('cliente_a_cognome').value || 'Cliente';
+            const tipoServizio = document.getElementById('evento_tipo').value || 'Servizio';
+            const dataEvento = document.getElementById('evento_data').value;
+            
             const dati = {
-                id: 'prev-' + Date.now(),
+                id: preventivoCorrenteId || ('prev-' + Date.now()),
                 numero: document.getElementById('prev_numero').value,
                 data_emissione: document.getElementById('prev_data').value,
-                tipo_servizio: document.getElementById('evento_tipo').value,
+                data_servizio: dataEvento,
+                tipo_servizio: tipoServizio,
                 luogo_cerimonia: document.getElementById('evento_luogo_cerimonia').value,
                 luogo_ricevimento: document.getElementById('evento_luogo_ricevimento').value,
                 cliente_a: {
                     nome: document.getElementById('cliente_a_nome').value,
-                    cognome: document.getElementById('cliente_a_cognome').value,
+                    cognome: cognomeCliente,
                     telefono: document.getElementById('cliente_a_telefono').value,
                     email: document.getElementById('cliente_a_email').value,
                     indirizzo: document.getElementById('cliente_a_indirizzo').value,
@@ -681,7 +845,7 @@
                 accettato: document.getElementById('prev_accettato').checked,
                 note: document.getElementById('prev_note').value,
                 totale_finale: parseFloat(document.getElementById('importo_totale').textContent.replace(' EUR', '').replace(',', '.')) || 0,
-                stato: 'bozza',
+                stato: document.getElementById('prev_accettato').checked ? 'accettato' : 'bozza',
                 data_creazione: new Date().toISOString()
             };
             
@@ -693,15 +857,12 @@
                 });
                 const result = await response.json();
                 if (result.success) {
+                    preventivoCorrenteId = dati.id;
+                    
+                    // Crea/aggiorna evento in agenda
+                    await aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, document.getElementById('prev_accettato').checked);
+                    
                     alert('Preventivo salvato con successo!');
-                    document.getElementById('form-preventivo').reset();
-                    serviziSelezionati = [];
-                    acconti = [];
-                    pianoPagamento = [];
-                    renderServiziSelezionati();
-                    renderAcconti();
-                    renderPiano();
-                    calcolaTotali();
                     caricaPreventivi();
                 } else {
                     alert('Errore: ' + result.error);
@@ -712,46 +873,126 @@
             }
         }
 
-        function generaPDF() {
-            alert('Funzione generazione PDF in sviluppo. Il preventivo verrà convertito in PDF scaricabile.');
+        async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettato) {
+            if (!dataEvento) return;
+            
+            const statoEvento = accettato ? 'Confermato' : 'Da Confermare';
+            const titoloEvento = tipoServizio + ' ' + cognomeCliente + ' - ' + (accettato ? 'confermato' : 'da confermare');
+            
+            const datiAgenda = {
+                id: agendaEventId || ('agenda-prev-' + Date.now()),
+                titolo: titoloEvento,
+                data: dataEvento,
+                descrizione: 'Preventivo/Contratto - ' + tipoServizio,
+                tipo_servizio: tipoServizio,
+                cliente: cognomeCliente,
+                stato: statoEvento
+            };
+            
+            try {
+                if (agendaEventId) {
+                    await fetch(WORKER_URL + '/api/studio/agenda/' + agendaEventId + '?token=' + encodeURIComponent(token), {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(datiAgenda)
+                    });
+                } else {
+                    const response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(datiAgenda)
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        agendaEventId = datiAgenda.id;
+                    }
+                }
+            } catch (error) {
+                console.error('Errore aggiornamento agenda:', error);
+            }
         }
 
+        // ==========================================
+        // GENERAZIONE PDF
+        // ==========================================
+        function generaPDF() {
+            if (!datiStudio) {
+                alert('Dati studio non disponibili. Compila prima la Scheda Anagrafica.');
+                return;
+            }
+            
+            const clienteA = getClienteA();
+            const clienteB = getClienteB();
+            
+            document.getElementById('pdf-nome-studio').textContent = datiStudio.nome || 'Studio';
+            document.getElementById('pdf-indirizzo-studio').textContent = [datiStudio.indirizzo, datiStudio.cap, datiStudio.citta, datiStudio.provincia].filter(Boolean).join(', ');
+            document.getElementById('pdf-telefono-studio').textContent = datiStudio.telefono || '';
+            document.getElementById('pdf-email-studio').textContent = datiStudio.email || '';
+            
+            document.getElementById('pdf-titolo-doc').textContent = 'PREVENTIVO N. ' + document.getElementById('prev_numero').value;
+            document.getElementById('pdf-numero').textContent = document.getElementById('prev_numero').value;
+            document.getElementById('pdf-data').textContent = document.getElementById('prev_data').value;
+            
+            document.getElementById('pdf-cliente-a').textContent = clienteA.nome + ' ' + clienteA.cognome;
+            document.getElementById('pdf-cliente-a-indirizzo').textContent = [clienteA.indirizzo, clienteA.cap, clienteA.citta, clienteA.provincia].filter(Boolean).join(', ');
+            document.getElementById('pdf-cliente-a-tel').textContent = clienteA.telefono || '-';
+            document.getElementById('pdf-cliente-a-email').textContent = clienteA.email || '-';
+            
+            document.getElementById('pdf-cliente-b').textContent = (clienteB.nome + ' ' + clienteB.cognome).trim() || '-';
+            document.getElementById('pdf-cliente-b-indirizzo').textContent = [clienteB.indirizzo, clienteB.cap, clienteB.citta, clienteB.provincia].filter(Boolean).join(', ') || '-';
+            
+            document.getElementById('pdf-tipo').textContent = document.getElementById('evento_tipo').value || '-';
+            document.getElementById('pdf-data-evento').textContent = document.getElementById('evento_data').value || '-';
+            document.getElementById('pdf-cerimonia').textContent = document.getElementById('evento_luogo_cerimonia').value || '-';
+            document.getElementById('pdf-ricevimento').textContent = document.getElementById('evento_luogo_ricevimento').value || '-';
+            
+            const serviziList = document.getElementById('pdf-servizi-list');
+            serviziList.innerHTML = '';
+            serviziSelezionati.forEach(function(s) {
+                const row = document.createElement('div');
+                row.className = 'pdf-row';
+                row.innerHTML = '<label>' + s.descrizione + '</label><span>' + s.prezzo.toFixed(2) + ' EUR</span>';
+                serviziList.appendChild(row);
+            });
+            
+            document.getElementById('pdf-totale-servizi').textContent = document.getElementById('totale_servizi').textContent;
+            document.getElementById('pdf-sconto').textContent = document.getElementById('totale_sconto').textContent;
+            document.getElementById('pdf-totale').textContent = document.getElementById('importo_totale').textContent;
+            document.getElementById('pdf-acconti').textContent = document.getElementById('totale_acconti').textContent;
+            document.getElementById('pdf-saldo').textContent = document.getElementById('saldo_residuo').textContent;
+            document.getElementById('pdf-note').textContent = document.getElementById('prev_note').value || 'Nessuna nota';
+            
+            window.print();
+        }
+
+        // ==========================================
+        // CONVERSIONE IN CONTRATTO
+        // ==========================================
         async function convertiInContratto() {
-            if (!confirm('Convertire questo preventivo in contratto?')) return;
+            if (!confirm('Convertire questo preventivo in contratto? L\'evento in agenda sara\' marcato come confermato.')) return;
+            
+            const cognomeCliente = document.getElementById('cliente_a_cognome').value || 'Cliente';
+            const tipoServizio = document.getElementById('evento_tipo').value || 'Servizio';
+            const dataEvento = document.getElementById('evento_data').value;
             
             const dati = {
                 id: 'contr-' + Date.now(),
-                numero: document.getElementById('prev_numero').value.replace('PREV', 'CTR'),
+                numero_contratto: document.getElementById('prev_numero').value.replace('PREV', 'CTR'),
+                numero: document.getElementById('prev_numero').value,
+                data_contratto: new Date().toISOString().split('T')[0],
                 data_emissione: document.getElementById('prev_data').value,
-                tipo_servizio: document.getElementById('evento_tipo').value,
+                data_servizio: dataEvento,
+                tipo_servizio: tipoServizio,
                 luogo_cerimonia: document.getElementById('evento_luogo_cerimonia').value,
                 luogo_ricevimento: document.getElementById('evento_luogo_ricevimento').value,
-                cliente_a: {
-                    nome: document.getElementById('cliente_a_nome').value,
-                    cognome: document.getElementById('cliente_a_cognome').value,
-                    telefono: document.getElementById('cliente_a_telefono').value,
-                    email: document.getElementById('cliente_a_email').value,
-                    indirizzo: document.getElementById('cliente_a_indirizzo').value,
-                    citta: document.getElementById('cliente_a_citta').value,
-                    cap: document.getElementById('cliente_a_cap').value,
-                    provincia: document.getElementById('cliente_a_provincia').value
-                },
-                cliente_b: {
-                    nome: document.getElementById('cliente_b_nome').value,
-                    cognome: document.getElementById('cliente_b_cognome').value,
-                    telefono: document.getElementById('cliente_b_telefono').value,
-                    email: document.getElementById('cliente_b_email').value,
-                    indirizzo: document.getElementById('cliente_b_indirizzo').value,
-                    citta: document.getElementById('cliente_b_citta').value,
-                    cap: document.getElementById('cliente_b_cap').value,
-                    provincia: document.getElementById('cliente_b_provincia').value
-                },
+                cliente_a: getClienteA(),
+                cliente_b: getClienteB(),
                 servizi: serviziSelezionati,
                 acconti: acconti,
                 piano_pagamento: pianoPagamento,
                 sconto_perc: parseFloat(document.getElementById('sconto_perc').value) || 0,
                 sconto_fisso: parseFloat(document.getElementById('sconto_fisso').value) || 0,
-                accettato: document.getElementById('prev_accettato').checked,
+                accettato: true,
                 note: document.getElementById('prev_note').value,
                 totale_finale: parseFloat(document.getElementById('importo_totale').textContent.replace(' EUR', '').replace(',', '.')) || 0,
                 stato: 'attivo',
@@ -766,7 +1007,9 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    alert('Contratto creato con successo!');
+                    // Aggiorna agenda a "confermato"
+                    await aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, true);
+                    alert('Contratto creato con successo! Evento in agenda aggiornato a "confermato".');
                     caricaContratti();
                 } else {
                     alert('Errore: ' + result.error);
@@ -777,6 +1020,51 @@
             }
         }
 
+        // ==========================================
+        // HELPERS CLIENTE
+        // ==========================================
+        function getClienteA() {
+            return {
+                nome: document.getElementById('cliente_a_nome').value,
+                cognome: document.getElementById('cliente_a_cognome').value,
+                telefono: document.getElementById('cliente_a_telefono').value,
+                email: document.getElementById('cliente_a_email').value,
+                indirizzo: document.getElementById('cliente_a_indirizzo').value,
+                citta: document.getElementById('cliente_a_citta').value,
+                cap: document.getElementById('cliente_a_cap').value,
+                provincia: document.getElementById('cliente_a_provincia').value
+            };
+        }
+
+        function getClienteB() {
+            return {
+                nome: document.getElementById('cliente_b_nome').value,
+                cognome: document.getElementById('cliente_b_cognome').value,
+                telefono: document.getElementById('cliente_b_telefono').value,
+                email: document.getElementById('cliente_b_email').value,
+                indirizzo: document.getElementById('cliente_b_indirizzo').value,
+                citta: document.getElementById('cliente_b_citta').value,
+                cap: document.getElementById('cliente_b_cap').value,
+                provincia: document.getElementById('cliente_b_provincia').value
+            };
+        }
+
+        function parseCliente(cliente) {
+            if (!cliente) return { nome: '', cognome: '', telefono: '', email: '', indirizzo: '', citta: '', cap: '', provincia: '' };
+            if (typeof cliente === 'string') {
+                try { return JSON.parse(cliente); } catch (e) { return { nome: '', cognome: '', telefono: '', email: '', indirizzo: '', citta: '', cap: '', provincia: '' }; }
+            }
+            return cliente;
+        }
+
+        function getNomeCompleto(cliente) {
+            const c = parseCliente(cliente);
+            return ((c.nome || '') + ' ' + (c.cognome || '')).trim() || '-';
+        }
+
+        // ==========================================
+        // ARCHIVIO PREVENTIVI
+        // ==========================================
         async function caricaPreventivi() {
             try {
                 const response = await fetch(WORKER_URL + '/api/studio/preventivi?token=' + encodeURIComponent(token));
@@ -790,15 +1078,21 @@
                     tbody.innerHTML = '';
                     
                     data.preventivi.forEach(function(p) {
-                        const cliente = (p.cliente_a ? (p.cliente_a.nome + ' ' + p.cliente_a.cognome) : '-');
-                        const statoClass = 'badge-' + (p.stato || 'bozza');
+                        const cliente = getNomeCompleto(p.cliente_a);
+                        const stato = p.stato || 'bozza';
+                        const statoClass = 'badge-' + stato;
                         tbody.innerHTML += '<tr>' +
                             '<td><strong>' + (p.numero || '-') + '</strong></td>' +
                             '<td>' + cliente + '</td>' +
                             '<td>' + (p.data_emissione ? new Date(p.data_emissione).toLocaleDateString('it-IT') : '-') + '</td>' +
                             '<td>' + (parseFloat(p.totale_finale) || 0).toFixed(2) + ' EUR</td>' +
-                            '<td><span class="badge ' + statoClass + '">' + (p.stato || 'bozza') + '</span></td>' +
-                            '<td><button class="btn btn-sm btn-outline" onclick="visualizzaPreventivo(\'' + p.id + '\')">Visualizza</button> <button class="btn btn-sm btn-danger" onclick="eliminaPreventivo(\'' + p.id + '\')">Elimina</button></td>' +
+                            '<td><span class="badge ' + statoClass + '">' + stato + '</span></td>' +
+                            '<td>' +
+                                '<button class="btn btn-sm btn-outline" onclick="visualizzaPreventivo(\'' + p.id + '\')">Visualizza</button> ' +
+                                '<button class="btn btn-sm btn-warning" onclick="modificaPreventivo(\'' + p.id + '\')">Modifica</button> ' +
+                                '<button class="btn btn-sm btn-primary" onclick="stampaPreventivo(\'' + p.id + '\')">PDF</button> ' +
+                                '<button class="btn btn-sm btn-danger" onclick="eliminaPreventivo(\'' + p.id + '\')">Elimina</button>' +
+                            '</td>' +
                         '</tr>';
                     });
                 } else {
@@ -810,8 +1104,91 @@
             }
         }
 
-        function visualizzaPreventivo(id) {
-            alert('Visualizza preventivo - ID: ' + id);
+        async function visualizzaPreventivo(id) {
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/preventivi?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (data.success && data.preventivi) {
+                    const p = data.preventivi.find(function(x) { return x.id === id; });
+                    if (!p) { alert('Preventivo non trovato'); return; }
+                    caricaDatiInForm(p, true);
+                }
+            } catch (error) {
+                console.error('Errore visualizzazione:', error);
+                alert('Errore di connessione');
+            }
+        }
+
+        async function modificaPreventivo(id) {
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/preventivi?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (data.success && data.preventivi) {
+                    const p = data.preventivi.find(function(x) { return x.id === id; });
+                    if (!p) { alert('Preventivo non trovato'); return; }
+                    caricaDatiInForm(p, false);
+                }
+            } catch (error) {
+                console.error('Errore modifica:', error);
+                alert('Errore di connessione');
+            }
+        }
+
+        async function stampaPreventivo(id) {
+            await visualizzaPreventivo(id);
+            setTimeout(function() { generaPDF(); }, 500);
+        }
+
+        function caricaDatiInForm(p, solaLettura) {
+            preventivoCorrenteId = p.id;
+            
+            document.getElementById('prev_numero').value = p.numero || '';
+            document.getElementById('prev_data').value = p.data_emissione || '';
+            document.getElementById('evento_tipo').value = p.tipo_servizio || '';
+            document.getElementById('evento_data').value = p.data_servizio || '';
+            document.getElementById('evento_luogo_cerimonia').value = p.luogo_cerimonia || '';
+            document.getElementById('evento_luogo_ricevimento').value = p.luogo_ricevimento || '';
+            
+            const clienteA = parseCliente(p.cliente_a);
+            document.getElementById('cliente_a_nome').value = clienteA.nome || '';
+            document.getElementById('cliente_a_cognome').value = clienteA.cognome || '';
+            document.getElementById('cliente_a_telefono').value = clienteA.telefono || '';
+            document.getElementById('cliente_a_email').value = clienteA.email || '';
+            document.getElementById('cliente_a_indirizzo').value = clienteA.indirizzo || '';
+            document.getElementById('cliente_a_citta').value = clienteA.citta || '';
+            document.getElementById('cliente_a_cap').value = clienteA.cap || '';
+            document.getElementById('cliente_a_provincia').value = clienteA.provincia || '';
+            
+            const clienteB = parseCliente(p.cliente_b);
+            document.getElementById('cliente_b_nome').value = clienteB.nome || '';
+            document.getElementById('cliente_b_cognome').value = clienteB.cognome || '';
+            document.getElementById('cliente_b_telefono').value = clienteB.telefono || '';
+            document.getElementById('cliente_b_email').value = clienteB.email || '';
+            document.getElementById('cliente_b_indirizzo').value = clienteB.indirizzo || '';
+            document.getElementById('cliente_b_citta').value = clienteB.citta || '';
+            document.getElementById('cliente_b_cap').value = clienteB.cap || '';
+            document.getElementById('cliente_b_provincia').value = clienteB.provincia || '';
+            
+            serviziSelezionati = p.servizi || [];
+            acconti = p.acconti || [];
+            pianoPagamento = p.piano_pagamento || [];
+            
+            document.getElementById('sconto_perc').value = p.sconto_perc || 0;
+            document.getElementById('sconto_fisso').value = p.sconto_fisso || 0;
+            document.getElementById('prev_accettato').checked = p.accettato === 1 || p.accettato === true;
+            document.getElementById('prev_note').value = p.note || '';
+            
+            renderServiziSelezionati();
+            renderAcconti();
+            renderPiano();
+            calcolaTotali();
+            
+            if (solaLettura) {
+                alert('Preventivo caricato in modalita\' visualizzazione. Clicca "Modifica" per modificare i dati.');
+            }
+            
+            switchTab('crea');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         async function eliminaPreventivo(id) {
@@ -824,6 +1201,9 @@
             } catch (error) { console.error('Errore eliminazione:', error); }
         }
 
+        // ==========================================
+        // ARCHIVIO CONTRATTI
+        // ==========================================
         async function caricaContratti() {
             try {
                 const response = await fetch(WORKER_URL + '/api/studio/contratti?token=' + encodeURIComponent(token));
@@ -837,15 +1217,21 @@
                     tbody.innerHTML = '';
                     
                     data.contratti.forEach(function(c) {
-                        const cliente = (c.cliente_a ? (c.cliente_a.nome + ' ' + c.cliente_a.cognome) : '-');
-                        const saldo = (parseFloat(c.totale_finale) || 0) - (c.acconti ? c.acconti.reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0) : 0);
+                        const cliente = getNomeCompleto(c.cliente_a);
+                        const totaleAcconti = (c.acconti || []).reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0);
+                        const saldo = (parseFloat(c.totale_finale) || 0) - totaleAcconti;
                         tbody.innerHTML += '<tr>' +
                             '<td><strong>' + (c.numero_contratto || c.numero || '-') + '</strong></td>' +
                             '<td>' + cliente + '</td>' +
                             '<td>' + (c.data_emissione ? new Date(c.data_emissione).toLocaleDateString('it-IT') : '-') + '</td>' +
                             '<td>' + (parseFloat(c.totale_finale) || 0).toFixed(2) + ' EUR</td>' +
                             '<td>' + saldo.toFixed(2) + ' EUR</td>' +
-                            '<td><button class="btn btn-sm btn-outline" onclick="visualizzaContratto(\'' + c.id + '\')">Visualizza</button> <button class="btn btn-sm btn-danger" onclick="eliminaContratto(\'' + c.id + '\')">Elimina</button></td>' +
+                            '<td>' +
+                                '<button class="btn btn-sm btn-outline" onclick="visualizzaContratto(\'' + c.id + '\')">Visualizza</button> ' +
+                                '<button class="btn btn-sm btn-warning" onclick="modificaContratto(\'' + c.id + '\')">Modifica</button> ' +
+                                '<button class="btn btn-sm btn-primary" onclick="stampaContratto(\'' + c.id + '\')">PDF</button> ' +
+                                '<button class="btn btn-sm btn-danger" onclick="eliminaContratto(\'' + c.id + '\')">Elimina</button>' +
+                            '</td>' +
                         '</tr>';
                     });
                 } else {
@@ -857,8 +1243,91 @@
             }
         }
 
-        function visualizzaContratto(id) {
-            alert('Visualizza contratto - ID: ' + id);
+        async function visualizzaContratto(id) {
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/contratti?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (data.success && data.contratti) {
+                    const c = data.contratti.find(function(x) { return x.id === id; });
+                    if (!c) { alert('Contratto non trovato'); return; }
+                    caricaDatiContrattoInForm(c, true);
+                }
+            } catch (error) {
+                console.error('Errore visualizzazione:', error);
+                alert('Errore di connessione');
+            }
+        }
+
+        async function modificaContratto(id) {
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/contratti?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (data.success && data.contratti) {
+                    const c = data.contratti.find(function(x) { return x.id === id; });
+                    if (!c) { alert('Contratto non trovato'); return; }
+                    caricaDatiContrattoInForm(c, false);
+                }
+            } catch (error) {
+                console.error('Errore modifica:', error);
+                alert('Errore di connessione');
+            }
+        }
+
+        async function stampaContratto(id) {
+            await visualizzaContratto(id);
+            setTimeout(function() { generaPDF(); }, 500);
+        }
+
+        function caricaDatiContrattoInForm(c, solaLettura) {
+            preventivoCorrenteId = null;
+            
+            document.getElementById('prev_numero').value = c.numero_contratto || c.numero || '';
+            document.getElementById('prev_data').value = c.data_emissione || '';
+            document.getElementById('evento_tipo').value = c.tipo_servizio || '';
+            document.getElementById('evento_data').value = c.data_servizio || '';
+            document.getElementById('evento_luogo_cerimonia').value = c.luogo_cerimonia || '';
+            document.getElementById('evento_luogo_ricevimento').value = c.luogo_ricevimento || '';
+            
+            const clienteA = parseCliente(c.cliente_a);
+            document.getElementById('cliente_a_nome').value = clienteA.nome || '';
+            document.getElementById('cliente_a_cognome').value = clienteA.cognome || '';
+            document.getElementById('cliente_a_telefono').value = clienteA.telefono || '';
+            document.getElementById('cliente_a_email').value = clienteA.email || '';
+            document.getElementById('cliente_a_indirizzo').value = clienteA.indirizzo || '';
+            document.getElementById('cliente_a_citta').value = clienteA.citta || '';
+            document.getElementById('cliente_a_cap').value = clienteA.cap || '';
+            document.getElementById('cliente_a_provincia').value = clienteA.provincia || '';
+            
+            const clienteB = parseCliente(c.cliente_b);
+            document.getElementById('cliente_b_nome').value = clienteB.nome || '';
+            document.getElementById('cliente_b_cognome').value = clienteB.cognome || '';
+            document.getElementById('cliente_b_telefono').value = clienteB.telefono || '';
+            document.getElementById('cliente_b_email').value = clienteB.email || '';
+            document.getElementById('cliente_b_indirizzo').value = clienteB.indirizzo || '';
+            document.getElementById('cliente_b_citta').value = clienteB.citta || '';
+            document.getElementById('cliente_b_cap').value = clienteB.cap || '';
+            document.getElementById('cliente_b_provincia').value = clienteB.provincia || '';
+            
+            serviziSelezionati = c.servizi || [];
+            acconti = c.acconti || [];
+            pianoPagamento = c.piano_pagamento || [];
+            
+            document.getElementById('sconto_perc').value = c.sconto_perc || 0;
+            document.getElementById('sconto_fisso').value = c.sconto_fisso || 0;
+            document.getElementById('prev_accettato').checked = c.accettato === 1 || c.accettato === true;
+            document.getElementById('prev_note').value = c.note || '';
+            
+            renderServiziSelezionati();
+            renderAcconti();
+            renderPiano();
+            calcolaTotali();
+            
+            if (solaLettura) {
+                alert('Contratto caricato in modalita\' visualizzazione. Clicca "Modifica" per modificare i dati.');
+            }
+            
+            switchTab('crea');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         async function eliminaContratto(id) {
