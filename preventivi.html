@@ -6,228 +6,451 @@
     <title>Preventivi & Contratti - AppCenterStudioPROGOLD</title>
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
+    
+    <!-- ============================================ -->
+    <!-- SEZIONE 1: CSS STYLES (Tema Oro/Nero/Bianco) -->
+    <!-- ============================================ -->
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background: var(--bg-gradient, #f5f5f5); min-height: 100vh; color: #000000; padding-bottom: 80px; }
-        .top-bar { background: var(--primary-gradient, linear-gradient(135deg, #a9dfbf, #1e8449)); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .top-bar h1 { color: #ffffff; font-size: 1.4em; }
+        body { background: #ffffff; min-height: 100vh; color: #000000; }
+        .top-bar { background: linear-gradient(135deg, #d4af37, #996515); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .top-bar h1 { color: #ffffff; font-size: 1.4em; font-weight: 600; }
         .sync-status { display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9em; }
-        .sync-dot { width: 10px; height: 10px; background: #ffffff; border-radius: 50%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .nav-btn { background: rgba(255,255,255,0.2); border: none; color: #ffffff; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9em; }
+        .nav-btn { background: rgba(255,255,255,0.2); border: none; color: #ffffff; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9em; margin-left: 10px; }
+        .nav-btn:hover { background: rgba(255,255,255,0.3); }
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-        .page-header { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 5px solid var(--primary, #82e0aa); }
+        .page-header { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 5px solid #d4af37; }
         .page-header h2 { color: #000000; margin-bottom: 10px; font-size: 1.6em; }
         .page-header p { color: #666666; font-size: 0.95em; }
-        .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
-        .tab { padding: 12px 25px; background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; cursor: pointer; font-weight: 600; color: #000000; }
-        .tab:hover { background: var(--primary-light, #e8f8f5); }
-        .tab.active { background: var(--primary-gradient, linear-gradient(135deg, #a9dfbf, #1e8449)); color: #ffffff; border-color: var(--primary-dark, #1e8449); }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .card { background: #ffffff; border-radius: 15px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; }
-        .card-title { color: #000000; font-size: 1.3em; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--primary-light, #e8f8f5); font-weight: 600; }
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .section { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; border-top: 4px solid #d4af37; }
+        .section-title { color: #000000; font-size: 1.3em; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #fff9e6; font-weight: 600; }
+        .section-subtitle { color: #666666; font-size: 0.9em; margin-bottom: 20px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .form-grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; margin-bottom: 8px; color: #000000; font-weight: 600; font-size: 0.9em; }
+        .form-group label .required { color: #c0392b; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 15px; border: 2px solid #d5d8dc; border-radius: 10px; font-size: 0.95em; background: #f8f9fa; color: #000000; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary, #82e0aa); background: #ffffff; }
-        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #d4af37; background: #ffffff; }
         .btn { padding: 12px 25px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.95em; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-primary { background: var(--primary-gradient, linear-gradient(135deg, #a9dfbf, #1e8449)); color: #ffffff; }
-        .btn-success { background: linear-gradient(135deg, #58d68d, #28b463); color: #ffffff; }
-        .btn-warning { background: linear-gradient(135deg, #f9e79f, #f1c40f); color: #000000; }
+        .btn-primary { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(212,175,55,0.3); }
+        .btn-outline { background: transparent; border: 2px solid #d4af37; color: #996515; }
+        .btn-outline:hover { background: #fff9e6; }
         .btn-danger { background: linear-gradient(135deg, #f1948a, #e74c3c); color: #ffffff; }
-        .btn-outline { background: transparent; border: 2px solid var(--primary, #82e0aa); color: var(--primary-dark, #1e8449); }
-        .btn-maps { background: linear-gradient(135deg, #5dade2, #2e86c1); color: #ffffff; padding: 10px 15px; font-size: 0.85em; margin-top: 5px; }
+        .btn-success { background: linear-gradient(135deg, #58d68d, #28b463); color: #ffffff; }
         .btn-sm { padding: 6px 12px; font-size: 0.8em; }
-        .section-title { color: #000000; font-size: 1.1em; margin: 25px 0 15px 0; padding: 10px 15px; background: var(--primary-light, #e8f8f5); border-radius: 8px; font-weight: 600; border-left: 4px solid var(--primary, #82e0aa); }
-        .services-list, .acconti-list, .piano-list { border: 2px solid #d5d8dc; border-radius: 10px; padding: 15px; margin-bottom: 15px; background: #f8f9fa; }
-        .service-item, .acconto-item, .piano-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #d5d8dc; color: #000000; }
-        .service-item:last-child, .acconto-item:last-child, .piano-item:last-child { border-bottom: none; }
-        .totals-box { background: var(--primary-light, #e8f8f5); padding: 20px; border-radius: 10px; margin-top: 20px; border: 2px solid var(--primary, #82e0aa); }
-        .total-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #d5d8dc; color: #000000; }
-        .total-row:last-child { border-bottom: none; }
-        .total-row.final { font-size: 1.3em; font-weight: 700; color: var(--primary-dark, #1e8449); border-top: 2px solid var(--primary, #82e0aa); padding-top: 15px; }
-        .total-row.saldo { background: #ffffff; padding: 15px; border-radius: 8px; margin-top: 10px; font-size: 1.2em; font-weight: 700; color: #e74c3c; }
-        .table-container { overflow-x: auto; background: #ffffff; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; }
-        th { background: var(--primary, #82e0aa); color: #ffffff; font-weight: 600; padding: 15px; text-align: left; }
-        td { padding: 15px; text-align: left; border-bottom: 1px solid #d5d8dc; color: #000000; background: #ffffff; }
-        tr:hover td { background: var(--primary-light, #e8f8f5); }
+        .actions-bar { display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .tab { padding: 12px 25px; background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; cursor: pointer; font-weight: 600; color: #000000; }
+        .tab:hover { background: #fff9e6; }
+        .tab.active { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; border-color: #996515; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .sub-section { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #d5d8dc; }
+        .sub-section h4 { color: #000000; margin-bottom: 15px; font-size: 1.1em; border-bottom: 2px solid #d4af37; padding-bottom: 8px; }
+        .clienti-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .totals-box { background: linear-gradient(135deg, #fff9e6, #ffffff); padding: 20px; border-radius: 10px; border: 2px solid #d4af37; margin-top: 20px; }
+        .totals-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #d5d8dc; font-size: 1em; }
+        .totals-row:last-child { border-bottom: none; }
+        .totals-row.total { font-size: 1.3em; font-weight: 700; color: #000000; border-top: 3px solid #d4af37; padding-top: 15px; margin-top: 10px; }
+        .totals-row label { color: #666666; }
+        .totals-row span { color: #000000; font-weight: 600; }
+        .totals-row.total span { color: #996515; }
+        .servizi-list { margin-top: 15px; }
+        .servizio-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #ffffff; border: 1px solid #d5d8dc; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #d4af37; }
+        .servizio-item:hover { background: #fff9e6; }
+        .servizio-info { flex: 1; }
+        .servizio-info h5 { color: #000000; margin-bottom: 3px; }
+        .servizio-info p { color: #666666; font-size: 0.85em; }
+        .servizio-prezzo { color: #996515; font-weight: 700; margin-right: 15px; }
+        .acconto-item, .piano-item { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+        .acconto-item input, .piano-item input { flex: 1; }
+        .empty-state { text-align: center; padding: 40px; color: #666666; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { background: #d4af37; color: #ffffff; font-weight: 600; padding: 12px; text-align: left; }
+        td { padding: 12px; text-align: left; border-bottom: 1px solid #d5d8dc; color: #000000; background: #ffffff; }
+        tr:hover td { background: #fff9e6; }
         .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; }
         .badge-bozza { background: #fdebd0; color: #d35400; }
-        .badge-accettato { background: #d6eaf8; color: #1a5276; }
-        .actions-cell { display: flex; gap: 8px; flex-wrap: wrap; }
+        .badge-inviato { background: #d5f5e3; color: #1e8449; }
+        .badge-accettato { background: #d4efdf; color: #1e8449; }
+        .badge-rifiutato { background: #fadbd8; color: #c0392b; }
+        .footer-branding { text-align: center; padding: 30px 20px; color: #666666; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
+        .footer-branding strong { color: #996515; }
+        .loading { text-align: center; padding: 40px; color: #666666; }
+        .spinner { border: 4px solid #fff9e6; border-top: 4px solid #d4af37; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
         .modal-overlay.active { display: flex; }
-        .modal-content { background: #ffffff; border-radius: 15px; padding: 30px; max-width: 900px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid var(--primary-light, #e8f8f5); }
-        .modal-header h3 { color: #000000; font-size: 1.4em; }
+        .modal-content { background: #ffffff; padding: 40px; border-radius: 15px; max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto; border-top: 5px solid #d4af37; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #fff9e6; }
+        .modal-header h2 { color: #000000; font-size: 1.4em; }
         .close-modal { background: none; border: none; font-size: 1.8em; cursor: pointer; color: #666666; }
-        .modal-actions { display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap; }
-        .loading { text-align: center; padding: 40px; color: #666666; }
-        .spinner { border: 4px solid var(--primary-light, #e8f8f5); border-top: 4px solid var(--primary, #82e0aa); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .empty-state { text-align: center; padding: 40px; color: #666666; }
-        .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
-        .checkbox-group input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
-        .checkbox-group label { color: #000000; font-weight: 600; cursor: pointer; }
-        .footer-branding { text-align: center; padding: 30px 20px; color: #666666; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
-        .footer-branding strong { color: var(--primary-dark, #1e8449); }
-        .evento-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; align-items: end; }
-        .evento-row .form-group { margin-bottom: 0; }
-        @media (max-width: 768px) { .form-grid, .evento-row { grid-template-columns: 1fr; } .tabs { flex-direction: column; } .tab { width: 100%; text-align: center; } .modal-actions { flex-direction: column; } .modal-actions .btn { width: 100%; justify-content: center; } .actions-cell { flex-direction: column; } }
+        .servizio-select-item { padding: 15px; border: 2px solid #d5d8dc; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease; }
+        .servizio-select-item:hover { border-color: #d4af37; background: #fff9e6; }
+        .servizio-select-item.selected { border-color: #d4af37; background: #fff9e6; }
+        .servizio-select-item h4 { color: #000000; margin-bottom: 5px; }
+        .servizio-select-item p { color: #666666; font-size: 0.9em; }
+        .servizio-select-item .price { color: #996515; font-weight: 700; font-size: 1.1em; }
+        .checkbox-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .checkbox-wrapper input[type="checkbox"] { width: 20px; height: 20px; accent-color: #d4af37; }
+        @media (max-width: 768px) { .form-grid, .form-grid-2, .clienti-grid { grid-template-columns: 1fr; } .actions-bar { flex-direction: column; } .actions-bar .btn { width: 100%; justify-content: center; } }
     </style>
 </head>
 <body>
+    <!-- ============================================ -->
+    <!-- SEZIONE 2: TOP BAR -->
+    <!-- ============================================ -->
     <div class="top-bar">
-        <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Indietro</button>
+        <button class="nav-btn" onclick="tornaAllaPlancia()">Indietro</button>
         <h1>Preventivi & Contratti</h1>
-        <div class="sync-status"><div class="sync-dot"></div><span>Cloud Sync: OK</span></div>
+        <div class="sync-status"><span>Cloud Sync: OK</span></div>
     </div>
 
     <div class="container">
+        <!-- ============================================ -->
+        <!-- SEZIONE 3: PAGE HEADER -->
+        <!-- ============================================ -->
         <div class="page-header">
             <h2>Preventivi & Contratti</h2>
-            <p>Gestione preventivi, contratti e generazione PDF professionale. Crea, modifica e traccia tutti i tuoi preventivi e contratti.</p>
+            <p>Gestione preventivi, contratti e generazione PDF professionale.</p>
         </div>
 
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab('nuovo')">Crea Preventivo</div>
+        <div id="loading-dati" class="loading">
+            <div class="spinner"></div>
+            <p>Caricamento dati...</p>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SEZIONE 4: TABS -->
+        <!-- ============================================ -->
+        <div class="tabs" id="tabs-container" style="display: none;">
+            <div class="tab active" onclick="switchTab('crea')">Crea Preventivo</div>
             <div class="tab" onclick="switchTab('archivio-preventivi')">Archivio Preventivi</div>
             <div class="tab" onclick="switchTab('archivio-contratti')">Archivio Contratti</div>
         </div>
 
-        <!-- TAB: NUOVO PREVENTIVO -->
-        <div id="tab-nuovo" class="tab-content active">
-            <div class="card">
-                <h3 class="card-title">Preventivo / Contratto Nuovo</h3>
+        <!-- ============================================ -->
+        <!-- SEZIONE 5: TAB CREA PREVENTIVO -->
+        <!-- ============================================ -->
+        <div id="tab-crea" class="tab-content active">
+            <div class="section">
+                <h3 class="section-title">PREVENTIVO / CONTRATTO NUOVO</h3>
                 
-                <div class="form-grid">
-                    <div class="form-group"><label>Numero Preventivo *</label><input type="text" id="numero" placeholder="Es. 2024-001"></div>
-                    <div class="form-group"><label>Data emissione *</label><input type="date" id="data_emissione"></div>
-                </div>
-
-                <div class="section-title">Anagrafica Cliente A (Intestatario Principale)</div>
-                <div class="form-grid">
-                    <div class="form-group"><label>Nome *</label><input type="text" id="cliente_a_nome" placeholder="Nome"></div>
-                    <div class="form-group"><label>Cognome *</label><input type="text" id="cliente_a_cognome" placeholder="Cognome"></div>
-                    <div class="form-group"><label>Telefono</label><input type="tel" id="cliente_a_telefono" placeholder="+39 333 1234567"></div>
-                    <div class="form-group"><label>Email</label><input type="email" id="cliente_a_email" placeholder="email@example.com"></div>
-                    <div class="form-group"><label>Indirizzo</label><input type="text" id="cliente_a_indirizzo" placeholder="Via Roma 123"></div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Citta</label><input type="text" id="cliente_a_citta" placeholder="Citta"></div>
-                        <div class="form-group"><label>CAP</label><input type="text" id="cliente_a_cap" placeholder="00100"></div>
-                        <div class="form-group"><label>Provincia</label><input type="text" id="cliente_a_provincia" placeholder="RM"></div>
+                <form id="form-preventivo" onsubmit="salvaPreventivo(event)">
+                    
+                    <!-- Numero e Data -->
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label>Numero Preventivo *</label>
+                            <input type="text" id="prev_numero" required placeholder="Es. PREV-2024-001" autocomplete="off" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Data Emissione *</label>
+                            <input type="date" id="prev_data" required autocomplete="off" value="">
+                        </div>
                     </div>
-                    <div class="form-group"><label>&nbsp;</label><button class="btn btn-maps" onclick="apriMaps('cliente_a')">Apri su Maps</button></div>
-                </div>
 
-                <div class="section-title">Anagrafica Cliente B (Secondo Intestatario)</div>
-                <div class="form-grid">
-                    <div class="form-group"><label>Nome</label><input type="text" id="cliente_b_nome" placeholder="Nome"></div>
-                    <div class="form-group"><label>Cognome</label><input type="text" id="cliente_b_cognome" placeholder="Cognome"></div>
-                    <div class="form-group"><label>Telefono</label><input type="tel" id="cliente_b_telefono" placeholder="+39 333 1234567"></div>
-                    <div class="form-group"><label>Email</label><input type="email" id="cliente_b_email" placeholder="email@example.com"></div>
-                    <div class="form-group"><label>Indirizzo</label><input type="text" id="cliente_b_indirizzo" placeholder="Via Roma 123"></div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Citta</label><input type="text" id="cliente_b_citta" placeholder="Citta"></div>
-                        <div class="form-group"><label>CAP</label><input type="text" id="cliente_b_cap" placeholder="00100"></div>
-                        <div class="form-group"><label>Provincia</label><input type="text" id="cliente_b_provincia" placeholder="RM"></div>
+                    <!-- ANAGRAFICA CLIENTE A -->
+                    <div class="sub-section">
+                        <h4>Anagrafica Cliente A (Intestatario Principale)</h4>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Nome *</label>
+                                <input type="text" id="cliente_a_nome" required placeholder="Nome" autocomplete="off" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Cognome *</label>
+                                <input type="text" id="cliente_a_cognome" required placeholder="Cognome" autocomplete="off" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Telefono</label>
+                                <input type="tel" id="cliente_a_telefono" placeholder="+39 333 1234567" autocomplete="off" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="cliente_a_email" placeholder="email@esempio.it" autocomplete="off" value="">
+                            </div>
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label>Indirizzo</label>
+                                <input type="text" id="cliente_a_indirizzo" placeholder="Via, numero civico" autocomplete="off" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Citta</label>
+                                <input type="text" id="cliente_a_citta" placeholder="Citta" autocomplete="off" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>CAP</label>
+                                <input type="text" id="cliente_a_cap" placeholder="00100" autocomplete="off" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Provincia</label>
+                                <input type="text" id="cliente_a_provincia" placeholder="RM" autocomplete="off" value="">
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group"><label>&nbsp;</label><button class="btn btn-maps" onclick="apriMaps('cliente_b')">Apri su Maps</button></div>
-                </div>
 
-                <div class="section-title">Dettagli Evento</div>
-                <div class="evento-row">
-                    <div class="form-group"><label>Tipo di Servizio *</label><select id="tipo_servizio"><option value="">-- Seleziona --</option><option value="Matrimonio">Matrimonio</option><option value="Comunione">Comunione</option><option value="Cresima">Cresima</option><option value="Battesimo">Battesimo</option><option value="Ritratto">Ritratto</option><option value="Evento Aziendale">Evento Aziendale</option><option value="Altro">Altro</option></select></div>
-                    <div class="form-group"><label>Data Evento *</label><input type="date" id="data_evento"></div>
-                    <div class="form-group"><label>Luogo Cerimonia</label><input type="text" id="luogo_cerimonia" placeholder="Nome e indirizzo chiesa/luogo"><button class="btn btn-maps" onclick="apriMapsLuogo('cerimonia')">Apri su Maps</button></div>
-                </div>
-                <div class="form-grid" style="margin-top: 15px;">
-                    <div class="form-group"><label>Luogo Ricevimento</label><input type="text" id="luogo_ricevimento" placeholder="Nome e indirizzo ristorante/luogo"><button class="btn btn-maps" onclick="apriMapsLuogo('ricevimento')">Apri su Maps</button></div>
-                </div>
+                    <!-- ANAGRAFICA CLIENTE B -->
+                    <div class="sub-section">
+                        <h4>Anagrafica Cliente B (Secondo Intestatario)</h4>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Nome</label>
+                                <input type="text" id="cliente_b_nome" placeholder="Nome" autocomplete="off" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Cognome</label>
+                                <input type="text" id="cliente_b_cognome" placeholder="Cognome" autocomplete="off" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Telefono</label>
+                                <input type="tel" id="cliente_b_telefono" placeholder="+39 333 1234567" autocomplete="off" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="cliente_b_email" placeholder="email@esempio.it" autocomplete="off" value="">
+                            </div>
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label>Indirizzo</label>
+                                <input type="text" id="cliente_b_indirizzo" placeholder="Via, numero civico" autocomplete="off" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Citta</label>
+                                <input type="text" id="cliente_b_citta" placeholder="Citta" autocomplete="off" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>CAP</label>
+                                <input type="text" id="cliente_b_cap" placeholder="00100" autocomplete="off" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Provincia</label>
+                                <input type="text" id="cliente_b_provincia" placeholder="RM" autocomplete="off" value="">
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="section-title">Servizi & Costi</div>
-                <div class="form-group"><button class="btn btn-outline" onclick="apriSelezioneServizi()">Seleziona da Listino</button></div>
-                <div id="servizi_selezionati" class="services-list"><p style="color: #666666;">Nessun servizio selezionato.</p></div>
+                    <!-- DETTAGLI EVENTO -->
+                    <div class="sub-section">
+                        <h4>Dettagli Evento</h4>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Tipo di Servizio *</label>
+                                <select id="evento_tipo" required>
+                                    <option value="">-- Seleziona --</option>
+                                    <option value="Matrimonio">Matrimonio</option>
+                                    <option value="Comunione">Comunione</option>
+                                    <option value="Cresima">Cresima</option>
+                                    <option value="Battesimo">Battesimo</option>
+                                    <option value="Ritratto">Ritratto</option>
+                                    <option value="Evento Aziendale">Evento Aziendale</option>
+                                    <option value="Compleanno">Compleanno</option>
+                                    <option value="Altro">Altro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Luogo Cerimonia</label>
+                                <input type="text" id="evento_luogo_cerimonia" placeholder="Chiesa, location..." autocomplete="off" value="">
+                            </div>
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label>Luogo Ricevimento</label>
+                                <input type="text" id="evento_luogo_ricevimento" placeholder="Ristorante, villa..." autocomplete="off" value="">
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="form-grid">
-                    <div class="form-group"><label>Sconto %</label><input type="number" id="sconto_perc" value="0" min="0" max="100" step="1" onchange="calcolaTotali()"></div>
-                    <div class="form-group"><label>Buono / promozione (EUR)</label><input type="number" id="sconto_fisso" value="0" min="0" step="1" onchange="calcolaTotali()"></div>
-                </div>
+                    <!-- SERVIZI & COSTI -->
+                    <div class="sub-section">
+                        <h4>Servizi & Costi</h4>
+                        <button type="button" class="btn btn-outline" onclick="apriModaleServizi()">Seleziona da Listino</button>
+                        
+                        <div id="servizi-selezionati" class="servizi-list"></div>
+                        
+                        <div style="margin-top: 20px;">
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label>Sconto %</label>
+                                    <input type="number" id="sconto_perc" step="0.01" min="0" max="100" placeholder="0" autocomplete="off" value="0" onchange="calcolaTotali()">
+                                </div>
+                                <div class="form-group">
+                                    <label>Buono / Promozione (EUR)</label>
+                                    <input type="number" id="sconto_fisso" step="0.01" min="0" placeholder="0.00" autocomplete="off" value="0" onchange="calcolaTotali()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="section-title">Acconti Ricevuti</div>
-                <div id="acconti_selezionati" class="acconti-list"><p style="color: #666666;">Nessun acconto.</p></div>
-                <button class="btn btn-outline" onclick="aggiungiAcconto()">+ Aggiungi Acconto</button>
+                    <!-- ACCONTI RICEVUTI -->
+                    <div class="sub-section">
+                        <h4>Acconti Ricevuti</h4>
+                        <div id="acconti-list"></div>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="aggiungiAcconto()">+ Aggiungi Acconto</button>
+                    </div>
 
-                <div class="section-title">Piano di Pagamento (Promemoria per il cliente)</div>
-                <div id="piano_selezionato" class="piano-list"><p style="color: #666666;">Nessuna rata impostata.</p></div>
-                <button class="btn btn-outline" onclick="aggiungiRata()">+ Aggiungi Voce</button>
+                    <!-- PIANO DI PAGAMENTO -->
+                    <div class="sub-section">
+                        <h4>Piano di Pagamento (Promemoria per il cliente)</h4>
+                        <div id="piano-list"></div>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="aggiungiPianoVoce()">+ Aggiungi Voce</button>
+                    </div>
 
-                <div class="totals-box">
-                    <div class="total-row"><span>Totale servizi:</span><span id="totale_servizi">0,00 EUR</span></div>
-                    <div class="total-row"><span>Sconto applicato:</span><span id="totale_sconto">-0,00 EUR</span></div>
-                    <div class="total-row final"><span>IMPORTO TOTALE:</span><span id="importo_totale">0,00 EUR</span></div>
-                    <div class="total-row"><span>Totale acconti versati:</span><span id="totale_acconti">0,00 EUR</span></div>
-                    <div class="total-row saldo"><span>SALDO RESIDUO:</span><span id="saldo_residuo">0,00 EUR</span></div>
-                </div>
+                    <!-- TOTALI -->
+                    <div class="totals-box">
+                        <div class="totals-row">
+                            <label>Totale servizi</label>
+                            <span id="totale_servizi">0,00 EUR</span>
+                        </div>
+                        <div class="totals-row">
+                            <label>Sconto applicato</label>
+                            <span id="totale_sconto">-0,00 EUR</span>
+                        </div>
+                        <div class="totals-row total">
+                            <label>IMPORTO TOTALE</label>
+                            <span id="importo_totale">0,00 EUR</span>
+                        </div>
+                        <div class="totals-row">
+                            <label>Totale acconti versati</label>
+                            <span id="totale_acconti">0,00 EUR</span>
+                        </div>
+                        <div class="totals-row total">
+                            <label>SALDO RESIDUO</label>
+                            <span id="saldo_residuo">0,00 EUR</span>
+                        </div>
+                    </div>
 
-                <div class="section-title">Accettazione e Note</div>
-                <div class="checkbox-group"><input type="checkbox" id="accettato"><label for="accettato">ACCETTATO E FIRMATO DAL CLIENTE</label></div>
-                <div class="form-group" style="margin-top: 15px;"><label>Note aggiuntive</label><textarea id="note" rows="4" placeholder="Note, condizioni speciali, ecc."></textarea></div>
+                    <!-- ACCETTAZIONE E NOTE -->
+                    <div class="sub-section" style="margin-top: 20px;">
+                        <h4>Accettazione e Note</h4>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="prev_accettato">
+                            <label for="prev_accettato" style="margin: 0; font-weight: 600;">ACCETTATO E FIRMATO DAL CLIENTE</label>
+                        </div>
+                        <div class="form-group" style="margin-top: 15px;">
+                            <label>Note aggiuntive</label>
+                            <textarea id="prev_note" rows="4" placeholder="Note, condizioni, clausole..." autocomplete="off"></textarea>
+                        </div>
+                    </div>
 
-                <div class="modal-actions">
-                    <button class="btn btn-primary" onclick="salvaPreventivo('bozza')">SALVA PREVENTIVO</button>
-                    <button class="btn btn-success" onclick="salvaPreventivo('accettato')">CONVERTI IN CONTRATTO</button>
-                    <button class="btn btn-warning" onclick="generaPDF()">GENERAZIONE PDF</button>
-                </div>
+                    <!-- AZIONI -->
+                    <div class="actions-bar">
+                        <button type="submit" class="btn btn-primary">SALVA PREVENTIVO</button>
+                        <button type="button" class="btn btn-outline" onclick="generaPDF()">GENERAZIONE PDF</button>
+                        <button type="button" class="btn btn-success" onclick="convertiInContratto()">CONVERTI IN CONTRATTO</button>
+                    </div>
+                </form>
             </div>
         </div>
 
-        <!-- TAB: ARCHIVIO PREVENTIVI -->
+        <!-- ============================================ -->
+        <!-- SEZIONE 6: TAB ARCHIVIO PREVENTIVI -->
+        <!-- ============================================ -->
         <div id="tab-archivio-preventivi" class="tab-content">
-            <div class="card">
-                <h3 class="card-title">Archivio Preventivi</h3>
-                <div id="loading-preventivi" class="loading"><div class="spinner"></div><p>Caricamento dati...</p></div>
-                <div id="archivio-preventivi" class="table-container" style="display: none;">
-                    <table><thead><tr><th>N.</th><th>Cliente</th><th>Data</th><th>Totale</th><th>Stato</th><th>Azioni</th></tr></thead><tbody id="tabella-preventivi"></tbody></table>
+            <div class="section">
+                <h3 class="section-title">Archivio Preventivi</h3>
+                <div id="loading-preventivi" class="loading">
+                    <div class="spinner"></div>
+                    <p>Caricamento preventivi...</p>
                 </div>
-                <div id="empty-preventivi" class="empty-state" style="display: none;"><p>Nessun preventivo trovato.</p></div>
+                <div id="tabella-preventivi" style="display: none; overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>N.</th>
+                                <th>Cliente</th>
+                                <th>Data</th>
+                                <th>Totale</th>
+                                <th>Stato</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-preventivi"></tbody>
+                    </table>
+                </div>
+                <div id="empty-preventivi" class="empty-state" style="display: none;">
+                    <p>Nessun preventivo in archivio.</p>
+                </div>
             </div>
         </div>
 
-        <!-- TAB: ARCHIVIO CONTRATTI -->
+        <!-- ============================================ -->
+        <!-- SEZIONE 7: TAB ARCHIVIO CONTRATTI -->
+        <!-- ============================================ -->
         <div id="tab-archivio-contratti" class="tab-content">
-            <div class="card">
-                <h3 class="card-title">Archivio Contratti</h3>
-                <div id="loading-contratti" class="loading"><div class="spinner"></div><p>Caricamento dati...</p></div>
-                <div id="archivio-contratti" class="table-container" style="display: none;">
-                    <table><thead><tr><th>N. Contratto</th><th>Cliente</th><th>Data</th><th>Totale</th><th>Saldo</th><th>Azioni</th></tr></thead><tbody id="tabella-contratti"></tbody></table>
+            <div class="section">
+                <h3 class="section-title">Archivio Contratti</h3>
+                <div id="loading-contratti" class="loading">
+                    <div class="spinner"></div>
+                    <p>Caricamento contratti...</p>
                 </div>
-                <div id="empty-contratti" class="empty-state" style="display: none;"><p>Nessun contratto trovato.</p></div>
+                <div id="tabella-contratti" style="display: none; overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>N. Contratto</th>
+                                <th>Cliente</th>
+                                <th>Data</th>
+                                <th>Totale</th>
+                                <th>Saldo</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-contratti"></tbody>
+                    </table>
+                </div>
+                <div id="empty-contratti" class="empty-state" style="display: none;">
+                    <p>Nessun contratto in archivio.</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- MODALI -->
-    <div id="modal-servizi" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3>Seleziona Servizi</h3><button class="close-modal" onclick="chiudiModale('modal-servizi')">×</button></div><div id="lista-servizi"><div class="loading"><div class="spinner"></div><p>Caricamento listino...</p></div></div><div class="modal-actions"><button class="btn btn-primary" onclick="confermaServizi()">Conferma Selezione</button></div></div></div>
-    <div id="modal-modifica" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3 id="modal-modifica-titolo">Modifica Preventivo</h3><button class="close-modal" onclick="chiudiModale('modal-modifica')">×</button></div><div id="form-modifica"></div><div class="modal-actions"><button class="btn btn-primary" onclick="salvaModifiche()">Salva Modifiche</button><button class="btn btn-outline" onclick="chiudiModale('modal-modifica')">Annulla</button></div></div></div>
-    <div id="modal-acconto" class="modal-overlay"><div class="modal-content"><div class="modal-header"><h3 id="modal-acconto-titolo">Aggiungi Acconto</h3><button class="close-modal" onclick="chiudiModale('modal-acconto')">×</button></div><div class="form-group"><label>Data</label><input type="date" id="acconto_data"></div><div class="form-group"><label>Importo (EUR)</label><input type="number" id="acconto_importo" step="0.01" min="0"></div><div class="form-group"><label>Metodo di pagamento</label><select id="acconto_metodo"><option value="Contanti">Contanti</option><option value="Bonifico">Bonifico</option><option value="Carta">Carta di Credito</option><option value="PayPal">PayPal</option><option value="Altro">Altro</option></select></div><div class="modal-actions"><button class="btn btn-primary" onclick="confermaAcconto()">Conferma</button><button class="btn btn-outline" onclick="chiudiModale('modal-acconto')">Annulla</button></div></div></div>
+    <!-- ============================================ -->
+    <!-- SEZIONE 8: MODALE SELEZIONA SERVIZI -->
+    <!-- ============================================ -->
+    <div id="modal-servizi" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Seleziona Servizi</h2>
+                <button class="close-modal" onclick="chiudiModaleServizi()">x</button>
+            </div>
+            <div id="lista-servizi-disponibili"></div>
+            <div class="actions-bar" style="margin-top: 25px;">
+                <button class="btn btn-primary" onclick="confermaSelezioneServizi()">Conferma Selezione</button>
+                <button class="btn btn-outline" onclick="chiudiModaleServizi()">Annulla</button>
+            </div>
+        </div>
+    </div>
 
-    <div class="footer-branding"><p>Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></p></div>
+    <div class="footer-branding">
+        <p>Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></p>
+    </div>
 
+    <!-- ============================================ -->
+    <!-- SEZIONE 9: JAVASCRIPT -->
+    <!-- ============================================ -->
     <script>
-        let token = '', studioId = '', serviziDisponibili = [], serviziSelezionati = [], acconti = [], pianoPagamento = [], preventivoCorrente = null, modalAccontoMode = 'aggiungi', accontoIndexModifica = -1;
+        var token = '';
+        var studioId = '';
+        var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
+        var serviziSelezionati = [];
+        var acconti = [];
+        var pianoPagamento = [];
+        var serviziDisponibili = [];
 
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             token = urlParams.get('token');
             if (!token) { alert('Token non trovato. Effettua il login.'); window.location.href = 'index.html'; return; }
+            
+            document.getElementById('prev_data').valueAsDate = new Date();
+            document.getElementById('prev_numero').value = 'PREV-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 9000) + 1000);
+            
             verificaSessione();
-            document.getElementById('data_emissione').valueAsDate = new Date();
         });
+
+        function tornaAllaPlancia() {
+            window.location.href = 'plancia-studio.html?token=' + encodeURIComponent(token);
+        }
 
         async function verificaSessione() {
             try {
@@ -235,184 +458,323 @@
                 const data = await response.json();
                 if (!data.success) { alert('Sessione scaduta. Effettua il login.'); window.location.href = 'index.html'; return; }
                 studioId = data.user.id;
-                caricaServizi(); caricaPreventivi(); caricaContratti();
-            } catch (error) { console.error('Errore verifica sessione:', error); }
+                document.getElementById('loading-dati').style.display = 'none';
+                document.getElementById('tabs-container').style.display = 'flex';
+                caricaServiziDisponibili();
+                caricaPreventivi();
+                caricaContratti();
+            } catch (error) {
+                console.error('Errore verifica sessione:', error);
+                document.getElementById('loading-dati').innerHTML = '<p style="color: #e74c3c;">Errore di connessione</p>';
+            }
         }
 
         function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
             event.target.classList.add('active');
             document.getElementById('tab-' + tabName).classList.add('active');
         }
 
-        function apriMaps(tipo) {
-            var indirizzo = '';
-            if (tipo === 'cliente_a') {
-                var via = document.getElementById('cliente_a_indirizzo').value;
-                var citta = document.getElementById('cliente_a_citta').value;
-                var cap = document.getElementById('cliente_a_cap').value;
-                var prov = document.getElementById('cliente_a_provincia').value;
-                indirizzo = (via + ', ' + cap + ' ' + citta + ' ' + prov).trim();
-            } else if (tipo === 'cliente_b') {
-                var via = document.getElementById('cliente_b_indirizzo').value;
-                var citta = document.getElementById('cliente_b_citta').value;
-                var cap = document.getElementById('cliente_b_cap').value;
-                var prov = document.getElementById('cliente_b_provincia').value;
-                indirizzo = (via + ', ' + cap + ' ' + citta + ' ' + prov).trim();
-            }
-            if (indirizzo) { window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(indirizzo), '_blank'); }
-            else { alert('Inserisci prima l\'indirizzo completo.'); }
-        }
-
-        function apriMapsLuogo(tipo) {
-            var luogo = '';
-            if (tipo === 'cerimonia') luogo = document.getElementById('luogo_cerimonia').value;
-            else if (tipo === 'ricevimento') luogo = document.getElementById('luogo_ricevimento').value;
-            if (luogo) { window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(luogo), '_blank'); }
-            else { alert('Inserisci prima il nome del luogo.'); }
-        }
-
-        async function caricaServizi() {
+        async function caricaServiziDisponibili() {
             try {
                 const response = await fetch(WORKER_URL + '/api/studio/servizi?token=' + encodeURIComponent(token));
                 const data = await response.json();
-                if (data.success) serviziDisponibili = data.servizi;
-            } catch (error) { console.error('Errore caricamento servizi:', error); }
+                if (data.success && data.servizi) {
+                    serviziDisponibili = data.servizi;
+                }
+            } catch (error) {
+                console.error('Errore caricamento servizi:', error);
+            }
         }
 
-        function apriSelezioneServizi() {
-            const listaDiv = document.getElementById('lista-servizi');
-            let html = '<div class="services-list">';
-            const categorie = {};
-            serviziDisponibili.forEach(s => { if (!categorie[s.categoria]) categorie[s.categoria] = []; categorie[s.categoria].push(s); });
-            for (const cat in categorie) {
-                const servizi = categorie[cat];
-                html += '<h4 style="color: var(--primary-dark, #1e8449); margin: 15px 0 10px 0;">' + cat + '</h4>';
-                servizi.forEach(s => {
-                    const isSelected = serviziSelezionati.some(sel => sel.id === s.id);
-                    html += '<div class="service-item"><div><strong>' + s.descrizione + '</strong><div style="color: #666666; font-size: 0.9em;">' + s.categoria + '</div></div><div style="display: flex; align-items: center; gap: 10px;"><span style="font-weight: 600; color: var(--primary-dark, #1e8449);">' + parseFloat(s.prezzo).toFixed(2) + ' EUR</span><input type="checkbox" data-id="' + s.id + '" data-desc="' + s.descrizione + '" data-prezzo="' + s.prezzo + '" ' + (isSelected ? 'checked' : '') + ' onchange="toggleServizio(this)"></div></div>';
+        function apriModaleServizi() {
+            const lista = document.getElementById('lista-servizi-disponibili');
+            lista.innerHTML = '';
+            
+            if (serviziDisponibili.length === 0) {
+                lista.innerHTML = '<p class="empty-state">Nessun servizio disponibile. Aggiungi servizi nella card "Listini & Categorie".</p>';
+            } else {
+                const categorie = {};
+                serviziDisponibili.forEach(function(s) {
+                    const cat = s.categoria || 'Altro';
+                    if (!categorie[cat]) categorie[cat] = [];
+                    categorie[cat].push(s);
                 });
+                
+                for (const cat in categorie) {
+                    const catHeader = document.createElement('h4');
+                    catHeader.textContent = cat;
+                    catHeader.style.cssText = 'margin: 20px 0 10px 0; color: #000000;';
+                    lista.appendChild(catHeader);
+                    
+                    categorie[cat].forEach(function(s) {
+                        const div = document.createElement('div');
+                        div.className = 'servizio-select-item';
+                        div.dataset.id = s.id;
+                        div.innerHTML = '<h4>' + (s.descrizione || 'Servizio') + '</h4><p>' + (s.categoria || '') + '</p><span class="price">' + parseFloat(s.prezzo).toFixed(2) + ' EUR</span>';
+                        div.onclick = function() { this.classList.toggle('selected'); };
+                        lista.appendChild(div);
+                    });
+                }
             }
-            html += '</div>';
-            listaDiv.innerHTML = html;
+            
             document.getElementById('modal-servizi').classList.add('active');
         }
 
-        function toggleServizio(checkbox) {
-            const id = checkbox.dataset.id, desc = checkbox.dataset.desc, prezzo = parseFloat(checkbox.dataset.prezzo);
-            if (checkbox.checked) serviziSelezionati.push({ id: id, descrizione: desc, prezzo: prezzo });
-            else serviziSelezionati = serviziSelezionati.filter(s => s.id !== id);
-            aggiornaServiziSelezionatiUI(); calcolaTotali();
+        function chiudiModaleServizi() {
+            document.getElementById('modal-servizi').classList.remove('active');
         }
 
-        function aggiornaServiziSelezionatiUI() {
-            const div = document.getElementById('servizi_selezionati');
-            if (serviziSelezionati.length === 0) { div.innerHTML = '<p style="color: #666666;">Nessun servizio selezionato.</p>'; return; }
-            let html = '';
-            serviziSelezionati.forEach((s, index) => { html += '<div class="service-item"><span>' + s.descrizione + '</span><div style="display: flex; align-items: center; gap: 10px;"><span style="font-weight: 600;">' + parseFloat(s.prezzo).toFixed(2) + ' EUR</span><button class="btn btn-danger btn-sm" onclick="rimuoviServizio(' + index + ')">X</button></div></div>'; });
-            div.innerHTML = html;
+        function confermaSelezioneServizi() {
+            const selezionati = document.querySelectorAll('.servizio-select-item.selected');
+            serviziSelezionati = [];
+            
+            selezionati.forEach(function(el) {
+                const id = el.dataset.id;
+                const servizio = serviziDisponibili.find(function(s) { return s.id === id; });
+                if (servizio) {
+                    serviziSelezionati.push({
+                        id: servizio.id,
+                        descrizione: servizio.descrizione,
+                        categoria: servizio.categoria,
+                        prezzo: parseFloat(servizio.prezzo)
+                    });
+                }
+            });
+            
+            chiudiModaleServizi();
+            renderServiziSelezionati();
+            calcolaTotali();
         }
 
-        function rimuoviServizio(index) { serviziSelezionati.splice(index, 1); aggiornaServiziSelezionatiUI(); calcolaTotali(); }
-        function confermaServizi() { chiudiModale('modal-servizi'); }
+        function renderServiziSelezionati() {
+            const container = document.getElementById('servizi-selezionati');
+            container.innerHTML = '';
+            
+            serviziSelezionati.forEach(function(s, index) {
+                const div = document.createElement('div');
+                div.className = 'servizio-item';
+                div.innerHTML = '<div class="servizio-info"><h5>' + s.descrizione + '</h5><p>' + (s.categoria || '') + '</p></div><span class="servizio-prezzo">' + s.prezzo.toFixed(2) + ' EUR</span><button class="btn btn-sm btn-danger" onclick="rimuoviServizio(' + index + ')">Rimuovi</button>';
+                container.appendChild(div);
+            });
+        }
+
+        function rimuoviServizio(index) {
+            serviziSelezionati.splice(index, 1);
+            renderServiziSelezionati();
+            calcolaTotali();
+        }
 
         function aggiungiAcconto() {
-            modalAccontoMode = 'aggiungi'; accontoIndexModifica = -1;
-            document.getElementById('modal-acconto-titolo').textContent = 'Aggiungi Acconto';
-            document.getElementById('acconto_data').value = new Date().toISOString().split('T')[0];
-            document.getElementById('acconto_importo').value = '';
-            document.getElementById('acconto_metodo').value = 'Contanti';
-            document.getElementById('modal-acconto').classList.add('active');
+            acconti.push({ data: '', importo: 0, metodo: 'Bonifico', note: '' });
+            renderAcconti();
         }
 
-        function modificaAcconto(index) {
-            modalAccontoMode = 'modifica'; accontoIndexModifica = index;
-            const acconto = acconti[index];
-            document.getElementById('modal-acconto-titolo').textContent = 'Modifica Acconto';
-            document.getElementById('acconto_data').value = acconto.data;
-            document.getElementById('acconto_importo').value = acconto.importo;
-            document.getElementById('acconto_metodo').value = acconto.metodo;
-            document.getElementById('modal-acconto').classList.add('active');
+        function renderAcconti() {
+            const container = document.getElementById('acconti-list');
+            container.innerHTML = '';
+            
+            acconti.forEach(function(a, index) {
+                const div = document.createElement('div');
+                div.className = 'acconto-item';
+                div.innerHTML = '<input type="date" value="' + a.data + '" onchange="acconti[' + index + '].data=this.value" placeholder="Data">' +
+                    '<input type="number" step="0.01" min="0" value="' + a.importo + '" onchange="acconti[' + index + '].importo=parseFloat(this.value); calcolaTotali();" placeholder="Importo">' +
+                    '<select onchange="acconti[' + index + '].metodo=this.value"><option value="Bonifico">Bonifico</option><option value="Contanti">Contanti</option><option value="Carta">Carta</option><option value="Altro">Altro</option></select>' +
+                    '<input type="text" value="' + a.note + '" onchange="acconti[' + index + '].note=this.value" placeholder="Note">' +
+                    '<button type="button" class="btn btn-sm btn-danger" onclick="rimuoviAcconto(' + index + ')">X</button>';
+                container.appendChild(div);
+            });
+            
+            calcolaTotali();
         }
 
-        function rimuoviAcconto(index) { if (confirm('Eliminare questo acconto?')) { acconti.splice(index, 1); aggiornaAccontiUI(); calcolaTotali(); } }
-
-        function confermaAcconto() {
-            const data = document.getElementById('acconto_data').value, importo = parseFloat(document.getElementById('acconto_importo').value) || 0, metodo = document.getElementById('acconto_metodo').value;
-            if (!data || importo <= 0) { alert('Inserisci data e importo validi.'); return; }
-            if (modalAccontoMode === 'aggiungi') acconti.push({ data: data, importo: importo, metodo: metodo });
-            else if (accontoIndexModifica >= 0) acconti[accontoIndexModifica] = { data: data, importo: importo, metodo: metodo };
-            aggiornaAccontiUI(); calcolaTotali(); chiudiModale('modal-acconto');
+        function rimuoviAcconto(index) {
+            acconti.splice(index, 1);
+            renderAcconti();
         }
 
-        function aggiornaAccontiUI() {
-            const div = document.getElementById('acconti_selezionati');
-            if (acconti.length === 0) { div.innerHTML = '<p style="color: #666666;">Nessun acconto.</p>'; return; }
-            let html = '';
-            acconti.forEach((a, index) => { html += '<div class="acconto-item"><span>' + new Date(a.data).toLocaleDateString('it-IT') + ' - ' + a.metodo + '</span><div style="display: flex; align-items: center; gap: 10px;"><span style="font-weight: 600; color: var(--primary-dark, #1e8449);">' + a.importo.toFixed(2) + ' EUR</span><button class="btn btn-outline btn-sm" onclick="modificaAcconto(' + index + ')">Modifica</button><button class="btn btn-danger btn-sm" onclick="rimuoviAcconto(' + index + ')">X</button></div></div>'; });
-            div.innerHTML = html;
+        function aggiungiPianoVoce() {
+            pianoPagamento.push({ data: '', importo: 0, descrizione: '' });
+            renderPiano();
         }
 
-        function aggiungiRata() { const importo = prompt('Importo rata (EUR):'); if (importo && parseFloat(importo) > 0) { pianoPagamento.push({ importo: parseFloat(importo), descrizione: 'Rata' }); aggiornaPianoUI(); } }
-        function aggiornaPianoUI() { const div = document.getElementById('piano_selezionato'); if (pianoPagamento.length === 0) { div.innerHTML = '<p style="color: #666666;">Nessuna rata impostata.</p>'; return; } let html = ''; pianoPagamento.forEach((r, index) => { html += '<div class="piano-item"><span>' + r.descrizione + '</span><div style="display: flex; align-items: center; gap: 10px;"><span style="font-weight: 600;">' + r.importo.toFixed(2) + ' EUR</span><button class="btn btn-danger btn-sm" onclick="rimuoviRata(' + index + ')">X</button></div></div>'; }); div.innerHTML = html; }
-        function rimuoviRata(index) { pianoPagamento.splice(index, 1); aggiornaPianoUI(); }
+        function renderPiano() {
+            const container = document.getElementById('piano-list');
+            container.innerHTML = '';
+            
+            pianoPagamento.forEach(function(p, index) {
+                const div = document.createElement('div');
+                div.className = 'piano-item';
+                div.innerHTML = '<input type="date" value="' + p.data + '" onchange="pianoPagamento[' + index + '].data=this.value" placeholder="Data">' +
+                    '<input type="number" step="0.01" min="0" value="' + p.importo + '" onchange="pianoPagamento[' + index + '].importo=parseFloat(this.value)" placeholder="Importo">' +
+                    '<input type="text" value="' + p.descrizione + '" onchange="pianoPagamento[' + index + '].descrizione=this.value" placeholder="Descrizione">' +
+                    '<button type="button" class="btn btn-sm btn-danger" onclick="rimuoviPianoVoce(' + index + ')">X</button>';
+                container.appendChild(div);
+            });
+        }
+
+        function rimuoviPianoVoce(index) {
+            pianoPagamento.splice(index, 1);
+            renderPiano();
+        }
 
         function calcolaTotali() {
-            const totaleServizi = serviziSelezionati.reduce((sum, s) => sum + s.prezzo, 0);
+            let totaleServizi = 0;
+            serviziSelezionati.forEach(function(s) { totaleServizi += s.prezzo; });
+            
             const scontoPerc = parseFloat(document.getElementById('sconto_perc').value) || 0;
             const scontoFisso = parseFloat(document.getElementById('sconto_fisso').value) || 0;
-            const totaleAcconti = acconti.reduce((sum, a) => sum + a.importo, 0);
-            const scontoTotale = (totaleServizi * scontoPerc / 100) + scontoFisso;
-            const importoTotale = totaleServizi - scontoTotale;
+            
+            let scontoApplicato = (totaleServizi * scontoPerc / 100) + scontoFisso;
+            if (scontoApplicato > totaleServizi) scontoApplicato = totaleServizi;
+            
+            const importoTotale = totaleServizi - scontoApplicato;
+            
+            let totaleAcconti = 0;
+            acconti.forEach(function(a) { totaleAcconti += (parseFloat(a.importo) || 0); });
+            
             const saldoResiduo = importoTotale - totaleAcconti;
+            
             document.getElementById('totale_servizi').textContent = totaleServizi.toFixed(2) + ' EUR';
-            document.getElementById('totale_sconto').textContent = '-' + scontoTotale.toFixed(2) + ' EUR';
+            document.getElementById('totale_sconto').textContent = '-' + scontoApplicato.toFixed(2) + ' EUR';
             document.getElementById('importo_totale').textContent = importoTotale.toFixed(2) + ' EUR';
             document.getElementById('totale_acconti').textContent = totaleAcconti.toFixed(2) + ' EUR';
             document.getElementById('saldo_residuo').textContent = saldoResiduo.toFixed(2) + ' EUR';
         }
 
-        async function salvaPreventivo(stato) {
-            const numero = document.getElementById('numero').value, dataEmissione = document.getElementById('data_emissione').value, tipoServizio = document.getElementById('tipo_servizio').value, dataEvento = document.getElementById('data_evento').value;
-            if (!numero || !dataEmissione) { alert('Compila i campi obbligatori.'); return; }
-            const clienteA = { nome: document.getElementById('cliente_a_nome').value, cognome: document.getElementById('cliente_a_cognome').value, telefono: document.getElementById('cliente_a_telefono').value, email: document.getElementById('cliente_a_email').value, indirizzo: document.getElementById('cliente_a_indirizzo').value, citta: document.getElementById('cliente_a_citta').value, cap: document.getElementById('cliente_a_cap').value, provincia: document.getElementById('cliente_a_provincia').value };
-            const clienteB = { nome: document.getElementById('cliente_b_nome').value, cognome: document.getElementById('cliente_b_cognome').value, telefono: document.getElementById('cliente_b_telefono').value, email: document.getElementById('cliente_b_email').value, indirizzo: document.getElementById('cliente_b_indirizzo').value, citta: document.getElementById('cliente_b_citta').value, cap: document.getElementById('cliente_b_cap').value, provincia: document.getElementById('cliente_b_provincia').value };
-            const totaleServizi = serviziSelezionati.reduce((sum, s) => sum + s.prezzo, 0);
-            const scontoPerc = parseFloat(document.getElementById('sconto_perc').value) || 0;
-            const scontoFisso = parseFloat(document.getElementById('sconto_fisso').value) || 0;
-            const scontoTotale = (totaleServizi * scontoPerc / 100) + scontoFisso;
-            const totaleFinale = totaleServizi - scontoTotale;
-            const dati = { id: 'prev-' + Date.now(), studio_id: studioId, numero: numero, data_emissione: dataEmissione, data_servizio: dataEvento || null, tipo_servizio: tipoServizio, luogo_cerimonia: document.getElementById('luogo_cerimonia').value, luogo_ricevimento: document.getElementById('luogo_ricevimento').value, cliente_a: clienteA, cliente_b: clienteB, servizi: serviziSelezionati, acconti: acconti, piano_pagamento: pianoPagamento, sconto_perc: scontoPerc, sconto_fisso: scontoFisso, sconto_fisso_nota: null, accettato: stato === 'accettato', note: document.getElementById('note').value, totale_finale: totaleFinale, stato: stato, data_creazione: new Date().toISOString() };
+        async function salvaPreventivo(event) {
+            event.preventDefault();
+            
+            const dati = {
+                id: 'prev-' + Date.now(),
+                numero: document.getElementById('prev_numero').value,
+                data_emissione: document.getElementById('prev_data').value,
+                tipo_servizio: document.getElementById('evento_tipo').value,
+                luogo_cerimonia: document.getElementById('evento_luogo_cerimonia').value,
+                luogo_ricevimento: document.getElementById('evento_luogo_ricevimento').value,
+                cliente_a: {
+                    nome: document.getElementById('cliente_a_nome').value,
+                    cognome: document.getElementById('cliente_a_cognome').value,
+                    telefono: document.getElementById('cliente_a_telefono').value,
+                    email: document.getElementById('cliente_a_email').value,
+                    indirizzo: document.getElementById('cliente_a_indirizzo').value,
+                    citta: document.getElementById('cliente_a_citta').value,
+                    cap: document.getElementById('cliente_a_cap').value,
+                    provincia: document.getElementById('cliente_a_provincia').value
+                },
+                cliente_b: {
+                    nome: document.getElementById('cliente_b_nome').value,
+                    cognome: document.getElementById('cliente_b_cognome').value,
+                    telefono: document.getElementById('cliente_b_telefono').value,
+                    email: document.getElementById('cliente_b_email').value,
+                    indirizzo: document.getElementById('cliente_b_indirizzo').value,
+                    citta: document.getElementById('cliente_b_citta').value,
+                    cap: document.getElementById('cliente_b_cap').value,
+                    provincia: document.getElementById('cliente_b_provincia').value
+                },
+                servizi: serviziSelezionati,
+                acconti: acconti,
+                piano_pagamento: pianoPagamento,
+                sconto_perc: parseFloat(document.getElementById('sconto_perc').value) || 0,
+                sconto_fisso: parseFloat(document.getElementById('sconto_fisso').value) || 0,
+                accettato: document.getElementById('prev_accettato').checked,
+                note: document.getElementById('prev_note').value,
+                totale_finale: parseFloat(document.getElementById('importo_totale').textContent.replace(' EUR', '').replace(',', '.')) || 0,
+                stato: 'bozza',
+                data_creazione: new Date().toISOString()
+            };
+            
             try {
-                const response = await fetch(WORKER_URL + '/api/studio/preventivo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati) });
+                const response = await fetch(WORKER_URL + '/api/studio/preventivo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dati)
+                });
                 const result = await response.json();
                 if (result.success) {
                     alert('Preventivo salvato con successo!');
-                    await aggiungiInAgenda(dati, stato);
-                    if (stato === 'accettato') {
-                        const datiContratto = { ...dati, id: 'contr-' + Date.now(), numero_contratto: numero, data_contratto: new Date().toISOString().split('T')[0] };
-                        await fetch(WORKER_URL + '/api/studio/contratti', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datiContratto) });
-                    }
-                    resetForm(); caricaPreventivi(); caricaContratti();
-                } else { alert('Errore: ' + result.error); }
-            } catch (error) { console.error('Errore salvataggio:', error); alert('Errore di connessione.'); }
+                    document.getElementById('form-preventivo').reset();
+                    serviziSelezionati = [];
+                    acconti = [];
+                    pianoPagamento = [];
+                    renderServiziSelezionati();
+                    renderAcconti();
+                    renderPiano();
+                    calcolaTotali();
+                    caricaPreventivi();
+                } else {
+                    alert('Errore: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Errore salvataggio:', error);
+                alert('Errore di connessione.');
+            }
         }
 
-        async function aggiungiInAgenda(dati, stato) {
-            const statoAgenda = stato === 'accettato' ? 'Confermato' : 'Da Confermare';
-            const clienteNome = dati.cliente_a ? (dati.cliente_a.nome + ' ' + dati.cliente_a.cognome) : 'N/A';
-            const agendaData = { id: 'agg-' + Date.now(), studio_id: studioId, titolo: 'Preventivo/Contratto ' + dati.numero, data: dati.data_servizio || dati.data_emissione, ora_inizio: null, ora_fine: null, descrizione: dati.tipo_servizio || '', luogo: dati.luogo_cerimonia || dati.luogo_ricevimento || '', tipo_servizio: dati.tipo_servizio || 'Servizio Fotografico', squadra: 'Squadra 1', cliente: clienteNome, note: statoAgenda + ' - ' + (dati.note || ''), data_creazione: new Date().toISOString() };
-            try { await fetch(WORKER_URL + '/api/studio/agenda', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(agendaData) }); } catch (error) { console.error('Errore aggiunta agenda:', error); }
+        function generaPDF() {
+            alert('Funzione generazione PDF in sviluppo. Il preventivo verrà convertito in PDF scaricabile.');
         }
 
-        function resetForm() {
-            document.getElementById('numero').value = ''; document.getElementById('cliente_a_nome').value = ''; document.getElementById('cliente_a_cognome').value = ''; document.getElementById('cliente_a_telefono').value = ''; document.getElementById('cliente_a_email').value = ''; document.getElementById('cliente_a_indirizzo').value = ''; document.getElementById('cliente_a_citta').value = ''; document.getElementById('cliente_a_cap').value = ''; document.getElementById('cliente_a_provincia').value = '';
-            document.getElementById('cliente_b_nome').value = ''; document.getElementById('cliente_b_cognome').value = ''; document.getElementById('cliente_b_telefono').value = ''; document.getElementById('cliente_b_email').value = ''; document.getElementById('cliente_b_indirizzo').value = ''; document.getElementById('cliente_b_citta').value = ''; document.getElementById('cliente_b_cap').value = ''; document.getElementById('cliente_b_provincia').value = '';
-            document.getElementById('tipo_servizio').value = ''; document.getElementById('data_evento').value = ''; document.getElementById('luogo_cerimonia').value = ''; document.getElementById('luogo_ricevimento').value = '';
-            document.getElementById('sconto_perc').value = '0'; document.getElementById('sconto_fisso').value = '0'; document.getElementById('note').value = ''; document.getElementById('accettato').checked = false;
-            serviziSelezionati = []; acconti = []; pianoPagamento = [];
-            aggiornaServiziSelezionatiUI(); aggiornaAccontiUI(); aggiornaPianoUI(); calcolaTotali();
+        async function convertiInContratto() {
+            if (!confirm('Convertire questo preventivo in contratto?')) return;
+            
+            const dati = {
+                id: 'contr-' + Date.now(),
+                numero: document.getElementById('prev_numero').value.replace('PREV', 'CTR'),
+                data_emissione: document.getElementById('prev_data').value,
+                tipo_servizio: document.getElementById('evento_tipo').value,
+                luogo_cerimonia: document.getElementById('evento_luogo_cerimonia').value,
+                luogo_ricevimento: document.getElementById('evento_luogo_ricevimento').value,
+                cliente_a: {
+                    nome: document.getElementById('cliente_a_nome').value,
+                    cognome: document.getElementById('cliente_a_cognome').value,
+                    telefono: document.getElementById('cliente_a_telefono').value,
+                    email: document.getElementById('cliente_a_email').value,
+                    indirizzo: document.getElementById('cliente_a_indirizzo').value,
+                    citta: document.getElementById('cliente_a_citta').value,
+                    cap: document.getElementById('cliente_a_cap').value,
+                    provincia: document.getElementById('cliente_a_provincia').value
+                },
+                cliente_b: {
+                    nome: document.getElementById('cliente_b_nome').value,
+                    cognome: document.getElementById('cliente_b_cognome').value,
+                    telefono: document.getElementById('cliente_b_telefono').value,
+                    email: document.getElementById('cliente_b_email').value,
+                    indirizzo: document.getElementById('cliente_b_indirizzo').value,
+                    citta: document.getElementById('cliente_b_citta').value,
+                    cap: document.getElementById('cliente_b_cap').value,
+                    provincia: document.getElementById('cliente_b_provincia').value
+                },
+                servizi: serviziSelezionati,
+                acconti: acconti,
+                piano_pagamento: pianoPagamento,
+                sconto_perc: parseFloat(document.getElementById('sconto_perc').value) || 0,
+                sconto_fisso: parseFloat(document.getElementById('sconto_fisso').value) || 0,
+                accettato: document.getElementById('prev_accettato').checked,
+                note: document.getElementById('prev_note').value,
+                totale_finale: parseFloat(document.getElementById('importo_totale').textContent.replace(' EUR', '').replace(',', '.')) || 0,
+                stato: 'attivo',
+                data_creazione: new Date().toISOString()
+            };
+            
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/contratti', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dati)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Contratto creato con successo!');
+                    caricaContratti();
+                } else {
+                    alert('Errore: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Errore conversione:', error);
+                alert('Errore di connessione.');
+            }
         }
 
         async function caricaPreventivi() {
@@ -420,20 +782,46 @@
                 const response = await fetch(WORKER_URL + '/api/studio/preventivi?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 document.getElementById('loading-preventivi').style.display = 'none';
-                if (data.success && data.preventivi.length > 0) {
-                    document.getElementById('archivio-preventivi').style.display = 'block';
+                
+                if (data.success && data.preventivi && data.preventivi.length > 0) {
                     document.getElementById('empty-preventivi').style.display = 'none';
-                    const tbody = document.getElementById('tabella-preventivi');
+                    document.getElementById('tabella-preventivi').style.display = 'block';
+                    const tbody = document.getElementById('tbody-preventivi');
                     tbody.innerHTML = '';
-                    data.preventivi.forEach(p => {
-                        let clienteA = {};
-                        try { clienteA = typeof p.cliente_a === 'string' ? JSON.parse(p.cliente_a) : p.cliente_a; } catch(e) { clienteA = {}; }
-                        const clienteNome = clienteA.nome && clienteA.cognome ? (clienteA.nome + ' ' + clienteA.cognome) : 'N/A';
-                        const statoClass = p.stato === 'accettato' ? 'badge-accettato' : 'badge-bozza';
-                        tbody.innerHTML += '<tr><td>' + (p.numero || '-') + '</td><td>' + clienteNome + '</td><td>' + new Date(p.data_emissione).toLocaleDateString('it-IT') + '</td><td>' + parseFloat(p.totale_finale).toFixed(2) + ' EUR</td><td><span class="badge ' + statoClass + '">' + p.stato + '</span></td><td class="actions-cell"><button class="btn btn-outline btn-sm" onclick="modificaPreventivo(\'' + p.id + '\')" style="color: #000000; background: #ffffff; border: 1px solid #d5d8dc;">Modifica</button><button class="btn btn-primary btn-sm" onclick="generaPDFFromId(\'' + p.id + '\')" style="color: #ffffff;">PDF</button><button class="btn btn-danger btn-sm" onclick="eliminaPreventivo(\'' + p.id + '\')" style="color: #ffffff;">Elimina</button></td></tr>';
+                    
+                    data.preventivi.forEach(function(p) {
+                        const cliente = (p.cliente_a ? (p.cliente_a.nome + ' ' + p.cliente_a.cognome) : '-');
+                        const statoClass = 'badge-' + (p.stato || 'bozza');
+                        tbody.innerHTML += '<tr>' +
+                            '<td><strong>' + (p.numero || '-') + '</strong></td>' +
+                            '<td>' + cliente + '</td>' +
+                            '<td>' + (p.data_emissione ? new Date(p.data_emissione).toLocaleDateString('it-IT') : '-') + '</td>' +
+                            '<td>' + (parseFloat(p.totale_finale) || 0).toFixed(2) + ' EUR</td>' +
+                            '<td><span class="badge ' + statoClass + '">' + (p.stato || 'bozza') + '</span></td>' +
+                            '<td><button class="btn btn-sm btn-outline" onclick="visualizzaPreventivo(\'' + p.id + '\')">Visualizza</button> <button class="btn btn-sm btn-danger" onclick="eliminaPreventivo(\'' + p.id + '\')">Elimina</button></td>' +
+                        '</tr>';
                     });
-                } else { document.getElementById('empty-preventivi').style.display = 'block'; }
-            } catch (error) { console.error('Errore caricamento preventivi:', error); }
+                } else {
+                    document.getElementById('empty-preventivi').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Errore caricamento preventivi:', error);
+                document.getElementById('loading-preventivi').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento</p>';
+            }
+        }
+
+        function visualizzaPreventivo(id) {
+            alert('Visualizza preventivo - ID: ' + id);
+        }
+
+        async function eliminaPreventivo(id) {
+            if (!confirm('Eliminare questo preventivo?')) return;
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/preventivo/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
+                const result = await response.json();
+                if (result.success) { alert('Preventivo eliminato.'); caricaPreventivi(); }
+                else { alert('Errore: ' + result.error); }
+            } catch (error) { console.error('Errore eliminazione:', error); }
         }
 
         async function caricaContratti() {
@@ -441,83 +829,51 @@
                 const response = await fetch(WORKER_URL + '/api/studio/contratti?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 document.getElementById('loading-contratti').style.display = 'none';
-                if (data.success && data.contratti.length > 0) {
-                    document.getElementById('archivio-contratti').style.display = 'block';
+                
+                if (data.success && data.contratti && data.contratti.length > 0) {
                     document.getElementById('empty-contratti').style.display = 'none';
-                    const tbody = document.getElementById('tabella-contratti');
+                    document.getElementById('tabella-contratti').style.display = 'block';
+                    const tbody = document.getElementById('tbody-contratti');
                     tbody.innerHTML = '';
-                    data.contratti.forEach(c => {
-                        let clienteA = {};
-                        try { clienteA = typeof c.cliente_a === 'string' ? JSON.parse(c.cliente_a) : c.cliente_a; } catch(e) { clienteA = {}; }
-                        const clienteNome = clienteA.nome && clienteA.cognome ? (clienteA.nome + ' ' + clienteA.cognome) : 'N/A';
-                        let totaleAcconti = 0;
-                        try {
-                            const accontiData = typeof c.acconti === 'string' ? JSON.parse(c.acconti) : c.acconti;
-                            if (Array.isArray(accontiData)) totaleAcconti = accontiData.reduce((sum, a) => sum + (parseFloat(a.importo) || 0), 0);
-                        } catch(e) {}
-                        const saldo = (parseFloat(c.totale_finale) || 0) - totaleAcconti;
-                        tbody.innerHTML += '<tr><td>' + (c.numero_contratto || c.numero || '-') + '</td><td>' + clienteNome + '</td><td>' + new Date(c.data_emissione).toLocaleDateString('it-IT') + '</td><td>' + parseFloat(c.totale_finale).toFixed(2) + ' EUR</td><td>' + saldo.toFixed(2) + ' EUR</td><td class="actions-cell"><button class="btn btn-outline btn-sm" onclick="modificaContratto(\'' + c.id + '\')" style="color: #000000; background: #ffffff; border: 1px solid #d5d8dc;">Modifica</button><button class="btn btn-primary btn-sm" onclick="generaPDFFromId(\'' + c.id + '\')" style="color: #ffffff;">PDF</button><button class="btn btn-danger btn-sm" onclick="eliminaContratto(\'' + c.id + '\')" style="color: #ffffff;">Elimina</button></td></tr>';
+                    
+                    data.contratti.forEach(function(c) {
+                        const cliente = (c.cliente_a ? (c.cliente_a.nome + ' ' + c.cliente_a.cognome) : '-');
+                        const saldo = (parseFloat(c.totale_finale) || 0) - (c.acconti ? c.acconti.reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0) : 0);
+                        tbody.innerHTML += '<tr>' +
+                            '<td><strong>' + (c.numero_contratto || c.numero || '-') + '</strong></td>' +
+                            '<td>' + cliente + '</td>' +
+                            '<td>' + (c.data_emissione ? new Date(c.data_emissione).toLocaleDateString('it-IT') : '-') + '</td>' +
+                            '<td>' + (parseFloat(c.totale_finale) || 0).toFixed(2) + ' EUR</td>' +
+                            '<td>' + saldo.toFixed(2) + ' EUR</td>' +
+                            '<td><button class="btn btn-sm btn-outline" onclick="visualizzaContratto(\'' + c.id + '\')">Visualizza</button> <button class="btn btn-sm btn-danger" onclick="eliminaContratto(\'' + c.id + '\')">Elimina</button></td>' +
+                        '</tr>';
                     });
-                } else { document.getElementById('empty-contratti').style.display = 'block'; }
-            } catch (error) { console.error('Errore caricamento contratti:', error); }
-        }
-
-        async function modificaPreventivo(id) {
-            try {
-                const response = await fetch(WORKER_URL + '/api/studio/preventivi?token=' + encodeURIComponent(token));
-                const data = await response.json();
-                if (data.success) {
-                    const preventivo = data.preventivi.find(p => p.id === id);
-                    if (preventivo) { preventivoCorrente = preventivo; popolaFormModifica(preventivo, 'Preventivo'); document.getElementById('modal-modifica').classList.add('active'); }
+                } else {
+                    document.getElementById('empty-contratti').style.display = 'block';
                 }
-            } catch (error) { console.error('Errore caricamento preventivo:', error); }
+            } catch (error) {
+                console.error('Errore caricamento contratti:', error);
+                document.getElementById('loading-contratti').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento</p>';
+            }
         }
 
-        async function modificaContratto(id) {
+        function visualizzaContratto(id) {
+            alert('Visualizza contratto - ID: ' + id);
+        }
+
+        async function eliminaContratto(id) {
+            if (!confirm('Eliminare questo contratto?')) return;
             try {
-                const response = await fetch(WORKER_URL + '/api/studio/contratti?token=' + encodeURIComponent(token));
-                const data = await response.json();
-                if (data.success) {
-                    const contratto = data.contratti.find(c => c.id === id);
-                    if (contratto) { preventivoCorrente = contratto; popolaFormModifica(contratto, 'Contratto'); document.getElementById('modal-modifica').classList.add('active'); }
-                }
-            } catch (error) { console.error('Errore caricamento contratto:', error); }
-        }
-
-        function popolaFormModifica(dati, tipo) {
-            document.getElementById('modal-modifica-titolo').textContent = 'Modifica ' + tipo;
-            const formDiv = document.getElementById('form-modifica');
-            let accontiData = [];
-            try { accontiData = typeof dati.acconti === 'string' ? JSON.parse(dati.acconti) : dati.acconti; } catch(e) {}
-            acconti = Array.isArray(accontiData) ? accontiData : [];
-            aggiornaAccontiUI();
-            formDiv.innerHTML = '<div class="form-group"><label>Numero</label><input type="text" id="mod_numero" value="' + (dati.numero || '') + '"></div><div class="form-group"><label>Data emissione</label><input type="date" id="mod_data_emissione" value="' + (dati.data_emissione || '') + '"></div><div class="form-group"><label>Totale Acconti (EUR)</label><input type="number" id="mod_totale_acconti" step="0.01" value="' + (acconti.reduce((sum, a) => sum + (parseFloat(a.importo) || 0), 0).toFixed(2)) + '"><small style="color: #666666;">Modifica questo valore per aggiornare gli acconti</small></div><div class="form-group"><label>Stato</label><select id="mod_stato"><option value="bozza" ' + (dati.stato === 'bozza' ? 'selected' : '') + '>Bozza</option><option value="accettato" ' + (dati.stato === 'accettato' ? 'selected' : '') + '>Accettato</option></select></div><div class="form-group"><label>Note</label><textarea id="mod_note" rows="3">' + (dati.note || '') + '</textarea></div><div style="margin-top: 15px; padding: 15px; background: var(--primary-light, #e8f8f5); border-radius: 8px;"><strong>Cliente:</strong> ' + (dati.cliente_a ? (typeof dati.cliente_a === 'string' ? JSON.parse(dati.cliente_a).nome + ' ' + JSON.parse(dati.cliente_a).cognome : dati.cliente_a.nome + ' ' + dati.cliente_a.cognome) : 'N/A') + '<br><strong>Totale:</strong> ' + parseFloat(dati.totale_finale).toFixed(2) + ' EUR<br><strong>Saldo:</strong> ' + (parseFloat(dati.totale_finale) - acconti.reduce((sum, a) => sum + (parseFloat(a.importo) || 0), 0)).toFixed(2) + ' EUR</div>';
-        }
-
-        async function salvaModifiche() {
-            if (!preventivoCorrente) return;
-            const numero = document.getElementById('mod_numero').value, dataEmissione = document.getElementById('mod_data_emissione').value, stato = document.getElementById('mod_stato').value, note = document.getElementById('mod_note').value, nuovoTotaleAcconti = parseFloat(document.getElementById('mod_totale_acconti').value) || 0;
-            if (acconti.length > 0) {
-                const vecchioTotale = acconti.reduce((sum, a) => sum + (parseFloat(a.importo) || 0), 0);
-                if (vecchioTotale > 0) {
-                    const rapporto = nuovoTotaleAcconti / vecchioTotale;
-                    acconti = acconti.map(a => ({ data: a.data, importo: parseFloat((a.importo * rapporto).toFixed(2)), metodo: a.metodo }));
-                } else if (nuovoTotaleAcconti > 0) acconti = [{ data: new Date().toISOString().split('T')[0], importo: nuovoTotaleAcconti, metodo: 'Contanti' }];
-            } else if (nuovoTotaleAcconti > 0) acconti = [{ data: new Date().toISOString().split('T')[0], importo: nuovoTotaleAcconti, metodo: 'Contanti' }];
-            try {
-                const response = await fetch(WORKER_URL + '/api/studio/contratti/' + preventivoCorrente.id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ acconti: acconti }) });
+                const response = await fetch(WORKER_URL + '/api/studio/contratti/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
                 const result = await response.json();
-                if (result.success) { alert('Modifiche salvate con successo!'); chiudiModale('modal-modifica'); caricaPreventivi(); caricaContratti(); }
+                if (result.success) { alert('Contratto eliminato.'); caricaContratti(); }
                 else { alert('Errore: ' + result.error); }
-            } catch (error) { console.error('Errore salvataggio modifiche:', error); alert('Errore di connessione.'); }
+            } catch (error) { console.error('Errore eliminazione:', error); }
         }
 
-        async function eliminaPreventivo(id) { if (!confirm('Eliminare questo preventivo?')) return; try { const response = await fetch(WORKER_URL + '/api/studio/preventivo/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' }); const result = await response.json(); if (result.success) { alert('Preventivo eliminato.'); caricaPreventivi(); } else { alert('Errore: ' + result.error); } } catch (error) { console.error('Errore eliminazione:', error); } }
-        async function eliminaContratto(id) { if (!confirm('Eliminare questo contratto?')) return; try { const response = await fetch(WORKER_URL + '/api/studio/contratti/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' }); const result = await response.json(); if (result.success) { alert('Contratto eliminato.'); caricaContratti(); } else { alert('Errore: ' + result.error); } } catch (error) { console.error('Errore eliminazione:', error); } }
-        function generaPDF() { alert('Funzione generazione PDF in sviluppo.'); }
-        function generaPDFFromId(id) { alert('Funzione generazione PDF in sviluppo per ID: ' + id); }
-        function chiudiModale(modalId) { document.getElementById(modalId).classList.remove('active'); }
-        document.querySelectorAll('.modal-overlay').forEach(modal => { modal.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); }); });
+        document.getElementById('modal-servizi').addEventListener('click', function(e) {
+            if (e.target === this) chiudiModaleServizi();
+        });
     </script>
 </body>
 </html>
