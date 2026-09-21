@@ -24,19 +24,25 @@
         .welcome-section { background: #ffffff; padding: 30px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 5px solid #d4af37; }
         .welcome-section h2 { color: #000000; font-size: 1.8em; margin-bottom: 10px; }
         .welcome-section p { color: #666666; font-size: 1em; }
+        .welcome-section .studio-id { color: #996515; font-size: 0.9em; margin-top: 10px; font-weight: 600; }
         .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
-        .module-card { background: #ffffff; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; border-top: 4px solid #d4af37; cursor: pointer; transition: all 0.3s ease; }
+        .module-card { background: #ffffff; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; border-top: 4px solid #d4af37; cursor: pointer; transition: all 0.3s ease; position: relative; }
         .module-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(212,175,55,0.3); border-color: #d4af37; }
+        .module-card .module-code { position: absolute; top: 10px; right: 15px; background: #d4af37; color: #ffffff; padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 700; }
         .module-card h3 { color: #000000; font-size: 1.2em; margin-bottom: 10px; font-weight: 600; }
         .module-card p { color: #666666; font-size: 0.9em; line-height: 1.5; }
+        .module-card .badge-status { display: inline-block; margin-top: 10px; padding: 4px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; background: #fff9e6; color: #996515; border: 1px solid #d4af37; }
         .footer-branding { text-align: center; padding: 30px 20px; color: #666666; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
         .footer-branding strong { color: #996515; }
-        @media (max-width: 768px) { .modules-grid { grid-template-columns: 1fr; } }
+        .loading-overlay { text-align: center; padding: 40px; color: #666666; }
+        .spinner { border: 4px solid #fff9e6; border-top: 4px solid #d4af37; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @media (max-width: 768px) { .modules-grid { grid-template-columns: 1fr; } .top-bar { flex-wrap: wrap; gap: 10px; } }
     </style>
 </head>
 <body>
     <!-- ============================================ -->
-    <!-- SEZIONE 2: TOP BAR & HEADER -->
+    <!-- SEZIONE 2: TOP BAR -->
     <!-- ============================================ -->
     <div class="top-bar">
         <h1>AppCenterStudioPROGOLD</h1>
@@ -48,68 +54,134 @@
     </div>
 
     <div class="container">
+        <!-- ============================================ -->
+        <!-- SEZIONE 3: WELCOME SECTION -->
+        <!-- ============================================ -->
         <div class="welcome-section">
-            <h2 id="benvenuto">Benvenuto</h2>
-            <p>Gestisci il tuo studio fotografico in modo professionale e organizzato.</p>
+            <h2 id="benvenuto">Plancia di Controllo Studio</h2>
+            <p>Gestisci tutte le funzionalita del tuo studio fotografico. Dati sincronizzati in tempo reale sul cloud.</p>
+            <div id="loading-sessione" class="loading-overlay">
+                <div class="spinner"></div>
+                <p>Verifica sessione cloud...</p>
+            </div>
+            <div id="studio-info" class="studio-id" style="display: none;">ID: -</div>
         </div>
 
         <!-- ============================================ -->
-        <!-- SEZIONE 3: MODULES GRID (Ordine Blindato) -->
+        <!-- SEZIONE 4: MODULES GRID (14 CARD ORIGINALI) -->
         <!-- ============================================ -->
-        <div class="modules-grid">
-            <div class="module-card" onclick="apriModulo('impostazioni.html')">
+        <div class="modules-grid" id="modules-grid" style="display: none;">
+            
+            <!-- CARD 1: IM - Impostazioni (Scheda Anagrafica) -->
+            <div class="module-card" onclick="apriModulo('scheda-anagrafica.html')">
+                <span class="module-code">IM</span>
                 <h3>Impostazioni</h3>
-                <p>Configura il tuo studio e le preferenze.</p>
+                <p>Scheda anagrafica, logo, messaggi automatici e link studio.</p>
             </div>
-            <div class="module-card" onclick="apriModulo('agenda.html')">
-                <h3>Agenda</h3>
-                <p>Organizza gli appuntamenti e i servizi fotografici nel calendario.</p>
+
+            <!-- CARD 2: ID - Registra Clienti ID -->
+            <div class="module-card" onclick="apriModulo('registra-clienti-id.html')">
+                <span class="module-code">ID</span>
+                <h3>Registra Clienti ID</h3>
+                <p>Registrazione anagrafica clienti con ID univoco.</p>
             </div>
+
+            <!-- CARD 3: LC - Listini, Categorie & Contratti -->
             <div class="module-card" onclick="apriModulo('listini-categorie.html')">
-                <h3>Listini e Categorie</h3>
-                <p>Gestisci i servizi offerti e i prezzi.</p>
+                <span class="module-code">LC</span>
+                <h3>Listini, Categorie & Contratti</h3>
+                <p>Crea listini, gestisci categorie e archivio contratti.</p>
             </div>
+
+            <!-- CARD 4: PV - Preventivi & Contratti -->
             <div class="module-card" onclick="apriModulo('preventivi.html')">
-                <h3>Preventivi e Contratti</h3>
-                <p>Crea preventivi professionali e convertili in contratti con un click.</p>
+                <span class="module-code">PV</span>
+                <h3>Preventivi & Contratti</h3>
+                <p>Crea preventivi, invia via WhatsApp e trasforma in contratti.</p>
             </div>
-            <div class="module-card" onclick="apriModulo('anagrafica-clienti.html')">
-                <h3>Anagrafica Clienti</h3>
-                <p>Gestisci l'anagrafica dei tuoi clienti con ID univoci e credenziali di accesso.</p>
+
+            <!-- CARD 5: SA - Seleziona Cartelle Clienti -->
+            <div class="module-card" onclick="apriModulo('selezione-album.html')">
+                <span class="module-code">SA</span>
+                <h3>Seleziona Cartelle Clienti</h3>
+                <p>Gestione caricamento gallerie e selezione album.</p>
+                <span class="badge-status">SELEZIONE IN ATTESA</span>
             </div>
+
+            <!-- CARD 6: GR - GRU -->
+            <div class="module-card" onclick="apriModulo('gru.html')">
+                <span class="module-code">GR</span>
+                <h3>GRU</h3>
+                <p>Gestione risorse e utility dello studio.</p>
+            </div>
+
+            <!-- CARD 7: WF - Workflow -->
             <div class="module-card" onclick="apriModulo('workflow.html')">
+                <span class="module-code">WF</span>
                 <h3>Workflow</h3>
-                <p>Traccia lo stato di avanzamento di ogni servizio fotografico.</p>
+                <p>Stato avanzamento foto e video per ogni cliente.</p>
             </div>
+
+            <!-- CARD 8: GC - Gallerie Clienti -->
             <div class="module-card" onclick="apriModulo('gallerie.html')">
-                <h3>Gallerie</h3>
-                <p>Gestisci le gallerie foto da consegnare ai clienti.</p>
+                <span class="module-code">GC</span>
+                <h3>Gallerie Clienti</h3>
+                <p>Crea gallerie esterne MEGA con link brandizzati per i clienti.</p>
+                <span class="badge-status">NUOVO</span>
             </div>
-            <div class="module-card" onclick="apriModulo('selezioni-album.html')">
-                <h3>Selezioni Album</h3>
-                <p>Permetti ai clienti di selezionare le foto per l'album.</p>
-            </div>
-            <div class="module-card" onclick="apriModulo('negozio.html')">
-                <h3>Negozio Online</h3>
-                <p>Gestisci il catalogo prodotti e gli ordini online.</p>
-            </div>
+
+            <!-- CARD 9: LR - Lista Regali -->
             <div class="module-card" onclick="apriModulo('lista-regali.html')">
+                <span class="module-code">LR</span>
                 <h3>Lista Regali</h3>
-                <p>Crea liste regali digitali per matrimoni ed eventi.</p>
+                <p>Crowdfunding e messaggi di auguri per eventi.</p>
             </div>
+
+            <!-- CARD 10: NZ - Negozio Online -->
+            <div class="module-card" onclick="apriModulo('negozio.html')">
+                <span class="module-code">NZ</span>
+                <h3>Negozio Online</h3>
+                <p>Prodotti, ordini e configurazione pagamenti.</p>
+                <span class="badge-status">0 ORDINI IN ATTESA</span>
+            </div>
+
+            <!-- CARD 11: RC - Ricevute -->
             <div class="module-card" onclick="apriModulo('ricevute.html')">
+                <span class="module-code">RC</span>
                 <h3>Ricevute</h3>
-                <p>Emetti e gestisci le ricevute dei pagamenti.</p>
+                <p>Gestisci le ricevute fiscali e i pagamenti dei clienti.</p>
             </div>
+
+            <!-- CARD 12: EM - Email -->
+            <div class="module-card" onclick="apriModulo('email.html')">
+                <span class="module-code">EM</span>
+                <h3>Email</h3>
+                <p>Invio email e archivio comunicazioni.</p>
+            </div>
+
+            <!-- CARD 13: AG - Agenda -->
+            <div class="module-card" onclick="apriModulo('agenda.html')">
+                <span class="module-code">AG</span>
+                <h3>Agenda</h3>
+                <p>Calendario eventi e appuntamenti dello studio.</p>
+            </div>
+
+            <!-- CARD 14: LN - Link Utili -->
+            <div class="module-card" onclick="apriModulo('link-utili.html')">
+                <span class="module-code">LN</span>
+                <h3>Link Utili</h3>
+                <p>Archivio personale di link, fornitori e risorse rapide.</p>
+            </div>
+
         </div>
     </div>
 
     <div class="footer-branding">
-        <p>Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></p>
+        <p>Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong></p>
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 4: JAVASCRIPT (Con Alert Scadenza) -->
+    <!-- SEZIONE 5: JAVASCRIPT -->
     <!-- ============================================ -->
     <script>
         var token = '';
@@ -137,9 +209,14 @@
                 
                 studioId = data.user.id;
                 studioNome = data.user.nome || 'Studio';
-                document.getElementById('benvenuto').textContent = 'Benvenuto, ' + studioNome;
                 
-                // CONTROLLO SCADENZA LICENZA BLINDATO
+                document.getElementById('benvenuto').textContent = 'Benvenuto, ' + studioNome;
+                document.getElementById('studio-info').textContent = 'ID: ' + studioId;
+                document.getElementById('loading-sessione').style.display = 'none';
+                document.getElementById('studio-info').style.display = 'block';
+                document.getElementById('modules-grid').style.display = 'grid';
+                
+                // CONTROLLO SCADENZA LICENZA
                 if (data.user && data.user.scadenza) {
                     const oggi = new Date();
                     const scadenza = new Date(data.user.scadenza);
@@ -150,6 +227,7 @@
                 
             } catch (error) {
                 console.error('Errore verifica sessione:', error);
+                document.getElementById('loading-sessione').innerHTML = '<p style="color: #e74c3c;">Errore connessione</p>';
             }
         }
 
