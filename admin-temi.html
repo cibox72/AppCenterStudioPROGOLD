@@ -3,282 +3,542 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestione Temi - AppCenterStudioPROGOLD</title>
-    
-    <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
+    <title>Admin Panel - CRM & Notifiche - AppCenterStudioPROGOLD</title>
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
-    
     <style>
-        :root {
-            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
-            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
-            --success: #27ae60; --danger: #e74c3c; --radius: 16px;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
-            transition: background 0.5s ease, color 0.5s ease;
-        }
-        .top-bar {
-            background: var(--primary-gradient); padding: 16px 24px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100;
-            transition: background 0.5s ease;
-        }
-        .nav-btn {
-            background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
-            cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark);
-            transition: all 0.2s ease;
-        }
-        .nav-btn:hover { transform: translateY(-2px); }
-        .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #ffffff; min-height: 100vh; color: #000000; }
+        .top-bar { background: linear-gradient(135deg, #d4af37, #996515); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .top-bar h1 { color: #ffffff; font-size: 1.4em; }
+        .sync-status { display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9em; }
+        .sync-dot { width: 10px; height: 10px; background: #ffffff; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; }
-        .page-header {
-            text-align: center; padding: 32px; background: var(--card-bg, white); border-radius: var(--radius);
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
-            transition: box-shadow 0.5s ease, background 0.5s ease;
-        }
-        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
-        .page-header h1 {
-            font-size: 32px; font-weight: 800; background: var(--primary-gradient);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px;
-        }
-        .page-header p { color: var(--text-light); font-size: 15px; }
-        .card-3d {
-            background: var(--card-bg, white); border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden;
-            transition: border-color 0.5s ease, box-shadow 0.5s ease, background 0.5s ease;
-            color: var(--text-main, #2c3e50);
-        }
-        .card-3d::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
-        .card-title {
-            font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px;
-            padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .card-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
-        .tema-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
-        .tema-card {
-            background: var(--card-bg, white); border-radius: 12px; padding: 24px; border: 3px solid var(--border-color);
-            transition: all 0.3s ease; cursor: pointer; position: relative; color: var(--text-main, #2c3e50);
-        }
-        .tema-card:hover { transform: translateY(-6px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
-        .tema-card.active { border-color: var(--primary); box-shadow: 0 8px 24px rgba(30, 132, 73, 0.2); }
-        .tema-card.active::after {
-            content: '✓'; position: absolute; top: 12px; right: 12px;
-            width: 30px; height: 30px; background: var(--primary); color: white;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 18px; font-weight: 700;
-        }
-        .tema-preview {
-            height: 80px; border-radius: 10px; margin-bottom: 16px;
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-weight: 700; font-size: 14px;
-            transition: background 0.5s ease;
-        }
-        .tema-nome { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
-        .tema-desc { font-size: 12px; color: var(--text-light); }
-        .tema-attuale {
-            background: var(--primary-light); padding: 20px; border-radius: 12px; margin-bottom: 24px;
-            border-left: 4px solid var(--primary);
-            transition: background 0.5s ease, border-color 0.5s ease;
-        }
-        .tema-attuale-title { font-size: 14px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; }
-        .tema-attuale-nome { font-size: 20px; font-weight: 800; color: var(--primary-dark); }
-        .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
-        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
-        .toast {
-            background: var(--card-bg, white); border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease;
-            color: var(--text-main, #2c3e50);
-        }
-        .toast.error { border-left-color: var(--danger); }
-        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
-        .loading { text-align: center; padding: 40px; color: var(--text-light); }
-        .spinner {
-            width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary);
-            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .hidden { display: none !important; }
+        .nav-btn { background: rgba(255,255,255,0.2); border: none; color: #ffffff; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9em; margin-left: 10px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .page-header { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 5px solid #d4af37; }
+        .page-header h2 { color: #000000; margin-bottom: 10px; font-size: 1.6em; }
+        .page-header p { color: #666666; font-size: 0.95em; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; display: flex; align-items: center; gap: 15px; }
+        .stat-icon { width: 50px; height: 50px; background: linear-gradient(135deg, #d4af37, #996515); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 1.5em; }
+        .stat-info h3 { color: #000000; font-size: 1.8em; margin-bottom: 5px; }
+        .stat-info p { color: #666666; font-size: 0.9em; }
+        .section { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; }
+        .section-title { color: #000000; font-size: 1.3em; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #fff9e6; font-weight: 600; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .section-header h3 { color: #000000; font-size: 1.2em; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { background: #d4af37; color: #ffffff; font-weight: 600; padding: 12px; text-align: left; }
+        td { padding: 12px; text-align: left; border-bottom: 1px solid #d5d8dc; color: #000000; background: #ffffff; }
+        tr:hover td { background: #fff9e6; }
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; }
+        .badge-attivo { background: #d5f5e3; color: #1e8449; }
+        .badge-trial { background: #fdebd0; color: #d35400; }
+        .badge-scaduto { background: #fadbd8; color: #c0392b; }
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9em; }
+        .btn-primary { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; }
+        .btn-outline { background: transparent; border: 2px solid #d4af37; color: #996515; }
+        .btn-sm { padding: 6px 12px; font-size: 0.8em; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #000000; font-weight: 600; font-size: 0.9em; }
+        .form-group input, .form-group select { width: 100%; padding: 12px 15px; border: 2px solid #d5d8dc; border-radius: 10px; font-size: 0.95em; background: #f8f9fa; color: #000000; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #d4af37; background: #ffffff; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .tab { padding: 12px 25px; background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; cursor: pointer; font-weight: 600; color: #000000; }
+        .tab:hover { background: #fff9e6; }
+        .tab.active { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; border-color: #996515; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .loading { text-align: center; padding: 40px; color: #666666; }
+        .spinner { border: 4px solid #fff9e6; border-top: 4px solid #d4af37; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .empty-state { text-align: center; padding: 40px; color: #666666; }
+        .footer-branding { text-align: center; padding: 30px 20px; color: #666666; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
+        .footer-branding strong { color: #996515; }
+        .notification-item { padding: 15px; border-left: 4px solid #d4af37; background: #fff9e6; margin-bottom: 10px; border-radius: 8px; }
+        .notification-item.unread { background: #ffffff; border-left-color: #996515; }
+        .notification-item h4 { color: #000000; margin-bottom: 5px; }
+        .notification-item p { color: #666666; font-size: 0.9em; }
+        .notification-item small { color: #999999; font-size: 0.8em; }
+        @media (max-width: 768px) { .form-grid, .stats-grid { grid-template-columns: 1fr; } .section-header { flex-direction: column; align-items: flex-start; gap: 15px; } }
     </style>
 </head>
 <body>
     <div class="top-bar">
-        <div style="display: flex; gap: 10px;">
-            <button class="nav-btn" onclick="tornaPlancia()">Indietro</button>
-            <button class="nav-btn" onclick="tornaPlancia()">Plancia</button>
+        <h1>Admin Panel - CRM</h1>
+        <div>
+            <span class="sync-status"><div class="sync-dot"></div>Cloud Sync: OK</span>
+            <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Plancia</button>
+            <button class="nav-btn" onclick="logout()">Logout</button>
         </div>
-        <div class="sync-status"><span class="sync-dot"></span> Cloud Sync: OK</div>
     </div>
 
     <div class="container">
         <div class="page-header">
-            <h1>Gestione Temi Colori</h1>
-            <p>Personalizza i colori dell'app per stagione o evento. Salvato sul cloud.</p>
+            <h2>Admin Panel - CRM & Notifiche</h2>
+            <p>Gestione studi, notifiche e personalizzazione della tua dashboard</p>
         </div>
 
-        <div id="loadingArea" class="loading">
-            <div class="spinner"></div>
-            <div>Verifica sessione cloud...</div>
-        </div>
-
-        <div id="mainContent" class="hidden">
-            <div class="tema-attuale">
-                <div class="tema-attuale-title">TEMA ATTUALMENTE ATTIVO</div>
-                <div class="tema-attuale-nome" id="temaAttualeNome">Caricamento...</div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-info">
+                    <h3 id="count-studi">0</h3>
+                    <p>Studi Registrati</p>
+                </div>
             </div>
-
-            <div class="card-3d">
-                <div class="card-title">Seleziona un Tema</div>
-                <div class="card-subtitle">Clicca su un tema per applicarlo immediatamente a tutta l'app.</div>
-                <div class="tema-grid" id="temaGrid"></div>
+            <div class="stat-card">
+                <div class="stat-icon">🔔</div>
+                <div class="stat-info">
+                    <h3 id="count-notifiche">0</h3>
+                    <p>Notifiche</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📁</div>
+                <div class="stat-info">
+                    <h3 id="count-archivio">0</h3>
+                    <p>Archivio Studi</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎨</div>
+                <div class="stat-info">
+                    <h3>Tema</h3>
+                    <p>Admin</p>
+                </div>
             </div>
         </div>
 
-        <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('studi')">Elenco Studi Registrati</div>
+            <div class="tab" onclick="switchTab('notifiche')">Notifiche</div>
+            <div class="tab" onclick="switchTab('archivio')">Archivio Studi</div>
+            <div class="tab" onclick="switchTab('tema')">Tema Admin</div>
+            <div class="tab" onclick="switchTab('crea')">Crea Studio</div>
+        </div>
+
+        <!-- TAB: STUDI -->
+        <div id="tab-studi" class="tab-content active">
+            <div class="section">
+                <div class="section-header">
+                    <h3>Elenco Studi Registrati</h3>
+                    <p style="color: #666666;">Gestisci credenziali, stato abbonamento e attivazione studi</p>
+                </div>
+                <div id="loading-studi" class="loading">
+                    <div class="spinner"></div>
+                    <p>Caricamento studi...</p>
+                </div>
+                <div id="tabella-studi" style="display: none; overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID Studio</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Password</th>
+                                <th>Abbonamento</th>
+                                <th>Scadenza</th>
+                                <th>Stato</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-studi"></tbody>
+                    </table>
+                </div>
+                <div id="empty-studi" class="empty-state" style="display: none;">
+                    <p>Nessuno studio registrato.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: NOTIFICHE -->
+        <div id="tab-notifiche" class="tab-content">
+            <div class="section">
+                <div class="section-header">
+                    <h3>Notifiche e Richieste</h3>
+                    <p style="color: #666666;">Schede di registrazione e eventi del sistema</p>
+                    <button class="btn btn-outline btn-sm" onclick="segnaTutteLetture()">✅ Segna tutte come lette</button>
+                </div>
+                <div id="loading-notifiche" class="loading">
+                    <div class="spinner"></div>
+                    <p>Caricamento notifiche...</p>
+                </div>
+                <div id="lista-notifiche"></div>
+                <div id="empty-notifiche" class="empty-state" style="display: none;">
+                    <p>Nessuna notifica presente.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: ARCHIVIO -->
+        <div id="tab-archivio" class="tab-content">
+            <div class="section">
+                <div class="section-header">
+                    <h3>Archivio Studi Completati</h3>
+                    <p style="color: #666666;">Visualizza studi con scheda anagrafica completata</p>
+                </div>
+                <div id="loading-archivio" class="loading">
+                    <div class="spinner"></div>
+                    <p>Caricamento archivio...</p>
+                </div>
+                <div id="lista-archivio"></div>
+                <div id="empty-archivio" class="empty-state" style="display: none;">
+                    <p>Nessuno studio archiviato.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: TEMA -->
+        <div id="tab-tema" class="tab-content">
+            <div class="section">
+                <h3>🎨 PERSONALIZZA TEMA ADMIN</h3>
+                <p style="color: #666666; margin-bottom: 20px;">Scegli il colore della tua dashboard di amministrazione. Ogni studio fotografico potrà scegliere il proprio tema dalla sua plancia.</p>
+                
+                <div class="form-group">
+                    <label>IL TUO TEMA ADMIN ATTUALE</label>
+                    <div id="tema-attuale" style="padding: 15px; background: #fff9e6; border-radius: 8px; border-left: 4px solid #d4af37;">
+                        <p style="color: #000000; font-weight: 600;">Caricamento...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: CREA STUDIO -->
+        <div id="tab-crea" class="tab-content">
+            <div class="section">
+                <h3>Crea Nuovo Studio</h3>
+                <p style="color: #666666; margin-bottom: 20px;">Registra un nuovo studio fotografico sulla piattaforma</p>
+                
+                <form id="form-crea-studio" onsubmit="creaStudio(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>ID Studio (unico) *</label>
+                            <input type="text" id="studio_id" required placeholder="Es. studio-001">
+                        </div>
+                        <div class="form-group">
+                            <label>Password *</label>
+                            <input type="password" id="studio_password" required placeholder="Password di accesso">
+                        </div>
+                        <div class="form-group">
+                            <label>Mostra Password</label>
+                            <input type="checkbox" id="show_password" onchange="togglePassword()">
+                        </div>
+                        <div class="form-group">
+                            <label>Nome Studio *</label>
+                            <input type="text" id="studio_nome" required placeholder="Nome dello studio">
+                        </div>
+                        <div class="form-group">
+                            <label>Partita IVA</label>
+                            <input type="text" id="studio_piva" placeholder="Partita IVA">
+                        </div>
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" id="studio_email" required placeholder="email@studio.it">
+                        </div>
+                        <div class="form-group">
+                            <label>Telefono</label>
+                            <input type="tel" id="studio_telefono" placeholder="+39 333 1234567">
+                        </div>
+                        <div class="form-group">
+                            <label>Indirizzo</label>
+                            <input type="text" id="studio_indirizzo" placeholder="Via Roma 123">
+                        </div>
+                        <div class="form-group">
+                            <label>Città</label>
+                            <input type="text" id="studio_citta" placeholder="Roma">
+                        </div>
+                        <div class="form-group">
+                            <label>Stato/Provincia</label>
+                            <input type="text" id="studio_stato" placeholder="RM">
+                        </div>
+                        <div class="form-group">
+                            <label>Scadenza Abbonamento</label>
+                            <input type="date" id="studio_scadenza">
+                        </div>
+                        <div class="form-group">
+                            <label>Stato Abbonamento</label>
+                            <select id="studio_stato_abbonamento">
+                                <option value="Attivo">Attivo</option>
+                                <option value="Trial">Trial</option>
+                                <option value="Scaduto">Scaduto</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="margin-top: 25px; display: flex; gap: 15px;">
+                        <button type="submit" class="btn btn-primary">CREA STUDIO</button>
+                        <button type="button" class="btn btn-outline" onclick="document.getElementById('form-crea-studio').reset()">PULISCI</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
-    <div class="toast-container" id="toastContainer"></div>
+    <div class="footer-branding">
+        <p>Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></p>
+    </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        let studioId = null;
-        let temaAttivo = 'default';
+        var token = '';
+        var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
 
-        const TEMI_PRESET = {
-            'default': { nome: 'Default (Verde Salvia)', primary: '#82e0aa', primary_dark: '#1e8449', primary_light: '#e8f8f5' },
-            'natale': { nome: 'Natale (Rosso & Oro)', primary: '#e74c3c', primary_dark: '#922b21', primary_light: '#fadbd8' },
-            'carnevale': { nome: 'Carnevale (Viola & Fucsia)', primary: '#af7ac5', primary_dark: '#6c3483', primary_light: '#e8daef' },
-            'inverno': { nome: 'Inverno (Nero & Argento)', primary: '#5d6d7e', primary_dark: '#1c2833', primary_light: '#eaeded' },
-            'pasqua': { nome: 'Pasqua (Rosa & Giallo)', primary: '#f1948a', primary_dark: '#c0392b', primary_light: '#fadbd8' },
-            'estate': { nome: 'Estate (Azzurro & Giallo)', primary: '#5dade2', primary_dark: '#1a5276', primary_light: '#d6eaf8' },
-            'halloween': { nome: 'Halloween (Arancio & Nero)', primary: '#f39c12', primary_dark: '#7d6608', primary_light: '#fdebd0' },
-            'san_valentino': { nome: 'San Valentino (Rosa & Rosso)', primary: '#e91e63', primary_dark: '#880e4f', primary_light: '#fce4ec' },
-            'arancio': { nome: 'Arancio (Energia)', primary: '#f39c12', primary_dark: '#d35400', primary_light: '#fdebd0' },
-            'elegante_beige': { nome: 'Beige Elegante', primary: '#8b7355', primary_dark: '#5d4e37', primary_light: '#f5f0e8' },
-            'notte_arancio': { nome: 'Notte Arancio', primary: '#ff6b35', primary_dark: '#c9451a', primary_light: '#ffe8e0' },
-            'caldo_professionale': { nome: 'Caldo Professional', primary: '#e67e50', primary_dark: '#a04020', primary_light: '#ffece4' },
-            'minimal_luxury': { nome: 'Minimal Luxury', primary: '#c9a87c', primary_dark: '#8b7355', primary_light: '#faf8f4' },
-            'tramonto_moderno': { nome: 'Tramonto Moderno', primary: '#ff512f', primary_dark: '#c93820', primary_light: '#ffe5e0' },
-            'oro_nero': { nome: 'Oro Nero', primary: '#d4af37', primary_dark: '#996515', primary_light: '#fff9e6' },
-            'ardesia_elegante': { nome: 'Ardesia Elegante', primary: '#6c7a89', primary_dark: '#34495e', primary_light: '#e8ecef' },
-            'corallo_professional': { nome: 'Corallo Professional', primary: '#ff6b6b', primary_dark: '#c94545', primary_light: '#ffe8e8' },
-            'bronzo_scuro': { nome: 'Bronzo Scuro', primary: '#cd7f32', primary_dark: '#8b4513', primary_light: '#f5ebe0' },
-            'platino': { nome: 'Platino', primary: '#9e9e9e', primary_dark: '#616161', primary_light: '#f5f5f5' },
-            'lavanda_professional': { nome: 'Lavanda Professional', primary: '#9b7cb6', primary_dark: '#6c5b7b', primary_light: '#f0e8f8' },
-            'rame_caldo': { nome: 'Rame Caldo', primary: '#b87333', primary_dark: '#8b4513', primary_light: '#fff0e6' }
-        };
-
-        document.addEventListener('DOMContentLoaded', async function() {
-            if (!token) { window.location.href = 'index.html'; return; }
-            await verificaSessione();
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            token = urlParams.get('token');
+            
+            if (!token) {
+                alert('Token non trovato. Effettua il login.');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            caricaDati();
         });
 
-        async function verificaSessione() {
+        async function caricaDati() {
+            await caricaStudi();
+            await caricaNotifiche();
+            await caricaArchivio();
+            await caricaTema();
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+
+        async function caricaStudi() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/auth/verifica?token=${encodeURIComponent(token)}`);
+                const response = await fetch(WORKER_URL + '/api/admin/crm/studi?token=' + encodeURIComponent(token));
                 const data = await response.json();
-                if (!data.success || data.tipo !== 'admin') {
-                    mostraToast('Sessione non valida', 'error');
-                    setTimeout(() => window.location.href = 'index.html', 1500);
-                    return;
-                }
-                studioId = 'admin'; // Admin non ha studioId specifico
-                document.getElementById('loadingArea').classList.add('hidden');
-                document.getElementById('mainContent').classList.remove('hidden');
-                await caricaTemaAttuale();
-                renderizzaTemi();
                 
-                // Applica il tema automaticamente usando la funzione di temi.js
-                if (typeof caricaTemaGlobale === 'function') {
-                    await caricaTemaGlobale('admin', token);
-                }
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
-            }
-        }
-
-        async function caricaTemaAttuale() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/admin/tema?token=${encodeURIComponent(token)}`);
-                const data = await response.json();
-                if (data.success && data.tema) {
-                    temaAttivo = data.tema.tema_attivo || 'default';
+                document.getElementById('loading-studi').style.display = 'none';
+                
+                if (data.success && data.studi.length > 0) {
+                    document.getElementById('tabella-studi').style.display = 'block';
+                    document.getElementById('empty-studi').style.display = 'none';
+                    document.getElementById('count-studi').textContent = data.studi.length;
+                    
+                    const tbody = document.getElementById('tbody-studi');
+                    tbody.innerHTML = '';
+                    
+                    data.studi.forEach(function(studio) {
+                        const statoClass = studio.stato_abbonamento === 'Attivo' ? 'badge-attivo' : (studio.stato_abbonamento === 'Trial' ? 'badge-trial' : 'badge-scaduto');
+                        const attivoClass = studio.attivo === 1 ? 'badge-attivo' : 'badge-scaduto';
+                        
+                        tbody.innerHTML += '<tr>' +
+                            '<td><strong>' + studio.id + '</strong></td>' +
+                            '<td>' + (studio.nome || '-') + '</td>' +
+                            '<td>' + (studio.email || '-') + '</td>' +
+                            '<td><small>' + (studio.password_plain || 'Nascosta') + '</small></td>' +
+                            '<td><span class="badge ' + statoClass + '">' + studio.stato_abbonamento + '</span></td>' +
+                            '<td>' + (studio.scadenza ? new Date(studio.scadenza).toLocaleDateString('it-IT') : '-') + '</td>' +
+                            '<td><span class="badge ' + attivoClass + '">' + (studio.attivo === 1 ? 'Attivo' : 'Disattivo') + '</span></td>' +
+                            '<td>' +
+                                '<button class="btn btn-sm btn-outline" onclick="modificaStudio(\'' + studio.id + '\')">Modifica</button> ' +
+                                '<button class="btn btn-sm btn-primary" onclick="visualizzaScheda(\'' + studio.id + '\')">Scheda</button>' +
+                            '</td>' +
+                        '</tr>';
+                    });
                 } else {
-                    temaAttivo = 'default';
+                    document.getElementById('empty-studi').style.display = 'block';
+                    document.getElementById('count-studi').textContent = '0';
                 }
-                document.getElementById('temaAttualeNome').textContent = TEMI_PRESET[temaAttivo].nome;
             } catch (error) {
-                console.error('Errore:', error);
-                temaAttivo = 'default';
-                document.getElementById('temaAttualeNome').textContent = TEMI_PRESET['default'].nome;
+                console.error('Errore caricamento studi:', error);
+                document.getElementById('loading-studi').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento</p>';
             }
         }
 
-        function renderizzaTemi() {
-            const grid = document.getElementById('temaGrid');
-            grid.innerHTML = Object.keys(TEMI_PRESET).map(key => {
-                const tema = TEMI_PRESET[key];
-                const isActive = key === temaAttivo;
-                return `
-                    <div class="tema-card ${isActive ? 'active' : ''}" onclick="selezionaTema('${key}')">
-                        <div class="tema-preview" style="background: linear-gradient(135deg, ${tema.primary_light}, ${tema.primary}, ${tema.primary_dark});">
-                            ${tema.nome}
-                        </div>
-                        <div class="tema-nome">${tema.nome}</div>
-                        <div class="tema-desc">Clicca per applicare</div>
-                    </div>
-                `;
-            }).join('');
+        async function caricaNotifiche() {
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/notifiche?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                
+                document.getElementById('loading-notifiche').style.display = 'none';
+                
+                if (data.success && data.notifiche.length > 0) {
+                    document.getElementById('count-notifiche').textContent = data.nonLette;
+                    
+                    const lista = document.getElementById('lista-notifiche');
+                    lista.innerHTML = '';
+                    
+                    data.notifiche.forEach(function(notif) {
+                        const unreadClass = notif.letto === 0 ? 'unread' : '';
+                        lista.innerHTML += '<div class="notification-item ' + unreadClass + '">' +
+                            '<h4>' + notif.titolo + '</h4>' +
+                            '<p>' + notif.messaggio + '</p>' +
+                            '<small>' + new Date(notif.data_creazione).toLocaleString('it-IT') + '</small>' +
+                            '<div style="margin-top: 10px;">' +
+                                '<button class="btn btn-sm btn-outline" onclick="segnaLetta(\'' + notif.id + '\')">Segna come letta</button> ' +
+                                '<button class="btn btn-sm btn-primary" onclick="archiviaNotifica(\'' + notif.id + '\')">Archivia</button>' +
+                            '</div>' +
+                        '</div>';
+                    });
+                } else {
+                    document.getElementById('empty-notifiche').style.display = 'block';
+                    document.getElementById('count-notifiche').textContent = '0';
+                }
+            } catch (error) {
+                console.error('Errore caricamento notifiche:', error);
+                document.getElementById('loading-notifiche').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento</p>';
+            }
         }
 
-        async function selezionaTema(temaId) {
+        async function caricaArchivio() {
             try {
-                const response = await fetch(`${WORKER_URL}/api/admin/tema?token=${encodeURIComponent(token)}`, {
+                const response = await fetch(WORKER_URL + '/api/admin/archivio-studi?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                
+                document.getElementById('loading-archivio').style.display = 'none';
+                
+                if (data.success && data.studi.length > 0) {
+                    document.getElementById('count-archivio').textContent = data.studi.length;
+                    
+                    const lista = document.getElementById('lista-archivio');
+                    lista.innerHTML = '<div style="overflow-x: auto;"><table>' +
+                        '<thead><tr><th>ID Studio</th><th>Nome</th><th>Email</th><th>P.IVA</th><th>Telefono</th><th>Azioni</th></tr></thead>' +
+                        '<tbody>';
+                    
+                    data.studi.forEach(function(studio) {
+                        lista.innerHTML += '<tr>' +
+                            '<td><strong>' + studio.id + '</strong></td>' +
+                            '<td>' + (studio.nome || '-') + '</td>' +
+                            '<td>' + (studio.email || '-') + '</td>' +
+                            '<td>' + (studio.piva || '-') + '</td>' +
+                            '<td>' + (studio.telefono || '-') + '</td>' +
+                            '<td><button class="btn btn-sm btn-primary" onclick="visualizzaScheda(\'' + studio.id + '\')">Visualizza Scheda</button></td>' +
+                        '</tr>';
+                    });
+                    
+                    lista.innerHTML += '</tbody></table></div>';
+                } else {
+                    document.getElementById('empty-archivio').style.display = 'block';
+                    document.getElementById('count-archivio').textContent = '0';
+                }
+            } catch (error) {
+                console.error('Errore caricamento archivio:', error);
+                document.getElementById('loading-archivio').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento</p>';
+            }
+        }
+
+        async function caricaTema() {
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/tema?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                
+                if (data.success && data.tema) {
+                    document.getElementById('tema-attuale').innerHTML = '<p style="color: #000000; font-weight: 600;">Tema attuale: <span style="color: #996515;">' + data.tema.tema_attivo + '</span></p>';
+                }
+            } catch (error) {
+                console.error('Errore caricamento tema:', error);
+            }
+        }
+
+        async function segnaLetta(id) {
+            try {
+                await fetch(WORKER_URL + '/api/admin/notifica/letta', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ tema_attivo: temaId })
+                    body: JSON.stringify({ id: id })
                 });
-                const result = await response.json();
-                if (result.success) {
-                    temaAttivo = temaId;
-                    document.getElementById('temaAttualeNome').textContent = TEMI_PRESET[temaId].nome;
-                    renderizzaTemi();
-                    
-                    // Forza l'aggiornamento immediato del tema nella pagina corrente
-                    if (typeof caricaTemaGlobale === 'function') {
-                        await caricaTemaGlobale('admin', token);
-                    }
-                    
-                    mostraToast(`Tema "${TEMI_PRESET[temaId].nome}" applicato!`, 'success');
-                } else {
-                    mostraToast('Errore nel salvataggio', 'error');
-                }
+                caricaNotifiche();
             } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore di connessione', 'error');
+                console.error('Errore segna letta:', error);
             }
         }
 
-        function tornaPlancia() {
-            window.location.href = `admin.html?token=${encodeURIComponent(token)}`;
+        async function segnaTutteLetture() {
+            try {
+                await fetch(WORKER_URL + '/api/admin/notifiche/lette', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                caricaNotifiche();
+            } catch (error) {
+                console.error('Errore segna tutte lette:', error);
+            }
         }
 
-        function mostraToast(msg, tipo) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div>${msg}</div>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        async function archiviaNotifica(id) {
+            try {
+                await fetch(WORKER_URL + '/api/admin/archivia-notifica', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ notifica_id: id })
+                });
+                caricaNotifiche();
+            } catch (error) {
+                console.error('Errore archivia notifica:', error);
+            }
+        }
+
+        function togglePassword() {
+            const pwdField = document.getElementById('studio_password');
+            const showCheck = document.getElementById('show_password');
+            pwdField.type = showCheck.checked ? 'text' : 'password';
+        }
+
+        async function creaStudio(event) {
+            event.preventDefault();
+            
+            const dati = {
+                id: document.getElementById('studio_id').value,
+                password: document.getElementById('studio_password').value,
+                nome: document.getElementById('studio_nome').value,
+                piva: document.getElementById('studio_piva').value,
+                email: document.getElementById('studio_email').value,
+                telefono: document.getElementById('studio_telefono').value,
+                indirizzo: document.getElementById('studio_indirizzo').value,
+                citta: document.getElementById('studio_citta').value,
+                stato: document.getElementById('studio_stato').value,
+                scadenza: document.getElementById('studio_scadenza').value,
+                stato_abbonamento: document.getElementById('studio_stato_abbonamento').value,
+                data_registrazione: new Date().toISOString().split('T')[0]
+            };
+            
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/crm/studio', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dati)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Studio creato con successo!');
+                    document.getElementById('form-crea-studio').reset();
+                    caricaStudi();
+                } else {
+                    alert('Errore: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Errore creazione studio:', error);
+                alert('Errore di connessione.');
+            }
+        }
+
+        function modificaStudio(id) {
+            alert('Funzione di modifica studio - ID: ' + id);
+        }
+
+        function visualizzaScheda(id) {
+            window.location.href = 'admin-scheda-studio.html?studioId=' + id + '&token=' + encodeURIComponent(token);
+        }
+
+        function logout() {
+            fetch(WORKER_URL + '/api/auth/logout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: token })
+            }).finally(function() {
+                window.location.href = 'index.html';
+            });
         }
     </script>
 </body>
