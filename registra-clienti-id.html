@@ -47,7 +47,7 @@
         .warning-box strong { color: #000000; }
         .warning-box p { color: #000000; font-size: 0.9em; margin-top: 5px; }
         .warning-box .btn { margin-top: 10px; }
-        .duplicate-item { padding: 10px; background: #ffffff; border: 1px solid #d5d8dc; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .duplicate-item { padding: 10px; background: #ffffff; border: 1px solid #d5d8dc; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .duplicate-item:hover { background: #fff9e6; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th { background: #d4af37; color: #ffffff; font-weight: 600; padding: 12px; text-align: left; }
@@ -139,6 +139,10 @@
                         <input type="text" id="cliente_cognome" required placeholder="Cognome" autocomplete="off" value="">
                     </div>
                     <div class="form-group">
+                        <label>Data di Nascita *</label>
+                        <input type="date" id="cliente_data_nascita" required autocomplete="off" value="">
+                    </div>
+                    <div class="form-group">
                         <label>Email *</label>
                         <input type="email" id="cliente_email" required placeholder="email@esempio.it" autocomplete="off" value="">
                     </div>
@@ -191,6 +195,7 @@
                             <th>ID</th>
                             <th>Nome</th>
                             <th>Cognome</th>
+                            <th>Data Nascita</th>
                             <th>Email</th>
                             <th>Telefono</th>
                             <th>Azioni</th>
@@ -224,6 +229,10 @@
                     <div class="form-group">
                         <label>Cognome</label>
                         <input type="text" id="mod_cognome" required autocomplete="off" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Data di Nascita</label>
+                        <input type="date" id="mod_data_nascita" autocomplete="off" value="">
                     </div>
                     <div class="form-group">
                         <label>Email</label>
@@ -286,6 +295,17 @@
             window.location.href = 'plancia-studio.html?token=' + encodeURIComponent(token);
         }
 
+        function formatDataIT(dataStr) {
+            if (!dataStr) return '-';
+            try {
+                const d = new Date(dataStr);
+                const gg = String(d.getDate()).padStart(2, '0');
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                const aaaa = d.getFullYear();
+                return gg + '/' + mm + '/' + aaaa;
+            } catch (e) { return dataStr; }
+        }
+
         async function caricaClienti() {
             try {
                 const response = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti?token=' + encodeURIComponent(token));
@@ -304,6 +324,7 @@
                             '<td><span class="id-badge">' + (c.id || '-') + '</span></td>' +
                             '<td>' + (c.nome || '-') + '</td>' +
                             '<td>' + (c.cognome || '-') + '</td>' +
+                            '<td>' + formatDataIT(c.data_nascita) + '</td>' +
                             '<td>' + (c.email || '-') + '</td>' +
                             '<td>' + (c.telefono || '-') + '</td>' +
                             '<td>' +
@@ -344,9 +365,8 @@
                     data.clienti.forEach(function(c, index) {
                         const div = document.createElement('div');
                         div.className = 'duplicate-item';
-                        div.innerHTML = '<div><span class="id-badge">' + (c.id || '-') + '</span> <strong>' + (c.nome || '') + ' ' + (c.cognome || '') + '</strong><br><small style="color: #666666;">' + (c.telefono || '') + ' - ' + (c.email || '') + '</small></div>';
+                        div.innerHTML = '<div><span class="id-badge">' + (c.id || '-') + '</span> <strong>' + (c.nome || '') + ' ' + (c.cognome || '') + '</strong><br><small style="color: #666666;">Nato il: ' + formatDataIT(c.data_nascita) + ' - ' + (c.telefono || '') + ' - ' + (c.email || '') + '</small></div>';
                         div.onclick = function() { selezionaDuplicato(c, div); };
-                        div.style.cursor = 'pointer';
                         lista.appendChild(div);
                     });
                     
@@ -376,6 +396,7 @@
             document.getElementById('cliente_id_esistente').value = c.id;
             document.getElementById('cliente_nome').value = c.nome || '';
             document.getElementById('cliente_cognome').value = c.cognome || '';
+            document.getElementById('cliente_data_nascita').value = c.data_nascita || '';
             document.getElementById('cliente_email').value = c.email || '';
             document.getElementById('cliente_telefono').value = c.telefono || '';
             document.getElementById('cliente_indirizzo').value = c.indirizzo || '';
@@ -400,6 +421,7 @@
             const dati = {
                 nome: document.getElementById('cliente_nome').value,
                 cognome: document.getElementById('cliente_cognome').value,
+                data_nascita: document.getElementById('cliente_data_nascita').value,
                 email: document.getElementById('cliente_email').value,
                 telefono: document.getElementById('cliente_telefono').value,
                 indirizzo: document.getElementById('cliente_indirizzo').value,
@@ -413,7 +435,6 @@
                 let response, result;
                 
                 if (idEsistente) {
-                    // Aggiorna cliente esistente
                     response = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti/' + idEsistente + '?token=' + encodeURIComponent(token), {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
@@ -427,7 +448,6 @@
                         return;
                     }
                 } else {
-                    // Crea nuovo cliente
                     response = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -470,6 +490,7 @@
                     document.getElementById('mod_id').value = c.id;
                     document.getElementById('mod_nome').value = c.nome || '';
                     document.getElementById('mod_cognome').value = c.cognome || '';
+                    document.getElementById('mod_data_nascita').value = c.data_nascita || '';
                     document.getElementById('mod_email').value = c.email || '';
                     document.getElementById('mod_telefono').value = c.telefono || '';
                     document.getElementById('mod_indirizzo').value = c.indirizzo || '';
@@ -495,6 +516,7 @@
             const dati = {
                 nome: document.getElementById('mod_nome').value,
                 cognome: document.getElementById('mod_cognome').value,
+                data_nascita: document.getElementById('mod_data_nascita').value,
                 email: document.getElementById('mod_email').value,
                 telefono: document.getElementById('mod_telefono').value,
                 indirizzo: document.getElementById('mod_indirizzo').value,
