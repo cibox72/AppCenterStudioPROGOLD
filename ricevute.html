@@ -6,334 +6,420 @@
     <title>Ricevute - AppCenterStudioPROGOLD</title>
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
+    
+    <!-- ============================================ -->
+    <!-- SEZIONE 1: CSS STYLES (Tema Oro/Nero/Bianco) -->
+    <!-- ============================================ -->
     <style>
-        :root {
-            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
-            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
-            --success: #27ae60; --warning: #f39c12; --danger: #e74c3c; --info: #3498db;
-            --radius: 16px;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh; transition: background 0.5s ease, color 0.5s ease; }
-        .top-bar { background: var(--primary-gradient); padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); transition: background 0.5s ease; }
-        .nav-btn { background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark); transition: all 0.2s; }
-        .nav-btn:hover { transform: translateY(-2px); }
-        .container { max-width: 900px; margin: 0 auto; padding: 30px 24px; }
-        .page-header { text-align: center; padding: 32px; background: white; border-radius: var(--radius); box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden; transition: box-shadow 0.5s ease; }
-        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
-        .page-header h1 { font-size: 32px; font-weight: 800; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
-        .page-header p { color: var(--text-light); font-size: 15px; }
-        .card { background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden; transition: border-color 0.5s ease, box-shadow 0.5s ease; }
-        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
-        .card-title { font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px; padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); }
-        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
-        .form-group input, .form-group select, .form-group textarea { padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
-        .btn { padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-right: 8px; margin-bottom: 8px; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .btn-primary { background: var(--primary-gradient); color: white; }
-        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
-        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
-        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
-        .btn-sm { padding: 8px 16px; font-size: 12px; }
-        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
-        .toast { background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s; }
-        .toast.error { border-left-color: var(--danger); }
-        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #ffffff; min-height: 100vh; color: #000000; }
+        .top-bar { background: linear-gradient(135deg, #d4af37, #996515); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .top-bar h1 { color: #ffffff; font-size: 1.4em; font-weight: 600; }
+        .sync-status { display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9em; }
+        .sync-dot { width: 10px; height: 10px; background: #ffffff; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .nav-btn { background: rgba(255,255,255,0.2); border: none; color: #ffffff; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9em; margin-left: 10px; }
+        .nav-btn:hover { background: rgba(255,255,255,0.3); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .page-header { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 5px solid #d4af37; }
+        .page-header h2 { color: #000000; margin-bottom: 10px; font-size: 1.6em; }
+        .page-header p { color: #666666; font-size: 0.95em; }
+        .section { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; }
+        .section-title { color: #000000; font-size: 1.3em; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #fff9e6; font-weight: 600; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #000000; font-weight: 600; font-size: 0.9em; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 15px; border: 2px solid #d5d8dc; border-radius: 10px; font-size: 0.95em; background: #f8f9fa; color: #000000; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #d4af37; background: #ffffff; }
+        .btn { padding: 12px 25px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.95em; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(212,175,55,0.3); }
+        .btn-outline { background: transparent; border: 2px solid #d4af37; color: #996515; }
+        .btn-outline:hover { background: #fff9e6; }
+        .btn-danger { background: linear-gradient(135deg, #f1948a, #e74c3c); color: #ffffff; }
+        .btn-warning { background: linear-gradient(135deg, #f9e79f, #f1c40f); color: #000000; }
+        .btn-success { background: linear-gradient(135deg, #58d68d, #28b463); color: #ffffff; }
+        .btn-sm { padding: 6px 12px; font-size: 0.8em; }
+        .actions-bar { display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap; }
+        .ricevuta-preview { background: #ffffff; border: 2px solid #d4af37; border-radius: 10px; padding: 30px; margin-top: 25px; }
+        .ricevuta-header { text-align: center; border-bottom: 2px solid #d4af37; padding-bottom: 15px; margin-bottom: 20px; }
+        .ricevuta-header h3 { color: #000000; font-size: 1.5em; margin-bottom: 5px; }
+        .ricevuta-header p { color: #666666; font-size: 0.9em; }
+        .ricevuta-info { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .ricevuta-info-item { padding: 10px; background: #fff9e6; border-radius: 8px; border-left: 3px solid #d4af37; }
+        .ricevuta-info-item label { font-size: 0.8em; color: #666666; display: block; margin-bottom: 3px; }
+        .ricevuta-info-item span { font-weight: 600; color: #000000; font-size: 0.95em; }
+        .ricevuta-importo { text-align: center; padding: 20px; background: linear-gradient(135deg, #d4af37, #996515); border-radius: 10px; margin: 20px 0; }
+        .ricevuta-importo label { color: #ffffff; font-size: 0.9em; display: block; margin-bottom: 5px; }
+        .ricevuta-importo span { color: #ffffff; font-size: 2em; font-weight: 700; }
+        .ricevuta-footer { text-align: center; padding-top: 15px; border-top: 2px solid #d4af37; margin-top: 20px; color: #666666; font-size: 0.85em; }
+        .ricevuta-numero { display: inline-block; background: #fff9e6; padding: 8px 20px; border-radius: 20px; border: 2px solid #d4af37; color: #000000; font-weight: 700; font-size: 1.1em; margin-bottom: 15px; }
+        .archive-section { margin-top: 30px; }
+        .archive-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid #d5d8dc; border-radius: 10px; margin-bottom: 10px; background: #ffffff; }
+        .archive-item:hover { background: #fff9e6; border-color: #d4af37; }
+        .archive-item-info h4 { color: #000000; margin-bottom: 5px; }
+        .archive-item-info p { color: #666666; font-size: 0.85em; }
+        .archive-item-actions { display: flex; gap: 8px; }
+        .empty-state { text-align: center; padding: 40px; color: #666666; }
+        .loading { text-align: center; padding: 40px; color: #666666; }
+        .spinner { border: 4px solid #fff9e6; border-top: 4px solid #d4af37; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .footer-branding { text-align: center; padding: 30px 20px; color: #666666; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
+        .footer-branding strong { color: #996515; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .tab { padding: 12px 25px; background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; cursor: pointer; font-weight: 600; color: #000000; }
+        .tab:hover { background: #fff9e6; }
+        .tab.active { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; border-color: #996515; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
         @media print {
-            body { background: white; margin: 0; padding: 0; }
-            .no-print { display: none !important; }
-            .print-only { display: block !important; }
-            @page { size: A4 portrait; margin: 10mm; }
-            .pagina-stampa { width: 190mm; height: 277mm; margin: 0 auto; display: flex; flex-direction: column; justify-content: space-between; }
-            .ricevuta-stampa { flex: 1; border: 2px solid #82e0aa; border-radius: 8px; padding: 6mm 10mm; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 8pt; color: #2c3e50; background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); position: relative; overflow: hidden; display: flex; flex-direction: column; }
-            .ricevuta-stampa::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%); }
-            .ricevuta-stampa .ricevuta-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4mm; padding-bottom: 3mm; border-bottom: 2px solid #e8f8f5; }
-            .ricevuta-stampa .ricevuta-studio-nome { font-size: 12pt; font-weight: 700; background: linear-gradient(135deg, #1e8449 0%, #82e0aa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 2px; }
-            .ricevuta-stampa .ricevuta-studio-info { font-size: 7pt; color: #7f8c8d; line-height: 1.4; }
-            .ricevuta-stampa .ricevuta-numero { border: 2px solid #82e0aa; padding: 4px 10px; background: linear-gradient(135deg, #e8f8f5 0%, #d5f4e6 100%); border-radius: 6px; text-align: center; min-width: 80px; }
-            .ricevuta-stampa .ricevuta-numero-label { font-size: 6pt; text-transform: uppercase; color: #7f8c8d; letter-spacing: 1px; margin-bottom: 2px; }
-            .ricevuta-stampa .ricevuta-numero-valore { font-size: 14pt; font-weight: 700; color: #1e8449; }
-            .ricevuta-stampa .ricevuta-data { display: flex; justify-content: space-between; margin-bottom: 3mm; padding: 3mm 5mm; background: linear-gradient(135deg, #f8f9fa 0%, #e8f8f5 100%); border-radius: 6px; border: 1px solid #e8e8e8; }
-            .ricevuta-stampa .ricevuta-data-label { font-weight: 600; font-size: 6pt; text-transform: uppercase; color: #7f8c8d; letter-spacing: 0.5px; margin-bottom: 2px; }
-            .ricevuta-stampa .ricevuta-data-valore { font-weight: 700; font-size: 9pt; color: #2c3e50; letter-spacing: 2px; }
-            .ricevuta-stampa .ricevuta-riga { display: flex; margin-bottom: 2mm; padding: 2mm 4mm; background: white; border-radius: 4px; border: 1px solid #f0f0f0; align-items: center; }
-            .ricevuta-stampa .ricevuta-riga-label { width: 100px; font-weight: 600; font-size: 7pt; text-transform: uppercase; color: #7f8c8d; flex-shrink: 0; letter-spacing: 0.5px; }
-            .ricevuta-stampa .ricevuta-riga-valore { flex: 1; font-size: 8pt; padding-left: 6px; color: #2c3e50; font-weight: 500; }
-            .ricevuta-stampa .ricevuta-importo { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 100%); border: 2px solid #1e8449; padding: 4mm 8mm; margin: 3mm 0; border-radius: 6px; }
-            .ricevuta-stampa .ricevuta-importo-label { font-weight: 700; font-size: 8pt; text-transform: uppercase; color: #1e8449; letter-spacing: 1px; }
-            .ricevuta-stampa .ricevuta-importo-valore { font-size: 14pt; font-weight: 800; color: #1e8449; }
-            .ricevuta-stampa .ricevuta-footer { display: flex; justify-content: space-between; margin-top: auto; padding-top: 3mm; border-top: 2px solid #e8f8f5; }
-            .ricevuta-stampa .ricevuta-firma { text-align: center; width: 45%; }
-            .ricevuta-stampa .ricevuta-firma-linea { border-top: 1px solid #bdc3c7; margin-top: 15mm; padding-top: 3px; font-size: 6pt; text-transform: uppercase; color: #95a5a6; letter-spacing: 0.5px; font-weight: 600; }
-            .ricevuta-stampa .ricevuta-note { font-size: 6pt; color: #95a5a6; text-align: center; margin-top: 2mm; font-style: italic; }
-            .linea-taglio-stampa { border-top: 2px dashed #82e0aa; margin: 3mm 0; position: relative; text-align: center; padding: 2mm 0; flex-shrink: 0; }
-            .linea-taglio-stampa::after { content: '✂ TAGLIARE QUI'; position: absolute; top: -7pt; left: 50%; transform: translateX(-50%); background: white; padding: 0 5mm; font-size: 7pt; color: #82e0aa; font-weight: 700; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; letter-spacing: 2px; }
+            body * { visibility: hidden; }
+            #ricevuta-stampa, #ricevuta-stampa * { visibility: visible; }
+            #ricevuta-stampa { position: absolute; left: 0; top: 0; width: 100%; }
         }
-        .print-only { display: none; }
+        @media (max-width: 768px) { .form-grid, .ricevuta-info { grid-template-columns: 1fr; } .actions-bar { flex-direction: column; } .actions-bar .btn { width: 100%; justify-content: center; } }
     </style>
 </head>
 <body>
-    <div class="top-bar no-print">
-        <div style="display: flex; gap: 10px;">
-            <button class="nav-btn" onclick="tornaPlancia()">Indietro alla Plancia</button>
+    <!-- ============================================ -->
+    <!-- SEZIONE 2: TOP BAR & HEADER -->
+    <!-- ============================================ -->
+    <div class="top-bar">
+        <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Indietro alla Plancia</button>
+        <h1>Ricevute</h1>
+        <div class="sync-status">
+            <div class="sync-dot"></div>
+            <span>Cloud Sync: OK</span>
         </div>
-        <div style="color: white; font-size: 13px;">Ricevute</div>
     </div>
 
-    <div class="container no-print">
+    <div class="container">
         <div class="page-header">
-            <h1>Ricevute - <span class="studio-nome">Caricamento...</span></h1>
-            <p>Crea ricevute stile cartolibreria per i tuoi clienti occasionali</p>
+            <h2>Ricevute</h2>
+            <p>Crea ricevute professionali per i tuoi clienti occasionali</p>
         </div>
 
-        <div class="card">
-            <div class="card-title">Nuova Ricevuta</div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Numero Ricevuta *</label>
-                    <input type="text" id="ricNumero" placeholder="001">
-                </div>
-                <div class="form-group">
-                    <label>Data *</label>
-                    <input type="date" id="ricData">
+        <!-- ============================================ -->
+        <!-- SEZIONE 3: TABS -->
+        <!-- ============================================ -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('nuova')">Nuova Ricevuta</div>
+            <div class="tab" onclick="switchTab('archivio')">Archivio Ricevute</div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SEZIONE 4: TAB NUOVA RICEVUTA -->
+        <!-- ============================================ -->
+        <div id="tab-nuova" class="tab-content active">
+            <div class="section">
+                <h3 class="section-title">Crea Nuova Ricevuta</h3>
+                
+                <form id="form-ricevuta" onsubmit="generaRicevuta(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Numero Ricevuta *</label>
+                            <input type="text" id="numero_ricevuta" required placeholder="Es. R-2024-001" autocomplete="off" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Data *</label>
+                            <input type="date" id="data_ricevuta" required autocomplete="off" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Ricevuto da (Nome Cliente) *</label>
+                            <input type="text" id="cliente_nome" required placeholder="Nome e cognome cliente" autocomplete="off" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Indirizzo Cliente</label>
+                            <input type="text" id="cliente_indirizzo" placeholder="Via, citta, CAP" autocomplete="off" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Importo (EUR) *</label>
+                            <input type="number" id="importo" required step="0.01" min="0" placeholder="0.00" autocomplete="off" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Per (Descrizione servizio/prodotto) *</label>
+                            <input type="text" id="descrizione" required placeholder="Es. Servizio fotografico matrimonio" autocomplete="off" value="">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Note (opzionale)</label>
+                            <textarea id="note" rows="3" placeholder="Note aggiuntive, condizioni, ecc..." autocomplete="off"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="actions-bar">
+                        <button type="submit" class="btn btn-primary">Genera Ricevuta</button>
+                        <button type="button" class="btn btn-outline" onclick="pulisciForm()">Pulisci</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ANTEPRIMA RICEVUTA -->
+            <div id="anteprima-container" style="display: none;">
+                <div class="section">
+                    <h3 class="section-title">Anteprima Ricevuta</h3>
+                    <div id="ricevuta-stampa" class="ricevuta-preview">
+                        <div class="ricevuta-header">
+                            <h3>AppCenterStudioPROGOLD</h3>
+                            <p>Ricevuta di pagamento</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <div class="ricevuta-numero" id="prev-numero"></div>
+                        </div>
+                        <div class="ricevuta-info">
+                            <div class="ricevuta-info-item">
+                                <label>Data</label>
+                                <span id="prev-data"></span>
+                            </div>
+                            <div class="ricevuta-info-item">
+                                <label>Ricevuto da</label>
+                                <span id="prev-cliente"></span>
+                            </div>
+                            <div class="ricevuta-info-item">
+                                <label>Indirizzo</label>
+                                <span id="prev-indirizzo"></span>
+                            </div>
+                            <div class="ricevuta-info-item">
+                                <label>Descrizione</label>
+                                <span id="prev-descrizione"></span>
+                            </div>
+                        </div>
+                        <div class="ricevuta-importo">
+                            <label>IMPORTO TOTALE</label>
+                            <span id="prev-importo"></span>
+                        </div>
+                        <div id="prev-note-container" style="display: none; padding: 15px; background: #fff9e6; border-radius: 8px; margin: 15px 0;">
+                            <label style="font-size: 0.85em; color: #666666; display: block; margin-bottom: 5px;">Note</label>
+                            <span id="prev-note" style="color: #000000; font-size: 0.95em;"></span>
+                        </div>
+                        <div class="ricevuta-footer">
+                            <p>Ricevuta generata da AppCenterStudioPROGOLD</p>
+                            <p style="margin-top: 5px;">Grazie per averci scelto!</p>
+                        </div>
+                    </div>
+
+                    <div class="actions-bar">
+                        <button class="btn btn-success" onclick="stampaRicevuta()">Stampa / Salva PDF</button>
+                        <button class="btn btn-primary" onclick="salvaRicevuta()">Salva in Archivio</button>
+                    </div>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Ricevuto da (Nome Cliente) *</label>
-                    <input type="text" id="ricCliente" placeholder="Mario Rossi">
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SEZIONE 5: TAB ARCHIVIO RICEVUTE -->
+        <!-- ============================================ -->
+        <div id="tab-archivio" class="tab-content">
+            <div class="section archive-section">
+                <h3 class="section-title">Archivio Ricevute</h3>
+                <div id="loading-archivio" class="loading">
+                    <div class="spinner"></div>
+                    <p>Caricamento archivio...</p>
                 </div>
-                <div class="form-group">
-                    <label>Indirizzo Cliente</label>
-                    <input type="text" id="ricIndirizzo" placeholder="Via Roma 1, Milano">
+                <div id="lista-archivio"></div>
+                <div id="empty-archivio" class="empty-state" style="display: none;">
+                    <p>Nessuna ricevuta in archivio.</p>
                 </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Importo (EUR) *</label>
-                    <input type="number" id="ricImporto" step="0.01" placeholder="0.00">
-                </div>
-            </div>
-            <div class="form-group" style="margin-bottom: 16px;">
-                <label>Per (Descrizione servizio/prodotto) *</label>
-                <textarea id="ricDescrizione" rows="2" placeholder="Servizio fotografico matrimonio, stampa foto, ecc."></textarea>
-            </div>
-            <div class="form-group" style="margin-bottom: 16px;">
-                <label>Note (opzionale)</label>
-                <textarea id="ricNote" rows="2" placeholder="Eventuali note aggiuntive"></textarea>
-            </div>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <button class="btn btn-success" onclick="stampaRicevuta()">Stampa / Salva PDF</button>
-                <button class="btn btn-outline" onclick="nuovaRicevuta()">Nuova Ricevuta</button>
             </div>
         </div>
     </div>
 
-    <div class="print-only">
-        <div class="pagina-stampa">
-            <div class="ricevuta-stampa" id="ricevutaStampa1"></div>
-            <div class="linea-taglio-stampa"></div>
-            <div class="ricevuta-stampa" id="ricevutaStampa2"></div>
-        </div>
+    <div class="footer-branding">
+        <p>Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></p>
     </div>
 
-    <div class="toast-container" id="toastContainer"></div>
-    <div class="footer-branding" style="text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px;">
-        Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong>
-    </div>
-
+    <!-- ============================================ -->
+    <!-- SEZIONE 6: JAVASCRIPT -->
+    <!-- ============================================ -->
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        let studioId = null;
-        let studioData = null;
+        var token = '';
+        var studioId = '';
+        var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
+        var ricevutaCorrente = null;
 
-        document.addEventListener('DOMContentLoaded', async function() {
-            if (!token) { window.location.href = 'index.html'; return; }
-            await verificaSessione();
-            await caricaStudio();
-            generaNumeroProgressivo();
-            impostaDataOdierna();
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            token = urlParams.get('token');
+            if (!token) { alert('Token non trovato. Effettua il login.'); window.location.href = 'index.html'; return; }
+            verificaSessione();
+            document.getElementById('data_ricevuta').valueAsDate = new Date();
         });
-
-        function tornaPlancia() { window.location.href = 'plancia-studio.html?token=' + token; }
 
         async function verificaSessione() {
             try {
                 const response = await fetch(WORKER_URL + '/api/auth/verifica?token=' + encodeURIComponent(token));
                 const data = await response.json();
-                if (!data.success || data.tipo !== 'studio') {
-                    mostraToast('Sessione non valida', 'error');
-                    setTimeout(() => window.location.href = 'index.html', 1500);
-                    return;
-                }
+                if (!data.success) { alert('Sessione scaduta. Effettua il login.'); window.location.href = 'index.html'; return; }
                 studioId = data.user.id;
-                await caricaTemaGlobale();
-                setInterval(async () => { await caricaTemaGlobale(); }, 10000);
-            } catch (error) { mostraToast('Errore di connessione', 'error'); }
+                caricaArchivio();
+            } catch (error) { console.error('Errore verifica sessione:', error); }
         }
 
-        async function caricaTemaGlobale() {
-            if (!studioId) return;
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
-                const data = await response.json();
-                if (data.success && data.tema && data.tema.tema_attivo) {
-                    const temaId = data.tema.tema_attivo;
-                    const temi = {
-                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)', effetto: null },
-                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)', effetto: 'neve' },
-                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)', effetto: 'coriandoli' },
-                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)', effetto: null },
-                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)', effetto: null },
-                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)', effetto: null },
-                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)', effetto: null },
-                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)', effetto: null },
-                        'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)', effetto: null }
-                    };
-                    const t = temi[temaId] || temi['default'];
-                    const root = document.documentElement;
-                    root.style.setProperty('--primary', t.p);
-                    root.style.setProperty('--primary-dark', t.pd);
-                    root.style.setProperty('--primary-light', t.pl);
-                    root.style.setProperty('--primary-gradient', t.pg);
-                    root.style.setProperty('--bg-gradient', t.bg);
-                    if (typeof attivaEffettoSpeciale === 'function') { attivaEffettoSpeciale(t.effetto); }
-                }
-            } catch (error) { console.error('Errore caricamento tema:', error); }
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
         }
 
-        async function caricaStudio() {
-            try {
-                const response = await fetch(WORKER_URL + '/api/studio/profilo?token=' + encodeURIComponent(token) + '&studioId=' + encodeURIComponent(studioId));
-                const data = await response.json();
-                if (data.success && data.studio) { studioData = data.studio; }
-            } catch (error) { console.error('Errore caricamento studio:', error); }
+        function generaRicevuta(event) {
+            event.preventDefault();
+            
+            ricevutaCorrente = {
+                numero: document.getElementById('numero_ricevuta').value,
+                data: document.getElementById('data_ricevuta').value,
+                cliente: document.getElementById('cliente_nome').value,
+                indirizzo: document.getElementById('cliente_indirizzo').value,
+                importo: parseFloat(document.getElementById('importo').value),
+                descrizione: document.getElementById('descrizione').value,
+                note: document.getElementById('note').value
+            };
+
+            document.getElementById('prev-numero').textContent = ricevutaCorrente.numero;
+            document.getElementById('prev-data').textContent = new Date(ricevutaCorrente.data).toLocaleDateString('it-IT');
+            document.getElementById('prev-cliente').textContent = ricevutaCorrente.cliente;
+            document.getElementById('prev-indirizzo').textContent = ricevutaCorrente.indirizzo || '-';
+            document.getElementById('prev-descrizione').textContent = ricevutaCorrente.descrizione;
+            document.getElementById('prev-importo').textContent = ricevutaCorrente.importo.toFixed(2) + ' EUR';
+            
+            if (ricevutaCorrente.note) {
+                document.getElementById('prev-note').textContent = ricevutaCorrente.note;
+                document.getElementById('prev-note-container').style.display = 'block';
+            } else {
+                document.getElementById('prev-note-container').style.display = 'none';
+            }
+
+            document.getElementById('anteprima-container').style.display = 'block';
+            document.getElementById('anteprima-container').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function generaNumeroProgressivo() {
-            const archivio = JSON.parse(localStorage.getItem('ricevute_' + studioId) || '[]');
-            const prossimoNumero = archivio.length + 1;
-            document.getElementById('ricNumero').value = String(prossimoNumero).padStart(3, '0');
-        }
-
-        function impostaDataOdierna() {
-            const oggi = new Date();
-            const yyyy = oggi.getFullYear();
-            const mm = String(oggi.getMonth() + 1).padStart(2, '0');
-            const dd = String(oggi.getDate()).padStart(2, '0');
-            document.getElementById('ricData').value = yyyy + '-' + mm + '-' + dd;
-        }
-
-        function formataDataGGMMYY(dataISO) {
-            if (!dataISO) return '';
-            const parti = dataISO.split('-');
-            if (parti.length !== 3) return dataISO;
-            const gg = parti[2];
-            const mm = parti[1];
-            const aa = parti[0].slice(-2);
-            return gg + mm + aa;
-        }
-
-        function generaHTMLRicevuta(numero, dataGGMMYY, cliente, indirizzo, importo, descrizione, note) {
-            const nomeStudio = studioData ? (studioData.nome || 'Studio Fotografico') : 'Studio Fotografico';
-            const indirizzoStudio = studioData ? (studioData.indirizzo || '') : '';
-            const cittaStudio = studioData ? (studioData.citta || '') : '';
-            const pivaStudio = studioData ? (studioData.piva || '') : '';
-            const telefonoStudio = studioData ? (studioData.telefono || '') : '';
-            return `
-                <div class="ricevuta">
-                    <div class="ricevuta-header">
-                        <div class="ricevuta-studio">
-                            <div class="ricevuta-studio-nome">${nomeStudio}</div>
-                            <div class="ricevuta-studio-info">
-                                ${indirizzoStudio ? indirizzoStudio + '<br>' : ''}
-                                ${cittaStudio ? cittaStudio + '<br>' : ''}
-                                ${telefonoStudio ? 'Tel: ' + telefonoStudio + '<br>' : ''}
-                                ${pivaStudio ? 'P.IVA: ' + pivaStudio : ''}
-                            </div>
-                        </div>
-                        <div class="ricevuta-numero">
-                            <div class="ricevuta-numero-label">Ricevuta N.</div>
-                            <div class="ricevuta-numero-valore">${numero}</div>
-                        </div>
-                    </div>
-                    <div class="ricevuta-data">
-                        <div>
-                            <div class="ricevuta-data-label">Data</div>
-                            <div class="ricevuta-data-valore">${dataGGMMYY}</div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div class="ricevuta-data-label">Luogo</div>
-                            <div class="ricevuta-data-valore">${cittaStudio || 'Italia'}</div>
-                        </div>
-                    </div>
-                    <div class="ricevuta-riga">
-                        <div class="ricevuta-riga-label">Ricevuto da</div>
-                        <div class="ricevuta-riga-valore">${cliente || ''}</div>
-                    </div>
-                    ${indirizzo ? `<div class="ricevuta-riga"><div class="ricevuta-riga-label">Indirizzo</div><div class="ricevuta-riga-valore">${indirizzo}</div></div>` : ''}
-                    <div class="ricevuta-importo">
-                        <div class="ricevuta-importo-label">Importo</div>
-                        <div class="ricevuta-importo-valore">EUR ${parseFloat(importo || 0).toFixed(2)}</div>
-                    </div>
-                    <div class="ricevuta-riga">
-                        <div class="ricevuta-riga-label">Per</div>
-                        <div class="ricevuta-riga-valore">${descrizione || ''}</div>
-                    </div>
-                    ${note ? `<div class="ricevuta-riga"><div class="ricevuta-riga-label">Note</div><div class="ricevuta-riga-valore">${note}</div></div>` : ''}
-                    <div class="ricevuta-footer">
-                        <div class="ricevuta-firma"><div class="ricevuta-firma-linea">Firma del Ricevente</div></div>
-                        <div class="ricevuta-firma"><div class="ricevuta-firma-linea">Firma per Quietanza</div></div>
-                    </div>
-                    <div class="ricevuta-note">Documento non fiscale - Ricevuta per clienti occasionali</div>
-                </div>
-            `;
+        function pulisciForm() {
+            document.getElementById('form-ricevuta').reset();
+            document.getElementById('anteprima-container').style.display = 'none';
+            document.getElementById('data_ricevuta').valueAsDate = new Date();
+            ricevutaCorrente = null;
         }
 
         function stampaRicevuta() {
-            const numero = document.getElementById('ricNumero').value;
-            const dataISO = document.getElementById('ricData').value;
-            const cliente = document.getElementById('ricCliente').value;
-            const indirizzo = document.getElementById('ricIndirizzo').value;
-            const importo = document.getElementById('ricImporto').value;
-            const descrizione = document.getElementById('ricDescrizione').value;
-            const note = document.getElementById('ricNote').value;
-            if (!numero || !dataISO || !cliente || !importo) {
-                mostraToast('Compila i campi obbligatori', 'error');
-                return;
-            }
-            const dataGGMMYY = formataDataGGMMYY(dataISO);
-            const html = generaHTMLRicevuta(numero, dataGGMMYY, cliente, indirizzo, importo, descrizione, note);
-            document.getElementById('ricevutaStampa1').innerHTML = html;
-            document.getElementById('ricevutaStampa2').innerHTML = html;
+            if (!ricevutaCorrente) { alert('Genera prima una ricevuta'); return; }
             window.print();
         }
 
-        function nuovaRicevuta() {
-            document.getElementById('ricNumero').value = '';
-            document.getElementById('ricData').value = '';
-            document.getElementById('ricCliente').value = '';
-            document.getElementById('ricIndirizzo').value = '';
-            document.getElementById('ricImporto').value = '';
-            document.getElementById('ricDescrizione').value = '';
-            document.getElementById('ricNote').value = '';
-            generaNumeroProgressivo();
-            impostaDataOdierna();
+        async function salvaRicevuta() {
+            if (!ricevutaCorrente) { alert('Genera prima una ricevuta'); return; }
+            
+            try {
+                const dati = {
+                    id: 'ric-' + Date.now(),
+                    studio_id: studioId,
+                    numero: ricevutaCorrente.numero,
+                    data: ricevutaCorrente.data,
+                    cliente: ricevutaCorrente.cliente,
+                    indirizzo: ricevutaCorrente.indirizzo,
+                    importo: ricevutaCorrente.importo,
+                    descrizione: ricevutaCorrente.descrizione,
+                    note: ricevutaCorrente.note,
+                    data_creazione: new Date().toISOString()
+                };
+                
+                const response = await fetch(WORKER_URL + '/api/studio/ricevuta', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dati)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Ricevuta salvata in archivio!');
+                    pulisciForm();
+                    caricaArchivio();
+                } else {
+                    alert('Errore: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Errore salvataggio:', error);
+                alert('Errore di connessione.');
+            }
         }
 
-        function mostraToast(msg, tipo) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = 'toast ' + tipo;
-            toast.textContent = msg;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        async function caricaArchivio() {
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/ricevute?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                
+                document.getElementById('loading-archivio').style.display = 'none';
+                
+                if (data.success && data.ricevute.length > 0) {
+                    document.getElementById('empty-archivio').style.display = 'none';
+                    const lista = document.getElementById('lista-archivio');
+                    lista.innerHTML = '';
+                    
+                    data.ricevute.forEach(function(r) {
+                        lista.innerHTML += '<div class="archive-item">' +
+                            '<div class="archive-item-info">' +
+                                '<h4>' + r.numero + ' - ' + r.cliente + '</h4>' +
+                                '<p>' + new Date(r.data).toLocaleDateString('it-IT') + ' | ' + parseFloat(r.importo).toFixed(2) + ' EUR | ' + r.descrizione + '</p>' +
+                            '</div>' +
+                            '<div class="archive-item-actions">' +
+                                '<button class="btn btn-sm btn-primary" onclick="visualizzaRicevuta(\'' + r.id + '\')">Visualizza</button>' +
+                                '<button class="btn btn-sm btn-outline" onclick="stampaRicevutaArchivio(\'' + r.id + '\')">Stampa</button>' +
+                                '<button class="btn btn-sm btn-danger" onclick="eliminaRicevuta(\'' + r.id + '\')">Elimina</button>' +
+                            '</div>' +
+                        '</div>';
+                    });
+                } else {
+                    document.getElementById('empty-archivio').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Errore caricamento archivio:', error);
+                document.getElementById('loading-archivio').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento</p>';
+            }
+        }
+
+        async function visualizzaRicevuta(id) {
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/ricevuta/' + id + '?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                
+                if (data.success) {
+                    const r = data.ricevuta;
+                    document.getElementById('numero_ricevuta').value = r.numero;
+                    document.getElementById('data_ricevuta').value = r.data;
+                    document.getElementById('cliente_nome').value = r.cliente;
+                    document.getElementById('cliente_indirizzo').value = r.indirizzo || '';
+                    document.getElementById('importo').value = r.importo;
+                    document.getElementById('descrizione').value = r.descrizione;
+                    document.getElementById('note').value = r.note || '';
+                    
+                    switchTab('nuova');
+                    generaRicevuta({ preventDefault: function() {} });
+                }
+            } catch (error) { console.error('Errore visualizzazione:', error); }
+        }
+
+        function stampaRicevutaArchivio(id) {
+            visualizzaRicevuta(id);
+            setTimeout(function() { window.print(); }, 500);
+        }
+
+        async function eliminaRicevuta(id) {
+            if (!confirm('Eliminare questa ricevuta?')) return;
+            
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/ricevuta/' + id + '?token=' + encodeURIComponent(token), {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Ricevuta eliminata.');
+                    caricaArchivio();
+                } else {
+                    alert('Errore: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Errore eliminazione:', error);
+            }
         }
     </script>
 </body>
