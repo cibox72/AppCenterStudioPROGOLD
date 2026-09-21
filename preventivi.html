@@ -52,7 +52,6 @@
         .tab-content.active { display: block; }
         .sub-section { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #d5d8dc; }
         .sub-section h4 { color: #000000; margin-bottom: 15px; font-size: 1.1em; border-bottom: 2px solid #d4af37; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .sub-section h4 .maps-btn { font-size: 0.8em; }
         .totals-box { background: linear-gradient(135deg, #fff9e6, #ffffff); padding: 20px; border-radius: 10px; border: 2px solid #d4af37; margin-top: 20px; }
         .totals-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #d5d8dc; font-size: 1em; }
         .totals-row:last-child { border-bottom: none; }
@@ -76,11 +75,7 @@
         tr:hover td { background: #fff9e6; }
         .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; display: inline-block; }
         .badge-bozza { background: #fdebd0; color: #d35400; }
-        .badge-inviato { background: #d5f5e3; color: #1e8449; }
         .badge-accettato { background: #d4efdf; color: #1e8449; }
-        .badge-rifiutato { background: #fadbd8; color: #c0392b; }
-        .badge-confermato { background: #d4efdf; color: #1e8449; }
-        .badge-da-confermare { background: #fdebd0; color: #d35400; }
         .footer-branding { text-align: center; padding: 30px 20px; color: #666666; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
         .footer-branding strong { color: #996515; }
         .loading { text-align: center; padding: 40px; color: #666666; }
@@ -169,7 +164,6 @@
                 
                 <form id="form-preventivo" onsubmit="salvaPreventivo(event)">
                     
-                    <!-- Numero e Data -->
                     <div class="form-grid-2">
                         <div class="form-group">
                             <label>Numero Preventivo *</label>
@@ -198,6 +192,10 @@
                             <div class="form-group">
                                 <label>Cognome *</label>
                                 <input type="text" id="cliente_a_cognome" required placeholder="Cognome" autocomplete="off" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Data di Nascita</label>
+                                <input type="date" id="cliente_a_data_nascita" autocomplete="off" value="">
                             </div>
                             <div class="form-group">
                                 <label>Telefono</label>
@@ -243,6 +241,10 @@
                             <div class="form-group">
                                 <label>Cognome</label>
                                 <input type="text" id="cliente_b_cognome" placeholder="Cognome" autocomplete="off" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Data di Nascita</label>
+                                <input type="date" id="cliente_b_data_nascita" autocomplete="off" value="">
                             </div>
                             <div class="form-group">
                                 <label>Telefono</label>
@@ -500,6 +502,7 @@
         <div class="pdf-section">
             <h3>Cliente A</h3>
             <div class="pdf-row"><label>Nome:</label><span id="pdf-cliente-a"></span></div>
+            <div class="pdf-row"><label>Data Nascita:</label><span id="pdf-cliente-a-nascita"></span></div>
             <div class="pdf-row"><label>Indirizzo:</label><span id="pdf-cliente-a-indirizzo"></span></div>
             <div class="pdf-row"><label>Telefono:</label><span id="pdf-cliente-a-tel"></span></div>
             <div class="pdf-row"><label>Email:</label><span id="pdf-cliente-a-email"></span></div>
@@ -507,6 +510,7 @@
         <div class="pdf-section">
             <h3>Cliente B</h3>
             <div class="pdf-row"><label>Nome:</label><span id="pdf-cliente-b"></span></div>
+            <div class="pdf-row"><label>Data Nascita:</label><span id="pdf-cliente-b-nascita"></span></div>
             <div class="pdf-row"><label>Indirizzo:</label><span id="pdf-cliente-b-indirizzo"></span></div>
         </div>
         <div class="pdf-section">
@@ -569,6 +573,17 @@
 
         function tornaAllaPlancia() {
             window.location.href = 'plancia-studio.html?token=' + encodeURIComponent(token);
+        }
+
+        function formatDataIT(dataStr) {
+            if (!dataStr) return '-';
+            try {
+                const d = new Date(dataStr);
+                const gg = String(d.getDate()).padStart(2, '0');
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                const aaaa = d.getFullYear();
+                return gg + '/' + mm + '/' + aaaa;
+            } catch (e) { return dataStr; }
         }
 
         async function verificaSessione() {
@@ -665,7 +680,8 @@
             
             clientiDisponibili.forEach(function(c) {
                 const ultimo = trovaUltimoContratto(c.id);
-                const label = (c.id || '') + ' - ' + (c.nome || '') + ' ' + (c.cognome || '') + (ultimo ? ' - ' + ultimo.tipo_servizio + ' (' + formatData(ultimo.data_servizio || ultimo.data_emissione) + ')' : '');
+                const dataNascita = formatDataIT(c.data_nascita);
+                const label = (c.id || '') + ' - ' + (c.nome || '') + ' ' + (c.cognome || '') + ' - ' + dataNascita + (ultimo ? ' - ' + ultimo.tipo_servizio + ' (' + formatDataIT(ultimo.data_servizio || ultimo.data_emissione) + ')' : '');
                 const optionA = document.createElement('option');
                 optionA.value = c.id;
                 optionA.textContent = label;
@@ -691,14 +707,6 @@
             return contrattiCliente[0];
         }
 
-        function formatData(dataStr) {
-            if (!dataStr) return '-';
-            try {
-                const d = new Date(dataStr);
-                return d.toLocaleDateString('it-IT');
-            } catch (e) { return dataStr; }
-        }
-
         function selezionaClienteA() {
             const id = document.getElementById('cliente_a_select').value;
             if (!id) return;
@@ -706,6 +714,7 @@
             if (!c) return;
             document.getElementById('cliente_a_nome').value = c.nome || '';
             document.getElementById('cliente_a_cognome').value = c.cognome || '';
+            document.getElementById('cliente_a_data_nascita').value = c.data_nascita || '';
             document.getElementById('cliente_a_email').value = c.email || '';
             document.getElementById('cliente_a_telefono').value = c.telefono || '';
             document.getElementById('cliente_a_indirizzo').value = c.indirizzo || '';
@@ -721,6 +730,7 @@
             if (!c) return;
             document.getElementById('cliente_b_nome').value = c.nome || '';
             document.getElementById('cliente_b_cognome').value = c.cognome || '';
+            document.getElementById('cliente_b_data_nascita').value = c.data_nascita || '';
             document.getElementById('cliente_b_email').value = c.email || '';
             document.getElementById('cliente_b_telefono').value = c.telefono || '';
             document.getElementById('cliente_b_indirizzo').value = c.indirizzo || '';
@@ -930,6 +940,7 @@
                 id: document.getElementById('cliente_a_select').value || null,
                 nome: document.getElementById('cliente_a_nome').value,
                 cognome: document.getElementById('cliente_a_cognome').value,
+                data_nascita: document.getElementById('cliente_a_data_nascita').value,
                 telefono: document.getElementById('cliente_a_telefono').value,
                 email: document.getElementById('cliente_a_email').value,
                 indirizzo: document.getElementById('cliente_a_indirizzo').value,
@@ -944,6 +955,7 @@
                 id: document.getElementById('cliente_b_select').value || null,
                 nome: document.getElementById('cliente_b_nome').value,
                 cognome: document.getElementById('cliente_b_cognome').value,
+                data_nascita: document.getElementById('cliente_b_data_nascita').value,
                 telefono: document.getElementById('cliente_b_telefono').value,
                 email: document.getElementById('cliente_b_email').value,
                 indirizzo: document.getElementById('cliente_b_indirizzo').value,
@@ -954,9 +966,9 @@
         }
 
         function parseCliente(cliente) {
-            if (!cliente) return { nome: '', cognome: '', telefono: '', email: '', indirizzo: '', citta: '', cap: '', provincia: '', id: '' };
+            if (!cliente) return { nome: '', cognome: '', telefono: '', email: '', indirizzo: '', citta: '', cap: '', provincia: '', id: '', data_nascita: '' };
             if (typeof cliente === 'string') {
-                try { return JSON.parse(cliente); } catch (e) { return { nome: '', cognome: '', telefono: '', email: '', indirizzo: '', citta: '', cap: '', provincia: '', id: '' }; }
+                try { return JSON.parse(cliente); } catch (e) { return { nome: '', cognome: '', telefono: '', email: '', indirizzo: '', citta: '', cap: '', provincia: '', id: '', data_nascita: '' }; }
             }
             return cliente;
         }
@@ -1070,10 +1082,12 @@
             document.getElementById('pdf-numero').textContent = document.getElementById('prev_numero').value;
             document.getElementById('pdf-data').textContent = document.getElementById('prev_data').value;
             document.getElementById('pdf-cliente-a').textContent = clienteA.nome + ' ' + clienteA.cognome;
+            document.getElementById('pdf-cliente-a-nascita').textContent = formatDataIT(clienteA.data_nascita);
             document.getElementById('pdf-cliente-a-indirizzo').textContent = [clienteA.indirizzo, clienteA.cap, clienteA.citta, clienteA.provincia].filter(Boolean).join(', ');
             document.getElementById('pdf-cliente-a-tel').textContent = clienteA.telefono || '-';
             document.getElementById('pdf-cliente-a-email').textContent = clienteA.email || '-';
             document.getElementById('pdf-cliente-b').textContent = (clienteB.nome + ' ' + clienteB.cognome).trim() || '-';
+            document.getElementById('pdf-cliente-b-nascita').textContent = formatDataIT(clienteB.data_nascita);
             document.getElementById('pdf-cliente-b-indirizzo').textContent = [clienteB.indirizzo, clienteB.cap, clienteB.citta, clienteB.provincia].filter(Boolean).join(', ') || '-';
             document.getElementById('pdf-tipo').textContent = document.getElementById('evento_tipo').value || '-';
             document.getElementById('pdf-data-evento').textContent = document.getElementById('evento_data').value || '-';
@@ -1209,6 +1223,7 @@
             document.getElementById('cliente_a_select').value = clienteA.id || '';
             document.getElementById('cliente_a_nome').value = clienteA.nome || '';
             document.getElementById('cliente_a_cognome').value = clienteA.cognome || '';
+            document.getElementById('cliente_a_data_nascita').value = clienteA.data_nascita || '';
             document.getElementById('cliente_a_telefono').value = clienteA.telefono || '';
             document.getElementById('cliente_a_email').value = clienteA.email || '';
             document.getElementById('cliente_a_indirizzo').value = clienteA.indirizzo || '';
@@ -1219,6 +1234,7 @@
             document.getElementById('cliente_b_select').value = clienteB.id || '';
             document.getElementById('cliente_b_nome').value = clienteB.nome || '';
             document.getElementById('cliente_b_cognome').value = clienteB.cognome || '';
+            document.getElementById('cliente_b_data_nascita').value = clienteB.data_nascita || '';
             document.getElementById('cliente_b_telefono').value = clienteB.telefono || '';
             document.getElementById('cliente_b_email').value = clienteB.email || '';
             document.getElementById('cliente_b_indirizzo').value = clienteB.indirizzo || '';
@@ -1316,6 +1332,7 @@
             document.getElementById('cliente_a_select').value = clienteA.id || '';
             document.getElementById('cliente_a_nome').value = clienteA.nome || '';
             document.getElementById('cliente_a_cognome').value = clienteA.cognome || '';
+            document.getElementById('cliente_a_data_nascita').value = clienteA.data_nascita || '';
             document.getElementById('cliente_a_telefono').value = clienteA.telefono || '';
             document.getElementById('cliente_a_email').value = clienteA.email || '';
             document.getElementById('cliente_a_indirizzo').value = clienteA.indirizzo || '';
@@ -1326,6 +1343,7 @@
             document.getElementById('cliente_b_select').value = clienteB.id || '';
             document.getElementById('cliente_b_nome').value = clienteB.nome || '';
             document.getElementById('cliente_b_cognome').value = clienteB.cognome || '';
+            document.getElementById('cliente_b_data_nascita').value = clienteB.data_nascita || '';
             document.getElementById('cliente_b_telefono').value = clienteB.telefono || '';
             document.getElementById('cliente_b_email').value = clienteB.email || '';
             document.getElementById('cliente_b_indirizzo').value = clienteB.indirizzo || '';
@@ -1386,7 +1404,7 @@
             });
             
             const nomeCliente = (clienteA.nome || '') + ' ' + (clienteA.cognome || '');
-            document.getElementById('cronologia-info').innerHTML = '<strong>Cliente:</strong> ' + nomeCliente + '<br><strong>ID:</strong> ' + clienteId + '<br><strong>Totale contratti:</strong> ' + contrattiCliente.length;
+            document.getElementById('cronologia-info').innerHTML = '<strong>Cliente:</strong> ' + nomeCliente + '<br><strong>ID:</strong> ' + clienteId + '<br><strong>Data di nascita:</strong> ' + formatDataIT(clienteA.data_nascita) + '<br><strong>Totale contratti:</strong> ' + contrattiCliente.length;
             
             const lista = document.getElementById('cronologia-lista');
             lista.innerHTML = '';
@@ -1397,7 +1415,7 @@
                 contrattiCliente.forEach(function(cc) {
                     const div = document.createElement('div');
                     div.className = 'cronologia-item';
-                    div.innerHTML = '<div class="cronologia-info"><h5>' + (cc.tipo_servizio || 'Servizio') + ' - ' + (cc.numero_contratto || cc.numero || '') + '</h5><p>Data: ' + formatData(cc.data_emissione) + (cc.data_servizio ? ' | Evento: ' + formatData(cc.data_servizio) : '') + '</p></div><span class="cronologia-prezzo">' + (parseFloat(cc.totale_finale) || 0).toFixed(2) + ' EUR</span><button class="btn btn-sm btn-outline" onclick="visualizzaContrattoDaCronologia(\'' + cc.id + '\')">Visualizza</button>';
+                    div.innerHTML = '<div class="cronologia-info"><h5>' + (cc.tipo_servizio || 'Servizio') + ' - ' + (cc.numero_contratto || cc.numero || '') + '</h5><p>Data: ' + formatDataIT(cc.data_emissione) + (cc.data_servizio ? ' | Evento: ' + formatDataIT(cc.data_servizio) : '') + '</p></div><span class="cronologia-prezzo">' + (parseFloat(cc.totale_finale) || 0).toFixed(2) + ' EUR</span><button class="btn btn-sm btn-outline" onclick="visualizzaContrattoDaCronologia(\'' + cc.id + '\')">Visualizza</button>';
                     lista.appendChild(div);
                 });
             }
