@@ -965,7 +965,8 @@
                 data_registrazione: new Date().toISOString().split('T')[0]
             };
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/crm/studio', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati) });
+                // CORREZIONE APPLICATA: Aggiunto il token all'URL della richiesta
+                const response = await fetch(WORKER_URL + '/api/admin/crm/studio?token=' + encodeURIComponent(token), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati) });
                 const result = await response.json();
                 if (result.success) { alert('Studio creato con successo!'); document.getElementById('form-crea-studio').reset(); caricaStudi(); } 
                 else { alert('Errore: ' + result.error); }
