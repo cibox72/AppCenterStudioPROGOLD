@@ -312,9 +312,7 @@
                             <label>Telefono*</label>
                             <input type="text" id="nuovo-studio-telefono" required autocomplete="off">
                         </div>
-                        <div class="form-group">
-
-                                <!-- SEZIONE JavaScript - LOGICA E GESTIONE CLOUD -->
+    <!-- SEZIONE JavaScript - LOGICA E GESTIONE CLOUD -->
     <script>
         const WORKER_URL = 'https://workers.dev';
         let token = '';
@@ -362,7 +360,6 @@
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
-            // Trova il pulsante cliccato in base al testo o all'azione
             const pulsanti = document.querySelectorAll('.tab');
             pulsanti.forEach(p => {
                 if (p.getAttribute('onclick').includes(`'${tabId}'`)) {
@@ -383,7 +380,7 @@
             document.getElementById('stat-studi').textContent = numStudi;
             document.getElementById('stat-notifiche').textContent = numNotifiche;
             document.getElementById('stat-offerte').textContent = numOfferte;
-            document.getElementById('stat-archivio').textContent = '0'; // Archivio storico statico
+            document.getElementById('stat-archivio').textContent = '0';
         }
 
         // CARICA L'ELENCO COMPLETO DEGLI STUDI REGISTRATI
@@ -406,7 +403,6 @@
                             badgeStato = `<span class="badge badge-scaduto">disattivato</span>`;
                         }
 
-                        // Sanificazione numero telefono per WhatsApp
                         const telPulito = studio.telefono ? studio.telefono.replace(/\s+/g, '') : '';
                         const linkWhatsapp = telPulito ? `<button class="btn btn-success btn-sm" onclick="window.open('https://wa.me{telPulito}', '_blank')">WhatsApp</button>` : '';
 
@@ -415,8 +411,8 @@
                             <td>${studio.nome || '-'}</td>
                             <td>${studio.telefono || '-'}</td>
                             <td>${badgeStato}</td>
-                            <td style="display: flex; gap: 8px;">
-                                <button class="btn btn-outline btn-sm" onclick="vediScheda('${studio.id}')">Vedi Scheda</button>
+                            <td>
+                                <button class="btn btn-warning btn-sm" style="background:linear-gradient(135deg, #d4af37, #996515); color:#ffffff; border:none; margin-right:5px;" onclick="vediScheda('${studio.id}')">Vedi Scheda</button>
                                 ${linkWhatsapp}
                             </td>
                         `;
@@ -424,7 +420,7 @@
                     });
 
                     document.getElementById('tabella-studi').style.display = 'table';
-                    document.getElementById('elenco-studi-vuoto').style.style.display = 'none';
+                    document.getElementById('elenco-studi-vuoto').style.display = 'none';
                 } else {
                     document.getElementById('tabella-studi').style.display = 'none';
                     document.getElementById('elenco-studi-vuoto').style.display = 'block';
@@ -436,11 +432,12 @@
             }
         }
 
-        // APRE LA SCHEDA COMPLETA E DETTAGLIATA DI UNO STUDIO (CORRETTA CHIRURGICAMENTE)
+        // APRE LA SCHEDA COMPLETA E DETTAGLIATA DI UNO STUDIO (CORRETTA ED EVITA ERRORI 404)
         async function vediScheda(studioId) {
             try {
-                // Chiamata corretta verso il Cloudflare Worker
-                const response = await fetch(WORKER_URL + '/api/admin/crm/studio/' + encodeURIComponent(studioId) + '?token=' + encodeURIComponent(token));
+                const urlCompleto = WORKER_URL + '/api/admin/crm/studio/' + encodeURIComponent(studioId) + '?token=' + encodeURIComponent(token);
+                
+                const response = await fetch(urlCompleto);
                 if (!response.ok) {
                     throw new Error('Impossibile recuperare i dettagli dello studio fotografico.');
                 }
@@ -462,7 +459,7 @@
                         <div class="scheda-sezione">
                             <h4>Contatti e Recapiti</h4>
                             <div class="scheda-riga"><label>Email Aziendale:</label> <span>${s.email || '-'}</span></div>
-                            <div class="scheda-riga"><label>Telefono:");</label> <span>${s.telefono || '-'}</span></div>
+                            <div class="scheda-riga"><label>Telefono:</label> <span>${s.telefono || '-'}</span></div>
                             <div class="scheda-riga"><label>PEC:</label> <span>${s.pec || '-'}</span></div>
                             <div class="scheda-riga"><label>Codice SDI (Fatturazione):</label> <span>${s.sdi || '-'}</span></div>
                             <div class="scheda-riga"><label>Indirizzo Completo:</label> <span>${s.indirizzo || '-'}, ${s.cap || ''} ${s.citta || ''} (${s.provincia || ''})</span></div>
@@ -493,3 +490,9 @@
 
         // CHIUSURA FINESTRE MODALI
         function chiudiModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // CARICA LE NOTIFICHE AMMINISTRATIVE DAL CLOUD
+
+                        
