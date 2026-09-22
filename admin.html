@@ -174,14 +174,14 @@
         </div>
 
         <!-- ============================================ -->
-        <!-- SEZIONE 5: TAB NOTIFICHE -->
+        <!-- SEZIONE 5: TAB NOTIFICHE (MODIFICATA - RIMOSSI TASTI LETTA) -->
         <!-- ============================================ -->
         <div id="tab-notifiche" class="tab-content">
             <div class="section">
                 <div class="section-header">
                     <h3>Notifiche e Richieste</h3>
                     <p style="color: #666666;">Schede di registrazione, eventi del sistema e avvisi di scadenza</p>
-                    <button class="btn btn-outline btn-sm" onclick="segnaTutteLetture()">Segna tutte come lette</button>
+                    <!-- RIMOSSO: <button class="btn btn-outline btn-sm" onclick="segnaTutteLetture()">Segna tutte come lette</button> -->
                 </div>
                 <div id="loading-notifiche" class="loading"><div class="spinner"></div><p>Caricamento notifiche...</p></div>
                 <div id="lista-notifiche"></div>
@@ -384,7 +384,7 @@
             </div>
             <div id="notifica-dettagli"></div>
             <div style="display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
-                <button class="btn btn-success" onclick="segnaNotificaLettaCorrente()" style="flex: 1;">Segna come Letta</button>
+                <!-- RIMOSSO: <button class="btn btn-success" onclick="segnaNotificaLettaCorrente()" style="flex: 1;">Segna come Letta</button> -->
                 <button class="btn btn-danger" onclick="eliminaNotificaCorrente()" style="flex: 1;">Elimina</button>
                 <button class="btn btn-outline" onclick="chiudiModalNotifica()" style="flex: 1;">Chiudi</button>
             </div>
@@ -593,7 +593,6 @@
                             '<small>' + new Date(notif.data_creazione).toLocaleString('it-IT') + '</small>' +
                             '<div class="notification-actions">' +
                                 '<button class="btn btn-sm btn-primary" onclick="apriDettaglioNotifica(\'' + notif.id + '\')">Leggi Notifica</button>' +
-                                '<button class="btn btn-sm btn-outline" onclick="segnaLetta(\'' + notif.id + '\')">Segna come letta</button>' +
                                 '<button class="btn btn-sm btn-danger" onclick="eliminaNotifica(\'' + notif.id + '\')">Elimina</button>' +
                             '</div>';
                         lista.appendChild(div);
@@ -632,7 +631,7 @@
                                     '<small>Generato automaticamente dal sistema</small>' +
                                     '<div class="notification-actions">' +
                                         '<button class="btn btn-sm btn-success" onclick="contattaWhatsAppScadenza(\'' + (studio.telefono || '') + '\', \'' + (studio.nome || '').replace(/'/g, "\\'") + '\')">Contatta su WhatsApp</button>' +
-                                        '<button class="btn btn-sm btn-outline" onclick="segnaLettaScadenza(this)">Segna come letta</button>' +
+                                        '<button class="btn btn-sm btn-danger" onclick="eliminaNotificaScadenza(this)">Elimina</button>' +
                                     '</div>';
                                 
                                 listaNotifiche.insertBefore(div, listaNotifiche.firstChild);
@@ -655,10 +654,9 @@
             window.open('https://wa.me/39' + (tel.startsWith('39') ? tel.substring(2) : tel) + '?text=' + msg, '_blank');
         }
 
-        function segnaLettaScadenza(btn) {
+        function eliminaNotificaScadenza(btn) {
             const item = btn.closest('.notification-item');
-            item.classList.remove('unread');
-            item.style.opacity = '0.6';
+            item.remove();
         }
 
         async function apriDettaglioNotifica(id) {
@@ -690,7 +688,6 @@
                         '<div class="scheda-sezione"><h4>Messaggio</h4><p style="color: #000000; line-height: 1.6;">' + (n.messaggio || '-') + '</p></div>' +
                         datiHtml;
                     document.getElementById('modal-notifica').classList.add('active');
-                    if (n.letto === 0) { await segnaLetta(id); }
                 } else {
                     alert('Errore: ' + (data.error || 'Notifica non trovata'));
                 }
@@ -705,42 +702,11 @@
             notificaCorrente = null;
         }
 
-        async function segnaNotificaLettaCorrente() {
-            if (!notificaCorrente) return;
-            await segnaLetta(notificaCorrente.id);
-            chiudiModalNotifica();
-        }
-
         async function eliminaNotificaCorrente() {
             if (!notificaCorrente) return;
             if (confirm('Eliminare questa notifica?')) {
                 await eliminaNotifica(notificaCorrente.id);
                 chiudiModalNotifica();
-            }
-        }
-
-        async function segnaLetta(id) {
-            try { 
-                await fetch(WORKER_URL + '/api/admin/notifica/letta?token=' + encodeURIComponent(token), { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ id: id }) 
-                }); 
-                caricaNotifiche(); 
-            } catch (error) { 
-                console.error('Errore segna letta:', error); 
-            }
-        }
-
-        async function segnaTutteLetture() {
-            try { 
-                await fetch(WORKER_URL + '/api/admin/notifiche/lette?token=' + encodeURIComponent(token), { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' } 
-                }); 
-                caricaNotifiche(); 
-            } catch (error) { 
-                console.error('Errore segna tutte lette:', error); 
             }
         }
 
@@ -754,6 +720,9 @@
                 console.error('Errore elimina notifica:', error); 
             }
         }
+
+        // RIMOSSA FUNZIONE: segnaTutteLetture()
+        // RIMOSSA FUNZIONE: segnaLetta()
 
         async function caricaArchivio() {
             try {
