@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - CRM & Notifiche - AppCenterStudioPROGOLD</title>
     <link rel="stylesheet" href="temi.css">
-    
-    <!-- TEMA ORO/NERO/BIANCO HARDCODED - SEZIONE 1: STILI CSS -->
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background: #ffffff; min-height: 100vh; color: #000000; }
@@ -15,7 +13,7 @@
         .sync-status { display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9em; }
         .sync-dot { width: 10px; height: 10px; background: #ffffff; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .nav-btn { background: rgba(255,255,255,0.2); border: none; color: #ffffff; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9em; margin-left: 10px; font-weight: 600; }
+        .nav-btn { background: rgba(255,255,255,0.2); border: none; color: #ffffff; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9em; margin-left: 10px; }
         .nav-btn:hover { background: rgba(255,255,255,0.3); }
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
         .page-header { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 5px solid #d4af37; }
@@ -37,16 +35,13 @@
         .badge-attivo { background: #d5f5e3; color: #1e8449; }
         .badge-trial { background: #fdebd0; color: #d35400; }
         .badge-scaduto { background: #fadbd8; color: #c0392b; }
-        .badge-bozza { background: #fdebd0; color: #d35400; }
-        .badge-attiva { background: #d5f5e3; color: #1e8449; }
-        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9em; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9em; display: inline-flex; align-items: center; gap: 8px; }
         .btn-primary { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; }
         .btn-outline { background: transparent; border: 2px solid #d4af37; color: #996515; }
         .btn-outline:hover { background: #fff9e6; }
         .btn-danger { background: linear-gradient(135deg, #f1948a, #e74c3c); color: #ffffff; }
         .btn-success { background: linear-gradient(135deg, #25d366, #128c7e); color: #ffffff; }
-        .btn-warning { background: linear-gradient(135deg, #f9e79f, #f1c40f); color: #000000; }
-        .btn-sm { padding: 6px 12px; font-size: 0.8em; border-radius: 6px; }
+        .btn-sm { padding: 6px 12px; font-size: 0.8em; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; margin-bottom: 8px; color: #000000; font-weight: 600; font-size: 0.9em; }
@@ -80,419 +75,411 @@
         .info-box { background: #fff9e6; padding: 15px; border-radius: 8px; border-left: 4px solid #d4af37; margin-bottom: 20px; }
         .info-box strong { color: #000000; }
         .info-box p { color: #000000; font-size: 0.9em; margin-top: 5px; }
-        .notification-item { background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #d4af37; transition: all 0.3s ease; position: relative; }
-        .notification-item:hover { border-color: #d4af37; background: #fff9e6; }
+        .notification-item { background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #d4af37; }
         .notification-item.unread { border-left: 4px solid #996515; background: #fff9e6; }
-        .notification-item h4 { color: #000000; font-size: 1.1em; margin-bottom: 5px; font-weight: 600; }
-        .notification-item p { color: #333333; font-size: 0.95em; margin-bottom: 10px; }
-        .notification-meta { color: #666666; font-size: 0.8em; display: flex; gap: 15px; }
-        .notification-actions { margin-top: 15px; display: flex; gap: 10px; }
+        .notification-item h4 { color: #000000; margin-bottom: 10px; }
+        .notification-item p { color: #000000; margin-bottom: 10px; line-height: 1.5; }
+        .notification-item small { color: #666666; font-size: 0.85em; }
+        .notification-actions { display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
+        .actions-cell { display: flex; gap: 8px; flex-wrap: wrap; }
+        .offerta-card { background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #d4af37; }
+        .offerta-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
+        .offerta-header h4 { color: #000000; font-size: 1.2em; margin: 0; }
+        .offerta-tipo { background: #fff9e6; color: #996515; padding: 4px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 600; border: 1px solid #d4af37; }
+        .offerta-descrizione { color: #666666; font-size: 0.95em; margin-bottom: 10px; line-height: 1.5; }
+        .offerta-dettagli { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 15px; font-size: 0.9em; }
+        .offerta-dettagli strong { color: #996515; }
+        .offerta-actions { display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid #d5d8dc; padding-top: 15px; }
+        .whatsapp-preview { background: #e5ddd5; padding: 15px; border-radius: 10px; margin-top: 15px; border-left: 4px solid #25d366; }
+        .whatsapp-preview h5 { color: #000000; margin-bottom: 10px; }
+        .whatsapp-preview p { color: #000000; font-size: 0.95em; line-height: 1.5; white-space: pre-wrap; }
     </style>
 </head>
 <body>
-
-    <!-- TOP BAR -->
     <div class="top-bar">
         <h1>Admin Panel - CRM</h1>
-        <div class="sync-status">
-            <div class="sync-dot"></div>
-            <span>Cloud Sync: OK</span>
-            <button class="nav-btn" onclick="effettuaLogout()">Logout</button>
+        <div>
+            <span class="sync-status"><div class="sync-dot"></div>Cloud Sync: OK</span>
+            <button class="nav-btn" onclick="logout()">Logout</button>
         </div>
     </div>
+
     <div class="container">
-        <!-- HEADER PAGINA -->
         <div class="page-header">
-            <h2>Pannello di Controllo Fornitore</h2>
-            <p>Benvenuto nell'area amministrativa di AppCenterStudioPROGOLD. Gestisci gli studi fotografici registrati, le notifiche di sistema e le offerte commerciali.</p>
+            <h2>Admin Panel - CRM & Notifiche</h2>
+            <p>Gestione studi, notifiche, offerte promozionali e personalizzazione della dashboard</p>
         </div>
 
-        <!-- GRIGLIA STATISTICHE -->
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">S</div>
-                <div class="stat-info">
-                    <h3 id="stat-studi">0</h3>
-                    <p>Studi Registrati</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">N</div>
-                <div class="stat-info">
-                    <h3 id="stat-notifiche">0</h3>
-                    <p>Notifiche Attive</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">A</div>
-                <div class="stat-info">
-                    <h3 id="stat-archivio">0</h3>
-                    <p>Archivio Studi</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">O</div>
-                <div class="stat-info">
-                    <h3 id="stat-offerte">0</h3>
-                    <p>Offerte Attive</p>
-                </div>
-            </div>
+            <div class="stat-card"><div class="stat-icon">S</div><div class="stat-info"><h3 id="count-studi">0</h3><p>Studi Registrati</p></div></div>
+            <div class="stat-card"><div class="stat-icon">N</div><div class="stat-info"><h3 id="count-notifiche">0</h3><p>Notifiche</p></div></div>
+            <div class="stat-card"><div class="stat-icon">A</div><div class="stat-info"><h3 id="count-archivio">0</h3><p>Archivio Studi</p></div></div>
+            <div class="stat-card"><div class="stat-icon">O</div><div class="stat-info"><h3 id="count-offerte">0</h3><p>Offerte Attive</p></div></div>
         </div>
 
-        <!-- TABS NAVIGAZIONE -->
         <div class="tabs">
-            <button class="tab active" onclick="cambiaTab('studi')">Elenco Studi</button>
-            <button class="tab" onclick="cambiaTab('notifiche')">Notifiche</button>
-            <button class="tab" onclick="cambiaTab('archivio')">Archivio Studi</button>
-            <button class="tab" onclick="cambiaTab('offerte')">Offerte Promo</button>
-            <button class="tab" onclick="cambiaTab('tema')">Tema Admin</button>
-            <button class="tab" onclick="cambiaTab('crea-studio')">Crea Studio</button>
+            <div class="tab active" onclick="switchTab('studi')">Elenco Studi</div>
+            <div class="tab" onclick="switchTab('notifiche')">Notifiche</div>
+            <div class="tab" onclick="switchTab('archivio')">Archivio Studi</div>
+            <div class="tab" onclick="switchTab('offerte')">Offerte Promo</div>
+            <div class="tab" onclick="switchTab('tema')">Tema Admin</div>
+            <div class="tab" onclick="switchTab('crea')">Crea Studio</div>
         </div>
 
-        <!-- CONTENUTO TAB: ELENCO STUDI -->
         <div id="tab-studi" class="tab-content active">
             <div class="section">
                 <div class="section-header">
                     <h3>Elenco Studi Registrati</h3>
-                    <p style="color: #666666; font-size: 0.9em;">Tabella semplificata - clicca "Vedi Scheda" per tutti i dettagli</p>
                 </div>
-                <div id="loading-studi" class="loading">
-                    <div class="spinner"></div>
-                    <p>Caricamento studi in corso...</p>
+                <div id="loading-studi" class="loading"><div class="spinner"></div><p>Caricamento studi...</p></div>
+                <div id="tabella-studi" style="display: none; overflow-x: auto;">
+                    <table>
+                        <thead><tr><th>ID Studio</th><th>Nome</th><th>Telefono</th><th>Stato</th><th>Azioni</th></tr></thead>
+                        <tbody id="tbody-studi"></tbody>
+                    </table>
                 </div>
-                <div id="elenco-studi-vuoto" class="empty-state" style="display:none;">
-                    <p>Nessuno studio fotografico registrato sulla piattaforma.</p>
-                </div>
-                <table id="tabella-studi" style="display:none;">
-                    <thead>
-                        <tr>
-                            <th>ID Studio</th>
-                            <th>Nome</th>
-                            <th>Telefono</th>
-                            <th>Stato</th>
-                            <th>Azioni</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lista-studi-corpo"></tbody>
-                </table>
+                <div id="empty-studi" class="empty-state" style="display: none;"><p>Nessuno studio registrato.</p></div>
             </div>
         </div>
 
-        <!-- CONTENUTO TAB: NOTIFICHE -->
         <div id="tab-notifiche" class="tab-content">
             <div class="section">
-                <div class="section-header">
-                    <h3>Notifiche Amministrative di Sistema</h3>
-                    <button class="btn btn-outline btn-sm" onclick="segnaTutteNotificheLette()">Segna tutte come lette</button>
-                </div>
-                <div id="loading-notifiche" class="loading">
-                    <div class="spinner"></div>
-                    <p>Caricamento notifiche in corso...</p>
-                </div>
-                <div id="elenco-notifiche-vuoto" class="empty-state" style="display:none;">
-                    <p>Non ci sono notifiche attive da visualizzare.</p>
-                </div>
-                <div id="lista-notifiche-corpo"></div>
+                <div class="section-header"><h3>Notifiche e Richieste</h3></div>
+                <div id="loading-notifiche" class="loading"><div class="spinner"></div><p>Caricamento notifiche...</p></div>
+                <div id="lista-notifiche"></div>
+                <div id="empty-notifiche" class="empty-state" style="display: none;"><p>Nessuna notifica presente.</p></div>
             </div>
         </div>
 
-        <!-- CONTENUTO TAB: ARCHIVIO STUDI -->
         <div id="tab-archivio" class="tab-content">
             <div class="section">
-                <div class="section-header">
-                    <h3>Archivio Storico Contratti Studi</h3>
+                <div class="section-header"><h3>Archivio Studi Completati</h3></div>
+                <div id="loading-archivio" class="loading"><div class="spinner"></div><p>Caricamento archivio...</p></div>
+                <div id="tabella-archivio" style="display: none; overflow-x: auto;">
+                    <table>
+                        <thead><tr><th>ID Studio</th><th>Nome</th><th>Email</th><th>Telefono</th><th>P.IVA</th><th>Azioni</th></tr></thead>
+                        <tbody id="tbody-archivio"></tbody>
+                    </table>
                 </div>
-                <div id="loading-archivio" class="loading">
-                    <div class="spinner"></div>
-                    <p>Caricamento archivio in corso...</p>
-                </div>
-                <div id="elenco-archivio-vuoto" class="empty-state" style="display:none;">
-                    <p>L'archivio storico degli studi è vuoto.</p>
-                </div>
-                <table id="tabella-archivio" style="display:none;">
-                    <thead>
-                        <tr>
-                            <th>ID Studio</th>
-                            <th>Nome Studio</th>
-                            <th>Data Disattivazione</th>
-                            <th>Azioni</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lista-archivio-corpo"></tbody>
-                </table>
+                <div id="empty-archivio" class="empty-state" style="display: none;"><p>Nessuno studio archiviato.</p></div>
             </div>
         </div>
 
-        <!-- CONTENUTO TAB: OFFERTE PROMO -->
         <div id="tab-offerte" class="tab-content">
             <div class="section">
-                <div class="section-header">
-                    <h3>Gestione Offerte Promozionali</h3>
-                    <button class="btn btn-primary btn-sm" onclick="apriModalNuovaOfferta()">Nuova Offerta</button>
-                </div>
-                <div id="loading-offerte" class="loading">
-                    <div class="spinner"></div>
-                    <p>Caricamento offerte in corso...</p>
-                </div>
-                <div id="elenco-offerte-vuoto" class="empty-state" style="display:none;">
-                    <p>Nessuna offerta promozionale attiva.</p>
-                </div>
-                <table id="tabella-offerte" style="display:none;">
-                    <thead>
-                        <tr>
-                            <th>Titolo</th>
-                            <th>Tipo</th>
-                            <th>Sconto</th>
-                            <th>Validità</th>
-                            <th>Stato</th>
-                            <th>Azioni</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lista-offerte-corpo"></tbody>
-                </table>
+                <div class="section-header"><h3>Crea Nuova Offerta Promozionale</h3></div>
+                <form id="form-offerta" onsubmit="salvaOfferta(event)">
+                    <input type="hidden" id="offerta_id" value="">
+                    <div class="form-grid">
+                        <div class="form-group"><label>Titolo Offerta *</label><input type="text" id="offerta_titolo" required autocomplete="off"></div>
+                        <div class="form-group"><label>Tipo Offerta *</label><select id="offerta_tipo" required><option value="">-- Seleziona --</option><option value="Abbonamento Anticipato">Abbonamento Anticipato</option><option value="Promo Lancio">Promo Lancio</option><option value="Sconto Fedelta">Sconto Fedelta</option><option value="Offerta Stagionale">Offerta Stagionale</option><option value="Altro">Altro</option></select></div>
+                        <div class="form-group"><label>Sconto</label><input type="text" id="offerta_sconto" autocomplete="off"></div>
+                        <div class="form-group"><label>Stato</label><select id="offerta_stato"><option value="attiva">Attiva</option><option value="bozza">Bozza</option></select></div>
+                        <div class="form-group"><label>Data Inizio</label><input type="date" id="offerta_data_inizio" autocomplete="off"></div>
+                        <div class="form-group"><label>Data Fine</label><input type="date" id="offerta_data_fine" autocomplete="off"></div>
+                        <div class="form-group" style="grid-column: 1 / -1;"><label>Descrizione *</label><textarea id="offerta_descrizione" required rows="3" autocomplete="off"></textarea></div>
+                        <div class="form-group" style="grid-column: 1 / -1;"><label>Messaggio WhatsApp</label><textarea id="offerta_messaggio" rows="3" autocomplete="off"></textarea></div>
+                    </div>
+                    <div style="margin-top: 20px;"><button type="submit" class="btn btn-primary">SALVA OFFERTA</button> <button type="button" class="btn btn-outline" onclick="pulisciFormOfferta()">PULISCI</button></div>
+                </form>
+            </div>
+            <div class="section">
+                <div class="section-header"><h3>Archivio Offerte</h3></div>
+                <div id="loading-offerte" class="loading"><div class="spinner"></div><p>Caricamento...</p></div>
+                <div id="lista-offerte"></div>
             </div>
         </div>
 
-        <!-- CONTENUTO TAB: TEMA ADMIN -->
         <div id="tab-tema" class="tab-content">
             <div class="section">
-                <div class="section-header">
-                    <h3>Personalizzazione Tema Grafico Admin</h3>
-                </div>
-                <div class="info-box">
-                    <strong>Configurazione Colori di Sistema</strong>
-                    <p>Il tema dell'applicazione rispetta lo standard hardcoded istituzionale: Oro come colore primario, Nero come colore di contrasto dominante e Bianco per i fondi e le superfici di lettura.</p>
-                </div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Colore Primario (Oro)</label>
-                        <input type="text" value="#d4af37" disabled autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label>Colore Secondario (Oro Scuro)</label>
-                        <input type="text" value="#996515" disabled autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label>Sfondo Principale</label>
-                        <input type="text" value="#ffffff" disabled autocomplete="off">
-                    </div>
-                </div>
+                <h3>TEMA ADMIN</h3>
+                <div class="info-box"><p>Tema Oro/Nero/Bianco attivo</p></div>
             </div>
         </div>
 
-        <!-- CONTENUTO TAB: CREA STUDIO -->
-        <div id="tab-crea-studio" class="tab-content">
+        <div id="tab-crea" class="tab-content">
             <div class="section">
-                <div class="section-header">
-                    <h3>Registrazione Manuale Nuovo Studio Fotografico</h3>
-                </div>
-                <form id="form-crea-studio" onsubmit="creaNuovoStudio(event)">
+                <h3>Crea Nuovo Studio</h3>
+                <form id="form-crea-studio" onsubmit="creaStudio(event)">
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label>ID Studio (Username di Login)*</label>
-                            <input type="text" id="nuovo-studio-id" required autocomplete="off" placeholder="es. RossiPH">
-                        </div>
-                        <div class="form-group">
-                            <label>Password di Accesso*</label>
-                            <input type="password" id="nuovo-studio-pass" required autocomplete="off">
-                        </div>
-                        <div class="form-group">
-                            <label>Nome Studio Fotografico*</label>
-                            <input type="text" id="nuovo-studio-nome" required autocomplete="off">
-                        </div>
-                        <div class="form-group">
-                            <label>Partita IVA*</label>
-                            <input type="text" id="nuovo-studio-piva" required autocomplete="off">
-                        </div>
-                        <div class="form-group">
-                            <label>Email Studio*</label>
-                            <input type="email" id="nuovo-studio-email" required autocomplete="off">
-                        </div>
-                        <div class="form-group">
-                            <label>Telefono*</label>
-                            <input type="text" id="nuovo-studio-telefono" required autocomplete="off">
-                        </div>
-    <!-- SEZIONE JavaScript - LOGICA E GESTIONE CLOUD -->
+                        <div class="form-group"><label>ID Studio *</label><input type="text" id="studio_id" required autocomplete="off"></div>
+                        <div class="form-group"><label>Password *</label><input type="password" id="studio_password" required autocomplete="off"></div>
+                        <div class="form-group"><label>Nome Studio *</label><input type="text" id="studio_nome" required autocomplete="off"></div>
+                        <div class="form-group"><label>Email *</label><input type="email" id="studio_email" required autocomplete="off"></div>
+                        <div class="form-group"><label>Telefono</label><input type="tel" id="studio_telefono" autocomplete="off"></div>
+                        <div class="form-group"><label>P.IVA</label><input type="text" id="studio_piva" autocomplete="off"></div>
+                        <div class="form-group"><label>Indirizzo</label><input type="text" id="studio_indirizzo" autocomplete="off"></div>
+                        <div class="form-group"><label>Citta</label><input type="text" id="studio_citta" autocomplete="off"></div>
+                        <div class="form-group"><label>Scadenza</label><input type="date" id="studio_scadenza" autocomplete="off"></div>
+                        <div class="form-group"><label>Stato</label><select id="studio_stato_abbonamento"><option value="Attivo">Attivo</option><option value="Trial">Trial</option></select></div>
+                    </div>
+                    <div style="margin-top: 20px;"><button type="submit" class="btn btn-primary">CREA STUDIO</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-scheda-studio" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header"><h2>Scheda Completa Studio</h2><button class="close-modal" onclick="chiudiModalScheda()">x</button></div>
+            <div id="scheda-dettagli"></div>
+            <div style="margin-top: 20px;"><button class="btn btn-outline" onclick="chiudiModalScheda()">Chiudi</button></div>
+        </div>
+    </div>
+
+    <div id="modal-notifica" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header"><h2>Dettaglio Notifica</h2><button class="close-modal" onclick="chiudiModalNotifica()">x</button></div>
+            <div id="notifica-dettagli"></div>
+            <div style="margin-top: 20px;"><button class="btn btn-danger" onclick="eliminaNotificaCorrente()">Elimina</button> <button class="btn btn-outline" onclick="chiudiModalNotifica()">Chiudi</button></div>
+        </div>
+    </div>
+
+    <div id="modal-whatsapp" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header"><h2>Invia WhatsApp</h2><button class="close-modal" onclick="chiudiModalWhatsApp()">x</button></div>
+            <div id="wa-contenuto"></div>
+            <div style="margin-top: 20px;"><button class="btn btn-success" onclick="inviaWhatsApp()">INVIA</button> <button class="btn btn-outline" onclick="chiudiModalWhatsApp()">Annulla</button></div>
+        </div>
+    </div>
+
+    <div class="footer-branding"><p>Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></p></div>
+
     <script>
-        const WORKER_URL = 'https://workers.dev';
-        let token = '';
+        var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
+        var token = '';
+        var studioCorrenteScheda = null;
+        var notificaCorrente = null;
+        var offerteDisponibili = [];
 
-        // INIZIALIZZAZIONE PAGINA E CONTROLLO TOKEN URL
-        window.addEventListener('DOMContentLoaded', async () => {
-            const urlParams = new URLSearchParams(window.location.search);
+        document.addEventListener('DOMContentLoaded', function() {
+            var urlParams = new URLSearchParams(window.location.search);
             token = urlParams.get('token');
-
-            if (!token) {
-                alert('Sessione non valida. Effettua nuovamente il login.');
-                window.location.href = 'index.html';
-                return;
-            }
-
-            await verificaAutenticazione();
+            if (!token) { alert('Token non trovato'); window.location.href = 'index.html'; return; }
+            caricaDati();
         });
 
-        // VERIFICA SE L'UTENTE È UN ADMIN AUTORIZZATO
-        async function verificaAutenticazione() {
-            try {
-                const response = await fetch(WORKER_URL + '/api/auth/verifica?token=' + encodeURIComponent(token));
-                if (!response.ok) {
-                    throw new Error('Sessione scaduta');
-                }
-                const data = await response.json();
-                if (data.success && data.tipo === 'admin') {
-                    // Carica tutti i dati in parallelo dal cloud
-                    caricaStudi();
-                    caricaNotifiche();
-                    caricaOfferte();
-                } else {
-                    alert('Accesso negato. Area riservata all\'amministratore.');
-                    window.location.href = 'index.html';
-                }
-            } catch (err) {
-                console.error(err);
-                alert('Sessione non valida o scaduta.');
-                window.location.href = 'index.html';
-            }
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
         }
 
-        // NAVIGAZIONE A SCHEDE (TAB) INTERNE
-        function cambiaTab(tabId) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
-            const pulsanti = document.querySelectorAll('.tab');
-            pulsanti.forEach(p => {
-                if (p.getAttribute('onclick').includes(`'${tabId}'`)) {
-                    p.classList.add('active');
-                }
-            });
-
-            const elementoTarget = document.getElementById('tab-' + tabId);
-            if (elementoTarget) elementoTarget.classList.add('active');
+        async function caricaDati() {
+            await caricaStudi();
+            await caricaNotifiche();
+            await caricaArchivio();
+            await caricaOfferte();
         }
 
-        // AGGIORNAMENTO DINAMICO DEI CONTATORI DELLE STATISTICHE
-        function aggiornaContatori() {
-            const numStudi = document.querySelectorAll('#lista-studi-corpo tr').length;
-            const numNotifiche = document.querySelectorAll('.notification-item').length;
-            const numOfferte = document.querySelectorAll('#lista-offerte-corpo tr').length;
-
-            document.getElementById('stat-studi').textContent = numStudi;
-            document.getElementById('stat-notifiche').textContent = numNotifiche;
-            document.getElementById('stat-offerte').textContent = numOfferte;
-            document.getElementById('stat-archivio').textContent = '0';
-        }
-
-        // CARICA L'ELENCO COMPLETO DEGLI STUDI REGISTRATI
         async function caricaStudi() {
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/crm/studi?token=' + encodeURIComponent(token));
-                const data = await response.json();
-
+                var response = await fetch(WORKER_URL + '/api/admin/crm/studi?token=' + encodeURIComponent(token));
+                var data = await response.json();
                 document.getElementById('loading-studi').style.display = 'none';
-
                 if (data.success && data.studi && data.studi.length > 0) {
-                    const tbody = document.getElementById('lista-studi-corpo');
+                    document.getElementById('tabella-studi').style.display = 'block';
+                    document.getElementById('empty-studi').style.display = 'none';
+                    document.getElementById('count-studi').textContent = data.studi.length;
+                    var tbody = document.getElementById('tbody-studi');
                     tbody.innerHTML = '';
-
-                    data.studi.forEach(studio => {
-                        const tr = document.createElement('tr');
-                        
-                        let badgeStato = `<span class="badge badge-attivo">attivo</span>`;
-                        if (studio.attivo === 0) {
-                            badgeStato = `<span class="badge badge-scaduto">disattivato</span>`;
-                        }
-
-                        const telPulito = studio.telefono ? studio.telefono.replace(/\s+/g, '') : '';
-                        const linkWhatsapp = telPulito ? `<button class="btn btn-success btn-sm" onclick="window.open('https://wa.me{telPulito}', '_blank')">WhatsApp</button>` : '';
-
-                        tr.innerHTML = `
-                            <td><strong>${studio.id}</strong></td>
-                            <td>${studio.nome || '-'}</td>
-                            <td>${studio.telefono || '-'}</td>
-                            <td>${badgeStato}</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" style="background:linear-gradient(135deg, #d4af37, #996515); color:#ffffff; border:none; margin-right:5px;" onclick="vediScheda('${studio.id}')">Vedi Scheda</button>
-                                ${linkWhatsapp}
-                            </td>
-                        `;
-                        tbody.appendChild(tr);
+                    data.studi.forEach(function(studio) {
+                        var stato = studio.stato_abbonamento || 'Attivo';
+                        var tr = '<tr><td><strong>' + studio.id + '</strong></td><td>' + (studio.nome || '-') + '</td><td>' + (studio.telefono || '-') + '</td><td><span class="badge badge-' + stato.toLowerCase() + '">' + stato + '</span></td><td class="actions-cell"><button class="btn btn-sm btn-primary" onclick="apriSchedaCompleta(\'' + studio.id + '\')">Vedi Scheda</button></td></tr>';
+                        tbody.innerHTML += tr;
                     });
-
-                    document.getElementById('tabella-studi').style.display = 'table';
-                    document.getElementById('elenco-studi-vuoto').style.display = 'none';
                 } else {
-                    document.getElementById('tabella-studi').style.display = 'none';
-                    document.getElementById('elenco-studi-vuoto').style.display = 'block';
+                    document.getElementById('empty-studi').style.display = 'block';
+                    document.getElementById('count-studi').textContent = '0';
                 }
-                aggiornaContatori();
-            } catch (err) {
-                console.error(err);
-                document.getElementById('loading-studi').textContent = 'Errore nel caricamento dei dati dal server cloud.';
+            } catch (error) {
+                console.error('Errore:', error);
+                document.getElementById('loading-studi').innerHTML = '<p style="color:red">Errore caricamento</p>';
             }
         }
 
-        // APRE LA SCHEDA COMPLETA E DETTAGLIATA DI UNO STUDIO (CORRETTA ED EVITA ERRORI 404)
-        async function vediScheda(studioId) {
+        async function apriSchedaCompleta(studioId) {
             try {
-                const urlCompleto = WORKER_URL + '/api/admin/crm/studio/' + encodeURIComponent(studioId) + '?token=' + encodeURIComponent(token);
-                
-                const response = await fetch(urlCompleto);
-                if (!response.ok) {
-                    throw new Error('Impossibile recuperare i dettagli dello studio fotografico.');
-                }
-                const data = await response.json();
-
+                var response = await fetch(WORKER_URL + '/api/admin/crm/studio/' + studioId + '?token=' + encodeURIComponent(token));
+                var data = await response.json();
                 if (data.success && data.studio) {
-                    const s = data.studio;
-                    const corpoModal = document.getElementById('modal-scheda-corpo');
-
-                    corpoModal.innerHTML = `
-                        <div class="scheda-sezione">
-                            <h4>Informazioni Profilo Generali</h4>
-                            <div class="scheda-riga"><label>ID Studio:</label> <span>${s.id || '-'}</span></div>
-                            <div class="scheda-riga"><label>Nome Studio:</label> <span>${s.nome || '-'}</span></div>
-                            <div class="scheda-riga"><label>Partita IVA:</label> <span>${s.piva || '-'}</span></div>
-                            <div class="scheda-riga"><label>Codice Fiscale Legale:</label> <span>${s.cf_legale || '-'}</span></div>
-                            <div class="scheda-riga"><label>Titolare / Legale:</label> <span>${s.legale || '-'}</span></div>
-                        </div>
-                        <div class="scheda-sezione">
-                            <h4>Contatti e Recapiti</h4>
-                            <div class="scheda-riga"><label>Email Aziendale:</label> <span>${s.email || '-'}</span></div>
-                            <div class="scheda-riga"><label>Telefono:</label> <span>${s.telefono || '-'}</span></div>
-                            <div class="scheda-riga"><label>PEC:</label> <span>${s.pec || '-'}</span></div>
-                            <div class="scheda-riga"><label>Codice SDI (Fatturazione):</label> <span>${s.sdi || '-'}</span></div>
-                            <div class="scheda-riga"><label>Indirizzo Completo:</label> <span>${s.indirizzo || '-'}, ${s.cap || ''} ${s.citta || ''} (${s.provincia || ''})</span></div>
-                        </div>
-                        <div class="scheda-sezione">
-                            <h4>Dati Finanziari</h4>
-                            <div class="scheda-riga"><label>IBAN:</label> <span>${s.iban || '-'}</span></div>
-                            <div class="scheda-riga"><label>Intestatario IBAN:</label> <span>${s.iban_intestato || '-'}</span></div>
-                        </div>
-                        <div class="scheda-sezione">
-                            <h4>Abbonamento e Licenza Piattaforma</h4>
-                            <div class="scheda-riga"><label>Data Registrazione:</label> <span>${s.data_registrazione ? new Date(s.data_registrazione).toLocaleDateString('it-IT') : '-'}</span></div>
-                            <div class="scheda-riga"><label>Data Scadenza Prova/Licenza:</label> <span>${s.scadenza ? new Date(s.scadenza).toLocaleDateString('it-IT') : '-'}</span></div>
-                            <div class="scheda-riga"><label>Stato Licenza Attiva:</label> <span>${s.licenza_attiva === 1 ? 'Sì (Attiva)' : 'No (Bloccata)'}</span></div>
-                            <div class="scheda-riga"><label>Stato Account:</label> <span>${s.attivo === 1 ? 'Attivo sulla piattaforma' : 'Disattivato'}</span></div>
-                        </div>
-                    `;
-
-                    document.getElementById('modal-scheda').classList.add('active');
+                    var s = data.studio;
+                    studioCorrenteScheda = s;
+                    document.getElementById('scheda-dettagli').innerHTML = '<div class="info-box"><strong>ID:</strong> ' + s.id + '<br><strong>Nome:</strong> ' + (s.nome || '-') + '</div><div class="scheda-sezione"><h4>Dati</h4><div class="scheda-riga"><label>Email</label><span>' + (s.email || '-') + '</span></div><div class="scheda-riga"><label>Telefono</label><span>' + (s.telefono || '-') + '</span></div><div class="scheda-riga"><label>P.IVA</label><span>' + (s.piva || '-') + '</span></div></div>';
+                    document.getElementById('modal-scheda-studio').classList.add('active');
                 } else {
-                    alert('Errore: ' + (data.error || 'Studio non trovato nel database cloud.'));
+                    alert('Errore: ' + (data.error || 'Studio non trovato'));
                 }
-            } catch (err) {
-                console.error(err);
-                alert('Errore di comunicazione con Cloudflare durante l\'apertura della scheda.');
+            } catch (error) {
+                console.error('Errore:', error);
+                alert('Errore di connessione');
             }
         }
 
-        // CHIUSURA FINESTRE MODALI
-        function chiudiModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
+        function chiudiModalScheda() { document.getElementById('modal-scheda-studio').classList.remove('active'); }
+        function chiudiModalNotifica() { document.getElementById('modal-notifica').classList.remove('active'); }
+        function chiudiModalWhatsApp() { document.getElementById('modal-whatsapp').classList.remove('active'); }
+
+        async function caricaNotifiche() {
+            try {
+                var response = await fetch(WORKER_URL + '/api/admin/notifiche?token=' + encodeURIComponent(token));
+                var data = await response.json();
+                document.getElementById('loading-notifiche').style.display = 'none';
+                if (data.success && data.notifiche && data.notifiche.length > 0) {
+                    document.getElementById('count-notifiche').textContent = data.notifiche.length;
+                    var lista = document.getElementById('lista-notifiche');
+                    lista.innerHTML = '';
+                    data.notifiche.forEach(function(n) {
+                        var div = document.createElement('div');
+                        div.className = 'notification-item';
+                        div.innerHTML = '<h4>' + (n.titolo || 'Notifica') + '</h4><p>' + (n.messaggio || '') + '</p><small>' + new Date(n.data_creazione).toLocaleString('it-IT') + '</small><div class="notification-actions"><button class="btn btn-sm btn-primary" onclick="apriDettaglioNotifica(\'' + n.id + '\')">Leggi</button><button class="btn btn-sm btn-danger" onclick="eliminaNotifica(\'' + n.id + '\')">Elimina</button></div>';
+                        lista.appendChild(div);
+                    });
+                } else {
+                    document.getElementById('count-notifiche').textContent = '0';
+                    document.getElementById('empty-notifiche').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Errore:', error);
+            }
         }
 
-        // CARICA LE NOTIFICHE AMMINISTRATIVE DAL CLOUD
+        async function apriDettaglioNotifica(id) {
+            try {
+                var response = await fetch(WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token));
+                var data = await response.json();
+                if (data.success && data.notifica) {
+                    notificaCorrente = data.notifica;
+                    document.getElementById('notifica-dettagli').innerHTML = '<p>' + (data.notifica.messaggio || '') + '</p>';
+                    document.getElementById('modal-notifica').classList.add('active');
+                }
+            } catch (error) { console.error('Errore:', error); }
+        }
 
-                        
+        async function eliminaNotifica(id) {
+            try {
+                await fetch(WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
+                caricaNotifiche();
+            } catch (error) { console.error('Errore:', error); }
+        }
+
+        function eliminaNotificaCorrente() {
+            if (notificaCorrente) { eliminaNotifica(notificaCorrente.id); chiudiModalNotifica(); }
+        }
+
+        async function caricaArchivio() {
+            try {
+                var response = await fetch(WORKER_URL + '/api/admin/archivio-studi?token=' + encodeURIComponent(token));
+                var data = await response.json();
+                document.getElementById('loading-archivio').style.display = 'none';
+                if (data.success && data.studi && data.studi.length > 0) {
+                    document.getElementById('count-archivio').textContent = data.studi.length;
+                    document.getElementById('tabella-archivio').style.display = 'block';
+                    document.getElementById('empty-archivio').style.display = 'none';
+                    var tbody = document.getElementById('tbody-archivio');
+                    tbody.innerHTML = '';
+                    data.studi.forEach(function(studio) {
+                        tbody.innerHTML += '<tr><td><strong>' + studio.id + '</strong></td><td>' + (studio.nome || '-') + '</td><td>' + (studio.email || '-') + '</td><td>' + (studio.telefono || '-') + '</td><td>' + (studio.piva || '-') + '</td><td><button class="btn btn-sm btn-primary" onclick="apriSchedaCompleta(\'' + studio.id + '\')">Vedi</button></td></tr>';
+                    });
+                } else {
+                    document.getElementById('count-archivio').textContent = '0';
+                    document.getElementById('empty-archivio').style.display = 'block';
+                }
+            } catch (error) { console.error('Errore:', error); }
+        }
+
+        async function caricaOfferte() {
+            try {
+                var response = await fetch(WORKER_URL + '/api/admin/offerte?token=' + encodeURIComponent(token));
+                var data = await response.json();
+                document.getElementById('loading-offerte').style.display = 'none';
+                if (data.success && data.offerte) {
+                    offerteDisponibili = data.offerte;
+                    var attive = offerteDisponibili.filter(function(o) { return o.stato === 'attiva'; });
+                    document.getElementById('count-offerte').textContent = attive.length;
+                    var lista = document.getElementById('lista-offerte');
+                    lista.innerHTML = '';
+                    if (offerteDisponibili.length === 0) {
+                        document.getElementById('empty-offerte').style.display = 'block';
+                    } else {
+                        document.getElementById('empty-offerte').style.display = 'none';
+                        offerteDisponibili.forEach(function(o) {
+                            var div = document.createElement('div');
+                            div.className = 'offerta-card';
+                            div.innerHTML = '<div class="offerta-header"><h4>' + (o.titolo || 'Offerta') + '</h4><span class="offerta-tipo">' + (o.tipo || '-') + '</span></div><div class="offerta-descrizione">' + (o.descrizione || '') + '</div><div class="offerta-actions"><button class="btn btn-sm btn-danger" onclick="eliminaOfferta(\'' + o.id + '\')">Elimina</button></div>';
+                            lista.appendChild(div);
+                        });
+                    }
+                } else {
+                    document.getElementById('count-offerte').textContent = '0';
+                    document.getElementById('empty-offerte').style.display = 'block';
+                }
+            } catch (error) { console.error('Errore:', error); }
+        }
+
+        async function salvaOfferta(event) {
+            event.preventDefault();
+            var dati = {
+                id: document.getElementById('offerta_id').value || ('off-' + Date.now()),
+                titolo: document.getElementById('offerta_titolo').value,
+                tipo: document.getElementById('offerta_tipo').value,
+                sconto: document.getElementById('offerta_sconto').value,
+                stato: document.getElementById('offerta_stato').value,
+                data_inizio: document.getElementById('offerta_data_inizio').value,
+                data_fine: document.getElementById('offerta_data_fine').value,
+                descrizione: document.getElementById('offerta_descrizione').value,
+                messaggio: document.getElementById('offerta_messaggio').value
+            };
+            try {
+                var url = WORKER_URL + '/api/admin/offerte?token=' + encodeURIComponent(token);
+                var response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati) });
+                var result = await response.json();
+                if (result.success) { alert('Offerta salvata'); pulisciFormOfferta(); caricaOfferte(); }
+                else { alert('Errore: ' + result.error); }
+            } catch (error) { console.error('Errore:', error); alert('Errore connessione'); }
+        }
+
+        function pulisciFormOfferta() {
+            document.getElementById('form-offerta').reset();
+            document.getElementById('offerta_id').value = '';
+        }
+
+        async function eliminaOfferta(id) {
+            if (!confirm('Eliminare?')) return;
+            try {
+                await fetch(WORKER_URL + '/api/admin/offerte/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
+                caricaOfferte();
+            } catch (error) { console.error('Errore:', error); }
+        }
+
+        async function creaStudio(event) {
+            event.preventDefault();
+            var dati = {
+                id: document.getElementById('studio_id').value,
+                password: document.getElementById('studio_password').value,
+                nome: document.getElementById('studio_nome').value,
+                email: document.getElementById('studio_email').value,
+                telefono: document.getElementById('studio_telefono').value,
+                piva: document.getElementById('studio_piva').value,
+                indirizzo: document.getElementById('studio_indirizzo').value,
+                citta: document.getElementById('studio_citta').value,
+                scadenza: document.getElementById('studio_scadenza').value,
+                stato_abbonamento: document.getElementById('studio_stato_abbonamento').value,
+                data_registrazione: new Date().toISOString().split('T')[0]
+            };
+            try {
+                var response = await fetch(WORKER_URL + '/api/admin/crm/studio?token=' + encodeURIComponent(token), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati) });
+                var result = await response.json();
+                if (result.success) { alert('Studio creato'); document.getElementById('form-crea-studio').reset(); caricaStudi(); }
+                else { alert('Errore: ' + result.error); }
+            } catch (error) { console.error('Errore:', error); alert('Errore connessione'); }
+        }
+
+        function logout() {
+            fetch(WORKER_URL + '/api/auth/logout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: token }) })
+            .finally(function() { window.location.href = 'index.html'; });
+        }
+    </script>
+</body>
+</html>
