@@ -721,7 +721,7 @@
 
         async function segnaLetta(id) {
             try { 
-                await fetch(WORKER_URL + '/api/admin/notifica/letta', { 
+                await fetch(WORKER_URL + '/api/admin/notifica/letta?token=' + encodeURIComponent(token), { 
                     method: 'POST', 
                     headers: { 'Content-Type': 'application/json' }, 
                     body: JSON.stringify({ id: id }) 
@@ -734,7 +734,7 @@
 
         async function segnaTutteLetture() {
             try { 
-                await fetch(WORKER_URL + '/api/admin/notifiche/lette', { 
+                await fetch(WORKER_URL + '/api/admin/notifiche/lette?token=' + encodeURIComponent(token), { 
                     method: 'POST', 
                     headers: { 'Content-Type': 'application/json' } 
                 }); 
@@ -938,9 +938,6 @@
             document.getElementById('modal-whatsapp').classList.add('active');
         }
 
-        // ==========================================
-        // FUNZIONE CORRETTA (errore apostrofi risolto)
-        // ==========================================
         function aggiornaAnteprimaWhatsApp() {
             const offertaId = document.getElementById('wa-offerta-select').value;
             if (!offertaId || !studioWhatsAppCorrente) return;
