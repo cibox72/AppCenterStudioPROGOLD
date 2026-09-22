@@ -105,7 +105,7 @@
         .whatsapp-preview h5 { color: #000000; margin-bottom: 10px; }
         .whatsapp-preview p { color: #000000; font-size: 0.95em; line-height: 1.5; white-space: pre-wrap; }
         
-        /* NUOVI STILI PER EDITING INLINE */
+        /* NUOVI STILI PER EDITING INLINE E TOGGLE LICENZA */
         .editable-field { 
             background: #f8f9fa; 
             border: 1px solid #d5d8dc; 
@@ -149,7 +149,7 @@
         .toggle-switch.active .toggle-slider {
             transform: translateX(26px);
         }
-        
+
         @media (max-width: 768px) { .form-grid, .stats-grid { grid-template-columns: 1fr; } .section-header { flex-direction: column; align-items: flex-start; gap: 15px; } .modal-content { padding: 25px; } .actions-cell { flex-direction: column; } .scheda-riga { flex-direction: column; } .scheda-riga label { min-width: auto; } }
     </style>
 </head>
@@ -209,7 +209,6 @@
                                 <th>User</th>
                                 <th>Password</th>
                                 <th>Telefono</th>
-                                <th>Stato</th>
                                 <th>Licenza</th>
                                 <th>Azioni</th>
                             </tr>
@@ -526,17 +525,13 @@
                     const tbody = document.getElementById('tbody-studi');
                     tbody.innerHTML = '';
                     data.studi.forEach(function(studio) {
-                        const stato = studio.stato_abbonamento || 'Attivo';
-                        const statoClass = 'badge-' + stato.toLowerCase();
                         const licenzaAttiva = studio.licenza_attiva === 1;
-                        
                         tbody.innerHTML += '<tr>' +
                             '<td><strong>' + studio.id + '</strong></td>' +
                             '<td>' + (studio.nome || '-') + '</td>' +
                             '<td><input type="text" class="editable-field" id="user-' + studio.id + '" value="' + (studio.id || '') + '" placeholder="User"></td>' +
-                            '<td><input type="password" class="editable-field" id="pass-' + studio.id + '" value="' + (studio.password_plain || '') + '" placeholder="Password"></td>' +
+                            '<td><input type="text" class="editable-field" id="pass-' + studio.id + '" value="' + (studio.password_plain || '') + '" placeholder="Password"></td>' +
                             '<td>' + (studio.telefono || '-') + '</td>' +
-                            '<td><span class="badge ' + statoClass + '">' + stato + '</span></td>' +
                             '<td>' +
                                 '<div class="license-toggle" onclick="toggleLicenza(\'' + studio.id + '\')">' +
                                     '<div class="toggle-switch ' + (licenzaAttiva ? 'active' : '') + '" id="toggle-' + studio.id + '">' +
@@ -582,7 +577,6 @@
                 if (result.success) {
                     toggle.classList.toggle('active');
                     toggle.nextElementSibling.textContent = nuovoStato === 1 ? 'Attiva' : 'Disattiva';
-                    alert('Licenza ' + (nuovoStato === 1 ? 'attivata' : 'disattivata') + ' con successo!');
                 } else {
                     alert('Errore: ' + result.error);
                 }
@@ -608,8 +602,8 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         id: studioId,
-                        id_nuovo: newUser,  // Cambio ID
-                        password: newPass    // Cambio password
+                        id_nuovo: newUser,
+                        password: newPass
                     })
                 });
                 const result = await response.json();
@@ -1107,33 +1101,18 @@
         async function creaStudio(event) {
             event.preventDefault();
             const dati = {
-                id: document.getElementById('studio_id').value, 
-                password: document.getElementById('studio_password').value, 
-                nome: document.getElementById('studio_nome').value,
-                piva: document.getElementById('studio_piva').value, 
-                email: document.getElementById('studio_email').value, 
-                telefono: document.getElementById('studio_telefono').value,
-                indirizzo: document.getElementById('studio_indirizzo').value, 
-                citta: document.getElementById('studio_citta').value, 
-                stato: document.getElementById('studio_stato').value,
-                scadenza: document.getElementById('studio_scadenza').value, 
-                stato_abbonamento: document.getElementById('studio_stato_abbonamento').value,
+                id: document.getElementById('studio_id').value, password: document.getElementById('studio_password').value, nome: document.getElementById('studio_nome').value,
+                piva: document.getElementById('studio_piva').value, email: document.getElementById('studio_email').value, telefono: document.getElementById('studio_telefono').value,
+                indirizzo: document.getElementById('studio_indirizzo').value, citta: document.getElementById('studio_citta').value, stato: document.getElementById('studio_stato').value,
+                scadenza: document.getElementById('studio_scadenza').value, stato_abbonamento: document.getElementById('studio_stato_abbonamento').value,
                 data_registrazione: new Date().toISOString().split('T')[0]
             };
             try {
                 const response = await fetch(WORKER_URL + '/api/admin/crm/studio?token=' + encodeURIComponent(token), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati) });
                 const result = await response.json();
-                if (result.success) { 
-                    alert('Studio creato con successo!'); 
-                    document.getElementById('form-crea-studio').reset(); 
-                    caricaStudi(); 
-                } else { 
-                    alert('Errore: ' + result.error); 
-                }
-            } catch (error) { 
-                console.error('Errore creazione studio:', error); 
-                alert('Errore di connessione.'); 
-            }
+                if (result.success) { alert('Studio creato con successo!'); document.getElementById('form-crea-studio').reset(); caricaStudi(); } 
+                else { alert('Errore: ' + result.error); }
+            } catch (error) { console.error('Errore creazione studio:', error); alert('Errore di connessione.'); }
         }
 
         function logout() {
