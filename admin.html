@@ -109,7 +109,7 @@
 </head>
 <body>
     <!-- ============================================ -->
-    <!-- SEZIONE 2: TOP BAR (PULSANTE PLANCIA RIMOSSO) -->
+    <!-- SEZIONE 2: TOP BAR -->
     <!-- ============================================ -->
     <div class="top-bar">
         <h1>Admin Panel - CRM</h1>
@@ -435,17 +435,23 @@
     <!-- SEZIONE 13: JAVASCRIPT -->
     <!-- ============================================ -->
     <script>
+        // COSTANTE IMMUTABILE - Non può essere sovrascritta da temi.js o altri script
+        const WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
+        
+        // Verifica immediata del valore
+        console.log('[ADMIN] WORKER_URL impostato a:', WORKER_URL);
+        
         var token = '';
         var studioCorrenteScheda = null;
         var notificaCorrente = null;
         var studioWhatsAppCorrente = null;
         var offerteDisponibili = [];
-        var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
 
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             token = urlParams.get('token');
             if (!token) { alert('Token non trovato. Effettua il login.'); window.location.href = 'index.html'; return; }
+            console.log('[ADMIN] Token caricato:', token ? 'OK' : 'MANCANTE');
             caricaDati();
         });
 
@@ -467,7 +473,9 @@
 
         async function caricaStudi() {
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/crm/studi?token=' + encodeURIComponent(token));
+                const url = WORKER_URL + '/api/admin/crm/studi?token=' + encodeURIComponent(token);
+                console.log('[ADMIN] caricaStudi URL:', url);
+                const response = await fetch(url);
                 const data = await response.json();
                 document.getElementById('loading-studi').style.display = 'none';
                 if (data.success && data.studi.length > 0) {
@@ -503,7 +511,7 @@
         async function apriSchedaCompleta(studioId) {
             try {
                 const url = WORKER_URL + '/api/admin/crm/studio/' + studioId + '?token=' + encodeURIComponent(token);
-                console.log('Chiamata API:', url);
+                console.log('[ADMIN] apriSchedaCompleta URL:', url);
                 const response = await fetch(url);
                 const data = await response.json();
                 if (data.success && data.studio) {
@@ -576,7 +584,9 @@
 
         async function caricaNotifiche() {
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/notifiche?token=' + encodeURIComponent(token));
+                const url = WORKER_URL + '/api/admin/notifiche?token=' + encodeURIComponent(token);
+                console.log('[ADMIN] caricaNotifiche URL:', url);
+                const response = await fetch(url);
                 const data = await response.json();
                 document.getElementById('loading-notifiche').style.display = 'none';
                 if (data.success && data.notifiche && data.notifiche.length > 0) {
@@ -608,7 +618,8 @@
 
         async function controllaScadenzeENotifica() {
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/crm/studi?token=' + encodeURIComponent(token));
+                const url = WORKER_URL + '/api/admin/crm/studi?token=' + encodeURIComponent(token);
+                const response = await fetch(url);
                 const data = await response.json();
                 if (data.success && data.studi) {
                     const oggi = new Date();
@@ -660,7 +671,9 @@
 
         async function apriDettaglioNotifica(id) {
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token));
+                const url = WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token);
+                console.log('[ADMIN] apriDettaglioNotifica URL:', url);
+                const response = await fetch(url);
                 const data = await response.json();
                 if (data.success && data.notifica) {
                     const n = data.notifica;
@@ -711,9 +724,8 @@
 
         async function eliminaNotifica(id) {
             try { 
-                await fetch(WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token), { 
-                    method: 'DELETE' 
-                }); 
+                const url = WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token);
+                await fetch(url, { method: 'DELETE' }); 
                 caricaNotifiche(); 
             } catch (error) { 
                 console.error('Errore elimina notifica:', error); 
@@ -722,7 +734,9 @@
 
         async function caricaArchivio() {
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/archivio-studi?token=' + encodeURIComponent(token));
+                const url = WORKER_URL + '/api/admin/archivio-studi?token=' + encodeURIComponent(token);
+                console.log('[ADMIN] caricaArchivio URL:', url);
+                const response = await fetch(url);
                 const data = await response.json();
                 document.getElementById('loading-archivio').style.display = 'none';
                 if (data.success && data.studi && data.studi.length > 0) {
@@ -753,7 +767,9 @@
 
         async function caricaOfferte() {
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/offerte?token=' + encodeURIComponent(token));
+                const url = WORKER_URL + '/api/admin/offerte?token=' + encodeURIComponent(token);
+                console.log('[ADMIN] caricaOfferte URL:', url);
+                const response = await fetch(url);
                 const data = await response.json();
                 document.getElementById('loading-offerte').style.display = 'none';
                 if (data.success && data.offerte) {
@@ -871,7 +887,8 @@
         async function eliminaOfferta(id) {
             if (!confirm('Eliminare questa offerta?')) return;
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/offerte/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
+                const url = WORKER_URL + '/api/admin/offerte/' + id + '?token=' + encodeURIComponent(token);
+                const response = await fetch(url, { method: 'DELETE' });
                 const result = await response.json();
                 if (result.success) { alert('Offerta eliminata.'); await caricaOfferte(); }
                 else { alert('Errore: ' + result.error); }
@@ -943,7 +960,8 @@
 
         async function caricaTema() {
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/tema?token=' + encodeURIComponent(token));
+                const url = WORKER_URL + '/api/admin/tema?token=' + encodeURIComponent(token);
+                const response = await fetch(url);
                 const data = await response.json();
                 if (data.success && data.tema) {
                     document.getElementById('tema-attuale').innerHTML = '<p style="color: #000000; font-weight: 600;">Tema attuale: <span style="color: #996515;">' + data.tema.tema_attivo + '</span></p>';
@@ -967,7 +985,8 @@
                 data_registrazione: new Date().toISOString().split('T')[0]
             };
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/crm/studio?token=' + encodeURIComponent(token), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati) });
+                const url = WORKER_URL + '/api/admin/crm/studio?token=' + encodeURIComponent(token);
+                const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati) });
                 const result = await response.json();
                 if (result.success) { alert('Studio creato con successo!'); document.getElementById('form-crea-studio').reset(); caricaStudi(); } 
                 else { alert('Errore: ' + result.error); }
