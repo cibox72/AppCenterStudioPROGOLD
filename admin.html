@@ -180,7 +180,7 @@
             <div class="section">
                 <div class="section-header">
                     <h3>Notifiche e Richieste</h3>
-                    <p style="color: #666666;">Schede di registrazione e eventi del sistema</p>
+                    <p style="color: #666666;">Schede di registrazione, eventi del sistema e avvisi di scadenza</p>
                     <button class="btn btn-outline btn-sm" onclick="segnaTutteLetture()">Segna tutte come lette</button>
                 </div>
                 <div id="loading-notifiche" class="loading"><div class="spinner"></div><p>Caricamento notifiche...</p></div>
@@ -458,6 +458,7 @@
             await caricaArchivio(); 
             await caricaOfferte(); 
             await caricaTema(); 
+            await controllaScadenzeENotifica(); 
         }
 
         function switchTab(tabName) {
@@ -605,6 +606,60 @@
                 console.error('Errore caricamento notifiche:', error);
                 document.getElementById('loading-notifiche').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento</p>';
             }
+        }
+
+        async function controllaScadenzeENotifica() {
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/crm/studi?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (data.success && data.studi) {
+                    const oggi = new Date();
+                    const listaNotifiche = document.getElementById('lista-notifiche');
+                    
+                    data.studi.forEach(function(studio) {
+                        if (studio.scadenza) {
+                            const dataScadenza = new Date(studio.scadenza);
+                            const diffGiorni = Math.ceil((dataScadenza - oggi) / (1000 * 60 * 60 * 24));
+                            
+                            if (diffGiorni <= 3) {
+                                const statoTesto = diffGiorni < 0 ? 'SCADUTO' : 'IN SCADENZA';
+                                const colore = diffGiorni < 0 ? '#c0392b' : '#d35400';
+                                
+                                const div = document.createElement('div');
+                                div.className = 'notification-item unread';
+                                div.style.borderLeft = '4px solid ' + colore;
+                                div.innerHTML = '<h4 style="color: ' + colore + ';">AVVISO SCADENZA ABBONAMENTO</h4>' +
+                                    '<p>Lo studio <strong>' + (studio.nome || studio.id) + '</strong> ha l\'abbonamento ' + (diffGiorni < 0 ? 'scaduto il ' : 'in scadenza il ') + new Date(studio.scadenza).toLocaleDateString('it-IT') + '.</p>' +
+                                    '<small>Generato automaticamente dal sistema</small>' +
+                                    '<div class="notification-actions">' +
+                                        '<button class="btn btn-sm btn-success" onclick="contattaWhatsAppScadenza(\'' + (studio.telefono || '') + '\', \'' + (studio.nome || '').replace(/'/g, "\\'") + '\')">Contatta su WhatsApp</button>' +
+                                        '<button class="btn btn-sm btn-outline" onclick="segnaLettaScadenza(this)">Segna come letta</button>' +
+                                    '</div>';
+                                
+                                listaNotifiche.insertBefore(div, listaNotifiche.firstChild);
+                            }
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Errore controllo scadenze:', error);
+            }
+        }
+
+        function contattaWhatsAppScadenza(telefono, nome) {
+            let tel = telefono.replace(/\s+/g, '').replace(/\+/g, '');
+            if (!tel) {
+                tel = prompt('Numero telefono non trovato per ' + nome + '. Inserisci il numero WhatsApp:');
+                if (!tel) return;
+            }
+            const msg = encodeURIComponent('Ciao ' + nome + ', il tuo periodo di prova/abbonamento e\' in scadenza. Contattaci per ricevere la tua offerta personalizzata e rinnovare l\'accesso alla piattaforma!');
+            window.open('https://wa.me/39' + (tel.startsWith('39') ? tel.substring(2) : tel) + '?text=' + msg, '_blank');
+        }
+
+        function segnaLettaScadenza(btn) {
+            const item = btn.closest('.notification-item');
+            item.classList.remove('unread');
+            item.style.opacity = '0.6';
         }
 
         async function apriDettaglioNotifica(id) {
