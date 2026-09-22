@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plancia Studio - AppCenterStudioPROGOLD</title>
+    <title>Plancia di Controllo - AppCenterStudioPROGOLD</title>
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
     
@@ -48,7 +48,7 @@
         <h1>AppCenterStudioPROGOLD</h1>
         <div>
             <span class="sync-status"><div class="sync-dot"></div>Cloud Sync: OK</span>
-            <button class="nav-btn" onclick="window.location.href='admin.html'">Admin Panel</button>
+            <button class="nav-btn" onclick="window.location.href='admin.html?token=' + encodeURIComponent(token)">Admin Panel</button>
             <button class="nav-btn" onclick="logout()">Logout</button>
         </div>
     </div>
@@ -58,8 +58,8 @@
         <!-- SEZIONE 3: WELCOME SECTION -->
         <!-- ============================================ -->
         <div class="welcome-section">
-            <h2 id="benvenuto">Plancia di Controllo Studio</h2>
-            <p>Gestisci tutte le funzionalita del tuo studio fotografico. Dati sincronizzati in tempo reale sul cloud.</p>
+            <h2 id="benvenuto">Plancia di Controllo</h2>
+            <p>Gestisci tutte le funzionalita della piattaforma. Dati sincronizzati in tempo reale sul cloud.</p>
             <div id="loading-sessione" class="loading-overlay">
                 <div class="spinner"></div>
                 <p>Verifica sessione cloud...</p>
@@ -68,7 +68,7 @@
         </div>
 
         <!-- ============================================ -->
-        <!-- SEZIONE 4: MODULES GRID (13 CARD - EMAIL ELIMINATA) -->
+        <!-- SEZIONE 4: MODULES GRID -->
         <!-- ============================================ -->
         <div class="modules-grid" id="modules-grid" style="display: none;">
             
@@ -200,27 +200,39 @@
                     return;
                 }
                 
-                studioId = data.user.id;
-                studioNome = data.user.nome || 'Studio';
+                // MODIFICA: Gestione differenziata per Admin e Studio
+                if (data.tipo === 'admin') {
+                    studioId = 'admin';
+                    studioNome = 'Super Admin';
+                    document.getElementById('benvenuto').textContent = 'Benvenuto, ' + studioNome;
+                    document.getElementById('studio-info').textContent = 'Ruolo: Amministratore di Sistema';
+                } else if (data.tipo === 'studio' && data.user) {
+                    studioId = data.user.id;
+                    studioNome = data.user.nome || 'Studio';
+                    document.getElementById('benvenuto').textContent = 'Benvenuto, ' + studioNome;
+                    document.getElementById('studio-info').textContent = 'ID Studio: ' + studioId;
+                    
+                    // CONTROLLO SCADENZA LICENZA (solo per studio)
+                    if (data.user.scadenza) {
+                        const oggi = new Date();
+                        const scadenza = new Date(data.user.scadenza);
+                        if (scadenza < oggi) {
+                            alert('Licenza scaduta! Contatta il numero 3447507656 per ricevere un\'offerta vantaggiosa!');
+                        }
+                    }
+                } else {
+                    alert('Tipo utente non riconosciuto o dati mancanti.');
+                    window.location.href = 'index.html';
+                    return;
+                }
                 
-                document.getElementById('benvenuto').textContent = 'Benvenuto, ' + studioNome;
-                document.getElementById('studio-info').textContent = 'ID: ' + studioId;
                 document.getElementById('loading-sessione').style.display = 'none';
                 document.getElementById('studio-info').style.display = 'block';
                 document.getElementById('modules-grid').style.display = 'grid';
                 
-                // CONTROLLO SCADENZA LICENZA
-                if (data.user && data.user.scadenza) {
-                    const oggi = new Date();
-                    const scadenza = new Date(data.user.scadenza);
-                    if (scadenza < oggi) {
-                        alert('Licenza scaduta! Contatta il numero 3447507656 per ricevere un\'offerta vantaggiosa!');
-                    }
-                }
-                
             } catch (error) {
                 console.error('Errore verifica sessione:', error);
-                document.getElementById('loading-sessione').innerHTML = '<p style="color: #e74c3c;">Errore connessione</p>';
+                document.getElementById('loading-sessione').innerHTML = '<p style="color: #e74c3c;">Errore connessione al server</p>';
             }
         }
 
