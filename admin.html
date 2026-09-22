@@ -276,7 +276,7 @@
                             <textarea id="offerta_condizioni" rows="3" placeholder="Condizioni, limitazioni, note..." autocomplete="off"></textarea>
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
-                            <label>Messaggio WhatsApp (verra' inviato agli studi)</label>
+                            <label>Messaggio WhatsApp (verra inviato agli studi)</label>
                             <textarea id="offerta_messaggio" rows="4" placeholder="Ciao [NOME_STUDIO],&#10;&#10;[TITOLO_OFFERTA]&#10;&#10;[DESCRIZIONE]&#10;&#10;Contattaci per maggiori informazioni!" autocomplete="off"></textarea>
                             <p style="color: #666666; font-size: 0.85em; margin-top: 5px;">Usa [NOME_STUDIO], [TITOLO_OFFERTA], [DESCRIZIONE], [SCONTO] come segnaposto</p>
                         </div>
@@ -580,7 +580,7 @@
                 const response = await fetch(WORKER_URL + '/api/admin/notifiche?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 document.getElementById('loading-notifiche').style.display = 'none';
-                if (data.success && data.notifiche.length > 0) {
+                if (data.success && data.notifiche && data.notifiche.length > 0) {
                     document.getElementById('count-notifiche').textContent = data.nonLette;
                     const lista = document.getElementById('lista-notifiche');
                     lista.innerHTML = '';
@@ -622,7 +622,6 @@
                             const diffGiorni = Math.ceil((dataScadenza - oggi) / (1000 * 60 * 60 * 24));
                             
                             if (diffGiorni <= 3) {
-                                const statoTesto = diffGiorni < 0 ? 'SCADUTO' : 'IN SCADENZA';
                                 const colore = diffGiorni < 0 ? '#c0392b' : '#d35400';
                                 
                                 const div = document.createElement('div');
@@ -761,7 +760,7 @@
                 const response = await fetch(WORKER_URL + '/api/admin/archivio-studi?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 document.getElementById('loading-archivio').style.display = 'none';
-                if (data.success && data.studi.length > 0) {
+                if (data.success && data.studi && data.studi.length > 0) {
                     document.getElementById('count-archivio').textContent = data.studi.length;
                     document.getElementById('tabella-archivio').style.display = 'block';
                     document.getElementById('empty-archivio').style.display = 'none';
@@ -935,10 +934,13 @@
             });
             
             document.getElementById('wa-messaggio').value = '';
-            document.getElementById('wa-anteprima').textContent = 'Seleziona un\'offerta per vedere l'anteprima...';
+            document.getElementById('wa-anteprima').textContent = "Seleziona un'offerta per vedere l'anteprima...";
             document.getElementById('modal-whatsapp').classList.add('active');
         }
 
+        // ==========================================
+        // FUNZIONE CORRETTA (errore apostrofi risolto)
+        // ==========================================
         function aggiornaAnteprimaWhatsApp() {
             const offertaId = document.getElementById('wa-offerta-select').value;
             if (!offertaId || !studioWhatsAppCorrente) return;
