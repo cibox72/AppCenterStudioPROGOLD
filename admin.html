@@ -109,7 +109,7 @@
 </head>
 <body>
     <!-- ============================================ -->
-    <!-- SEZIONE 2: TOP BAR (PULSANTE PLANCIA RIMOSSO) -->
+    <!-- SEZIONE 2: TOP BAR -->
     <!-- ============================================ -->
     <div class="top-bar">
         <h1>Admin Panel - CRM</h1>
@@ -487,6 +487,7 @@
                             '<td class="actions-cell">' +
                                 '<button class="btn btn-sm btn-primary" onclick="apriSchedaCompleta(\'' + studio.id + '\')">Vedi Scheda</button>' +
                                 '<button class="btn btn-sm btn-success" onclick="apriWhatsApp(\'' + studio.id + '\', \'' + (studio.nome || '').replace(/'/g, "\\'") + '\', \'' + (studio.telefono || '').replace(/'/g, "\\'") + '\')">WhatsApp</button>' +
+                                '<button class="btn btn-sm btn-danger" onclick="eliminaStudio(\'' + studio.id + '\', \'' + (studio.nome || '').replace(/'/g, "\\'") + '\')">Elimina</button>' +
                             '</td>' +
                         '</tr>';
                     });
@@ -497,6 +498,29 @@
             } catch (error) {
                 console.error('Errore caricamento studi:', error);
                 document.getElementById('loading-studi').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento</p>';
+            }
+        }
+
+        // NUOVA FUNZIONE PER ELIMINARE STUDIO
+        async function eliminaStudio(studioId, studioNome) {
+            if (!confirm('Sei sicuro di voler eliminare lo studio "' + studioNome + '"? Questa azione è irreversibile e cancellerà tutti i dati associati.')) return;
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/crm/studio?token=' + encodeURIComponent(token), {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: studioId })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Studio eliminato con successo!');
+                    caricaStudi();
+                    caricaArchivio();
+                } else {
+                    alert('Errore: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Errore eliminazione studio:', error);
+                alert('Errore di connessione.');
             }
         }
 
@@ -965,7 +989,6 @@
                 data_registrazione: new Date().toISOString().split('T')[0]
             };
             try {
-                // CORREZIONE APPLICATA QUI: aggiunto ?token= all'URL
                 const response = await fetch(WORKER_URL + '/api/admin/crm/studio?token=' + encodeURIComponent(token), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati) });
                 const result = await response.json();
                 if (result.success) { alert('Studio creato con successo!'); document.getElementById('form-crea-studio').reset(); caricaStudi(); } 
