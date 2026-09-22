@@ -502,7 +502,9 @@
 
         async function apriSchedaCompleta(studioId) {
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/crm/studio/' + studioId + '?token=' + encodeURIComponent(token));
+                const url = WORKER_URL + '/api/admin/crm/studio/' + studioId + '?token=' + encodeURIComponent(token);
+                console.log('Chiamata API:', url);
+                const response = await fetch(url);
                 const data = await response.json();
                 if (data.success && data.studio) {
                     const s = data.studio;
@@ -965,7 +967,6 @@
                 data_registrazione: new Date().toISOString().split('T')[0]
             };
             try {
-                // CORREZIONE APPLICATA: Aggiunto il token all'URL della richiesta
                 const response = await fetch(WORKER_URL + '/api/admin/crm/studio?token=' + encodeURIComponent(token), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati) });
                 const result = await response.json();
                 if (result.success) { alert('Studio creato con successo!'); document.getElementById('form-crea-studio').reset(); caricaStudi(); } 
