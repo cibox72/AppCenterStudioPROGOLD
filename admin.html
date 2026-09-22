@@ -115,7 +115,7 @@
         <h1>Admin Panel - CRM</h1>
         <div>
             <span class="sync-status"><div class="sync-dot"></div>Cloud Sync: OK</span>
-            <button class="nav-btn" onclick="window.location.href='plancia-studio.html'">Plancia</button>
+            <button class="nav-btn" onclick="vaiAPlancia()">Plancia</button>
             <button class="nav-btn" onclick="logout()">Logout</button>
         </div>
     </div>
@@ -181,7 +181,6 @@
                 <div class="section-header">
                     <h3>Notifiche e Richieste</h3>
                     <p style="color: #666666;">Schede di registrazione, eventi del sistema e avvisi di scadenza</p>
-                    <!-- RIMOSSO: <button class="btn btn-outline btn-sm" onclick="segnaTutteLetture()">Segna tutte come lette</button> -->
                 </div>
                 <div id="loading-notifiche" class="loading"><div class="spinner"></div><p>Caricamento notifiche...</p></div>
                 <div id="lista-notifiche"></div>
@@ -384,7 +383,6 @@
             </div>
             <div id="notifica-dettagli"></div>
             <div style="display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
-                <!-- RIMOSSO: <button class="btn btn-success" onclick="segnaNotificaLettaCorrente()" style="flex: 1;">Segna come Letta</button> -->
                 <button class="btn btn-danger" onclick="eliminaNotificaCorrente()" style="flex: 1;">Elimina</button>
                 <button class="btn btn-outline" onclick="chiudiModalNotifica()" style="flex: 1;">Chiudi</button>
             </div>
@@ -451,6 +449,13 @@
             if (!token) { alert('Token non trovato. Effettua il login.'); window.location.href = 'index.html'; return; }
             caricaDati();
         });
+
+        // ============================================
+        // FUNZIONE CORRETTA PER ANDARE ALLA PLANCIA
+        // ============================================
+        function vaiAPlancia() {
+            window.location.href = 'plancia-studio.html?token=' + encodeURIComponent(token);
+        }
 
         async function caricaDati() { 
             await caricaStudi(); 
