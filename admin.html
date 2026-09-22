@@ -196,7 +196,7 @@
             <div class="section">
                 <div class="section-header">
                     <h3>Archivio Studi Completati</h3>
-                    <p style="color: #666666;">Visualizza studi con scheda anagrafica completata</p>
+                    <p style="color: #666666;">Visualizza studi con scheda anagrafica completata - Dati aggiornati automaticamente</p>
                 </div>
                 <div id="loading-archivio" class="loading"><div class="spinner"></div><p>Caricamento archivio...</p></div>
                 <div id="tabella-archivio" style="display: none; overflow-x: auto;">
@@ -385,7 +385,7 @@
             <div id="notifica-dettagli"></div>
             <div style="display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
                 <button class="btn btn-success" onclick="segnaNotificaLettaCorrente()" style="flex: 1;">Segna come Letta</button>
-                <button class="btn btn-outline" onclick="archiviaNotificaCorrente()" style="flex: 1;">Archivia</button>
+                <button class="btn btn-danger" onclick="eliminaNotificaCorrente()" style="flex: 1;">Elimina</button>
                 <button class="btn btn-outline" onclick="chiudiModalNotifica()" style="flex: 1;">Chiudi</button>
             </div>
         </div>
@@ -594,7 +594,7 @@
                             '<div class="notification-actions">' +
                                 '<button class="btn btn-sm btn-primary" onclick="apriDettaglioNotifica(\'' + notif.id + '\')">Leggi Notifica</button>' +
                                 '<button class="btn btn-sm btn-outline" onclick="segnaLetta(\'' + notif.id + '\')">Segna come letta</button>' +
-                                '<button class="btn btn-sm btn-outline" onclick="archiviaNotifica(\'' + notif.id + '\')">Archivia</button>' +
+                                '<button class="btn btn-sm btn-danger" onclick="eliminaNotifica(\'' + notif.id + '\')">Elimina</button>' +
                             '</div>';
                         lista.appendChild(div);
                     });
@@ -712,25 +712,48 @@
             chiudiModalNotifica();
         }
 
-        async function archiviaNotificaCorrente() {
+        async function eliminaNotificaCorrente() {
             if (!notificaCorrente) return;
-            await archiviaNotifica(notificaCorrente.id);
-            chiudiModalNotifica();
+            if (confirm('Eliminare questa notifica?')) {
+                await eliminaNotifica(notificaCorrente.id);
+                chiudiModalNotifica();
+            }
         }
 
         async function segnaLetta(id) {
-            try { await fetch(WORKER_URL + '/api/admin/notifica/letta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: id }) }); caricaNotifiche(); } 
-            catch (error) { console.error('Errore segna letta:', error); }
+            try { 
+                await fetch(WORKER_URL + '/api/admin/notifica/letta', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ id: id }) 
+                }); 
+                caricaNotifiche(); 
+            } catch (error) { 
+                console.error('Errore segna letta:', error); 
+            }
         }
 
         async function segnaTutteLetture() {
-            try { await fetch(WORKER_URL + '/api/admin/notifiche/lette', { method: 'POST', headers: { 'Content-Type': 'application/json' } }); caricaNotifiche(); } 
-            catch (error) { console.error('Errore segna tutte lette:', error); }
+            try { 
+                await fetch(WORKER_URL + '/api/admin/notifiche/lette', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' } 
+                }); 
+                caricaNotifiche(); 
+            } catch (error) { 
+                console.error('Errore segna tutte lette:', error); 
+            }
         }
 
-        async function archiviaNotifica(id) {
-            try { await fetch(WORKER_URL + '/api/admin/archivia-notifica', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ notifica_id: id }) }); caricaNotifiche(); } 
-            catch (error) { console.error('Errore archivia notifica:', error); }
+        async function eliminaNotifica(id) {
+            try { 
+                await fetch(WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token), { 
+                    method: 'DELETE' 
+                }); 
+                caricaNotifiche(); 
+            } catch (error) { 
+                console.error('Errore elimina notifica:', error); 
+            }
         }
 
         async function caricaArchivio() {
@@ -912,7 +935,7 @@
             });
             
             document.getElementById('wa-messaggio').value = '';
-            document.getElementById('wa-anteprima').textContent = 'Seleziona un\'offerta per vedere l\'anteprima...';
+            document.getElementById('wa-anteprima').textContent = 'Seleziona un\'offerta per vedere l'anteprima...';
             document.getElementById('modal-whatsapp').classList.add('active');
         }
 
