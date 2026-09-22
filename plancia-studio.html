@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plancia di Controllo - AppCenterStudioPROGOLD</title>
+    <title>Plancia di Controllo Studio - AppCenterStudioPROGOLD</title>
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
     
@@ -42,13 +42,13 @@
 </head>
 <body>
     <!-- ============================================ -->
-    <!-- SEZIONE 2: TOP BAR -->
+    <!-- SEZIONE 2: TOP BAR (ADMIN PANEL SOLO PER ADMIN) -->
     <!-- ============================================ -->
     <div class="top-bar">
         <h1>AppCenterStudioPROGOLD</h1>
         <div>
             <span class="sync-status"><div class="sync-dot"></div>Cloud Sync: OK</span>
-            <button class="nav-btn" onclick="window.location.href='admin.html?token=' + encodeURIComponent(token)">Admin Panel</button>
+            <button class="nav-btn" id="btn-admin-panel" onclick="window.location.href='admin.html?token=' + encodeURIComponent(token)" style="display: none;">Admin Panel</button>
             <button class="nav-btn" onclick="logout()">Logout</button>
         </div>
     </div>
@@ -58,8 +58,8 @@
         <!-- SEZIONE 3: WELCOME SECTION -->
         <!-- ============================================ -->
         <div class="welcome-section">
-            <h2 id="benvenuto">Plancia di Controllo</h2>
-            <p>Gestisci tutte le funzionalita della piattaforma. Dati sincronizzati in tempo reale sul cloud.</p>
+            <h2 id="benvenuto">Plancia di Controllo Studio</h2>
+            <p>Gestisci tutte le funzionalita del tuo studio fotografico. Dati sincronizzati in tempo reale sul cloud.</p>
             <div id="loading-sessione" class="loading-overlay">
                 <div class="spinner"></div>
                 <p>Verifica sessione cloud...</p>
@@ -68,7 +68,7 @@
         </div>
 
         <!-- ============================================ -->
-        <!-- SEZIONE 4: MODULES GRID -->
+        <!-- SEZIONE 4: MODULES GRID (13 CARD) -->
         <!-- ============================================ -->
         <div class="modules-grid" id="modules-grid" style="display: none;">
             
@@ -200,17 +200,21 @@
                     return;
                 }
                 
-                // MODIFICA: Gestione differenziata per Admin e Studio
+                // Gestione differenziata per Admin e Studio
                 if (data.tipo === 'admin') {
                     studioId = 'admin';
                     studioNome = 'Super Admin';
                     document.getElementById('benvenuto').textContent = 'Benvenuto, ' + studioNome;
                     document.getElementById('studio-info').textContent = 'Ruolo: Amministratore di Sistema';
+                    // MOSTRA PULSANTE ADMIN PANEL SOLO PER ADMIN
+                    document.getElementById('btn-admin-panel').style.display = 'inline-block';
                 } else if (data.tipo === 'studio' && data.user) {
                     studioId = data.user.id;
                     studioNome = data.user.nome || 'Studio';
                     document.getElementById('benvenuto').textContent = 'Benvenuto, ' + studioNome;
                     document.getElementById('studio-info').textContent = 'ID Studio: ' + studioId;
+                    // NASCONDI PULSANTE ADMIN PANEL PER GLI STUDI
+                    document.getElementById('btn-admin-panel').style.display = 'none';
                     
                     // CONTROLLO SCADENZA LICENZA (solo per studio)
                     if (data.user.scadenza) {
