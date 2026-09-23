@@ -443,7 +443,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 13: JAVASCRIPT (PARTE 1) -->
+    <!-- SEZIONE 13: JAVASCRIPT -->
     <!-- ============================================ -->
     <script>
         var token = '';
@@ -489,25 +489,30 @@
                     tbody.innerHTML = '';
                     data.studi.forEach(function(studio) {
                         const licenzaAttiva = studio.licenza_attiva === 1;
+                        // MODIFICA CHIRURGICA: Escape dei caratteri speciali per evitare rotture con ID come "G&LStudio"
+                        const safeId = String(studio.id).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                        const safeNome = String(studio.nome || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                        const safeTelefono = String(studio.telefono || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                        
                         tbody.innerHTML += '<tr>' +
                             '<td><strong>' + studio.id + '</strong></td>' +
                             '<td>' + (studio.nome || '-') + '</td>' +
-                            '<td><input type="text" class="editable-field" id="user-' + studio.id + '" value="' + (studio.id || '') + '" placeholder="User"></td>' +
-                            '<td><input type="text" class="editable-field" id="pass-' + studio.id + '" value="' + (studio.password_plain || '') + '" placeholder="Password"></td>' +
+                            '<td><input type="text" class="editable-field" id="user-' + safeId + '" value="' + (studio.id || '') + '" placeholder="User"></td>' +
+                            '<td><input type="text" class="editable-field" id="pass-' + safeId + '" value="' + (studio.password_plain || '') + '" placeholder="Password"></td>' +
                             '<td>' + (studio.telefono || '-') + '</td>' +
                             '<td>' +
-                                '<div class="license-toggle" onclick="toggleLicenza(\'' + studio.id + '\')">' +
-                                    '<div class="toggle-switch ' + (licenzaAttiva ? 'active' : '') + '" id="toggle-' + studio.id + '">' +
+                                '<div class="license-toggle" onclick="toggleLicenza(\'' + safeId + '\')">' +
+                                    '<div class="toggle-switch ' + (licenzaAttiva ? 'active' : '') + '" id="toggle-' + safeId + '">' +
                                         '<div class="toggle-slider"></div>' +
                                     '</div>' +
                                     '<span style="font-size: 0.85em; color: #666666;">' + (licenzaAttiva ? 'Attiva' : 'Disattiva') + '</span>' +
                                 '</div>' +
                             '</td>' +
                             '<td class="actions-cell">' +
-                                '<button class="btn btn-sm btn-primary" onclick="apriSchedaCompleta(\'' + studio.id + '\')">Vedi Scheda</button>' +
-                                '<button class="btn btn-sm btn-success" onclick="apriWhatsApp(\'' + studio.id + '\', \'' + (studio.nome || '').replace(/'/g, "\\'") + '\', \'' + (studio.telefono || '').replace(/'/g, "\\'") + '\')">WhatsApp</button>' +
-                                '<button class="btn btn-sm btn-warning" onclick="apriModificaStudio(\'' + studio.id + '\')">Modifica</button>' +
-                                '<button class="btn btn-sm btn-danger" onclick="eliminaStudio(\'' + studio.id + '\', \'' + (studio.nome || '').replace(/'/g, "\\'") + '\')">Elimina</button>' +
+                                '<button class="btn btn-sm btn-primary" onclick="apriSchedaCompleta(this)" data-id="' + safeId + '">Vedi Scheda</button>' +
+                                '<button class="btn btn-sm btn-success" onclick="apriWhatsApp(this)" data-id="' + safeId + '" data-nome="' + safeNome + '" data-telefono="' + safeTelefono + '">WhatsApp</button>' +
+                                '<button class="btn btn-sm btn-warning" onclick="apriModificaStudio(this)" data-id="' + safeId + '">Modifica</button>' +
+                                '<button class="btn btn-sm btn-danger" onclick="eliminaStudio(this)" data-id="' + safeId + '" data-nome="' + safeNome + '">Elimina</button>' +
                             '</td>' +
                         '</tr>';
                     });
@@ -539,23 +544,10 @@
             } catch (error) { alert('Errore di connessione.'); }
         }
 
-        async function eliminaStudio(studioId, studioNome) {
-            if (!confirm('Sei sicuro di voler eliminare lo studio "' + studioNome + '"? Questa azione è irreversibile e cancellerà tutti i dati associati.')) return;
+        async function apriSchedaCompleta(btn) {
+            const studioId = btn.getAttribute('data-id');
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/crm/studio?token=' + encodeURIComponent(token), {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: studioId })
-                });
-                const result = await response.json();
-                if (result.success) { alert('Studio eliminato con successo!'); caricaStudi(); caricaArchivio(); } 
-                else { alert('Errore: ' + result.error); }
-            } catch (error) { alert('Errore di connessione.'); }
-        }
-
-        async function apriSchedaCompleta(studioId) {
-            try {
-                const response = await fetch(WORKER_URL + '/api/admin/crm/studio/' + studioId + '?token=' + encodeURIComponent(token));
+                const response = await fetch(WORKER_URL + '/api/admin/crm/studio/' + encodeURIComponent(studioId) + '?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 if (data.success && data.studio) {
                     const s = data.studio;
@@ -784,13 +776,14 @@
                     const tbody = document.getElementById('tbody-archivio');
                     tbody.innerHTML = '';
                     data.studi.forEach(function(studio) {
+                        const safeId = String(studio.id).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
                         tbody.innerHTML += '<tr>' +
                             '<td><strong>' + studio.id + '</strong></td>' +
                             '<td>' + (studio.nome || '-') + '</td>' +
                             '<td>' + (studio.email || '-') + '</td>' +
                             '<td>' + (studio.telefono || '-') + '</td>' +
                             '<td>' + (studio.piva || '-') + '</td>' +
-                            '<td class="actions-cell"><button class="btn btn-sm btn-primary" onclick="apriSchedaCompleta(\'' + studio.id + '\')">Visualizza Scheda</button></td>' +
+                            '<td class="actions-cell"><button class="btn btn-sm btn-primary" onclick="apriSchedaCompleta(this)" data-id="' + safeId + '">Visualizza Scheda</button></td>' +
                         '</tr>';
                     });
                 } else {
@@ -851,7 +844,8 @@
                 document.getElementById('loading-offerte').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento</p>';
             }
         }
-                async function salvaOfferta(event) {
+
+        async function salvaOfferta(event) {
             event.preventDefault();
             const idEsistente = document.getElementById('offerta_id').value;
             const dati = {
@@ -927,7 +921,10 @@
             document.getElementById('btn-salva-offerta').textContent = 'SALVA OFFERTA';
         }
 
-        function apriWhatsApp(studioId, studioNome, studioTelefono) {
+        function apriWhatsApp(btn) {
+            const studioId = btn.getAttribute('data-id');
+            const studioNome = btn.getAttribute('data-nome');
+            const studioTelefono = btn.getAttribute('data-telefono');
             studioWhatsAppCorrente = { id: studioId, nome: studioNome, telefono: studioTelefono };
             document.getElementById('wa-studio-nome').textContent = studioNome || '-';
             document.getElementById('wa-studio-telefono').textContent = studioTelefono || '-';
@@ -1018,9 +1015,10 @@
         // ==========================================
         // SEZIONE 13.1: FUNZIONI MODIFICA STUDIO (NUOVO)
         // ==========================================
-        async function apriModificaStudio(studioId) {
+        async function apriModificaStudio(btn) {
+            const studioId = btn.getAttribute('data-id');
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/crm/studio/' + studioId + '?token=' + encodeURIComponent(token));
+                const response = await fetch(WORKER_URL + '/api/admin/crm/studio/' + encodeURIComponent(studioId) + '?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 if (data.success && data.studio) {
                     const s = data.studio;
@@ -1088,6 +1086,22 @@
 
         function chiudiModaleModifica() {
             document.getElementById('modal-modifica-studio').classList.remove('active');
+        }
+
+        async function eliminaStudio(btn) {
+            const studioId = btn.getAttribute('data-id');
+            const studioNome = btn.getAttribute('data-nome');
+            if (!confirm('Sei sicuro di voler eliminare lo studio "' + studioNome + '"? Questa azione è irreversibile e cancellerà tutti i dati associati.')) return;
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/crm/studio?token=' + encodeURIComponent(token), {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: studioId })
+                });
+                const result = await response.json();
+                if (result.success) { alert('Studio eliminato con successo!'); caricaStudi(); caricaArchivio(); } 
+                else { alert('Errore: ' + result.error); }
+            } catch (error) { alert('Errore di connessione.'); }
         }
 
         // Listener per chiudere i modali cliccando fuori
