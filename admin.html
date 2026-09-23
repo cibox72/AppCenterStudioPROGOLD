@@ -149,7 +149,7 @@
         .toggle-switch.active .toggle-slider {
             transform: translateX(26px);
         }
-
+        
         @media (max-width: 768px) { .form-grid, .stats-grid { grid-template-columns: 1fr; } .section-header { flex-direction: column; align-items: flex-start; gap: 15px; } .modal-content { padding: 25px; } .actions-cell { flex-direction: column; } .scheda-riga { flex-direction: column; } .scheda-riga label { min-width: auto; } }
     </style>
 </head>
@@ -558,68 +558,40 @@
             }
         }
 
-        // NUOVA FUNZIONE: Toggle licenza
         async function toggleLicenza(studioId) {
             const toggle = document.getElementById('toggle-' + studioId);
             const isActive = toggle.classList.contains('active');
             const nuovoStato = isActive ? 0 : 1;
-            
             try {
                 const response = await fetch(WORKER_URL + '/api/admin/crm/studio?token=' + encodeURIComponent(token), {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        id: studioId,
-                        licenza_attiva: nuovoStato
-                    })
+                    body: JSON.stringify({ id: studioId, licenza_attiva: nuovoStato })
                 });
                 const result = await response.json();
                 if (result.success) {
                     toggle.classList.toggle('active');
                     toggle.nextElementSibling.textContent = nuovoStato === 1 ? 'Attiva' : 'Disattiva';
-                } else {
-                    alert('Errore: ' + result.error);
-                }
-            } catch (error) {
-                console.error('Errore toggle licenza:', error);
-                alert('Errore di connessione.');
-            }
+                } else { alert('Errore: ' + result.error); }
+            } catch (error) { alert('Errore di connessione.'); }
         }
 
-        // NUOVA FUNZIONE: Salva modifiche studio (user e password)
         async function salvaModificheStudio(studioId) {
             const newUser = document.getElementById('user-' + studioId).value;
             const newPass = document.getElementById('pass-' + studioId).value;
-            
-            if (!newUser || !newPass) {
-                alert('User e Password sono obbligatori!');
-                return;
-            }
-            
+            if (!newUser || !newPass) { alert('User e Password sono obbligatori!'); return; }
             try {
                 const response = await fetch(WORKER_URL + '/api/admin/crm/studio?token=' + encodeURIComponent(token), {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        id: studioId,
-                        id_nuovo: newUser,
-                        password: newPass
-                    })
+                    body: JSON.stringify({ id: studioId, id_nuovo: newUser, password: newPass })
                 });
                 const result = await response.json();
-                if (result.success) {
-                    alert('Dati salvati con successo!');
-                    caricaStudi();
-                } else {
-                    alert('Errore: ' + result.error);
-                }
-            } catch (error) {
-                console.error('Errore salvataggio:', error);
-                alert('Errore di connessione.');
-            }
+                if (result.success) { alert('Dati salvati con successo!'); caricaStudi(); } 
+                else { alert('Errore: ' + result.error); }
+            } catch (error) { alert('Errore di connessione.'); }
         }
 
-        // NUOVA FUNZIONE: Elimina studio
         async function eliminaStudio(studioId, studioNome) {
             if (!confirm('Sei sicuro di voler eliminare lo studio "' + studioNome + '"? Questa azione è irreversibile e cancellerà tutti i dati associati.')) return;
             try {
@@ -629,17 +601,9 @@
                     body: JSON.stringify({ id: studioId })
                 });
                 const result = await response.json();
-                if (result.success) {
-                    alert('Studio eliminato con successo!');
-                    caricaStudi();
-                    caricaArchivio();
-                } else {
-                    alert('Errore: ' + result.error);
-                }
-            } catch (error) {
-                console.error('Errore eliminazione studio:', error);
-                alert('Errore di connessione.');
-            }
+                if (result.success) { alert('Studio eliminato con successo!'); caricaStudi(); caricaArchivio(); } 
+                else { alert('Errore: ' + result.error); }
+            } catch (error) { alert('Errore di connessione.'); }
         }
 
         async function apriSchedaCompleta(studioId) {
@@ -754,15 +718,12 @@
                 if (data.success && data.studi) {
                     const oggi = new Date();
                     const listaNotifiche = document.getElementById('lista-notifiche');
-                    
                     data.studi.forEach(function(studio) {
                         if (studio.scadenza) {
                             const dataScadenza = new Date(studio.scadenza);
                             const diffGiorni = Math.ceil((dataScadenza - oggi) / (1000 * 60 * 60 * 24));
-                            
                             if (diffGiorni <= 3) {
                                 const colore = diffGiorni < 0 ? '#c0392b' : '#d35400';
-                                
                                 const div = document.createElement('div');
                                 div.className = 'notification-item unread';
                                 div.style.borderLeft = '4px solid ' + colore;
@@ -773,7 +734,6 @@
                                         '<button class="btn btn-sm btn-success" onclick="contattaWhatsAppScadenza(\'' + (studio.telefono || '') + '\', \'' + (studio.nome || '').replace(/'/g, "\\'") + '\')">Contatta su WhatsApp</button>' +
                                         '<button class="btn btn-sm btn-danger" onclick="eliminaNotificaScadenza(this)">Elimina</button>' +
                                     '</div>';
-                                
                                 listaNotifiche.insertBefore(div, listaNotifiche.firstChild);
                             }
                         }
@@ -799,6 +759,9 @@
             item.remove();
         }
 
+        // ============================================
+        // SEZIONE 13.1: FUNZIONE DETTAGLIO NOTIFICA (CORRETTA - LOGO COME IMMAGINE)
+        // ============================================
         async function apriDettaglioNotifica(id) {
             try {
                 const response = await fetch(WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token));
@@ -813,7 +776,24 @@
                         if (Object.keys(dati).length > 0) {
                             datiHtml = '<div class="scheda-sezione"><h4>Dati Associati</h4>';
                             for (const key in dati) {
-                                datiHtml += '<div class="scheda-riga"><label>' + key + '</label><span>' + (typeof dati[key] === 'object' ? JSON.stringify(dati[key]) : dati[key]) + '</span></div>';
+                                // Salta campi tecnici
+                                if (key === 'studio_id' || key === 'id') continue;
+                                
+                                // LOGO: mostra come immagine mantenendo proporzioni
+                                if (key === 'logo_url' && dati[key]) {
+                                    datiHtml += '<div class="scheda-riga"><label>Logo</label><span><img src="' + dati[key] + '" alt="Logo Studio" style="max-width: 200px; max-height: 200px; width: auto; height: auto; border-radius: 8px; border: 1px solid #d5d8dc; background: #ffffff; padding: 5px;"></span></div>';
+                                    continue;
+                                }
+                                
+                                let valore = dati[key];
+                                if (typeof valore === 'object') {
+                                    valore = JSON.stringify(valore);
+                                }
+                                // Tronca testi troppo lunghi (tranne logo_url già gestito)
+                                if (typeof valore === 'string' && valore.length > 100) {
+                                    valore = valore.substring(0, 100) + '...';
+                                }
+                                datiHtml += '<div class="scheda-riga"><label>' + key + '</label><span>' + valore + '</span></div>';
                             }
                             datiHtml += '</div>';
                         }
@@ -852,13 +832,9 @@
 
         async function eliminaNotifica(id) {
             try { 
-                await fetch(WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token), { 
-                    method: 'DELETE' 
-                }); 
+                await fetch(WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' }); 
                 caricaNotifiche(); 
-            } catch (error) { 
-                console.error('Errore elimina notifica:', error); 
-            }
+            } catch (error) { console.error('Errore elimina notifica:', error); }
         }
 
         async function caricaArchivio() {
@@ -962,17 +938,9 @@
                 const url = idEsistente ? WORKER_URL + '/api/admin/offerte/' + idEsistente + '?token=' + encodeURIComponent(token) : WORKER_URL + '/api/admin/offerte?token=' + encodeURIComponent(token);
                 const response = await fetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati) });
                 const result = await response.json();
-                if (result.success) {
-                    alert('Offerta salvata con successo!');
-                    pulisciFormOfferta();
-                    await caricaOfferte();
-                } else {
-                    alert('Errore: ' + result.error);
-                }
-            } catch (error) {
-                console.error('Errore salvataggio offerta:', error);
-                alert('Errore di connessione.');
-            }
+                if (result.success) { alert('Offerta salvata con successo!'); pulisciFormOfferta(); await caricaOfferte(); } 
+                else { alert('Errore: ' + result.error); }
+            } catch (error) { console.error('Errore salvataggio offerta:', error); alert('Errore di connessione.'); }
         }
 
         function modificaOfferta(id) {
@@ -1029,7 +997,6 @@
             studioWhatsAppCorrente = { id: studioId, nome: studioNome, telefono: studioTelefono };
             document.getElementById('wa-studio-nome').textContent = studioNome || '-';
             document.getElementById('wa-studio-telefono').textContent = studioTelefono || '-';
-            
             const select = document.getElementById('wa-offerta-select');
             select.innerHTML = '<option value="">-- Seleziona un\'offerta --</option>';
             offerteDisponibili.filter(function(o) { return o.stato === 'attiva'; }).forEach(function(o) {
@@ -1038,7 +1005,6 @@
                 option.textContent = o.titolo + ' - ' + (o.tipo || '');
                 select.appendChild(option);
             });
-            
             document.getElementById('wa-messaggio').value = '';
             document.getElementById('wa-anteprima').textContent = "Seleziona un'offerta per vedere l'anteprima...";
             document.getElementById('modal-whatsapp').classList.add('active');
@@ -1047,16 +1013,13 @@
         function aggiornaAnteprimaWhatsApp() {
             const offertaId = document.getElementById('wa-offerta-select').value;
             if (!offertaId || !studioWhatsAppCorrente) return;
-            
             const offerta = offerteDisponibili.find(function(o) { return o.id === offertaId; });
             if (!offerta) return;
-            
             let messaggio = offerta.messaggio || '';
             messaggio = messaggio.replace(/\[NOME_STUDIO\]/g, studioWhatsAppCorrente.nome || 'Studio');
             messaggio = messaggio.replace(/\[TITOLO_OFFERTA\]/g, offerta.titolo || '');
             messaggio = messaggio.replace(/\[DESCRIZIONE\]/g, offerta.descrizione || '');
             messaggio = messaggio.replace(/\[SCONTO\]/g, offerta.sconto || '');
-            
             document.getElementById('wa-messaggio').value = messaggio;
             document.getElementById('wa-anteprima').textContent = messaggio;
         }
@@ -1064,14 +1027,12 @@
         function inviaWhatsApp() {
             const messaggio = document.getElementById('wa-messaggio').value;
             if (!messaggio) { alert('Inserisci un messaggio'); return; }
-            
             let telefono = studioWhatsAppCorrente.telefono || '';
             telefono = telefono.replace(/\s+/g, '').replace(/\+/g, '');
             if (!telefono) {
                 telefono = prompt('Numero telefono non trovato. Inserisci il numero WhatsApp (con prefisso internazionale, es. 393331234567):');
                 if (!telefono) return;
             }
-            
             const url = 'https://wa.me/' + telefono + '?text=' + encodeURIComponent(messaggio);
             window.open(url, '_blank');
             chiudiModalWhatsApp();
