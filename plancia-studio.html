@@ -224,6 +224,17 @@
                             alert('Licenza scaduta! Contatta il numero 3447507656 per ricevere un\'offerta vantaggiosa!');
                         }
                     }
+
+                    // ==========================================
+                    // SEZIONE 5.1: CONTROLLO SCHEDA ANAGRAFICA OBBLIGATORIA
+                    // ==========================================
+                    if (data.user.scheda_completata === 0 || data.user.scheda_completata === null || data.user.scheda_completata === undefined) {
+                        setTimeout(function() {
+                            alert('Benvenuto! Prima di accedere alla plancia, devi compilare la scheda anagrafica del tuo studio. I dati inseriti appariranno su contratti, preventivi e ricevute.');
+                            window.location.href = 'scheda-anagrafica.html?token=' + encodeURIComponent(token);
+                        }, 500);
+                        return;
+                    }
                 } else {
                     alert('Tipo utente non riconosciuto o dati mancanti.');
                     window.location.href = 'index.html';
