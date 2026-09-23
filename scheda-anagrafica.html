@@ -23,10 +23,10 @@
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
         .page-header { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 5px solid #d4af37; }
         .page-header h2 { color: #000000; margin-bottom: 10px; font-size: 1.6em; }
-        .page-header p { color: #666666; font-size: 0.95em; }
+        .page-header p { color: #000000; font-size: 0.95em; font-weight: 500; }
         .section { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; border-top: 4px solid #d4af37; }
         .section-title { color: #000000; font-size: 1.3em; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #fff9e6; font-weight: 600; }
-        .section-subtitle { color: #666666; font-size: 0.9em; margin-bottom: 20px; }
+        .section-subtitle { color: #000000; font-size: 0.9em; margin-bottom: 20px; font-weight: 500; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; margin-bottom: 8px; color: #000000; font-weight: 600; font-size: 0.9em; }
@@ -46,12 +46,12 @@
         .logo-upload-area { border: 2px dashed #d4af37; border-radius: 10px; padding: 30px; text-align: center; background: #fff9e6; cursor: pointer; transition: all 0.3s ease; }
         .logo-upload-area:hover { background: #fff4d4; border-color: #996515; }
         .logo-upload-area input[type="file"] { display: none; }
-        .logo-upload-area p { color: #666666; margin-top: 10px; font-size: 0.9em; }
+        .logo-upload-area p { color: #000000; margin-top: 10px; font-size: 0.9em; font-weight: 500; }
         .logo-preview { max-width: 200px; max-height: 200px; margin: 15px auto; display: block; border: 2px solid #d5d8dc; border-radius: 10px; padding: 10px; background: #ffffff; }
-        .logo-status { text-align: center; margin-top: 10px; color: #666666; font-size: 0.85em; }
-        .footer-branding { text-align: center; padding: 30px 20px; color: #666666; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
+        .logo-status { text-align: center; margin-top: 10px; color: #000000; font-size: 0.85em; font-weight: 600; }
+        .footer-branding { text-align: center; padding: 30px 20px; color: #000000; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
         .footer-branding strong { color: #996515; }
-        .loading { text-align: center; padding: 40px; color: #666666; }
+        .loading { text-align: center; padding: 40px; color: #000000; }
         .spinner { border: 4px solid #fff9e6; border-top: 4px solid #d4af37; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .success-message { background: #d5f5e3; color: #1e8449; padding: 12px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #1e8449; font-weight: 600; display: none; }
@@ -103,7 +103,7 @@
             <!-- LOGO DELLO STUDIO -->
             <div class="section">
                 <h3 class="section-title">LOGO DELLO STUDIO</h3>
-                <p class="section-subtitle">Carica il logo del tuo studio. Verra' ridimensionato automaticamente a 200x200px.</p>
+                <p class="section-subtitle">Carica il logo del tuo studio. Verra' ridimensionato automaticamente a 200x200px con compressione per ottimizzare lo spazio.</p>
                 
                 <label class="logo-upload-area" for="logo-input">
                     <input type="file" id="logo-input" accept="image/jpeg,image/png" onchange="anteprimaLogo(event)">
@@ -293,18 +293,18 @@
 
         async function caricaScheda() {
             try {
-                const response = await fetch(WORKER_URL + '/api/studio/scheda-anagrafica?token=' + encodeURIComponent(token));
+                const response = await fetch(WORKER_URL + '/api/studio/profilo?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 
                 document.getElementById('loading-container').style.display = 'none';
                 
-                if (data.success) {
+                if (data.success && data.studio) {
                     document.getElementById('form-scheda').style.display = 'block';
+                    const s = data.studio;
                     
-                    const s = data.scheda || {};
-                    
-                    document.getElementById('nome_studio').value = s.nome_studio || '';
-                    document.getElementById('partita_iva').value = s.partita_iva || '';
+                    // Mappatura corretta dai campi del database ai campi del form
+                    document.getElementById('nome_studio').value = s.nome || '';
+                    document.getElementById('partita_iva').value = s.piva || '';
                     document.getElementById('email_studio').value = s.email || '';
                     document.getElementById('telefono_studio').value = s.telefono || '';
                     document.getElementById('pec_studio').value = s.pec || '';
@@ -314,35 +314,35 @@
                     document.getElementById('citta_studio').value = s.citta || '';
                     document.getElementById('provincia_studio').value = s.provincia || '';
                     document.getElementById('stato_studio').value = s.stato || '';
-                    document.getElementById('rappresentante_nome').value = s.rappresentante_nome || '';
-                    document.getElementById('rappresentante_cf').value = s.rappresentante_cf || '';
+                    document.getElementById('rappresentante_nome').value = s.legale || '';
+                    document.getElementById('rappresentante_cf').value = s.cf_legale || '';
                     document.getElementById('iban_studio').value = s.iban || '';
                     document.getElementById('iban_intestato').value = s.iban_intestato || '';
                     document.getElementById('msg_benvenuto').value = s.msg_benvenuto || '';
                     document.getElementById('msg_ringraziamento').value = s.msg_ringraziamento || '';
-                    document.getElementById('link_sito').value = s.link_sito || '';
+                    document.getElementById('link_sito').value = s.website || '';
                     document.getElementById('link_facebook').value = s.link_facebook || '';
                     document.getElementById('link_instagram').value = s.link_instagram || '';
                     document.getElementById('link_portfolio').value = s.link_portfolio || '';
                     document.getElementById('link_qrcode').value = s.link_qrcode || '';
                     
-                    if (s.logo) {
-                        logoData = s.logo;
-                        document.getElementById('logo-preview').src = s.logo;
+                    if (s.logo_url) {
+                        logoData = s.logo_url;
+                        document.getElementById('logo-preview').src = s.logo_url;
                         document.getElementById('logo-preview').style.display = 'block';
                         document.getElementById('logo-preview-container').style.display = 'none';
                         document.getElementById('logo-status').textContent = 'Logo gia caricato';
                     }
                     
-                    studioId = data.studio_id || '';
-                    document.getElementById('page-title').textContent = 'Scheda Anagrafica Studio - ' + (s.nome_studio || 'Caricamento...');
+                    studioId = s.id || '';
+                    document.getElementById('page-title').textContent = 'Scheda Anagrafica Studio - ' + (s.nome || 'Caricamento...');
                 } else {
                     document.getElementById('form-scheda').style.display = 'block';
                     mostraErrore(data.error || 'Errore nel caricamento');
                 }
             } catch (error) {
                 console.error('Errore caricamento scheda:', error);
-                document.getElementById('loading-container').innerHTML = '<p style="color: #e74c3c;">Errore di connessione</p>';
+                document.getElementById('loading-container').innerHTML = '<p style="color: #c0392b;">Errore di connessione</p>';
             }
         }
 
@@ -369,11 +369,12 @@
                     canvas.height = 200;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, 200, 200);
-                    logoData = canvas.toDataURL('image/png');
+                    // MODIFICA CHIRURGICA: Compressione a bassa qualità (0.7) in formato JPEG per ridurre drasticamente il peso
+                    logoData = canvas.toDataURL('image/jpeg', 0.7);
                     document.getElementById('logo-preview').src = logoData;
                     document.getElementById('logo-preview').style.display = 'block';
                     document.getElementById('logo-preview-container').style.display = 'none';
-                    document.getElementById('logo-status').textContent = 'Logo caricato (200x200px)';
+                    document.getElementById('logo-status').textContent = 'Logo caricato e compresso (200x200px)';
                 };
                 img.src = e.target.result;
             };
@@ -383,9 +384,10 @@
         async function salvaScheda(event) {
             event.preventDefault();
             
+            // Mappatura corretta dai campi del form ai nomi delle colonne del database
             const dati = {
-                nome_studio: document.getElementById('nome_studio').value,
-                partita_iva: document.getElementById('partita_iva').value,
+                nome: document.getElementById('nome_studio').value,
+                piva: document.getElementById('partita_iva').value,
                 email: document.getElementById('email_studio').value,
                 telefono: document.getElementById('telefono_studio').value,
                 pec: document.getElementById('pec_studio').value,
@@ -395,23 +397,23 @@
                 citta: document.getElementById('citta_studio').value,
                 provincia: document.getElementById('provincia_studio').value,
                 stato: document.getElementById('stato_studio').value,
-                rappresentante_nome: document.getElementById('rappresentante_nome').value,
-                rappresentante_cf: document.getElementById('rappresentante_cf').value,
+                legale: document.getElementById('rappresentante_nome').value,
+                cf_legale: document.getElementById('rappresentante_cf').value,
                 iban: document.getElementById('iban_studio').value,
                 iban_intestato: document.getElementById('iban_intestato').value,
                 msg_benvenuto: document.getElementById('msg_benvenuto').value,
                 msg_ringraziamento: document.getElementById('msg_ringraziamento').value,
-                link_sito: document.getElementById('link_sito').value,
+                website: document.getElementById('link_sito').value,
                 link_facebook: document.getElementById('link_facebook').value,
                 link_instagram: document.getElementById('link_instagram').value,
                 link_portfolio: document.getElementById('link_portfolio').value,
                 link_qrcode: document.getElementById('link_qrcode').value,
-                logo: logoData
+                logo_url: logoData
             };
             
             try {
-                const response = await fetch(WORKER_URL + '/api/studio/scheda-anagrafica', {
-                    method: 'POST',
+                const response = await fetch(WORKER_URL + '/api/studio/profilo?token=' + encodeURIComponent(token), {
+                    method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dati)
                 });
@@ -419,8 +421,13 @@
                 
                 if (result.success) {
                     mostraSuccesso('Scheda salvata e inviata al fornitore con successo!');
-                    document.getElementById('page-title').textContent = 'Scheda Anagrafica Studio - ' + dati.nome_studio;
+                    document.getElementById('page-title').textContent = 'Scheda Anagrafica Studio - ' + dati.nome;
                     window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    // Reindirizzamento alla plancia dopo 2 secondi
+                    setTimeout(function() {
+                        window.location.href = 'plancia-studio.html?token=' + encodeURIComponent(token);
+                    }, 2000);
                 } else {
                     mostraErrore('Errore: ' + result.error);
                 }
