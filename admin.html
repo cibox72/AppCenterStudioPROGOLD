@@ -105,50 +105,13 @@
         .whatsapp-preview h5 { color: #000000; margin-bottom: 10px; }
         .whatsapp-preview p { color: #000000; font-size: 0.95em; line-height: 1.5; white-space: pre-wrap; }
         
-        /* NUOVI STILI PER EDITING INLINE E TOGGLE LICENZA */
-        .editable-field { 
-            background: #f8f9fa; 
-            border: 1px solid #d5d8dc; 
-            border-radius: 4px; 
-            padding: 4px 8px; 
-            font-size: 0.9em;
-            min-width: 100px;
-        }
-        .editable-field:focus { 
-            outline: none; 
-            border-color: #d4af37; 
-            background: #ffffff; 
-        }
-        .license-toggle {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-        .toggle-switch {
-            position: relative;
-            width: 50px;
-            height: 24px;
-            background: #d5d8dc;
-            border-radius: 12px;
-            transition: background 0.3s;
-        }
-        .toggle-switch.active {
-            background: #25d366;
-        }
-        .toggle-slider {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            transition: transform 0.3s;
-        }
-        .toggle-switch.active .toggle-slider {
-            transform: translateX(26px);
-        }
+        .editable-field { background: #f8f9fa; border: 1px solid #d5d8dc; border-radius: 4px; padding: 4px 8px; font-size: 0.9em; min-width: 100px; }
+        .editable-field:focus { outline: none; border-color: #d4af37; background: #ffffff; }
+        .license-toggle { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+        .toggle-switch { position: relative; width: 50px; height: 24px; background: #d5d8dc; border-radius: 12px; transition: background 0.3s; }
+        .toggle-switch.active { background: #25d366; }
+        .toggle-slider { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: white; border-radius: 50%; transition: transform 0.3s; }
+        .toggle-switch.active .toggle-slider { transform: translateX(26px); }
         
         @media (max-width: 768px) { .form-grid, .stats-grid { grid-template-columns: 1fr; } .section-header { flex-direction: column; align-items: flex-start; gap: 15px; } .modal-content { padding: 25px; } .actions-cell { flex-direction: column; } .scheda-riga { flex-direction: column; } .scheda-riga label { min-width: auto; } }
     </style>
@@ -480,7 +443,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 13: JAVASCRIPT -->
+    <!-- SEZIONE 13: JAVASCRIPT (PARTE 1) -->
     <!-- ============================================ -->
     <script>
         var token = '';
@@ -543,8 +506,8 @@
                             '<td class="actions-cell">' +
                                 '<button class="btn btn-sm btn-primary" onclick="apriSchedaCompleta(\'' + studio.id + '\')">Vedi Scheda</button>' +
                                 '<button class="btn btn-sm btn-success" onclick="apriWhatsApp(\'' + studio.id + '\', \'' + (studio.nome || '').replace(/'/g, "\\'") + '\', \'' + (studio.telefono || '').replace(/'/g, "\\'") + '\')">WhatsApp</button>' +
+                                '<button class="btn btn-sm btn-warning" onclick="apriModificaStudio(\'' + studio.id + '\')">Modifica</button>' +
                                 '<button class="btn btn-sm btn-danger" onclick="eliminaStudio(\'' + studio.id + '\', \'' + (studio.nome || '').replace(/'/g, "\\'") + '\')">Elimina</button>' +
-                                '<button class="btn btn-sm btn-warning" onclick="salvaModificheStudio(\'' + studio.id + '\')">Salva</button>' +
                             '</td>' +
                         '</tr>';
                     });
@@ -573,22 +536,6 @@
                     toggle.classList.toggle('active');
                     toggle.nextElementSibling.textContent = nuovoStato === 1 ? 'Attiva' : 'Disattiva';
                 } else { alert('Errore: ' + result.error); }
-            } catch (error) { alert('Errore di connessione.'); }
-        }
-
-        async function salvaModificheStudio(studioId) {
-            const newUser = document.getElementById('user-' + studioId).value;
-            const newPass = document.getElementById('pass-' + studioId).value;
-            if (!newUser || !newPass) { alert('User e Password sono obbligatori!'); return; }
-            try {
-                const response = await fetch(WORKER_URL + '/api/admin/crm/studio?token=' + encodeURIComponent(token), {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: studioId, id_nuovo: newUser, password: newPass })
-                });
-                const result = await response.json();
-                if (result.success) { alert('Dati salvati con successo!'); caricaStudi(); } 
-                else { alert('Errore: ' + result.error); }
             } catch (error) { alert('Errore di connessione.'); }
         }
 
@@ -759,9 +706,6 @@
             item.remove();
         }
 
-        // ============================================
-        // SEZIONE 13.1: FUNZIONE DETTAGLIO NOTIFICA (CORRETTA - LOGO COME IMMAGINE)
-        // ============================================
         async function apriDettaglioNotifica(id) {
             try {
                 const response = await fetch(WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token));
@@ -776,23 +720,14 @@
                         if (Object.keys(dati).length > 0) {
                             datiHtml = '<div class="scheda-sezione"><h4>Dati Associati</h4>';
                             for (const key in dati) {
-                                // Salta campi tecnici
                                 if (key === 'studio_id' || key === 'id') continue;
-                                
-                                // LOGO: mostra come immagine mantenendo proporzioni
                                 if (key === 'logo_url' && dati[key]) {
                                     datiHtml += '<div class="scheda-riga"><label>Logo</label><span><img src="' + dati[key] + '" alt="Logo Studio" style="max-width: 200px; max-height: 200px; width: auto; height: auto; border-radius: 8px; border: 1px solid #d5d8dc; background: #ffffff; padding: 5px;"></span></div>';
                                     continue;
                                 }
-                                
                                 let valore = dati[key];
-                                if (typeof valore === 'object') {
-                                    valore = JSON.stringify(valore);
-                                }
-                                // Tronca testi troppo lunghi (tranne logo_url già gestito)
-                                if (typeof valore === 'string' && valore.length > 100) {
-                                    valore = valore.substring(0, 100) + '...';
-                                }
+                                if (typeof valore === 'object') { valore = JSON.stringify(valore); }
+                                if (typeof valore === 'string' && valore.length > 100) { valore = valore.substring(0, 100) + '...'; }
                                 datiHtml += '<div class="scheda-riga"><label>' + key + '</label><span>' + valore + '</span></div>';
                             }
                             datiHtml += '</div>';
@@ -916,8 +851,7 @@
                 document.getElementById('loading-offerte').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento</p>';
             }
         }
-
-        async function salvaOfferta(event) {
+                async function salvaOfferta(event) {
             event.preventDefault();
             const idEsistente = document.getElementById('offerta_id').value;
             const dati = {
@@ -1081,9 +1015,136 @@
             .finally(function() { window.location.href = 'index.html'; });
         }
 
+        // ==========================================
+        // SEZIONE 13.1: FUNZIONI MODIFICA STUDIO (NUOVO)
+        // ==========================================
+        async function apriModificaStudio(studioId) {
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/crm/studio/' + studioId + '?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (data.success && data.studio) {
+                    const s = data.studio;
+                    document.getElementById('mod-studio-id-originale').value = s.id;
+                    document.getElementById('mod-id-display').textContent = s.id;
+                    document.getElementById('mod-id').value = s.id;
+                    document.getElementById('mod-password').value = '';
+                    document.getElementById('mod-nome').value = s.nome || '';
+                    document.getElementById('mod-piva').value = s.piva || '';
+                    document.getElementById('mod-email').value = s.email || '';
+                    document.getElementById('mod-telefono').value = s.telefono || '';
+                    document.getElementById('mod-indirizzo').value = s.indirizzo || '';
+                    document.getElementById('mod-citta').value = s.citta || '';
+                    document.getElementById('mod-stato').value = s.stato || '';
+                    document.getElementById('mod-scadenza').value = s.scadenza ? s.scadenza.split('T')[0] : '';
+                    document.getElementById('mod-stato-abbonamento').value = s.stato_abbonamento || 'Attivo';
+                    document.getElementById('mod-attivo').value = s.attivo !== undefined ? s.attivo.toString() : '1';
+                    document.getElementById('modal-modifica-studio').classList.add('active');
+                } else {
+                    alert('Errore: ' + (data.error || 'Studio non trovato'));
+                }
+            } catch (error) {
+                console.error('Errore caricamento studio:', error);
+                alert('Errore di connessione: ' + error.message);
+            }
+        }
+
+        async function salvaModificaStudio(event) {
+            event.preventDefault();
+            const idOriginale = document.getElementById('mod-studio-id-originale').value;
+            const dati = {
+                id: idOriginale,
+                id_nuovo: document.getElementById('mod-id').value,
+                password: document.getElementById('mod-password').value,
+                nome: document.getElementById('mod-nome').value,
+                piva: document.getElementById('mod-piva').value,
+                email: document.getElementById('mod-email').value,
+                telefono: document.getElementById('mod-telefono').value,
+                indirizzo: document.getElementById('mod-indirizzo').value,
+                citta: document.getElementById('mod-citta').value,
+                stato: document.getElementById('mod-stato').value,
+                scadenza: document.getElementById('mod-scadenza').value,
+                stato_abbonamento: document.getElementById('mod-stato-abbonamento').value,
+                attivo: document.getElementById('mod-attivo').value === '1'
+            };
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/crm/studio?token=' + encodeURIComponent(token), {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dati)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Studio modificato con successo!');
+                    chiudiModaleModifica();
+                    caricaStudi();
+                } else {
+                    alert('Errore: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Errore salvataggio modifiche:', error);
+                alert('Errore di connessione.');
+            }
+        }
+
+        function chiudiModaleModifica() {
+            document.getElementById('modal-modifica-studio').classList.remove('active');
+        }
+
+        // Listener per chiudere i modali cliccando fuori
         document.getElementById('modal-scheda-studio')?.addEventListener('click', function(e) { if (e.target === this) chiudiModalScheda(); });
         document.getElementById('modal-notifica')?.addEventListener('click', function(e) { if (e.target === this) chiudiModalNotifica(); });
         document.getElementById('modal-whatsapp')?.addEventListener('click', function(e) { if (e.target === this) chiudiModalWhatsApp(); });
+        document.getElementById('modal-modifica-studio')?.addEventListener('click', function(e) { if (e.target === this) chiudiModaleModifica(); });
     </script>
+
+    <!-- ============================================ -->
+    <!-- SEZIONE 14: MODALE MODIFICA STUDIO (NUOVO) -->
+    <!-- ============================================ -->
+    <div id="modal-modifica-studio" class="modal-overlay">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h2>Modifica Dati Studio</h2>
+                <button class="close-modal" onclick="chiudiModaleModifica()">x</button>
+            </div>
+            <form id="form-modifica-studio" onsubmit="salvaModificaStudio(event)">
+                <input type="hidden" id="mod-studio-id-originale">
+                <div class="info-box">
+                    <strong>ID Attuale:</strong> <span id="mod-id-display"></span>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group"><label>Nuovo ID Studio (User) *</label><input type="text" id="mod-id" required autocomplete="off"></div>
+                    <div class="form-group"><label>Password (Lascia vuoto per non cambiare)</label><input type="text" id="mod-password" autocomplete="off"></div>
+                    <div class="form-group"><label>Nome Studio *</label><input type="text" id="mod-nome" required autocomplete="off"></div>
+                    <div class="form-group"><label>Partita IVA</label><input type="text" id="mod-piva" autocomplete="off"></div>
+                    <div class="form-group"><label>Email</label><input type="email" id="mod-email" autocomplete="off"></div>
+                    <div class="form-group"><label>Telefono</label><input type="tel" id="mod-telefono" autocomplete="off"></div>
+                    <div class="form-group"><label>Indirizzo</label><input type="text" id="mod-indirizzo" autocomplete="off"></div>
+                    <div class="form-group"><label>Città</label><input type="text" id="mod-citta" autocomplete="off"></div>
+                    <div class="form-group"><label>Stato/Provincia</label><input type="text" id="mod-stato" autocomplete="off"></div>
+                    <div class="form-group"><label>Scadenza Abbonamento</label><input type="date" id="mod-scadenza" autocomplete="off"></div>
+                    <div class="form-group">
+                        <label>Stato Abbonamento</label>
+                        <select id="mod-stato-abbonamento">
+                            <option value="Attivo">Attivo</option>
+                            <option value="Trial">Trial</option>
+                            <option value="Scaduto">Scaduto</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Account Attivo</label>
+                        <select id="mod-attivo">
+                            <option value="1">Si</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="margin-top: 25px; display: flex; gap: 15px; flex-wrap: wrap;">
+                    <button type="submit" class="btn btn-primary">SALVA MODIFICHE</button>
+                    <button type="button" class="btn btn-outline" onclick="chiudiModaleModifica()">ANNULLA</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>
