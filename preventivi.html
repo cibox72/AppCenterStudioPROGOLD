@@ -108,29 +108,86 @@
         .cronologia-prezzo { color: #996515; font-weight: 700; font-size: 1.1em; margin-right: 15px; }
         .pdf-preview { display: none; }
         
-        /* OTTIMIZZAZIONE PDF PER FOGLIO A4 */
-        @media print {
-            @page { size: A4; margin: 15mm; }
-            body * { visibility: hidden; }
-            #pdf-preview, #pdf-preview * { visibility: visible; }
-            #pdf-preview { 
-                display: block; 
-                position: absolute; 
-                left: 0; top: 0; 
-                width: 100%; 
-                padding: 20px; 
-                background: #ffffff; 
-                color: #000000; 
-                font-size: 11pt; 
-            }
-            #pdf-preview .pdf-header { border-bottom: 3px solid #d4af37; padding-bottom: 20px; margin-bottom: 20px; }
-            #pdf-preview .pdf-header h1 { color: #000000; font-size: 1.8em; margin-bottom: 10px; }
-            #pdf-preview .pdf-header p { color: #666666; margin: 5px 0; }
-            #pdf-preview .pdf-section { margin-bottom: 15px; page-break-inside: avoid; }
-            #pdf-preview .pdf-section h3 { color: #000000; border-bottom: 2px solid #d4af37; padding-bottom: 8px; margin-bottom: 10px; font-size: 1.2em; }
-            #pdf-preview .pdf-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #d5d8dc; }
-            #pdf-preview .pdf-total { font-size: 1.2em; font-weight: 700; color: #996515; border-top: 3px solid #d4af37; padding-top: 10px; margin-top: 10px; }
-        }
+       /* OTTIMIZZAZIONE PDF PER SINGOLO FOGLIO A4 */
+@media print {
+    @page { 
+        size: A4 portrait; 
+        margin: 8mm 10mm; 
+    }
+    * { box-sizing: border-box; }
+    body * { visibility: hidden; }
+    #pdf-preview, #pdf-preview * { visibility: visible; }
+    #pdf-preview { 
+        display: block !important; 
+        position: absolute; 
+        left: 0; top: 0; 
+        width: 100%; 
+        padding: 0; 
+        margin: 0;
+        background: #ffffff; 
+        color: #000000; 
+        font-size: 8pt;
+        line-height: 1.3;
+        overflow: hidden;
+        max-height: 277mm;
+    }
+    #pdf-preview .pdf-header { 
+        border-bottom: 2px solid #d4af37; 
+        padding-bottom: 4px; 
+        margin-bottom: 6px; 
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+    #pdf-preview .pdf-header h1 { 
+        color: #000000; 
+        font-size: 14pt; 
+        margin: 0; 
+    }
+    #pdf-preview .pdf-header p { 
+        color: #666666; 
+        margin: 1px 0; 
+        font-size: 7pt;
+    }
+    #pdf-preview .pdf-section { 
+        margin-bottom: 5px; 
+        page-break-inside: avoid;
+    }
+    #pdf-preview .pdf-section h3 { 
+        color: #000000; 
+        border-bottom: 1px solid #d4af37; 
+        padding-bottom: 2px; 
+        margin-bottom: 3px; 
+        font-size: 9pt;
+        font-weight: 700;
+    }
+    #pdf-preview .pdf-row { 
+        display: flex; 
+        justify-content: space-between; 
+        padding: 2px 0; 
+        border-bottom: 1px dotted #d5d8dc;
+        font-size: 8pt;
+    }
+    #pdf-preview .pdf-row label {
+        color: #666666;
+        font-weight: 600;
+    }
+    #pdf-preview .pdf-row span {
+        color: #000000;
+    }
+    #pdf-preview .pdf-total { 
+        font-size: 9pt; 
+        font-weight: 700; 
+        color: #996515; 
+        border-top: 2px solid #d4af37; 
+        padding-top: 3px; 
+        margin-top: 3px; 
+    }
+    #pdf-preview .pdf-note {
+        font-size: 7pt;
+        color: #666666;
+    }
+}
         @media (max-width: 768px) { .form-grid, .form-grid-2 { grid-template-columns: 1fr; } .actions-bar { flex-direction: column; } .actions-bar .btn { width: 100%; justify-content: center; } }
     </style>
 </head>
