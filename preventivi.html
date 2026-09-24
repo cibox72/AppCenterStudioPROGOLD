@@ -108,86 +108,43 @@
         .cronologia-prezzo { color: #996515; font-weight: 700; font-size: 1.1em; margin-right: 15px; }
         .pdf-preview { display: none; }
         
-       /* OTTIMIZZAZIONE PDF PER SINGOLO FOGLIO A4 */
-@media print {
-    @page { 
-        size: A4 portrait; 
-        margin: 8mm 10mm; 
-    }
-    * { box-sizing: border-box; }
-    body * { visibility: hidden; }
-    #pdf-preview, #pdf-preview * { visibility: visible; }
-    #pdf-preview { 
-        display: block !important; 
-        position: absolute; 
-        left: 0; top: 0; 
-        width: 100%; 
-        padding: 0; 
-        margin: 0;
-        background: #ffffff; 
-        color: #000000; 
-        font-size: 8pt;
-        line-height: 1.3;
-        overflow: hidden;
-        max-height: 277mm;
-    }
-    #pdf-preview .pdf-header { 
-        border-bottom: 2px solid #d4af37; 
-        padding-bottom: 4px; 
-        margin-bottom: 6px; 
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-    }
-    #pdf-preview .pdf-header h1 { 
-        color: #000000; 
-        font-size: 14pt; 
-        margin: 0; 
-    }
-    #pdf-preview .pdf-header p { 
-        color: #666666; 
-        margin: 1px 0; 
-        font-size: 7pt;
-    }
-    #pdf-preview .pdf-section { 
-        margin-bottom: 5px; 
-        page-break-inside: avoid;
-    }
-    #pdf-preview .pdf-section h3 { 
-        color: #000000; 
-        border-bottom: 1px solid #d4af37; 
-        padding-bottom: 2px; 
-        margin-bottom: 3px; 
-        font-size: 9pt;
-        font-weight: 700;
-    }
-    #pdf-preview .pdf-row { 
-        display: flex; 
-        justify-content: space-between; 
-        padding: 2px 0; 
-        border-bottom: 1px dotted #d5d8dc;
-        font-size: 8pt;
-    }
-    #pdf-preview .pdf-row label {
-        color: #666666;
-        font-weight: 600;
-    }
-    #pdf-preview .pdf-row span {
-        color: #000000;
-    }
-    #pdf-preview .pdf-total { 
-        font-size: 9pt; 
-        font-weight: 700; 
-        color: #996515; 
-        border-top: 2px solid #d4af37; 
-        padding-top: 3px; 
-        margin-top: 3px; 
-    }
-    #pdf-preview .pdf-note {
-        font-size: 7pt;
-        color: #666666;
-    }
-}
+        /* LAYOUT PROFESSIONALE PDF A4 */
+        @media print {
+            @page { size: A4 portrait; margin: 12mm 15mm; }
+            * { box-sizing: border-box; }
+            body * { visibility: hidden; }
+            #pdf-preview, #pdf-preview * { visibility: visible; }
+            #pdf-preview { 
+                display: block !important; position: absolute; left: 0; top: 0; width: 100%; padding: 0; margin: 0;
+                background: #ffffff; color: #000000; font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 9pt; line-height: 1.4;
+            }
+            #pdf-preview .pdf-header { text-align: center; border-bottom: 3px solid #d4af37; padding-bottom: 8px; margin-bottom: 10px; }
+            #pdf-preview .pdf-header h1 { color: #000000; font-size: 18pt; margin: 0 0 4px 0; letter-spacing: 1px; text-transform: uppercase; }
+            #pdf-preview .pdf-header .studio-details { color: #666666; font-size: 8pt; margin: 0; }
+            #pdf-preview .pdf-titolo-sezione { text-align: center; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid #d4af37; }
+            #pdf-preview .pdf-titolo-sezione h2 { font-size: 13pt; color: #996515; margin: 0; font-weight: 700; letter-spacing: 0.5px; }
+            #pdf-preview .pdf-titolo-sezione p { font-size: 9pt; color: #666666; margin: 2px 0 0 0; }
+            #pdf-preview .pdf-clienti-row { display: flex; gap: 15px; margin-bottom: 8px; }
+            #pdf-preview .pdf-cliente-col { flex: 1; border: 1px solid #d4af37; padding: 6px 8px; border-radius: 4px; background: #fffdf5; }
+            #pdf-preview .pdf-cliente-col h3 { color: #996515; font-size: 10pt; margin: 0 0 5px 0; padding-bottom: 3px; border-bottom: 1px solid #d4af37; font-weight: 700; }
+            #pdf-preview .pdf-section { margin-bottom: 6px; page-break-inside: avoid; }
+            #pdf-preview .pdf-section h3 { color: #996515; border-bottom: 2px solid #d4af37; padding-bottom: 3px; margin-bottom: 4px; font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+            #pdf-preview .pdf-row { display: flex; justify-content: space-between; padding: 2px 0; border-bottom: 1px dotted #d5d8dc; font-size: 9pt; }
+            #pdf-preview .pdf-row label { color: #666666; font-weight: 600; flex: 0 0 40%; }
+            #pdf-preview .pdf-row span { color: #000000; flex: 1; text-align: right; }
+            #pdf-preview .pdf-servizio-row { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid #eee; font-size: 9pt; }
+            #pdf-preview .pdf-servizio-row label { flex: 1; color: #000000; }
+            #pdf-preview .pdf-servizio-row span { flex: 0 0 100px; text-align: right; color: #996515; font-weight: 600; }
+            #pdf-preview .pdf-totali-box { background: #fffdf5; border: 2px solid #d4af37; padding: 8px 10px; border-radius: 4px; margin-top: 6px; }
+            #pdf-preview .pdf-total { font-size: 10pt; font-weight: 700; color: #996515; border-top: 2px solid #d4af37; padding-top: 4px; margin-top: 4px; }
+            #pdf-preview .pdf-total label { color: #000000; font-weight: 700; }
+            #pdf-preview .pdf-total span { color: #996515; font-size: 11pt; }
+            #pdf-preview .pdf-note { font-size: 8pt; color: #666666; font-style: italic; padding: 4px 8px; background: #f8f9fa; border-left: 3px solid #d4af37; margin-top: 4px; }
+            #pdf-preview .pdf-firme { display: flex; justify-content: space-between; margin-top: 15px; padding-top: 8px; border-top: 2px solid #d4af37; }
+            #pdf-preview .pdf-firma-box { flex: 1; text-align: center; padding: 0 10px; }
+            #pdf-preview .pdf-firma-box .firma-linea { border-top: 1px solid #000000; margin: 30px 10px 5px 10px; padding-top: 3px; font-size: 8pt; color: #666666; }
+            #pdf-preview .pdf-accettazione { text-align: center; font-size: 8pt; color: #666666; margin-top: 8px; font-style: italic; }
+        }
         @media (max-width: 768px) { .form-grid, .form-grid-2 { grid-template-columns: 1fr; } .actions-bar { flex-direction: column; } .actions-bar .btn { width: 100%; justify-content: center; } }
     </style>
 </head>
@@ -232,7 +189,6 @@
                 <h3 class="section-title">PREVENTIVO / CONTRATTO NUOVO</h3>
                 
                 <form id="form-preventivo" onsubmit="salvaPreventivo(event)">
-                    
                     <div class="form-grid-2">
                         <div class="form-group">
                             <label>Numero Preventivo *</label>
@@ -554,60 +510,70 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 10: ANTEPRIMA PDF -->
+    <!-- SEZIONE 10: ANTEPRIMA PDF (LAYOUT PROFESSIONALE) -->
     <!-- ============================================ -->
     <div id="pdf-preview" class="pdf-preview">
         <div class="pdf-header">
             <h1 id="pdf-nome-studio">Nome Studio</h1>
-            <p id="pdf-indirizzo-studio"></p>
-            <p id="pdf-telefono-studio"></p>
-            <p id="pdf-email-studio"></p>
+            <p class="studio-details" id="pdf-studio-details"></p>
         </div>
-        <div class="pdf-section">
-            <h3 id="pdf-titolo-doc">PREVENTIVO</h3>
-            <div class="pdf-row"><label>Numero:</label><span id="pdf-numero"></span></div>
-            <div class="pdf-row"><label>Data:</label><span id="pdf-data"></span></div>
+        <div class="pdf-titolo-sezione">
+            <h2 id="pdf-titolo-doc">PREVENTIVO</h2>
+            <p id="pdf-numero-data"></p>
         </div>
-        <div class="pdf-section">
-            <h3>Cliente A</h3>
-            <div class="pdf-row"><label>Nome:</label><span id="pdf-cliente-a"></span></div>
-            <div class="pdf-row"><label>Data Nascita:</label><span id="pdf-cliente-a-nascita"></span></div>
-            <div class="pdf-row"><label>Indirizzo:</label><span id="pdf-cliente-a-indirizzo"></span></div>
-            <div class="pdf-row"><label>Telefono:</label><span id="pdf-cliente-a-tel"></span></div>
-            <div class="pdf-row"><label>Email:</label><span id="pdf-cliente-a-email"></span></div>
-        </div>
-        <div class="pdf-section">
-            <h3>Cliente B</h3>
-            <div class="pdf-row"><label>Nome:</label><span id="pdf-cliente-b"></span></div>
-            <div class="pdf-row"><label>Data Nascita:</label><span id="pdf-cliente-b-nascita"></span></div>
-            <div class="pdf-row"><label>Indirizzo:</label><span id="pdf-cliente-b-indirizzo"></span></div>
+        <div class="pdf-clienti-row">
+            <div class="pdf-cliente-col">
+                <h3>Cliente A - Intestatario</h3>
+                <div class="pdf-row"><label>Nome:</label><span id="pdf-cliente-a"></span></div>
+                <div class="pdf-row"><label>Nato il:</label><span id="pdf-cliente-a-nascita"></span></div>
+                <div class="pdf-row"><label>Indirizzo:</label><span id="pdf-cliente-a-indirizzo"></span></div>
+                <div class="pdf-row"><label>Telefono:</label><span id="pdf-cliente-a-tel"></span></div>
+                <div class="pdf-row"><label>Email:</label><span id="pdf-cliente-a-email"></span></div>
+            </div>
+            <div class="pdf-cliente-col">
+                <h3>Cliente B - Secondo Intestatario</h3>
+                <div class="pdf-row"><label>Nome:</label><span id="pdf-cliente-b"></span></div>
+                <div class="pdf-row"><label>Nato il:</label><span id="pdf-cliente-b-nascita"></span></div>
+                <div class="pdf-row"><label>Indirizzo:</label><span id="pdf-cliente-b-indirizzo"></span></div>
+                <div class="pdf-row"><label>Telefono:</label><span id="pdf-cliente-b-tel"></span></div>
+                <div class="pdf-row"><label>Email:</label><span id="pdf-cliente-b-email"></span></div>
+            </div>
         </div>
         <div class="pdf-section">
             <h3>Dettagli Evento</h3>
-            <div class="pdf-row"><label>Tipo:</label><span id="pdf-tipo"></span></div>
-            <div class="pdf-row"><label>Data Evento:</label><span id="pdf-data-evento"></span></div>
-            <div class="pdf-row"><label>Cerimonia:</label><span id="pdf-cerimonia"></span></div>
-            <div class="pdf-row"><label>Ricevimento:</label><span id="pdf-ricevimento"></span></div>
+            <div class="pdf-row"><label>Tipo servizio:</label><span id="pdf-tipo"></span></div>
+            <div class="pdf-row"><label>Data evento:</label><span id="pdf-data-evento"></span></div>
+            <div class="pdf-row"><label>Luogo cerimonia:</label><span id="pdf-cerimonia"></span></div>
+            <div class="pdf-row"><label>Luogo ricevimento:</label><span id="pdf-ricevimento"></span></div>
         </div>
         <div class="pdf-section">
-            <h3>Servizi</h3>
+            <h3>Servizi Richiesti</h3>
             <div id="pdf-servizi-list"></div>
         </div>
         <div class="pdf-section">
-            <h3>Totali</h3>
-            <div class="pdf-row"><label>Totale servizi:</label><span id="pdf-totale-servizi"></span></div>
-            <div class="pdf-row"><label>Sconto:</label><span id="pdf-sconto"></span></div>
-            <div class="pdf-row pdf-total"><label>IMPORTO TOTALE:</label><span id="pdf-totale"></span></div>
-            <div class="pdf-row"><label>Acconti:</label><span id="pdf-acconti"></span></div>
-            <div class="pdf-row pdf-total"><label>SALDO RESIDUO:</label><span id="pdf-saldo"></span></div>
+            <div class="pdf-totali-box">
+                <div class="pdf-row"><label>Totale servizi:</label><span id="pdf-totale-servizi"></span></div>
+                <div class="pdf-row"><label>Sconto applicato:</label><span id="pdf-sconto"></span></div>
+                <div class="pdf-row pdf-total"><label>IMPORTO TOTALE:</label><span id="pdf-totale"></span></div>
+                <div class="pdf-row"><label>Acconti versati:</label><span id="pdf-acconti"></span></div>
+                <div class="pdf-row pdf-total"><label>SALDO RESIDUO:</label><span id="pdf-saldo"></span></div>
+            </div>
         </div>
         <div class="pdf-section">
-            <h3>Note</h3>
-            <p id="pdf-note"></p>
+            <h3>Note e Condizioni</h3>
+            <p class="pdf-note" id="pdf-note"></p>
         </div>
+        <div class="pdf-firme">
+            <div class="pdf-firma-box">
+                <div class="firma-linea">Firma del Cliente (per accettazione)</div>
+            </div>
+            <div class="pdf-firma-box">
+                <div class="firma-linea">Firma dello Studio</div>
+            </div>
+        </div>
+        <p class="pdf-accettazione">Il sottoscritto dichiara di aver letto e accettato tutte le condizioni del presente documento.</p>
     </div>
-
-    <div class="footer-branding">
+        <div class="footer-branding">
         <p>Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></p>
     </div>
 
@@ -815,9 +781,6 @@
             document.getElementById('tab-' + tabName).classList.add('active');
         }
 
-        // ==========================================
-        // FUNZIONI MAPS
-        // ==========================================
         function apriMapsClienteA() {
             const indirizzo = document.getElementById('cliente_a_indirizzo').value;
             const citta = document.getElementById('cliente_a_citta').value;
@@ -850,9 +813,6 @@
             window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(luogo), '_blank');
         }
 
-        // ==========================================
-        // MODALE SERVIZI
-        // ==========================================
         function apriModaleServizi() {
             const lista = document.getElementById('lista-servizi-disponibili');
             lista.innerHTML = '';
@@ -924,9 +884,6 @@
             calcolaTotali();
         }
 
-        // ==========================================
-        // ACCONTI
-        // ==========================================
         function aggiungiAcconto() {
             acconti.push({ data: '', importo: 0, metodo: 'Bonifico', note: '' });
             renderAcconti();
@@ -953,9 +910,6 @@
             renderAcconti();
         }
 
-        // ==========================================
-        // PIANO DI PAGAMENTO (MODIFICATO: SENZA DATE)
-        // ==========================================
         function aggiungiPianoVoce() {
             pianoPagamento.push({ importo: 0, descrizione: '' });
             renderPiano();
@@ -979,9 +933,6 @@
             renderPiano();
         }
 
-        // ==========================================
-        // CALCOLI TOTALI
-        // ==========================================
         function calcolaTotali() {
             let totaleServizi = 0;
             serviziSelezionati.forEach(function(s) { totaleServizi += s.prezzo; });
@@ -1000,9 +951,6 @@
             document.getElementById('saldo_residuo').textContent = saldoResiduo.toFixed(2) + ' EUR';
         }
 
-        // ==========================================
-        // HELPERS CLIENTE
-        // ==========================================
         function getClienteA() {
             return {
                 id: document.getElementById('cliente_a_select').value || null,
@@ -1046,9 +994,6 @@
             return ((c.nome || '') + ' ' + (c.cognome || '')).trim() || '-';
         }
 
-        // ==========================================
-        // SALVA PREVENTIVO + AGENDA
-        // ==========================================
         async function salvaPreventivo(event) {
             event.preventDefault();
             const cognomeCliente = document.getElementById('cliente_a_cognome').value || 'Cliente';
@@ -1078,7 +1023,6 @@
             };
             
             try {
-                // MODIFICA CHIRURGICA: aggiunto ?token= all'URL per autorizzare la richiesta POST
                 const response = await fetch(WORKER_URL + '/api/studio/preventivo?token=' + encodeURIComponent(token), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1133,9 +1077,6 @@
             }
         }
 
-        // ==========================================
-        // GENERAZIONE PDF
-        // ==========================================
         function generaPDF() {
             if (!datiStudio) {
                 alert('Dati studio non disponibili. Compila prima la Scheda Anagrafica.');
@@ -1143,45 +1084,56 @@
             }
             const clienteA = getClienteA();
             const clienteB = getClienteB();
+            
             document.getElementById('pdf-nome-studio').textContent = datiStudio.nome || 'Studio';
-            document.getElementById('pdf-indirizzo-studio').textContent = [datiStudio.indirizzo, datiStudio.cap, datiStudio.citta, datiStudio.provincia].filter(Boolean).join(', ');
-            document.getElementById('pdf-telefono-studio').textContent = datiStudio.telefono || '';
-            document.getElementById('pdf-email-studio').textContent = datiStudio.email || '';
-            document.getElementById('pdf-titolo-doc').textContent = 'PREVENTIVO N. ' + document.getElementById('prev_numero').value;
-            document.getElementById('pdf-numero').textContent = document.getElementById('prev_numero').value;
-            document.getElementById('pdf-data').textContent = document.getElementById('prev_data').value;
-            document.getElementById('pdf-cliente-a').textContent = clienteA.nome + ' ' + clienteA.cognome;
+            const dettagliStudio = [datiStudio.indirizzo, (datiStudio.cap || '') + ' ' + (datiStudio.citta || ''), datiStudio.provincia, 'Tel: ' + (datiStudio.telefono || '-'), datiStudio.email || ''].filter(Boolean).join(' | ');
+            document.getElementById('pdf-studio-details').textContent = dettagliStudio;
+            
+            const numeroDoc = document.getElementById('prev_numero').value;
+            const tipoDoc = numeroDoc.toUpperCase().startsWith('CTR') ? 'CONTRATTO' : 'PREVENTIVO';
+            document.getElementById('pdf-titolo-doc').textContent = tipoDoc;
+            document.getElementById('pdf-numero-data').textContent = 'N. ' + numeroDoc + ' - Data: ' + formatDataIT(document.getElementById('prev_data').value);
+            
+            document.getElementById('pdf-cliente-a').textContent = (clienteA.nome + ' ' + clienteA.cognome).trim() || '-';
             document.getElementById('pdf-cliente-a-nascita').textContent = formatDataIT(clienteA.data_nascita);
-            document.getElementById('pdf-cliente-a-indirizzo').textContent = [clienteA.indirizzo, clienteA.cap, clienteA.citta, clienteA.provincia].filter(Boolean).join(', ');
+            document.getElementById('pdf-cliente-a-indirizzo').textContent = [clienteA.indirizzo, (clienteA.cap || '') + ' ' + (clienteA.citta || ''), clienteA.provincia].filter(Boolean).join(', ') || '-';
             document.getElementById('pdf-cliente-a-tel').textContent = clienteA.telefono || '-';
             document.getElementById('pdf-cliente-a-email').textContent = clienteA.email || '-';
+            
             document.getElementById('pdf-cliente-b').textContent = (clienteB.nome + ' ' + clienteB.cognome).trim() || '-';
             document.getElementById('pdf-cliente-b-nascita').textContent = formatDataIT(clienteB.data_nascita);
-            document.getElementById('pdf-cliente-b-indirizzo').textContent = [clienteB.indirizzo, clienteB.cap, clienteB.citta, clienteB.provincia].filter(Boolean).join(', ') || '-';
+            document.getElementById('pdf-cliente-b-indirizzo').textContent = [clienteB.indirizzo, (clienteB.cap || '') + ' ' + (clienteB.citta || ''), clienteB.provincia].filter(Boolean).join(', ') || '-';
+            document.getElementById('pdf-cliente-b-tel').textContent = clienteB.telefono || '-';
+            document.getElementById('pdf-cliente-b-email').textContent = clienteB.email || '-';
+            
             document.getElementById('pdf-tipo').textContent = document.getElementById('evento_tipo').value || '-';
-            document.getElementById('pdf-data-evento').textContent = document.getElementById('evento_data').value || '-';
+            document.getElementById('pdf-data-evento').textContent = formatDataIT(document.getElementById('evento_data').value);
             document.getElementById('pdf-cerimonia').textContent = document.getElementById('evento_luogo_cerimonia').value || '-';
             document.getElementById('pdf-ricevimento').textContent = document.getElementById('evento_luogo_ricevimento').value || '-';
+            
             const serviziList = document.getElementById('pdf-servizi-list');
             serviziList.innerHTML = '';
-            serviziSelezionati.forEach(function(s) {
-                const row = document.createElement('div');
-                row.className = 'pdf-row';
-                row.innerHTML = '<label>' + s.descrizione + '</label><span>' + s.prezzo.toFixed(2) + ' EUR</span>';
-                serviziList.appendChild(row);
-            });
+            if (serviziSelezionati.length === 0) {
+                serviziList.innerHTML = '<div class="pdf-row"><label>Nessun servizio selezionato</label><span>-</span></div>';
+            } else {
+                serviziSelezionati.forEach(function(s) {
+                    const row = document.createElement('div');
+                    row.className = 'pdf-servizio-row';
+                    row.innerHTML = '<label>' + s.descrizione + ' <small style="color:#666">(' + (s.categoria || '') + ')</small></label><span>' + s.prezzo.toFixed(2) + ' EUR</span>';
+                    serviziList.appendChild(row);
+                });
+            }
+            
             document.getElementById('pdf-totale-servizi').textContent = document.getElementById('totale_servizi').textContent;
             document.getElementById('pdf-sconto').textContent = document.getElementById('totale_sconto').textContent;
             document.getElementById('pdf-totale').textContent = document.getElementById('importo_totale').textContent;
             document.getElementById('pdf-acconti').textContent = document.getElementById('totale_acconti').textContent;
             document.getElementById('pdf-saldo').textContent = document.getElementById('saldo_residuo').textContent;
-            document.getElementById('pdf-note').textContent = document.getElementById('prev_note').value || 'Nessuna nota';
+            document.getElementById('pdf-note').textContent = document.getElementById('prev_note').value || 'Nessuna nota aggiuntiva.';
+            
             window.print();
         }
 
-        // ==========================================
-        // CONVERSIONE IN CONTRATTO
-        // ==========================================
         async function convertiInContratto() {
             if (!confirm('Convertire questo preventivo in contratto? L\'evento in agenda sara\' marcato come confermato.')) return;
             const cognomeCliente = document.getElementById('cliente_a_cognome').value || 'Cliente';
@@ -1230,9 +1182,6 @@
             }
         }
 
-        // ==========================================
-        // ARCHIVIO PREVENTIVI
-        // ==========================================
         function renderTabellaPreventivi() {
             if (preventiviDisponibili.length === 0) {
                 document.getElementById('empty-preventivi').style.display = 'block';
@@ -1311,27 +1260,9 @@
             document.getElementById('cliente_b_cap').value = clienteB.cap || '';
             document.getElementById('cliente_b_provincia').value = clienteB.provincia || '';
             
-            // PARSING SICURO PER SERVIZI, ACCONTI E PIANO PAGAMENTO
-            if (p.servizi && typeof p.servizi === 'string') {
-                try { serviziSelezionati = JSON.parse(p.servizi); } 
-                catch (e) { serviziSelezionati = []; }
-            } else {
-                serviziSelezionati = Array.isArray(p.servizi) ? p.servizi : [];
-            }
-            
-            if (p.acconti && typeof p.acconti === 'string') {
-                try { acconti = JSON.parse(p.acconti); } 
-                catch (e) { acconti = []; }
-            } else {
-                acconti = Array.isArray(p.acconti) ? p.acconti : [];
-            }
-            
-            if (p.piano_pagamento && typeof p.piano_pagamento === 'string') {
-                try { pianoPagamento = JSON.parse(p.piano_pagamento); } 
-                catch (e) { pianoPagamento = []; }
-            } else {
-                pianoPagamento = Array.isArray(p.piano_pagamento) ? p.piano_pagamento : [];
-            }
+            if (p.servizi && typeof p.servizi === 'string') { try { serviziSelezionati = JSON.parse(p.servizi); } catch (e) { serviziSelezionati = []; } } else { serviziSelezionati = Array.isArray(p.servizi) ? p.servizi : []; }
+            if (p.acconti && typeof p.acconti === 'string') { try { acconti = JSON.parse(p.acconti); } catch (e) { acconti = []; } } else { acconti = Array.isArray(p.acconti) ? p.acconti : []; }
+            if (p.piano_pagamento && typeof p.piano_pagamento === 'string') { try { pianoPagamento = JSON.parse(p.piano_pagamento); } catch (e) { pianoPagamento = []; } } else { pianoPagamento = Array.isArray(p.piano_pagamento) ? p.piano_pagamento : []; }
             
             document.getElementById('sconto_perc').value = p.sconto_perc || 0;
             document.getElementById('sconto_fisso').value = p.sconto_fisso || 0;
@@ -1341,9 +1272,7 @@
             renderAcconti();
             renderPiano();
             calcolaTotali();
-            if (solaLettura) {
-                alert('Preventivo caricato in modalita\' visualizzazione. Clicca "Modifica" per modificare i dati.');
-            }
+            if (solaLettura) { alert('Preventivo caricato in modalita\' visualizzazione. Clicca "Modifica" per modificare i dati.'); }
             switchTab('crea');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -1358,9 +1287,6 @@
             } catch (error) { console.error('Errore eliminazione:', error); }
         }
 
-        // ==========================================
-        // ARCHIVIO CONTRATTI
-        // ==========================================
         function renderTabellaContratti() {
             if (contrattiDisponibili.length === 0) {
                 document.getElementById('empty-contratti').style.display = 'block';
@@ -1440,27 +1366,9 @@
             document.getElementById('cliente_b_cap').value = clienteB.cap || '';
             document.getElementById('cliente_b_provincia').value = clienteB.provincia || '';
             
-            // PARSING SICURO PER SERVIZI, ACCONTI E PIANO PAGAMENTO
-            if (c.servizi && typeof c.servizi === 'string') {
-                try { serviziSelezionati = JSON.parse(c.servizi); } 
-                catch (e) { serviziSelezionati = []; }
-            } else {
-                serviziSelezionati = Array.isArray(c.servizi) ? c.servizi : [];
-            }
-            
-            if (c.acconti && typeof c.acconti === 'string') {
-                try { acconti = JSON.parse(c.acconti); } 
-                catch (e) { acconti = []; }
-            } else {
-                acconti = Array.isArray(c.acconti) ? c.acconti : [];
-            }
-            
-            if (c.piano_pagamento && typeof c.piano_pagamento === 'string') {
-                try { pianoPagamento = JSON.parse(c.piano_pagamento); } 
-                catch (e) { pianoPagamento = []; }
-            } else {
-                pianoPagamento = Array.isArray(c.piano_pagamento) ? c.piano_pagamento : [];
-            }
+            if (c.servizi && typeof c.servizi === 'string') { try { serviziSelezionati = JSON.parse(c.servizi); } catch (e) { serviziSelezionati = []; } } else { serviziSelezionati = Array.isArray(c.servizi) ? c.servizi : []; }
+            if (c.acconti && typeof c.acconti === 'string') { try { acconti = JSON.parse(c.acconti); } catch (e) { acconti = []; } } else { acconti = Array.isArray(c.acconti) ? c.acconti : []; }
+            if (c.piano_pagamento && typeof c.piano_pagamento === 'string') { try { pianoPagamento = JSON.parse(c.piano_pagamento); } catch (e) { pianoPagamento = []; } } else { pianoPagamento = Array.isArray(c.piano_pagamento) ? c.piano_pagamento : []; }
             
             document.getElementById('sconto_perc').value = c.sconto_perc || 0;
             document.getElementById('sconto_fisso').value = c.sconto_fisso || 0;
@@ -1470,9 +1378,7 @@
             renderAcconti();
             renderPiano();
             calcolaTotali();
-            if (solaLettura) {
-                alert('Contratto caricato in modalita\' visualizzazione. Clicca "Modifica" per modificare i dati.');
-            }
+            if (solaLettura) { alert('Contratto caricato in modalita\' visualizzazione. Clicca "Modifica" per modificare i dati.'); }
             switchTab('crea');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -1487,37 +1393,25 @@
             } catch (error) { console.error('Errore eliminazione:', error); }
         }
 
-        // ==========================================
-        // CRONOLOGIA CLIENTE (solo contratti)
-        // ==========================================
         function apriCronologia(id) {
             const c = contrattiDisponibili.find(function(x) { return x.id === id; });
             if (!c) { alert('Contratto non trovato'); return; }
-            
             const clienteA = parseCliente(c.cliente_a);
             const clienteId = clienteA.id;
-            
-            if (!clienteId) {
-                alert('Questo contratto non ha un ID cliente associato. La cronologia e\' disponibile solo per clienti registrati.');
-                return;
-            }
+            if (!clienteId) { alert('Questo contratto non ha un ID cliente associato. La cronologia e\' disponibile solo per clienti registrati.'); return; }
             
             const contrattiCliente = contrattiDisponibili.filter(function(x) {
                 const ca = parseCliente(x.cliente_a);
                 const cb = parseCliente(x.cliente_b);
                 return (ca && ca.id === clienteId) || (cb && cb.id === clienteId);
             });
-            
-            contrattiCliente.sort(function(a, b) {
-                return new Date(b.data_emissione || 0) - new Date(a.data_emissione || 0);
-            });
+            contrattiCliente.sort(function(a, b) { return new Date(b.data_emissione || 0) - new Date(a.data_emissione || 0); });
             
             const nomeCliente = (clienteA.nome || '') + ' ' + (clienteA.cognome || '');
             document.getElementById('cronologia-info').innerHTML = '<strong>Cliente:</strong> ' + nomeCliente + '<br><strong>ID:</strong> ' + clienteId + '<br><strong>Data di nascita:</strong> ' + formatDataIT(clienteA.data_nascita) + '<br><strong>Totale contratti:</strong> ' + contrattiCliente.length;
             
             const lista = document.getElementById('cronologia-lista');
             lista.innerHTML = '';
-            
             if (contrattiCliente.length === 0) {
                 lista.innerHTML = '<p class="empty-state">Nessun contratto trovato per questo cliente.</p>';
             } else {
@@ -1532,7 +1426,6 @@
             let totaleSpeso = 0;
             contrattiCliente.forEach(function(cc) { totaleSpeso += (parseFloat(cc.totale_finale) || 0); });
             document.getElementById('cronologia-totale').innerHTML = '<div class="totals-row total"><label>TOTALE STORICO SPESO DAL CLIENTE</label><span>' + totaleSpeso.toFixed(2) + ' EUR</span></div>';
-            
             document.getElementById('modal-cronologia').classList.add('active');
         }
 
