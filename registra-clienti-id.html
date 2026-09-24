@@ -448,7 +448,8 @@
                         return;
                     }
                 } else {
-                    response = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti', {
+                    // MODIFICA CHIRURGICA APPLICATA QUI: aggiunto ?token= all'URL
+                    response = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti?token=' + encodeURIComponent(token), {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(dati)
