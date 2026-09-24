@@ -1304,7 +1304,10 @@
             tbody.innerHTML = '';
             contrattiDisponibili.forEach(function(c) {
                 const cliente = getNomeCompleto(c.cliente_a);
-                const totaleAcconti = (c.acconti || []).reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0);
+                let accontiArr = c.acconti || [];
+if (typeof accontiArr === 'string') { try { accontiArr = JSON.parse(accontiArr); } catch(e) { accontiArr = []; } }
+if (!Array.isArray(accontiArr)) accontiArr = [];
+const totaleAcconti = accontiArr.reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0);
                 const saldo = (parseFloat(c.totale_finale) || 0) - totaleAcconti;
                 tbody.innerHTML += '<tr>' +
                     '<td><strong>' + (c.numero_contratto || c.numero || '-') + '</strong></td>' +
