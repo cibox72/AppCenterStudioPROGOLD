@@ -1028,15 +1028,16 @@
             };
             
             try {
+                // MODIFICA CHIRURGICA: usa PUT se stiamo modificando un preventivo esistente, altrimenti POST
+                const method = preventivoCorrenteId ? 'PUT' : 'POST';
                 const response = await fetch(WORKER_URL + '/api/studio/preventivo?token=' + encodeURIComponent(token), {
-                    method: 'POST',
+                    method: method,
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dati)
                 });
                 const result = await response.json();
                 if (result.success) {
                     preventivoCorrenteId = dati.id;
-                    // Resetta agendaEventId per forzare creazione nuovo evento
                     agendaEventId = null;
                     await aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, document.getElementById('prev_accettato').checked);
                     alert('Preventivo salvato con successo!');
@@ -1059,7 +1060,6 @@
                 const statoEvento = accettato ? 'Confermato' : 'Da Confermare';
                 const titoloEvento = tipoServizio + ' ' + cognomeCliente + ' - ' + (accettato ? 'confermato' : 'da confermare');
                 
-                // Cerca evento esistente per questa data
                 const agendaResponse = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token));
                 const agendaData = await agendaResponse.json();
                 
@@ -1085,14 +1085,12 @@
                 
                 let response;
                 if (existingEventId) {
-                    // Aggiorna evento esistente
                     response = await fetch(WORKER_URL + '/api/studio/agenda/' + existingEventId + '?token=' + encodeURIComponent(token), {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(datiAgenda)
                     });
                 } else {
-                    // Crea nuovo evento
                     response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token), {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -1335,7 +1333,6 @@
             contrattiDisponibili.forEach(function(c) {
                 const cliente = getNomeCompleto(c.cliente_a);
                 
-                // Parsing sicuro per acconti
                 let accontiArr = c.acconti || [];
                 if (typeof accontiArr === 'string') { try { accontiArr = JSON.parse(accontiArr); } catch(e) { accontiArr = []; } }
                 if (!Array.isArray(accontiArr)) accontiArr = [];
