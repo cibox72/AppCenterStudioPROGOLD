@@ -626,14 +626,15 @@
         }
 
         async function modificaAppuntamento(id) {
-            const app = appuntamentiCorrenti.find(a => a.id === id);
-            if (app) {
-                const conferma = confirm('Modificare l\'appuntamento:\n\n"' + (app.descrizione || app.titolo) + '"\nCliente: ' + (app.cliente || 'N/D') + '\nStato: ' + app.stato + '\n\n(Per ora la modifica completa è in sviluppo. Vuoi eliminarlo e rifarlo?)');
-                if (conferma) {
-                    eliminaAppuntamento(id);
-                }
-            }
+    const app = appuntamentiCorrenti.find(a => a.id === id);
+    if (app) {
+        const stato = app.stato || 'Non definito';
+        const conferma = confirm('Modificare l\'appuntamento:\n\n"' + (app.descrizione || app.titolo) + '"\nCliente: ' + (app.cliente || 'N/D') + '\nStato: ' + stato + '\nData: ' + (app.data || 'N/D') + '\n\n(Per ora la modifica completa è in sviluppo. Vuoi eliminarlo e rifarlo?)');
+        if (conferma) {
+            eliminaAppuntamento(id);
         }
+    }
+}
 
         async function eliminaAppuntamento(id) {
             if (!confirm('Eliminare questo appuntamento?')) return;
