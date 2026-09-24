@@ -456,7 +456,7 @@
                     });
                     result = await response.json();
                     if (result.success) {
-                        alert('Cliente registrato con successo! ID: ' + result.cliente.id + '\nUsername: ' + result.cliente.username + '\nPassword: ' + result.cliente.password);
+                     alert('Cliente registrato con successo! ID: ' + result.cliente.id);  
                     } else {
                         alert('Errore: ' + result.error);
                         return;
