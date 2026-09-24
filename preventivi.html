@@ -1253,28 +1253,29 @@
             document.getElementById('cliente_b_citta').value = clienteB.citta || '';
             document.getElementById('cliente_b_cap').value = clienteB.cap || '';
             document.getElementById('cliente_b_provincia').value = clienteB.provincia || '';
+            
+            // PARSING SICURO PER SERVIZI, ACCONTI E PIANO PAGAMENTO
             if (p.servizi && typeof p.servizi === 'string') {
-    try { serviziSelezionati = JSON.parse(p.servizi); } 
-    catch (e) { serviziSelezionati = []; }
-} else {
-    serviziSelezionati = p.servizi || [];
-}
-            // Per acconti:
-if (p.acconti && typeof p.acconti === 'string') {
-    try { acconti = JSON.parse(p.acconti); } 
-    catch (e) { acconti = []; }
-} else {
-    acconti = p.acconti || [];
-}
-
-// Per pianoPagamento:
-if (p.piano_pagamento && typeof p.piano_pagamento === 'string') {
-    try { pianoPagamento = JSON.parse(p.piano_pagamento); } 
-    catch (e) { pianoPagamento = []; }
-} else {
-    pianoPagamento = p.piano_pagamento || [];
-}
-            pianoPagamento = p.piano_pagamento || [];
+                try { serviziSelezionati = JSON.parse(p.servizi); } 
+                catch (e) { serviziSelezionati = []; }
+            } else {
+                serviziSelezionati = Array.isArray(p.servizi) ? p.servizi : [];
+            }
+            
+            if (p.acconti && typeof p.acconti === 'string') {
+                try { acconti = JSON.parse(p.acconti); } 
+                catch (e) { acconti = []; }
+            } else {
+                acconti = Array.isArray(p.acconti) ? p.acconti : [];
+            }
+            
+            if (p.piano_pagamento && typeof p.piano_pagamento === 'string') {
+                try { pianoPagamento = JSON.parse(p.piano_pagamento); } 
+                catch (e) { pianoPagamento = []; }
+            } else {
+                pianoPagamento = Array.isArray(p.piano_pagamento) ? p.piano_pagamento : [];
+            }
+            
             document.getElementById('sconto_perc').value = p.sconto_perc || 0;
             document.getElementById('sconto_fisso').value = p.sconto_fisso || 0;
             document.getElementById('prev_accettato').checked = p.accettato === 1 || p.accettato === true;
@@ -1381,9 +1382,29 @@ if (p.piano_pagamento && typeof p.piano_pagamento === 'string') {
             document.getElementById('cliente_b_citta').value = clienteB.citta || '';
             document.getElementById('cliente_b_cap').value = clienteB.cap || '';
             document.getElementById('cliente_b_provincia').value = clienteB.provincia || '';
-            serviziSelezionati = c.servizi || [];
-            acconti = c.acconti || [];
-            pianoPagamento = c.piano_pagamento || [];
+            
+            // PARSING SICURO PER SERVIZI, ACCONTI E PIANO PAGAMENTO
+            if (c.servizi && typeof c.servizi === 'string') {
+                try { serviziSelezionati = JSON.parse(c.servizi); } 
+                catch (e) { serviziSelezionati = []; }
+            } else {
+                serviziSelezionati = Array.isArray(c.servizi) ? c.servizi : [];
+            }
+            
+            if (c.acconti && typeof c.acconti === 'string') {
+                try { acconti = JSON.parse(c.acconti); } 
+                catch (e) { acconti = []; }
+            } else {
+                acconti = Array.isArray(c.acconti) ? c.acconti : [];
+            }
+            
+            if (c.piano_pagamento && typeof c.piano_pagamento === 'string') {
+                try { pianoPagamento = JSON.parse(c.piano_pagamento); } 
+                catch (e) { pianoPagamento = []; }
+            } else {
+                pianoPagamento = Array.isArray(c.piano_pagamento) ? c.piano_pagamento : [];
+            }
+            
             document.getElementById('sconto_perc').value = c.sconto_perc || 0;
             document.getElementById('sconto_fisso').value = c.sconto_fisso || 0;
             document.getElementById('prev_accettato').checked = c.accettato === 1 || c.accettato === true;
