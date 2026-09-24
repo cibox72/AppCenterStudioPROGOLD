@@ -1028,13 +1028,12 @@
             };
             
             try {
-                // MODIFICA CHIRURGICA: usa PUT se stiamo modificando un preventivo esistente, altrimenti POST
-               // Usa sempre POST per creare o aggiornare
-const response = await fetch(WORKER_URL + '/api/studio/preventivo?token=' + encodeURIComponent(token), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(dati)
-});
+                // Usa sempre POST per creare o aggiornare (il Worker gestisce l'UPSERT)
+                const response = await fetch(WORKER_URL + '/api/studio/preventivo?token=' + encodeURIComponent(token), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dati)
+                });
                 const result = await response.json();
                 if (result.success) {
                     preventivoCorrenteId = dati.id;
@@ -1065,8 +1064,13 @@ const response = await fetch(WORKER_URL + '/api/studio/preventivo?token=' + enco
                 
                 let existingEventId = null;
                 if (agendaData.success && agendaData.eventi) {
+                    // CORREZIONE CHIAVE: Cerca per cliente e tipo servizio, NON per data.
+                    // Così se sposti un evento da una settimana all'altra, lo trova comunque e aggiorna la data.
                     const existingEvent = agendaData.eventi.find(function(e) { 
-                        return e.data === dataEvento && e.cliente === cognomeCliente; 
+                        const clienteMatch = e.cliente === cognomeCliente;
+                        const tipoMatch = e.tipo_servizio === tipoServizio;
+                        const descMatch = e.descrizione && e.descrizione.includes('Preventivo/Contratto');
+                        return clienteMatch && tipoMatch && descMatch;
                     });
                     if (existingEvent) {
                         existingEventId = existingEvent.id;
