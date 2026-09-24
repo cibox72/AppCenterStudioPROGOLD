@@ -430,13 +430,14 @@
             document.getElementById('agenda-empty').style.display = 'none';
             
             try {
+                // Carica eventi dall'agenda
                 const response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token) + '&data=' + data);
                 const result = await response.json();
                 
                 document.getElementById('loading-agenda').style.display = 'none';
                 
-                if (result.success && result.appuntamenti && result.appuntamenti.length > 0) {
-                    appuntamentiCorrenti = result.appuntamenti;
+                if (result.success && result.eventi && result.eventi.length > 0) {
+                    appuntamentiCorrenti = result.eventi;
                     renderAgendaGrid(appuntamentiCorrenti);
                     
                     let totale = 0;
@@ -464,7 +465,7 @@
             }
         }
 
-        function renderAgendaGrid(appuntamenti) {
+        function renderAgendaGrid(eventi) {
             const grid = document.getElementById('agenda-grid-container');
             grid.innerHTML = '';
             
@@ -482,20 +483,33 @@
                 const content = document.createElement('div');
                 content.className = 'hour-content';
                 
-                // Filtra appuntamenti per questa ora
-                const events = appuntamenti.filter(app => {
+                // Filtra eventi per questa ora
+                const eventiOra = eventi.filter(app => {
                     if (!app.ora_inizio) return h === 8; // Tutto il giorno alle 8:00
                     const appHour = parseInt(app.ora_inizio.split(':')[0]);
                     return appHour === h;
                 });
                 
-                events.forEach(app => {
+                eventiOra.forEach(app => {
                     const div = document.createElement('div');
-                    div.className = 'agenda-event ' + (app.stato === 'Confermato' ? '' : 'da-confermare');
+                    const statoConfermato = app.stato === 'Confermato';
+                    div.className = 'agenda-event ' + (statoConfermato ? '' : 'da-confermare');
+                    
+                    // Crea testo descrittivo in base al tipo
+                    let testoDescrittivo = app.titolo || app.descrizione || 'Appuntamento';
+                    const cognomeCliente = app.cliente ? app.cliente.split(' ').pop() : '';
+                    const tipoServizio = app.tipo_servizio || 'Servizio';
+                    
+                    // Se è un evento da preventivo/contratto, formatta diversamente
+                    if (app.descrizione && app.descrizione.includes('Preventivo/Contratto')) {
+                        const statoTesto = statoConfermato ? 'confermato' : 'da confermare';
+                        testoDescrittivo = `${tipoServizio} ${cognomeCliente} - ${statoTesto}`;
+                    }
+                    
                     div.innerHTML = `
-                        <h5>${app.descrizione || app.titolo || 'Appuntamento'}</h5>
+                        <h5>${testoDescrittivo}</h5>
                         <p>${app.ora_inizio || 'Tutto il giorno'} ${app.ora_fine ? '- ' + app.ora_fine : ''} | ${app.cliente || 'Cliente non specificato'}</p>
-                        <div class="event-meta">${app.tipo_servizio || 'Servizio'} ${app.luogo ? '| 📍 ' + app.luogo : ''}</div>
+                        <div class="event-meta">${tipoServizio} ${app.luogo ? '| 📍 ' + app.luogo : ''}</div>
                     `;
                     div.onclick = () => modificaAppuntamento(app.id);
                     content.appendChild(div);
@@ -611,7 +625,7 @@
         async function modificaAppuntamento(id) {
             const app = appuntamentiCorrenti.find(a => a.id === id);
             if (app) {
-                const conferma = confirm(`Modificare l'appuntamento:\n\n"${app.descrizione}"\nCliente: ${app.cliente || 'N/D'}\nStato: ${app.stato}\n\n(Per ora la modifica completa è in sviluppo. Vuoi eliminarlo e rifarlo?)`);
+                const conferma = confirm(`Modificare l'appuntamento:\n\n"${app.descrizione || app.titolo}"\nCliente: ${app.cliente || 'N/D'}\nStato: ${app.stato}\n\n(Per ora la modifica completa è in sviluppo. Vuoi eliminarlo e rifarlo?)`);
                 if (conferma) {
                     eliminaAppuntamento(id);
                 }
