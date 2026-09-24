@@ -1029,12 +1029,12 @@
             
             try {
                 // MODIFICA CHIRURGICA: usa PUT se stiamo modificando un preventivo esistente, altrimenti POST
-                const method = preventivoCorrenteId ? 'PUT' : 'POST';
-                const response = await fetch(WORKER_URL + '/api/studio/preventivo?token=' + encodeURIComponent(token), {
-                    method: method,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dati)
-                });
+               // Usa sempre POST per creare o aggiornare
+const response = await fetch(WORKER_URL + '/api/studio/preventivo?token=' + encodeURIComponent(token), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(dati)
+});
                 const result = await response.json();
                 if (result.success) {
                     preventivoCorrenteId = dati.id;
