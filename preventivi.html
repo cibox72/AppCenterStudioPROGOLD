@@ -1070,20 +1070,31 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
         const agendaResponse = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token));
         const agendaData = await agendaResponse.json();
 
-        // ELIMINA tutti gli eventi esistenti per questo cliente+tipo_servizio
+        // ELIMINA tutti gli eventi che corrispondono al cliente (anche parzialmente)
         if (agendaData.success && agendaData.eventi) {
             const eventiDaEliminare = agendaData.eventi.filter(function(e) {
-                const clienteMatch = e.cliente && e.cliente.toLowerCase().trim() === cognomeCliente.toLowerCase().trim();
-                const tipoMatch = e.tipo_servizio && e.tipo_servizio.toLowerCase() === tipoServizio.toLowerCase();
+                // Cerca per cliente (case-insensitive, parziale)
+                const clienteMatch = e.cliente && cognomeCliente && 
+                    (e.cliente.toLowerCase().includes(cognomeCliente.toLowerCase()) || 
+                     cognomeCliente.toLowerCase().includes(e.cliente.toLowerCase()));
+                
+                // Cerca per tipo servizio (case-insensitive)
+                const tipoMatch = e.tipo_servizio && tipoServizio && 
+                    e.tipo_servizio.toLowerCase() === tipoServizio.toLowerCase();
+                
+                // Cerca nella descrizione
                 const descMatch = e.descrizione && e.descrizione.includes('Preventivo/Contratto');
+                
                 return clienteMatch && tipoMatch && descMatch;
             });
+
+            console.log('Eventi da eliminare:', eventiDaEliminare.length);
 
             for (const evento of eventiDaEliminare) {
                 await fetch(WORKER_URL + '/api/studio/agenda/' + evento.id + '?token=' + encodeURIComponent(token), {
                     method: 'DELETE'
                 });
-                console.log('Evento vecchio eliminato:', evento.id, 'data:', evento.data);
+                console.log('✅ Evento vecchio eliminato:', evento.id, 'data:', evento.data);
             }
         }
 
