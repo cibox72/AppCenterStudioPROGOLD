@@ -1050,11 +1050,18 @@
             }
         }
 
-                async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettato) {
+async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettato) {
+    console.log('=== DEBUG aggiornaAgenda ===');
+    console.log('tipoServizio:', tipoServizio);
+    console.log('cognomeCliente:', cognomeCliente);
+    console.log('dataEvento:', dataEvento);
+    console.log('accettato:', accettato);
+    
     if (!dataEvento) {
         console.log('Agenda: nessuna data evento, skip');
         return;
     }
+    
     try {
         const statoEvento = accettato ? 'Confermato' : 'Da Confermare';
         const titoloEvento = tipoServizio + ' ' + cognomeCliente + ' - ' + (accettato ? 'confermato' : 'da confermare');
@@ -1072,7 +1079,6 @@
                 return clienteMatch && tipoMatch && descMatch;
             });
 
-            // Elimina tutti gli eventi vecchi
             for (const evento of eventiDaEliminare) {
                 await fetch(WORKER_URL + '/api/studio/agenda/' + evento.id + '?token=' + encodeURIComponent(token), {
                     method: 'DELETE'
@@ -1091,6 +1097,8 @@
             cliente: cognomeCliente,
             stato: statoEvento
         };
+        
+        console.log('Dati evento da creare:', datiAgenda);
 
         const response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token), {
             method: 'POST',
@@ -1100,13 +1108,13 @@
 
         const result = await response.json();
         if (result.success) {
-            console.log('Nuovo evento creato:', statoEvento, 'ID:', datiAgenda.id, 'Data:', dataEvento);
+            console.log('✅ Nuovo evento creato:', statoEvento, 'ID:', datiAgenda.id, 'Data:', dataEvento);
             agendaEventId = datiAgenda.id;
         } else {
-            console.error('Errore agenda:', result.error);
+            console.error('❌ Errore agenda:', result.error);
         }
     } catch (error) {
-        console.error('Errore aggiornamento agenda:', error);
+        console.error('❌ Errore aggiornamento agenda:', error);
     }
 }
         function generaPDF() {
