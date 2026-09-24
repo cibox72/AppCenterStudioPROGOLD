@@ -107,16 +107,12 @@
         .cronologia-prezzo { color: #996515; font-weight: 700; font-size: 1.1em; margin-right: 15px; }
         .pdf-preview { display: none; }
         
-        /* LAYOUT PROFESSIONALE PDF A4 (PULITO, SENZA HEADER/FOOTER BROWSER) */
+        /* LAYOUT PROFESSIONALE PDF A4 */
         @media print {
-            @page { 
-                size: A4 portrait; 
-                margin: 10mm 15mm; /* Margini stretti per evitare righe data/ora del browser */
-            }
+            @page { size: A4 portrait; margin: 10mm 15mm; }
             * { box-sizing: border-box; }
             body * { visibility: hidden; }
             #pdf-preview, #pdf-preview *, .footer-branding, .footer-branding * { visibility: visible; }
-            
             #pdf-preview { 
                 display: block !important; position: absolute; left: 0; top: 0; width: 100%; padding: 0; margin: 0;
                 background: #ffffff; color: #000000; font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 9pt; line-height: 1.4;
@@ -147,19 +143,9 @@
             #pdf-preview .pdf-firma-box { flex: 1; text-align: center; padding: 0 10px; }
             #pdf-preview .pdf-firma-box .firma-linea { border-top: 1px solid #000000; margin: 30px 10px 5px 10px; padding-top: 3px; font-size: 8pt; color: #666666; }
             #pdf-preview .pdf-accettazione { text-align: center; font-size: 8pt; color: #666666; margin-top: 8px; font-style: italic; }
-            
-            /* Footer discreto solo in stampa */
             .footer-branding {
-                position: fixed;
-                bottom: 5mm;
-                left: 0;
-                width: 100%;
-                text-align: center;
-                font-size: 7pt;
-                color: #bbbbbb;
-                border: none;
-                margin: 0;
-                padding: 0;
+                position: fixed; bottom: 5mm; left: 0; width: 100%; text-align: center;
+                font-size: 7pt; color: #bbbbbb; border: none; margin: 0; padding: 0;
             }
         }
         @media (max-width: 768px) { .form-grid, .form-grid-2 { grid-template-columns: 1fr; } .actions-bar { flex-direction: column; } .actions-bar .btn { width: 100%; justify-content: center; } }
@@ -1181,7 +1167,8 @@
                 data_creazione: new Date().toISOString()
             };
             try {
-                const response = await fetch(WORKER_URL + '/api/studio/contratti', {
+                // MODIFICA CHIRURGICA: aggiunto ?token= all'URL per autorizzare la richiesta POST
+                const response = await fetch(WORKER_URL + '/api/studio/contratti?token=' + encodeURIComponent(token), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dati)
