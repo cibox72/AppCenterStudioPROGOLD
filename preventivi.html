@@ -464,7 +464,8 @@
                             <tr>
                                 <th>N. Contratto</th>
                                 <th>Cliente</th>
-                                <th>Data</th>
+                                <th>Data Emissione</th>
+                                <th>Data Evento</th>
                                 <th>Totale</th>
                                 <th>Saldo</th>
                                 <th>Azioni</th>
@@ -1035,6 +1036,8 @@
                 const result = await response.json();
                 if (result.success) {
                     preventivoCorrenteId = dati.id;
+                    // Resetta agendaEventId per forzare creazione nuovo evento
+                    agendaEventId = null;
                     await aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, document.getElementById('prev_accettato').checked);
                     alert('Preventivo salvato con successo!');
                     await caricaPreventivi();
@@ -1048,33 +1051,61 @@
         }
 
         async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettato) {
-            if (!dataEvento) return;
-            const statoEvento = accettato ? 'Confermato' : 'Da Confermare';
-            const titoloEvento = tipoServizio + ' ' + cognomeCliente + ' - ' + (accettato ? 'confermato' : 'da confermare');
-            const datiAgenda = {
-                id: agendaEventId || ('agenda-prev-' + Date.now()),
-                titolo: titoloEvento,
-                data: dataEvento,
-                descrizione: 'Preventivo/Contratto - ' + tipoServizio,
-                tipo_servizio: tipoServizio,
-                cliente: cognomeCliente,
-                stato: statoEvento
-            };
+            if (!dataEvento) {
+                console.log('Agenda: nessuna data evento, skip');
+                return;
+            }
             try {
-                if (agendaEventId) {
-                    await fetch(WORKER_URL + '/api/studio/agenda/' + agendaEventId + '?token=' + encodeURIComponent(token), {
+                const statoEvento = accettato ? 'Confermato' : 'Da Confermare';
+                const titoloEvento = tipoServizio + ' ' + cognomeCliente + ' - ' + (accettato ? 'confermato' : 'da confermare');
+                
+                // Cerca evento esistente per questa data
+                const agendaResponse = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token));
+                const agendaData = await agendaResponse.json();
+                
+                let existingEventId = null;
+                if (agendaData.success && agendaData.eventi) {
+                    const existingEvent = agendaData.eventi.find(function(e) { 
+                        return e.data === dataEvento && e.cliente === cognomeCliente; 
+                    });
+                    if (existingEvent) {
+                        existingEventId = existingEvent.id;
+                    }
+                }
+                
+                const datiAgenda = {
+                    id: existingEventId || ('agenda-prev-' + Date.now()),
+                    titolo: titoloEvento,
+                    data: dataEvento,
+                    descrizione: 'Preventivo/Contratto - ' + tipoServizio,
+                    tipo_servizio: tipoServizio,
+                    cliente: cognomeCliente,
+                    stato: statoEvento
+                };
+                
+                let response;
+                if (existingEventId) {
+                    // Aggiorna evento esistente
+                    response = await fetch(WORKER_URL + '/api/studio/agenda/' + existingEventId + '?token=' + encodeURIComponent(token), {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(datiAgenda)
                     });
                 } else {
-                    const response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token), {
+                    // Crea nuovo evento
+                    response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token), {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(datiAgenda)
                     });
-                    const result = await response.json();
-                    if (result.success) agendaEventId = datiAgenda.id;
+                }
+                
+                const result = await response.json();
+                if (result.success) {
+                    console.log('Agenda aggiornata:', statoEvento);
+                    agendaEventId = datiAgenda.id;
+                } else {
+                    console.error('Errore agenda:', result.error);
                 }
             } catch (error) {
                 console.error('Errore aggiornamento agenda:', error);
@@ -1167,7 +1198,6 @@
                 data_creazione: new Date().toISOString()
             };
             try {
-                // MODIFICA CHIRURGICA: aggiunto ?token= all'URL per autorizzare la richiesta POST
                 const response = await fetch(WORKER_URL + '/api/studio/contratti?token=' + encodeURIComponent(token), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1304,15 +1334,19 @@
             tbody.innerHTML = '';
             contrattiDisponibili.forEach(function(c) {
                 const cliente = getNomeCompleto(c.cliente_a);
+                
+                // Parsing sicuro per acconti
                 let accontiArr = c.acconti || [];
-if (typeof accontiArr === 'string') { try { accontiArr = JSON.parse(accontiArr); } catch(e) { accontiArr = []; } }
-if (!Array.isArray(accontiArr)) accontiArr = [];
-const totaleAcconti = accontiArr.reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0);
+                if (typeof accontiArr === 'string') { try { accontiArr = JSON.parse(accontiArr); } catch(e) { accontiArr = []; } }
+                if (!Array.isArray(accontiArr)) accontiArr = [];
+                const totaleAcconti = accontiArr.reduce(function(sum, a) { return sum + (parseFloat(a.importo) || 0); }, 0);
+                
                 const saldo = (parseFloat(c.totale_finale) || 0) - totaleAcconti;
                 tbody.innerHTML += '<tr>' +
                     '<td><strong>' + (c.numero_contratto || c.numero || '-') + '</strong></td>' +
                     '<td>' + cliente + '</td>' +
                     '<td>' + (c.data_emissione ? new Date(c.data_emissione).toLocaleDateString('it-IT') : '-') + '</td>' +
+                    '<td>' + (c.data_servizio ? formatDataIT(c.data_servizio) : '-') + '</td>' +
                     '<td>' + (parseFloat(c.totale_finale) || 0).toFixed(2) + ' EUR</td>' +
                     '<td>' + saldo.toFixed(2) + ' EUR</td>' +
                     '<td>' +
