@@ -430,14 +430,14 @@
             document.getElementById('agenda-empty').style.display = 'none';
             
             try {
-                // Carica eventi dall'agenda
                 const response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token) + '&data=' + data);
                 const result = await response.json();
                 
                 document.getElementById('loading-agenda').style.display = 'none';
                 
-                if (result.success && result.eventi && result.eventi.length > 0) {
-                    appuntamentiCorrenti = result.eventi;
+                // CORREZIONE CHIAVE: Mostra SEMPRE la griglia oraria (stile cartaceo), anche se vuota
+                if (result.success) {
+                    appuntamentiCorrenti = result.eventi || [];
                     renderAgendaGrid(appuntamentiCorrenti);
                     
                     let totale = 0;
@@ -453,11 +453,16 @@
                     document.getElementById('stat-totale').textContent = totale;
                     document.getElementById('stat-confermati').textContent = confermati;
                     document.getElementById('stat-da-confermare').textContent = daConfermare;
+                    
+                    // Nascondiamo il messaggio "nessun impegno" per mostrare sempre il foglio agenda
+                    document.getElementById('agenda-empty').style.display = 'none';
                 } else {
-                    document.getElementById('agenda-empty').style.display = 'block';
+                    appuntamentiCorrenti = [];
+                    renderAgendaGrid([]);
                     document.getElementById('stat-totale').textContent = '0';
                     document.getElementById('stat-confermati').textContent = '0';
                     document.getElementById('stat-da-confermare').textContent = '0';
+                    document.getElementById('agenda-empty').style.display = 'none';
                 }
             } catch (error) {
                 console.error('Errore caricamento agenda:', error);
@@ -469,7 +474,7 @@
             const grid = document.getElementById('agenda-grid-container');
             grid.innerHTML = '';
             
-            // Ore da 8 a 20
+            // Ore da 8 a 20 (il foglio dell'agenda cartacea viene sempre generato)
             for (let h = 8; h <= 20; h++) {
                 const hourStr = h.toString().padStart(2, '0') + ':00';
                 const row = document.createElement('div');
@@ -500,17 +505,15 @@
                     const cognomeCliente = app.cliente ? app.cliente.split(' ').pop() : '';
                     const tipoServizio = app.tipo_servizio || 'Servizio';
                     
-                    // Se è un evento da preventivo/contratto, formatta diversamente
+                    // Se è un evento da preventivo/contratto, formatta come richiesto
                     if (app.descrizione && app.descrizione.includes('Preventivo/Contratto')) {
                         const statoTesto = statoConfermato ? 'confermato' : 'da confermare';
-                        testoDescrittivo = `${tipoServizio} ${cognomeCliente} - ${statoTesto}`;
+                        testoDescrittivo = tipoServizio + ' ' + cognomeCliente + ' - ' + statoTesto;
                     }
                     
-                    div.innerHTML = `
-                        <h5>${testoDescrittivo}</h5>
-                        <p>${app.ora_inizio || 'Tutto il giorno'} ${app.ora_fine ? '- ' + app.ora_fine : ''} | ${app.cliente || 'Cliente non specificato'}</p>
-                        <div class="event-meta">${tipoServizio} ${app.luogo ? '| 📍 ' + app.luogo : ''}</div>
-                    `;
+                    div.innerHTML = '<h5>' + testoDescrittivo + '</h5>' +
+                                    '<p>' + (app.ora_inizio || 'Tutto il giorno') + ' ' + (app.ora_fine ? '- ' + app.ora_fine : '') + ' | ' + (app.cliente || 'Cliente non specificato') + '</p>' +
+                                    '<div class="event-meta">' + tipoServizio + (app.luogo ? ' | 📍 ' + app.luogo : '') + '</div>';
                     div.onclick = () => modificaAppuntamento(app.id);
                     content.appendChild(div);
                 });
@@ -625,7 +628,7 @@
         async function modificaAppuntamento(id) {
             const app = appuntamentiCorrenti.find(a => a.id === id);
             if (app) {
-                const conferma = confirm(`Modificare l'appuntamento:\n\n"${app.descrizione || app.titolo}"\nCliente: ${app.cliente || 'N/D'}\nStato: ${app.stato}\n\n(Per ora la modifica completa è in sviluppo. Vuoi eliminarlo e rifarlo?)`);
+                const conferma = confirm('Modificare l\'appuntamento:\n\n"' + (app.descrizione || app.titolo) + '"\nCliente: ' + (app.cliente || 'N/D') + '\nStato: ' + app.stato + '\n\n(Per ora la modifica completa è in sviluppo. Vuoi eliminarlo e rifarlo?)');
                 if (conferma) {
                     eliminaAppuntamento(id);
                 }
