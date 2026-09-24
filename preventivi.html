@@ -1038,7 +1038,9 @@
                 if (result.success) {
                     preventivoCorrenteId = dati.id;
                     agendaEventId = null;
-                    await aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, document.getElementById('prev_accettato').checked);
+                    console.log('🔔 Chiamata aggiornaAgenda da salvaPreventivo');
+console.trace('Stack trace:');
+await aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, document.getElementById('prev_accettato').checked);
                     alert('Preventivo salvato con successo!');
                     await caricaPreventivi();
                 } else {
@@ -1051,41 +1053,30 @@
         }
 
 async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettato) {
-    console.log('=== DEBUG aggiornaAgenda ===');
-    console.log('tipoServizio:', tipoServizio);
-    console.log('cognomeCliente:', cognomeCliente);
-    console.log('dataEvento:', dataEvento);
-    console.log('accettato:', accettato);
+    console.log('=== INIZIO aggiornaAgenda ===');
+    console.log('Parametri:', { tipoServizio, cognomeCliente, dataEvento, accettato });
     
     if (!dataEvento) {
-        console.log('Agenda: nessuna data evento, skip');
+        console.log('❌ Nessuna data evento, skip');
         return;
     }
     
     try {
         const statoEvento = accettato ? 'Confermato' : 'Da Confermare';
         const titoloEvento = tipoServizio + ' ' + cognomeCliente + ' - ' + (accettato ? 'confermato' : 'da confermare');
+        const descrizioneEvento = 'Preventivo/Contratto - ' + tipoServizio;
 
         // Carica TUTTI gli eventi dell'agenda
         const agendaResponse = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token));
         const agendaData = await agendaResponse.json();
 
-        // ELIMINA tutti gli eventi che corrispondono al cliente (anche parzialmente)
+        console.log('Eventi totali nel database:', agendaData.eventi ? agendaData.eventi.length : 0);
+
+        // ELIMINA TUTTI gli eventi con la stessa descrizione (indipendentemente da tutto)
         if (agendaData.success && agendaData.eventi) {
             const eventiDaEliminare = agendaData.eventi.filter(function(e) {
-                // Cerca per cliente (case-insensitive, parziale)
-                const clienteMatch = e.cliente && cognomeCliente && 
-                    (e.cliente.toLowerCase().includes(cognomeCliente.toLowerCase()) || 
-                     cognomeCliente.toLowerCase().includes(e.cliente.toLowerCase()));
-                
-                // Cerca per tipo servizio (case-insensitive)
-                const tipoMatch = e.tipo_servizio && tipoServizio && 
-                    e.tipo_servizio.toLowerCase() === tipoServizio.toLowerCase();
-                
-                // Cerca nella descrizione
-                const descMatch = e.descrizione && e.descrizione.includes('Preventivo/Contratto');
-                
-                return clienteMatch && tipoMatch && descMatch;
+                // Cerca per descrizione esatta
+                return e.descrizione === descrizioneEvento;
             });
 
             console.log('Eventi da eliminare:', eventiDaEliminare.length);
@@ -1094,10 +1085,42 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
                 await fetch(WORKER_URL + '/api/studio/agenda/' + evento.id + '?token=' + encodeURIComponent(token), {
                     method: 'DELETE'
                 });
-                console.log('✅ Evento vecchio eliminato:', evento.id, 'data:', evento.data);
+                console.log('🗑️ Eliminato evento ID:', evento.id, 'Data:', evento.data);
             }
         }
 
+        // Crea un NUOVO evento con la data corretta
+        const datiAgenda = {
+            id: 'agenda-prev-' + Date.now(),
+            titolo: titoloEvento,
+            data: dataEvento,
+            descrizione: descrizioneEvento,
+            tipo_servizio: tipoServizio,
+            cliente: cognomeCliente,
+            stato: statoEvento
+        };
+        
+        console.log('➕ Creazione nuovo evento:', datiAgenda);
+
+        const response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datiAgenda)
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            console.log('✅ Evento creato con successo:', datiAgenda.id, 'Data:', dataEvento);
+            agendaEventId = datiAgenda.id;
+        } else {
+            console.error(' Errore creazione evento:', result.error);
+        }
+        
+        console.log('=== FINE aggiornaAgenda ===');
+    } catch (error) {
+        console.error('❌ Errore aggiornamento agenda:', error);
+    }
+}
         // Crea un NUOVO evento con la data corretta
         const datiAgenda = {
             id: 'agenda-prev-' + Date.now(),
