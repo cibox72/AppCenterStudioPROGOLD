@@ -1051,72 +1051,64 @@
         }
 
                 async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettato) {
-            if (!dataEvento) {
-                console.log('Agenda: nessuna data evento, skip');
-                return;
-            }
-            try {
-                const statoEvento = accettato ? 'Confermato' : 'Da Confermare';
-                const titoloEvento = tipoServizio + ' ' + cognomeCliente + ' - ' + (accettato ? 'confermato' : 'da confermare');
+    if (!dataEvento) {
+        console.log('Agenda: nessuna data evento, skip');
+        return;
+    }
+    try {
+        const statoEvento = accettato ? 'Confermato' : 'Da Confermare';
+        const titoloEvento = tipoServizio + ' ' + cognomeCliente + ' - ' + (accettato ? 'confermato' : 'da confermare');
 
-                // Carica TUTTI gli eventi dell'agenda (senza filtro data)
-                const agendaResponse = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token));
-                const agendaData = await agendaResponse.json();
+        // Carica TUTTI gli eventi dell'agenda
+        const agendaResponse = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token));
+        const agendaData = await agendaResponse.json();
 
-                let existingEventId = null;
-                if (agendaData.success && agendaData.eventi) {
-                    // CORREZIONE CHIAVE: Cerca per cliente + tipo servizio (NON per data!)
-                    // Così quando sposti un evento da una settimana all'altra, lo trova comunque
-                    const existingEvent = agendaData.eventi.find(function(e) {
-                        const clienteMatch = e.cliente === cognomeCliente;
-                        const tipoMatch = e.tipo_servizio === tipoServizio;
-                        const descMatch = e.descrizione && e.descrizione.includes('Preventivo/Contratto');
-                        return clienteMatch && tipoMatch && descMatch;
-                    });
-                    if (existingEvent) {
-                        existingEventId = existingEvent.id;
-                        console.log('Evento esistente trovato:', existingEventId, 'vecchia data:', existingEvent.data);
-                    }
-                }
+        // ELIMINA tutti gli eventi esistenti per questo cliente+tipo_servizio
+        if (agendaData.success && agendaData.eventi) {
+            const eventiDaEliminare = agendaData.eventi.filter(function(e) {
+                const clienteMatch = e.cliente && e.cliente.toLowerCase().trim() === cognomeCliente.toLowerCase().trim();
+                const tipoMatch = e.tipo_servizio && e.tipo_servizio.toLowerCase() === tipoServizio.toLowerCase();
+                const descMatch = e.descrizione && e.descrizione.includes('Preventivo/Contratto');
+                return clienteMatch && tipoMatch && descMatch;
+            });
 
-                const datiAgenda = {
-                    id: existingEventId || ('agenda-prev-' + Date.now()),
-                    titolo: titoloEvento,
-                    data: dataEvento,
-                    descrizione: 'Preventivo/Contratto - ' + tipoServizio,
-                    tipo_servizio: tipoServizio,
-                    cliente: cognomeCliente,
-                    stato: statoEvento
-                };
-
-                let response;
-                if (existingEventId) {
-                    // Aggiorna evento esistente (cambia data, stato, ecc.)
-                    response = await fetch(WORKER_URL + '/api/studio/agenda/' + existingEventId + '?token=' + encodeURIComponent(token), {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(datiAgenda)
-                    });
-                } else {
-                    // Crea nuovo evento
-                    response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token), {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(datiAgenda)
-                    });
-                }
-
-                const result = await response.json();
-                if (result.success) {
-                    console.log('Agenda aggiornata:', statoEvento, 'ID:', datiAgenda.id);
-                    agendaEventId = datiAgenda.id;
-                } else {
-                    console.error('Errore agenda:', result.error);
-                }
-            } catch (error) {
-                console.error('Errore aggiornamento agenda:', error);
+            // Elimina tutti gli eventi vecchi
+            for (const evento of eventiDaEliminare) {
+                await fetch(WORKER_URL + '/api/studio/agenda/' + evento.id + '?token=' + encodeURIComponent(token), {
+                    method: 'DELETE'
+                });
+                console.log('Evento vecchio eliminato:', evento.id, 'data:', evento.data);
             }
         }
+
+        // Crea un NUOVO evento con la data corretta
+        const datiAgenda = {
+            id: 'agenda-prev-' + Date.now(),
+            titolo: titoloEvento,
+            data: dataEvento,
+            descrizione: 'Preventivo/Contratto - ' + tipoServizio,
+            tipo_servizio: tipoServizio,
+            cliente: cognomeCliente,
+            stato: statoEvento
+        };
+
+        const response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datiAgenda)
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            console.log('Nuovo evento creato:', statoEvento, 'ID:', datiAgenda.id, 'Data:', dataEvento);
+            agendaEventId = datiAgenda.id;
+        } else {
+            console.error('Errore agenda:', result.error);
+        }
+    } catch (error) {
+        console.error('Errore aggiornamento agenda:', error);
+    }
+}
         function generaPDF() {
             if (!datiStudio) {
                 alert('Dati studio non disponibili. Compila prima la Scheda Anagrafica.');
