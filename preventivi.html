@@ -107,17 +107,29 @@
         .cronologia-info p { color: #666666; font-size: 0.9em; }
         .cronologia-prezzo { color: #996515; font-weight: 700; font-size: 1.1em; margin-right: 15px; }
         .pdf-preview { display: none; }
+        
+        /* OTTIMIZZAZIONE PDF PER FOGLIO A4 */
         @media print {
+            @page { size: A4; margin: 15mm; }
             body * { visibility: hidden; }
             #pdf-preview, #pdf-preview * { visibility: visible; }
-            #pdf-preview { display: block; position: absolute; left: 0; top: 0; width: 100%; padding: 40px; background: #ffffff; color: #000000; }
-            #pdf-preview .pdf-header { border-bottom: 3px solid #d4af37; padding-bottom: 20px; margin-bottom: 30px; }
-            #pdf-preview .pdf-header h1 { color: #000000; font-size: 2em; margin-bottom: 10px; }
+            #pdf-preview { 
+                display: block; 
+                position: absolute; 
+                left: 0; top: 0; 
+                width: 100%; 
+                padding: 20px; 
+                background: #ffffff; 
+                color: #000000; 
+                font-size: 11pt; 
+            }
+            #pdf-preview .pdf-header { border-bottom: 3px solid #d4af37; padding-bottom: 20px; margin-bottom: 20px; }
+            #pdf-preview .pdf-header h1 { color: #000000; font-size: 1.8em; margin-bottom: 10px; }
             #pdf-preview .pdf-header p { color: #666666; margin: 5px 0; }
-            #pdf-preview .pdf-section { margin-bottom: 25px; }
-            #pdf-preview .pdf-section h3 { color: #000000; border-bottom: 2px solid #d4af37; padding-bottom: 8px; margin-bottom: 15px; }
-            #pdf-preview .pdf-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #d5d8dc; }
-            #pdf-preview .pdf-total { font-size: 1.3em; font-weight: 700; color: #996515; border-top: 3px solid #d4af37; padding-top: 15px; margin-top: 15px; }
+            #pdf-preview .pdf-section { margin-bottom: 15px; page-break-inside: avoid; }
+            #pdf-preview .pdf-section h3 { color: #000000; border-bottom: 2px solid #d4af37; padding-bottom: 8px; margin-bottom: 10px; font-size: 1.2em; }
+            #pdf-preview .pdf-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #d5d8dc; }
+            #pdf-preview .pdf-total { font-size: 1.2em; font-weight: 700; color: #996515; border-top: 3px solid #d4af37; padding-top: 10px; margin-top: 10px; }
         }
         @media (max-width: 768px) { .form-grid, .form-grid-2 { grid-template-columns: 1fr; } .actions-bar { flex-direction: column; } .actions-bar .btn { width: 100%; justify-content: center; } }
     </style>
@@ -334,8 +346,8 @@
                         <button type="button" class="btn btn-outline btn-sm" onclick="aggiungiAcconto()">+ Aggiungi Acconto</button>
                     </div>
 
-                    <!-- PIANO DI PAGAMENTO (solo promemoria) -->
-                    <div class="sub-section">
+                    <!-- PIANO DI PAGAMENTO (EVIDENZIATO E SENZA DATE) -->
+                    <div class="sub-section" style="background: #fff9e6; border: 2px solid #d4af37;">
                         <h4>Piano di Pagamento (Promemoria per il cliente)</h4>
                         <p style="color: #666666; font-size: 0.85em; margin-bottom: 15px;">Questo e' un promemoria visivo per il cliente. Non influenza i totali.</p>
                         <div id="piano-list"></div>
@@ -885,10 +897,10 @@
         }
 
         // ==========================================
-        // PIANO DI PAGAMENTO (solo promemoria)
+        // PIANO DI PAGAMENTO (MODIFICATO: SENZA DATE)
         // ==========================================
         function aggiungiPianoVoce() {
-            pianoPagamento.push({ data: '', importo: 0, descrizione: '' });
+            pianoPagamento.push({ importo: 0, descrizione: '' });
             renderPiano();
         }
 
@@ -898,9 +910,8 @@
             pianoPagamento.forEach(function(p, index) {
                 const div = document.createElement('div');
                 div.className = 'piano-item';
-                div.innerHTML = '<input type="date" value="' + (p.data || '') + '" onchange="pianoPagamento[' + index + '].data=this.value" placeholder="Data">' +
-                    '<input type="number" step="0.01" min="0" value="' + (p.importo || 0) + '" onchange="pianoPagamento[' + index + '].importo=parseFloat(this.value)" placeholder="Importo">' +
-                    '<input type="text" value="' + (p.descrizione || '') + '" onchange="pianoPagamento[' + index + '].descrizione=this.value" placeholder="Descrizione (es. Acconto, Saldo)">' +
+                div.innerHTML = '<input type="number" step="0.01" min="0" value="' + (p.importo || 0) + '" onchange="pianoPagamento[' + index + '].importo=parseFloat(this.value)" placeholder="Importo">' +
+                    '<input type="text" value="' + (p.descrizione || '') + '" onchange="pianoPagamento[' + index + '].descrizione=this.value" placeholder="Descrizione (es. Acconto, Saldo)" style="flex: 2;">' +
                     '<button type="button" class="btn btn-sm btn-danger" onclick="rimuoviPianoVoce(' + index + ')">X</button>';
                 container.appendChild(div);
             });
@@ -1010,7 +1021,8 @@
             };
             
             try {
-                const response = await fetch(WORKER_URL + '/api/studio/preventivo', {
+                // MODIFICA CHIRURGICA: aggiunto ?token= all'URL per autorizzare la richiesta POST
+                const response = await fetch(WORKER_URL + '/api/studio/preventivo?token=' + encodeURIComponent(token), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dati)
