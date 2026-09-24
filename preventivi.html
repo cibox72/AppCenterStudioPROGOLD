@@ -1050,7 +1050,7 @@
             }
         }
 
-        async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettato) {
+                async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettato) {
             if (!dataEvento) {
                 console.log('Agenda: nessuna data evento, skip');
                 return;
@@ -1058,15 +1058,16 @@
             try {
                 const statoEvento = accettato ? 'Confermato' : 'Da Confermare';
                 const titoloEvento = tipoServizio + ' ' + cognomeCliente + ' - ' + (accettato ? 'confermato' : 'da confermare');
-                
+
+                // Carica TUTTI gli eventi dell'agenda (senza filtro data)
                 const agendaResponse = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token));
                 const agendaData = await agendaResponse.json();
-                
+
                 let existingEventId = null;
                 if (agendaData.success && agendaData.eventi) {
-                    // CORREZIONE CHIAVE: Cerca per cliente e tipo servizio, NON per data.
-                    // Così se sposti un evento da una settimana all'altra, lo trova comunque e aggiorna la data.
-                    const existingEvent = agendaData.eventi.find(function(e) { 
+                    // CORREZIONE CHIAVE: Cerca per cliente + tipo servizio (NON per data!)
+                    // Così quando sposti un evento da una settimana all'altra, lo trova comunque
+                    const existingEvent = agendaData.eventi.find(function(e) {
                         const clienteMatch = e.cliente === cognomeCliente;
                         const tipoMatch = e.tipo_servizio === tipoServizio;
                         const descMatch = e.descrizione && e.descrizione.includes('Preventivo/Contratto');
@@ -1074,9 +1075,10 @@
                     });
                     if (existingEvent) {
                         existingEventId = existingEvent.id;
+                        console.log('Evento esistente trovato:', existingEventId, 'vecchia data:', existingEvent.data);
                     }
                 }
-                
+
                 const datiAgenda = {
                     id: existingEventId || ('agenda-prev-' + Date.now()),
                     titolo: titoloEvento,
@@ -1086,25 +1088,27 @@
                     cliente: cognomeCliente,
                     stato: statoEvento
                 };
-                
+
                 let response;
                 if (existingEventId) {
+                    // Aggiorna evento esistente (cambia data, stato, ecc.)
                     response = await fetch(WORKER_URL + '/api/studio/agenda/' + existingEventId + '?token=' + encodeURIComponent(token), {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(datiAgenda)
                     });
                 } else {
+                    // Crea nuovo evento
                     response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token), {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(datiAgenda)
                     });
                 }
-                
+
                 const result = await response.json();
                 if (result.success) {
-                    console.log('Agenda aggiornata:', statoEvento);
+                    console.log('Agenda aggiornata:', statoEvento, 'ID:', datiAgenda.id);
                     agendaEventId = datiAgenda.id;
                 } else {
                     console.error('Errore agenda:', result.error);
@@ -1113,7 +1117,6 @@
                 console.error('Errore aggiornamento agenda:', error);
             }
         }
-
         function generaPDF() {
             if (!datiStudio) {
                 alert('Dati studio non disponibili. Compila prima la Scheda Anagrafica.');
