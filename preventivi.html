@@ -1253,8 +1253,27 @@
             document.getElementById('cliente_b_citta').value = clienteB.citta || '';
             document.getElementById('cliente_b_cap').value = clienteB.cap || '';
             document.getElementById('cliente_b_provincia').value = clienteB.provincia || '';
-            serviziSelezionati = p.servizi || [];
-            acconti = p.acconti || [];
+            if (p.servizi && typeof p.servizi === 'string') {
+    try { serviziSelezionati = JSON.parse(p.servizi); } 
+    catch (e) { serviziSelezionati = []; }
+} else {
+    serviziSelezionati = p.servizi || [];
+}
+            // Per acconti:
+if (p.acconti && typeof p.acconti === 'string') {
+    try { acconti = JSON.parse(p.acconti); } 
+    catch (e) { acconti = []; }
+} else {
+    acconti = p.acconti || [];
+}
+
+// Per pianoPagamento:
+if (p.piano_pagamento && typeof p.piano_pagamento === 'string') {
+    try { pianoPagamento = JSON.parse(p.piano_pagamento); } 
+    catch (e) { pianoPagamento = []; }
+} else {
+    pianoPagamento = p.piano_pagamento || [];
+}
             pianoPagamento = p.piano_pagamento || [];
             document.getElementById('sconto_perc').value = p.sconto_perc || 0;
             document.getElementById('sconto_fisso').value = p.sconto_fisso || 0;
