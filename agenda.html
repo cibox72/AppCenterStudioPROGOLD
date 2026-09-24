@@ -25,9 +25,13 @@
         .page-header h2 { color: #000000; margin-bottom: 10px; font-size: 1.6em; }
         .page-header p { color: #666666; font-size: 0.95em; }
         
-        /* LAYOUT DUE COLONNE */
-        .agenda-main-layout { display: grid; grid-template-columns: 350px 1fr; gap: 25px; }
-        @media (max-width: 1024px) { .agenda-main-layout { grid-template-columns: 1fr; } }
+        /* LAYOUT TRE COLONNE */
+        .agenda-main-layout { display: grid; grid-template-columns: 280px 1fr 320px; gap: 20px; }
+        @media (max-width: 1200px) { 
+            .agenda-main-layout { grid-template-columns: 1fr; } 
+            .left-column, .right-column { order: 2; }
+            .center-column { order: 1; grid-column: 1 / -1; }
+        }
         
         .section { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; }
         .section-title { color: #000000; font-size: 1.3em; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #fff9e6; font-weight: 600; }
@@ -58,7 +62,7 @@
         .agenda-stat h4 { color: #996515; font-size: 1.8em; margin-bottom: 5px; }
         .agenda-stat p { color: #666666; font-size: 0.8em; font-weight: 600; }
         
-        /* AGENDA GRID (PLANNER) */
+        /* AGENDA GRID STILE CARTACEO */
         .agenda-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 2px solid #fff9e6; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
         .agenda-header h3 { color: #000000; font-size: 1.3em; }
         .agenda-date-nav { display: flex; gap: 8px; align-items: center; }
@@ -66,19 +70,21 @@
         .agenda-date-nav button { padding: 8px 15px; background: #d4af37; color: #ffffff; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
         .agenda-date-nav button:hover { background: #996515; }
         
-        .agenda-grid { display: flex; flex-direction: column; border: 1px solid #d5d8dc; border-radius: 10px; overflow: hidden; background: #ffffff; }
-        .agenda-hour-row { display: flex; border-bottom: 1px solid #d5d8dc; min-height: 70px; }
+        .agenda-grid { display: flex; flex-direction: column; border: 2px solid #d5d8dc; border-radius: 10px; overflow: hidden; background: #ffffff; margin-top: 15px; }
+        .agenda-hour-row { display: flex; border-bottom: 1px solid #f0f0f0; min-height: 65px; transition: background 0.2s; }
         .agenda-hour-row:last-child { border-bottom: none; }
         .agenda-hour-row:hover { background: #fffdf5; }
-        .hour-label { width: 90px; background: #fff9e6; color: #996515; font-weight: 700; display: flex; align-items: center; justify-content: center; border-right: 2px solid #d4af37; font-size: 0.95em; flex-shrink: 0; }
-        .hour-content { flex: 1; padding: 8px; position: relative; }
+        .agenda-hour-row.has-events { background: #fffdf5; }
         
-        .agenda-event { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; padding: 10px; border-radius: 8px; margin-bottom: 8px; font-size: 0.85em; cursor: pointer; border-left: 4px solid #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: transform 0.2s; }
-        .agenda-event:hover { transform: translateX(5px); }
+        .hour-label { width: 80px; background: #ffffff; color: #996515; font-weight: 700; display: flex; align-items: center; justify-content: center; border-right: 2px solid #d4af37; font-size: 0.85em; flex-shrink: 0; padding: 0 10px; }
+        .hour-content { flex: 1; padding: 6px 10px; position: relative; display: flex; flex-direction: column; gap: 6px; }
+        
+        .agenda-event { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; padding: 8px 12px; border-radius: 6px; font-size: 0.85em; cursor: pointer; border-left: 4px solid #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s; }
+        .agenda-event:hover { transform: translateX(5px); box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
         .agenda-event.da-confermare { background: linear-gradient(135deg, #f9e79f, #f1c40f); color: #000000; border-left-color: #d35400; }
-        .agenda-event h5 { margin: 0 0 4px 0; font-size: 1em; font-weight: 700; }
-        .agenda-event p { margin: 0; font-size: 0.9em; opacity: 0.95; }
-        .agenda-event .event-meta { font-size: 0.8em; margin-top: 6px; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 4px; }
+        .agenda-event h5 { margin: 0 0 3px 0; font-size: 0.95em; font-weight: 700; }
+        .agenda-event p { margin: 0; font-size: 0.85em; opacity: 0.95; }
+        .agenda-event .event-meta { font-size: 0.75em; margin-top: 5px; opacity: 0.85; border-top: 1px solid rgba(255,255,255,0.4); padding-top: 4px; }
         .agenda-event.da-confermare .event-meta { border-top-color: rgba(0,0,0,0.2); }
         
         .agenda-empty { text-align: center; padding: 40px; color: #666666; font-style: italic; }
@@ -105,7 +111,7 @@
             .form-grid { grid-template-columns: 1fr; } 
             .actions-bar { flex-direction: column; } 
             .actions-bar .btn { width: 100%; justify-content: center; } 
-            .hour-label { width: 70px; font-size: 0.8em; }
+            .hour-label { width: 60px; font-size: 0.75em; }
         }
     </style>
 </head>
@@ -129,7 +135,7 @@
         </div>
 
         <!-- ============================================ -->
-        <!-- SEZIONE 3: LAYOUT PRINCIPALE A DUE COLONNE -->
+        <!-- SEZIONE 3: LAYOUT PRINCIPALE A TRE COLONNE -->
         <!-- ============================================ -->
         <div class="agenda-main-layout">
             
@@ -156,7 +162,7 @@
                             </div>
                             <div class="actions-bar" style="margin-top: 15px;">
                                 <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Salva Numeri</button>
-                                <button type="button" class="btn btn-outline" style="width: 100%; justify-content: center;" onclick="testaInvio()">Testa Invio Domani</button>
+                                <button type="button" class="btn btn-outline" style="width: 100%; justify-content: center; margin-top: 8px;" onclick="testaInvio()">Testa Invio Domani</button>
                             </div>
                         </form>
                     </div>
@@ -178,21 +184,18 @@
                             <p>Da Confermare</p>
                         </div>
                     </div>
-                    <div class="actions-bar" style="margin-top: 20px;">
-                        <button class="btn btn-success" style="width: 100%; justify-content: center;" onclick="stampaGiornataPDF()">📄 Stampa PDF Giornata</button>
-                    </div>
                 </div>
             </div>
 
-            <!-- COLONNA DESTRA: Agenda Planner -->
-            <div class="right-column">
+            <!-- COLONNA CENTRALE: AGENDA PLANNER -->
+            <div class="center-column">
                 <div class="section" style="margin-bottom: 0;">
                     <div class="agenda-header">
                         <h3 id="agenda-data-titolo">Agenda</h3>
                         <div class="agenda-date-nav">
-                            <button onclick="cambiaGiorno(-1)">◀</button>
+                            <button onclick="cambiaGiorno(-1)"> Ieri</button>
                             <input type="date" id="agenda-data" onchange="caricaAgenda()">
-                            <button onclick="cambiaGiorno(1)">▶</button>
+                            <button onclick="cambiaGiorno(1)">Domani ▶</button>
                             <button onclick="vaiAOggi()" style="background: #ffffff; color: #996515; border: 2px solid #d4af37;">Oggi</button>
                         </div>
                     </div>
@@ -205,56 +208,55 @@
                     <div id="agenda-grid-container" class="agenda-grid"></div>
 
                     <div id="agenda-empty" class="agenda-empty" style="display: none;">
-                        <p>Nessun impegno programmato per questa data</p>
+                        <p style="font-size: 1.1em; color: #999;">Nessun impegno programmato per questa data</p>
                     </div>
+                </div>
+            </div>
 
-                    <div class="actions-bar" style="margin-top: 25px; justify-content: flex-end;">
-                        <button class="btn btn-primary" onclick="apriModalNuovoAppuntamento()">+ Nuovo Appuntamento</button>
+            <!-- COLONNA DESTRA: AGGIUNTA RAPIDA -->
+            <div class="right-column">
+                <div class="section">
+                    <h3 class="section-title">Aggiunta Rapida</h3>
+                    <form id="form-appuntamento-rapido" onsubmit="aggiungiAppuntamentoRapido(event)">
+                        <div class="form-group">
+                            <label>Descrizione *</label>
+                            <input type="text" id="appuntamento-descrizione" required placeholder="Es. ore 9:00 appuntamento Rossi" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Data *</label>
+                            <input type="date" id="appuntamento-data" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Ora</label>
+                            <input type="time" id="appuntamento-ora" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Cliente</label>
+                            <input type="text" id="appuntamento-cliente" placeholder="Nome cliente" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Stato</label>
+                            <select id="appuntamento-stato">
+                                <option value="Da Confermare">Da Confermare</option>
+                                <option value="Confermato">Confermato</option>
+                            </select>
+                        </div>
+                        <div class="actions-bar" style="margin-top: 20px;">
+                            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Aggiungi Appuntamento</button>
+                        </div>
+                    </form>
+                    
+                    <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid #fff9e6;">
+                        <button class="btn btn-success" style="width: 100%; justify-content: center; margin-bottom: 10px;" onclick="apriModalNuovoAppuntamento()">+ Appuntamento Completo</button>
+                        <button class="btn btn-outline" style="width: 100%; justify-content: center;" onclick="stampaGiornataPDF()">📄 Stampa PDF</button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- ============================================ -->
-        <!-- SEZIONE 4: FORM AGGIUNTA RAPIDA (COMPATTA) -->
-        <!-- ============================================ -->
-        <div class="section" style="margin-top: 25px;">
-            <h3 class="section-title">Aggiunta Rapida</h3>
-            <form id="form-appuntamento-rapido" onsubmit="aggiungiAppuntamentoRapido(event)">
-                <div class="form-grid">
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label>Descrizione *</label>
-                        <input type="text" id="appuntamento-descrizione" required placeholder="Es. ore 9:00 appuntamento Rossi" autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label>Data *</label>
-                        <input type="date" id="appuntamento-data" required autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label>Ora</label>
-                        <input type="time" id="appuntamento-ora" autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label>Cliente</label>
-                        <input type="text" id="appuntamento-cliente" placeholder="Nome cliente" autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label>Stato</label>
-                        <select id="appuntamento-stato">
-                            <option value="Da Confermare">Da Confermare</option>
-                            <option value="Confermato">Confermato</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="actions-bar">
-                    <button type="submit" class="btn btn-primary">Aggiungi Appuntamento</button>
-                </div>
-            </form>
-        </div>
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 5: MODALE NUOVO APPUNTAMENTO -->
+    <!-- SEZIONE 4: MODALE NUOVO APPUNTAMENTO -->
     <!-- ============================================ -->
     <div id="modal-nuovo-appuntamento" class="modal-overlay">
         <div class="modal-content">
@@ -335,7 +337,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- SEZIONE 6: JAVASCRIPT -->
+    <!-- SEZIONE 5: JAVASCRIPT -->
     <!-- ============================================ -->
     <script>
         var token = '';
@@ -607,7 +609,6 @@
         }
 
         async function modificaAppuntamento(id) {
-            // Per ora mostra un alert, può essere espanso con un modale di modifica pre-compilato
             const app = appuntamentiCorrenti.find(a => a.id === id);
             if (app) {
                 const conferma = confirm(`Modificare l'appuntamento:\n\n"${app.descrizione}"\nCliente: ${app.cliente || 'N/D'}\nStato: ${app.stato}\n\n(Per ora la modifica completa è in sviluppo. Vuoi eliminarlo e rifarlo?)`);
