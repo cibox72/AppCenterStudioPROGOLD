@@ -294,7 +294,8 @@
     <div style="text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; border-top: 1px solid var(--border-color); margin-top: 40px;">
         Servizio offerto da <strong style="color: var(--primary-dark);">G&L Studio</strong>
     </div>
-        <script>
+
+    <script>
         // Fallback di sicurezza per WORKER_URL
         if (typeof WORKER_URL === 'undefined') {
             var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
@@ -372,7 +373,10 @@
                     '<button class="btn btn-primary" onclick="aggiungiAlCarrello(\'' + p.id + '\')">Aggiungi al Carrello</button>' +
                     '</div>'
                 ).join('');
-            } catch (error) { mostraToast('Errore caricamento prodotti', 'error'); }
+            } catch (error) { 
+                console.error('Errore caricamento prodotti:', error);
+                mostraToast('Errore caricamento prodotti', 'error'); 
+            }
         }
 
         function aggiungiAlCarrello(prodId) {
@@ -380,7 +384,7 @@
             if (!prodotto) return;
             const esistente = carrello.find(item => item.id === prodId);
             if (esistente) { esistente.quantita++; } 
-            else { carrello.push({ id: prodotto.id, nome: prodotto.nome, prezzo: prodotto.prezzo, quantita: 1, fotoUrl: null, fotoPreview: null }); }
+            else { carrello.push({ id: prodotto.id, nome: prodotto.nome, prezzo: prodotto.prezzo, quantita: 1, fotoBase64: null, fotoPreview: null }); }
             aggiornaCarrelloUI();
             mostraToast('Prodotto aggiunto', 'success');
         }
@@ -413,8 +417,8 @@
                             '<span>Qty: ' + item.quantita + '</span>' +
                             '<button class="qty-btn" onclick="cambiaQty(' + index + ', 1)">+</button>' +
                         '</div>' +
-                        '<label class="foto-upload-label ' + (item.fotoUrl ? 'has-foto' : '') + '">' +
-                            (item.fotoUrl ? 'Foto caricata' : 'Carica Foto') +
+                        '<label class="foto-upload-label ' + (item.fotoBase64 ? 'has-foto' : '') + '">' +
+                            (item.fotoBase64 ? 'Foto caricata' : 'Carica Foto') +
                             '<input type="file" accept="image/*" style="display:none" onchange="caricaFotoProdotto(' + index + ', this)">' +
                         '</label>' +
                         '<button class="cart-item-remove" onclick="rimuoviDalCarrello(' + index + ')">Rimuovi</button>' +
@@ -436,36 +440,29 @@
             aggiornaCarrelloUI();
         }
 
-        async function caricaFotoProdotto(index, input) {
+        function caricaFotoProdotto(index, input) {
             if (!input.files || !input.files[0]) return;
             const file = input.files[0];
-            mostraToast('Caricamento foto originale in corso...', 'success');
+            mostraToast('Caricamento foto...', 'success');
             
             const reader = new FileReader();
             reader.onload = function(e) {
-                carrello[index].fotoPreview = e.target.result;
+                // Salviamo la foto in base64 per includerla nell'ordine
+                // Nota: limitiamo a 2MB per evitare problemi di dimensione
+                const base64 = e.target.result;
+                if (base64.length > 2097152) { // 2MB
+                    mostraToast('Foto troppo grande. Massimo 2MB.', 'error');
+                    return;
+                }
+                carrello[index].fotoBase64 = base64;
+                carrello[index].fotoPreview = base64;
                 aggiornaCarrelloUI();
+                mostraToast('Foto caricata', 'success');
+            };
+            reader.onerror = function() {
+                mostraToast('Errore nella lettura del file', 'error');
             };
             reader.readAsDataURL(file);
-            
-            try {
-                // Invia il file originale senza ridimensionamento per preservare la qualita massima
-                const uploadUrl = WORKER_URL + '/api/studio/upload?studioId=' + encodeURIComponent(studioId) + '&clienteId=' + encodeURIComponent(clienteId || 'anon') + '&folder=foto-ordine&filename=' + encodeURIComponent(file.name);
-                const response = await fetch(uploadUrl, {
-                    method: 'POST',
-                    body: file // Il file viene inviato come blob originale, nessuna compressione lato client
-                });
-                const result = await response.json();
-                if (result.success) {
-                    carrello[index].fotoUrl = result.url;
-                    mostraToast('Foto caricata con successo', 'success');
-                } else {
-                    mostraToast('Errore nel caricamento: ' + (result.error || ''), 'error');
-                }
-            } catch (e) {
-                console.error(e);
-                mostraToast('Errore di connessione durante il caricamento', 'error');
-            }
         }
 
         function toggleCart() { document.getElementById('cartSidebar').classList.toggle('open'); }
@@ -491,39 +488,55 @@
             const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
 
             try {
+                // Prepariamo i dati dell'ordine includendo le foto in base64
+                const ordineData = {
+                    studio_id: studioId,
+                    codice_ordine: codiceOrdine,
+                    cliente_nome: nome,
+                    cliente_telefono: telefono,
+                    cliente_email: email,
+                    prodotti: JSON.stringify(carrello.map(item => ({
+                        id: item.id,
+                        nome: item.nome,
+                        prezzo: item.prezzo,
+                        quantita: item.quantita,
+                        fotoBase64: item.fotoBase64 // Includiamo la foto direttamente nell'ordine
+                    }))),
+                    totale: totale,
+                    stato: 'in_attesa',
+                    metodo_pagamento: 'anticipato',
+                    file_url: '',
+                    data_creazione: new Date().toISOString()
+                };
+
                 const ordineResponse = await fetch(WORKER_URL + '/api/studio/negozio/ordine', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        studio_id: studioId,
-                        codice_ordine: codiceOrdine,
-                        cliente_nome: nome,
-                        cliente_telefono: telefono,
-                        cliente_email: email,
-                        prodotti: JSON.stringify(carrello),
-                        totale: totale,
-                        stato: 'in_attesa',
-                        metodo_pagamento: 'anticipato',
-                        file_url: '',
-                        data_creazione: new Date().toISOString()
-                    })
+                    body: JSON.stringify(ordineData)
                 });
                 
+                if (!ordineResponse.ok) {
+                    throw new Error('Errore server: ' + ordineResponse.status);
+                }
+                
                 const ordineResult = await ordineResponse.json();
+                console.log('Ordine creato:', ordineResult);
 
+                // Carichiamo la configurazione pagamenti
                 try {
                     const configRes = await fetch(WORKER_URL + '/api/studio/negozio-config?studioId=' + encodeURIComponent(studioId));
+                    if (!configRes.ok) throw new Error('Config non disponibile');
                     const configData = await configRes.json();
                     const config = configData.success ? configData.config : null;
-                    let htmlPagamento = '<p>Contatteremo il cliente per il pagamento. Totale: <strong>EUR ' + totale.toFixed(2) + '</strong></p>';
+                    
+                    let htmlPagamento = '<p style="font-weight: 600;">Totale da pagare: <strong>EUR ' + totale.toFixed(2) + '</strong></p>';
                     
                     if (config && config.metodi_pagamento) {
                         htmlPagamento = '<ul>';
                         const metodi = config.metodi_pagamento.split(',');
                         if (metodi.includes('paypal') && config.paypal_email) {
-                            const emailPaypal = config.paypal_email.includes('http') ? '' : config.paypal_email;
-                            const link = config.paypal_email.includes('http') ? config.paypal_email : 'https://paypal.me/' + emailPaypal.split('@')[0] + '/' + totale;
-                            htmlPagamento += '<li><strong>PayPal:</strong> <a href="' + link + '" target="_blank">Clicca qui per pagare con PayPal</a></li>';
+                            const linkPaypal = config.paypal_email.includes('http') ? config.paypal_email : 'https://paypal.me/' + config.paypal_email.split('@')[0].replace('paypal.me/', '') + '/' + totale;
+                            htmlPagamento += '<li><strong>PayPal:</strong> <a href="' + linkPaypal + '" target="_blank">Clicca qui per pagare con PayPal</a></li>';
                         }
                         if (metodi.includes('stripe') && config.stripe_link) {
                             htmlPagamento += '<li><strong>Carta di Credito (Stripe):</strong> <a href="' + config.stripe_link + '" target="_blank">Clicca qui per pagare con Carta</a></li>';
@@ -535,10 +548,13 @@
                             htmlPagamento += '<li><strong>Bonifico IBAN:</strong><br><code>' + config.iban_numero + '</code><br>Causale: <strong>' + codiceOrdine + '</strong></li>';
                         }
                         htmlPagamento += '</ul>';
+                    } else {
+                        htmlPagamento += '<p style="margin-top: 12px; font-style: italic;">Lo studio ti contattera a breve per concordare il pagamento.</p>';
                     }
                     document.getElementById('pagamentoLinks').innerHTML = htmlPagamento;
                 } catch (e) {
-                    document.getElementById('pagamentoLinks').innerHTML = '<p>Totale da pagare: <strong>EUR ' + totale.toFixed(2) + '</strong>. Ti contatteremo per il pagamento.</p>';
+                    console.error('Errore caricamento config:', e);
+                    document.getElementById('pagamentoLinks').innerHTML = '<p style="font-weight: 600;">Totale da pagare: <strong>EUR ' + totale.toFixed(2) + '</strong></p><p>Lo studio ti contattera a breve per concordare il pagamento.</p>';
                 }
 
                 document.getElementById('checkoutModal').classList.remove('active');
@@ -547,8 +563,8 @@
                 carrello = [];
                 aggiornaCarrelloUI();
             } catch (error) {
-                console.error(error);
-                mostraToast('Errore durante l\'ordine', 'error');
+                console.error('Errore ordine:', error);
+                mostraToast('Errore durante l\'ordine: ' + error.message, 'error');
             }
         }
 
