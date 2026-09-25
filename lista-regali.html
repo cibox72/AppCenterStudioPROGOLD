@@ -12,23 +12,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            --primary: #82e0aa;
-            --primary-dark: #1e8449;
-            --primary-light: #e8f8f5;
-            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --text-main: #2c3e50;
-            --text-light: #7f8c8d;
-            --border-color: #e8e8e8;
-            --success: #27ae60;
-            --warning: #f39c12;
+            --primary: #d4af37;
+            --primary-dark: #996515;
+            --primary-light: #fff9e6;
+            --primary-gradient: linear-gradient(135deg, #d4af37 0%, #996515 100%);
+            --bg-gradient: #ffffff;
+            --text-main: #000000;
+            --text-light: #666666;
+            --border-color: #d5d8dc;
+            --success: #28b463;
+            --warning: #f1c40f;
             --danger: #e74c3c;
-            --info: #3498db;
-            --radius: 16px;
+            --info: #2980b9;
+            --radius: 15px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             background: var(--bg-gradient);
             background-attachment: fixed;
             color: var(--text-main);
@@ -43,7 +43,7 @@
             background: var(--primary-gradient);
             padding: 12px 24px;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(30, 132, 73, 0.15);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -54,13 +54,13 @@
             font-style: italic;
             font-size: 16px;
             font-weight: 700;
-            color: white;
+            color: #ffffff;
             text-decoration: none;
             letter-spacing: 0.5px;
         }
         .branding-header .studio-name:hover { text-decoration: underline; }
-        .branding-header .separator { margin: 0 8px; opacity: 0.8; }
-        .branding-header .tagline { font-size: 13px; opacity: 0.9; }
+        .branding-header .separator { margin: 0 8px; opacity: 0.8; color: #ffffff; }
+        .branding-header .tagline { font-size: 13px; opacity: 0.9; color: #ffffff; }
         
         .top-bar {
             background: var(--primary-gradient);
@@ -68,34 +68,36 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 100;
             transition: background 0.5s ease;
         }
         .nav-btn {
-            background: rgba(255,255,255,0.95);
+            background: rgba(255,255,255,0.2);
             border: none;
-            padding: 10px 18px;
-            border-radius: 10px;
+            padding: 8px 15px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
-            color: var(--primary-dark);
+            color: #ffffff;
             transition: all 0.2s;
         }
-        .nav-btn:hover { transform: translateY(-2px); }
-        .container { max-width: 1200px; margin: 0 auto; padding: 30px 24px; flex: 1; width: 100%; }
+        .nav-btn:hover { background: rgba(255,255,255,0.3); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; flex: 1; width: 100%; }
         
         .card {
-            background: white;
+            background: #ffffff;
             border-radius: var(--radius);
-            padding: 32px;
+            padding: 25px;
             margin-bottom: 24px;
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             position: relative;
             overflow: hidden;
+            border: 1px solid var(--border-color);
+            border-top: 4px solid var(--primary);
             transition: border-color 0.5s ease, box-shadow 0.5s ease;
         }
         .card::before {
@@ -109,7 +111,7 @@
         .card-title {
             font-size: 20px;
             font-weight: 700;
-            color: var(--primary-dark);
+            color: #000000;
             margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -124,14 +126,14 @@
             gap: 16px;
             margin-bottom: 16px;
         }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
+        .form-group { display: flex; flex-direction: column; position: relative; }
+        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #000000; }
         .form-group input, .form-group select, .form-group textarea {
-            padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            padding: 12px; border: 2px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
+            background: #f8f9fa; color: #000000; transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
+            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2); background: #ffffff;
         }
         .form-hint { font-size: 12px; color: var(--text-light); margin-top: 4px; font-style: italic; }
         
@@ -139,11 +141,12 @@
             padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
             cursor: pointer; transition: all 0.2s; margin-right: 8px; margin-bottom: 8px; font-family: inherit;
         }
-        .btn-primary { background: var(--primary-gradient); color: white; }
-        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
-        .btn-info { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
-        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
-        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-primary { background: var(--primary-gradient); color: #ffffff; }
+        .btn-success { background: linear-gradient(135deg, #58d68d, #28b463); color: #ffffff; }
+        .btn-info { background: linear-gradient(135deg, #5dade2, #2980b9); color: #ffffff; }
+        .btn-danger { background: linear-gradient(135deg, #f1948a, #e74c3c); color: #ffffff; }
+        .btn-outline { background: transparent; color: var(--primary-dark); border: 2px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
         .btn-sm { padding: 8px 14px; font-size: 12px; }
         .btn-xs { padding: 4px 8px; font-size: 11px; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
@@ -151,7 +154,7 @@
 
         .cred-box {
             background: var(--primary-light); padding: 20px; border-radius: 10px;
-            border: 1px solid var(--primary); text-align: center; margin-top: 16px;
+            border: 1px solid var(--border-color); text-align: center; margin-top: 16px;
             transition: background 0.5s ease, border-color 0.5s ease;
         }
         .cred-box .label { font-size: 11px; color: var(--text-light); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
@@ -159,11 +162,11 @@
         .cred-box .value.small { font-size: 13px; font-family: -apple-system, sans-serif; word-break: break-all; font-weight: 500; }
 
         .table-container { overflow-x: auto; margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; background: #ffffff; }
+        th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; color: #000000; }
         th {
             background: #f8f9fa;
-            color: var(--text-main);
+            color: #000000;
             font-weight: 700;
             text-transform: uppercase;
             font-size: 11px;
@@ -178,7 +181,7 @@
             text-transform: uppercase;
         }
         .status-coperto { background: #eafaf1; color: var(--success); }
-        .status-corso { background: #fef9e7; color: var(--warning); }
+        .status-corso { background: #fef9e7; color: #d35400; }
         .cred-cell { font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.5; }
         .cred-cell strong { color: var(--primary-dark); transition: color 0.5s ease; }
 
@@ -189,14 +192,14 @@
 
         .archive-section { margin-top: 40px; padding-top: 30px; border-top: 2px solid var(--border-color); }
         .archive-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
-        .archive-header h3 { color: var(--primary-dark); font-size: 18px; text-transform: uppercase; letter-spacing: 1px; transition: color 0.5s ease; }
-        .archive-summary { background: var(--primary-light); padding: 20px; border-radius: 10px; margin-bottom: 24px; text-align: center; transition: background 0.5s ease; }
+        .archive-header h3 { color: #000000; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; transition: color 0.5s ease; }
+        .archive-summary { background: var(--primary-light); padding: 20px; border-radius: 10px; margin-bottom: 24px; text-align: center; border: 1px solid var(--border-color); transition: background 0.5s ease; }
         .archive-summary .total { font-size: 36px; font-weight: 800; color: var(--primary-dark); font-family: 'Georgia', serif; transition: color 0.5s ease; }
         .archive-summary .label { font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; }
         .archive-summary .count { font-size: 14px; color: var(--text-main); margin-top: 8px; }
         .archive-item {
-            background: white; padding: 18px; border-radius: 10px; margin-bottom: 12px;
-            border-left: 4px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            background: #ffffff; padding: 18px; border-radius: 10px; margin-bottom: 12px;
+            border-left: 4px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid var(--border-color);
             page-break-inside: avoid; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
             transition: border-color 0.5s ease;
         }
@@ -206,13 +209,13 @@
         .archive-item .item-date { font-size: 12px; color: var(--text-light); margin-top: 6px; }
         .archive-item .item-amount { font-weight: 800; color: var(--success); font-size: 18px; font-family: 'Georgia', serif; white-space: nowrap; min-width: 100px; text-align: right; }
 
-        .wish-card { background: #f8f9fa; padding: 18px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--primary); page-break-inside: avoid; transition: border-color 0.5s ease; }
+        .wish-card { background: #f8f9fa; padding: 18px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid var(--primary); border: 1px solid var(--border-color); page-break-inside: avoid; transition: border-color 0.5s ease; }
         .wish-card .name { font-weight: 700; color: var(--primary-dark); font-size: 14px; transition: color 0.5s ease; }
         .wish-card .msg { font-style: italic; color: var(--text-main); margin-top: 4px; font-size: 14px; }
         .wish-card .date { font-size: 12px; color: var(--text-light); margin-top: 6px; }
 
         .progress-container { background: var(--primary-light); height: 24px; border-radius: 12px; overflow: hidden; margin: 20px 0; border: 1px solid var(--border-color); transition: background 0.5s ease, border-color 0.5s ease; }
-        .progress-bar { height: 100%; background: var(--primary-gradient); transition: width 0.5s ease, background 0.5s ease; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 12px; }
+        .progress-bar { height: 100%; background: var(--primary-gradient); transition: width 0.5s ease, background 0.5s ease; display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: 700; font-size: 12px; }
         .progress-bar.full { background: linear-gradient(135deg, #f1c40f, #f39c12); }
 
         .hidden { display: none !important; }
@@ -220,24 +223,24 @@
         .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
-        .toast { background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease; font-size: 14px; }
+        .toast { background: #ffffff; border-radius: 10px; padding: 16px 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease; font-size: 14px; color: #000000; font-weight: 600; }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
         
-        .info-box { background: #f8f9fa; border-left: 4px solid var(--info); padding: 16px 20px; border-radius: 8px; margin: 16px 0; font-size: 14px; color: var(--text-main); transition: background 0.5s ease, border-color 0.5s ease; }
+        .info-box { background: var(--primary-light); border-left: 4px solid var(--info); padding: 16px 20px; border-radius: 8px; margin: 16px 0; font-size: 14px; color: var(--text-main); border: 1px solid var(--border-color); transition: background 0.5s ease, border-color 0.5s ease; }
         .info-box strong { color: var(--primary-dark); transition: color 0.5s ease; }
         
         .center-text { text-align: center; }
         .mt-20 { margin-top: 20px; }
         .mb-16 { margin-bottom: 16px; }
         
-        .qr-container { text-align: center; padding: 24px; background: white; border-radius: 12px; border: 2px dashed var(--primary); margin: 20px 0; transition: border-color 0.5s ease; }
-        .qr-container #qrcode { display: inline-block; padding: 16px; background: white; }
+        .qr-container { text-align: center; padding: 24px; background: #ffffff; border-radius: 12px; border: 2px dashed var(--primary); margin: 20px 0; transition: border-color 0.5s ease; }
+        .qr-container #qrcode { display: inline-block; padding: 16px; background: #ffffff; }
         .qr-container .qr-label { margin-top: 12px; font-size: 13px; color: var(--text-light); font-style: italic; }
         
-        .payment-box { background: var(--primary-light); padding: 28px; border-radius: 12px; margin: 20px 0; text-align: center; transition: background 0.5s ease; }
+        .payment-box { background: var(--primary-light); padding: 28px; border-radius: 12px; margin: 20px 0; text-align: center; border: 1px solid var(--border-color); transition: background 0.5s ease; }
         .payment-box .payment-method { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); margin-bottom: 8px; }
-        .payment-box .payment-data { font-size: 16px; font-weight: 600; color: var(--primary-dark); word-break: break-all; padding: 12px; background: white; border-radius: 8px; margin: 12px 0; font-family: 'Courier New', monospace; transition: color 0.5s ease; }
+        .payment-box .payment-data { font-size: 16px; font-weight: 600; color: var(--primary-dark); word-break: break-all; padding: 12px; background: #ffffff; border-radius: 8px; margin: 12px 0; font-family: 'Courier New', monospace; border: 1px solid var(--border-color); transition: color 0.5s ease; }
         
         .whatsapp-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
         
@@ -266,21 +269,22 @@
             opacity: 0.5;
             pointer-events: none;
             position: relative;
+            border: 1px solid var(--border-color);
         }
         .auguri-disabled::after {
-            content: '🔒 Completa il pagamento per sbloccare';
+            content: 'Completa il pagamento per sbloccare';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(0,0,0,0.8);
-            color: white;
+            color: #ffffff;
             padding: 12px 24px;
             border-radius: 8px;
             font-size: 14px;
             font-weight: 600;
         }
-        .auguri-disabled .card-title { color: #999; }
+        .auguri-disabled .card-title { color: #999999; }
         .auguri-disabled input, .auguri-disabled textarea { background: #e0e0e0; cursor: not-allowed; }
 
         .footer-branding {
@@ -307,12 +311,12 @@
             .progress-container, .whatsapp-buttons, .card::before, .footer-branding, .auguri-disabled::after {
                 display: none !important;
             }
-            body { background: white; }
+            body { background: #ffffff; }
             .container { max-width: 100%; padding: 0; }
-            .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+            .card { box-shadow: none; border: 1px solid #d5d8dc; page-break-inside: avoid; }
             .archive-item, .wish-card { page-break-inside: avoid; border: 1px solid #e0e0e0; }
-            .archive-section { border-top: 2px solid #333; }
-            .archive-summary { background: #f0f0f0; border: 1px solid #ccc; }
+            .archive-section { border-top: 2px solid #333333; }
+            .archive-summary { background: #f0f0f0; border: 1px solid #cccccc; }
         }
         
         @media (max-width: 768px) {
@@ -336,7 +340,7 @@
     </div>
 
     <div id="topBar" class="top-bar hidden">
-        <div style="color: white; font-size: 14px;">
+        <div style="color: #ffffff; font-size: 14px;">
             <span id="topBarTitle">Dashboard</span>
         </div>
         <div id="topBarActions">
@@ -376,7 +380,7 @@
                         <input type="text" id="searchCliente" placeholder="Cerca ID o Nome..." oninput="cercaCliente(this.value)">
                         <input type="hidden" id="selectedClienteId">
                         <input type="hidden" id="selectedClienteNome">
-                        <div id="resultsCliente" style="position:absolute; background:white; border:1px solid #ccc; width:100%; max-height:150px; overflow-y:auto; z-index:10; display:none; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1);"></div>
+                        <div id="resultsCliente" style="position:absolute; background:#ffffff; border:1px solid var(--border-color); width:100%; max-height:150px; overflow-y:auto; z-index:10; display:none; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1);"></div>
                     </div>
                     <div class="form-group">
                         <label>Tipo di Evento *</label>
@@ -422,13 +426,12 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Messaggio di Ringraziamento (dopo augurio)</label>
-                        <textarea id="messaggioRingraziamento" rows="3" placeholder="Es. Grazie per il tuo pensiero!">Grazie per il tuo pensiero gentile! Il tuo augurio è stato registrato e i festeggiati potranno leggerlo.</textarea>
+                        <textarea id="messaggioRingraziamento" rows="3" placeholder="Es. Grazie per il tuo pensiero!">Grazie per il tuo pensiero gentile! Il tuo augurio e' stato registrato e i festeggiati potranno leggerlo.</textarea>
                     </div>
                 </div>
                 <button class="btn btn-success" onclick="creaListaRegali()">Genera Lista, Credenziali e QR</button>
             </div>
-
-            <div id="credenzialiGenerate" class="card hidden">
+                        <div id="credenzialiGenerate" class="card hidden">
                 <div class="card-title">Lista Creata con Successo</div>
                 <p class="mb-16" style="color:var(--text-light); font-size:14px;">Invia le credenziali al cliente e il link pubblico agli invitati.</p>
                 
@@ -551,7 +554,7 @@
                     <div style="display:inline-block; background:var(--primary-light); color:var(--primary-dark); padding:6px 16px; border-radius:20px; font-size:13px; font-weight:600; margin-top:8px; text-transform:uppercase; letter-spacing:1px;" id="pubTipoEvento">Evento</div>
                 </div>
                 
-                <div class="center-text" style="padding: 24px; background:var(--primary-light); border-radius:12px; margin-bottom:30px;">
+                <div class="center-text" style="padding: 24px; background:var(--primary-light); border-radius:12px; margin-bottom:30px; border: 1px solid var(--border-color);">
                     <p id="pubMessaggioStudio" style="font-style:italic; font-size:16px; color:var(--text-main); font-family:'Georgia', serif;"></p>
                 </div>
 
@@ -576,9 +579,9 @@
                 </div>
 
                 <div id="augurioSection" class="hidden">
-                    <div class="card" style="background:#f8f9fa; box-shadow:none;">
+                    <div class="card" style="background:#f8f9fa; box-shadow:none; border: 1px solid var(--border-color);">
                         <div class="card-title">Lascia un Messaggio di Auguri</div>
-                        <p style="font-size:14px; color:var(--text-light); margin-bottom:16px;">Il pagamento è stato confermato. Ora puoi lasciare il tuo augurio ai festeggiati.</p>
+                        <p style="font-size:14px; color:var(--text-light); margin-bottom:16px;">Il pagamento e' stato confermato. Ora puoi lasciare il tuo augurio ai festeggiati.</p>
                         <div class="form-group mb-16">
                             <label>Il tuo Nome *</label>
                             <input type="text" id="wishName" placeholder="Es. Zio Mario">
@@ -600,7 +603,7 @@
                     <div class="success-message">
                         <h3>Augurio Inviato con Successo!</h3>
                         <p id="successMessage">Grazie per il tuo pensiero gentile!</p>
-                        <p style="font-size:14px; color:var(--text-light); margin-top:16px;">Il tuo messaggio è stato registrato e i festeggiati potranno leggerlo nella loro dashboard privata.</p>
+                        <p style="font-size:14px; color:var(--text-light); margin-top:16px;">Il tuo messaggio e' stato registrato e i festeggiati potranno leggerlo nella loro dashboard privata.</p>
                         <p class="thanks">Con affetto, i festeggiati ti ringraziano.</p>
                     </div>
                 </div>
@@ -618,10 +621,11 @@
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-
-    <script>
-        // NOTA: WORKER_URL è già definito globalmente in temi.js. 
-        // Rimuovendolo da qui evitiamo l'errore "Identifier has already been declared" che bloccava tutto lo script.
+        <script>
+        // Fallback di sicurezza per WORKER_URL
+        if (typeof WORKER_URL === 'undefined') {
+            var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
+        }
         
         const STUDIO_NAME = "G&L Studio";
         const STUDIO_SITE = "https://www.glstudio.it";
@@ -651,7 +655,7 @@
         });
 
         // ============================================
-        // SEZIONE TEMA GLOBALE AGGIORNATA CON EFFETTI E TEMA ARANCIO
+        // SEZIONE TEMA GLOBALE (Aggiornata con default Oro e Nero)
         // ============================================
         async function applicaTemaGlobale(sId) {
             if (!sId) return;
@@ -661,15 +665,15 @@
                 if (data.success && data.tema && data.tema.tema_attivo) {
                     const temaId = data.tema.tema_attivo;
                     const temi = {
-                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)', effetto: null },
-                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)', effetto: 'neve' },
-                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)', effetto: 'coriandoli' },
-                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)', effetto: null },
-                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)', effetto: null },
-                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)', effetto: null },
-                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)', effetto: null },
-                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)', effetto: null },
-                        'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)', effetto: null }
+                        'default': { p: '#d4af37', pd: '#996515', pl: '#fff9e6', pg: 'linear-gradient(135deg, #d4af37 0%, #996515 100%)', bg: '#ffffff', effetto: null },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: '#ffffff', effetto: 'neve' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: '#ffffff', effetto: 'coriandoli' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: '#ffffff', effetto: null },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: '#ffffff', effetto: null },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: '#ffffff', effetto: null },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: '#ffffff', effetto: null },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: '#ffffff', effetto: null },
+                        'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: '#ffffff', effetto: null }
                     };
                     const t = temi[temaId] || temi['default'];
                     const root = document.documentElement;
@@ -679,7 +683,6 @@
                     root.style.setProperty('--primary-gradient', t.pg);
                     root.style.setProperty('--bg-gradient', t.bg);
                     
-                    // Attiva effetto speciale se la funzione esiste (caricata da temi.js)
                     if (typeof attivaEffettoSpeciale === 'function') {
                         attivaEffettoSpeciale(t.effetto);
                     }
@@ -707,7 +710,6 @@
                     currentLista = data.lista;
                     await applicaTemaGlobale(studioId);
                     
-                    // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
                     setInterval(async () => {
                         await applicaTemaGlobale(studioId);
                     }, 10000);
@@ -729,21 +731,21 @@
         async function caricaDashboard(listaId) {
             document.getElementById('dashNomeCliente').textContent = currentLista.cliente_nome;
             document.getElementById('dashTipoEvento').textContent = currentLista.tipo_evento;
-            document.getElementById('dashRaccolto').textContent = `EUR ${currentLista.raccolto_attuale || 0}`;
-            document.getElementById('dashCosto').textContent = `EUR ${currentLista.importo_servizio}`;
+            document.getElementById('dashRaccolto').textContent = 'EUR ' + (currentLista.raccolto_attuale || 0);
+            document.getElementById('dashCosto').textContent = 'EUR ' + currentLista.importo_servizio;
             document.getElementById('dashLinkPubblico').textContent = currentLista.link_pubblico;
             
             const perc = Math.min(100, Math.round(((currentLista.raccolto_attuale || 0) / currentLista.importo_servizio) * 100));
             const bar = document.getElementById('dashProgressBar');
-            bar.style.width = `${perc}%`;
-            bar.textContent = `${perc}%`;
+            bar.style.width = perc + '%';
+            bar.textContent = perc + '%';
             if (perc >= 100) {
                 bar.classList.add('full');
                 document.getElementById('dashMessaggioStato').innerHTML = 'Complimenti! Avete coperto il costo del servizio.';
                 document.getElementById('dashMessaggioStato').style.color = 'var(--success)';
             } else {
                 const mancante = (currentLista.importo_servizio - (currentLista.raccolto_attuale || 0)).toFixed(2);
-                document.getElementById('dashMessaggioStato').textContent = `Mancano ancora EUR ${mancante} per raggiungere l'obiettivo.`;
+                document.getElementById('dashMessaggioStato').textContent = 'Mancano ancora EUR ' + mancante + ' per raggiungere l\'obiettivo.';
                 document.getElementById('dashMessaggioStato').style.color = 'var(--warning)';
             }
 
@@ -777,15 +779,15 @@
                                     <div class="item-msg">"${m.messaggio}"</div>
                                     <div class="item-date">${m.data ? new Date(m.data).toLocaleDateString('it-IT') : ''}</div>
                                 </div>
-                                ${importo > 0 ? `<div class="item-amount">EUR ${importo.toFixed(2)}</div>` : ''}
+                                ${importo > 0 ? '<div class="item-amount">EUR ' + importo.toFixed(2) + '</div>' : ''}
                             </div>
                         `;
                     }).join('');
                 }
             } catch (e) { console.error('Errore archivio:', e); }
 
-            document.getElementById('archiveTotale').textContent = `EUR ${totale.toFixed(2)}`;
-            document.getElementById('archiveCount').textContent = `${count} regali ricevuti`;
+            document.getElementById('archiveTotale').textContent = 'EUR ' + totale.toFixed(2);
+            document.getElementById('archiveCount').textContent = count + ' regali ricevuti';
             
             if (count === 0) {
                 divEmpty.style.display = 'block';
@@ -799,7 +801,7 @@
 
         const METODI_CONFIG = {
             'paypal': { label: 'Link PayPal', placeholder: 'https://paypal.me/...', hint: 'Inserisci il link PayPal.me o il link di pagamento PayPal' },
-            'iban': { label: 'Coordinate IBAN', placeholder: 'IT00 X000 0000 0000 0000 0000 000', hint: 'IBAN completo con intestatario' },
+            'iban': { label: 'Coordinate IBAN', placeholder: 'IT00 X000 0000 0000 0000 0000 0000 000', hint: 'IBAN completo con intestatario' },
             'stripe': { label: 'Link Stripe', placeholder: 'https://buy.stripe.com/...', hint: 'Link di pagamento Stripe' },
             'satispay': { label: 'Numero Satispay o Link', placeholder: '+39 333 1234567', hint: 'Numero di telefono associato a Satispay' },
             'altro': { label: 'Istruzioni di Pagamento', placeholder: 'Es. Contanti, Postepay, ecc.', hint: 'Descrivi il metodo di pagamento preferito' }
@@ -834,20 +836,20 @@
             
             const config = METODI_CONFIG[metodo] || { label: metodo };
             
-            let html = `<div class="payment-box">
-                <div class="payment-method">Metodo di pagamento: ${config.label}</div>`;
+            let html = '<div class="payment-box">' +
+                '<div class="payment-method">Metodo di pagamento: ' + config.label + '</div>';
             
             if (metodo === 'iban' || metodo === 'altro') {
-                html += `<div class="payment-data">${dati}</div>
-                    <button class="btn btn-sm btn-info" onclick="copiaDatiPagamento('${dati.replace(/'/g, "\\'")}')">Copia Dati</button>
-                    <button class="btn btn-success mt-20" onclick="confermaPagamento()">Ho completato il pagamento</button>`;
+                html += '<div class="payment-data">' + dati + '</div>' +
+                    '<button class="btn btn-sm btn-info" onclick="copiaDatiPagamento(\'' + dati.replace(/'/g, "\\'") + '\')">Copia Dati</button>' +
+                    '<button class="btn btn-success mt-20" onclick="confermaPagamento()">Ho completato il pagamento</button>';
             } else {
-                html += `<a href="${dati}" target="_blank" class="btn btn-success" style="font-size:16px; padding:14px 28px; display:inline-block; text-decoration:none; margin-bottom:16px;">Procedi al Pagamento</a>
-                    <br><button class="btn btn-outline mt-20" onclick="confermaPagamento()">Ho completato il pagamento</button>`;
+                html += '<a href="' + dati + '" target="_blank" class="btn btn-success" style="font-size:16px; padding:14px 28px; display:inline-block; text-decoration:none; margin-bottom:16px;">Procedi al Pagamento</a>' +
+                    '<br><button class="btn btn-outline mt-20" onclick="confermaPagamento()">Ho completato il pagamento</button>';
             }
             
-            html += `<p style="font-size:13px; color:var(--text-light); margin-top:16px;">Dopo il pagamento potrai lasciare il tuo augurio ai festeggiati.</p>
-                </div>`;
+            html += '<p style="font-size:13px; color:var(--text-light); margin-top:16px;">Dopo il pagamento potrai lasciare il tuo augurio ai festeggiati.</p>' +
+                '</div>';
             
             area.innerHTML = html;
         }
@@ -878,7 +880,6 @@
             
             await applicaTemaGlobale(studioId);
             
-            // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
             setInterval(async () => {
                 await applicaTemaGlobale(studioId);
             }, 10000);
@@ -896,7 +897,7 @@
                 const data = await res.json();
                 if (data.success && data.clienti.length > 0) {
                     div.innerHTML = data.clienti.map(c => `
-                        <div style="padding:12px; cursor:pointer; border-bottom:1px solid #eee; font-size:14px;" onclick="selezionaCliente('${c.id}', '${c.nome}', '${c.cognome}')">
+                        <div style="padding:12px; cursor:pointer; border-bottom:1px solid #f0f0f0; font-size:14px; color:#000000;" onclick="selezionaCliente('${c.id}', '${c.nome}', '${c.cognome}')">
                             <strong>${c.id}</strong> - ${c.nome} ${c.cognome}
                         </div>
                     `).join('');
@@ -907,8 +908,8 @@
 
         function selezionaCliente(id, nome, cognome) {
             document.getElementById('selectedClienteId').value = id;
-            document.getElementById('selectedClienteNome').value = `${nome} ${cognome}`;
-            document.getElementById('searchCliente').value = `${id} - ${nome} ${cognome}`;
+            document.getElementById('selectedClienteNome').value = nome + ' ' + cognome;
+            document.getElementById('searchCliente').value = id + ' - ' + nome + ' ' + cognome;
             document.getElementById('resultsCliente').style.display = 'none';
         }
 
@@ -930,7 +931,7 @@
             const username = 'lr-' + Math.random().toString(36).substring(2, 6).toUpperCase();
             const password = Math.random().toString(36).substring(2, 6).toUpperCase() + Math.floor(10+Math.random()*90);
             const id = 'lr-' + Date.now();
-            const linkPubblico = `${window.location.origin}${window.location.pathname}?id=${id}`;
+            const linkPubblico = window.location.origin + window.location.pathname + '?id=' + id;
 
             try {
                 const res = await fetch(`${WORKER_URL}/api/studio/lista-regali?token=${encodeURIComponent(token)}`, {
@@ -950,7 +951,7 @@
                     document.getElementById('genUser').textContent = username;
                     document.getElementById('genPass').textContent = password;
                     document.getElementById('genLink').textContent = linkPubblico;
-                    document.getElementById('genDashLink').textContent = `${window.location.origin}${window.location.pathname}?dashboard=${id}`;
+                    document.getElementById('genDashLink').textContent = window.location.origin + window.location.pathname + '?dashboard=' + id;
                     document.getElementById('credenzialiGenerate').classList.remove('hidden');
                     
                     currentLista = { 
@@ -983,7 +984,7 @@
             if (typeof QRCode !== 'undefined') {
                 qrCodeInstance = new QRCode(qrDiv, {
                     text: url, width: 200, height: 200,
-                    colorDark: '#1e8449', colorLight: '#ffffff',
+                    colorDark: '#996515', colorLight: '#ffffff',
                     correctLevel: QRCode.CorrectLevel.H
                 });
             }
@@ -1002,14 +1003,14 @@
 
         function inviaWhatsAppCliente() {
             if (!currentLista) return;
-            const linkDashboard = `${window.location.origin}${window.location.pathname}?dashboard=${currentLista.id}`;
-            const msg = `Buongiorno ${currentLista.cliente_nome},\n\nlo studio ha creato la tua Lista Regali per il tuo ${currentLista.tipo_evento}.\n\nLE TUE CREDENZIALI PRIVATE:\nUsername: ${currentLista.username}\nPassword: ${currentLista.password}\n\nLINK DASHBOARD:\n${linkDashboard}\n\nCon la dashboard puoi:\n- Vedere l'importo raccolto che si aggiorna automaticamente\n- Vedere l'archivio completo di regali e auguri\n- Stampare l'archivio in PDF per ricambiare i regali\n\nUn cordiale saluto.`;
-            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+            const linkDashboard = window.location.origin + window.location.pathname + '?dashboard=' + currentLista.id;
+            const msg = 'Buongiorno ' + currentLista.cliente_nome + ',\n\nlo studio ha creato la tua Lista Regali per il tuo ' + currentLista.tipo_evento + '.\n\nLE TUE CREDENZIALI PRIVATE:\nUsername: ' + currentLista.username + '\nPassword: ' + currentLista.password + '\n\nLINK DASHBOARD:\n' + linkDashboard + '\n\nCon la dashboard puoi:\n- Vedere l\'importo raccolto che si aggiorna automaticamente\n- Vedere l\'archivio completo di regali e auguri\n- Stampare l\'archivio in PDF per ricambiare i regali\n\nUn cordiale saluto.';
+            window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
         }
 
         function inviaWhatsAppInvitati() {
             if (!currentLista) return;
-            const msg = `Cari amici e familiari,\n\n${currentLista.cliente_nome} festeggia il suo ${currentLista.tipo_evento} e ha creato una lista regali per voi.\n\nPotete lasciare un augurio e contribuire al regalo tramite questo link:\n${currentLista.link_pubblico}\n\nVi aspettiamo per festeggiare insieme!\n\nCon affetto.`;
+            const msg = 'Cari amici e familiari,\n\n' + currentLista.cliente_nome + ' festeggia il suo ' + currentLista.tipo_evento + ' e ha creato una lista regali per voi.\n\nPotete lasciare un augurio e contribuire al regalo tramite questo link:\n' + currentLista.link_pubblico + '\n\nVi aspettiamo per festeggiare insieme!\n\nCon affetto.';
             
             const textarea = document.createElement('textarea');
             textarea.value = msg;
@@ -1043,7 +1044,7 @@
                         <td>${l.tipo_evento}</td>
                         <td>
                             <span class="status-badge ${isCoperto ? 'status-coperto' : 'status-corso'}">
-                                ${isCoperto ? '✓ Coperto' : 'In Corso'}
+                                ${isCoperto ? 'Coperto' : 'In Corso'}
                             </span>
                         </td>
                         <td>
@@ -1077,7 +1078,7 @@
         }
 
         function copiaCredenziali(username, password) {
-            const testo = `Username: ${username}\nPassword: ${password}`;
+            const testo = 'Username: ' + username + '\nPassword: ' + password;
             navigator.clipboard.writeText(testo).then(() => {
                 mostraToast('Credenziali copiate', 'success');
             }).catch(() => {
@@ -1086,7 +1087,7 @@
         }
 
         function copiaLinkArchivio(id) {
-            const link = `${window.location.origin}${window.location.pathname}?id=${id}`;
+            const link = window.location.origin + window.location.pathname + '?id=' + id;
             navigator.clipboard.writeText(link).then(() => {
                 mostraToast('Link invitati copiato', 'success');
             }).catch(() => {
@@ -1119,7 +1120,6 @@
                     currentLista = data.lista;
                     await applicaTemaGlobale(studioId);
                     
-                    // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
                     setInterval(async () => {
                         await applicaTemaGlobale(studioId);
                     }, 10000);
@@ -1129,7 +1129,7 @@
                     
                     document.getElementById('pubNomeCliente').textContent = currentLista.cliente_nome;
                     document.getElementById('pubTipoEvento').textContent = currentLista.tipo_evento;
-                    document.getElementById('pubMessaggioStudio').textContent = currentLista.messaggio_cortesia || `Con gioia vi invitiamo a contribuire al regalo di ${currentLista.cliente_nome}.`;
+                    document.getElementById('pubMessaggioStudio').textContent = currentLista.messaggio_cortesia || 'Con gioia vi invitiamo a contribuire al regalo di ' + currentLista.cliente_nome + '.';
                     
                     renderPaymentArea(currentLista);
 
@@ -1199,14 +1199,14 @@
         }
 
         function tornaPlancia() {
-            window.location.href = `plancia-studio.html?token=${encodeURIComponent(token)}`;
+            window.location.href = 'plancia-studio.html?token=' + encodeURIComponent(token);
         }
 
         function mostraToast(msg, tipo) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div>${msg}</div>`;
+            toast.className = 'toast ' + tipo;
+            toast.innerHTML = '<div>' + msg + '</div>';
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
