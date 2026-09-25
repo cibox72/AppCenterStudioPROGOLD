@@ -1357,14 +1357,62 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
         }
 
         async function eliminaPreventivo(id) {
-            if (!confirm('Eliminare questo preventivo?')) return;
-            try {
-                const response = await fetch(WORKER_URL + '/api/studio/preventivo/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
-                const result = await response.json();
-                if (result.success) { alert('Preventivo eliminato.'); await caricaPreventivi(); }
-                else { alert('Errore: ' + result.error); }
-            } catch (error) { console.error('Errore eliminazione:', error); }
+    const preventivo = preventiviDisponibili.find(p => p.id === id);
+    if (!preventivo) {
+        alert('Preventivo non trovato.');
+        return;
+    }
+    
+    const eventId = 'agenda-' + id;
+    let eventoDaEliminare = null;
+    
+    try {
+        const agendaResponse = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token));
+        const agendaData = await agendaResponse.json();
+        
+        if (agendaData.success && agendaData.eventi) {
+            eventoDaEliminare = agendaData.eventi.find(e => e.id === eventId);
         }
+    } catch (err) {
+        console.warn('Impossibile verificare evento agenda:', err);
+    }
+    
+    let messaggioConferma = 'Eliminare questo preventivo?';
+    
+    if (eventoDaEliminare) {
+        if (eventoDaEliminare.stato === 'Da Confermare') {
+            messaggioConferma += '\n\n⚠️ Verrà eliminato ANCHE l\'evento in agenda (stato: Da Confermare).';
+        } else if (eventoDaEliminare.stato === 'Confermato') {
+            messaggioConferma += '\n\n✅ L\'evento in agenda è CONFERMATO e NON verrà eliminato (probabilmente è già un contratto).';
+        }
+    }
+    
+    if (!confirm(messaggioConferma)) return;
+    
+    try {
+        if (eventoDaEliminare && eventoDaEliminare.stato === 'Da Confermare') {
+            await fetch(WORKER_URL + '/api/studio/agenda/' + eventId + '?token=' + encodeURIComponent(token), { 
+                method: 'DELETE' 
+            });
+            console.log('🗑️ Evento agenda eliminato (era Da Confermare):', eventId);
+        } else if (eventoDaEliminare && eventoDaEliminare.stato === 'Confermato') {
+            console.log('✅ Evento agenda CONFERMATO mantenuto intatto:', eventId);
+        }
+        
+        const response = await fetch(WORKER_URL + '/api/studio/preventivo/' + id + '?token=' + encodeURIComponent(token), { 
+            method: 'DELETE' 
+        });
+        const result = await response.json();
+        if (result.success) { 
+            alert('Preventivo eliminato.'); 
+            await caricaPreventivi(); 
+        } else { 
+            alert('Errore: ' + result.error); 
+        }
+    } catch (error) { 
+        console.error('Errore eliminazione:', error); 
+    }
+}
 
         function renderTabellaContratti() {
             if (contrattiDisponibili.length === 0) {
