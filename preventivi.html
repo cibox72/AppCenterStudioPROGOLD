@@ -1054,6 +1054,7 @@
                 async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettato) {
     console.log('=== INIZIO aggiornaAgenda ===');
     console.log('Parametri:', { tipoServizio, cognomeCliente, dataEvento, accettato });
+    console.log('preventivoCorrenteId:', preventivoCorrenteId);
     
     if (!dataEvento) {
         console.log('❌ Nessuna data evento, skip');
@@ -1065,60 +1066,22 @@
         const titoloEvento = tipoServizio + ' ' + cognomeCliente + ' - ' + (accettato ? 'confermato' : 'da confermare');
         const descrizioneEvento = 'Preventivo/Contratto - ' + tipoServizio;
 
-        // Carica TUTTI gli eventi dell'agenda (SENZA filtro data)
-        const agendaUrl = WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token);
-        console.log('📡 Chiamata API:', agendaUrl);
-        
-        const agendaResponse = await fetch(agendaUrl);
-        const agendaData = await agendaResponse.json();
-        
-        console.log('📦 Risposta API:', agendaData);
-        console.log('Eventi totali nel database:', agendaData.eventi ? agendaData.eventi.length : 0);
+        // Usa un ID basato sul preventivo, così INSERT OR REPLACE sostituisce sempre lo stesso evento
+        const eventId = 'agenda-' + (preventivoCorrenteId || ('prev-' + Date.now()));
+        console.log('🆔 ID evento:', eventId);
 
-        // ELIMINA TUTTI gli eventi per questo cliente + tipo servizio
-        if (agendaData.success && agendaData.eventi && agendaData.eventi.length > 0) {
-            const eventiDaEliminare = agendaData.eventi.filter(function(e) {
-                // Filtro molto ampio: cerca per cliente E tipo servizio
-                const clienteMatch = e.cliente && cognomeCliente && 
-                    e.cliente.toLowerCase().trim() === cognomeCliente.toLowerCase().trim();
-                const tipoMatch = e.tipo_servizio && tipoServizio && 
-                    e.tipo_servizio.toLowerCase().trim() === tipoServizio.toLowerCase().trim();
-                
-                return clienteMatch && tipoMatch;
-            });
-
-            console.log('🎯 Eventi da eliminare:', eventiDaEliminare.length);
-            
-            if (eventiDaEliminare.length > 0) {
-                eventiDaEliminare.forEach(e => {
-                    console.log('  - ID:', e.id, 'Data:', e.data, 'Cliente:', e.cliente, 'Tipo:', e.tipo_servizio);
-                });
-
-                // Elimina tutti gli eventi vecchi
-                for (const evento of eventiDaEliminare) {
-                    const deleteResponse = await fetch(WORKER_URL + '/api/studio/agenda/' + evento.id + '?token=' + encodeURIComponent(token), {
-                        method: 'DELETE'
-                    });
-                    const deleteResult = await deleteResponse.json();
-                    console.log('🗑️ Eliminato evento ID:', evento.id, 'Risultato:', deleteResult);
-                }
-            }
-        } else {
-            console.log('️ Nessun evento nel database o errore nella risposta');
-        }
-
-        // Crea un NUOVO evento con la data corretta
         const datiAgenda = {
-            id: 'agenda-prev-' + Date.now(),
+            id: eventId,
             titolo: titoloEvento,
             data: dataEvento,
             descrizione: descrizioneEvento,
             tipo_servizio: tipoServizio,
             cliente: cognomeCliente,
-            stato: statoEvento
+            stato: statoEvento,
+            data_creazione: new Date().toISOString()
         };
         
-        console.log('➕ Creazione nuovo evento:', datiAgenda);
+        console.log('➕ Creazione/aggiornamento evento:', datiAgenda);
 
         const response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token), {
             method: 'POST',
@@ -1128,11 +1091,17 @@
 
         const result = await response.json();
         if (result.success) {
-            console.log('✅ Evento creato con successo:', datiAgenda.id, 'Data:', dataEvento);
-            agendaEventId = datiAgenda.id;
+            console.log('✅ Evento salvato con successo:', eventId, 'Data:', dataEvento);
+            agendaEventId = eventId;
         } else {
-            console.error('❌ Errore creazione evento:', result.error);
+            console.error(' Errore creazione evento:', result.error);
         }
+        
+        console.log('=== FINE aggiornaAgenda ===');
+    } catch (error) {
+        console.error('❌ Errore aggiornamento agenda:', error);
+    }
+}
         
         console.log('=== FINE aggiornaAgenda ===');
     } catch (error) {
