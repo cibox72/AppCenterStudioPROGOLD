@@ -193,7 +193,7 @@
                     <div class="agenda-header">
                         <h3 id="agenda-data-titolo">Agenda</h3>
                         <div class="agenda-date-nav">
-                            <button onclick="cambiaGiorno(-1)"> Ieri</button>
+                            <button onclick="cambiaGiorno(-1)">◀ Ieri</button>
                             <input type="date" id="agenda-data" onchange="caricaAgenda()">
                             <button onclick="cambiaGiorno(1)">Domani ▶</button>
                             <button onclick="vaiAOggi()" style="background: #ffffff; color: #996515; border: 2px solid #d4af37;">Oggi</button>
@@ -430,12 +430,12 @@
             document.getElementById('agenda-empty').style.display = 'none';
             
             try {
+                // MODIFICA CHIAVE: Supporto filtro per data
                 const response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token) + '&data=' + data);
                 const result = await response.json();
                 
                 document.getElementById('loading-agenda').style.display = 'none';
                 
-                // CORREZIONE CHIAVE: Mostra SEMPRE la griglia oraria (stile cartaceo), anche se vuota
                 if (result.success) {
                     appuntamentiCorrenti = result.eventi || [];
                     renderAgendaGrid(appuntamentiCorrenti);
@@ -453,8 +453,6 @@
                     document.getElementById('stat-totale').textContent = totale;
                     document.getElementById('stat-confermati').textContent = confermati;
                     document.getElementById('stat-da-confermare').textContent = daConfermare;
-                    
-                    // Nascondiamo il messaggio "nessun impegno" per mostrare sempre il foglio agenda
                     document.getElementById('agenda-empty').style.display = 'none';
                 } else {
                     appuntamentiCorrenti = [];
@@ -488,9 +486,8 @@
                 const content = document.createElement('div');
                 content.className = 'hour-content';
                 
-                // Filtra eventi per questa ora
                 const eventiOra = eventi.filter(app => {
-                    if (!app.ora_inizio) return h === 8; // Tutto il giorno alle 8:00
+                    if (!app.ora_inizio) return h === 8;
                     const appHour = parseInt(app.ora_inizio.split(':')[0]);
                     return appHour === h;
                 });
@@ -500,12 +497,10 @@
                     const statoConfermato = app.stato === 'Confermato';
                     div.className = 'agenda-event ' + (statoConfermato ? '' : 'da-confermare');
                     
-                    // Crea testo descrittivo in base al tipo
                     let testoDescrittivo = app.titolo || app.descrizione || 'Appuntamento';
                     const cognomeCliente = app.cliente ? app.cliente.split(' ').pop() : '';
                     const tipoServizio = app.tipo_servizio || 'Servizio';
                     
-                    // Se è un evento da preventivo/contratto, formatta come richiesto
                     if (app.descrizione && app.descrizione.includes('Preventivo/Contratto')) {
                         const statoTesto = statoConfermato ? 'confermato' : 'da confermare';
                         testoDescrittivo = tipoServizio + ' ' + cognomeCliente + ' - ' + statoTesto;
@@ -626,15 +621,15 @@
         }
 
         async function modificaAppuntamento(id) {
-    const app = appuntamentiCorrenti.find(a => a.id === id);
-    if (app) {
-        const stato = app.stato || 'Non definito';
-        const conferma = confirm('Modificare l\'appuntamento:\n\n"' + (app.descrizione || app.titolo) + '"\nCliente: ' + (app.cliente || 'N/D') + '\nStato: ' + stato + '\nData: ' + (app.data || 'N/D') + '\n\n(Per ora la modifica completa è in sviluppo. Vuoi eliminarlo e rifarlo?)');
-        if (conferma) {
-            eliminaAppuntamento(id);
+            const app = appuntamentiCorrenti.find(a => a.id === id);
+            if (app) {
+                const stato = app.stato || 'Non definito';
+                const conferma = confirm('Modificare l\'appuntamento:\n\n"' + (app.descrizione || app.titolo) + '"\nCliente: ' + (app.cliente || 'N/D') + '\nStato: ' + stato + '\nData: ' + (app.data || 'N/D') + '\n\n(Per ora la modifica completa è in sviluppo. Vuoi eliminarlo e rifarlo?)');
+                if (conferma) {
+                    eliminaAppuntamento(id);
+                }
+            }
         }
-    }
-}
 
         async function eliminaAppuntamento(id) {
             if (!confirm('Eliminare questo appuntamento?')) return;
