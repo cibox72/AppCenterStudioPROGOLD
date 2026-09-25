@@ -454,9 +454,21 @@ export default {
       // ============================================
       if (path === "/api/studio/agenda" && request.method === "GET") {
         const token = url.searchParams.get("token");
+        const dataFilter = url.searchParams.get("data"); // ✅ FILTRO DATA AGGIUNTO
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const result = await env.DB.prepare("SELECT * FROM agenda WHERE studio_id=? ORDER BY data DESC").bind(sess.user_id).all();
+        
+        let query = "SELECT * FROM agenda WHERE studio_id=?";
+        let params = [sess.user_id];
+        
+        if (dataFilter) {
+          query += " AND data=?";
+          params.push(dataFilter);
+        }
+        
+        query += " ORDER BY data DESC, ora_inizio ASC";
+        
+        const result = await env.DB.prepare(query).bind(...params).all();
         return new Response(JSON.stringify({ success: true, eventi: result.results }), { headers: corsHeaders });
       }
 
