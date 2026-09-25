@@ -343,8 +343,7 @@ export default {
         await env.DB.prepare("DELETE FROM servizi WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-
-      // ============================================
+            // ============================================
       // SEZIONE 7: STUDIO - PREVENTIVI
       // ============================================
       if (path === "/api/studio/preventivi" && request.method === "GET") {
@@ -466,7 +465,26 @@ export default {
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
         const d = await request.json();
-        await env.DB.prepare(`INSERT INTO agenda (id, studio_id, titolo, data, ora_inizio, ora_fine, descrizione, luogo, tipo_servizio, squadra, cliente, note, creato_il) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(d.id, sess.user_id, d.titolo, d.data, d.ora_inizio || null, d.ora_fine || null, d.descrizione || null, d.luogo || null, d.tipo_servizio || null, d.squadra || 'Squadra 1', d.cliente || null, d.note || null, d.data_creazione || new Date().toISOString()).run();
+        
+        // ✅ MODIFICA CHIAVE: INSERT OR REPLACE + colonne corrette (stato, data_creazione)
+        await env.DB.prepare(`INSERT OR REPLACE INTO agenda (id, studio_id, titolo, data, ora_inizio, ora_fine, descrizione, luogo, tipo_servizio, squadra, cliente, note, creato_il, stato, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+          d.id, 
+          sess.user_id, 
+          d.titolo, 
+          d.data, 
+          d.ora_inizio || null, 
+          d.ora_fine || null, 
+          d.descrizione || null, 
+          d.luogo || null, 
+          d.tipo_servizio || null, 
+          d.squadra || 'Squadra 1', 
+          d.cliente || null, 
+          d.note || null, 
+          d.creato_il || new Date().toISOString(),
+          d.stato || 'Da Confermare',
+          d.data_creazione || new Date().toISOString()
+        ).run();
+        
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
@@ -477,7 +495,7 @@ export default {
         const id = path.split("/api/studio/agenda/")[1].split('?')[0];
         const d = await request.json();
         const updates = []; const params = [];
-        ['titolo', 'data', 'ora_inizio', 'ora_fine', 'descrizione', 'luogo', 'tipo_servizio', 'squadra', 'cliente', 'note'].forEach(field => {
+        ['titolo', 'data', 'ora_inizio', 'ora_fine', 'descrizione', 'luogo', 'tipo_servizio', 'squadra', 'cliente', 'note', 'stato'].forEach(field => {
             if (d[field] !== undefined) { updates.push(`${field}=?`); params.push(d[field]); }
         });
         if (updates.length === 0) return new Response(JSON.stringify({ error: "Nessun campo da aggiornare" }), { status: 400, headers: corsHeaders });
@@ -653,8 +671,7 @@ export default {
         }
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-
-      // ============================================
+            // ============================================
       // SEZIONE 14: STUDIO - LISTA REGALI
       // ============================================
       if (path === "/api/studio/lista-regali" && request.method === "GET") {
