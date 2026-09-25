@@ -1066,57 +1066,96 @@
             }
         }
 
-        async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettato) {
-            console.log('=== INIZIO aggiornaAgenda ===');
-            console.log('Parametri:', { tipoServizio, cognomeCliente, dataEvento, accettato });
-            console.log('preventivoCorrenteId:', preventivoCorrenteId);
-            
-            if (!dataEvento) {
-                console.log('❌ Nessuna data evento, skip');
-                return;
-            }
-            
-            try {
-                const statoEvento = accettato ? 'Confermato' : 'Da Confermare';
-                const titoloEvento = tipoServizio + ' ' + cognomeCliente + ' - ' + (accettato ? 'confermato' : 'da confermare');
-                const descrizioneEvento = 'Preventivo/Contratto - ' + tipoServizio;
+async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettato) {
+    console.log('=== INIZIO aggiornaAgenda ===');
+    console.log('Parametri:', { tipoServizio, cognomeCliente, dataEvento, accettato });
+    console.log('preventivoCorrenteId:', preventivoCorrenteId);
+    
+    if (!dataEvento) {
+        console.log('❌ Nessuna data evento, skip');
+        return;
+    }
+    
+    try {
+        const statoEvento = accettato ? 'Confermato' : 'Da Confermare';
+        const titoloEvento = tipoServizio + ' ' + cognomeCliente + ' - ' + (accettato ? 'confermato' : 'da confermare');
+        const descrizioneEvento = 'Preventivo/Contratto - ' + tipoServizio;
 
-                // ✅ ID STABILE: Usa l'ID del preventivo per garantire che INSERT OR REPLACE aggiorni lo stesso record
-                const eventId = 'agenda-' + (preventivoCorrenteId || ('prev-' + Date.now()));
-                console.log('🆔 ID evento stabile:', eventId);
-
-                const datiAgenda = {
-                    id: eventId,
-                    titolo: titoloEvento,
-                    data: dataEvento,
-                    descrizione: descrizioneEvento,
-                    tipo_servizio: tipoServizio,
-                    cliente: cognomeCliente,
-                    stato: statoEvento,
-                    data_creazione: new Date().toISOString()
-                };
+        // ✅ CONTROLLO DUPLICATI: verifica se ci sono già eventi nella stessa data
+        let squadraScelta = 'Squadra 1';
+        try {
+            const checkResponse = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token) + '&data=' + dataEvento);
+            const checkData = await checkResponse.json();
+            
+            if (checkData.success && checkData.eventi && checkData.eventi.length > 0) {
+                // Filtra solo gli eventi dello stesso studio (il filtro è già fatto dal Worker)
+                const eventiEsistenti = checkData.eventi;
                 
-                console.log('➕ Creazione/aggiornamento evento:', datiAgenda);
-
-                const response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token), {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datiAgenda)
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    console.log('✅ Evento salvato con successo:', eventId, 'Data:', dataEvento);
-                    agendaEventId = eventId;
-                } else {
-                    console.error('❌ Errore creazione evento:', result.error);
+                // Escludi l'evento corrente (se stiamo modificando un preventivo esistente)
+                const eventIdCorrente = 'agenda-' + (preventivoCorrenteId || '');
+                const altriEventi = eventiEsistenti.filter(e => e.id !== eventIdCorrente);
+                
+                if (altriEventi.length > 0) {
+                    const listaEventi = altriEventi.map(e => {
+                        const cliente = e.cliente || 'N/D';
+                        const tipo = e.tipo_servizio || e.titolo || 'Servizio';
+                        const squadra = e.squadra || 'N/D';
+                        return `• ${tipo} - ${cliente} (${squadra})`;
+                    }).join('\n');
+                    
+                    const messaggio = `⚠️ ATTENZIONE: Esistono già ${altriEventi.length} event${altriEventi.length > 1 ? 'i' : 'o'} in questa data (${formatDataIT(dataEvento)}):\n\n${listaEventi}\n\nVuoi assegnare una squadra diversa per evitare sovrapposizioni?\n\nOK = Scegli squadra\nAnnulla = Mantieni Squadra 1`;
+                    
+                    const scelta = confirm(messaggio);
+                    
+                    if (scelta) {
+                        const squadraInput = prompt('Inserisci il numero della squadra (1, 2 o 3):', '2');
+                        if (squadraInput && ['1', '2', '3'].includes(squadraInput)) {
+                            squadraScelta = 'Squadra ' + squadraInput;
+                        }
+                    }
                 }
-                
-                console.log('=== FINE aggiornaAgenda ===');
-            } catch (error) {
-                console.error('❌ Errore aggiornamento agenda:', error);
             }
+        } catch (checkError) {
+            console.warn('⚠️ Impossibile verificare eventi esistenti:', checkError);
         }
+
+        // ✅ ID STABILE: Usa l'ID del preventivo per garantire che INSERT OR REPLACE aggiorni lo stesso record
+        const eventId = 'agenda-' + (preventivoCorrenteId || ('prev-' + Date.now()));
+        console.log('🆔 ID evento stabile:', eventId);
+
+        const datiAgenda = {
+            id: eventId,
+            titolo: titoloEvento,
+            data: dataEvento,
+            descrizione: descrizioneEvento,
+            tipo_servizio: tipoServizio,
+            cliente: cognomeCliente,
+            stato: statoEvento,
+            squadra: squadraScelta,
+            data_creazione: new Date().toISOString()
+        };
+        
+        console.log('➕ Creazione/aggiornamento evento:', datiAgenda);
+
+        const response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datiAgenda)
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            console.log('✅ Evento salvato con successo:', eventId, 'Data:', dataEvento, 'Squadra:', squadraScelta);
+            agendaEventId = eventId;
+        } else {
+            console.error('❌ Errore creazione evento:', result.error);
+        }
+        
+        console.log('=== FINE aggiornaAgenda ===');
+    } catch (error) {
+        console.error('❌ Errore aggiornamento agenda:', error);
+    }
+}
         
         function generaPDF() {
             if (!datiStudio) {
