@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workflow Foto & Video - AppCenterStudioPROGOLD</title>
+    <title>Workflow Foto e Video - AppCenterStudioPROGOLD</title>
     
     <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
     <link rel="stylesheet" href="temi.css">
@@ -11,152 +11,153 @@
     
     <style>
         :root {
-            --primary: #82e0aa; --primary-dark: #1e8449; --primary-light: #e8f8f5;
-            --primary-gradient: linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%);
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%);
-            --text-main: #2c3e50; --text-light: #7f8c8d; --border-color: #e8e8e8;
-            --success: #27ae60; --warning: #f39c12; --danger: #e74c3c; --info: #3498db;
-            --radius: 16px;
+            --primary: #d4af37;
+            --primary-dark: #996515;
+            --primary-light: #fff9e6;
+            --primary-gradient: linear-gradient(135deg, #d4af37 0%, #996515 100%);
+            --bg-gradient: #ffffff;
+            --text-main: #000000;
+            --text-light: #666666;
+            --border-color: #d5d8dc;
+            --success: #28b463;
+            --warning: #f1c40f;
+            --danger: #e74c3c;
+            --info: #2980b9;
+            --radius: 15px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh;
-            transition: background 0.5s ease, color 0.5s ease;
         }
         .top-bar {
-            background: var(--primary-gradient); padding: 16px 24px;
+            background: var(--primary-gradient); padding: 15px 20px;
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 20px rgba(30, 132, 73, 0.15); position: sticky; top: 0; z-index: 100;
-            transition: background 0.5s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;
         }
         .nav-left, .nav-right { display: flex; gap: 10px; align-items: center; }
         .nav-btn {
-            background: rgba(255,255,255,0.95); border: none; padding: 10px 18px; border-radius: 10px;
-            cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary-dark);
+            background: rgba(255,255,255,0.2); border: none; padding: 8px 15px; border-radius: 8px;
+            cursor: pointer; font-size: 14px; font-weight: 600; color: #ffffff;
             transition: all 0.2s ease;
         }
-        .nav-btn:hover { transform: translateY(-2px); }
-        .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-        .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
+        .nav-btn:hover { background: rgba(255,255,255,0.3); }
+        .sync-status { color: #ffffff; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .sync-dot { width: 8px; height: 8px; background: #ffffff; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .container { max-width: 1400px; margin: 0 auto; padding: 30px 24px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
         .page-header {
-            text-align: center; padding: 32px; background: white; border-radius: var(--radius);
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); margin-bottom: 32px; position: relative; overflow: hidden;
-            transition: box-shadow 0.5s ease;
+            text-align: center; padding: 25px; background: #ffffff; border-radius: var(--radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 25px; position: relative; overflow: hidden;
+            border-left: 5px solid var(--primary);
         }
-        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); transition: background 0.5s ease; }
+        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
         .page-header h1 {
-            font-size: 32px; font-weight: 800; background: var(--primary-gradient);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px;
-            transition: background 0.5s ease;
+            font-size: 28px; font-weight: 800; color: #000000; margin-bottom: 8px;
         }
         .page-header p { color: var(--text-light); font-size: 15px; }
         .card-3d {
-            background: white; border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
-            box-shadow: 0 10px 30px rgba(30, 132, 73, 0.12); position: relative; overflow: hidden;
-            transition: border-color 0.5s ease, box-shadow 0.5s ease;
+            background: #ffffff; border-radius: var(--radius); padding: 25px; margin-bottom: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; overflow: hidden;
+            border: 1px solid var(--border-color); border-top: 4px solid var(--primary);
         }
-        .card-3d::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); transition: background 0.5s ease; }
+        .card-3d::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
         .card-title {
-            font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px;
+            font-size: 20px; font-weight: 700; color: #000000; margin-bottom: 8px;
             padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); text-transform: uppercase; letter-spacing: 0.5px;
-            transition: color 0.5s ease, border-color 0.5s ease;
         }
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; margin-bottom: 16px; position: relative; }
-        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+        .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #000000; }
         .form-group input, .form-group select, .form-group textarea {
-            padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            padding: 12px 14px; border: 2px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit;
+            background: #f8f9fa; color: #000000; transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2);
+            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2); background: #ffffff;
         }
         .btn {
             padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
             cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .btn-primary { background: var(--primary-gradient); color: white; }
-        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); color: white; }
-        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
-        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
-        .btn-info { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
-        .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
+        .btn-primary { background: var(--primary-gradient); color: #ffffff; }
+        .btn-success { background: linear-gradient(135deg, #58d68d, #28b463); color: #ffffff; }
+        .btn-warning { background: linear-gradient(135deg, #f9e79f, #f1c40f); color: #000000; }
+        .btn-danger { background: linear-gradient(135deg, #f1948a, #e74c3c); color: #ffffff; }
+        .btn-info { background: linear-gradient(135deg, #5dade2, #2980b9); color: #ffffff; }
+        .btn-outline { background: transparent; color: var(--primary-dark); border: 2px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
         .btn-sm { padding: 8px 16px; font-size: 12px; }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
         
         .servizio-card {
-            background: white; border-radius: var(--radius); padding: 28px; margin-bottom: 20px;
+            background: #ffffff; border-radius: var(--radius); padding: 28px; margin-bottom: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1px solid var(--border-color);
             position: relative; overflow: hidden; transition: all 0.3s ease, border-color 0.5s ease, box-shadow 0.5s ease;
         }
-        .servizio-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(30, 132, 73, 0.15); }
-        .servizio-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); transition: background 0.5s ease; }
+        .servizio-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(212, 175, 55, 0.15); }
+        .servizio-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
         .servizio-header {
             display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
         }
-        .servizio-nome { font-size: 24px; font-weight: 800; color: var(--text-main); transition: color 0.5s ease; }
-        .servizio-id { font-size: 13px; color: var(--primary-dark); font-weight: 600; margin-bottom: 4px; transition: color 0.5s ease; }
+        .servizio-nome { font-size: 24px; font-weight: 800; color: #000000; }
+        .servizio-id { font-size: 13px; color: var(--primary-dark); font-weight: 600; margin-bottom: 4px; }
         .servizio-videografo { font-size: 13px; color: var(--text-light); margin-top: 4px; }
         .servizio-tipo-btn {
-            background: var(--primary-gradient); color: white; border: none;
+            background: var(--primary-gradient); color: #ffffff; border: none;
             padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 700;
             cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
-            transition: background 0.5s ease;
         }
         .progress-sections { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
         .progress-block { }
         .progress-label { font-size: 12px; font-weight: 700; color: var(--text-light); text-transform: uppercase; margin-bottom: 8px; }
-        .progress-bar-container { background: var(--primary-light); height: 10px; border-radius: 5px; overflow: hidden; margin-bottom: 6px; transition: background 0.5s ease; }
-        .progress-bar { height: 100%; background: var(--primary-gradient); transition: width 0.4s ease, background 0.5s ease; border-radius: 5px; }
-        .progress-value { font-size: 13px; color: var(--text-main); font-weight: 600; }
+        .progress-bar-container { background: var(--primary-light); height: 10px; border-radius: 5px; overflow: hidden; margin-bottom: 6px; }
+        .progress-bar { height: 100%; background: var(--primary-gradient); transition: width 0.4s ease; border-radius: 5px; }
+        .progress-value { font-size: 13px; color: #000000; font-weight: 600; }
         .servizio-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; padding-top: 16px; border-top: 1px solid var(--border-color); }
         
         .workflow-section {
             margin-bottom: 24px; border-radius: 12px; overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid var(--border-color);
         }
         .section-header {
-            padding: 16px 24px; font-size: 18px; font-weight: 800; color: white;
+            padding: 16px 24px; font-size: 18px; font-weight: 800; color: #ffffff;
             display: flex; justify-content: space-between; align-items: center;
             background: var(--primary-gradient);
-            transition: background 0.5s ease;
         }
         .section-progress {
             font-size: 13px; font-weight: 600; background: rgba(255,255,255,0.3);
             padding: 4px 12px; border-radius: 20px;
         }
-        .section-body { background: white; padding: 24px; transition: background 0.5s ease; }
+        .section-body { background: #ffffff; padding: 24px; }
         .task-row {
             display: flex; align-items: center; gap: 16px; padding: 12px 0;
             border-bottom: 1px solid var(--border-color); flex-wrap: wrap;
         }
         .task-row:last-child { border-bottom: none; }
-        .task-checkbox { width: 20px; height: 20px; cursor: pointer; flex-shrink: 0; }
-        .task-label { flex: 1; font-size: 14px; font-weight: 500; min-width: 200px; }
+        .task-checkbox { width: 20px; height: 20px; cursor: pointer; flex-shrink: 0; accent-color: var(--primary); }
+        .task-label { flex: 1; font-size: 14px; font-weight: 500; min-width: 200px; color: #000000; }
         .task-date { width: 140px; }
-        .task-date input { padding: 6px 10px; font-size: 13px; width: 100%; }
-        .task-input { padding: 8px 12px; font-size: 13px; width: 100%; max-width: 250px; border: 1px solid var(--border-color); border-radius: 8px; }
+        .task-date input { padding: 6px 10px; font-size: 13px; width: 100%; border: 1px solid var(--border-color); border-radius: 8px; background: #f8f9fa; }
+        .task-input { padding: 8px 12px; font-size: 13px; width: 100%; max-width: 250px; border: 1px solid var(--border-color); border-radius: 8px; background: #f8f9fa; color: #000000; }
         .task-input.full-width { max-width: 100%; }
         .task-completed .task-label { text-decoration: line-through; color: var(--text-light); }
         
         .overall-progress {
-            background: white; padding: 20px; border-radius: 12px; margin-bottom: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            transition: background 0.5s ease, box-shadow 0.5s ease;
+            background: #ffffff; padding: 20px; border-radius: 12px; margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1px solid var(--border-color);
         }
         .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .progress-title { font-size: 16px; font-weight: 700; color: var(--text-main); }
-        .progress-percent { font-size: 18px; font-weight: 800; color: var(--primary-dark); transition: color 0.5s ease; }
+        .progress-title { font-size: 16px; font-weight: 700; color: #000000; }
+        .progress-percent { font-size: 18px; font-weight: 800; color: var(--primary-dark); }
         
-        .footer-branding { text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; margin-top: 40px; }
+        .footer-branding { text-align: center; padding: 24px; color: #999999; font-size: 13px; margin-top: 40px; border-top: 1px solid var(--border-color); }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 2000; }
         .toast {
-            background: white; border-radius: 10px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            background: #ffffff; border-radius: 10px; padding: 16px 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
             margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s ease;
+            min-width: 300px; color: #000000; font-weight: 600;
         }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
@@ -170,24 +171,24 @@
         .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
         
         .search-results { 
-            position: absolute; top: 100%; left: 0; right: 0; background: white; 
+            position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; 
             border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
             z-index: 10; max-height: 200px; overflow-y: auto; display: none; 
         }
-        .search-result-item { padding: 12px; cursor: pointer; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+        .search-result-item { padding: 12px; cursor: pointer; border-bottom: 1px solid #f0f0f0; font-size: 13px; color: #000000; }
         .search-result-item:hover { background: var(--primary-light); }
-        .search-result-item strong { color: var(--primary-dark); transition: color 0.5s ease; }
+        .search-result-item strong { color: var(--primary-dark); }
         
         .table-container { overflow-x: auto; margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; background: white; }
-        th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
-        th { background: #f8f9fa; color: var(--text-main); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; transition: background 0.5s ease, color 0.5s ease; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; background: #ffffff; }
+        th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; color: #000000; }
+        th { background: #f8f9fa; color: #000000; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
         tr:hover td { background: #fafafa; }
         .status-badge {
             display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700;
         }
         .status-completed { background: #eafaf1; color: var(--success); }
-        .status-progress { background: #fef9e7; color: var(--warning); }
+        .status-progress { background: #fef9e7; color: #d35400; }
         .status-new { background: #f4f6f7; color: var(--text-light); }
         
         @media (max-width: 768px) {
@@ -217,7 +218,7 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>Workflow Foto & Video</h1>
+            <h1>Workflow Foto e Video</h1>
             <p>Gestisci i servizi, monitora l'avanzamento e completa ogni fase di produzione.</p>
         </div>
 
@@ -263,13 +264,13 @@
                 </div>
                 <div class="btn-group" style="justify-content: flex-end; margin-top: 10px;">
                     <button class="btn btn-outline" onclick="pulisciFormNuovo()">Annulla</button>
-                    <button class="btn btn-success" onclick="creaNuovoServizio()">💾 Salva e Apri Workflow</button>
+                    <button class="btn btn-success" onclick="creaNuovoServizio()">Salva e Apri Workflow</button>
                 </div>
             </div>
 
             <!-- TABELLA ARCHIVIO -->
             <div class="card-3d">
-                <div class="card-title"> Archivio Servizi</div>
+                <div class="card-title">Archivio Servizi</div>
                 <div id="loadingServizi" class="loading" style="padding: 20px;">
                     <div class="spinner"></div>
                     <div>Caricamento servizi...</div>
@@ -293,12 +294,11 @@
                 </div>
             </div>
         </div>
-
-        <!-- VISTA DETTAGLIO -->
+                <!-- VISTA DETTAGLIO -->
         <div id="dettaglioView" class="hidden">
             <div class="btn-group" style="margin-bottom: 24px; justify-content: flex-start;">
-                <button class="btn btn-outline" onclick="tornaArchivio()">← Torna all'Archivio</button>
-                <button class="btn btn-info" onclick="stampaWorkflow()">🖨️ Stampa</button>
+                <button class="btn btn-outline" onclick="tornaArchivio()">Torna all'Archivio</button>
+                <button class="btn btn-info" onclick="stampaWorkflow()">Stampa</button>
             </div>
 
             <div id="dettaglioHeader"></div>
@@ -316,7 +316,7 @@
             <!-- SEZIONE 1: ACQUISIZIONE -->
             <div class="workflow-section">
                 <div class="section-header">
-                    <span>💾 1. Acquisizione & Archiviazione Iniziale</span>
+                    <span>1. Acquisizione e Archiviazione Iniziale</span>
                     <span class="section-progress" id="prog1">0/4</span>
                 </div>
                 <div class="section-body">
@@ -328,7 +328,7 @@
 
                     <div class="task-row" style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin: 8px 0;">
                         <input type="checkbox" class="task-checkbox" id="f_hd_a" onchange="toggleTask('f_hd_a')">
-                        <label class="task-label" for="f_hd_a">Archiviazione RAW - <strong>Hard Disk A</strong></label>
+                        <label class="task-label" for="f_hd_a">Archiviazione RAW - Hard Disk A</label>
                         <div class="task-date"><input type="date" id="f_hd_a_date" onchange="salvaDettaglio()"></div>
                     </div>
                     <div class="task-row" style="padding-left: 36px;">
@@ -337,7 +337,7 @@
 
                     <div class="task-row" style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin: 8px 0;">
                         <input type="checkbox" class="task-checkbox" id="f_hd_b" onchange="toggleTask('f_hd_b')">
-                        <label class="task-label" for="f_hd_b">Archiviazione RAW - <strong>Hard Disk B</strong></label>
+                        <label class="task-label" for="f_hd_b">Archiviazione RAW - Hard Disk B</label>
                         <div class="task-date"><input type="date" id="f_hd_b_date" onchange="salvaDettaglio()"></div>
                     </div>
                     <div class="task-row" style="padding-left: 36px;">
@@ -346,7 +346,7 @@
 
                     <div class="task-row" style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin: 8px 0;">
                         <input type="checkbox" class="task-checkbox" id="f_hd_ext" onchange="toggleTask('f_hd_ext')">
-                        <label class="task-label" for="f_hd_ext">Archiviazione RAW - <strong>HD Esterno / Altro</strong></label>
+                        <label class="task-label" for="f_hd_ext">Archiviazione RAW - HD Esterno / Altro</label>
                         <div class="task-date"><input type="date" id="f_hd_ext_date" onchange="salvaDettaglio()"></div>
                     </div>
                     <div class="task-row" style="padding-left: 36px;">
@@ -358,13 +358,13 @@
             <!-- SEZIONE 2: LAVORAZIONE FOTO -->
             <div class="workflow-section">
                 <div class="section-header">
-                    <span>📸 2. Lavorazione Foto</span>
+                    <span>2. Lavorazione Foto</span>
                     <span class="section-progress" id="prog2">0/2</span>
                 </div>
                 <div class="section-body">
                     <div class="task-row">
                         <input type="checkbox" class="task-checkbox" id="f_raw_jpeg" onchange="toggleTask('f_raw_jpeg')">
-                        <label class="task-label" for="f_raw_jpeg">Conversione RAW → JPEG e Culling</label>
+                        <label class="task-label" for="f_raw_jpeg">Conversione RAW in JPEG e Culling</label>
                         <div class="task-date"><input type="date" id="f_raw_jpeg_date" onchange="salvaDettaglio()"></div>
                     </div>
                     <div class="task-row">
@@ -378,7 +378,7 @@
             <!-- SEZIONE 3: SELEZIONE ALBUM -->
             <div class="workflow-section">
                 <div class="section-header">
-                    <span>📋 3. Selezione Foto Album</span>
+                    <span>3. Selezione Foto Album</span>
                     <span class="section-progress" id="prog3">0/1</span>
                 </div>
                 <div class="section-body">
@@ -388,9 +388,9 @@
                         <div class="task-date"><input type="date" id="f_selezione_date" onchange="salvaDettaglio()"></div>
                     </div>
                     <div class="task-row" style="padding-left: 36px; background: var(--primary-light); padding: 12px; border-radius: 8px; margin-top: 8px;">
-                        <label class="task-label" style="font-size: 13px; font-weight: 600;">Modalità di selezione:</label>
+                        <label class="task-label" style="font-size: 13px; font-weight: 600;">Modalita di selezione:</label>
                         <select class="task-input" id="f_selezione_modalita" onchange="salvaDettaglio()" style="max-width: 300px;">
-                            <option value="">-- Seleziona modalità --</option>
+                            <option value="">-- Seleziona modalita --</option>
                             <option value="In Studio (Presenza)">In Studio (Presenza cliente)</option>
                             <option value="Online (tramite App)">Online (tramite App/Web)</option>
                         </select>
@@ -401,7 +401,7 @@
             <!-- SEZIONE 4: PRODUZIONE ALBUM -->
             <div class="workflow-section">
                 <div class="section-header">
-                    <span>📚 4. Produzione & Stampa Album</span>
+                    <span>4. Produzione e Stampa Album</span>
                     <span class="section-progress" id="prog4">0/2</span>
                 </div>
                 <div class="section-body">
@@ -421,10 +421,10 @@
                 </div>
             </div>
 
-            <!-- SEZIONE 5: CONSEGNA & ARCHIVIAZIONE -->
+            <!-- SEZIONE 5: CONSEGNA E ARCHIVIAZIONE -->
             <div class="workflow-section">
                 <div class="section-header">
-                    <span>🏁 5. Consegna & Archiviazione Finale</span>
+                    <span>5. Consegna e Archiviazione Finale</span>
                     <span class="section-progress" id="prog5">0/4</span>
                 </div>
                 <div class="section-body">
@@ -453,8 +453,8 @@
 
             <!-- SEZIONE 6: FLUSSO VIDEO -->
             <div class="workflow-section">
-                <div class="section-header" style="background: linear-gradient(135deg, #3498db, #2980b9);">
-                    <span>🎬 6. Flusso di Lavoro Video</span>
+                <div class="section-header" style="background: linear-gradient(135deg, #5dade2, #2980b9);">
+                    <span>6. Flusso di Lavoro Video</span>
                     <span class="section-progress" id="prog6">0/3</span>
                 </div>
                 <div class="section-body">
@@ -474,7 +474,7 @@
                     </div>
                     <div class="task-row">
                         <input type="checkbox" class="task-checkbox" id="v_consegna_grezzo" onchange="toggleTask('v_consegna_grezzo')">
-                        <label class="task-label" for="v_consegna_grezzo">Consegna materiale video grezzo a videografo</label>
+                        <label class="task-label" for="v_consegna_grezzo">Consegna materiale video grezzo a videgrafo</label>
                         <div class="task-date"><input type="date" id="v_consegna_grezzo_date" onchange="salvaDettaglio()"></div>
                     </div>
                     <div class="task-row">
@@ -491,16 +491,21 @@
             </div>
 
             <div class="btn-group" style="justify-content: center; margin-bottom: 40px;">
-                <button class="btn btn-info" onclick="stampaWorkflow()">️ Stampa Report</button>
-                <button class="btn btn-danger" onclick="eliminaServizioCorrente()">🗑️ Elimina Servizio</button>
+                <button class="btn btn-info" onclick="stampaWorkflow()">Stampa Report</button>
+                <button class="btn btn-danger" onclick="eliminaServizioCorrente()">Elimina Servizio</button>
             </div>
         </div>
 
-        <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
+        <div class="footer-branding">Piattaforma sviluppata da AppCenterStudioPROGOLD</div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-    <script>
+        <script>
+        // Fallback di sicurezza per WORKER_URL
+        if (typeof WORKER_URL === 'undefined') {
+            var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
+        }
+
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
@@ -555,15 +560,15 @@
                 if (data.success && data.tema && data.tema.tema_attivo) {
                     const temaId = data.tema.tema_attivo;
                     const temi = {
-                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)', effetto: null },
-                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)', effetto: 'neve' },
-                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)', effetto: 'coriandoli' },
-                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)', effetto: null },
-                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)', effetto: null },
-                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)', effetto: null },
-                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)', effetto: null },
-                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)', effetto: null },
-                        'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)', effetto: null }
+                        'default': { p: '#d4af37', pd: '#996515', pl: '#fff9e6', pg: 'linear-gradient(135deg, #d4af37 0%, #996515 100%)', bg: '#ffffff', effetto: null },
+                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: '#ffffff', effetto: 'neve' },
+                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: '#ffffff', effetto: 'coriandoli' },
+                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: '#ffffff', effetto: null },
+                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: '#ffffff', effetto: null },
+                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: '#ffffff', effetto: null },
+                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: '#ffffff', effetto: null },
+                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: '#ffffff', effetto: null },
+                        'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: '#ffffff', effetto: null }
                     };
                     const t = temi[temaId] || temi['default'];
                     const root = document.documentElement;
@@ -644,8 +649,8 @@
                         <td><span class="status-badge ${statoClass}">${statoText}</span></td>
                         <td>
                             <button class="btn btn-info btn-sm" onclick="apriDettaglio('${s.id}')">Apri</button>
-                            <button class="btn btn-primary btn-sm" onclick="stampaDaArchivio('${s.id}')">🖨️</button>
-                            <button class="btn btn-danger btn-sm" onclick="eliminaServizio('${s.id}')">🗑️</button>
+                            <button class="btn btn-primary btn-sm" onclick="stampaDaArchivio('${s.id}')">Stampa</button>
+                            <button class="btn btn-danger btn-sm" onclick="eliminaServizio('${s.id}')">Elimina</button>
                         </td>
                     </tr>
                 `;
@@ -660,6 +665,7 @@
 
             debounceTimer = setTimeout(async () => {
                 try {
+                    // ✅ MODIFICA CHIAVE: Usa l'endpoint dell'anagrafica clienti blindata
                     const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti/ricerca?q=${encodeURIComponent(query)}&token=${encodeURIComponent(token)}`);
                     const data = await response.json();
                     if (data.success && data.clienti.length > 0) {
@@ -679,8 +685,8 @@
 
         function selezionaCliente(id, nome, cognome) {
             document.getElementById('selectedClienteId').value = id;
-            document.getElementById('selectedClienteNome').value = `${nome} ${cognome}`;
-            document.getElementById('searchCliente').value = `${id} - ${nome} ${cognome}`;
+            document.getElementById('selectedClienteNome').value = nome + ' ' + cognome;
+            document.getElementById('searchCliente').value = id + ' - ' + nome + ' ' + cognome;
             document.getElementById('resultsCliente').style.display = 'none';
         }
 
@@ -705,7 +711,7 @@
             const nuovoServizio = {
                 id: 'wf-' + Date.now(),
                 studio_id: studioId,
-                cliente: `${clienteId} - ${nomeCliente}`,
+                cliente: clienteId + ' - ' + nomeCliente,
                 nome_cliente: nomeCliente,
                 tipo_servizio: tipoServizio,
                 data_evento: dataServizio,
@@ -722,7 +728,7 @@
                 const result = await response.json();
                 if (result.success) {
                     servizi.unshift(nuovoServizio);
-                    mostraToast('Servizio creato! Apertura workflow...', 'success');
+                    mostraToast('Servizio creato. Apertura workflow...', 'success');
                     pulisciFormNuovo();
                     renderizzaArchivio();
                     setTimeout(() => apriDettaglio(nuovoServizio.id), 300);
@@ -839,15 +845,15 @@
             }).length;
             const perc = Math.round((comp / ALL_TASKS.length) * 100);
 
-            document.getElementById('prog1').textContent = `${checkCount(['f_download', 'f_hd_a', 'f_hd_b', 'f_hd_ext'])}/4`;
-            document.getElementById('prog2').textContent = `${checkCount(['f_raw_jpeg', 'f_anteprima'])}/2`;
-            document.getElementById('prog3').textContent = `${checkCount(['f_selezione'])}/1`;
-            document.getElementById('prog4').textContent = `${checkCount(['f_impaginazione', 'f_invio_lab'])}/2`;
-            document.getElementById('prog5').textContent = `${checkCount(['f_ricezione_lab', 'f_consegna_cliente', 'f_consegna_file', 'f_archiviazione_finale'])}/4`;
-            document.getElementById('prog6').textContent = `${checkCount(['v_consegna_grezzo', 'v_montaggio', 'v_consegna_finale'])}/3`;
+            document.getElementById('prog1').textContent = checkCount(['f_download', 'f_hd_a', 'f_hd_b', 'f_hd_ext']) + '/4';
+            document.getElementById('prog2').textContent = checkCount(['f_raw_jpeg', 'f_anteprima']) + '/2';
+            document.getElementById('prog3').textContent = checkCount(['f_selezione']) + '/1';
+            document.getElementById('prog4').textContent = checkCount(['f_impaginazione', 'f_invio_lab']) + '/2';
+            document.getElementById('prog5').textContent = checkCount(['f_ricezione_lab', 'f_consegna_cliente', 'f_consegna_file', 'f_archiviazione_finale']) + '/4';
+            document.getElementById('prog6').textContent = checkCount(['v_consegna_grezzo', 'v_montaggio', 'v_consegna_finale']) + '/3';
 
-            document.getElementById('totalProgress').textContent = `${perc}%`;
-            document.getElementById('totalProgressBar').style.width = `${perc}%`;
+            document.getElementById('totalProgress').textContent = perc + '%';
+            document.getElementById('totalProgressBar').style.width = perc + '%';
         }
 
         function checkCount(ids) {
@@ -928,14 +934,14 @@
         }
 
         function tornaPlancia() {
-            window.location.href = `plancia-studio.html?token=${encodeURIComponent(token)}`;
+            window.location.href = 'plancia-studio.html?token=' + encodeURIComponent(token);
         }
 
         function mostraToast(msg, tipo) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div>${msg}</div>`;
+            toast.className = 'toast ' + tipo;
+            toast.innerHTML = '<div>' + msg + '</div>';
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
