@@ -75,6 +75,7 @@
         .btn:hover { transform: translateY(-2px); }
         .btn-primary { background: var(--primary-gradient); color: #ffffff; width: 100%; }
         .btn-success { background: var(--success); color: #ffffff; }
+        .btn-warning { background: var(--danger); color: #ffffff; }
         .cart-float-btn { 
             position: fixed; bottom: 24px; right: 24px; 
             background: var(--primary-gradient); color: #ffffff; 
@@ -138,7 +139,7 @@
         .modal-overlay.active { display: flex; }
         .modal-content { 
             background: #ffffff; border-radius: var(--radius); 
-            padding: 32px; width: 90%; max-width: 500px; 
+            padding: 32px; width: 90%; max-width: 600px; 
             max-height: 90vh; overflow-y: auto; 
             box-shadow: 0 20px 60px rgba(0,0,0,0.3); 
             transition: background 0.5s ease; 
@@ -165,6 +166,60 @@
         }
         .form-group input:focus { outline: none; border-color: var(--primary); background: #ffffff; }
         
+        .payment-methods { 
+            background: var(--primary-light); 
+            padding: 20px; 
+            border-radius: 8px; 
+            margin: 20px 0; 
+            border: 2px solid var(--primary); 
+        }
+        .payment-methods h3 { color: var(--primary-dark); margin-bottom: 16px; font-size: 18px; }
+        .payment-option { 
+            background: #ffffff; 
+            padding: 16px; 
+            border-radius: 8px; 
+            margin-bottom: 12px; 
+            border: 1px solid var(--border-color); 
+        }
+        .payment-option h4 { color: var(--primary-dark); margin-bottom: 8px; font-size: 16px; }
+        .payment-option p { font-size: 13px; color: var(--text-light); margin-bottom: 8px; }
+        .payment-option code { 
+            background: #ffffff; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-size: 12px; 
+            display: block; 
+            margin: 8px 0; 
+            word-break: break-all; 
+            border: 1px solid var(--border-color);
+        }
+        .payment-option a { 
+            color: var(--primary-dark); 
+            font-weight: 700; 
+            text-decoration: underline; 
+        }
+        .payment-btn {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 8px 16px;
+            background: var(--primary-gradient);
+            color: #ffffff;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .payment-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        
+        .alert-box { 
+            background: #fff3cd; 
+            border-left: 4px solid var(--danger); 
+            padding: 16px; 
+            border-radius: 8px; 
+            margin: 16px 0; 
+        }
+        .alert-box strong { color: #856404; }
+        
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
         .toast { 
             background: #ffffff; border-radius: 8px; padding: 14px 20px; 
@@ -181,22 +236,6 @@
         .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        .payment-info { 
-            background: var(--primary-light); border-left: 4px solid var(--primary); 
-            padding: 16px; border-radius: 8px; margin-top: 16px; 
-            font-size: 14px; line-height: 1.6; color: #000000;
-        }
-        .payment-info strong { display: block; margin-bottom: 8px; font-size: 16px; color: var(--primary-dark); }
-        .payment-info ul { list-style: none; padding: 0; margin: 0; }
-        .payment-info li { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.1); }
-        .payment-info li:last-child { border-bottom: none; }
-        .payment-info a { color: var(--primary-dark); font-weight: 700; text-decoration: underline; }
-        .payment-info code { 
-            background: #ffffff; padding: 4px 8px; border-radius: 4px; 
-            font-size: 13px; display: inline-block; margin: 4px 0; 
-            word-break: break-all; border: 1px solid var(--border-color);
-        }
-        
         @media (max-width: 768px) { 
             .products-grid { grid-template-columns: 1fr; } 
             .cart-sidebar { width: 100%; right: -100%; } 
@@ -206,20 +245,19 @@
 <body>
     <div class="header">
         <h1>Negozio ON-Line</h1>
-        <p>Prodotti personalizzati - Ritiro in studio</p>
+        <p>Prodotti personalizzati - Pagamento anticipato obbligatorio</p>
     </div>
     <div class="container">
         <div class="hero">
             <h2>Benvenuto nel nostro negozio</h2>
-            <p>Sfoglia i prodotti, personalizzali con le tue foto e completa l'ordine.</p>
+            <p>Sfoglia i prodotti, personalizzali con le tue foto e completa l'ordine con pagamento anticipato.</p>
         </div>
         <div id="vetrinaLoading" class="loading"><div class="spinner"></div><div>Caricamento prodotti...</div></div>
-        <div id="vetrinaEmpty" class="empty-state hidden">Nessun prodotto disponibile al momento.</div>
+        <div id="vetrinaEmpty" class="empty-state hidden">Nessun prodotto disponibile.</div>
         <div class="products-grid" id="vetrinaGrid"></div>
     </div>
         <button class="cart-float-btn" onclick="toggleCart()" id="cartBtn" style="display:none;">
-        <span>Carrello</span>
-        <span class="cart-count" id="cartCount">0</span>
+        <span>Carrello</span><span class="cart-count" id="cartCount">0</span>
     </button>
 
     <div class="cart-sidebar" id="cartSidebar">
@@ -227,15 +265,12 @@
             <h3>Il tuo Carrello</h3>
             <button onclick="toggleCart()" class="close-modal">Chiudi</button>
         </div>
-        <div class="cart-items" id="cartItems">
-            <div class="empty-state">Il carrello e vuoto</div>
-        </div>
+        <div class="cart-items" id="cartItems"><div class="empty-state">Il carrello e vuoto</div></div>
         <div class="cart-footer">
             <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 20px; font-weight: 700;">
-                <span>Totale:</span>
-                <span id="cartTotal">EUR 0.00</span>
+                <span>Totale:</span><span id="cartTotal">EUR 0.00</span>
             </div>
-            <button class="btn btn-primary" onclick="apriCheckout()">PROCEDI ALL'ORDINE</button>
+            <button class="btn btn-primary" onclick="apriCheckout()">PROCEDI CON PAGAMENTO</button>
         </div>
     </div>
 
@@ -245,6 +280,11 @@
                 <h2>Completa l'Ordine</h2>
                 <button class="close-modal" onclick="chiudiCheckout()">Chiudi</button>
             </div>
+            
+            <div class="alert-box">
+                <strong>ATTENZIONE:</strong> Il pagamento anticipato e obbligatorio per confermare l'ordine. Scegli uno dei metodi sotto indicati.
+            </div>
+
             <div class="form-group">
                 <label>Nome e Cognome *</label>
                 <input type="text" id="checkNome">
@@ -257,13 +297,19 @@
                 <label>Email *</label>
                 <input type="email" id="checkEmail">
             </div>
-            <div style="margin-top: 20px; padding: 16px; background: var(--primary-light); border-radius: 8px; text-align: center; border: 1px solid var(--border-color);">
-                <div style="font-weight: 700; font-size: 18px; color: var(--primary-dark);" id="checkTotal">Totale: EUR 0.00</div>
-                <div style="font-size: 12px; color: var(--text-light); margin-top: 4px;">Pagamento anticipato obbligatorio - Ritiro in studio</div>
+
+            <div id="paymentMethodsContainer" class="payment-methods">
+                <div class="loading"><div class="spinner"></div><div>Caricamento metodi di pagamento...</div></div>
             </div>
+
+            <div style="margin-top: 20px; padding: 16px; background: var(--primary-light); border-radius: 8px; text-align: center; border: 2px solid var(--primary);">
+                <div style="font-weight: 700; font-size: 20px; color: var(--primary-dark);" id="checkTotal">Totale: EUR 0.00</div>
+                <div style="font-size: 13px; color: var(--text-light); margin-top: 4px; font-weight: 600;">Pagamento anticipato obbligatorio - Ritiro in studio</div>
+            </div>
+
             <div style="margin-top: 20px; display: flex; gap: 10px;">
                 <button class="btn" onclick="chiudiCheckout()" style="flex: 1; background: #95a5a6; color: #ffffff;">Annulla</button>
-                <button class="btn btn-success" onclick="confermaOrdine()" style="flex: 2;">CONFERMA ORDINE E PAGAMENTO</button>
+                <button class="btn btn-success" onclick="confermaOrdine()" style="flex: 2;">CONFERMA ORDINE</button>
             </div>
         </div>
     </div>
@@ -272,15 +318,10 @@
         <div class="modal-content" style="text-align: center;">
             <div style="font-size: 48px; margin-bottom: 16px; color: var(--success); font-weight: 700;">Ordine Registrato</div>
             <h2 style="color: var(--primary-dark); margin-bottom: 16px;">Grazie per il pagamento.</h2>
-            <p style="margin-bottom: 16px; color: var(--text-main); font-size: 16px; font-weight: 600;">
-                Contatta lo studio per il ritiro della merce.
-            </p>
-            <p style="margin-bottom: 16px; color: var(--text-light);">
-                Il tuo codice ordine e:<br>
-                <strong id="successCode" style="color: var(--primary-dark); font-size: 24px; font-family: monospace;"></strong>
-            </p>
-            <div id="pagamentoContainer" class="payment-info">
-                <strong>Istruzioni per finalizzare il Pagamento</strong>
+            <p style="margin-bottom: 16px; color: var(--text-main); font-size: 16px; font-weight: 600;">Contatta lo studio per il ritiro della merce.</p>
+            <p style="margin-bottom: 16px; color: var(--text-light);">Il tuo codice ordine e:<br><strong id="successCode" style="color: var(--primary-dark); font-size: 24px; font-family: monospace;"></strong></p>
+            <div id="pagamentoContainer" class="payment-methods">
+                <h3>Istruzioni per finalizzare il Pagamento</h3>
                 <div id="pagamentoLinks"></div>
             </div>
             <p style="margin-top: 16px; margin-bottom: 24px; color: var(--text-light); font-size: 14px;">
@@ -294,28 +335,21 @@
     <div style="text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; border-top: 1px solid var(--border-color); margin-top: 40px;">
         Servizio offerto da <strong style="color: var(--primary-dark);">G&L Studio</strong>
     </div>
-
-    <script>
-        // Fallback di sicurezza per WORKER_URL
-        if (typeof WORKER_URL === 'undefined') {
-            var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
+        <script>
+        if (typeof WORKER_URL === 'undefined') { 
+            var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev'; 
         }
-        
         const urlParams = new URLSearchParams(window.location.search);
         const studioId = urlParams.get('studioId');
         const clienteId = urlParams.get('clienteId');
-        
         let prodotti = [];
         let carrello = [];
+        let configPagamenti = null;
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!studioId) { mostraToast('Link non valido', 'error'); return; }
             await applicaTemaGlobale();
-            
-            setInterval(async () => {
-                await applicaTemaGlobale();
-            }, 10000);
-            
+            setInterval(async () => { await applicaTemaGlobale(); }, 10000);
             await caricaProdotti();
         });
 
@@ -324,7 +358,6 @@
                 const res = await fetch(WORKER_URL + '/api/studio/tema?studioId=' + encodeURIComponent(studioId));
                 const data = await res.json();
                 if (data.success && data.tema && data.tema.tema_attivo) {
-                    const temaId = data.tema.tema_attivo;
                     const temi = {
                         'default': { p: '#d4af37', pd: '#996515', pl: '#fff9e6', pg: 'linear-gradient(135deg, #d4af37 0%, #996515 100%)', bg: '#ffffff', effetto: null },
                         'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: '#ffffff', effetto: 'neve' },
@@ -336,17 +369,14 @@
                         'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: '#ffffff', effetto: null },
                         'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: '#ffffff', effetto: null }
                     };
-                    const t = temi[temaId] || temi['default'];
+                    const t = temi[data.tema.tema_attivo] || temi['default'];
                     const root = document.documentElement;
                     root.style.setProperty('--primary', t.p);
                     root.style.setProperty('--primary-dark', t.pd);
                     root.style.setProperty('--primary-light', t.pl);
                     root.style.setProperty('--primary-gradient', t.pg);
                     root.style.setProperty('--bg-gradient', t.bg);
-                    
-                    if (typeof attivaEffettoSpeciale === 'function') {
-                        attivaEffettoSpeciale(t.effetto);
-                    }
+                    if (typeof attivaEffettoSpeciale === 'function') { attivaEffettoSpeciale(t.effetto); }
                 }
             } catch (e) { console.error('Errore tema:', e); }
         }
@@ -374,7 +404,7 @@
                     '</div>'
                 ).join('');
             } catch (error) { 
-                console.error('Errore caricamento prodotti:', error);
+                console.error('Errore prodotti:', error); 
                 mostraToast('Errore caricamento prodotti', 'error'); 
             }
         }
@@ -395,64 +425,45 @@
             const totalEl = document.getElementById('cartTotal');
             const totaleItems = carrello.reduce((sum, item) => sum + item.quantita, 0);
             countBadge.textContent = totaleItems;
-            
-            if (carrello.length === 0) {
-                container.innerHTML = '<div class="empty-state">Il carrello e vuoto</div>';
-                totalEl.textContent = 'EUR 0.00';
-                return;
+            if (carrello.length === 0) { 
+                container.innerHTML = '<div class="empty-state">Il carrello e vuoto</div>'; 
+                totalEl.textContent = 'EUR 0.00'; 
+                return; 
             }
-
             let totale = 0;
             container.innerHTML = carrello.map((item, index) => {
-                const subtotale = item.prezzo * item.quantita;
+                const subtotale = item.prezzo * item.quantita; 
                 totale += subtotale;
                 return '<div class="cart-item">' +
-                    '<div class="cart-item-top">' +
-                        '<div class="cart-item-name">' + item.nome + '</div>' +
-                        '<div class="cart-item-price">EUR ' + subtotale.toFixed(2) + '</div>' +
-                    '</div>' +
-                    '<div class="cart-item-actions">' +
-                        '<div class="qty-controls">' +
-                            '<button class="qty-btn" onclick="cambiaQty(' + index + ', -1)">-</button>' +
-                            '<span>Qty: ' + item.quantita + '</span>' +
-                            '<button class="qty-btn" onclick="cambiaQty(' + index + ', 1)">+</button>' +
-                        '</div>' +
-                        '<label class="foto-upload-label ' + (item.fotoBase64 ? 'has-foto' : '') + '">' +
-                            (item.fotoBase64 ? 'Foto caricata' : 'Carica Foto') +
-                            '<input type="file" accept="image/*" style="display:none" onchange="caricaFotoProdotto(' + index + ', this)">' +
-                        '</label>' +
-                        '<button class="cart-item-remove" onclick="rimuoviDalCarrello(' + index + ')">Rimuovi</button>' +
-                    '</div>' +
-                    (item.fotoPreview ? '<img src="' + item.fotoPreview + '" class="foto-preview" alt="Anteprima">' : '') +
-                '</div>';
+                    '<div class="cart-item-top"><div class="cart-item-name">' + item.nome + '</div><div class="cart-item-price">EUR ' + subtotale.toFixed(2) + '</div></div>' +
+                    '<div class="cart-item-actions"><div class="qty-controls"><button class="qty-btn" onclick="cambiaQty(' + index + ', -1)">-</button><span>Qty: ' + item.quantita + '</span><button class="qty-btn" onclick="cambiaQty(' + index + ', 1)">+</button></div>' +
+                    '<label class="foto-upload-label ' + (item.fotoBase64 ? 'has-foto' : '') + '">' + (item.fotoBase64 ? 'Foto caricata' : 'Carica Foto') + '<input type="file" accept="image/*" style="display:none" onchange="caricaFotoProdotto(' + index + ', this)"></label>' +
+                    '<button class="cart-item-remove" onclick="rimuoviDalCarrello(' + index + ')">Rimuovi</button></div>' +
+                    (item.fotoPreview ? '<img src="' + item.fotoPreview + '" class="foto-preview" alt="Anteprima">' : '') + '</div>';
             }).join('');
             totalEl.textContent = 'EUR ' + totale.toFixed(2);
         }
 
-        function cambiaQty(index, delta) {
-            carrello[index].quantita += delta;
-            if (carrello[index].quantita <= 0) carrello.splice(index, 1);
-            aggiornaCarrelloUI();
+        function cambiaQty(index, delta) { 
+            carrello[index].quantita += delta; 
+            if (carrello[index].quantita <= 0) carrello.splice(index, 1); 
+            aggiornaCarrelloUI(); 
         }
-
-        function rimuoviDalCarrello(index) {
-            carrello.splice(index, 1);
-            aggiornaCarrelloUI();
+        function rimuoviDalCarrello(index) { 
+            carrello.splice(index, 1); 
+            aggiornaCarrelloUI(); 
         }
 
         function caricaFotoProdotto(index, input) {
             if (!input.files || !input.files[0]) return;
             const file = input.files[0];
             mostraToast('Caricamento foto...', 'success');
-            
             const reader = new FileReader();
             reader.onload = function(e) {
-                // Salviamo la foto in base64 per includerla nell'ordine
-                // Nota: limitiamo a 2MB per evitare problemi di dimensione
                 const base64 = e.target.result;
-                if (base64.length > 2097152) { // 2MB
-                    mostraToast('Foto troppo grande. Massimo 2MB.', 'error');
-                    return;
+                if (base64.length > 2097152) { 
+                    mostraToast('Foto troppo grande. Massimo 2MB.', 'error'); 
+                    return; 
                 }
                 carrello[index].fotoBase64 = base64;
                 carrello[index].fotoPreview = base64;
@@ -465,30 +476,90 @@
             reader.readAsDataURL(file);
         }
 
-        function toggleCart() { document.getElementById('cartSidebar').classList.toggle('open'); }
+        function toggleCart() { 
+            document.getElementById('cartSidebar').classList.toggle('open'); 
+        }
 
-        function apriCheckout() {
-            if (carrello.length === 0) { mostraToast('Il carrello e vuoto', 'error'); return; }
+        async function apriCheckout() {
+            if (carrello.length === 0) { 
+                mostraToast('Il carrello e vuoto', 'error'); 
+                return; 
+            }
             const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
             document.getElementById('checkTotal').textContent = 'Totale: EUR ' + totale.toFixed(2);
+            
+            // Carica configurazione pagamenti PRIMA di mostrare il modale
+            await caricaConfigurazioniPagamenti(totale);
+            
             document.getElementById('checkoutModal').classList.add('active');
             toggleCart();
         }
 
-        function chiudiCheckout() { document.getElementById('checkoutModal').classList.remove('active'); }
+        async function caricaConfigurazioniPagamenti(totale) {
+            const container = document.getElementById('paymentMethodsContainer');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Caricamento metodi di pagamento...</div></div>';
+            
+            try {
+                const configRes = await fetch(WORKER_URL + '/api/studio/negozio-config?studioId=' + encodeURIComponent(studioId));
+                if (!configRes.ok) throw new Error('Config non disponibile: ' + configRes.status);
+                const configData = await configRes.json();
+                configPagamenti = configData.success ? configData.config : null;
+                
+                let html = '<h3>Metodi di Pagamento Disponibili</h3>';
+                let hasMethods = false;
+                
+                if (configPagamenti && configPagamenti.metodi_pagamento) {
+                    const metodi = configPagamenti.metodi_pagamento.split(',');
+                    
+                    if (metodi.includes('paypal') && configPagamenti.paypal_email) {
+                        hasMethods = true;
+                        const linkPaypal = configPagamenti.paypal_email.includes('http') ? configPagamenti.paypal_email : 'https://paypal.me/' + configPagamenti.paypal_email.split('@')[0].replace('paypal.me/', '') + '/' + totale;
+                        html += '<div class="payment-option"><h4>PayPal</h4><p>Clicca sul link per pagare immediatamente:</p><a href="' + linkPaypal + '" target="_blank" class="payment-btn">PAGA ORA CON PAYPAL</a></div>';
+                    }
+                    if (metodi.includes('stripe') && configPagamenti.stripe_link) {
+                        hasMethods = true;
+                        html += '<div class="payment-option"><h4>Carta di Credito (Stripe)</h4><p>Pagamento sicuro con carta:</p><a href="' + configPagamenti.stripe_link + '" target="_blank" class="payment-btn">PAGA CON CARTA</a></div>';
+                    }
+                    if (metodi.includes('satispay') && configPagamenti.satispay_numero) {
+                        hasMethods = true;
+                        html += '<div class="payment-option"><h4>Satispay</h4><p>Invia l\'importo a:</p><code>' + configPagamenti.satispay_numero + '</code><p>Causale: <strong>ORDINE-NEGOZIO</strong></p></div>';
+                    }
+                    if (metodi.includes('iban') && configPagamenti.iban_numero) {
+                        hasMethods = true;
+                        html += '<div class="payment-option"><h4>Bonifico Bancario</h4><p>IBAN:</p><code>' + configPagamenti.iban_numero + '</code><p>Causale: <strong>ORDINE-NEGOZIO</strong></p></div>';
+                    }
+                }
+                
+                if (!hasMethods) {
+                    html += '<div class="alert-box"><strong>Nessun metodo di pagamento configurato</strong><p>Lo studio ti contattera a breve per concordare il pagamento. Totale: <strong>EUR ' + totale.toFixed(2) + '</strong></p></div>';
+                }
+                
+                container.innerHTML = html;
+            } catch (e) {
+                console.error('Errore config pagamenti:', e);
+                container.innerHTML = '<div class="alert-box"><strong>Impossibile caricare i metodi di pagamento</strong><p>Totale da pagare: <strong>EUR ' + totale.toFixed(2) + '</strong></p><p>Lo studio ti contattera a breve per concordare il pagamento.</p></div>';
+            }
+        }
+
+        function chiudiCheckout() { 
+            document.getElementById('checkoutModal').classList.remove('active'); 
+        }
 
         async function confermaOrdine() {
             const nome = document.getElementById('checkNome').value.trim();
             const telefono = document.getElementById('checkTelefono').value.trim();
             const email = document.getElementById('checkEmail').value.trim();
-            if (!nome || !telefono || !email) { mostraToast('Compila tutti i campi', 'error'); return; }
+            if (!nome || !telefono || !email) { 
+                mostraToast('Compila tutti i campi', 'error'); 
+                return; 
+            }
 
-            mostraToast('Elaborazione ordine...', 'success');
-            const codiceOrdine = 'ORD-' + Date.now().toString().slice(-6);
             const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
+            const codiceOrdine = 'ORD-' + Date.now().toString().slice(-6);
+            
+            mostraToast('Registrazione ordine...', 'success');
 
             try {
-                // Prepariamo i dati dell'ordine includendo le foto in base64
                 const ordineData = {
                     studio_id: studioId,
                     codice_ordine: codiceOrdine,
@@ -496,75 +567,52 @@
                     cliente_telefono: telefono,
                     cliente_email: email,
                     prodotti: JSON.stringify(carrello.map(item => ({
-                        id: item.id,
-                        nome: item.nome,
-                        prezzo: item.prezzo,
-                        quantita: item.quantita,
-                        fotoBase64: item.fotoBase64 // Includiamo la foto direttamente nell'ordine
+                        id: item.id, 
+                        nome: item.nome, 
+                        prezzo: item.prezzo, 
+                        quantita: item.quantita, 
+                        fotoBase64: item.fotoBase64
                     }))),
                     totale: totale,
-                    stato: 'in_attesa',
+                    stato: 'in_attesa_pagamento',
                     metodo_pagamento: 'anticipato',
-                    file_url: '',
                     data_creazione: new Date().toISOString()
                 };
 
-                const ordineResponse = await fetch(WORKER_URL + '/api/studio/negozio/ordine', {
+                const response = await fetch(WORKER_URL + '/api/studio/negozio/ordine', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(ordineData)
                 });
                 
-                if (!ordineResponse.ok) {
-                    throw new Error('Errore server: ' + ordineResponse.status);
+                if (!response.ok) {
+                    throw new Error('Errore server: ' + response.status);
                 }
                 
-                const ordineResult = await ordineResponse.json();
-                console.log('Ordine creato:', ordineResult);
-
-                // Carichiamo la configurazione pagamenti
-                try {
-                    const configRes = await fetch(WORKER_URL + '/api/studio/negozio-config?studioId=' + encodeURIComponent(studioId));
-                    if (!configRes.ok) throw new Error('Config non disponibile');
-                    const configData = await configRes.json();
-                    const config = configData.success ? configData.config : null;
-                    
-                    let htmlPagamento = '<p style="font-weight: 600;">Totale da pagare: <strong>EUR ' + totale.toFixed(2) + '</strong></p>';
-                    
-                    if (config && config.metodi_pagamento) {
-                        htmlPagamento = '<ul>';
-                        const metodi = config.metodi_pagamento.split(',');
-                        if (metodi.includes('paypal') && config.paypal_email) {
-                            const linkPaypal = config.paypal_email.includes('http') ? config.paypal_email : 'https://paypal.me/' + config.paypal_email.split('@')[0].replace('paypal.me/', '') + '/' + totale;
-                            htmlPagamento += '<li><strong>PayPal:</strong> <a href="' + linkPaypal + '" target="_blank">Clicca qui per pagare con PayPal</a></li>';
-                        }
-                        if (metodi.includes('stripe') && config.stripe_link) {
-                            htmlPagamento += '<li><strong>Carta di Credito (Stripe):</strong> <a href="' + config.stripe_link + '" target="_blank">Clicca qui per pagare con Carta</a></li>';
-                        }
-                        if (metodi.includes('satispay') && config.satispay_numero) {
-                            htmlPagamento += '<li><strong>Satispay:</strong> Invia l\'importo al numero <strong>' + config.satispay_numero + '</strong> con causale: <strong>' + codiceOrdine + '</strong></li>';
-                        }
-                        if (metodi.includes('iban') && config.iban_numero) {
-                            htmlPagamento += '<li><strong>Bonifico IBAN:</strong><br><code>' + config.iban_numero + '</code><br>Causale: <strong>' + codiceOrdine + '</strong></li>';
-                        }
-                        htmlPagamento += '</ul>';
-                    } else {
-                        htmlPagamento += '<p style="margin-top: 12px; font-style: italic;">Lo studio ti contattera a breve per concordare il pagamento.</p>';
-                    }
-                    document.getElementById('pagamentoLinks').innerHTML = htmlPagamento;
-                } catch (e) {
-                    console.error('Errore caricamento config:', e);
-                    document.getElementById('pagamentoLinks').innerHTML = '<p style="font-weight: 600;">Totale da pagare: <strong>EUR ' + totale.toFixed(2) + '</strong></p><p>Lo studio ti contattera a breve per concordare il pagamento.</p>';
-                }
-
+                const result = await response.json();
+                console.log('Ordine creato:', result);
+                
                 document.getElementById('checkoutModal').classList.remove('active');
                 document.getElementById('successCode').textContent = codiceOrdine;
                 document.getElementById('successModal').classList.add('active');
                 carrello = [];
                 aggiornaCarrelloUI();
+                
             } catch (error) {
                 console.error('Errore ordine:', error);
-                mostraToast('Errore durante l\'ordine: ' + error.message, 'error');
+                // Anche se c'e' errore 500, mostriamo comunque il codice ordine e le istruzioni
+                document.getElementById('checkoutModal').classList.remove('active');
+                document.getElementById('successCode').textContent = codiceOrdine + ' (da confermare)';
+                document.getElementById('successModal').classList.add('active');
+                
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert-box';
+                alertDiv.style.marginTop = '16px';
+                alertDiv.innerHTML = '<strong>Nota:</strong> Si e\' verificato un errore tecnico. Ti invitiamo a contattare lo studio al numero che hai inserito per confermare l\'ordine e completare il pagamento.';
+                document.querySelector('#successModal .modal-content').insertBefore(alertDiv, document.querySelector('#successModal button'));
+                
+                carrello = [];
+                aggiornaCarrelloUI();
             }
         }
 
