@@ -666,19 +666,63 @@ export default {
         return new Response(JSON.stringify({ success: true, config: result }), { headers: corsHeaders });
       }
 
-      if (path === "/api/studio/negozio-config" && request.method === "POST") {
+            if (path === "/api/studio/negozio-config" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
         const d = await request.json();
         const existing = await env.DB.prepare("SELECT id FROM negozi_config WHERE studio_id=?").bind(sess.user_id).first();
+        
         if (existing) {
-          await env.DB.prepare(`UPDATE negozi_config SET paypal_email=?, iban_numero=?, satispay_numero=?, stripe_link=?, whatsapp_numero=?, studio_indirizzo=?, msg_benvenuto=?, msg_ritiro=?, metodi_pagamento=? WHERE studio_id=?`).bind(
-            d.paypal_email || '', d.iban_numero || '', d.satispay_numero || '', d.stripe_link || '', d.whatsapp_numero || '', d.studio_indirizzo || '', d.msg_benvenuto || '', d.msg_ritiro || '', d.metodi_pagamento || '', sess.user_id
+          await env.DB.prepare(`UPDATE negozi_config SET 
+            paypal_email=?, 
+            whatsapp_numero=?, 
+            studio_indirizzo=?, 
+            metodi_pagamento=?, 
+            stripe_link=?, 
+            satispay_numero=?, 
+            iban_numero=?, 
+            metodo_pagamento_preferito=?, 
+            iban_intestatario=?, 
+            studio_pagamento_istruzioni=? 
+            WHERE studio_id=?`).bind(
+            d.paypal_email || '', 
+            d.whatsapp_numero || '', 
+            d.studio_indirizzo || '', 
+            d.metodi_pagamento || '', 
+            d.stripe_link || '', 
+            d.satispay_numero || '', 
+            d.iban_numero || '', 
+            d.metodo_pagamento_preferito || '', 
+            d.iban_intestatario || '', 
+            d.studio_pagamento_istruzioni || '', 
+            sess.user_id
           ).run();
         } else {
-          await env.DB.prepare(`INSERT INTO negozi_config (studio_id, paypal_email, iban_numero, satispay_numero, stripe_link, whatsapp_numero, studio_indirizzo, msg_benvenuto, msg_ritiro, metodi_pagamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
-            sess.user_id, d.paypal_email || '', d.iban_numero || '', d.satispay_numero || '', d.stripe_link || '', d.whatsapp_numero || '', d.studio_indirizzo || '', d.msg_benvenuto || '', d.msg_ritiro || '', d.metodi_pagamento || ''
+          await env.DB.prepare(`INSERT INTO negozi_config (
+            studio_id, 
+            paypal_email, 
+            whatsapp_numero, 
+            studio_indirizzo, 
+            metodi_pagamento, 
+            stripe_link, 
+            satispay_numero, 
+            iban_numero, 
+            metodo_pagamento_preferito, 
+            iban_intestatario, 
+            studio_pagamento_istruzioni
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+            sess.user_id, 
+            d.paypal_email || '', 
+            d.whatsapp_numero || '', 
+            d.studio_indirizzo || '', 
+            d.metodi_pagamento || '', 
+            d.stripe_link || '', 
+            d.satispay_numero || '', 
+            d.iban_numero || '', 
+            d.metodo_pagamento_preferito || '', 
+            d.iban_intestatario || '', 
+            d.studio_pagamento_istruzioni || ''
           ).run();
         }
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
