@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRU - Gestione Risorse & Utility</title>
+    <title>GRU - Gestione Risorse e Utility</title>
     
     <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
     <link rel="stylesheet" href="temi.css">
@@ -94,7 +94,7 @@
             padding: 24px; border-radius: 12px; margin-bottom: 32px;
             display: flex; align-items: flex-start; gap: 16px; border: 1px solid var(--border-color);
         }
-        .warning-icon { font-size: 32px; }
+        .warning-icon { font-size: 24px; font-weight: 800; color: var(--warning); }
         .warning-content h3 { color: #000000; margin-bottom: 8px; font-size: 18px; }
         .warning-content p { color: var(--text-light); margin-bottom: 12px; }
         .browser-badges { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -212,43 +212,43 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>🤖 GRU - Gestione Risorse & Utility</h1>
-            <p>Strumenti professionali per la gestione dello studio. Tutto automatizzato!</p>
+            <h1>GRU - Gestione Risorse e Utility</h1>
+            <p>Strumenti professionali per la gestione dello studio. Tutto automatizzato.</p>
         </div>
 
         <!-- AVVISO BROWSER -->
         <div class="browser-warning">
-            <div class="warning-icon">⚠️</div>
+            <div class="warning-icon">!</div>
             <div class="warning-content">
                 <h3>Importante: Usa Google Chrome o Microsoft Edge</h3>
                 <p>Per utilizzare la funzione di selezione foto, devi aprire questa pagina con <strong>Google Chrome</strong> o <strong>Microsoft Edge</strong>. Questi browser supportano l'accesso sicuro alle cartelle del tuo computer.</p>
                 <div class="browser-badges">
-                    <span class="browser-badge">🌐 Google Chrome</span>
-                    <span class="browser-badge">🌐 Microsoft Edge</span>
-                    <span class="browser-badge">🚫 Safari non supportato</span>
+                    <span class="browser-badge">Google Chrome</span>
+                    <span class="browser-badge">Microsoft Edge</span>
+                    <span class="browser-badge">Safari non supportato</span>
                 </div>
             </div>
         </div>
 
         <!-- GUIDA PASSO PASSO -->
         <div class="guide-box">
-            <h3>📋 Come Funziona - Guida Rapida</h3>
+            <h3>Come Funziona - Guida Rapida</h3>
             <div class="guide-steps">
                 <div class="guide-step">
                     <div class="step-number">1</div>
-                    <div class="step-text">Il cliente seleziona le foto online → Il cloud genera automaticamente un file <strong>.txt</strong> con l'elenco delle foto scelte</div>
+                    <div class="step-text">Il cliente seleziona le foto online. Il cloud genera automaticamente un file .txt con l'elenco delle foto scelte.</div>
                 </div>
                 <div class="guide-step">
                     <div class="step-number">2</div>
-                    <div class="step-text">Scarica il file <strong>.txt</strong> dal tuo CRM (nella sezione Notifiche)</div>
+                    <div class="step-text">Scarica il file .txt dal tuo CRM (nella sezione Notifiche).</div>
                 </div>
                 <div class="guide-step">
                     <div class="step-number">3</div>
-                    <div class="step-text">Qui nella GRU: seleziona il file <strong>.txt</strong>, la cartella ORIGINALI (dal tuo NAS/HD) e la cartella di DESTINAZIONE</div>
+                    <div class="step-text">Qui nella GRU: seleziona il file .txt, la cartella ORIGINALI (dal tuo NAS/HD) e la cartella di DESTINAZIONE.</div>
                 </div>
                 <div class="guide-step">
                     <div class="step-number">4</div>
-                    <div class="step-text">Clicca <strong>"🚀 AVVIA COPIA INTELLIGENTE"</strong> → La GRU copierà automaticamente SOLO le foto selezionate dal cliente!</div>
+                    <div class="step-text">Clicca "AVVIA COPIA INTELLIGENTE". La GRU copiera automaticamente SOLO le foto selezionate dal cliente.</div>
                 </div>
             </div>
         </div>
@@ -261,14 +261,14 @@
         <div id="mainContent" class="hidden">
             <!-- SEZIONE PRINCIPALE: SELEZIONE FOTO -->
             <div class="card-3d">
-                <div class="card-title">📸 Selezione Intelligente Foto</div>
+                <div class="card-title">Selezione Intelligente Foto</div>
                 <div class="card-subtitle">Copia automatica delle foto originali basate sulla selezione del cliente</div>
                 
                 <div class="file-section" id="sectionTxt">
-                    <h3>📄 1. File TXT Selezione (dal cloud)</h3>
+                    <h3>1. File TXT Selezione (dal cloud)</h3>
                     <div class="form-group">
                         <button class="btn btn-outline" onclick="selezionaFileTXT()" style="width: 100%;">
-                            📂 Seleziona File TXT
+                            Seleziona File TXT
                         </button>
                     </div>
                     <div class="file-info hidden" id="txtInfo">
@@ -279,10 +279,10 @@
                 </div>
 
                 <div class="file-section" id="sectionOrigini">
-                    <h3>📁 2. Cartella ORIGINALI (NAS/HD Esterno)</h3>
+                    <h3>2. Cartella ORIGINALI (NAS/HD Esterno)</h3>
                     <div class="form-group">
                         <button class="btn btn-outline" onclick="selezionaCartellaOrigini()" style="width: 100%;">
-                            📂 Seleziona Cartella ORIGINALI
+                            Seleziona Cartella ORIGINALI
                         </button>
                     </div>
                     <div class="file-info hidden" id="originiInfo">
@@ -293,10 +293,10 @@
                 </div>
 
                 <div class="file-section" id="sectionDestinazione">
-                    <h3>📤 3. Cartella DESTINAZIONE (Lavorazione)</h3>
+                    <h3>3. Cartella DESTINAZIONE (Lavorazione)</h3>
                     <div class="form-group">
                         <button class="btn btn-outline" onclick="selezionaCartellaDestinazione()" style="width: 100%;">
-                            📂 Seleziona Cartella DESTINAZIONE
+                            Seleziona Cartella DESTINAZIONE
                         </button>
                     </div>
                     <div class="file-info hidden" id="destinazioneInfo">
@@ -308,7 +308,7 @@
 
                 <div class="btn-group" style="justify-content: center;">
                     <button class="btn btn-success" id="btnCopia" onclick="avviaCopia()" disabled style="font-size: 18px; padding: 18px 36px;">
-                        🚀 AVVIA COPIA INTELLIGENTE
+                        AVVIA COPIA INTELLIGENTE
                     </button>
                 </div>
 
@@ -344,12 +344,12 @@
             </div>
         </div>
 
-        <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
+        <div class="footer-branding">Piattaforma sviluppata da AppCenterStudioPROGOLD</div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
         <script>
-        // Fallback di sicurezza per WORKER_URL se non è definito in temi.js
+        // Fallback di sicurezza per WORKER_URL se non e definito in temi.js
         if (typeof WORKER_URL === 'undefined') {
             var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
         }
@@ -369,7 +369,7 @@
             const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
             const isEdge = /Edg/.test(navigator.userAgent);
             if (!isChrome && !isEdge) {
-                mostraToast('⚠️ Usa Google Chrome o Microsoft Edge per questa funzione!', 'warning');
+                mostraToast('ATTENZIONE: Usa Google Chrome o Microsoft Edge per questa funzione.', 'warning');
             }
         }
 
@@ -449,7 +449,7 @@
         async function selezionaFileTXT() {
             try {
                 if (!('showOpenFilePicker' in window)) {
-                    mostraToast('❌ Il tuo browser non supporta questa funzione. Usa Chrome o Edge!', 'error');
+                    mostraToast('ERRORE: Il tuo browser non supporta questa funzione. Usa Chrome o Edge.', 'error');
                     return;
                 }
 
@@ -484,27 +484,27 @@
                     if (intestazioni.some(h => trimmed.includes(h))) return;
                     
                     // Estrai il nome file rimuovendo il prefisso [Cartella]
-                    // Esempio: "[Casa sposa] 4N6A9233.jpg" → "4N6A9233.jpg"
+                    // Esempio: "[Casa sposa] 4N6A9233.jpg" -> "4N6A9233.jpg"
                     const match = trimmed.match(/\[.*?\]\s*(.+\.(jpg|jpeg|png|gif|webp))/i);
                     if (match) {
                         fotoSelezionate.push(match[1]);
                     } else if (trimmed.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
-                        // Se è già un nome file senza prefisso
+                        // Se e gia un nome file senza prefisso
                         fotoSelezionate.push(trimmed);
                     }
                 });
 
                 // Aggiorna UI
                 document.getElementById('txtNome').textContent = file.name;
-                document.getElementById('txtCount').textContent = `${fotoSelezionate.length} foto`;
+                document.getElementById('txtCount').textContent = fotoSelezionate.length + ' foto';
                 document.getElementById('txtInfo').classList.remove('hidden');
                 document.getElementById('txtStatus').classList.remove('hidden');
-                document.getElementById('txtStatus').innerHTML = `✅ File caricato correttamente! <strong>${fotoSelezionate.length}</strong> foto da copiare.`;
+                document.getElementById('txtStatus').innerHTML = 'File caricato correttamente. <strong>' + fotoSelezionate.length + '</strong> foto da copiare.';
                 document.getElementById('txtStatus').className = 'file-status success';
                 document.getElementById('sectionTxt').classList.add('active');
 
                 verificaPronti();
-                mostraToast(`File TXT caricato: ${fotoSelezionate.length} foto`, 'success');
+                mostraToast('File TXT caricato: ' + fotoSelezionate.length + ' foto', 'success');
             } catch (error) {
                 if (error.name !== 'AbortError') {
                     console.error('Errore:', error);
@@ -516,7 +516,7 @@
         async function selezionaCartellaOrigini() {
             try {
                 if (!('showDirectoryPicker' in window)) {
-                    mostraToast('❌ Il tuo browser non supporta questa funzione. Usa Chrome o Edge!', 'error');
+                    mostraToast('ERRORE: Il tuo browser non supporta questa funzione. Usa Chrome o Edge.', 'error');
                     return;
                 }
 
@@ -525,7 +525,7 @@
                 document.getElementById('originiNome').textContent = cartellaOrigini.name;
                 document.getElementById('originiInfo').classList.remove('hidden');
                 document.getElementById('originiStatus').classList.remove('hidden');
-                document.getElementById('originiStatus').innerHTML = `✅ Cartella selezionata: <strong>${cartellaOrigini.name}</strong>`;
+                document.getElementById('originiStatus').innerHTML = 'Cartella selezionata: <strong>' + cartellaOrigini.name + '</strong>';
                 document.getElementById('originiStatus').className = 'file-status success';
                 document.getElementById('sectionOrigini').classList.add('active');
 
@@ -542,7 +542,7 @@
         async function selezionaCartellaDestinazione() {
             try {
                 if (!('showDirectoryPicker' in window)) {
-                    mostraToast('❌ Il tuo browser non supporta questa funzione. Usa Chrome o Edge!', 'error');
+                    mostraToast('ERRORE: Il tuo browser non supporta questa funzione. Usa Chrome o Edge.', 'error');
                     return;
                 }
 
@@ -551,7 +551,7 @@
                 document.getElementById('destinazioneNome').textContent = cartellaDestinazione.name;
                 document.getElementById('destinazioneInfo').classList.remove('hidden');
                 document.getElementById('destinazioneStatus').classList.remove('hidden');
-                document.getElementById('destinazioneStatus').innerHTML = `✅ Cartella selezionata: <strong>${cartellaDestinazione.name}</strong>`;
+                document.getElementById('destinazioneStatus').innerHTML = 'Cartella selezionata: <strong>' + cartellaDestinazione.name + '</strong>';
                 document.getElementById('destinazioneStatus').className = 'file-status success';
                 document.getElementById('sectionDestinazione').classList.add('active');
 
@@ -569,7 +569,7 @@
             const btn = document.getElementById('btnCopia');
             if (fileTXT && cartellaOrigini && cartellaDestinazione && fotoSelezionate.length > 0) {
                 btn.disabled = false;
-                btn.innerHTML = '🚀 AVVIA COPIA INTELLIGENTE';
+                btn.innerHTML = 'AVVIA COPIA INTELLIGENTE';
             } else {
                 btn.disabled = true;
                 btn.innerHTML = 'Completa tutti i passaggi sopra';
@@ -578,13 +578,13 @@
 
         async function avviaCopia() {
             if (!fileTXT || !cartellaOrigini || !cartellaDestinazione) {
-                mostraToast('Completa tutti i passaggi!', 'error');
+                mostraToast('Completa tutti i passaggi.', 'error');
                 return;
             }
 
             const btn = document.getElementById('btnCopia');
             btn.disabled = true;
-            btn.innerHTML = '⏳ Copia in corso...';
+            btn.innerHTML = 'Copia in corso...';
 
             // Mostra progress bar
             document.getElementById('progressContainer').classList.add('active');
@@ -650,10 +650,10 @@
                 const percent = Math.round(((copiate + mancanti) / totale) * 100);
                 document.getElementById('progressBar').style.width = percent + '%';
                 document.getElementById('progressPercent').textContent = percent + '%';
-                document.getElementById('progressText').textContent = `${copiate + mancanti} / ${totale} foto`;
+                document.getElementById('progressText').textContent = (copiate + mancanti) + ' / ' + totale + ' foto';
                 document.getElementById('statCopiateVal').textContent = copiate;
                 document.getElementById('statMancantiVal').textContent = mancanti;
-                document.getElementById('progressDetails').textContent = `Elaborazione: ${nomeFile}...`;
+                document.getElementById('progressDetails').textContent = 'Elaborazione: ' + nomeFile + '...';
 
                 // Scroll automatico per vedere il progresso
                 document.getElementById('progressContainer').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -661,21 +661,21 @@
 
             // Completato
             btn.disabled = false;
-            btn.innerHTML = '🚀 AVVIA COPIA INTELLIGENTE';
-            document.getElementById('progressDetails').textContent = `✅ Completato! ${copiate} foto copiate, ${mancanti} non trovate.`;
+            btn.innerHTML = 'AVVIA COPIA INTELLIGENTE';
+            document.getElementById('progressDetails').textContent = 'Completato. ' + copiate + ' foto copiate, ' + mancanti + ' non trovate.';
             
-            mostraToast(`✅ Copia completata! ${copiate} foto copiate, ${mancanti} non trovate.`, 'success');
+            mostraToast('Copia completata. ' + copiate + ' foto copiate, ' + mancanti + ' non trovate.', 'success');
         }
 
         function tornaPlancia() {
-            window.location.href = `plancia-studio.html?token=${encodeURIComponent(token)}`;
+            window.location.href = 'plancia-studio.html?token=' + encodeURIComponent(token);
         }
 
         function mostraToast(msg, tipo) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            toast.className = `toast ${tipo}`;
-            toast.innerHTML = `<div>${msg}</div>`;
+            toast.className = 'toast ' + tipo;
+            toast.innerHTML = '<div>' + msg + '</div>';
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 5000);
         }
