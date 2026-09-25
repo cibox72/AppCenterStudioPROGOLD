@@ -1088,7 +1088,6 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
             const checkData = await checkResponse.json();
             
             if (checkData.success && checkData.eventi && checkData.eventi.length > 0) {
-                // Filtra solo gli eventi dello stesso studio (il filtro è già fatto dal Worker)
                 const eventiEsistenti = checkData.eventi;
                 
                 // Escludi l'evento corrente (se stiamo modificando un preventivo esistente)
@@ -1103,14 +1102,14 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
                         return `• ${tipo} - ${cliente} (${squadra})`;
                     }).join('\n');
                     
-                    const messaggio = `⚠️ ATTENZIONE: Esistono già ${altriEventi.length} event${altriEventi.length > 1 ? 'i' : 'o'} in questa data (${formatDataIT(dataEvento)}):\n\n${listaEventi}\n\nVuoi assegnare una squadra diversa per evitare sovrapposizioni?\n\nOK = Scegli squadra\nAnnulla = Mantieni Squadra 1`;
+                    const messaggio = `⚠️ ATTENZIONE: Esistono già ${altriEventi.length} event${altriEventi.length > 1 ? 'i' : 'o'} in questa data (${formatDataIT(dataEvento)}):\n\n${listaEventi}\n\nVuoi assegnare un collaboratore diverso per evitare sovrapposizioni?\n\nOK = Inserisci nome collaboratore\nAnnulla = Mantieni Squadra 1`;
                     
                     const scelta = confirm(messaggio);
                     
                     if (scelta) {
-                        const squadraInput = prompt('Inserisci il numero della squadra (1, 2 o 3):', '2');
-                        if (squadraInput && ['1', '2', '3'].includes(squadraInput)) {
-                            squadraScelta = 'Squadra ' + squadraInput;
+                        const squadraInput = prompt('Inserisci il nome del collaboratore (es. "Mario 3331234567"):', '');
+                        if (squadraInput && squadraInput.trim() !== '') {
+                            squadraScelta = squadraInput.trim();
                         }
                     }
                 }
@@ -1119,7 +1118,7 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
             console.warn('⚠️ Impossibile verificare eventi esistenti:', checkError);
         }
 
-        // ✅ ID STABILE: Usa l'ID del preventivo per garantire che INSERT OR REPLACE aggiorni lo stesso record
+        // ✅ ID STABILE: Usa l'ID del preventivo
         const eventId = 'agenda-' + (preventivoCorrenteId || ('prev-' + Date.now()));
         console.log('🆔 ID evento stabile:', eventId);
 
