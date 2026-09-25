@@ -999,58 +999,76 @@
             return ((c.nome || '') + ' ' + (c.cognome || '')).trim() || '-';
         }
 
+        
         async function salvaPreventivo(event) {
-            event.preventDefault();
-            const cognomeCliente = document.getElementById('cliente_a_cognome').value || 'Cliente';
-            const tipoServizio = document.getElementById('evento_tipo').value || 'Servizio';
-            const dataEvento = document.getElementById('evento_data').value;
+    event.preventDefault();
+    
+    // Evita doppio submit
+    if (window.isSavingPreventivo) {
+        console.log('⚠️ Salvataggio già in corso, ignoro');
+        return;
+    }
+    window.isSavingPreventivo = true;
+    
+    const cognomeCliente = document.getElementById('cliente_a_cognome').value || 'Cliente';
+    const tipoServizio = document.getElementById('evento_tipo').value || 'Servizio';
+    const dataEvento = document.getElementById('evento_data').value;
+    
+    console.log('🔍 Dati salvataggio:', { cognomeCliente, tipoServizio, dataEvento });
+    
+    const dati = {
+        id: preventivoCorrenteId || ('prev-' + Date.now()),
+        numero: document.getElementById('prev_numero').value,
+        data_emissione: document.getElementById('prev_data').value,
+        data_servizio: dataEvento,
+        tipo_servizio: tipoServizio,
+        luogo_cerimonia: document.getElementById('evento_luogo_cerimonia').value,
+        luogo_ricevimento: document.getElementById('evento_luogo_ricevimento').value,
+        cliente_a: getClienteA(),
+        cliente_b: getClienteB(),
+        servizi: serviziSelezionati,
+        acconti: acconti,
+        piano_pagamento: pianoPagamento,
+        sconto_perc: parseFloat(document.getElementById('sconto_perc').value) || 0,
+        sconto_fisso: parseFloat(document.getElementById('sconto_fisso').value) || 0,
+        accettato: document.getElementById('prev_accettato').checked,
+        note: document.getElementById('prev_note').value,
+        totale_finale: parseFloat(document.getElementById('importo_totale').textContent.replace(' EUR', '').replace(',', '.')) || 0,
+        stato: document.getElementById('prev_accettato').checked ? 'accettato' : 'bozza',
+        data_creazione: new Date().toISOString()
+    };
+    
+    try {
+        const response = await fetch(WORKER_URL + '/api/studio/preventivo?token=' + encodeURIComponent(token), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dati)
+        });
+        const result = await response.json();
+        if (result.success) {
+            preventivoCorrenteId = dati.id;
+            agendaEventId = null;
             
-            const dati = {
-                id: preventivoCorrenteId || ('prev-' + Date.now()),
-                numero: document.getElementById('prev_numero').value,
-                data_emissione: document.getElementById('prev_data').value,
-                data_servizio: dataEvento,
-                tipo_servizio: tipoServizio,
-                luogo_cerimonia: document.getElementById('evento_luogo_cerimonia').value,
-                luogo_ricevimento: document.getElementById('evento_luogo_ricevimento').value,
-                cliente_a: getClienteA(),
-                cliente_b: getClienteB(),
-                servizi: serviziSelezionati,
-                acconti: acconti,
-                piano_pagamento: pianoPagamento,
-                sconto_perc: parseFloat(document.getElementById('sconto_perc').value) || 0,
-                sconto_fisso: parseFloat(document.getElementById('sconto_fisso').value) || 0,
-                accettato: document.getElementById('prev_accettato').checked,
-                note: document.getElementById('prev_note').value,
-                totale_finale: parseFloat(document.getElementById('importo_totale').textContent.replace(' EUR', '').replace(',', '.')) || 0,
-                stato: document.getElementById('prev_accettato').checked ? 'accettato' : 'bozza',
-                data_creazione: new Date().toISOString()
-            };
-            
-            try {
-                // Usa sempre POST per creare o aggiornare (il Worker gestisce l'UPSERT)
-                const response = await fetch(WORKER_URL + '/api/studio/preventivo?token=' + encodeURIComponent(token), {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dati)
-                });
-                const result = await response.json();
-                if (result.success) {
-                    preventivoCorrenteId = dati.id;
-                    agendaEventId = null;
-                    console.log('🔔 Chiamata aggiornaAgenda da salvaPreventivo');
-                    console.trace('Stack trace:');
-                    await aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, document.getElementById('prev_accettato').checked);
-                    alert('Preventivo salvato con successo!');
-                    await caricaPreventivi();
-                } else {
-                    alert('Errore: ' + result.error);
-                }
-            } catch (error) {
-                console.error('Errore salvataggio:', error);
-                alert('Errore di connessione.');
+            // Chiama aggiornaAgenda SOLO se c'è una data evento valida
+            if (dataEvento) {
+                console.log('🔔 Chiamata aggiornaAgenda da salvaPreventivo');
+                await aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, document.getElementById('prev_accettato').checked);
+            } else {
+                console.log('⚠️ Nessuna data evento, non chiamo aggiornaAgenda');
             }
+            
+            alert('Preventivo salvato con successo!');
+            await caricaPreventivi();
+        } else {
+            alert('Errore: ' + result.error);
         }
+    } catch (error) {
+        console.error('Errore salvataggio:', error);
+        alert('Errore di connessione.');
+    } finally {
+        window.isSavingPreventivo = false;
+    }
+}
                 async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettato) {
     console.log('=== INIZIO aggiornaAgenda ===');
     console.log('Parametri:', { tipoServizio, cognomeCliente, dataEvento, accettato });
