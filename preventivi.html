@@ -1065,40 +1065,46 @@
         const titoloEvento = tipoServizio + ' ' + cognomeCliente + ' - ' + (accettato ? 'confermato' : 'da confermare');
         const descrizioneEvento = 'Preventivo/Contratto - ' + tipoServizio;
 
-        // Carica TUTTI gli eventi dell'agenda
-        const agendaResponse = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token));
+        // Carica TUTTI gli eventi dell'agenda (SENZA filtro data)
+        const agendaUrl = WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token);
+        console.log('📡 Chiamata API:', agendaUrl);
+        
+        const agendaResponse = await fetch(agendaUrl);
         const agendaData = await agendaResponse.json();
-
+        
+        console.log('📦 Risposta API:', agendaData);
         console.log('Eventi totali nel database:', agendaData.eventi ? agendaData.eventi.length : 0);
 
-        // ELIMINA TUTTI gli eventi per questo cliente (filtro molto ampio)
-        if (agendaData.success && agendaData.eventi) {
+        // ELIMINA TUTTI gli eventi per questo cliente + tipo servizio
+        if (agendaData.success && agendaData.eventi && agendaData.eventi.length > 0) {
             const eventiDaEliminare = agendaData.eventi.filter(function(e) {
-                // Cerca per cliente (case-insensitive)
+                // Filtro molto ampio: cerca per cliente E tipo servizio
                 const clienteMatch = e.cliente && cognomeCliente && 
-                    e.cliente.toLowerCase().includes(cognomeCliente.toLowerCase());
-                
-                // Cerca per tipo servizio (case-insensitive)
+                    e.cliente.toLowerCase().trim() === cognomeCliente.toLowerCase().trim();
                 const tipoMatch = e.tipo_servizio && tipoServizio && 
-                    e.tipo_servizio.toLowerCase() === tipoServizio.toLowerCase();
+                    e.tipo_servizio.toLowerCase().trim() === tipoServizio.toLowerCase().trim();
                 
-                // Cerca nella descrizione o nel titolo
-                const descMatch = (e.descrizione && e.descrizione.includes('Preventivo')) || 
-                                  (e.titolo && e.titolo.includes('Preventivo'));
-                
-                return clienteMatch && tipoMatch && descMatch;
+                return clienteMatch && tipoMatch;
             });
 
             console.log('🎯 Eventi da eliminare:', eventiDaEliminare.length);
-            eventiDaEliminare.forEach(e => console.log('  - ID:', e.id, 'Data:', e.data, 'Desc:', e.descrizione));
-
-            // Elimina tutti gli eventi vecchi
-            for (const evento of eventiDaEliminare) {
-                await fetch(WORKER_URL + '/api/studio/agenda/' + evento.id + '?token=' + encodeURIComponent(token), {
-                    method: 'DELETE'
+            
+            if (eventiDaEliminare.length > 0) {
+                eventiDaEliminare.forEach(e => {
+                    console.log('  - ID:', e.id, 'Data:', e.data, 'Cliente:', e.cliente, 'Tipo:', e.tipo_servizio);
                 });
-                console.log('🗑️ Eliminato evento ID:', evento.id, 'Data:', evento.data);
+
+                // Elimina tutti gli eventi vecchi
+                for (const evento of eventiDaEliminare) {
+                    const deleteResponse = await fetch(WORKER_URL + '/api/studio/agenda/' + evento.id + '?token=' + encodeURIComponent(token), {
+                        method: 'DELETE'
+                    });
+                    const deleteResult = await deleteResponse.json();
+                    console.log('🗑️ Eliminato evento ID:', evento.id, 'Risultato:', deleteResult);
+                }
             }
+        } else {
+            console.log('️ Nessun evento nel database o errore nella risposta');
         }
 
         // Crea un NUOVO evento con la data corretta
@@ -1130,10 +1136,9 @@
         
         console.log('=== FINE aggiornaAgenda ===');
     } catch (error) {
-        console.error('❌ Errore aggiornamento agenda:', error);
+        console.error(' Errore aggiornamento agenda:', error);
     }
 }
-
         function generaPDF() {
             if (!datiStudio) {
                 alert('Dati studio non disponibili. Compila prima la Scheda Anagrafica.');
