@@ -143,6 +143,7 @@
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
             outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2); background: #ffffff; 
         }
+        .form-hint { font-size: 12px; color: var(--text-light); margin-top: 4px; font-style: italic; }
         
         .btn { 
             padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; 
@@ -250,22 +251,6 @@
         .cred-box .label { font-size: 11px; color: var(--text-light); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
         .cred-box .value { font-size: 16px; font-weight: 700; color: var(--primary-dark); margin: 8px 0; font-family: monospace; word-break: break-all; }
         
-        .payment-card { 
-            border: 1px solid var(--border-color); border-radius: 12px; 
-            padding: 20px; margin-bottom: 16px; transition: all 0.3s; background: #ffffff;
-        }
-        .payment-card.active { border-color: var(--primary); background: var(--primary-light); }
-        .payment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .payment-title { font-weight: 700; font-size: 16px; color: #000000; display: flex; align-items: center; gap: 8px; }
-        .payment-desc { font-size: 13px; color: var(--text-light); margin-bottom: 12px; line-height: 1.5; }
-        
-        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 26px; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: #ffffff; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary); }
-        input:checked + .slider:before { transform: translateX(24px); }
-        
         .hidden { display: none !important; }
         .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
         .loading { text-align: center; padding: 40px; color: var(--text-light); }
@@ -331,7 +316,7 @@
                 </div>
                 <div class="dash-card" onclick="mostraSezione('config')">
                     <div class="card-title">Configurazione</div>
-                    <div class="card-desc">Imposta i metodi di pagamento e i dati di ritiro.</div>
+                    <div class="card-desc">Imposta i dati di ritiro e il metodo di pagamento preferito.</div>
                 </div>
             </div>
         </div>
@@ -453,11 +438,12 @@
                 <div id="ordersList"></div>
             </div>
         </div>
-                <div id="configSection" class="section">
+
+        <div id="configSection" class="section">
             <div class="card">
                 <div class="card-title">Configurazione Negozio</div>
                 <div style="background: var(--primary-light); padding: 16px; border-radius: 8px; margin-bottom: 24px; border-left: 4px solid var(--primary); border: 1px solid var(--border-color);">
-                    <strong>Nota Operativa:</strong> Il cliente seleziona i prodotti, carica le foto e invia l'ordine. Tu ricevi l'ordine in "Attesa". Il cliente deve pagare in anticipo usando uno dei metodi che attivi qui sotto. Una volta ricevuto il pagamento, cambi lo stato dell'ordine in "Pagato" e poi "Pronto" per il ritiro.
+                    <strong>Nota Operativa:</strong> Scegli come vuoi ricevere i pagamenti dai clienti. Il cliente vedra le tue istruzioni dopo aver fatto l'ordine.
                 </div>
 
                 <div class="card-title" style="font-size: 18px; margin-top: 0;">Dati per il Ritiro</div>
@@ -466,68 +452,46 @@
                     <div class="form-group"><label>Indirizzo Studio (per ritiro)</label><input type="text" id="studioIndirizzo" placeholder="Via Roma 1, Milano"></div>
                 </div>
 
-                <div class="card-title" style="font-size: 18px; margin-top: 32px;">Metodi di Pagamento</div>
-                <p style="font-size: 13px; color: var(--text-light); margin-bottom: 20px;">Attiva i metodi che vuoi offrire. Il cliente vedra le istruzioni specifiche con il link o i dati per pagare l'importo esatto dell'ordine.</p>
+                <div class="card-title" style="font-size: 18px; margin-top: 32px;">Metodo di Pagamento Preferito</div>
+                <p style="font-size: 13px; color: var(--text-light); margin-bottom: 20px;">Scegli UN metodo principale. Il cliente vedra le istruzioni specifiche dopo aver fatto l'ordine.</p>
 
-                <div class="payment-card" id="card-paypal">
-                    <div class="payment-header">
-                        <div class="payment-title">PayPal</div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="check-paypal" onchange="togglePayment('paypal')">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="payment-desc">Il cliente vedra un link diretto "Paga con PayPal" che precompila l'importo esatto dell'ordine.</div>
-                    <div class="form-group hidden" id="group-paypal">
-                        <label>Email PayPal o Link PayPal.me</label>
-                        <input type="text" id="paypalEmail" placeholder="es. tuaemail@dominio.com o https://paypal.me/tuonome">
-                    </div>
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label style="font-size: 14px; font-weight: 700;">Seleziona il metodo di pagamento:</label>
+                    <select id="metodoPagamentoPreferito" onchange="onMetodoChange()" style="padding: 12px; border: 2px solid var(--border-color); border-radius: 10px; font-size: 14px; background: #f8f9fa; color: #000000;">
+                        <option value="">-- Seleziona metodo --</option>
+                        <option value="paypal">Link PayPal (il cliente clicca e paga)</option>
+                        <option value="iban">Bonifico Bancario (IBAN)</option>
+                        <option value="satispay">Satispay (numero di telefono)</option>
+                        <option value="studio">Pagamento in Studio (contanti o POS al ritiro)</option>
+                    </select>
                 </div>
 
-                <div class="payment-card" id="card-stripe">
-                    <div class="payment-header">
-                        <div class="payment-title">Stripe (Carta di Credito)</div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="check-stripe" onchange="togglePayment('stripe')">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="payment-desc">Il cliente verra reindirizzato a una pagina di pagamento sicura Stripe.</div>
-                    <div class="form-group hidden" id="group-stripe">
-                        <label>Link di Pagamento Stripe</label>
-                        <input type="text" id="stripeLink" placeholder="https://buy.stripe.com/...">
-                        <div style="font-size: 11px; color: var(--text-light); margin-top: 4px;">Crea un "Payment Link" nella dashboard di Stripe con importo variabile.</div>
-                    </div>
+                <div id="group-paypal" class="form-group hidden" style="background: var(--primary-light); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <label>Email PayPal o Link PayPal.me</label>
+                    <input type="text" id="paypalEmail" placeholder="es. tuaemail@dominio.com o https://paypal.me/tuonome">
+                    <div class="form-hint">Il cliente vedra un link diretto per pagare l'importo esatto dell'ordine.</div>
                 </div>
 
-                <div class="payment-card" id="card-satispay">
-                    <div class="payment-header">
-                        <div class="payment-title">Satispay</div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="check-satispay" onchange="togglePayment('satispay')">
-                            <span class="slider"></span>
-                        </label>
+                <div id="group-iban" class="form-group hidden" style="background: var(--primary-light); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <label>Codice IBAN</label>
+                    <input type="text" id="ibanNumero" placeholder="IT00 X000 0000 0000 0000 0000 000">
+                    <div class="form-group" style="margin-top: 12px;">
+                        <label>Intestatario Conto</label>
+                        <input type="text" id="ibanIntestatario" placeholder="Nome e Cognome intestatario">
                     </div>
-                    <div class="payment-desc">Il cliente vedra il tuo numero di telefono e la causale da inserire nell'app Satispay.</div>
-                    <div class="form-group hidden" id="group-satispay">
-                        <label>Numero di Telefono Satispay</label>
-                        <input type="tel" id="satispayNumero" placeholder="+39 333 1234567">
-                    </div>
+                    <div class="form-hint">Il cliente vedra l'IBAN e dovra fare un bonifico con causale: ORDINE-[codice]</div>
                 </div>
 
-                <div class="payment-card" id="card-iban">
-                    <div class="payment-header">
-                        <div class="payment-title">Bonifico Bancario (IBAN)</div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="check-iban" onchange="togglePayment('iban')">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="payment-desc">Il cliente vedra il tuo IBAN e la causale da usare per il bonifico.</div>
-                    <div class="form-group hidden" id="group-iban">
-                        <label>Codice IBAN</label>
-                        <input type="text" id="ibanNumero" placeholder="IT00 X000 0000 0000 0000 0000 000">
-                    </div>
+                <div id="group-satispay" class="form-group hidden" style="background: var(--primary-light); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <label>Numero di Telefono Satispay</label>
+                    <input type="tel" id="satispayNumero" placeholder="+39 333 1234567">
+                    <div class="form-hint">Il cliente vedra il tuo numero e dovra inviarti l'importo tramite app Satispay.</div>
+                </div>
+
+                <div id="group-studio" class="form-group hidden" style="background: var(--primary-light); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <label>Istruzioni per il Pagamento in Studio</label>
+                    <textarea id="studioPagamentoIstruzioni" rows="3" placeholder="Es. Pagamento in contanti o POS al momento del ritiro. Orari: Lun-Ven 9-18, Sab 9-13"></textarea>
+                    <div class="form-hint">Il cliente vedra queste istruzioni e paghera direttamente quando verra a ritirare la merce.</div>
                 </div>
 
                 <button class="btn btn-primary" style="margin-top: 24px; width: 100%;" onclick="salvaConfig()">SALVA CONFIGURAZIONE</button>
@@ -539,9 +503,7 @@
     <div class="footer-branding" style="text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; border-top: 1px solid var(--border-color); margin-top: 40px;">
         Servizio offerto da <strong class="studio-nome" id="footerStudioName" style="color: var(--primary-dark);">Caricamento...</strong>
     </div>
-
-    <script>
-        // Fallback di sicurezza per WORKER_URL
+        <script>
         if (typeof WORKER_URL === 'undefined') {
             var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
         }
@@ -577,7 +539,6 @@
                     await caricaTemaGlobale();
                 }, 10000);
                 
-                // Nascondi loading generico se presente, altrimenti gestito dalle sezioni
                 const loadingArea = document.getElementById('loadingArea');
                 if (loadingArea) loadingArea.classList.add('hidden');
                 
@@ -632,17 +593,11 @@
             document.getElementById(nomeSezione + 'Section').classList.add('active');
             window.scrollTo(0, 0);
             
-            if (nomeSezione === 'anteprima') {
-                renderizzaVetrina();
-            } else if (nomeSezione === 'clienti') {
-                caricaClienti();
-            } else if (nomeSezione === 'prodotti') {
-                caricaProdotti();
-            } else if (nomeSezione === 'ordini') {
-                caricaOrdini();
-            } else if (nomeSezione === 'config') {
-                caricaConfig();
-            }
+            if (nomeSezione === 'anteprima') renderizzaVetrina();
+            else if (nomeSezione === 'clienti') caricaClienti();
+            else if (nomeSezione === 'prodotti') caricaProdotti();
+            else if (nomeSezione === 'ordini') caricaOrdini();
+            else if (nomeSezione === 'config') caricaConfig();
         }
 
         async function caricaDatiIniziali() {
@@ -1020,10 +975,14 @@
             }
         }
 
-        function togglePayment(method) {
-            const isChecked = document.getElementById('check-' + method).checked;
-            document.getElementById('card-' + method).classList.toggle('active', isChecked);
-            document.getElementById('group-' + method).classList.toggle('hidden', !isChecked);
+        function onMetodoChange() {
+            const metodo = document.getElementById('metodoPagamentoPreferito').value;
+            ['paypal', 'iban', 'satispay', 'studio'].forEach(m => {
+                document.getElementById('group-' + m).classList.add('hidden');
+            });
+            if (metodo) {
+                document.getElementById('group-' + metodo).classList.remove('hidden');
+            }
         }
 
         async function caricaConfig() {
@@ -1034,34 +993,34 @@
                     config = data.config;
                     document.getElementById('whatsappNumero').value = config.whatsapp_numero || '';
                     document.getElementById('studioIndirizzo').value = config.studio_indirizzo || '';
-                    ['paypal', 'stripe', 'satispay', 'iban'].forEach(m => {
-                        if (config.metodi_pagamento && config.metodi_pagamento.includes(m)) {
-                            document.getElementById('check-' + m).checked = true;
-                            togglePayment(m);
-                            if (m === 'paypal') document.getElementById('paypalEmail').value = config.paypal_email || '';
-                            if (m === 'stripe') document.getElementById('stripeLink').value = config.stripe_link || '';
-                            if (m === 'satispay') document.getElementById('satispayNumero').value = config.satispay_numero || '';
-                            if (m === 'iban') document.getElementById('ibanNumero').value = config.iban_numero || '';
-                        }
-                    });
+                    
+                    const metodo = config.metodo_pagamento_preferito || '';
+                    document.getElementById('metodoPagamentoPreferito').value = metodo;
+                    onMetodoChange();
+                    
+                    if (metodo === 'paypal') document.getElementById('paypalEmail').value = config.paypal_email || '';
+                    if (metodo === 'iban') {
+                        document.getElementById('ibanNumero').value = config.iban_numero || '';
+                        document.getElementById('ibanIntestatario').value = config.iban_intestatario || '';
+                    }
+                    if (metodo === 'satispay') document.getElementById('satispayNumero').value = config.satispay_numero || '';
+                    if (metodo === 'studio') document.getElementById('studioPagamentoIstruzioni').value = config.studio_pagamento_istruzioni || '';
                 }
             } catch (e) { console.error('Errore caricamento config:', e); }
         }
 
         async function salvaConfig() {
-            const metodi = [];
-            ['paypal', 'stripe', 'satispay', 'iban'].forEach(m => {
-                if (document.getElementById('check-' + m).checked) metodi.push(m);
-            });
+            const metodo = document.getElementById('metodoPagamentoPreferito').value;
             const data = {
                 studio_id: studioId,
                 whatsapp_numero: document.getElementById('whatsappNumero').value.trim(),
                 studio_indirizzo: document.getElementById('studioIndirizzo').value.trim(),
-                metodi_pagamento: metodi.join(','),
+                metodo_pagamento_preferito: metodo,
                 paypal_email: document.getElementById('paypalEmail').value.trim(),
-                stripe_link: document.getElementById('stripeLink').value.trim(),
+                iban_numero: document.getElementById('ibanNumero').value.trim(),
+                iban_intestatario: document.getElementById('ibanIntestatario').value.trim(),
                 satispay_numero: document.getElementById('satispayNumero').value.trim(),
-                iban_numero: document.getElementById('ibanNumero').value.trim()
+                studio_pagamento_istruzioni: document.getElementById('studioPagamentoIstruzioni').value.trim()
             };
             await fetch(WORKER_URL + '/api/studio/negozio-config?token=' + token, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
