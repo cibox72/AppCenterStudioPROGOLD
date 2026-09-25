@@ -35,6 +35,7 @@
             transition: all 0.2s ease;
         }
         .nav-btn:hover { transform: translateY(-2px); }
+        .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .sync-status { color: white; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
         .sync-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
@@ -66,14 +67,18 @@
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
         .form-group input, .form-group select { 
             padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; font-family: inherit; 
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
         }
         .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(130, 224, 170, 0.2); }
+        .form-group input:disabled, .form-group select:disabled { 
+            background-color: #f8f9fa; color: #adb5bd; cursor: not-allowed; border-color: #e9ecef; 
+        }
         .btn { 
             padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; 
             cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
         .btn-primary { background: var(--primary-gradient); color: white; }
         .btn-outline { background: white; color: var(--primary-dark); border: 1px solid var(--primary); }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
@@ -122,37 +127,42 @@
 
         <div id="loadingArea" class="loading">
             <div class="spinner"></div>
-            <div>Verifica sessione cloud...</div>
+            <div>Verifica sessione cloud e caricamento anagrafica...</div>
         </div>
 
         <div id="mainContent" class="hidden">
             <div class="card-3d">
-                <div class="card-title">Carica Nuova Cartella Foto</div>
-                <div class="card-subtitle">Seleziona il cliente, dai un nome al momento e carica le foto (bassa risoluzione).</div>
+                <div class="card-title">1. Carica Nuova Cartella Foto</div>
+                <div class="card-subtitle">Segui i passaggi in ordine. I campi successivi si sbloccheranno automaticamente.</div>
+                
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Seleziona Cliente *</label>
-                        <select id="cfCliente"><option value="">-- Caricamento... --</option></select>
+                        <label>Seleziona Cliente dall'Anagrafica *</label>
+                        <select id="cfCliente" onchange="abilitaPassoSuccessivo()">
+                            <option value="">-- Caricamento anagrafica... --</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Nome Cartella / Momento *</label>
-                        <input type="text" id="cfNomeCartella" placeholder="Es. Casa Sposa, Ristorante, Esterni...">
+                        <input type="text" id="cfNomeCartella" placeholder="Es. Casa Sposa, Ristorante..." disabled oninput="abilitaPassoSuccessivo()">
                     </div>
                 </div>
+                
                 <div class="form-group">
-                    <label>Seleziona Foto (puoi selezionarne più di una)</label>
-                    <input type="file" id="cfFileInput" multiple accept="image/*" style="padding: 10px; border: 1px dashed var(--border-color); border-radius: 10px;">
+                    <label>Seleziona Foto (puoi selezionarne più di una) *</label>
+                    <input type="file" id="cfFileInput" multiple accept="image/*" disabled style="padding: 10px; border: 1px dashed var(--border-color); border-radius: 10px;">
                 </div>
+                
                 <div class="btn-group">
-                    <button class="btn btn-primary" onclick="assegnaFoto()">📤 CARICA CARTELLA</button>
+                    <button class="btn btn-primary" id="btnCarica" onclick="assegnaFoto()" disabled>📤 CARICA CARTELLA</button>
                 </div>
             </div>
 
             <div class="card-3d">
-                <div class="card-title">Clienti con Album Attivi</div>
+                <div class="card-title">2. Clienti con Album Attivi</div>
                 <div id="loadingClienti" class="loading" style="padding: 20px;">
                     <div class="spinner"></div>
-                    <div>Caricamento clienti...</div>
+                    <div>Caricamento elenco...</div>
                 </div>
                 <div class="client-list" id="clientList"></div>
             </div>
@@ -161,10 +171,11 @@
         <div class="footer-branding">Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></div>
     </div>
     <div class="toast-container" id="toastContainer"></div>
-
-    <script>
-        // NOTA: WORKER_URL è già definito globalmente in temi.js. 
-        // Rimuovendolo da qui evitiamo l'errore "Identifier has already been declared" che bloccava tutto lo script.
+        <script>
+        // Fallback di sicurezza per WORKER_URL se non è definito in temi.js
+        if (typeof WORKER_URL === 'undefined') {
+            var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
+        }
         
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
@@ -188,15 +199,15 @@
                 studioId = data.user.id;
                 
                 // CARICAMENTO TEMA GLOBALE
-                await caricaTemaGlobale();
-                
-                // POLLING PER AGGIORNAMENTO TEMA IN TEMPO REALE (ogni 10 secondi)
-                setInterval(async () => {
+                if (typeof caricaTemaGlobale === 'function') {
                     await caricaTemaGlobale();
-                }, 10000);
+                    setInterval(async () => { await caricaTemaGlobale(); }, 10000);
+                }
                 
                 document.getElementById('loadingArea').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
+                
+                // Carica i clienti dall'ANAGRAFICA blindata
                 await caricaClienti();
             } catch (error) {
                 console.error('Errore:', error);
@@ -205,101 +216,143 @@
         }
 
         // ============================================
-        // SEZIONE TEMA GLOBALE AGGIORNATA CON EFFETTI E TEMA ARANCIO
+        // CARICAMENTO CLIENTI DALL'ANAGRAFICA BLINDATA
         // ============================================
-        async function caricaTemaGlobale() {
-            if (!studioId) return;
-            try {
-                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
-                const data = await response.json();
-                if (data.success && data.tema && data.tema.tema_attivo) {
-                    const temaId = data.tema.tema_attivo;
-                    const temi = {
-                        'default': { p: '#82e0aa', pd: '#1e8449', pl: '#e8f8f5', pg: 'linear-gradient(135deg, #a9dfbf 0%, #82e0aa 50%, #1e8449 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8f8f5 40%, #ebf5fb 100%)', effetto: null },
-                        'natale': { p: '#e74c3c', pd: '#922b21', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f1948a 0%, #e74c3c 50%, #922b21 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fadbd8 40%, #fef9e7 100%)', effetto: 'neve' },
-                        'carnevale': { p: '#af7ac5', pd: '#6c3483', pl: '#e8daef', pg: 'linear-gradient(135deg, #d2b4de 0%, #af7ac5 50%, #6c3483 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #e8daef 40%, #f4ecf7 100%)', effetto: 'coriandoli' },
-                        'inverno': { p: '#5d6d7e', pd: '#1c2833', pl: '#eaeded', pg: 'linear-gradient(135deg, #aab7b8 0%, #5d6d7e 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #eaeded 40%, #f2f3f4 100%)', effetto: null },
-                        'pasqua': { p: '#f1948a', pd: '#c0392b', pl: '#fadbd8', pg: 'linear-gradient(135deg, #f9e79f 0%, #f1948a 50%, #c0392b 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fadbd8 100%)', effetto: null },
-                        'estate': { p: '#5dade2', pd: '#1a5276', pl: '#d6eaf8', pg: 'linear-gradient(135deg, #f9e79f 0%, #5dade2 50%, #1a5276 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #d6eaf8 40%, #fef9e7 100%)', effetto: null },
-                        'halloween': { p: '#f39c12', pd: '#7d6608', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #1c2833 100%)', bg: 'linear-gradient(135deg, #1c2833 0%, #2c3e50 40%, #fdebd0 100%)', effetto: null },
-                        'san_valentino': { p: '#e91e63', pd: '#880e4f', pl: '#fce4ec', pg: 'linear-gradient(135deg, #f48fb1 0%, #e91e63 50%, #880e4f 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fce4ec 40%, #f8bbd0 100%)', effetto: null },
-                        'arancio': { p: '#f39c12', pd: '#d35400', pl: '#fdebd0', pg: 'linear-gradient(135deg, #f1c40f 0%, #f39c12 50%, #d35400 100%)', bg: 'linear-gradient(135deg, #fdfbfb 0%, #fdebd0 40%, #fef9e7 100%)', effetto: null }
-                    };
-                    const t = temi[temaId] || temi['default'];
-                    const root = document.documentElement;
-                    root.style.setProperty('--primary', t.p);
-                    root.style.setProperty('--primary-dark', t.pd);
-                    root.style.setProperty('--primary-light', t.pl);
-                    root.style.setProperty('--primary-gradient', t.pg);
-                    root.style.setProperty('--bg-gradient', t.bg);
-                    
-                    // Attiva effetto speciale se la funzione esiste (caricata da temi.js)
-                    if (typeof attivaEffettoSpeciale === 'function') {
-                        attivaEffettoSpeciale(t.effetto);
-                    }
-                }
-            } catch (error) {
-                console.error('Errore caricamento tema:', error);
-            }
-        }
-
         async function caricaClienti() {
             document.getElementById('loadingClienti').style.display = 'block';
             document.getElementById('clientList').innerHTML = '';
-            document.getElementById('cfCliente').innerHTML = '<option value="">-- Caricamento... --</option>';
+            const select = document.getElementById('cfCliente');
+            select.innerHTML = '<option value="">-- Caricamento anagrafica... --</option>';
 
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/clienti?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
+                // ✅ MODIFICA CHIAVE: Usa l'endpoint dell'anagrafica clienti blindata
+                const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti?token=${encodeURIComponent(token)}`);
                 const data = await response.json();
+                
                 if (data.success && data.clienti) {
                     clienti = data.clienti;
-                    const select = document.getElementById('cfCliente');
-                    select.innerHTML = '<option value="">-- Seleziona un cliente --</option>' + 
-                        clienti.map(c => `<option value="${c.id}">${c.nome_a} ${c.cognome_a} (${c.tipo_evento || 'Evento'})</option>`).join('');
                     
+                    // Popola il menu a tendina con i dati corretti dell'anagrafica
+                    select.innerHTML = '<option value="">-- Seleziona un cliente dall\'anagrafica --</option>' + 
+                        clienti.map(c => `<option value="${c.id}">${c.nome} ${c.cognome} (ID: ${c.id})</option>`).join('');
+                    
+                    // Popola la lista clienti in basso
                     document.getElementById('clientList').innerHTML = clienti.map(c => `
                         <div class="client-item">
                             <div class="client-info">
-                                <div class="client-name">${c.nome_a} ${c.cognome_a} ${c.nome_b ? '& ' + c.nome_b + ' ' + c.cognome_b : ''}</div>
-                                <div class="client-event">${c.tipo_evento || 'Evento'} - ${c.data_evento ? new Date(c.data_evento).toLocaleDateString('it-IT') : 'Data non impostata'}</div>
+                                <div class="client-name">${c.nome} ${c.cognome}</div>
+                                <div class="client-event">ID: ${c.id} | 📞 ${c.telefono || 'N/D'} | ✉️ ${c.email || 'N/D'}</div>
                             </div>
-                            <button class="btn btn-outline" style="padding: 8px 16px;" onclick="window.location.href='selezione-album-cliente.html?token=${encodeURIComponent(token)}&clienteId=${encodeURIComponent(c.id)}'">Gestisci Selezione</button>
+                            <button class="btn btn-outline" style="padding: 8px 16px;" onclick="window.location.href='selezione-album-cliente.html?id=${encodeURIComponent(c.id)}&token=${encodeURIComponent(token)}'">Gestisci Selezione</button>
                         </div>
                     `).join('');
+                } else {
+                    select.innerHTML = '<option value="">-- Nessun cliente trovato in anagrafica --</option>';
+                    document.getElementById('clientList').innerHTML = '<div style="text-align:center; color: var(--text-light); padding: 20px;">Nessun cliente registrato. Vai in "Anagrafica Clienti" per aggiungerne uno.</div>';
                 }
-            } catch (error) { console.error('Errore:', error); }
+            } catch (error) { 
+                console.error('Errore:', error); 
+                select.innerHTML = '<option value="">-- Errore di caricamento --</option>';
+            }
             document.getElementById('loadingClienti').style.display = 'none';
         }
 
+        // ============================================
+        // VALIDAZIONE SEQUENZIALE (Blindaggio UX)
+        // ============================================
+        function abilitaPassoSuccessivo() {
+            const clienteId = document.getElementById('cfCliente').value;
+            const inputCartella = document.getElementById('cfNomeCartella');
+            const inputFiles = document.getElementById('cfFileInput');
+            const btnCarica = document.getElementById('btnCarica');
+
+            // Passo 1: Selezionato un cliente? Sblocca il nome cartella
+            if (clienteId) {
+                inputCartella.disabled = false;
+                inputCartella.style.backgroundColor = '#ffffff';
+                inputCartella.focus();
+            } else {
+                inputCartella.disabled = true;
+                inputCartella.style.backgroundColor = '#f8f9fa';
+                inputFiles.disabled = true;
+                btnCarica.disabled = true;
+                return;
+            }
+
+            // Passo 2: Scritto il nome della cartella? Sblocca file e pulsante
+            if (inputCartella.value.trim().length > 0) {
+                inputFiles.disabled = false;
+                inputFiles.style.backgroundColor = '#ffffff';
+                btnCarica.disabled = false;
+            } else {
+                inputFiles.disabled = true;
+                inputFiles.style.backgroundColor = '#f8f9fa';
+                btnCarica.disabled = true;
+            }
+        }
+
+        // ============================================
+        // UPLOAD FOTO
+        // ============================================
         async function assegnaFoto() {
             const clienteId = document.getElementById('cfCliente').value;
             const nomeCartella = document.getElementById('cfNomeCartella').value.trim();
             const fileInput = document.getElementById('cfFileInput');
             const files = fileInput.files;
+            const btnCarica = document.getElementById('btnCarica');
 
-            if (!clienteId || !nomeCartella) { mostraToast('Seleziona cliente e inserisci il nome della cartella', 'error'); return; }
-            if (files.length === 0) { mostraToast('Seleziona almeno una foto', 'error'); return; }
+            if (!clienteId || !nomeCartella) { 
+                mostraToast('Seleziona cliente e inserisci il nome della cartella', 'error'); 
+                return; 
+            }
+            if (files.length === 0) { 
+                mostraToast('Seleziona almeno una foto', 'error'); 
+                return; 
+            }
 
-            const cliente = clienti.find(c => c.id === clienteId);
-            mostraToast(`Caricamento di ${files.length} foto in "${nomeCartella}"...`, 'success');
+            // Blocca il pulsante durante l'upload
+            btnCarica.disabled = true;
+            btnCarica.textContent = '⏳ Caricamento in corso...';
 
             let caricati = 0;
+            let errori = 0;
+
             for (let file of files) {
                 try {
-                    await fetch(`${WORKER_URL}/api/studio/upload?token=${encodeURIComponent(token)}&studioId=${encodeURIComponent(studioId)}&clienteId=${encodeURIComponent(clienteId)}&folder=${encodeURIComponent(nomeCartella)}&filename=${encodeURIComponent(file.name)}`, {
+                    const response = await fetch(`${WORKER_URL}/api/studio/upload?token=${encodeURIComponent(token)}&studioId=${encodeURIComponent(studioId)}&clienteId=${encodeURIComponent(clienteId)}&folder=${encodeURIComponent(nomeCartella)}&filename=${encodeURIComponent(file.name)}`, {
                         method: 'POST',
                         body: file
                     });
-                    caricati++;
-                } catch (error) { console.error('Errore upload:', error); }
+                    
+                    const result = await response.json();
+                    if (result.success) {
+                        caricati++;
+                    } else {
+                        errori++;
+                    }
+                } catch (error) { 
+                    console.error('Errore upload:', error); 
+                    errori++;
+                }
             }
 
-            mostraToast(`${caricati} foto caricate con successo!`, 'success');
-            fileInput.value = '';
-            document.getElementById('cfNomeCartella').value = '';
+            // Ripristina il pulsante
+            btnCarica.disabled = false;
+            btnCarica.textContent = '📤 CARICA CARTELLA';
+
+            if (caricati > 0) {
+                mostraToast(`✅ ${caricati} foto caricate con successo in "${nomeCartella}"!`, 'success');
+                fileInput.value = ''; // Resetta l'input file
+                document.getElementById('cfNomeCartella').value = ''; // Resetta il nome cartella
+                abilitaPassoSuccessivo(); // Riapplica la validazione sequenziale
+            } else {
+                mostraToast(`❌ Errore nel caricamento delle foto. Riprova.`, 'error');
+            }
         }
 
-        function tornaPlancia() { window.location.href = `plancia-studio.html?token=${encodeURIComponent(token)}`; }
+        function tornaPlancia() { 
+            window.location.href = `plancia-studio.html?token=${encodeURIComponent(token)}`; 
+        }
         
         function mostraToast(msg, tipo) {
             const container = document.getElementById('toastContainer');
@@ -307,7 +360,10 @@
             toast.className = `toast ${tipo}`;
             toast.innerHTML = `<div>${msg}</div>`;
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
     </script>
 </body>
