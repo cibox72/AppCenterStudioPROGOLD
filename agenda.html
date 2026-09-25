@@ -7,17 +7,12 @@
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
     
-    <!-- ============================================ -->
-    <!-- SEZIONE 1: CSS STYLES (Tema Oro/Nero/Bianco) -->
-    <!-- ============================================ -->
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background: #ffffff; min-height: 100vh; color: #000000; }
         .top-bar { background: linear-gradient(135deg, #d4af37, #996515); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .top-bar h1 { color: #ffffff; font-size: 1.4em; font-weight: 600; }
         .sync-status { display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.9em; }
-        .sync-dot { width: 10px; height: 10px; background: #ffffff; border-radius: 50%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .nav-btn { background: rgba(255,255,255,0.2); border: none; color: #ffffff; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9em; margin-left: 10px; }
         .nav-btn:hover { background: rgba(255,255,255,0.3); }
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
@@ -25,17 +20,11 @@
         .page-header h2 { color: #000000; margin-bottom: 10px; font-size: 1.6em; }
         .page-header p { color: #666666; font-size: 0.95em; }
         
-        /* LAYOUT TRE COLONNE */
-        .agenda-main-layout { display: grid; grid-template-columns: 280px 1fr 320px; gap: 20px; }
-        @media (max-width: 1200px) { 
-            .agenda-main-layout { grid-template-columns: 1fr; } 
-            .left-column, .right-column { order: 2; }
-            .center-column { order: 1; grid-column: 1 / -1; }
-        }
+        .agenda-layout { display: grid; grid-template-columns: 280px 1fr 320px; gap: 20px; }
+        @media (max-width: 1200px) { .agenda-layout { grid-template-columns: 1fr; } }
         
         .section { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; }
         .section-title { color: #000000; font-size: 1.3em; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #fff9e6; font-weight: 600; }
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 6px; color: #000000; font-weight: 600; font-size: 0.85em; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 2px solid #d5d8dc; border-radius: 8px; font-size: 0.9em; background: #f8f9fa; color: #000000; }
@@ -46,23 +35,18 @@
         .btn-outline { background: transparent; border: 2px solid #d4af37; color: #996515; }
         .btn-outline:hover { background: #fff9e6; }
         .btn-danger { background: linear-gradient(135deg, #f1948a, #e74c3c); color: #ffffff; }
-        .btn-warning { background: linear-gradient(135deg, #f9e79f, #f1c40f); color: #000000; }
-        .btn-success { background: linear-gradient(135deg, #58d68d, #28b463); color: #ffffff; }
         .btn-sm { padding: 5px 10px; font-size: 0.8em; }
         .actions-bar { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
         
-        /* WHATSAPP SECTION */
         .whatsapp-section { background: #fff9e6; padding: 20px; border-radius: 10px; border-left: 4px solid #d4af37; }
         .whatsapp-section h4 { color: #000000; margin-bottom: 10px; font-size: 1.1em; }
         .whatsapp-section p { color: #666666; font-size: 0.85em; margin-bottom: 15px; line-height: 1.4; }
         
-        /* STATS */
         .agenda-stats { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 20px; }
         .agenda-stat { background: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid #d5d8dc; text-align: center; border-left: 4px solid #d4af37; }
         .agenda-stat h4 { color: #996515; font-size: 1.8em; margin-bottom: 5px; }
         .agenda-stat p { color: #666666; font-size: 0.8em; font-weight: 600; }
         
-        /* AGENDA GRID STILE CARTACEO */
         .agenda-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 2px solid #fff9e6; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
         .agenda-header h3 { color: #000000; font-size: 1.3em; }
         .agenda-date-nav { display: flex; gap: 8px; align-items: center; }
@@ -70,11 +54,10 @@
         .agenda-date-nav button { padding: 8px 15px; background: #d4af37; color: #ffffff; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
         .agenda-date-nav button:hover { background: #996515; }
         
-        .agenda-grid { display: flex; flex-direction: column; border: 2px solid #d5d8dc; border-radius: 10px; overflow: hidden; background: #ffffff; margin-top: 15px; }
+        .agenda-grid { display: flex; flex-direction: column; border: 2px solid #d5d8dc; border-radius: 10px; overflow: hidden; background: #ffffff; }
         .agenda-hour-row { display: flex; border-bottom: 1px solid #f0f0f0; min-height: 65px; transition: background 0.2s; }
         .agenda-hour-row:last-child { border-bottom: none; }
         .agenda-hour-row:hover { background: #fffdf5; }
-        .agenda-hour-row.has-events { background: #fffdf5; }
         
         .hour-label { width: 80px; background: #ffffff; color: #996515; font-weight: 700; display: flex; align-items: center; justify-content: center; border-right: 2px solid #d4af37; font-size: 0.85em; flex-shrink: 0; padding: 0 10px; }
         .hour-content { flex: 1; padding: 6px 10px; position: relative; display: flex; flex-direction: column; gap: 6px; }
@@ -87,7 +70,6 @@
         .agenda-event .event-meta { font-size: 0.75em; margin-top: 5px; opacity: 0.85; border-top: 1px solid rgba(255,255,255,0.4); padding-top: 4px; }
         .agenda-event.da-confermare .event-meta { border-top-color: rgba(0,0,0,0.2); }
         
-        .agenda-empty { text-align: center; padding: 40px; color: #666666; font-style: italic; }
         .loading { text-align: center; padding: 40px; color: #666666; }
         .spinner { border: 4px solid #fff9e6; border-top: 4px solid #d4af37; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -105,25 +87,15 @@
             body * { visibility: hidden; }
             .agenda-grid, .agenda-grid * { visibility: visible; }
             .agenda-grid { position: absolute; left: 0; top: 0; width: 100%; border: none; }
-            .agenda-hour-row { break-inside: avoid; }
-        }
-        @media (max-width: 768px) { 
-            .form-grid { grid-template-columns: 1fr; } 
-            .actions-bar { flex-direction: column; } 
-            .actions-bar .btn { width: 100%; justify-content: center; } 
-            .hour-label { width: 60px; font-size: 0.75em; }
         }
     </style>
 </head>
 <body>
-    <!-- ============================================ -->
-    <!-- SEZIONE 2: TOP BAR & HEADER -->
-    <!-- ============================================ -->
     <div class="top-bar">
-        <button class="nav-btn" onclick="window.location.href='plancia-studio.html?token=' + encodeURIComponent(token)">Indietro alla Plancia</button>
+        <button class="nav-btn" onclick="tornaAllaPlancia()">Indietro alla Plancia</button>
         <h1>Agenda</h1>
         <div class="sync-status">
-            <div class="sync-dot"></div>
+            <div style="width: 10px; height: 10px; background: #ffffff; border-radius: 50%;"></div>
             <span>Cloud Sync: OK</span>
         </div>
     </div>
@@ -134,12 +106,8 @@
             <p>Gestione appuntamenti, servizi e promemoria automatici</p>
         </div>
 
-        <!-- ============================================ -->
-        <!-- SEZIONE 3: LAYOUT PRINCIPALE A TRE COLONNE -->
-        <!-- ============================================ -->
-        <div class="agenda-main-layout">
+        <div class="agenda-layout">
             
-            <!-- COLONNA SINISTRA: WhatsApp e Stats -->
             <div class="left-column">
                 <div class="section">
                     <h3 class="section-title">Promemoria WhatsApp</h3>
@@ -187,15 +155,14 @@
                 </div>
             </div>
 
-            <!-- COLONNA CENTRALE: AGENDA PLANNER -->
             <div class="center-column">
                 <div class="section" style="margin-bottom: 0;">
                     <div class="agenda-header">
                         <h3 id="agenda-data-titolo">Agenda</h3>
                         <div class="agenda-date-nav">
-                            <button onclick="cambiaGiorno(-1)">◀ Ieri</button>
+                            <button onclick="cambiaGiorno(-1)">Ieri</button>
                             <input type="date" id="agenda-data" onchange="caricaAgenda()">
-                            <button onclick="cambiaGiorno(1)">Domani ▶</button>
+                            <button onclick="cambiaGiorno(1)">Domani</button>
                             <button onclick="vaiAOggi()" style="background: #ffffff; color: #996515; border: 2px solid #d4af37;">Oggi</button>
                         </div>
                     </div>
@@ -206,14 +173,9 @@
                     </div>
 
                     <div id="agenda-grid-container" class="agenda-grid"></div>
-
-                    <div id="agenda-empty" class="agenda-empty" style="display: none;">
-                        <p style="font-size: 1.1em; color: #999;">Nessun impegno programmato per questa data</p>
-                    </div>
                 </div>
             </div>
 
-            <!-- COLONNA DESTRA: AGGIUNTA RAPIDA -->
             <div class="right-column">
                 <div class="section">
                     <h3 class="section-title">Aggiunta Rapida</h3>
@@ -248,21 +210,18 @@
                     
                     <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid #fff9e6;">
                         <button class="btn btn-success" style="width: 100%; justify-content: center; margin-bottom: 10px;" onclick="apriModalNuovoAppuntamento()">+ Appuntamento Completo</button>
-                        <button class="btn btn-outline" style="width: 100%; justify-content: center;" onclick="stampaGiornataPDF()">📄 Stampa PDF</button>
+                        <button class="btn btn-outline" style="width: 100%; justify-content: center;" onclick="stampaGiornataPDF()">Stampa PDF</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- SEZIONE 4: MODALE NUOVO APPUNTAMENTO -->
-    <!-- ============================================ -->
     <div id="modal-nuovo-appuntamento" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Nuovo Appuntamento</h2>
-                <button class="close-modal" onclick="chiudiModalAppuntamento()">×</button>
+                <button class="close-modal" onclick="chiudiModalAppuntamento()">x</button>
             </div>
             
             <form id="form-nuovo-appuntamento" onsubmit="salvaAppuntamento(event)">
@@ -270,7 +229,7 @@
                     <label>Descrizione *</label>
                     <textarea id="nuovo-descrizione" rows="3" required placeholder="Descrizione appuntamento" autocomplete="off"></textarea>
                 </div>
-                <div class="form-grid">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
                         <label>Data *</label>
                         <input type="date" id="nuovo-data" required autocomplete="off">
@@ -331,13 +290,12 @@
             </form>
         </div>
     </div>
-        <!-- FOOTER MINIMALISTA -->
+
     <div class="footer-branding">
         AppCenterStudioPROGOLD
     </div>
-
-    <!-- ============================================ -->
-    <!-- SEZIONE 5: JAVASCRIPT -->
+        <!-- ============================================ -->
+    <!-- SEZIONE JAVASCRIPT -->
     <!-- ============================================ -->
     <script>
         var token = '';
@@ -357,15 +315,21 @@
             verificaSessione();
         });
 
+        function tornaAllaPlancia() {
+            window.location.href = 'plancia-studio.html?token=' + encodeURIComponent(token);
+        }
+
         async function verificaSessione() {
             try {
                 const response = await fetch(WORKER_URL + '/api/auth/verifica?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 if (!data.success) { alert('Sessione scaduta. Effettua il login.'); window.location.href = 'index.html'; return; }
                 studioId = data.user.id;
-                caricaAgenda();
-                caricaNumeriWhatsApp();
-            } catch (error) { console.error('Errore verifica sessione:', error); }
+                await caricaNumeriWhatsApp();
+                await caricaAgenda();
+            } catch (error) { 
+                console.error('Errore verifica sessione:', error); 
+            }
         }
 
         async function caricaNumeriWhatsApp() {
@@ -377,7 +341,9 @@
                     document.getElementById('whatsapp_2').value = data.numeri.numero2 || '';
                     document.getElementById('whatsapp_3').value = data.numeri.numero3 || '';
                 }
-            } catch (error) { console.error('Errore caricamento numeri WhatsApp:', error); }
+            } catch (error) { 
+                console.error('Errore caricamento numeri WhatsApp:', error); 
+            }
         }
 
         async function salvaNumeriWhatsApp(event) {
@@ -406,13 +372,13 @@
             }
         }
 
-        async function testaInvio() {
+        function testaInvio() {
             const numero1 = document.getElementById('whatsapp_1').value;
             if (!numero1) {
                 alert('Inserisci almeno il primo numero WhatsApp');
                 return;
             }
-            const messaggio = `Test promemoria agenda AppCenterStudioPROGOLD. Questo e' un messaggio di prova per verificare il corretto funzionamento del sistema di promemoria.`;
+            const messaggio = `Test promemoria agenda AppCenterStudioPROGOLD. Questo e' un messaggio di prova.`;
             const whatsappUrl = `https://web.whatsapp.com/send?phone=${numero1}&text=${encodeURIComponent(messaggio)}`;
             window.open(whatsappUrl, '_blank');
         }
@@ -421,16 +387,14 @@
             const data = document.getElementById('agenda-data').value;
             if (!data) return;
             
-            const dataObj = new Date(data);
+            const dataObj = new Date(data + 'T00:00:00');
             const opzioni = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('agenda-data-titolo').textContent = 'Agenda - ' + dataObj.toLocaleDateString('it-IT', opzioni);
             
             document.getElementById('loading-agenda').style.display = 'block';
             document.getElementById('agenda-grid-container').innerHTML = '';
-            document.getElementById('agenda-empty').style.display = 'none';
             
             try {
-                // MODIFICA CHIAVE: Supporto filtro per data
                 const response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token) + '&data=' + data);
                 const result = await response.json();
                 
@@ -439,28 +403,11 @@
                 if (result.success) {
                     appuntamentiCorrenti = result.eventi || [];
                     renderAgendaGrid(appuntamentiCorrenti);
-                    
-                    let totale = 0;
-                    let confermati = 0;
-                    let daConfermare = 0;
-                    
-                    appuntamentiCorrenti.forEach(function(app) {
-                        totale++;
-                        if (app.stato === 'Confermato') confermati++;
-                        else daConfermare++;
-                    });
-                    
-                    document.getElementById('stat-totale').textContent = totale;
-                    document.getElementById('stat-confermati').textContent = confermati;
-                    document.getElementById('stat-da-confermare').textContent = daConfermare;
-                    document.getElementById('agenda-empty').style.display = 'none';
+                    aggiornaStatistiche(appuntamentiCorrenti);
                 } else {
                     appuntamentiCorrenti = [];
                     renderAgendaGrid([]);
-                    document.getElementById('stat-totale').textContent = '0';
-                    document.getElementById('stat-confermati').textContent = '0';
-                    document.getElementById('stat-da-confermare').textContent = '0';
-                    document.getElementById('agenda-empty').style.display = 'none';
+                    aggiornaStatistiche([]);
                 }
             } catch (error) {
                 console.error('Errore caricamento agenda:', error);
@@ -468,11 +415,26 @@
             }
         }
 
+        function aggiornaStatistiche(eventi) {
+            let totale = 0;
+            let confermati = 0;
+            let daConfermare = 0;
+            
+            eventi.forEach(function(app) {
+                totale++;
+                if (app.stato === 'Confermato') confermati++;
+                else daConfermare++;
+            });
+            
+            document.getElementById('stat-totale').textContent = totale;
+            document.getElementById('stat-confermati').textContent = confermati;
+            document.getElementById('stat-da-confermare').textContent = daConfermare;
+        }
+
         function renderAgendaGrid(eventi) {
             const grid = document.getElementById('agenda-grid-container');
             grid.innerHTML = '';
             
-            // Ore da 8 a 20 (il foglio dell'agenda cartacea viene sempre generato)
             for (let h = 8; h <= 20; h++) {
                 const hourStr = h.toString().padStart(2, '0') + ':00';
                 const row = document.createElement('div');
@@ -507,8 +469,8 @@
                     }
                     
                     div.innerHTML = '<h5>' + testoDescrittivo + '</h5>' +
-                                    '<p>' + (app.ora_inizio || 'Tutto il giorno') + ' ' + (app.ora_fine ? '- ' + app.ora_fine : '') + ' | ' + (app.cliente || 'Cliente non specificato') + '</p>' +
-                                    '<div class="event-meta">' + tipoServizio + (app.luogo ? ' | 📍 ' + app.luogo : '') + '</div>';
+                                    '<p>' + (app.ora_inizio || 'Tutto il giorno') + (app.ora_fine ? ' - ' + app.ora_fine : '') + ' | ' + (app.cliente || 'Cliente non specificato') + '</p>' +
+                                    '<div class="event-meta">' + tipoServizio + (app.luogo ? ' | ' + app.luogo : '') + '</div>';
                     div.onclick = () => modificaAppuntamento(app.id);
                     content.appendChild(div);
                 });
@@ -519,7 +481,7 @@
         }
 
         function cambiaGiorno(giorni) {
-            const oggi = new Date(document.getElementById('agenda-data').value);
+            const oggi = new Date(document.getElementById('agenda-data').value + 'T00:00:00');
             oggi.setDate(oggi.getDate() + giorni);
             document.getElementById('agenda-data').value = oggi.toISOString().split('T')[0];
             caricaAgenda();
@@ -573,7 +535,7 @@
                 if (result.success) {
                     alert('Appuntamento salvato con successo!');
                     chiudiModalAppuntamento();
-                    caricaAgenda();
+                    await caricaAgenda();
                 } else {
                     alert('Errore: ' + result.error);
                 }
@@ -610,7 +572,7 @@
                     alert('Appuntamento aggiunto!');
                     document.getElementById('form-appuntamento-rapido').reset();
                     document.getElementById('appuntamento-data').value = document.getElementById('agenda-data').value;
-                    caricaAgenda();
+                    await caricaAgenda();
                 } else {
                     alert('Errore: ' + result.error);
                 }
@@ -624,9 +586,9 @@
             const app = appuntamentiCorrenti.find(a => a.id === id);
             if (app) {
                 const stato = app.stato || 'Non definito';
-                const conferma = confirm('Modificare l\'appuntamento:\n\n"' + (app.descrizione || app.titolo) + '"\nCliente: ' + (app.cliente || 'N/D') + '\nStato: ' + stato + '\nData: ' + (app.data || 'N/D') + '\n\n(Per ora la modifica completa è in sviluppo. Vuoi eliminarlo e rifarlo?)');
+                const conferma = confirm('Modificare l\'appuntamento:\n\n"' + (app.descrizione || app.titolo) + '"\nCliente: ' + (app.cliente || 'N/D') + '\nStato: ' + stato + '\nData: ' + (app.data || 'N/D') + '\n\n(Per ora la modifica completa e\' in sviluppo. Vuoi eliminarlo e rifarlo?)');
                 if (conferma) {
-                    eliminaAppuntamento(id);
+                    await eliminaAppuntamento(id);
                 }
             }
         }
@@ -642,7 +604,7 @@
                 
                 if (result.success) {
                     alert('Appuntamento eliminato.');
-                    caricaAgenda();
+                    await caricaAgenda();
                 } else {
                     alert('Errore: ' + result.error);
                 }
@@ -652,12 +614,8 @@
             }
         }
 
-        function stampaGiornata() {
-            window.print();
-        }
-
         function stampaGiornataPDF() {
-            alert('Per salvare come PDF: nella finestra di stampa che si aprirà, seleziona "Salva come PDF" come destinazione.');
+            alert('Per salvare come PDF: nella finestra di stampa che si aprira\', seleziona "Salva come PDF" come destinazione.');
             window.print();
         }
 
