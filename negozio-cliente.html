@@ -168,11 +168,14 @@
                 <strong id="successCode" style="color: var(--primary-dark); font-size: 28px; font-family: monospace;"></strong>
             </p>
             <div id="whatsappReminder" class="info-box hidden" style="text-align: left;">
-                <strong>Passaggio importante:</strong>
+                <strong>Passaggio importante per la qualita di stampa:</strong>
                 <p style="margin-top: 8px; font-size: 14px; color: #155724; line-height: 1.6;">
-                    Per garantire la massima qualita di stampa, inviaci le foto originali via WhatsApp come ALLEGATO FILE (non come foto dalla chat).
+                    Le foto caricate sul sito sono state compresse per l'anteprima. Per garantire la massima qualita di stampa, inviaci le foto ORIGINALI via WhatsApp come <strong>ALLEGATO FILE</strong> (non come foto dalla chat).
                 </p>
-                <button class="btn btn-whatsapp" id="btnWhatsAppOrder" style="margin-top: 12px; width: 100%;">Invia foto via WhatsApp</button>
+                <p style="margin-top: 8px; font-size: 13px; color: #155724;">
+                    <strong>Come fare:</strong> Apri WhatsApp > Chat con lo studio > Allega > Documento > Seleziona le foto originali > Invia
+                </p>
+                <button class="btn btn-whatsapp" id="btnWhatsAppOrder" style="margin-top: 12px; width: 100%;">Invia foto originali via WhatsApp</button>
             </div>
             <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 16px; border-radius: 8px; margin: 20px 0; text-align: left;">
                 <strong style="color: #856404; font-size: 14px;">Nota:</strong>
@@ -270,7 +273,7 @@
             if (!prodotto) return;
             const esistente = carrello.find(function(item) { return item.id === prodId; });
             if (esistente) { esistente.quantita++; } 
-            else { carrello.push({ id: prodotto.id, nome: prodotto.nome, prezzo: prodotto.prezzo, quantita: 1, fotoBase64: null, fotoPreview: null }); }
+            else { carrello.push({ id: prodotto.id, nome: prodotto.nome, prezzo: prodotto.prezzo, quantita: 1, hasFoto: false }); }
             aggiornaCarrelloUI();
             mostraToast('Prodotto aggiunto', 'success');
         }
@@ -293,9 +296,8 @@
                 return '<div class="cart-item">' +
                     '<div class="cart-item-top"><div class="cart-item-name">' + item.nome + '</div><div class="cart-item-price">EUR ' + subtotale.toFixed(2) + '</div></div>' +
                     '<div class="cart-item-actions"><div class="qty-controls"><button class="qty-btn" onclick="cambiaQty(' + index + ', -1)">-</button><span>Qty: ' + item.quantita + '</span><button class="qty-btn" onclick="cambiaQty(' + index + ', 1)">+</button></div>' +
-                    '<label class="foto-upload-label ' + (item.fotoBase64 ? 'has-foto' : '') + '">' + (item.fotoBase64 ? 'Foto caricata' : 'Carica Foto') + '<input type="file" accept="image/*" style="display:none" onchange="caricaFotoProdotto(' + index + ', this)"></label>' +
+                    '<label class="foto-upload-label ' + (item.hasFoto ? 'has-foto' : '') + '">' + (item.hasFoto ? 'Foto caricata' : 'Carica Foto') + '<input type="file" accept="image/*" style="display:none" onchange="caricaFotoProdotto(' + index + ', this)"></label>' +
                     '<button class="cart-item-remove" onclick="rimuoviDalCarrello(' + index + ')">Rimuovi</button></div>' +
-                    (item.fotoPreview ? '<img src="' + item.fotoPreview + '" class="foto-preview" alt="Anteprima">' : '') +
                     '</div>';
             }).join('');
             totalEl.textContent = 'EUR ' + totale.toFixed(2);
@@ -312,52 +314,12 @@
             aggiornaCarrelloUI(); 
         }
 
-        function compressaImmagine(file, callback) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const MAX_SIZE = 800;
-                    const QUALITY = 0.7;
-                    let width = img.width;
-                    let height = img.height;
-                    
-                    if (width > height) {
-                        if (width > MAX_SIZE) {
-                            height = Math.round(height * MAX_SIZE / width);
-                            width = MAX_SIZE;
-                        }
-                    } else {
-                        if (height > MAX_SIZE) {
-                            width = Math.round(width * MAX_SIZE / height);
-                            height = MAX_SIZE;
-                        }
-                    }
-                    
-                    const canvas = document.createElement('canvas');
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    
-                    const base64 = canvas.toDataURL('image/jpeg', QUALITY);
-                    callback(base64);
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
         function caricaFotoProdotto(index, input) {
             if (!input.files || !input.files[0]) return;
             const file = input.files[0];
-            mostraToast('Compressione foto in corso...', 'success');
-            compressaImmagine(file, function(base64) {
-                carrello[index].fotoBase64 = base64;
-                carrello[index].fotoPreview = base64;
-                aggiornaCarrelloUI();
-                mostraToast('Foto caricata e ottimizzata', 'success');
-            });
+            carrello[index].hasFoto = true;
+            aggiornaCarrelloUI();
+            mostraToast('Foto associata al prodotto. Invia l\'originale via WhatsApp dopo l\'ordine.', 'success');
         }
 
         function toggleCart() { 
@@ -463,7 +425,7 @@
                             nome: item.nome, 
                             prezzo: item.prezzo, 
                             quantita: item.quantita,
-                            fotoBase64: item.fotoBase64 || null
+                            hasFoto: item.hasFoto || false
                         };
                     })),
                     totale: totale,
@@ -497,7 +459,7 @@
                 document.getElementById('successCode').textContent = codiceOrdine;
                 
                 if (studioWhatsApp) {
-                    const msg = 'Ciao, ho appena fatto l\'ordine ' + codiceOrdine + '. Ti invio le foto ad alta risoluzione per la stampa.';
+                    const msg = 'Ciao, ho appena fatto l\'ordine ' + codiceOrdine + '. Ti invio le foto originali ad alta risoluzione per la stampa.';
                     const whatsappLink = 'https://wa.me/' + studioWhatsApp + '?text=' + encodeURIComponent(msg);
                     const btnWhatsApp = document.getElementById('btnWhatsAppOrder');
                     btnWhatsApp.onclick = function() { window.open(whatsappLink, '_blank'); };
