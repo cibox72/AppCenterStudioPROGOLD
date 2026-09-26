@@ -613,55 +613,55 @@
             ).join('');
         }
 
-       async function caricaAnagraficaClienti() {
-    const select = document.getElementById('linkClienteSelect');
-    select.innerHTML = '<option value="">-- Caricamento clienti... --</option>';
-    
-    try {
-        const res = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti?token=' + token + '&studioId=' + encodeURIComponent(studioId));
-        const data = await res.json();
-        
-        if (!data.success || !data.clienti || data.clienti.length === 0) {
-            select.innerHTML = '<option value="">-- Nessun cliente in anagrafica --</option>';
-            mostraToast('Nessun cliente trovato in anagrafica', 'error');
-            return;
+        async function caricaAnagraficaClienti() {
+            const select = document.getElementById('linkClienteSelect');
+            select.innerHTML = '<option value="">-- Caricamento clienti... --</option>';
+            
+            try {
+                const res = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti?token=' + token + '&studioId=' + encodeURIComponent(studioId));
+                const data = await res.json();
+                
+                if (!data.success || !data.clienti || data.clienti.length === 0) {
+                    select.innerHTML = '<option value="">-- Nessun cliente in anagrafica --</option>';
+                    mostraToast('Nessun cliente trovato in anagrafica', 'error');
+                    return;
+                }
+                
+                anagraficaClienti = data.clienti;
+                select.innerHTML = '<option value="">-- Seleziona un cliente --</option>';
+                data.clienti.forEach(c => {
+                    const nomeCompleto = ((c.nome || '') + ' ' + (c.cognome || '')).trim();
+                    const idCliente = c.id || '';
+                    const telefono = c.telefono || 'No tel.';
+                    const option = document.createElement('option');
+                    option.value = idCliente;
+                    option.textContent = nomeCompleto + ' - ' + idCliente + ' (' + telefono + ')';
+                    select.appendChild(option);
+                });
+            } catch (e) {
+                console.error('Errore caricamento anagrafica:', e);
+                select.innerHTML = '<option value="">-- Errore caricamento --</option>';
+                mostraToast('Errore caricamento anagrafica clienti', 'error');
+            }
         }
-        
-        anagraficaClienti = data.clienti;
-        select.innerHTML = '<option value="">-- Seleziona un cliente --</option>';
-        data.clienti.forEach(c => {
-            const nomeCompleto = ((c.nome || '') + ' ' + (c.cognome || '')).trim();
-            const idCliente = c.id || '';
-            const telefono = c.telefono || 'No tel.';
-            const option = document.createElement('option');
-            option.value = idCliente;
-            option.textContent = nomeCompleto + ' - ' + idCliente + ' (' + telefono + ')';
-            select.appendChild(option);
-        });
-    } catch (e) {
-        console.error('Errore caricamento anagrafica:', e);
-        select.innerHTML = '<option value="">-- Errore caricamento --</option>';
-        mostraToast('Errore caricamento anagrafica clienti', 'error');
-    }
-}
 
-function onClienteSelectChange() {
-    const idCliente = document.getElementById('linkClienteSelect').value;
-    if (!idCliente) {
-        document.getElementById('linkClienteNome').value = '';
-        document.getElementById('linkClienteTelefono').value = '';
-        aggiornaBtnWhatsApp();
-        return;
-    }
-    
-    const cliente = anagraficaClienti.find(c => c.id === idCliente);
-    if (cliente) {
-        const nomeCompleto = ((cliente.nome || '') + ' ' + (cliente.cognome || '')).trim();
-        document.getElementById('linkClienteNome').value = nomeCompleto;
-        document.getElementById('linkClienteTelefono').value = cliente.telefono || '';
-        aggiornaBtnWhatsApp();
-    }
-}
+        function onClienteSelectChange() {
+            const idCliente = document.getElementById('linkClienteSelect').value;
+            if (!idCliente) {
+                document.getElementById('linkClienteNome').value = '';
+                document.getElementById('linkClienteTelefono').value = '';
+                aggiornaBtnWhatsApp();
+                return;
+            }
+            
+            const cliente = anagraficaClienti.find(c => c.id === idCliente);
+            if (cliente) {
+                const nomeCompleto = ((cliente.nome || '') + ' ' + (cliente.cognome || '')).trim();
+                document.getElementById('linkClienteNome').value = nomeCompleto;
+                document.getElementById('linkClienteTelefono').value = cliente.telefono || '';
+                aggiornaBtnWhatsApp();
+            }
+        }
 
         async function generaLinkCliente() {
             const idAnagrafica = document.getElementById('linkClienteSelect').value;
@@ -912,7 +912,8 @@ function onClienteSelectChange() {
                     if (o.stato === 'in_lavorazione') stats.lav++;
                     if (o.stato === 'pronto') stats.pro++;
                     if (o.stato === 'ritirato') stats.rit++;
-                    const prods = JSON.parse(o.prodotti || '[]');
+                    let prods = [];
+                    try { prods = JSON.parse(o.prodotti || '[]'); } catch(e) { prods = []; }
                     const badgeClass = 'badge-' + o.stato;
                     const statoText = o.stato.replace('_', ' ').toUpperCase();
                     return '<div class="order-item">' +
@@ -923,15 +924,11 @@ function onClienteSelectChange() {
                         '</div>' +
                         '<div class="order-products">' +
                             prods.map(p => {
-                                let fotoUrl = null;
-                                if (p.fotoUrl) {
-                                    const relativePath = p.fotoUrl.replace('https://appcenter-studio-foto.r2.dev/', '');
-                                    fotoUrl = WORKER_URL + '/api/studio/file?token=' + encodeURIComponent(token) + '&path=' + encodeURIComponent(relativePath);
-                                }
+                                let hasFoto = p.fotoUrl || p.fotoBase64;
                                 return '<div class="order-product">' +
                                     '<div class="order-product-info">' +
                                         '<div><strong>• ' + p.nome + ' x' + p.quantita + '</strong> - EUR ' + (p.prezzo * p.quantita).toFixed(2) + '</div>' +
-                                        (fotoUrl ? '<div class="order-product-actions"><a href="' + fotoUrl + '" target="_blank" class="btn btn-sm btn-info" style="text-decoration:none;">Visualizza Foto</a><button onclick="downloadFoto(\'' + fotoUrl + '\')" class="btn btn-sm btn-success" style="text-decoration:none;">Scarica Originale</button></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
+                                        (hasFoto ? '<div class="order-product-actions"><button onclick="scaricaEdEliminaFotoOrdine(\'' + o.id + '\')" class="btn btn-sm btn-success" style="text-decoration:none;">Scarica ed Elimina Foto</button></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
                                     '</div>' +
                                 '</div>';
                             }).join('') +
@@ -952,27 +949,35 @@ function onClienteSelectChange() {
             document.getElementById('statRit').textContent = stats.rit;
         }
 
-        async function downloadFoto(url) {
+        async function scaricaEdEliminaFotoOrdine(ordineId) {
             try {
-                mostraToast('Download in corso...', 'success');
-                const response = await fetch(url);
-                const blob = await response.blob();
-                const blobUrl = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = blobUrl;
-                const urlObj = new URL(url);
-                const pathParams = new URLSearchParams(urlObj.search);
-                const percorso = pathParams.get('path');
-                const nomeFile = percorso ? percorso.split('/').pop() : 'foto.jpg';
-                link.download = nomeFile;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                window.URL.revokeObjectURL(blobUrl);
-                mostraToast('Foto scaricata con successo', 'success');
+                mostraToast('Preparazione download e pulizia...', 'success');
+                const response = await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + ordineId + '/scarica-foto?token=' + token, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const result = await response.json();
+                
+                if (result.success && result.foto && result.foto.length > 0) {
+                    result.foto.forEach((f, index) => {
+                        setTimeout(() => {
+                            const link = document.createElement('a');
+                            link.href = f.fotoBase64;
+                            const safeName = f.nome.replace(/[^a-z0-9]/gi, '_');
+                            link.download = 'Ordine_' + ordineId + '_' + safeName + '.jpg';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                        }, index * 500);
+                    });
+                    mostraToast('Foto scaricate ed eliminate automaticamente dal database', 'success');
+                    setTimeout(() => caricaOrdini(), 2500);
+                } else {
+                    mostraToast('Nessuna foto trovata per questo ordine', 'error');
+                }
             } catch (error) {
-                console.error('Errore download:', error);
-                mostraToast('Errore nel download', 'error');
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione durante il download', 'error');
             }
         }
 
