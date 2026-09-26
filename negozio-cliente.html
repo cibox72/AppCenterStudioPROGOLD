@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Negozio ON-Line</title>
-    
-    <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
     
@@ -182,16 +180,6 @@
         }
         .payment-option h4 { color: var(--primary-dark); margin-bottom: 8px; font-size: 16px; }
         .payment-option p { font-size: 13px; color: var(--text-light); margin-bottom: 8px; }
-        .payment-option code { 
-            background: #ffffff; 
-            padding: 4px 8px; 
-            border-radius: 4px; 
-            font-size: 12px; 
-            display: block; 
-            margin: 8px 0; 
-            word-break: break-all; 
-            border: 1px solid var(--border-color);
-        }
         .payment-btn {
             display: inline-block;
             margin-top: 8px;
@@ -481,9 +469,7 @@
             }
             const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
             document.getElementById('checkTotal').textContent = 'Totale: EUR ' + totale.toFixed(2);
-            
             await caricaConfigurazioniPagamenti(totale);
-            
             document.getElementById('checkoutModal').classList.add('active');
             toggleCart();
         }
@@ -528,7 +514,6 @@
                 } else {
                     html += '<div class="alert-box"><strong>Impossibile caricare i metodi di pagamento</strong><p>Totale da pagare: <strong>EUR ' + totale.toFixed(2) + '</strong></p><p>Lo studio ti contattera a breve per concordare il pagamento.</p></div>';
                 }
-                
                 container.innerHTML = html;
             } catch (e) {
                 console.error('Errore config pagamenti:', e);
@@ -552,12 +537,12 @@
 
             const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
             const codiceOrdine = 'ORD-' + Date.now().toString().slice(-6);
-            
             mostraToast('Registrazione ordine...', 'success');
 
             try {
                 const ordineData = {
                     studio_id: studioId,
+                    cliente_id: clienteId,
                     codice_ordine: codiceOrdine,
                     cliente_nome: nome,
                     cliente_telefono: telefono,
@@ -581,9 +566,7 @@
                     body: JSON.stringify(ordineData)
                 });
                 
-                if (!response.ok) {
-                    throw new Error('Errore server: ' + response.status);
-                }
+                if (!response.ok) throw new Error('Errore server: ' + response.status);
                 
                 const result = await response.json();
                 console.log('Ordine creato:', result);
