@@ -443,7 +443,7 @@
             <div class="card">
                 <div class="card-title">Configurazione Negozio</div>
                 <div style="background: var(--primary-light); padding: 16px; border-radius: 8px; margin-bottom: 24px; border-left: 4px solid var(--primary); border: 1px solid var(--border-color);">
-                    <strong>Nota Operativa:</strong> Scegli come vuoi ricevere i pagamenti dai clienti. Il cliente vedra le tue istruzioni dopo aver fatto l'ordine.
+                    <strong>Nota Operativa:</strong> Il cliente seleziona i prodotti, carica le foto e invia l'ordine. Tu ricevi l'ordine in "Attesa". Il cliente deve pagare in anticipo usando il metodo che attivi qui sotto. Una volta ricevuto il pagamento, cambi lo stato dell'ordine in "Pagato" e poi "Pronto" per il ritiro.
                 </div>
 
                 <div class="card-title" style="font-size: 18px; margin-top: 0;">Dati per il Ritiro</div>
@@ -639,8 +639,14 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        id: clienteId, studio_id: studioId, nome_a: nome, cognome_a: '', 
-                        email: '', telefono: telefono, tipo_evento: 'Negozio', 
+                        id: clienteId, 
+                        studio_id: studioId, 
+                        nome_a: nome, 
+                        cognome_a: '', 
+                        email: '', 
+                        telefono: telefono, 
+                        tipo_evento: 'Negozio', 
+                        password: 'negozio-' + clienteId,
                         data_registrazione: new Date().toISOString()
                     })
                 });
@@ -1010,51 +1016,49 @@
         }
 
         async function salvaConfig() {
-    const metodo = document.getElementById('metodoPagamentoPreferito').value;
-    
-    // Invia SOLO i campi essenziali
-    const data = {
-        studio_id: studioId,
-        whatsapp_numero: document.getElementById('whatsappNumero').value.trim(),
-        studio_indirizzo: document.getElementById('studioIndirizzo').value.trim(),
-        paypal_email: document.getElementById('paypalEmail').value.trim(),
-        metodo_pagamento_preferito: metodo
-    };
-    
-    // Aggiungi campi opzionali solo se il metodo li richiede
-    if (metodo === 'iban') {
-        data.iban_numero = document.getElementById('ibanNumero').value.trim();
-        data.iban_intestatario = document.getElementById('ibanIntestatario').value.trim();
-    }
-    if (metodo === 'satispay') {
-        data.satispay_numero = document.getElementById('satispayNumero').value.trim();
-    }
-    if (metodo === 'studio') {
-        data.studio_pagamento_istruzioni = document.getElementById('studioPagamentoIstruzioni').value.trim();
-    }
-    
-    try {
-        const response = await fetch(WORKER_URL + '/api/studio/negozio-config?token=' + token, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-        
-        if (!response.ok) {
-            throw new Error('Errore server: ' + response.status);
+            const metodo = document.getElementById('metodoPagamentoPreferito').value;
+            
+            const data = {
+                studio_id: studioId,
+                whatsapp_numero: document.getElementById('whatsappNumero').value.trim(),
+                studio_indirizzo: document.getElementById('studioIndirizzo').value.trim(),
+                paypal_email: document.getElementById('paypalEmail').value.trim(),
+                metodo_pagamento_preferito: metodo
+            };
+            
+            if (metodo === 'iban') {
+                data.iban_numero = document.getElementById('ibanNumero').value.trim();
+                data.iban_intestatario = document.getElementById('ibanIntestatario').value.trim();
+            }
+            if (metodo === 'satispay') {
+                data.satispay_numero = document.getElementById('satispayNumero').value.trim();
+            }
+            if (metodo === 'studio') {
+                data.studio_pagamento_istruzioni = document.getElementById('studioPagamentoIstruzioni').value.trim();
+            }
+            
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/negozio-config?token=' + token, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Errore server: ' + response.status);
+                }
+                
+                const result = await response.json();
+                if (result.success) {
+                    mostraToast('Configurazione salvata', 'success');
+                } else {
+                    mostraToast('Errore: ' + (result.error || 'Sconosciuto'), 'error');
+                }
+            } catch (error) {
+                console.error('Errore salvataggio config:', error);
+                mostraToast('Errore di connessione: ' + error.message, 'error');
+            }
         }
-        
-        const result = await response.json();
-        if (result.success) {
-            mostraToast('Configurazione salvata', 'success');
-        } else {
-            mostraToast('Errore: ' + (result.error || 'Sconosciuto'), 'error');
-        }
-    } catch (error) {
-        console.error('Errore salvataggio config:', error);
-        mostraToast('Errore di connessione: ' + error.message, 'error');
-    }
-}
 
         function mostraToast(msg, tipo) {
             const container = document.getElementById('toastContainer');
