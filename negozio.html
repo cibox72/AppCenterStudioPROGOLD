@@ -107,8 +107,8 @@
         .toast { background: #ffffff; border-radius: 10px; padding: 16px 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s; color: #000000; font-weight: 600; }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
-        .foto-thumb { width: 80px; height: 80px; object-fit: contain; border-radius: 6px; border: 2px solid var(--primary); background: #f8f9fa; margin-right: 12px; }
         .whatsapp-reminder { background: #d4edda; border-left: 4px solid var(--success); padding: 12px; border-radius: 6px; margin-top: 8px; font-size: 12px; color: #155724; }
+        .foto-indicator { display: inline-block; padding: 4px 8px; background: #eafaf1; color: var(--success); border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 8px; }
         @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } .products-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -280,7 +280,7 @@
             <div class="card">
                 <div class="card-title">Configurazione Negozio</div>
                 <div style="background: var(--primary-light); padding: 16px; border-radius: 8px; margin-bottom: 24px; border-left: 4px solid var(--primary);">
-                    <strong>Nota Operativa:</strong> Il cliente carica le foto sul sito (compresse per anteprima). Per la stampa, il cliente invia le foto originali via WhatsApp come ALLEGATO FILE. Controlla WhatsApp Web per scaricare le foto ad alta risoluzione.
+                    <strong>Nota Operativa:</strong> Il cliente carica le foto sul sito (solo per anteprima). Per la stampa, il cliente invia le foto originali via WhatsApp come ALLEGATO FILE. Controlla WhatsApp Web per scaricare le foto ad alta risoluzione.
                 </div>
                 <div class="card-title" style="font-size: 18px; margin-top: 0;">Dati per il Ritiro</div>
                 <div class="form-row">
@@ -324,7 +324,6 @@
         let config = null;
         let currentImageBase64 = '';
         let anagraficaClienti = [];
-        let studioWhatsApp = '';
 
         document.addEventListener('DOMContentLoaded', function() {
             if (!token) { window.location.href = 'index.html'; return; }
@@ -705,7 +704,7 @@
                     try { prods = JSON.parse(o.prodotti || '[]'); } catch(e) { prods = []; }
                     const badgeClass = 'badge-' + o.stato;
                     const statoText = o.stato.replace(/_/g, ' ').toUpperCase();
-                    const nextAction = getNextAction(o.stato);
+                    const nextAction = getNextAction(o.stato, o.id);
                     return '<div class="order-item">' +
                         '<div class="order-header">' +
                             '<div><div class="order-code">Ordine #' + o.codice_ordine + '</div>' +
@@ -714,11 +713,10 @@
                         '</div>' +
                         '<div class="order-products">' +
                             prods.map(function(p) {
-                                const hasFoto = p.fotoBase64;
+                                const hasFoto = p.hasFoto;
                                 return '<div class="order-product">' +
                                     '<div class="order-product-info">' +
-                                        '<div><strong>• ' + p.nome + ' x' + p.quantita + '</strong> - EUR ' + (p.prezzo * p.quantita).toFixed(2) + '</div>' +
-                                        (hasFoto ? '<div class="order-product-actions" style="margin-top:8px;"><img src="' + hasFoto + '" class="foto-thumb" alt="Anteprima"><button onclick="scaricaEdEliminaFotoOrdine(\'' + o.id + '\')" class="btn btn-sm btn-success">Scarica ed Elimina Foto</button></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
+                                        '<div><strong>• ' + p.nome + ' x' + p.quantita + '</strong> - EUR ' + (p.prezzo * p.quantita).toFixed(2) + (hasFoto ? '<span class="foto-indicator">Foto da ricevere via WhatsApp</span>' : '') + '</div>' +
                                     '</div>' +
                                 '</div>';
                             }).join('') +
@@ -738,47 +736,16 @@
             document.getElementById('statRit').textContent = stats.rit;
         }
 
-        function getNextAction(stato) {
+        function getNextAction(stato, id) {
             const actions = {
-                'in_attesa': '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'{ID}\', \'pagato\')">Segna Pagato</button>',
-                'in_attesa_pagamento': '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'{ID}\', \'pagato\')">Segna Pagato</button>',
-                'pagato': '<button class="btn btn-sm btn-info" onclick="cambiaStato(\'{ID}\', \'in_lavorazione\')">Segna In Lavorazione</button>',
-                'in_lavorazione': '<button class="btn btn-sm btn-warning" onclick="segnaPronto(\'{ID}\')">Segna Pronto</button>',
-                'pronto': '<button class="btn btn-sm btn-primary" onclick="segnaRitirato(\'{ID}\')">Segna Ritirato</button>',
+                'in_attesa': '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'' + id + '\', \'pagato\')">Segna Pagato</button>',
+                'in_attesa_pagamento': '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'' + id + '\', \'pagato\')">Segna Pagato</button>',
+                'pagato': '<button class="btn btn-sm btn-info" onclick="cambiaStato(\'' + id + '\', \'in_lavorazione\')">Segna In Lavorazione</button>',
+                'in_lavorazione': '<button class="btn btn-sm btn-warning" onclick="cambiaStato(\'' + id + '\', \'pronto\')">Segna Pronto</button>',
+                'pronto': '<button class="btn btn-sm btn-primary" onclick="segnaRitirato(\'' + id + '\')">Segna Ritirato</button>',
                 'ritirato': ''
             };
-            return (actions[stato] || '').replace(/{ID}/g, '');
-        }
-
-        async function scaricaEdEliminaFotoOrdine(ordineId) {
-            try {
-                mostraToast('Preparazione download...', 'success');
-                const response = await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + ordineId + '/scarica-foto?token=' + token, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                const result = await response.json();
-                if (result.success && result.foto && result.foto.length > 0) {
-                    result.foto.forEach(function(f, index) {
-                        setTimeout(function() {
-                            const link = document.createElement('a');
-                            link.href = f.fotoBase64;
-                            const safeName = f.nome.replace(/[^a-z0-9]/gi, '_');
-                            link.download = 'Ordine_' + ordineId + '_' + safeName + '.jpg';
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                        }, index * 500);
-                    });
-                    mostraToast('Foto scaricate ed eliminate dal database', 'success');
-                    setTimeout(function() { caricaOrdini(); }, 2500);
-                } else {
-                    mostraToast('Nessuna foto trovata', 'error');
-                }
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore durante il download', 'error');
-            }
+            return actions[stato] || '';
         }
 
         async function cambiaStato(id, stato) {
@@ -787,19 +754,6 @@
             });
             mostraToast('Ordine aggiornato', 'success');
             caricaOrdini();
-        }
-
-        async function segnaPronto(id) {
-            try {
-                await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + id + '?token=' + token, {
-                    method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ stato: 'pronto' })
-                });
-                mostraToast('Ordine pronto', 'success');
-                caricaOrdini();
-            } catch (error) {
-                console.error('Errore:', error);
-                mostraToast('Errore nell\'operazione', 'error');
-            }
         }
 
         async function segnaRitirato(id) {
