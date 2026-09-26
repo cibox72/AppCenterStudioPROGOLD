@@ -404,7 +404,7 @@
             if (!prodotto) return;
             const esistente = carrello.find(function(item) { return item.id === prodId; });
             if (esistente) { esistente.quantita++; } 
-            else { carrello.push({ id: prodotto.id, nome: prodotto.nome, prezzo: prodotto.prezzo, quantita: 1, hasFoto: false }); }
+            else { carrello.push({ id: prodotto.id, nome: prodotto.nome, prezzo: prodotto.prezzo, quantita: 1, fotoBase64: null, fotoPreview: null }); }
             aggiornaCarrelloUI();
             mostraToast('Prodotto aggiunto', 'success');
         }
@@ -427,8 +427,9 @@
                 return '<div class="cart-item">' +
                     '<div class="cart-item-top"><div class="cart-item-name">' + item.nome + '</div><div class="cart-item-price">EUR ' + subtotale.toFixed(2) + '</div></div>' +
                     '<div class="cart-item-actions"><div class="qty-controls"><button class="qty-btn" onclick="cambiaQty(' + index + ', -1)">-</button><span>Qty: ' + item.quantita + '</span><button class="qty-btn" onclick="cambiaQty(' + index + ', 1)">+</button></div>' +
-                    '<label class="foto-upload-label ' + (item.hasFoto ? 'has-foto' : '') + '">' + (item.hasFoto ? 'Foto caricata' : 'Carica Foto') + '<input type="file" accept="image/*" style="display:none" onchange="caricaFotoProdotto(' + index + ', this)"></label>' +
+                    '<label class="foto-upload-label ' + (item.fotoBase64 ? 'has-foto' : '') + '">' + (item.fotoBase64 ? 'Foto caricata' : 'Carica Foto') + '<input type="file" accept="image/*" style="display:none" onchange="caricaFotoProdotto(' + index + ', this)"></label>' +
                     '<button class="cart-item-remove" onclick="rimuoviDalCarrello(' + index + ')">Rimuovi</button></div>' +
+                    (item.fotoPreview ? '<img src="' + item.fotoPreview + '" class="foto-preview" alt="Anteprima">' : '') +
                     '</div>';
             }).join('');
             totalEl.textContent = 'EUR ' + totale.toFixed(2);
@@ -448,9 +449,19 @@
         function caricaFotoProdotto(index, input) {
             if (!input.files || !input.files[0]) return;
             const file = input.files[0];
-            carrello[index].hasFoto = true;
-            aggiornaCarrelloUI();
-            mostraToast('Foto associata al prodotto (verra caricata separatamente)', 'success');
+            mostraToast('Caricamento foto in corso...', 'success');
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64 = e.target.result;
+                carrello[index].fotoBase64 = base64;
+                carrello[index].fotoPreview = base64;
+                aggiornaCarrelloUI();
+                mostraToast('Foto ad alta risoluzione caricata con successo', 'success');
+            };
+            reader.onerror = function() {
+                mostraToast('Errore nella lettura del file', 'error');
+            };
+            reader.readAsDataURL(file);
         }
 
         function toggleCart() { 
@@ -468,7 +479,7 @@
             document.getElementById('checkoutModal').classList.add('active');
             toggleCart();
         }
-                   async function caricaConfigurazioniPagamenti(totale) {
+                    async function caricaConfigurazioniPagamenti(totale) {
             const container = document.getElementById('paymentMethodsContainer');
             container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Caricamento metodi di pagamento...</div></div>';
             
@@ -552,7 +563,7 @@
                             nome: item.nome, 
                             prezzo: item.prezzo, 
                             quantita: item.quantita,
-                            hasFoto: item.hasFoto || false
+                            fotoBase64: item.fotoBase64 || null
                         };
                     })),
                     totale: totale,
@@ -564,7 +575,7 @@
                 console.log('Invio ordine:', ordineData);
 
                 const controller = new AbortController();
-                const timeoutId = setTimeout(function() { controller.abort(); }, 15000);
+                const timeoutId = setTimeout(function() { controller.abort(); }, 30000);
 
                 const response = await fetch(WORKER_URL + '/api/studio/negozio/ordine', {
                     method: 'POST',
@@ -625,4 +636,4 @@
         }
     </script>
 </body>
-</html> 
+</html>
