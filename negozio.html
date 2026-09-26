@@ -613,53 +613,55 @@
             ).join('');
         }
 
-        async function caricaAnagraficaClienti() {
-            const select = document.getElementById('linkClienteSelect');
-            select.innerHTML = '<option value="">-- Caricamento clienti... --</option>';
-            
-            try {
-                const res = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti?token=' + token + '&studioId=' + encodeURIComponent(studioId));
-                const data = await res.json();
-                
-                if (!data.success || !data.clienti || data.clienti.length === 0) {
-                    select.innerHTML = '<option value="">-- Nessun cliente in anagrafica --</option>';
-                    mostraToast('Nessun cliente trovato in anagrafica', 'error');
-                    return;
-                }
-                
-                anagraficaClienti = data.clienti;
-                select.innerHTML = '<option value="">-- Seleziona un cliente --</option>';
-                data.clienti.forEach(c => {
-                    const nomeCompleto = (c.nome_a || '') + ' ' + (c.cognome_a || '');
-                    const option = document.createElement('option');
-                    option.value = c.id;
-                    option.textContent = nomeCompleto.trim() + ' - ' + (c.telefono || 'No tel.');
-                    select.appendChild(option);
-                });
-            } catch (e) {
-                console.error('Errore caricamento anagrafica:', e);
-                select.innerHTML = '<option value="">-- Errore caricamento --</option>';
-                mostraToast('Errore caricamento anagrafica clienti', 'error');
-            }
+       async function caricaAnagraficaClienti() {
+    const select = document.getElementById('linkClienteSelect');
+    select.innerHTML = '<option value="">-- Caricamento clienti... --</option>';
+    
+    try {
+        const res = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti?token=' + token + '&studioId=' + encodeURIComponent(studioId));
+        const data = await res.json();
+        
+        if (!data.success || !data.clienti || data.clienti.length === 0) {
+            select.innerHTML = '<option value="">-- Nessun cliente in anagrafica --</option>';
+            mostraToast('Nessun cliente trovato in anagrafica', 'error');
+            return;
         }
+        
+        anagraficaClienti = data.clienti;
+        select.innerHTML = '<option value="">-- Seleziona un cliente --</option>';
+        data.clienti.forEach(c => {
+            const nomeCompleto = ((c.nome || '') + ' ' + (c.cognome || '')).trim();
+            const idCliente = c.id || '';
+            const telefono = c.telefono || 'No tel.';
+            const option = document.createElement('option');
+            option.value = idCliente;
+            option.textContent = nomeCompleto + ' - ' + idCliente + ' (' + telefono + ')';
+            select.appendChild(option);
+        });
+    } catch (e) {
+        console.error('Errore caricamento anagrafica:', e);
+        select.innerHTML = '<option value="">-- Errore caricamento --</option>';
+        mostraToast('Errore caricamento anagrafica clienti', 'error');
+    }
+}
 
-        function onClienteSelectChange() {
-            const idCliente = document.getElementById('linkClienteSelect').value;
-            if (!idCliente) {
-                document.getElementById('linkClienteNome').value = '';
-                document.getElementById('linkClienteTelefono').value = '';
-                aggiornaBtnWhatsApp();
-                return;
-            }
-            
-            const cliente = anagraficaClienti.find(c => c.id === idCliente);
-            if (cliente) {
-                const nomeCompleto = ((cliente.nome_a || '') + ' ' + (cliente.cognome_a || '')).trim();
-                document.getElementById('linkClienteNome').value = nomeCompleto;
-                document.getElementById('linkClienteTelefono').value = cliente.telefono || '';
-                aggiornaBtnWhatsApp();
-            }
-        }
+function onClienteSelectChange() {
+    const idCliente = document.getElementById('linkClienteSelect').value;
+    if (!idCliente) {
+        document.getElementById('linkClienteNome').value = '';
+        document.getElementById('linkClienteTelefono').value = '';
+        aggiornaBtnWhatsApp();
+        return;
+    }
+    
+    const cliente = anagraficaClienti.find(c => c.id === idCliente);
+    if (cliente) {
+        const nomeCompleto = ((cliente.nome || '') + ' ' + (cliente.cognome || '')).trim();
+        document.getElementById('linkClienteNome').value = nomeCompleto;
+        document.getElementById('linkClienteTelefono').value = cliente.telefono || '';
+        aggiornaBtnWhatsApp();
+    }
+}
 
         async function generaLinkCliente() {
             const idAnagrafica = document.getElementById('linkClienteSelect').value;
