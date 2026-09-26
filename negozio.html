@@ -281,7 +281,7 @@
                 </div>
                 <div class="dash-card" onclick="mostraSezione('link')">
                     <div class="card-title">Genera Link Cliente</div>
-                    <div class="card-desc">Crea un link univoco da inviare al cliente via WhatsApp.</div>
+                    <div class="card-desc">Seleziona un cliente dall'anagrafica e genera un link univoco.</div>
                 </div>
                 <div class="dash-card" onclick="mostraSezione('clienti')">
                     <div class="card-title">Archivio Clienti</div>
@@ -319,15 +319,26 @@
             <div class="card">
                 <div class="card-title">Genera Link per il Cliente</div>
                 <div style="font-size: 13px; color: var(--text-light); margin-bottom: 24px;">
-                    Inserisci i dati del cliente. Verra generato un link univoco che potra usare per accedere al negozio e fare ordini. Non sono necessarie password.
+                    Seleziona un cliente dall'anagrafica. I campi verranno precompilati automaticamente.
+                    Puoi modificare il numero di telefono se il cliente ne ha uno nuovo.
+                    Verra generato un link univoco che potra usare per accedere al negozio e fare ordini.
                 </div>
+                
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label>Seleziona Cliente dall'Anagrafica *</label>
+                    <select id="linkClienteSelect" onchange="onClienteSelectChange()" style="padding: 12px 14px; border: 2px solid var(--border-color); border-radius: 10px; font-size: 14px; background: #f8f9fa; color: #000000;">
+                        <option value="">-- Seleziona un cliente --</option>
+                    </select>
+                    <div class="form-hint">I clienti vengono caricati dalla scheda Anagrafica Clienti.</div>
+                </div>
+                
                 <div class="form-row">
                     <div class="form-group">
                         <label>Nome Cliente *</label>
-                        <input type="text" id="linkClienteNome" placeholder="Es. Mario Rossi">
+                        <input type="text" id="linkClienteNome" placeholder="Si precompila dalla selezione">
                     </div>
                     <div class="form-group">
-                        <label>Numero WhatsApp * (con prefisso)</label>
+                        <label>Numero WhatsApp * (modificabile)</label>
                         <input type="tel" id="linkClienteTelefono" placeholder="+39 333 1234567" oninput="aggiornaBtnWhatsApp()">
                         <button type="button" class="btn btn-whatsapp" id="btnWhatsAppWeb" onclick="apriWhatsAppWeb()" style="margin-top: 12px; display: none; width: 100%;">Apri WhatsApp Web</button>
                     </div>
@@ -348,7 +359,7 @@
 
         <div id="clientiSection" class="section">
             <div class="card">
-                <div class="card-title">Archivio Clienti</div>
+                <div class="card-title">Archivio Clienti Negozio</div>
                 <div id="clientiLoading" class="loading"><div class="spinner"></div><div>Caricamento...</div></div>
                 <div id="clientiEmpty" class="empty-state hidden">Nessun cliente trovato.</div>
                 <div class="products-grid" id="clientiGrid"></div>
@@ -495,6 +506,7 @@
         let prodotti = [];
         let config = null;
         let currentImageBase64 = '';
+        let anagraficaClienti = [];
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) { window.location.href = 'index.html'; return; }
@@ -518,6 +530,7 @@
                 
                 const loadingArea = document.getElementById('loadingArea');
                 if (loadingArea) loadingArea.classList.add('hidden');
+                
                 await caricaDatiIniziali();
             } catch (error) {
                 console.error('Errore:', error);
@@ -565,7 +578,9 @@
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(nomeSezione + 'Section').classList.add('active');
             window.scrollTo(0, 0);
+            
             if (nomeSezione === 'anteprima') renderizzaVetrina();
+            else if (nomeSezione === 'link') caricaAnagraficaClienti();
             else if (nomeSezione === 'clienti') caricaClienti();
             else if (nomeSezione === 'prodotti') caricaProdotti();
             else if (nomeSezione === 'ordini') caricaOrdini();
@@ -598,29 +613,88 @@
             ).join('');
         }
 
+        async function caricaAnagraficaClienti() {
+            const select = document.getElementById('linkClienteSelect');
+            select.innerHTML = '<option value="">-- Caricamento clienti... --</option>';
+            
+            try {
+                const res = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti?token=' + token + '&studioId=' + encodeURIComponent(studioId));
+                const data = await res.json();
+                
+                if (!data.success || !data.clienti || data.clienti.length === 0) {
+                    select.innerHTML = '<option value="">-- Nessun cliente in anagrafica --</option>';
+                    mostraToast('Nessun cliente trovato in anagrafica', 'error');
+                    return;
+                }
+                
+                anagraficaClienti = data.clienti;
+                select.innerHTML = '<option value="">-- Seleziona un cliente --</option>';
+                data.clienti.forEach(c => {
+                    const nomeCompleto = (c.nome_a || '') + ' ' + (c.cognome_a || '');
+                    const option = document.createElement('option');
+                    option.value = c.id;
+                    option.textContent = nomeCompleto.trim() + ' - ' + (c.telefono || 'No tel.');
+                    select.appendChild(option);
+                });
+            } catch (e) {
+                console.error('Errore caricamento anagrafica:', e);
+                select.innerHTML = '<option value="">-- Errore caricamento --</option>';
+                mostraToast('Errore caricamento anagrafica clienti', 'error');
+            }
+        }
+
+        function onClienteSelectChange() {
+            const idCliente = document.getElementById('linkClienteSelect').value;
+            if (!idCliente) {
+                document.getElementById('linkClienteNome').value = '';
+                document.getElementById('linkClienteTelefono').value = '';
+                aggiornaBtnWhatsApp();
+                return;
+            }
+            
+            const cliente = anagraficaClienti.find(c => c.id === idCliente);
+            if (cliente) {
+                const nomeCompleto = ((cliente.nome_a || '') + ' ' + (cliente.cognome_a || '')).trim();
+                document.getElementById('linkClienteNome').value = nomeCompleto;
+                document.getElementById('linkClienteTelefono').value = cliente.telefono || '';
+                aggiornaBtnWhatsApp();
+            }
+        }
+
         async function generaLinkCliente() {
+            const idAnagrafica = document.getElementById('linkClienteSelect').value;
             const nome = document.getElementById('linkClienteNome').value.trim();
             const telefono = document.getElementById('linkClienteTelefono').value.trim();
-            if (!nome || !telefono) { mostraToast('Inserisci nome e telefono', 'error'); return; }
+            
+            if (!idAnagrafica) { mostraToast('Seleziona un cliente dall\'anagrafica', 'error'); return; }
+            if (!nome || !telefono) { mostraToast('Compila nome e telefono', 'error'); return; }
 
             const clienteId = 'CL-' + Math.random().toString(36).substring(2, 8).toUpperCase();
             const link = window.location.origin + '/AppCenterStudioPROGOLD/negozio-cliente.html?studioId=' + encodeURIComponent(studioId) + '&clienteId=' + clienteId;
 
             try {
-                await fetch(WORKER_URL + '/api/studio/cliente?token=' + token, {
+                await fetch(WORKER_URL + '/api/studio/cliente-negozio?token=' + token, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        id: clienteId, studio_id: studioId, nome_a: nome, cognome_a: '', 
-                        email: '', telefono: telefono, tipo_evento: 'Negozio', 
-                        password: 'negozio-' + clienteId,
+                        id: clienteId,
+                        id_anagrafica: idAnagrafica,
+                        studio_id: studioId,
+                        nome_a: nome,
+                        cognome_a: '',
+                        email: '',
+                        telefono: telefono,
+                        tipo_evento: 'Negozio',
                         data_registrazione: new Date().toISOString()
                     })
                 });
                 document.getElementById('genLink').textContent = link;
                 document.getElementById('linkGenerato').classList.remove('hidden');
                 mostraToast('Link generato con successo', 'success');
-            } catch (error) { mostraToast('Errore di connessione', 'error'); }
+            } catch (error) { 
+                console.error('Errore:', error);
+                mostraToast('Errore di connessione', 'error'); 
+            }
         }
 
         function copiaLinkCliente() {
@@ -652,16 +726,17 @@
             const empty = document.getElementById('clientiEmpty');
             loading.style.display = 'block'; empty.classList.add('hidden'); grid.innerHTML = '';
             try {
-                const res = await fetch(WORKER_URL + '/api/studio/clienti?token=' + token + '&studioId=' + encodeURIComponent(studioId));
+                const res = await fetch(WORKER_URL + '/api/studio/clienti-negozio?token=' + token + '&studioId=' + encodeURIComponent(studioId));
                 const data = await res.json();
                 loading.style.display = 'none';
                 if (!data.success || data.clienti.length === 0) { empty.classList.remove('hidden'); return; }
                 grid.innerHTML = data.clienti.map(c => {
                     const link = window.location.origin + '/AppCenterStudioPROGOLD/negozio-cliente.html?studioId=' + encodeURIComponent(studioId) + '&clienteId=' + c.id;
                     return '<div class="product-card">' +
-                        '<div class="product-category">Cliente</div>' +
+                        '<div class="product-category">Cliente Negozio</div>' +
                         '<div class="product-name">' + (c.nome_a || '') + '</div>' +
                         '<div style="font-size:12px;color:var(--text-light);margin-bottom:8px;">' + (c.telefono || '') + '</div>' +
+                        '<div style="font-size:11px;color:var(--text-light);margin-bottom:8px;">ID Anagrafica: ' + (c.id_anagrafica || 'N/D') + '</div>' +
                         '<div style="background:var(--primary-light);padding:8px;border-radius:6px;margin-bottom:12px;border:1px solid var(--border-color);">' +
                         '<div style="font-size:10px;color:var(--text-light);font-weight:600;">Link:</div>' +
                         '<div style="font-size:11px;word-break:break-all;font-family:monospace;">' + link + '</div></div>' +
@@ -674,7 +749,7 @@
 
         async function eliminaCliente(id) {
             if (!confirm('Eliminare questo cliente?')) return;
-            await fetch(WORKER_URL + '/api/studio/cliente/' + id + '?token=' + token, { method: 'DELETE' });
+            await fetch(WORKER_URL + '/api/studio/cliente-negozio/' + id + '?token=' + token, { method: 'DELETE' });
             mostraToast('Cliente eliminato', 'success');
             caricaClienti();
         }
