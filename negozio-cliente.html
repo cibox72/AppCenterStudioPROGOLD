@@ -73,6 +73,7 @@
         .btn:hover { transform: translateY(-2px); }
         .btn-primary { background: var(--primary-gradient); color: #ffffff; width: 100%; }
         .btn-success { background: var(--success); color: #ffffff; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .cart-float-btn { 
             position: fixed; bottom: 24px; right: 24px; 
             background: var(--primary-gradient); color: #ffffff; 
@@ -292,7 +293,7 @@
 
             <div style="margin-top: 20px; display: flex; gap: 10px;">
                 <button class="btn" onclick="chiudiCheckout()" style="flex: 1; background: #95a5a6; color: #ffffff;">Annulla</button>
-                <button class="btn btn-success" onclick="confermaOrdine()" style="flex: 2;">CONFERMA ORDINE</button>
+                <button class="btn btn-success" id="btnConfermaOrdine" onclick="confermaOrdine()" style="flex: 2;">CONFERMA ORDINE</button>
             </div>
         </div>
     </div>
@@ -335,11 +336,11 @@
         let carrello = [];
         let configPagamenti = null;
 
-        document.addEventListener('DOMContentLoaded', async function() {
+        document.addEventListener('DOMContentLoaded', function() {
             if (!studioId) { mostraToast('Link non valido', 'error'); return; }
-            await applicaTemaGlobale();
-            setInterval(async () => { await applicaTemaGlobale(); }, 10000);
-            await caricaProdotti();
+            applicaTemaGlobale();
+            setInterval(function() { applicaTemaGlobale(); }, 10000);
+            caricaProdotti();
         });
 
         async function applicaTemaGlobale() {
@@ -382,16 +383,16 @@
                 document.getElementById('cartBtn').style.display = 'flex';
                 prodotti = data.prodotti;
                 const categorieMap = { 'canvas': 'Canvas', 'poster': 'Poster', 'tazza': 'Tazza', 'cuscino': 'Cuscino', 'acconto': 'Acconto', 'altro': 'Altro' };
-                document.getElementById('vetrinaGrid').innerHTML = prodotti.map(p => 
-                    '<div class="product-card">' +
-                    (p.immagine ? '<img src="' + p.immagine + '" class="product-image">' : '<div class="product-image" style="display:flex;align-items:center;justify-content:center;color:var(--text-light);">No Img</div>') +
-                    '<div class="product-category">' + (categorieMap[p.categoria] || p.categoria) + '</div>' +
-                    '<div class="product-name">' + p.nome + '</div>' +
-                    '<div class="product-price">EUR ' + parseFloat(p.prezzo).toFixed(2) + '</div>' +
-                    (p.descrizione ? '<div class="product-desc">' + p.descrizione + '</div>' : '') +
-                    '<button class="btn btn-primary" onclick="aggiungiAlCarrello(\'' + p.id + '\')">Aggiungi al Carrello</button>' +
-                    '</div>'
-                ).join('');
+                document.getElementById('vetrinaGrid').innerHTML = prodotti.map(function(p) {
+                    return '<div class="product-card">' +
+                        (p.immagine ? '<img src="' + p.immagine + '" class="product-image">' : '<div class="product-image" style="display:flex;align-items:center;justify-content:center;color:var(--text-light);">No Img</div>') +
+                        '<div class="product-category">' + (categorieMap[p.categoria] || p.categoria) + '</div>' +
+                        '<div class="product-name">' + p.nome + '</div>' +
+                        '<div class="product-price">EUR ' + parseFloat(p.prezzo).toFixed(2) + '</div>' +
+                        (p.descrizione ? '<div class="product-desc">' + p.descrizione + '</div>' : '') +
+                        '<button class="btn btn-primary" onclick="aggiungiAlCarrello(\'' + p.id + '\')">Aggiungi al Carrello</button>' +
+                        '</div>';
+                }).join('');
             } catch (error) { 
                 console.error('Errore prodotti:', error); 
                 mostraToast('Errore caricamento prodotti', 'error'); 
@@ -399,11 +400,11 @@
         }
 
         function aggiungiAlCarrello(prodId) {
-            const prodotto = prodotti.find(p => p.id === prodId);
+            const prodotto = prodotti.find(function(p) { return p.id === prodId; });
             if (!prodotto) return;
-            const esistente = carrello.find(item => item.id === prodId);
+            const esistente = carrello.find(function(item) { return item.id === prodId; });
             if (esistente) { esistente.quantita++; } 
-            else { carrello.push({ id: prodotto.id, nome: prodotto.nome, prezzo: prodotto.prezzo, quantita: 1, fotoBase64: null, fotoPreview: null }); }
+            else { carrello.push({ id: prodotto.id, nome: prodotto.nome, prezzo: prodotto.prezzo, quantita: 1, hasFoto: false }); }
             aggiornaCarrelloUI();
             mostraToast('Prodotto aggiunto', 'success');
         }
@@ -412,7 +413,7 @@
             const container = document.getElementById('cartItems');
             const countBadge = document.getElementById('cartCount');
             const totalEl = document.getElementById('cartTotal');
-            const totaleItems = carrello.reduce((sum, item) => sum + item.quantita, 0);
+            const totaleItems = carrello.reduce(function(sum, item) { return sum + item.quantita; }, 0);
             countBadge.textContent = totaleItems;
             if (carrello.length === 0) { 
                 container.innerHTML = '<div class="empty-state">Il carrello e vuoto</div>'; 
@@ -420,15 +421,15 @@
                 return; 
             }
             let totale = 0;
-            container.innerHTML = carrello.map((item, index) => {
+            container.innerHTML = carrello.map(function(item, index) {
                 const subtotale = item.prezzo * item.quantita; 
                 totale += subtotale;
                 return '<div class="cart-item">' +
                     '<div class="cart-item-top"><div class="cart-item-name">' + item.nome + '</div><div class="cart-item-price">EUR ' + subtotale.toFixed(2) + '</div></div>' +
                     '<div class="cart-item-actions"><div class="qty-controls"><button class="qty-btn" onclick="cambiaQty(' + index + ', -1)">-</button><span>Qty: ' + item.quantita + '</span><button class="qty-btn" onclick="cambiaQty(' + index + ', 1)">+</button></div>' +
-                    '<label class="foto-upload-label ' + (item.fotoBase64 ? 'has-foto' : '') + '">' + (item.fotoBase64 ? 'Foto caricata' : 'Carica Foto') + '<input type="file" accept="image/*" style="display:none" onchange="caricaFotoProdotto(' + index + ', this)"></label>' +
+                    '<label class="foto-upload-label ' + (item.hasFoto ? 'has-foto' : '') + '">' + (item.hasFoto ? 'Foto caricata' : 'Carica Foto') + '<input type="file" accept="image/*" style="display:none" onchange="caricaFotoProdotto(' + index + ', this)"></label>' +
                     '<button class="cart-item-remove" onclick="rimuoviDalCarrello(' + index + ')">Rimuovi</button></div>' +
-                    (item.fotoPreview ? '<img src="' + item.fotoPreview + '" class="foto-preview" alt="Anteprima">' : '') + '</div>';
+                    '</div>';
             }).join('');
             totalEl.textContent = 'EUR ' + totale.toFixed(2);
         }
@@ -447,19 +448,9 @@
         function caricaFotoProdotto(index, input) {
             if (!input.files || !input.files[0]) return;
             const file = input.files[0];
-            mostraToast('Caricamento foto in corso...', 'success');
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64 = e.target.result;
-                carrello[index].fotoBase64 = base64;
-                carrello[index].fotoPreview = base64;
-                aggiornaCarrelloUI();
-                mostraToast('Foto ad alta risoluzione caricata con successo', 'success');
-            };
-            reader.onerror = function() {
-                mostraToast('Errore nella lettura del file', 'error');
-            };
-            reader.readAsDataURL(file);
+            carrello[index].hasFoto = true;
+            aggiornaCarrelloUI();
+            mostraToast('Foto associata al prodotto (verra caricata separatamente)', 'success');
         }
 
         function toggleCart() { 
@@ -471,13 +462,13 @@
                 mostraToast('Il carrello e vuoto', 'error'); 
                 return; 
             }
-            const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
+            const totale = carrello.reduce(function(sum, item) { return sum + (item.prezzo * item.quantita); }, 0);
             document.getElementById('checkTotal').textContent = 'Totale: EUR ' + totale.toFixed(2);
             await caricaConfigurazioniPagamenti(totale);
             document.getElementById('checkoutModal').classList.add('active');
             toggleCart();
         }
-                    async function caricaConfigurazioniPagamenti(totale) {
+                   async function caricaConfigurazioniPagamenti(totale) {
             const container = document.getElementById('paymentMethodsContainer');
             container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Caricamento metodi di pagamento...</div></div>';
             
@@ -520,7 +511,7 @@
                 container.innerHTML = html;
             } catch (e) {
                 console.error('Errore config pagamenti:', e);
-                const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
+                const totale = carrello.reduce(function(sum, item) { return sum + (item.prezzo * item.quantita); }, 0);
                 container.innerHTML = '<div class="alert-box"><strong>Impossibile caricare i metodi di pagamento</strong><p>Totale da pagare: <strong>EUR ' + totale.toFixed(2) + '</strong></p><p>Lo studio ti contattera a breve per concordare il pagamento.</p></div>';
             }
         }
@@ -533,12 +524,17 @@
             const nome = document.getElementById('checkNome').value.trim();
             const telefono = document.getElementById('checkTelefono').value.trim();
             const email = document.getElementById('checkEmail').value.trim();
+            
             if (!nome || !telefono || !email) { 
                 mostraToast('Compila tutti i campi', 'error'); 
                 return; 
             }
 
-            const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
+            const btnConferma = document.getElementById('btnConfermaOrdine');
+            btnConferma.disabled = true;
+            btnConferma.textContent = 'INVIO IN CORSO...';
+            
+            const totale = carrello.reduce(function(sum, item) { return sum + (item.prezzo * item.quantita); }, 0);
             const codiceOrdine = 'ORD-' + Date.now().toString().slice(-6);
             mostraToast('Registrazione ordine...', 'success');
 
@@ -550,26 +546,38 @@
                     cliente_nome: nome,
                     cliente_telefono: telefono,
                     cliente_email: email,
-                    prodotti: JSON.stringify(carrello.map(item => ({
-                        id: item.id, 
-                        nome: item.nome, 
-                        prezzo: item.prezzo, 
-                        quantita: item.quantita, 
-                        fotoBase64: item.fotoBase64 || null
-                    }))),
+                    prodotti: JSON.stringify(carrello.map(function(item) {
+                        return {
+                            id: item.id, 
+                            nome: item.nome, 
+                            prezzo: item.prezzo, 
+                            quantita: item.quantita,
+                            hasFoto: item.hasFoto || false
+                        };
+                    })),
                     totale: totale,
                     stato: 'in_attesa_pagamento',
                     metodo_pagamento: configPagamenti ? configPagamenti.metodo_pagamento_preferito : 'non_specificato',
                     data_creazione: new Date().toISOString()
                 };
 
+                console.log('Invio ordine:', ordineData);
+
+                const controller = new AbortController();
+                const timeoutId = setTimeout(function() { controller.abort(); }, 15000);
+
                 const response = await fetch(WORKER_URL + '/api/studio/negozio/ordine', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(ordineData)
+                    body: JSON.stringify(ordineData),
+                    signal: controller.signal
                 });
                 
-                if (!response.ok) throw new Error('Errore server: ' + response.status);
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    throw new Error('Errore server: ' + response.status);
+                }
                 
                 const result = await response.json();
                 console.log('Ordine creato:', result);
@@ -585,19 +593,11 @@
                 document.getElementById('checkoutModal').classList.remove('active');
                 document.getElementById('successCode').textContent = codiceOrdine + ' (da confermare)';
                 document.getElementById('successModal').classList.add('active');
-                
-                const alertDiv = document.createElement('div');
-                alertDiv.className = 'alert-box';
-                alertDiv.style.marginTop = '16px';
-                alertDiv.innerHTML = '<strong>Nota:</strong> Si e\' verificato un errore tecnico. Ti invitiamo a contattare lo studio al numero che hai inserito per confermare l\'ordine e completare il pagamento.';
-                const modalContent = document.querySelector('#successModal .modal-content');
-                const button = modalContent.querySelector('button');
-                if (button) {
-                    modalContent.insertBefore(alertDiv, button);
-                }
-                
                 carrello = [];
                 aggiornaCarrelloUI();
+            } finally {
+                btnConferma.disabled = false;
+                btnConferma.textContent = 'CONFERMA ORDINE';
             }
         }
 
@@ -607,24 +607,22 @@
             toast.className = 'toast ' + tipo;
             toast.textContent = msg;
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            setTimeout(function() { toast.remove(); }, 3000);
         }
 
         function mostraMessaggioChiusura() {
-            document.body.innerHTML = `
-                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; background: #ffffff; font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px;">
-                    <div style="font-size: 64px; color: #28b463; margin-bottom: 20px;">Ordine Completato</div>
-                    <h1 style="color: #996515; margin-bottom: 20px;">Grazie per il tuo ordine!</h1>
-                    <p style="color: #666666; font-size: 18px; line-height: 1.6; max-width: 500px;">
-                        Il tuo ordine e stato registrato con successo.<br>
-                        Verrai contattato dallo studio non appena sara pronto per il ritiro.
-                    </p>
-                    <p style="color: #999999; font-size: 14px; margin-top: 40px;">
-                        Puoi chiudere questa scheda manualmente.
-                    </p>
-                </div>
-            `;
+            document.body.innerHTML = '<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; background: #ffffff; font-family: Segoe UI, sans-serif; text-align: center; padding: 20px;">' +
+                '<div style="font-size: 64px; color: #28b463; margin-bottom: 20px;">Ordine Completato</div>' +
+                '<h1 style="color: #996515; margin-bottom: 20px;">Grazie per il tuo ordine!</h1>' +
+                '<p style="color: #666666; font-size: 18px; line-height: 1.6; max-width: 500px;">' +
+                'Il tuo ordine e stato registrato con successo.<br>' +
+                'Verrai contattato dallo studio non appena sara pronto per il ritiro.' +
+                '</p>' +
+                '<p style="color: #999999; font-size: 14px; margin-top: 40px;">' +
+                'Puoi chiudere questa scheda manualmente.' +
+                '</p>' +
+                '</div>';
         }
     </script>
 </body>
-</html>
+</html> 
