@@ -142,7 +142,8 @@
                 <span class="module-code">NZ</span>
                 <h3>Negozio Online</h3>
                 <p>Prodotti, ordini e configurazione pagamenti.</p>
-                <span class="badge-status">0 ORDINI IN ATTESA</span>
+                <!-- MODIFICA AGGIUNTA: aggiunto id="badge-ordini-negozio" -->
+                <span class="badge-status" id="badge-ordini-negozio">0 ORDINI IN ATTESA</span>
             </div>
 
             <!-- CARD 11: RC - Ricevute -->
@@ -245,9 +246,39 @@
                 document.getElementById('studio-info').style.display = 'block';
                 document.getElementById('modules-grid').style.display = 'grid';
                 
+                // MODIFICA AGGIUNTA: Chiama la funzione per aggiornare il badge degli ordini
+                aggiornaConteggioOrdini();
+                
             } catch (error) {
                 console.error('Errore verifica sessione:', error);
                 document.getElementById('loading-sessione').innerHTML = '<p style="color: #e74c3c;">Errore connessione al server</p>';
+            }
+        }
+
+        // MODIFICA AGGIUNTA: Funzione per contare gli ordini in attesa e aggiornare il badge
+        async function aggiornaConteggioOrdini() {
+            if (studioId === 'admin') return;
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/negozio/ordini?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (data.success && data.ordini) {
+                    const ordiniInAttesa = data.ordini.filter(o => o.stato === 'in_attesa' || o.stato === 'in_attesa_pagamento').length;
+                    const badge = document.getElementById('badge-ordini-negozio');
+                    if (badge) {
+                        badge.textContent = ordiniInAttesa + ' ORDINI IN ATTESA';
+                        if (ordiniInAttesa > 0) {
+                            badge.style.background = '#e74c3c';
+                            badge.style.color = '#ffffff';
+                            badge.style.borderColor = '#c0392b';
+                        } else {
+                            badge.style.background = '#fff9e6';
+                            badge.style.color = '#996515';
+                            badge.style.borderColor = '#d4af37';
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Errore aggiornamento conteggio ordini:', error);
             }
         }
 
