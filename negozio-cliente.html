@@ -6,7 +6,6 @@
     <title>Negozio ON-Line</title>
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
-    
     <style>
         :root {
             --primary: #d4af37;
@@ -22,50 +21,19 @@
             --radius: 12px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, sans-serif; 
-            background: var(--bg-gradient); 
-            color: var(--text-main); 
-            line-height: 1.6; 
-            min-height: 100vh; 
-            transition: background 0.5s ease, color 0.5s ease; 
-        }
-        .header { 
-            background: var(--primary-gradient); 
-            color: #ffffff; 
-            padding: 20px; 
-            text-align: center; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
-            transition: background 0.5s ease; 
-        }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh; }
+        .header { background: var(--primary-gradient); color: #ffffff; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .header h1 { font-size: 24px; margin-bottom: 4px; font-weight: 700; }
         .header p { font-size: 14px; opacity: 0.9; }
         .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
-        .hero { 
-            background: #ffffff; 
-            padding: 40px 24px; 
-            text-align: center; 
-            border-radius: var(--radius); 
-            margin-bottom: 24px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
-            border: 1px solid var(--border-color);
-            transition: box-shadow 0.5s ease; 
-        }
+        .hero { background: #ffffff; padding: 40px 24px; text-align: center; border-radius: var(--radius); margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
         .hero h2 { font-size: 28px; font-weight: 800; color: var(--primary-dark); margin-bottom: 8px; }
         .hero p { font-size: 16px; color: var(--text-light); }
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
-        .product-card { 
-            background: #ffffff; 
-            border-radius: var(--radius); 
-            padding: 20px; 
-            border: 1px solid var(--border-color); 
-            transition: all 0.3s; 
-            display: flex; 
-            flex-direction: column; 
-        }
+        .product-card { background: #ffffff; border-radius: var(--radius); padding: 20px; border: 1px solid var(--border-color); transition: all 0.3s; display: flex; flex-direction: column; }
         .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); border-color: var(--primary); }
         .product-image { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 16px; background: var(--primary-light); }
-        .product-category { font-size: 11px; color: var(--primary-dark); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .product-category { font-size: 11px; color: var(--primary-dark); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
         .product-name { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
         .product-price { font-size: 24px; font-weight: 800; color: var(--primary-dark); margin-bottom: 12px; }
         .product-desc { font-size: 14px; color: var(--text-light); margin-bottom: 16px; flex-grow: 1; }
@@ -73,156 +41,58 @@
         .btn:hover { transform: translateY(-2px); }
         .btn-primary { background: var(--primary-gradient); color: #ffffff; width: 100%; }
         .btn-success { background: var(--success); color: #ffffff; }
-        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-        .cart-float-btn { 
-            position: fixed; bottom: 24px; right: 24px; 
-            background: var(--primary-gradient); color: #ffffff; 
-            padding: 16px 24px; border-radius: 50px; 
-            display: flex; align-items: center; gap: 8px; 
-            font-size: 16px; font-weight: 600; 
-            box-shadow: 0 4px 20px rgba(153, 101, 21, 0.3); 
-            cursor: pointer; z-index: 1000; border: none; 
-            transition: background 0.5s ease; 
-        }
-        .cart-count { 
-            background: var(--danger); color: #ffffff; 
-            width: 24px; height: 24px; border-radius: 50%; 
-            font-size: 12px; font-weight: 700; 
-            display: flex; align-items: center; justify-content: center; 
-        }
-        .cart-sidebar { 
-            position: fixed; top: 0; right: -450px; 
-            width: 400px; max-width: 90vw; height: 100vh; 
-            background: #ffffff; 
-            box-shadow: -4px 0 20px rgba(0,0,0,0.15); 
-            z-index: 2000; transition: right 0.3s ease; 
-            display: flex; flex-direction: column; 
-        }
+        .btn-whatsapp { background: #25d366; color: #ffffff; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .cart-float-btn { position: fixed; bottom: 24px; right: 24px; background: var(--primary-gradient); color: #ffffff; padding: 16px 24px; border-radius: 50px; display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 20px rgba(153, 101, 21, 0.3); cursor: pointer; z-index: 1000; border: none; }
+        .cart-count { background: var(--danger); color: #ffffff; width: 24px; height: 24px; border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+        .cart-sidebar { position: fixed; top: 0; right: -450px; width: 400px; max-width: 90vw; height: 100vh; background: #ffffff; box-shadow: -4px 0 20px rgba(0,0,0,0.15); z-index: 2000; transition: right 0.3s ease; display: flex; flex-direction: column; }
         .cart-sidebar.open { right: 0; }
-        .cart-header { 
-            padding: 20px; border-bottom: 1px solid var(--border-color); 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: var(--primary-light); transition: background 0.5s ease; 
-        }
+        .cart-header { padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--primary-light); }
         .cart-header h3 { font-size: 20px; font-weight: 700; color: var(--primary-dark); }
         .cart-items { flex: 1; overflow-y: auto; padding: 20px; }
-        .cart-footer { padding: 20px; border-top: 1px solid var(--border-color); background: #f8f9fa; transition: background 0.5s ease; }
-        .cart-item { 
-            display: flex; flex-direction: column; gap: 8px; 
-            padding: 12px; background: #ffffff; border-radius: 8px; 
-            margin-bottom: 12px; border: 1px solid var(--border-color); 
-        }
+        .cart-footer { padding: 20px; border-top: 1px solid var(--border-color); background: #f8f9fa; }
+        .cart-item { display: flex; flex-direction: column; gap: 8px; padding: 12px; background: #ffffff; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border-color); }
         .cart-item-top { display: flex; justify-content: space-between; align-items: center; }
         .cart-item-name { font-weight: 700; font-size: 14px; }
         .cart-item-price { font-weight: 700; color: var(--primary-dark); font-size: 16px; }
         .cart-item-actions { display: flex; justify-content: space-between; align-items: center; font-size: 12px; flex-wrap: wrap; gap: 8px; }
         .qty-controls { display: flex; align-items: center; gap: 8px; }
         .qty-btn { width: 28px; height: 28px; border: 1px solid var(--border-color); background: #ffffff; border-radius: 4px; cursor: pointer; font-weight: 700; }
-        .foto-upload-label { 
-            display: inline-flex; align-items: center; gap: 4px; 
-            padding: 6px 12px; background: var(--primary-light); 
-            color: var(--primary-dark); border-radius: 6px; 
-            cursor: pointer; font-size: 12px; font-weight: 600; 
-            border: 1px dashed var(--primary); transition: all 0.3s; 
-        }
+        .foto-upload-label { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background: var(--primary-light); color: var(--primary-dark); border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; border: 1px dashed var(--primary); }
         .foto-upload-label.has-foto { background: #eafaf1; color: var(--success); border-color: var(--success); }
         .cart-item-remove { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 14px; font-weight: 700; text-decoration: underline; }
-        .foto-preview { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 2px solid var(--primary); margin-top: 8px; }
-        
-        .modal-overlay { 
-            display: none; position: fixed; top: 0; left: 0; 
-            width: 100%; height: 100%; background: rgba(0,0,0,0.6); 
-            z-index: 2500; align-items: center; justify-content: center; 
-        }
+        .foto-preview { width: 60px; height: 60px; object-fit: contain; border-radius: 6px; border: 2px solid var(--primary); margin-top: 8px; background: #f8f9fa; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2500; align-items: center; justify-content: center; }
         .modal-overlay.active { display: flex; }
-        .modal-content { 
-            background: #ffffff; border-radius: var(--radius); 
-            padding: 32px; width: 90%; max-width: 600px; 
-            max-height: 90vh; overflow-y: auto; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3); 
-            transition: background 0.5s ease; 
-        }
-        .modal-header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            margin-bottom: 24px; border-bottom: 2px solid var(--primary-light); 
-            padding-bottom: 16px; 
-        }
+        .modal-content { background: #ffffff; border-radius: var(--radius); padding: 32px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid var(--primary-light); padding-bottom: 16px; }
         .modal-header h2 { font-size: 22px; color: var(--primary-dark); font-weight: 700; }
-        .close-modal { 
-            background: none; border: 1px solid var(--border-color); 
-            padding: 4px 12px; border-radius: 6px; cursor: pointer; 
-            color: var(--text-main); font-size: 14px; font-weight: 600; 
-        }
+        .close-modal { background: none; border: 1px solid var(--border-color); padding: 4px 12px; border-radius: 6px; cursor: pointer; color: var(--text-main); font-size: 14px; font-weight: 600; }
         .close-modal:hover { background: var(--primary-light); }
-        
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; color: var(--text-main); }
-        .form-group input { 
-            width: 100%; padding: 12px; border: 2px solid var(--border-color); 
-            border-radius: 8px; font-size: 14px; background: #f8f9fa; color: #000000;
-            transition: border-color 0.3s ease; 
-        }
+        .form-group input { width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 14px; background: #f8f9fa; color: #000000; }
         .form-group input:focus { outline: none; border-color: var(--primary); background: #ffffff; }
-        
-        .payment-methods { 
-            background: var(--primary-light); 
-            padding: 20px; 
-            border-radius: 8px; 
-            margin: 20px 0; 
-            border: 2px solid var(--primary); 
-        }
+        .payment-methods { background: var(--primary-light); padding: 20px; border-radius: 8px; margin: 20px 0; border: 2px solid var(--primary); }
         .payment-methods h3 { color: var(--primary-dark); margin-bottom: 16px; font-size: 18px; }
-        .payment-option { 
-            background: #ffffff; 
-            padding: 16px; 
-            border-radius: 8px; 
-            margin-bottom: 12px; 
-            border: 1px solid var(--border-color); 
-        }
+        .payment-option { background: #ffffff; padding: 16px; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border-color); }
         .payment-option h4 { color: var(--primary-dark); margin-bottom: 8px; font-size: 16px; }
         .payment-option p { font-size: 13px; color: var(--text-light); margin-bottom: 8px; }
-        .payment-btn {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 12px 24px;
-            background: #0070ba;
-            color: #ffffff;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .payment-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        
-        .alert-box { 
-            background: #fff3cd; 
-            border-left: 4px solid var(--danger); 
-            padding: 16px; 
-            border-radius: 8px; 
-            margin: 16px 0; 
-        }
+        .payment-btn { display: inline-block; margin-top: 8px; padding: 12px 24px; background: #0070ba; color: #ffffff; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px; }
+        .alert-box { background: #fff3cd; border-left: 4px solid var(--danger); padding: 16px; border-radius: 8px; margin: 16px 0; }
         .alert-box strong { color: #856404; }
-        
+        .info-box { background: #d4edda; border-left: 4px solid var(--success); padding: 16px; border-radius: 8px; margin: 16px 0; }
+        .info-box strong { color: #155724; }
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
-        .toast { 
-            background: #ffffff; border-radius: 8px; padding: 14px 20px; 
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; 
-            border-left: 4px solid var(--success); animation: slideIn 0.3s; 
-            font-size: 14px; color: #000000; font-weight: 600;
-        }
+        .toast { background: #ffffff; border-radius: 8px; padding: 14px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s; font-size: 14px; color: #000000; font-weight: 600; }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        
         .hidden { display: none !important; }
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-light); font-size: 16px; }
         .loading { text-align: center; padding: 60px 20px; color: var(--text-light); }
         .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        @media (max-width: 768px) { 
-            .products-grid { grid-template-columns: 1fr; } 
-            .cart-sidebar { width: 100%; right: -100%; } 
-        }
+        @media (max-width: 768px) { .products-grid { grid-template-columns: 1fr; } .cart-sidebar { width: 100%; right: -100%; } }
     </style>
 </head>
 <body>
@@ -239,11 +109,9 @@
         <div id="vetrinaEmpty" class="empty-state hidden">Nessun prodotto disponibile.</div>
         <div class="products-grid" id="vetrinaGrid"></div>
     </div>
-    
     <button class="cart-float-btn" onclick="toggleCart()" id="cartBtn" style="display:none;">
         <span>Carrello</span><span class="cart-count" id="cartCount">0</span>
     </button>
-
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
             <h3>Il tuo Carrello</h3>
@@ -257,18 +125,15 @@
             <button class="btn btn-primary" onclick="apriCheckout()">PROCEDI ALL'ORDINE</button>
         </div>
     </div>
-
     <div class="modal-overlay" id="checkoutModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Completa l'Ordine</h2>
                 <button class="close-modal" onclick="chiudiCheckout()">Chiudi</button>
             </div>
-            
             <div class="alert-box">
                 <strong>ATTENZIONE:</strong> Segui le istruzioni di pagamento indicate qui sotto per confermare l'ordine.
             </div>
-
             <div class="form-group">
                 <label>Nome e Cognome *</label>
                 <input type="text" id="checkNome">
@@ -281,23 +146,19 @@
                 <label>Email *</label>
                 <input type="email" id="checkEmail">
             </div>
-
             <div id="paymentMethodsContainer" class="payment-methods">
                 <div class="loading"><div class="spinner"></div><div>Caricamento metodi di pagamento...</div></div>
             </div>
-
             <div style="margin-top: 20px; padding: 16px; background: var(--primary-light); border-radius: 8px; text-align: center; border: 2px solid var(--primary);">
                 <div style="font-weight: 700; font-size: 20px; color: var(--primary-dark);" id="checkTotal">Totale: EUR 0.00</div>
                 <div style="font-size: 13px; color: var(--text-light); margin-top: 4px; font-weight: 600;">Ritiro in studio</div>
             </div>
-
             <div style="margin-top: 20px; display: flex; gap: 10px;">
                 <button class="btn" onclick="chiudiCheckout()" style="flex: 1; background: #95a5a6; color: #ffffff;">Annulla</button>
                 <button class="btn btn-success" id="btnConfermaOrdine" onclick="confermaOrdine()" style="flex: 2;">CONFERMA ORDINE</button>
             </div>
         </div>
     </div>
-
     <div class="modal-overlay" id="successModal">
         <div class="modal-content" style="text-align: center;">
             <div style="font-size: 48px; margin-bottom: 16px; color: var(--success); font-weight: 700;">Ordine Registrato</div>
@@ -306,21 +167,25 @@
             <p style="margin-bottom: 24px; color: var(--text-light);">
                 <strong id="successCode" style="color: var(--primary-dark); font-size: 28px; font-family: monospace;"></strong>
             </p>
-            
+            <div id="whatsappReminder" class="info-box hidden" style="text-align: left;">
+                <strong>Passaggio importante:</strong>
+                <p style="margin-top: 8px; font-size: 14px; color: #155724; line-height: 1.6;">
+                    Per garantire la massima qualita di stampa, inviaci le foto originali via WhatsApp come ALLEGATO FILE (non come foto dalla chat).
+                </p>
+                <button class="btn btn-whatsapp" id="btnWhatsAppOrder" style="margin-top: 12px; width: 100%;">Invia foto via WhatsApp</button>
+            </div>
             <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 16px; border-radius: 8px; margin: 20px 0; text-align: left;">
                 <strong style="color: #856404; font-size: 14px;">Nota:</strong>
                 <p style="margin-top: 8px; font-size: 14px; color: #856404; line-height: 1.6;">
                     Verrai contattato appena l'ordine sara pronto per il ritiro.
                 </p>
             </div>
-
             <div style="margin-top: 24px; display: flex; gap: 10px;">
                 <button class="btn btn-primary" onclick="location.reload()" style="flex: 1;">Torna al Negozio per altri ordini</button>
                 <button class="btn" onclick="mostraMessaggioChiusura()" style="flex: 1; background: #95a5a6; color: #ffffff;">Chiudi pagina</button>
             </div>
         </div>
     </div>
-
     <div class="toast-container" id="toastContainer"></div>
     <div style="text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; border-top: 1px solid var(--border-color); margin-top: 40px;">
         Servizio offerto da <strong style="color: var(--primary-dark);">G&L Studio</strong>
@@ -335,6 +200,7 @@
         let prodotti = [];
         let carrello = [];
         let configPagamenti = null;
+        let studioWhatsApp = '';
 
         document.addEventListener('DOMContentLoaded', function() {
             if (!studioId) { mostraToast('Link non valido', 'error'); return; }
@@ -446,22 +312,52 @@
             aggiornaCarrelloUI(); 
         }
 
+        function compressaImmagine(file, callback) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const MAX_SIZE = 800;
+                    const QUALITY = 0.7;
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height = Math.round(height * MAX_SIZE / width);
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width = Math.round(width * MAX_SIZE / height);
+                            height = MAX_SIZE;
+                        }
+                    }
+                    
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    const base64 = canvas.toDataURL('image/jpeg', QUALITY);
+                    callback(base64);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
         function caricaFotoProdotto(index, input) {
             if (!input.files || !input.files[0]) return;
             const file = input.files[0];
-            mostraToast('Caricamento foto in corso...', 'success');
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64 = e.target.result;
+            mostraToast('Compressione foto in corso...', 'success');
+            compressaImmagine(file, function(base64) {
                 carrello[index].fotoBase64 = base64;
                 carrello[index].fotoPreview = base64;
                 aggiornaCarrelloUI();
-                mostraToast('Foto ad alta risoluzione caricata con successo', 'success');
-            };
-            reader.onerror = function() {
-                mostraToast('Errore nella lettura del file', 'error');
-            };
-            reader.readAsDataURL(file);
+                mostraToast('Foto caricata e ottimizzata', 'success');
+            });
         }
 
         function toggleCart() { 
@@ -488,6 +384,10 @@
                 if (!configRes.ok) throw new Error('Config non disponibile: ' + configRes.status);
                 const configData = await configRes.json();
                 configPagamenti = configData.success ? configData.config : null;
+                
+                if (configPagamenti && configPagamenti.whatsapp_numero) {
+                    studioWhatsApp = configPagamenti.whatsapp_numero.replace(/\D/g, '');
+                }
                 
                 let html = '<h3>Metodo di Pagamento</h3>';
                 
@@ -567,7 +467,7 @@
                         };
                     })),
                     totale: totale,
-                    stato: 'in_attesa_pagamento',
+                    stato: 'in_attesa',
                     metodo_pagamento: configPagamenti ? configPagamenti.metodo_pagamento_preferito : 'non_specificato',
                     data_creazione: new Date().toISOString()
                 };
@@ -595,6 +495,15 @@
                 
                 document.getElementById('checkoutModal').classList.remove('active');
                 document.getElementById('successCode').textContent = codiceOrdine;
+                
+                if (studioWhatsApp) {
+                    const msg = 'Ciao, ho appena fatto l\'ordine ' + codiceOrdine + '. Ti invio le foto ad alta risoluzione per la stampa.';
+                    const whatsappLink = 'https://wa.me/' + studioWhatsApp + '?text=' + encodeURIComponent(msg);
+                    const btnWhatsApp = document.getElementById('btnWhatsAppOrder');
+                    btnWhatsApp.onclick = function() { window.open(whatsappLink, '_blank'); };
+                    document.getElementById('whatsappReminder').classList.remove('hidden');
+                }
+                
                 document.getElementById('successModal').classList.add('active');
                 carrello = [];
                 aggiornaCarrelloUI();
