@@ -299,17 +299,23 @@
     <div class="modal-overlay" id="successModal">
         <div class="modal-content" style="text-align: center;">
             <div style="font-size: 48px; margin-bottom: 16px; color: var(--success); font-weight: 700;">Ordine Registrato</div>
-            <h2 style="color: var(--primary-dark); margin-bottom: 16px;">Grazie per il pagamento.</h2>
-            <p style="margin-bottom: 16px; color: var(--text-main); font-size: 16px; font-weight: 600;">Contatta lo studio per il ritiro della merce.</p>
-            <p style="margin-bottom: 16px; color: var(--text-light);">Il tuo codice ordine e:<br><strong id="successCode" style="color: var(--primary-dark); font-size: 24px; font-family: monospace;"></strong></p>
-            <div id="pagamentoContainer" class="payment-methods">
-                <h3>Istruzioni per finalizzare il Pagamento</h3>
-                <div id="pagamentoLinks"></div>
-            </div>
-            <p style="margin-top: 16px; margin-bottom: 24px; color: var(--text-light); font-size: 14px;">
-                Completa il pagamento tramite le istruzioni sopra indicate. Ti contatteremo per confermare il ritiro in studio.
+            <h2 style="color: var(--primary-dark); margin-bottom: 16px;">Grazie per aver completato l'ordine.</h2>
+            <p style="margin-bottom: 16px; color: var(--text-main); font-size: 16px; font-weight: 600;">Il tuo codice ordine e:</p>
+            <p style="margin-bottom: 24px; color: var(--text-light);">
+                <strong id="successCode" style="color: var(--primary-dark); font-size: 28px; font-family: monospace;"></strong>
             </p>
-            <button class="btn btn-primary" onclick="location.reload()">Torna al Negozio</button>
+            
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 16px; border-radius: 8px; margin: 20px 0; text-align: left;">
+                <strong style="color: #856404; font-size: 14px;">Nota:</strong>
+                <p style="margin-top: 8px; font-size: 14px; color: #856404; line-height: 1.6;">
+                    Verrai contattato appena l'ordine sara pronto per il ritiro.
+                </p>
+            </div>
+
+            <div style="margin-top: 24px; display: flex; gap: 10px;">
+                <button class="btn btn-primary" onclick="location.reload()" style="flex: 1;">Torna al Negozio per altri ordini</button>
+                <button class="btn" onclick="window.close()" style="flex: 1; background: #95a5a6; color: #ffffff;">Chiudi pagina</button>
+            </div>
         </div>
     </div>
 
