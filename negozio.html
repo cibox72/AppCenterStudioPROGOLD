@@ -6,10 +6,8 @@
     <title>Negozio ON-Line - AppCenterStudioPROGOLD</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-    
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
-    
     <style>
         :root {
             --primary: #d4af37;
@@ -27,129 +25,35 @@
             --radius: 12px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, sans-serif; 
-            background: var(--bg-gradient); 
-            color: var(--text-main); 
-            line-height: 1.6; 
-            min-height: 100vh; 
-            transition: background 0.5s ease, color 0.5s ease; 
-        }
-        .branding-header { 
-            background: var(--primary-gradient); 
-            padding: 12px 24px; 
-            text-align: center; 
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
-            transition: background 0.5s ease; 
-        }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-gradient); color: var(--text-main); line-height: 1.6; min-height: 100vh; }
+        .branding-header { background: var(--primary-gradient); padding: 12px 24px; text-align: center; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
         .branding-header .tagline { font-size: 13px; opacity: 0.9; color: #ffffff; margin-left: 8px; }
-        .top-bar { 
-            background: var(--primary-gradient); 
-            padding: 14px 24px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
-            transition: background 0.5s ease; 
-        }
-        .nav-btn { 
-            background: rgba(255,255,255,0.2); 
-            border: none; 
-            padding: 8px 15px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 14px; 
-            font-weight: 600; 
-            color: #ffffff; 
-            transition: all 0.2s; 
-        }
+        .top-bar { background: var(--primary-gradient); padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
+        .nav-btn { background: rgba(255,255,255,0.2); border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; color: #ffffff; transition: all 0.2s; }
         .nav-btn:hover { background: rgba(255,255,255,0.3); }
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .page-header { 
-            text-align: center; 
-            padding: 25px; 
-            background: #ffffff; 
-            border-radius: var(--radius); 
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
-            margin-bottom: 25px; 
-            position: relative; 
-            overflow: hidden; 
-            border-left: 5px solid var(--primary);
-            transition: box-shadow 0.5s ease; 
-        }
-        .page-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--primary-gradient); }
+        .page-header { text-align: center; padding: 25px; background: #ffffff; border-radius: var(--radius); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); margin-bottom: 25px; border-left: 5px solid var(--primary); }
         .page-header h1 { font-size: 28px; font-weight: 800; color: #000000; margin-bottom: 8px; }
         .page-header p { color: var(--text-light); font-size: 15px; }
-        
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-top: 24px; }
-        .dash-card { 
-            background: #ffffff; 
-            border-radius: var(--radius); 
-            padding: 32px 24px; 
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
-            cursor: pointer; 
-            transition: all 0.3s; 
-            position: relative; 
-            overflow: hidden; 
-            text-align: center; 
-            border: 1px solid var(--border-color);
-            border-top: 4px solid var(--primary);
-        }
+        .dash-card { background: #ffffff; border-radius: var(--radius); padding: 32px 24px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); cursor: pointer; transition: all 0.3s; position: relative; text-align: center; border: 1px solid var(--border-color); border-top: 4px solid var(--primary); }
         .dash-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(212, 175, 55, 0.2); border-color: var(--primary); }
-        .dash-card .card-title { font-size: 18px; font-weight: 700; color: #000000; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .dash-card .card-title { font-size: 18px; font-weight: 700; color: #000000; margin-bottom: 8px; text-transform: uppercase; }
         .dash-card .card-desc { font-size: 13px; color: var(--text-light); line-height: 1.5; }
-        .dash-card .badge-alert { 
-            position: absolute; top: 16px; right: 16px; 
-            background: var(--danger); color: #ffffff; 
-            width: 32px; height: 32px; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 14px; font-weight: 700; 
-            animation: pulse 2s infinite; 
-            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4); 
-        }
+        .dash-card .badge-alert { position: absolute; top: 16px; right: 16px; background: var(--danger); color: #ffffff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } }
-        
         .section { display: none; }
         .section.active { display: block; }
-        
-        .card { 
-            background: #ffffff; 
-            border-radius: var(--radius); 
-            padding: 25px; 
-            margin-bottom: 24px; 
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
-            position: relative; 
-            overflow: hidden; 
-            border: 1px solid var(--border-color);
-            border-top: 4px solid var(--primary);
-            transition: border-color 0.5s ease, box-shadow 0.5s ease; 
-        }
-        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); }
-        .card-title { 
-            font-size: 20px; font-weight: 700; color: #000000; margin-bottom: 20px; 
-            text-transform: uppercase; letter-spacing: 0.5px; 
-            padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); 
-        }
-        
+        .card { background: #ffffff; border-radius: var(--radius); padding: 25px; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); border: 1px solid var(--border-color); border-top: 4px solid var(--primary); }
+        .card-title { font-size: 20px; font-weight: 700; color: #000000; margin-bottom: 20px; text-transform: uppercase; padding-bottom: 12px; border-bottom: 2px solid var(--primary-light); }
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #000000; }
-        .form-group input, .form-group select, .form-group textarea { 
-            padding: 12px 14px; border: 2px solid var(--border-color); border-radius: 10px; 
-            font-size: 14px; font-family: inherit; background: #f8f9fa; color: #000000;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease; 
-        }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
-            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2); background: #ffffff; 
-        }
+        .form-group input, .form-group select, .form-group textarea { padding: 12px 14px; border: 2px solid var(--border-color); border-radius: 10px; font-size: 14px; background: #f8f9fa; color: #000000; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); background: #ffffff; }
         .form-hint { font-size: 12px; color: var(--text-light); margin-top: 4px; font-style: italic; }
-        
-        .btn { 
-            padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; 
-            cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
-            margin-right: 8px; margin-bottom: 8px; 
-        }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .btn { padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-right: 8px; margin-bottom: 8px; }
+        .btn:hover { transform: translateY(-2px); }
         .btn-primary { background: var(--primary-gradient); color: #ffffff; }
         .btn-success { background: linear-gradient(135deg, #58d68d, #28b463); color: #ffffff; }
         .btn-warning { background: linear-gradient(135deg, #f9e79f, #f1c40f); color: #000000; }
@@ -159,105 +63,58 @@
         .btn-outline:hover { background: var(--primary-light); }
         .btn-sm { padding: 8px 16px; font-size: 12px; }
         .btn-whatsapp { background: linear-gradient(135deg, #25d366, #128c7e); color: #ffffff; }
-        
-        .vetrina-header { 
-            background: var(--primary-gradient); color: #ffffff; padding: 40px 24px; 
-            text-align: center; border-radius: var(--radius); margin-bottom: 24px; 
-            transition: background 0.5s ease; 
-        }
+        .vetrina-header { background: var(--primary-gradient); color: #ffffff; padding: 40px 24px; text-align: center; border-radius: var(--radius); margin-bottom: 24px; }
         .vetrina-header h2 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
         .vetrina-header p { font-size: 16px; opacity: 0.9; }
-        
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin-top: 20px; }
-        .product-card { 
-            background: #ffffff; border-radius: 12px; padding: 20px; 
-            border: 1px solid var(--border-color); transition: all 0.3s; 
-        }
+        .product-card { background: #ffffff; border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); transition: all 0.3s; }
         .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(212, 175, 55, 0.15); border-color: var(--primary); }
         .product-image { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; background: var(--primary-light); }
         .product-category { font-size: 11px; color: var(--primary-dark); font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
         .product-name { font-size: 16px; font-weight: 700; color: #000000; margin-bottom: 4px; }
         .product-price { font-size: 22px; font-weight: 800; color: var(--primary-dark); margin-bottom: 8px; }
         .product-desc { font-size: 13px; color: var(--text-light); margin-bottom: 12px; }
-        
-        .order-item { 
-            background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 16px; 
-            border-left: 4px solid var(--primary); 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
-            border: 1px solid var(--border-color);
-            transition: border-color 0.5s ease; 
-        }
+        .order-item { background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 16px; border-left: 4px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border-color); }
         .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
         .order-code { font-size: 16px; font-weight: 700; color: var(--primary-dark); }
         .order-date { font-size: 12px; color: var(--text-light); }
         .order-products { margin-bottom: 12px; }
-        .order-product { 
-            padding: 8px 0; border-bottom: 1px solid var(--border-color); 
-            font-size: 13px; display: flex; justify-content: space-between; 
-            align-items: center; flex-wrap: wrap; gap: 8px; 
-        }
+        .order-product { padding: 8px 0; border-bottom: 1px solid var(--border-color); font-size: 13px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
         .order-product-info { display: flex; flex-direction: column; gap: 4px; flex: 1; }
         .order-product-actions { display: flex; gap: 8px; align-items: center; }
         .order-total { font-size: 18px; font-weight: 700; color: var(--primary-dark); text-align: right; margin-top: 12px; }
         .order-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-        
         .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
         .badge-attesa { background: #fef9e7; color: #d35400; }
         .badge-pagato { background: #eafaf1; color: var(--success); }
         .badge-lavorazione { background: #d6eaf8; color: var(--info); }
         .badge-pronto { background: #f4ecf7; color: #8e44ad; }
         .badge-ritirato { background: #eafaf1; color: var(--success); }
-        
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 24px; }
-        .stat-card { 
-            background: #ffffff; border-radius: 12px; padding: 16px; text-align: center; 
-            border-left: 4px solid var(--primary); 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
-            border: 1px solid var(--border-color);
-            transition: border-color 0.5s ease; 
-        }
+        .stat-card { background: #ffffff; border-radius: 12px; padding: 16px; text-align: center; border-left: 4px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border-color); }
         .stat-number { font-size: 28px; font-weight: 800; color: var(--primary-dark); }
         .stat-label { font-size: 12px; color: var(--text-light); margin-top: 4px; }
-        
-        .alert-box { 
-            background: #fdedec; border-left: 4px solid var(--danger); 
-            padding: 16px; border-radius: 8px; margin-bottom: 20px; 
-            display: flex; align-items: center; gap: 12px; border: 1px solid var(--border-color);
-        }
-        
-        .cred-box { 
-            background: var(--primary-light); padding: 20px; border-radius: 10px; 
-            border: 1px solid var(--border-color); text-align: center; margin: 16px 0; 
-            transition: background 0.5s ease, border-color 0.5s ease; 
-        }
+        .alert-box { background: #fdedec; border-left: 4px solid var(--danger); padding: 16px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; border: 1px solid var(--border-color); }
+        .cred-box { background: var(--primary-light); padding: 20px; border-radius: 10px; border: 1px solid var(--border-color); text-align: center; margin: 16px 0; }
         .cred-box .label { font-size: 11px; color: var(--text-light); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
         .cred-box .value { font-size: 16px; font-weight: 700; color: var(--primary-dark); margin: 8px 0; font-family: monospace; word-break: break-all; }
-        
         .hidden { display: none !important; }
         .empty-state { text-align: center; padding: 40px; color: var(--text-light); }
         .loading { text-align: center; padding: 40px; color: var(--text-light); }
         .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 3000; }
-        .toast { 
-            background: #ffffff; border-radius: 10px; padding: 16px 24px; 
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; 
-            border-left: 4px solid var(--success); animation: slideIn 0.3s; 
-            color: #000000; font-weight: 600;
-        }
+        .toast { background: #ffffff; border-radius: 10px; padding: 16px 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); margin-bottom: 10px; border-left: 4px solid var(--success); animation: slideIn 0.3s; color: #000000; font-weight: 600; }
         .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
-        
-        @media (max-width: 768px) { 
-            .dashboard-grid { grid-template-columns: 1fr; } 
-            .products-grid { grid-template-columns: 1fr; } 
-        }
+        .foto-thumb { width: 80px; height: 80px; object-fit: contain; border-radius: 6px; border: 2px solid var(--primary); background: #f8f9fa; margin-right: 12px; }
+        .whatsapp-reminder { background: #d4edda; border-left: 4px solid var(--success); padding: 12px; border-radius: 6px; margin-top: 8px; font-size: 12px; color: #155724; }
+        @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } .products-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <div class="branding-header">
-        <span class="studio-nome" id="headerStudioName" style="font-family: 'Georgia', serif; font-style: italic; font-size: 16px; font-weight: 700; color: #ffffff; text-decoration: none;">Caricamento...</span>
+        <span class="studio-nome" id="headerStudioName" style="font-family: 'Georgia', serif; font-style: italic; font-size: 16px; font-weight: 700; color: #ffffff;">Caricamento...</span>
         <span class="tagline">| Negozio ON-Line Professionale</span>
     </div>
     <div class="top-bar">
@@ -267,7 +124,6 @@
         </div>
         <div style="color: #ffffff; font-size: 13px;">Negozio ON-Line</div>
     </div>
-
     <div class="container">
         <div id="dashboardSection" class="section active">
             <div class="page-header">
@@ -314,24 +170,18 @@
                 <div class="products-grid" id="vetrinaGrid"></div>
             </div>
         </div>
-
         <div id="linkSection" class="section">
             <div class="card">
                 <div class="card-title">Genera Link per il Cliente</div>
                 <div style="font-size: 13px; color: var(--text-light); margin-bottom: 24px;">
                     Seleziona un cliente dall'anagrafica. I campi verranno precompilati automaticamente.
-                    Puoi modificare il numero di telefono se il cliente ne ha uno nuovo.
-                    Verra generato un link univoco che potra usare per accedere al negozio e fare ordini.
                 </div>
-                
                 <div class="form-group" style="margin-bottom: 16px;">
                     <label>Seleziona Cliente dall'Anagrafica *</label>
-                    <select id="linkClienteSelect" onchange="onClienteSelectChange()" style="padding: 12px 14px; border: 2px solid var(--border-color); border-radius: 10px; font-size: 14px; background: #f8f9fa; color: #000000;">
+                    <select id="linkClienteSelect" onchange="onClienteSelectChange()" style="padding: 12px 14px; border: 2px solid var(--border-color); border-radius: 10px; font-size: 14px; background: #f8f9fa;">
                         <option value="">-- Seleziona un cliente --</option>
                     </select>
-                    <div class="form-hint">I clienti vengono caricati dalla scheda Anagrafica Clienti.</div>
                 </div>
-                
                 <div class="form-row">
                     <div class="form-group">
                         <label>Nome Cliente *</label>
@@ -356,7 +206,6 @@
                 </div>
             </div>
         </div>
-
         <div id="clientiSection" class="section">
             <div class="card">
                 <div class="card-title">Archivio Clienti Negozio</div>
@@ -365,7 +214,6 @@
                 <div class="products-grid" id="clientiGrid"></div>
             </div>
         </div>
-
         <div id="prodottiSection" class="section">
             <div class="card">
                 <div class="card-title" id="formTitolo">Nuovo Prodotto</div>
@@ -388,13 +236,11 @@
                     <div class="form-group"><label>Misura</label><input type="text" id="prodMisura" placeholder="es. 50x70 cm"></div>
                 </div>
                 <div class="form-group"><label>Descrizione</label><textarea id="prodDescrizione" rows="2"></textarea></div>
-                
                 <div class="form-group" style="margin-top: 16px;">
                     <label>Immagine Prodotto</label>
                     <input type="file" id="prodImmagine" accept="image/*" onchange="anteprimaImmagine(this)">
                     <img id="imgPreview" style="max-width: 150px; margin-top: 8px; border-radius: 8px; display: none; border: 1px solid var(--border-color);">
                 </div>
-
                 <div style="margin-top: 20px;">
                     <button class="btn btn-primary" id="btnSalvaProdotto" onclick="creaProdotto()">CREA PRODOTTO</button>
                     <button class="btn btn-outline" onclick="resetFormProdotto()">Annulla / Nuovo</button>
@@ -408,7 +254,6 @@
                 <div class="products-grid" id="prodottiGrid"></div>
             </div>
         </div>
-
         <div id="ordiniSection" class="section">
             <div id="alertNuoviOrdini" class="alert-box hidden">
                 <div style="font-size: 24px; color: var(--danger); font-weight: 800;">!</div>
@@ -431,65 +276,38 @@
                 <div id="ordersList"></div>
             </div>
         </div>
-
         <div id="configSection" class="section">
             <div class="card">
                 <div class="card-title">Configurazione Negozio</div>
-                <div style="background: var(--primary-light); padding: 16px; border-radius: 8px; margin-bottom: 24px; border-left: 4px solid var(--primary); border: 1px solid var(--border-color);">
-                    <strong>Nota Operativa:</strong> Il cliente seleziona i prodotti, carica le foto e invia l'ordine. Tu ricevi l'ordine in "Attesa". Il cliente deve pagare in anticipo usando il metodo che attivi qui sotto. Una volta ricevuto il pagamento, cambi lo stato dell'ordine in "Pagato" e poi "Pronto" per il ritiro.
+                <div style="background: var(--primary-light); padding: 16px; border-radius: 8px; margin-bottom: 24px; border-left: 4px solid var(--primary);">
+                    <strong>Nota Operativa:</strong> Il cliente carica le foto sul sito (compresse per anteprima). Per la stampa, il cliente invia le foto originali via WhatsApp come ALLEGATO FILE. Controlla WhatsApp Web per scaricare le foto ad alta risoluzione.
                 </div>
-
                 <div class="card-title" style="font-size: 18px; margin-top: 0;">Dati per il Ritiro</div>
                 <div class="form-row">
                     <div class="form-group"><label>Numero WhatsApp Studio *</label><input type="tel" id="whatsappNumero" placeholder="+39 333 1234567"></div>
                     <div class="form-group"><label>Indirizzo Studio (per ritiro)</label><input type="text" id="studioIndirizzo" placeholder="Via Roma 1, Milano"></div>
                 </div>
-
                 <div class="card-title" style="font-size: 18px; margin-top: 32px;">Metodo di Pagamento Preferito</div>
-                <p style="font-size: 13px; color: var(--text-light); margin-bottom: 20px;">Scegli UN metodo principale. Il cliente vedra le istruzioni specifiche dopo aver fatto l'ordine.</p>
-
                 <div class="form-group" style="margin-bottom: 24px;">
                     <label style="font-size: 14px; font-weight: 700;">Seleziona il metodo di pagamento:</label>
-                    <select id="metodoPagamentoPreferito" onchange="onMetodoChange()" style="padding: 12px; border: 2px solid var(--border-color); border-radius: 10px; font-size: 14px; background: #f8f9fa; color: #000000;">
+                    <select id="metodoPagamentoPreferito" onchange="onMetodoChange()" style="padding: 12px; border: 2px solid var(--border-color); border-radius: 10px; font-size: 14px; background: #f8f9fa;">
                         <option value="">-- Seleziona metodo --</option>
                         <option value="paypal">Link PayPal (il cliente clicca e paga)</option>
                         <option value="studio">Pagamento in Studio (contanti o POS al ritiro)</option>
                     </select>
                 </div>
-
                 <div id="group-paypal" class="form-group hidden" style="background: var(--primary-light); padding: 20px; border-radius: 8px; border: 2px solid var(--primary); margin-top: 16px;">
                     <label style="font-size: 14px; font-weight: 700; color: var(--primary-dark);">Email PayPal o Link PayPal.me</label>
-                    <input type="text" id="paypalEmail" placeholder="es. tuaemail@dominio.com o https://paypal.me/tuonome" style="margin-top: 8px;">
-                    <div class="form-hint" style="margin-top: 8px;">Il cliente vedra un link diretto per pagare l'importo esatto dell'ordine.</div>
-                    
-                    <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 16px; border-radius: 8px; margin-top: 16px;">
-                        <strong style="color: #856404; font-size: 14px;">AVVISO IMPORTANTE - FLUSSO DI VERIFICA PAGAMENTO</strong>
-                        <p style="margin-top: 8px; font-size: 13px; color: #856404; line-height: 1.6;">
-                            Quando selezioni PayPal come metodo di pagamento:
-                        </p>
-                        <ol style="margin-top: 8px; font-size: 13px; color: #856404; line-height: 1.8; padding-left: 20px;">
-                            <li>Il cliente paghera direttamente su PayPal con il link che gli verra mostrato.</li>
-                            <li><strong>Il cliente dovra stampare o salvare la ricevuta di pagamento PayPal</strong> (con numero di transazione, importo e data).</li>
-                            <li>Al momento del ritiro della merce, <strong>il cliente dovra mostrare la ricevuta stampata</strong> per dimostrare il pagamento.</li>
-                            <li><strong>Tu dovrai verificare la ricevuta</strong> confrontandola con il tuo account PayPal prima di consegnare la merce.</li>
-                        </ol>
-                        <p style="margin-top: 12px; font-size: 12px; color: #856404; font-style: italic;">
-                            Senza ricevuta di pagamento, non consegnare la merce. Questo protegge te e il tuo studio da contestazioni.
-                        </p>
-                    </div>
+                    <input type="text" id="paypalEmail" placeholder="es. tuaemail@dominio.com" style="margin-top: 8px;">
                 </div>
-
                 <div id="group-studio" class="form-group hidden" style="background: var(--primary-light); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
                     <label>Istruzioni per il Pagamento in Studio</label>
-                    <textarea id="studioPagamentoIstruzioni" rows="3" placeholder="Es. Pagamento in contanti o POS al momento del ritiro. Orari: Lun-Ven 9-18, Sab 9-13"></textarea>
-                    <div class="form-hint">Il cliente vedra queste istruzioni e paghera direttamente quando verra a ritirare la merce.</div>
+                    <textarea id="studioPagamentoIstruzioni" rows="3" placeholder="Es. Pagamento in contanti o POS al momento del ritiro."></textarea>
                 </div>
-
                 <button class="btn btn-primary" style="margin-top: 24px; width: 100%;" onclick="salvaConfig()">SALVA CONFIGURAZIONE</button>
             </div>
         </div>
     </div>
-
     <div class="toast-container" id="toastContainer"></div>
     <div class="footer-branding" style="text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; border-top: 1px solid var(--border-color); margin-top: 40px;">
         Servizio offerto da <strong class="studio-nome" id="footerStudioName" style="color: var(--primary-dark);">Caricamento...</strong>
@@ -498,7 +316,6 @@
         if (typeof WORKER_URL === 'undefined') {
             var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
         }
-
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         let studioId = null;
@@ -507,10 +324,11 @@
         let config = null;
         let currentImageBase64 = '';
         let anagraficaClienti = [];
+        let studioWhatsApp = '';
 
-        document.addEventListener('DOMContentLoaded', async function() {
+        document.addEventListener('DOMContentLoaded', function() {
             if (!token) { window.location.href = 'index.html'; return; }
-            await verificaSessione();
+            verificaSessione();
         });
 
         async function verificaSessione() {
@@ -524,13 +342,8 @@
                 }
                 studioId = data.user.id;
                 studioNome = data.user.nome || 'Studio';
-                
                 await caricaTemaGlobale();
                 setInterval(function() { caricaTemaGlobale(); }, 10000);
-                
-                const loadingArea = document.getElementById('loadingArea');
-                if (loadingArea) loadingArea.classList.add('hidden');
-                
                 await caricaDatiIniziali();
             } catch (error) {
                 console.error('Errore:', error);
@@ -578,7 +391,6 @@
             document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
             document.getElementById(nomeSezione + 'Section').classList.add('active');
             window.scrollTo(0, 0);
-            
             if (nomeSezione === 'anteprima') renderizzaVetrina();
             else if (nomeSezione === 'link') caricaAnagraficaClienti();
             else if (nomeSezione === 'clienti') caricaClienti();
@@ -616,31 +428,25 @@
         async function caricaAnagraficaClienti() {
             const select = document.getElementById('linkClienteSelect');
             select.innerHTML = '<option value="">-- Caricamento clienti... --</option>';
-            
             try {
                 const res = await fetch(WORKER_URL + '/api/studio/anagrafica-clienti?token=' + token + '&studioId=' + encodeURIComponent(studioId));
                 const data = await res.json();
-                
                 if (!data.success || !data.clienti || data.clienti.length === 0) {
                     select.innerHTML = '<option value="">-- Nessun cliente in anagrafica --</option>';
                     mostraToast('Nessun cliente trovato in anagrafica', 'error');
                     return;
                 }
-                
                 anagraficaClienti = data.clienti;
                 select.innerHTML = '<option value="">-- Seleziona un cliente --</option>';
                 data.clienti.forEach(function(c) {
                     const nomeCompleto = ((c.nome || '') + ' ' + (c.cognome || '')).trim();
-                    const idCliente = c.id || '';
-                    const telefono = c.telefono || 'No tel.';
                     const option = document.createElement('option');
-                    option.value = idCliente;
-                    option.textContent = nomeCompleto + ' - ' + idCliente + ' (' + telefono + ')';
+                    option.value = c.id;
+                    option.textContent = nomeCompleto + ' - ' + c.id + ' (' + (c.telefono || 'No tel.') + ')';
                     select.appendChild(option);
                 });
             } catch (e) {
                 console.error('Errore caricamento anagrafica:', e);
-                select.innerHTML = '<option value="">-- Errore caricamento --</option>';
                 mostraToast('Errore caricamento anagrafica clienti', 'error');
             }
         }
@@ -653,11 +459,9 @@
                 aggiornaBtnWhatsApp();
                 return;
             }
-            
             const cliente = anagraficaClienti.find(function(c) { return c.id === idCliente; });
             if (cliente) {
-                const nomeCompleto = ((cliente.nome || '') + ' ' + (cliente.cognome || '')).trim();
-                document.getElementById('linkClienteNome').value = nomeCompleto;
+                document.getElementById('linkClienteNome').value = ((cliente.nome || '') + ' ' + (cliente.cognome || '')).trim();
                 document.getElementById('linkClienteTelefono').value = cliente.telefono || '';
                 aggiornaBtnWhatsApp();
             }
@@ -667,28 +471,15 @@
             const idAnagrafica = document.getElementById('linkClienteSelect').value;
             const nome = document.getElementById('linkClienteNome').value.trim();
             const telefono = document.getElementById('linkClienteTelefono').value.trim();
-            
             if (!idAnagrafica) { mostraToast('Seleziona un cliente dall\'anagrafica', 'error'); return; }
             if (!nome || !telefono) { mostraToast('Compila nome e telefono', 'error'); return; }
-
             const clienteId = 'CL-' + Math.random().toString(36).substring(2, 8).toUpperCase();
             const link = window.location.origin + '/AppCenterStudioPROGOLD/negozio-cliente.html?studioId=' + encodeURIComponent(studioId) + '&clienteId=' + clienteId;
-
             try {
                 await fetch(WORKER_URL + '/api/studio/cliente-negozio?token=' + token, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        id: clienteId,
-                        id_anagrafica: idAnagrafica,
-                        studio_id: studioId,
-                        nome_a: nome,
-                        cognome_a: '',
-                        email: '',
-                        telefono: telefono,
-                        tipo_evento: 'Negozio',
-                        data_registrazione: new Date().toISOString()
-                    })
+                    body: JSON.stringify({ id: clienteId, studio_id: studioId, nome_a: nome, cognome_a: '', email: '', telefono: telefono, tipo_evento: 'Negozio', data_registrazione: new Date().toISOString() })
                 });
                 document.getElementById('genLink').textContent = link;
                 document.getElementById('linkGenerato').classList.remove('hidden');
@@ -718,7 +509,7 @@
             const nome = document.getElementById('linkClienteNome').value.trim();
             const telefono = document.getElementById('linkClienteTelefono').value.trim();
             const link = document.getElementById('genLink').textContent;
-            const msg = 'Ciao ' + nome + ',\n\nti inviamo il link per accedere al nostro negozio online e ordinare i tuoi prodotti personalizzati:\n\n' + link + '\n\nBuon acquisto!';
+            const msg = 'Ciao ' + nome + ',\n\nti inviamo il link per accedere al nostro negozio online:\n\n' + link + '\n\nBuon acquisto!';
             window.open('https://wa.me/' + telefono.replace(/\D/g, '') + '?text=' + encodeURIComponent(msg), '_blank');
         }
 
@@ -738,7 +529,6 @@
                         '<div class="product-category">Cliente Negozio</div>' +
                         '<div class="product-name">' + (c.nome_a || '') + '</div>' +
                         '<div style="font-size:12px;color:var(--text-light);margin-bottom:8px;">' + (c.telefono || '') + '</div>' +
-                        '<div style="font-size:11px;color:var(--text-light);margin-bottom:8px;">ID Anagrafica: ' + (c.id_anagrafica || 'N/D') + '</div>' +
                         '<div style="background:var(--primary-light);padding:8px;border-radius:6px;margin-bottom:12px;border:1px solid var(--border-color);">' +
                         '<div style="font-size:10px;color:var(--text-light);font-weight:600;">Link:</div>' +
                         '<div style="font-size:11px;word-break:break-all;font-family:monospace;">' + link + '</div></div>' +
@@ -786,7 +576,6 @@
             const nome = document.getElementById('prodNome').value.trim();
             const prezzo = parseFloat(document.getElementById('prodPrezzo').value);
             if (!nome || isNaN(prezzo)) { mostraToast('Compila nome e prezzo', 'error'); return; }
-            
             const prodotto = {
                 id: isEdit ? editId : 'prod-' + Date.now(),
                 studio_id: studioId,
@@ -798,17 +587,11 @@
                 immagine: currentImageBase64,
                 data_creazione: isEdit ? (prodotti.find(function(p) { return p.id === editId; }).data_creazione) : new Date().toISOString()
             };
-
             const url = isEdit ? WORKER_URL + '/api/studio/negozio/prodotto/' + editId + '?token=' + token : WORKER_URL + '/api/studio/negozio/prodotto?token=' + token;
             const method = isEdit ? 'PUT' : 'POST';
-
             try {
-                await fetch(url, {
-                    method: method,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(prodotto)
-                });
-                mostraToast(isEdit ? 'Prodotto aggiornato con successo' : 'Prodotto creato con successo', 'success');
+                await fetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(prodotto) });
+                mostraToast(isEdit ? 'Prodotto aggiornato' : 'Prodotto creato', 'success');
                 resetFormProdotto();
                 caricaProdotti();
             } catch (error) {
@@ -899,33 +682,30 @@
                 const data = await res.json();
                 loading.style.display = 'none';
                 const ordini = data.success ? data.ordini : [];
-                
                 console.log('Ordini ricevuti:', ordini);
-                
                 if (ordini.length === 0) { 
                     empty.classList.remove('hidden'); 
                     document.getElementById('alertOrdini').classList.add('hidden'); 
                     document.getElementById('alertNuoviOrdini').classList.add('hidden');
                     return; 
                 }
-                
                 const inAttesa = ordini.filter(function(o) { return o.stato === 'in_attesa' || o.stato === 'in_attesa_pagamento'; }).length;
                 const badge = document.getElementById('alertOrdini');
                 badge.textContent = inAttesa;
                 badge.classList.toggle('hidden', inAttesa === 0);
                 document.getElementById('alertNuoviOrdini').classList.toggle('hidden', inAttesa === 0);
                 document.getElementById('countNuoviOrdini').textContent = inAttesa;
-
                 list.innerHTML = ordini.map(function(o) {
                     if (o.stato === 'in_attesa' || o.stato === 'in_attesa_pagamento') stats.att++;
-                    if (o.stato === 'pagato') stats.pag++;
-                    if (o.stato === 'in_lavorazione') stats.lav++;
-                    if (o.stato === 'pronto') stats.pro++;
-                    if (o.stato === 'ritirato') stats.rit++;
+                    else if (o.stato === 'pagato') stats.pag++;
+                    else if (o.stato === 'in_lavorazione') stats.lav++;
+                    else if (o.stato === 'pronto') stats.pro++;
+                    else if (o.stato === 'ritirato') stats.rit++;
                     let prods = [];
                     try { prods = JSON.parse(o.prodotti || '[]'); } catch(e) { prods = []; }
                     const badgeClass = 'badge-' + o.stato;
                     const statoText = o.stato.replace(/_/g, ' ').toUpperCase();
+                    const nextAction = getNextAction(o.stato);
                     return '<div class="order-item">' +
                         '<div class="order-header">' +
                             '<div><div class="order-code">Ordine #' + o.codice_ordine + '</div>' +
@@ -934,22 +714,18 @@
                         '</div>' +
                         '<div class="order-products">' +
                             prods.map(function(p) {
-                                const hasFoto = p.fotoUrl || p.fotoBase64;
+                                const hasFoto = p.fotoBase64;
                                 return '<div class="order-product">' +
                                     '<div class="order-product-info">' +
                                         '<div><strong>• ' + p.nome + ' x' + p.quantita + '</strong> - EUR ' + (p.prezzo * p.quantita).toFixed(2) + '</div>' +
-                                        (hasFoto ? '<div class="order-product-actions"><button onclick="scaricaEdEliminaFotoOrdine(\'' + o.id + '\')" class="btn btn-sm btn-success" style="text-decoration:none;">Scarica ed Elimina Foto</button></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
+                                        (hasFoto ? '<div class="order-product-actions" style="margin-top:8px;"><img src="' + hasFoto + '" class="foto-thumb" alt="Anteprima"><button onclick="scaricaEdEliminaFotoOrdine(\'' + o.id + '\')" class="btn btn-sm btn-success">Scarica ed Elimina Foto</button></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
                                     '</div>' +
                                 '</div>';
                             }).join('') +
                         '</div>' +
+                        '<div class="whatsapp-reminder"><strong>Promemoria:</strong> Le foto ad alta risoluzione sono state inviate dal cliente via WhatsApp come allegato file. Controlla WhatsApp Web per scaricarle.</div>' +
                         '<div class="order-total">Totale: EUR ' + parseFloat(o.totale).toFixed(2) + '</div>' +
-                        '<div class="order-actions">' +
-                            (o.stato !== 'pagato' ? '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'' + o.id + '\', \'pagato\')">Segna Pagato</button>' : '') +
-                            (o.stato !== 'in_lavorazione' ? '<button class="btn btn-sm btn-info" onclick="cambiaStato(\'' + o.id + '\', \'in_lavorazione\')">Segna In Lavorazione</button>' : '') +
-                            (o.stato !== 'pronto' ? '<button class="btn btn-sm btn-warning" onclick="segnaPronto(\'' + o.id + '\')">Segna Pronto</button>' : '') +
-                            (o.stato !== 'ritirato' ? '<button class="btn btn-sm btn-primary" onclick="segnaRitirato(\'' + o.id + '\')">Segna Ritirato</button>' : '') +
-                        '</div></div>';
+                        '<div class="order-actions">' + nextAction + '</div></div>';
                 }).join('');
             } catch (e) { 
                 console.error('Errore caricamento ordini:', e);
@@ -962,15 +738,26 @@
             document.getElementById('statRit').textContent = stats.rit;
         }
 
+        function getNextAction(stato) {
+            const actions = {
+                'in_attesa': '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'{ID}\', \'pagato\')">Segna Pagato</button>',
+                'in_attesa_pagamento': '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'{ID}\', \'pagato\')">Segna Pagato</button>',
+                'pagato': '<button class="btn btn-sm btn-info" onclick="cambiaStato(\'{ID}\', \'in_lavorazione\')">Segna In Lavorazione</button>',
+                'in_lavorazione': '<button class="btn btn-sm btn-warning" onclick="segnaPronto(\'{ID}\')">Segna Pronto</button>',
+                'pronto': '<button class="btn btn-sm btn-primary" onclick="segnaRitirato(\'{ID}\')">Segna Ritirato</button>',
+                'ritirato': ''
+            };
+            return (actions[stato] || '').replace(/{ID}/g, '');
+        }
+
         async function scaricaEdEliminaFotoOrdine(ordineId) {
             try {
-                mostraToast('Preparazione download e pulizia...', 'success');
+                mostraToast('Preparazione download...', 'success');
                 const response = await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + ordineId + '/scarica-foto?token=' + token, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' }
                 });
                 const result = await response.json();
-                
                 if (result.success && result.foto && result.foto.length > 0) {
                     result.foto.forEach(function(f, index) {
                         setTimeout(function() {
@@ -983,14 +770,14 @@
                             document.body.removeChild(link);
                         }, index * 500);
                     });
-                    mostraToast('Foto scaricate ed eliminate automaticamente dal database', 'success');
+                    mostraToast('Foto scaricate ed eliminate dal database', 'success');
                     setTimeout(function() { caricaOrdini(); }, 2500);
                 } else {
-                    mostraToast('Nessuna foto trovata per questo ordine', 'error');
+                    mostraToast('Nessuna foto trovata', 'error');
                 }
             } catch (error) {
                 console.error('Errore:', error);
-                mostraToast('Errore di connessione durante il download', 'error');
+                mostraToast('Errore durante il download', 'error');
             }
         }
 
