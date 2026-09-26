@@ -897,9 +897,17 @@
                 const data = await res.json();
                 loading.style.display = 'none';
                 const ordini = data.success ? data.ordini : [];
-                if (ordini.length === 0) { empty.classList.remove('hidden'); document.getElementById('alertOrdini').classList.add('hidden'); return; }
                 
-                const inAttesa = ordini.filter(o => o.stato === 'in_attesa').length;
+                console.log('Ordini ricevuti:', ordini);
+                
+                if (ordini.length === 0) { 
+                    empty.classList.remove('hidden'); 
+                    document.getElementById('alertOrdini').classList.add('hidden'); 
+                    return; 
+                }
+                
+                // Conta ordini in attesa (stati possibili: in_attesa, in_attesa_pagamento)
+                const inAttesa = ordini.filter(o => o.stato === 'in_attesa' || o.stato === 'in_attesa_pagamento').length;
                 const badge = document.getElementById('alertOrdini');
                 badge.textContent = inAttesa;
                 badge.classList.toggle('hidden', inAttesa === 0);
@@ -907,7 +915,7 @@
                 document.getElementById('countNuoviOrdini').textContent = inAttesa;
 
                 list.innerHTML = ordini.map(o => {
-                    if (o.stato === 'in_attesa') stats.att++;
+                    if (o.stato === 'in_attesa' || o.stato === 'in_attesa_pagamento') stats.att++;
                     if (o.stato === 'pagato') stats.pag++;
                     if (o.stato === 'in_lavorazione') stats.lav++;
                     if (o.stato === 'pronto') stats.pro++;
@@ -915,7 +923,7 @@
                     let prods = [];
                     try { prods = JSON.parse(o.prodotti || '[]'); } catch(e) { prods = []; }
                     const badgeClass = 'badge-' + o.stato;
-                    const statoText = o.stato.replace('_', ' ').toUpperCase();
+                    const statoText = o.stato.replace(/_/g, ' ').toUpperCase();
                     return '<div class="order-item">' +
                         '<div class="order-header">' +
                             '<div><div class="order-code">Ordine #' + o.codice_ordine + '</div>' +
@@ -941,7 +949,10 @@
                             (o.stato !== 'ritirato' ? '<button class="btn btn-sm btn-primary" onclick="segnaRitirato(\'' + o.id + '\')">Segna Ritirato</button>' : '') +
                         '</div></div>';
                 }).join('');
-            } catch (e) { loading.style.display = 'none'; }
+            } catch (e) { 
+                console.error('Errore caricamento ordini:', e);
+                loading.style.display = 'none'; 
+            }
             document.getElementById('statAtt').textContent = stats.att;
             document.getElementById('statPag').textContent = stats.pag;
             document.getElementById('statLav').textContent = stats.lav;
@@ -991,11 +1002,10 @@
 
         async function segnaPronto(id) {
             try {
-                await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + id + '/elimina-foto?token=' + token, { method: 'DELETE' });
                 await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + id + '?token=' + token, {
                     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ stato: 'pronto' })
                 });
-                mostraToast('Ordine pronto e foto eliminata dal cloud', 'success');
+                mostraToast('Ordine pronto', 'success');
                 caricaOrdini();
             } catch (error) {
                 console.error('Errore:', error);
