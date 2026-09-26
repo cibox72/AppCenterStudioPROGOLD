@@ -445,18 +445,14 @@
         function caricaFotoProdotto(index, input) {
             if (!input.files || !input.files[0]) return;
             const file = input.files[0];
-            mostraToast('Caricamento foto...', 'success');
+            mostraToast('Caricamento foto in corso...', 'success');
             const reader = new FileReader();
             reader.onload = function(e) {
                 const base64 = e.target.result;
-                if (base64.length > 2097152) { 
-                    mostraToast('Foto troppo grande. Massimo 2MB.', 'error'); 
-                    return; 
-                }
                 carrello[index].fotoBase64 = base64;
                 carrello[index].fotoPreview = base64;
                 aggiornaCarrelloUI();
-                mostraToast('Foto caricata', 'success');
+                mostraToast('Foto ad alta risoluzione caricata con successo', 'success');
             };
             reader.onerror = function() {
                 mostraToast('Errore nella lettura del file', 'error');
