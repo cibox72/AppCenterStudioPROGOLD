@@ -37,7 +37,7 @@ export default {
       ).bind(id, tipo, titolo, messaggio, JSON.stringify(dati), 0, 0, new Date().toISOString()).run();
     }
 
-    // ✅ ID CLIENTE UNIVOCO GLOBALE - EVITA COLLISIONI TRA STUDI
+    // ID CLIENTE UNIVOCO GLOBALE - EVITA COLLISIONI TRA STUDI
     async function generaIdCliente(studioId) {
       const uuid = crypto.randomUUID().toLowerCase();
       const shortId = uuid.replace(/-/g, '').substring(0, 8);
@@ -184,7 +184,7 @@ export default {
       }
 
       // ============================================
-      // SEZIONE 3: ADMIN - NOTIFICHE
+      // SEZIONE 3: ADMIN - NOTIFICHE E CLIENTI
       // ============================================
       if (path === "/api/admin/crm/clienti" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -304,8 +304,7 @@ export default {
         await env.DB.prepare("INSERT INTO notifiche (id, tipo, titolo, messaggio, dati, letto, archiviata, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?)").bind('not-' + Date.now(), 'selezione_foto', 'Nuova Selezione Foto Completata', JSON.stringify({ clienteId, studioId: cliente.studio_id }), 0, 0, new Date().toISOString()).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-
-      // ============================================
+            // ============================================
       // SEZIONE 6: STUDIO - SERVIZI
       // ============================================
       if (path === "/api/studio/servizi" && request.method === "GET") {
@@ -343,7 +342,8 @@ export default {
         await env.DB.prepare("DELETE FROM servizi WHERE id=? AND studio_id=?").bind(id, sess.user_id).run();
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
-            // ============================================
+
+      // ============================================
       // SEZIONE 7: STUDIO - PREVENTIVI
       // ============================================
       if (path === "/api/studio/preventivi" && request.method === "GET") {
@@ -454,7 +454,7 @@ export default {
       // ============================================
       if (path === "/api/studio/agenda" && request.method === "GET") {
         const token = url.searchParams.get("token");
-        const dataFilter = url.searchParams.get("data"); // ✅ FILTRO DATA AGGIUNTO
+        const dataFilter = url.searchParams.get("data");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
         
@@ -478,23 +478,8 @@ export default {
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
         const d = await request.json();
         
-        // ✅ MODIFICA CHIAVE: INSERT OR REPLACE + colonne corrette (stato, data_creazione)
         await env.DB.prepare(`INSERT OR REPLACE INTO agenda (id, studio_id, titolo, data, ora_inizio, ora_fine, descrizione, luogo, tipo_servizio, squadra, cliente, note, creato_il, stato, data_creazione) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
-          d.id, 
-          sess.user_id, 
-          d.titolo, 
-          d.data, 
-          d.ora_inizio || null, 
-          d.ora_fine || null, 
-          d.descrizione || null, 
-          d.luogo || null, 
-          d.tipo_servizio || null, 
-          d.squadra || 'Squadra 1', 
-          d.cliente || null, 
-          d.note || null, 
-          d.creato_il || new Date().toISOString(),
-          d.stato || 'Da Confermare',
-          d.data_creazione || new Date().toISOString()
+          d.id, sess.user_id, d.titolo, d.data, d.ora_inizio || null, d.ora_fine || null, d.descrizione || null, d.luogo || null, d.tipo_servizio || null, d.squadra || 'Squadra 1', d.cliente || null, d.note || null, d.creato_il || new Date().toISOString(), d.stato || 'Da Confermare', d.data_creazione || new Date().toISOString()
         ).run();
         
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
@@ -580,7 +565,7 @@ export default {
       }
 
       // ============================================
-      // SEZIONE 13: STUDIO - NEGOZIO
+      // SEZIONE 13: STUDIO - NEGOZIO (PRODOTTI, ORDINI, CONFIG)
       // ============================================
       if (path === "/api/studio/negozio/prodotti" && request.method === "GET") {
         const token = url.searchParams.get("token");
@@ -658,17 +643,15 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
-           if (path === "/api/studio/negozio-config" && request.method === "GET") {
+      if (path === "/api/studio/negozio-config" && request.method === "GET") {
         const token = url.searchParams.get("token");
         const studioIdParam = url.searchParams.get("studioId");
         
-        // Se c'è solo studioId (cliente pubblico), permetti l'accesso senza token
         if (studioIdParam && !token) {
           const result = await env.DB.prepare("SELECT * FROM negozi_config WHERE studio_id=?").bind(studioIdParam).first();
           return new Response(JSON.stringify({ success: true, config: result }), { headers: corsHeaders });
         }
         
-        // Altrimenti verifica autenticazione (per lo studio)
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
         const targetStudioId = studioIdParam || sess.user_id;
@@ -676,7 +659,7 @@ export default {
         return new Response(JSON.stringify({ success: true, config: result }), { headers: corsHeaders });
       }
 
-            if (path === "/api/studio/negozio-config" && request.method === "POST") {
+      if (path === "/api/studio/negozio-config" && request.method === "POST") {
         const token = url.searchParams.get("token");
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
