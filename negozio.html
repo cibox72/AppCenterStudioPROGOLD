@@ -181,23 +181,6 @@
         .product-price { font-size: 22px; font-weight: 800; color: var(--primary-dark); margin-bottom: 8px; }
         .product-desc { font-size: 13px; color: var(--text-light); margin-bottom: 12px; }
         
-        .cart-float-btn { 
-            position: fixed; bottom: 24px; right: 24px; 
-            background: var(--primary-gradient); color: #ffffff; 
-            width: 60px; height: 60px; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 24px; font-weight: 700; 
-            box-shadow: 0 4px 20px rgba(153, 101, 21, 0.4); 
-            cursor: pointer; z-index: 1000; border: none; 
-        }
-        .cart-count { 
-            position: absolute; top: -5px; right: -5px; 
-            background: var(--danger); color: #ffffff; 
-            width: 24px; height: 24px; border-radius: 50%; 
-            font-size: 12px; font-weight: 700; 
-            display: flex; align-items: center; justify-content: center; 
-        }
-        
         .order-item { 
             background: #ffffff; border-radius: 12px; padding: 20px; margin-bottom: 16px; 
             border-left: 4px solid var(--primary); 
@@ -438,8 +421,7 @@
                 <div id="ordersList"></div>
             </div>
         </div>
-
-        <div id="configSection" class="section">
+                <div id="configSection" class="section">
             <div class="card">
                 <div class="card-title">Configurazione Negozio</div>
                 <div style="background: var(--primary-light); padding: 16px; border-radius: 8px; margin-bottom: 24px; border-left: 4px solid var(--primary); border: 1px solid var(--border-color);">
@@ -466,10 +448,26 @@
                     </select>
                 </div>
 
-                <div id="group-paypal" class="form-group hidden" style="background: var(--primary-light); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
-                    <label>Email PayPal o Link PayPal.me</label>
-                    <input type="text" id="paypalEmail" placeholder="es. tuaemail@dominio.com o https://paypal.me/tuonome">
-                    <div class="form-hint">Il cliente vedra un link diretto per pagare l'importo esatto dell'ordine.</div>
+                <div id="group-paypal" class="form-group hidden" style="background: var(--primary-light); padding: 20px; border-radius: 8px; border: 2px solid var(--primary); margin-top: 16px;">
+                    <label style="font-size: 14px; font-weight: 700; color: var(--primary-dark);">Email PayPal o Link PayPal.me</label>
+                    <input type="text" id="paypalEmail" placeholder="es. tuaemail@dominio.com o https://paypal.me/tuonome" style="margin-top: 8px;">
+                    <div class="form-hint" style="margin-top: 8px;">Il cliente vedra un link diretto per pagare l'importo esatto dell'ordine.</div>
+                    
+                    <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 16px; border-radius: 8px; margin-top: 16px;">
+                        <strong style="color: #856404; font-size: 14px;">AVVISO IMPORTANTE - FLUSSO DI VERIFICA PAGAMENTO</strong>
+                        <p style="margin-top: 8px; font-size: 13px; color: #856404; line-height: 1.6;">
+                            Quando selezioni PayPal come metodo di pagamento:
+                        </p>
+                        <ol style="margin-top: 8px; font-size: 13px; color: #856404; line-height: 1.8; padding-left: 20px;">
+                            <li>Il cliente paghera direttamente su PayPal con il link che gli verra mostrato.</li>
+                            <li><strong>Il cliente dovra stampare o salvare la ricevuta di pagamento PayPal</strong> (con numero di transazione, importo e data).</li>
+                            <li>Al momento del ritiro della merce, <strong>il cliente dovra mostrare la ricevuta stampata</strong> per dimostrare il pagamento.</li>
+                            <li><strong>Tu dovrai verificare la ricevuta</strong> confrontandola con il tuo account PayPal prima di consegnare la merce.</li>
+                        </ol>
+                        <p style="margin-top: 12px; font-size: 12px; color: #856404; font-style: italic;">
+                            Senza ricevuta di pagamento, non consegnare la merce. Questo protegge te e il tuo studio da contestazioni.
+                        </p>
+                    </div>
                 </div>
 
                 <div id="group-iban" class="form-group hidden" style="background: var(--primary-light); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
@@ -503,7 +501,8 @@
     <div class="footer-branding" style="text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; border-top: 1px solid var(--border-color); margin-top: 40px;">
         Servizio offerto da <strong class="studio-nome" id="footerStudioName" style="color: var(--primary-dark);">Caricamento...</strong>
     </div>
-        <script>
+
+    <script>
         if (typeof WORKER_URL === 'undefined') {
             var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
         }
