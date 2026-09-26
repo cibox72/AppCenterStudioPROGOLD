@@ -92,6 +92,21 @@
         .loading { text-align: center; padding: 60px 20px; color: var(--text-light); }
         .spinner { width: 40px; height: 40px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Stili per la slide WhatsApp centrale */
+        .whatsapp-slide { text-align: center; }
+        .whatsapp-slide h3 { color: var(--primary-dark); font-size: 20px; margin-bottom: 16px; }
+        .whatsapp-slide .instructions { background: #fff3cd; border-left: 4px solid #ffc107; padding: 16px; border-radius: 8px; margin: 16px 0; text-align: left; }
+        .whatsapp-slide .instructions ol { margin-left: 20px; margin-top: 8px; }
+        .whatsapp-slide .instructions li { margin-bottom: 8px; font-size: 14px; color: #856404; }
+        .whatsapp-slide .product-list { text-align: left; margin: 20px 0; }
+        .whatsapp-slide .product-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border-color); }
+        .whatsapp-slide .product-item input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+        .whatsapp-slide .product-item label { flex: 1; cursor: pointer; font-size: 14px; }
+        .whatsapp-slide .product-item .check-icon { color: var(--success); font-weight: 700; font-size: 18px; }
+        .whatsapp-slide .btn-whatsapp-large { width: 100%; padding: 16px; font-size: 16px; margin: 16px 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .whatsapp-slide .btn-continue { width: 100%; padding: 14px; font-size: 15px; margin-top: 8px; }
+        
         @media (max-width: 768px) { .products-grid { grid-template-columns: 1fr; } .cart-sidebar { width: 100%; right: -100%; } }
     </style>
 </head>
@@ -125,6 +140,8 @@
             <button class="btn btn-primary" onclick="apriCheckout()">PROCEDI ALL'ORDINE</button>
         </div>
     </div>
+    
+    <!-- Modale Checkout dati -->
     <div class="modal-overlay" id="checkoutModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -155,10 +172,40 @@
             </div>
             <div style="margin-top: 20px; display: flex; gap: 10px;">
                 <button class="btn" onclick="chiudiCheckout()" style="flex: 1; background: #95a5a6; color: #ffffff;">Annulla</button>
-                <button class="btn btn-success" id="btnConfermaOrdine" onclick="confermaOrdine()" style="flex: 2;">CONFERMA ORDINE</button>
+                <button class="btn btn-success" id="btnConfermaOrdine" onclick="apriSlideWhatsApp()" style="flex: 2;">CONFERMA ORDINE</button>
             </div>
         </div>
     </div>
+    
+    <!-- NUOVO: Modale Slide WhatsApp Centrale -->
+    <div class="modal-overlay" id="whatsappModal">
+        <div class="modal-content whatsapp-slide">
+            <div class="modal-header">
+                <h2>Invia le Foto Originali</h2>
+                <button class="close-modal" onclick="chiudiSlideWhatsApp()">Chiudi</button>
+            </div>
+            <div class="instructions">
+                <strong style="color: #856404; font-size: 15px;">Per garantire la massima qualità di stampa:</strong>
+                <ol>
+                    <li>Clicca il pulsante verde qui sotto per aprire WhatsApp</li>
+                    <li>Allega le foto originali come <strong>DOCUMENTO</strong> (non come foto dalla chat)</li>
+                    <li>Invia il messaggio</li>
+                    <li>Torna qui e spunta le checkbox per confermare l'invio</li>
+                </ol>
+            </div>
+            <button class="btn btn-whatsapp btn-whatsapp-large" id="btnWhatsAppSlide" onclick="apriWhatsAppPerOrdine()">
+                <span style="font-size: 20px;">📱</span> Apri WhatsApp e invia foto originali
+            </button>
+            <div class="product-list" id="whatsappProductList">
+                <!-- Lista prodotti con checkbox generata dinamicamente -->
+            </div>
+            <button class="btn btn-primary btn-continue" id="btnContinuaOrdine" onclick="inviaOrdineDefinitivo()">
+                Continua con l'ordine →
+            </button>
+        </div>
+    </div>
+    
+    <!-- Modale Successo -->
     <div class="modal-overlay" id="successModal">
         <div class="modal-content" style="text-align: center;">
             <div style="font-size: 48px; margin-bottom: 16px; color: var(--success); font-weight: 700;">Ordine Registrato</div>
@@ -167,16 +214,6 @@
             <p style="margin-bottom: 24px; color: var(--text-light);">
                 <strong id="successCode" style="color: var(--primary-dark); font-size: 28px; font-family: monospace;"></strong>
             </p>
-            <div id="whatsappReminder" class="info-box hidden" style="text-align: left;">
-                <strong>Passaggio importante per la qualita di stampa:</strong>
-                <p style="margin-top: 8px; font-size: 14px; color: #155724; line-height: 1.6;">
-                    Le foto caricate sul sito sono state compresse per l'anteprima. Per garantire la massima qualita di stampa, inviaci le foto ORIGINALI via WhatsApp come <strong>ALLEGATO FILE</strong> (non come foto dalla chat).
-                </p>
-                <p style="margin-top: 8px; font-size: 13px; color: #155724;">
-                    <strong>Come fare:</strong> Apri WhatsApp > Chat con lo studio > Allega > Documento > Seleziona le foto originali > Invia
-                </p>
-                <button class="btn btn-whatsapp" id="btnWhatsAppOrder" style="margin-top: 12px; width: 100%;">Invia foto originali via WhatsApp</button>
-            </div>
             <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 16px; border-radius: 8px; margin: 20px 0; text-align: left;">
                 <strong style="color: #856404; font-size: 14px;">Nota:</strong>
                 <p style="margin-top: 8px; font-size: 14px; color: #856404; line-height: 1.6;">
@@ -204,6 +241,7 @@
         let carrello = [];
         let configPagamenti = null;
         let studioWhatsApp = '';
+        let codiceOrdineTemporaneo = '';
 
         document.addEventListener('DOMContentLoaded', function() {
             if (!studioId) { mostraToast('Link non valido', 'error'); return; }
@@ -273,7 +311,7 @@
             if (!prodotto) return;
             const esistente = carrello.find(function(item) { return item.id === prodId; });
             if (esistente) { esistente.quantita++; } 
-            else { carrello.push({ id: prodotto.id, nome: prodotto.nome, prezzo: prodotto.prezzo, quantita: 1, hasFoto: false }); }
+            else { carrello.push({ id: prodotto.id, nome: prodotto.nome, prezzo: prodotto.prezzo, quantita: 1, hasFoto: false, fotoInviataWhatsApp: false }); }
             aggiornaCarrelloUI();
             mostraToast('Prodotto aggiunto', 'success');
         }
@@ -316,10 +354,9 @@
 
         function caricaFotoProdotto(index, input) {
             if (!input.files || !input.files[0]) return;
-            const file = input.files[0];
             carrello[index].hasFoto = true;
             aggiornaCarrelloUI();
-            mostraToast('Foto associata al prodotto. Invia l\'originale via WhatsApp dopo l\'ordine.', 'success');
+            mostraToast('Foto associata al prodotto. Ricorda di inviare l\'originale via WhatsApp.', 'success');
         }
 
         function toggleCart() { 
@@ -393,7 +430,8 @@
             document.getElementById('checkoutModal').classList.remove('active'); 
         }
 
-        async function confermaOrdine() {
+        // NUOVA FUNZIONE: Apre la slide WhatsApp centrale
+        function apriSlideWhatsApp() {
             const nome = document.getElementById('checkNome').value.trim();
             const telefono = document.getElementById('checkTelefono').value.trim();
             const email = document.getElementById('checkEmail').value.trim();
@@ -402,20 +440,72 @@
                 mostraToast('Compila tutti i campi', 'error'); 
                 return; 
             }
-
-            const btnConferma = document.getElementById('btnConfermaOrdine');
-            btnConferma.disabled = true;
-            btnConferma.textContent = 'INVIO IN CORSO...';
             
+            // Genera codice ordine temporaneo
+            codiceOrdineTemporaneo = 'ORD-' + Date.now().toString().slice(-6);
+            
+            // Genera la lista prodotti con checkbox
+            const productList = document.getElementById('whatsappProductList');
+            productList.innerHTML = '<h4 style="margin-bottom: 12px; color: var(--primary-dark);">Prodotti ordinati:</h4>' +
+                carrello.map(function(item, index) {
+                    return '<div class="product-item">' +
+                        '<input type="checkbox" id="fotoCheck_' + index + '" onchange="aggiornaStatoCheckbox(' + index + ')">' +
+                        '<label for="fotoCheck_' + index + '"><strong>' + item.nome + '</strong> x' + item.quantita + ' - EUR ' + (item.prezzo * item.quantita).toFixed(2) + '</label>' +
+                        '<span class="check-icon" id="checkIcon_' + index + '" style="display:none;">✓</span>' +
+                        '</div>';
+                }).join('');
+            
+            // Chiudi checkout e apri slide WhatsApp
+            document.getElementById('checkoutModal').classList.remove('active');
+            document.getElementById('whatsappModal').classList.add('active');
+        }
+
+        function chiudiSlideWhatsApp() {
+            document.getElementById('whatsappModal').classList.remove('active');
+        }
+
+        function aggiornaStatoCheckbox(index) {
+            const checkbox = document.getElementById('fotoCheck_' + index);
+            const icon = document.getElementById('checkIcon_' + index);
+            if (checkbox.checked) {
+                icon.style.display = 'inline';
+                carrello[index].fotoInviataWhatsApp = true;
+            } else {
+                icon.style.display = 'none';
+                carrello[index].fotoInviataWhatsApp = false;
+            }
+        }
+
+        function apriWhatsAppPerOrdine() {
+            if (!studioWhatsApp) {
+                mostraToast('Numero WhatsApp dello studio non configurato', 'error');
+                return;
+            }
+            const nome = document.getElementById('checkNome').value.trim();
+            const msg = 'Ciao, sono ' + nome + '. Ho appena fatto l\'ordine ' + codiceOrdineTemporaneo + '. Ti invio le foto originali ad alta risoluzione per la stampa come allegato file.';
+            const whatsappLink = 'https://wa.me/' + studioWhatsApp + '?text=' + encodeURIComponent(msg);
+            window.open(whatsappLink, '_blank');
+            mostraToast('WhatsApp aperto. Invia le foto come ALLEGATO FILE (non come foto dalla chat).', 'success');
+        }
+
+        // NUOVA FUNZIONE: Invia l'ordine definitivo al server
+        async function inviaOrdineDefinitivo() {
+            const btnContinua = document.getElementById('btnContinuaOrdine');
+            btnContinua.disabled = true;
+            btnContinua.textContent = 'INVIO IN CORSO...';
+            
+            const nome = document.getElementById('checkNome').value.trim();
+            const telefono = document.getElementById('checkTelefono').value.trim();
+            const email = document.getElementById('checkEmail').value.trim();
             const totale = carrello.reduce(function(sum, item) { return sum + (item.prezzo * item.quantita); }, 0);
-            const codiceOrdine = 'ORD-' + Date.now().toString().slice(-6);
+            
             mostraToast('Registrazione ordine...', 'success');
 
             try {
                 const ordineData = {
                     studio_id: studioId,
                     cliente_id: clienteId || '',
-                    codice_ordine: codiceOrdine,
+                    codice_ordine: codiceOrdineTemporaneo,
                     cliente_nome: nome,
                     cliente_telefono: telefono,
                     cliente_email: email,
@@ -425,12 +515,15 @@
                             nome: item.nome, 
                             prezzo: item.prezzo, 
                             quantita: item.quantita,
-                            hasFoto: item.hasFoto || false
+                            hasFoto: item.hasFoto || false,
+                            fotoInviataWhatsApp: item.fotoInviataWhatsApp || false
                         };
                     })),
                     totale: totale,
                     stato: 'in_attesa',
                     metodo_pagamento: configPagamenti ? configPagamenti.metodo_pagamento_preferito : 'non_specificato',
+                    file_url: '',
+                    letto: 0,
                     data_creazione: new Date().toISOString()
                 };
 
@@ -455,31 +548,22 @@
                 const result = await response.json();
                 console.log('Ordine creato:', result);
                 
-                document.getElementById('checkoutModal').classList.remove('active');
-                document.getElementById('successCode').textContent = codiceOrdine;
-                
-                if (studioWhatsApp) {
-                    const msg = 'Ciao, ho appena fatto l\'ordine ' + codiceOrdine + '. Ti invio le foto originali ad alta risoluzione per la stampa.';
-                    const whatsappLink = 'https://wa.me/' + studioWhatsApp + '?text=' + encodeURIComponent(msg);
-                    const btnWhatsApp = document.getElementById('btnWhatsAppOrder');
-                    btnWhatsApp.onclick = function() { window.open(whatsappLink, '_blank'); };
-                    document.getElementById('whatsappReminder').classList.remove('hidden');
-                }
-                
+                document.getElementById('whatsappModal').classList.remove('active');
+                document.getElementById('successCode').textContent = codiceOrdineTemporaneo;
                 document.getElementById('successModal').classList.add('active');
                 carrello = [];
                 aggiornaCarrelloUI();
                 
             } catch (error) {
                 console.error('Errore ordine:', error);
-                document.getElementById('checkoutModal').classList.remove('active');
-                document.getElementById('successCode').textContent = codiceOrdine + ' (da confermare)';
+                document.getElementById('whatsappModal').classList.remove('active');
+                document.getElementById('successCode').textContent = codiceOrdineTemporaneo + ' (da confermare)';
                 document.getElementById('successModal').classList.add('active');
                 carrello = [];
                 aggiornaCarrelloUI();
             } finally {
-                btnConferma.disabled = false;
-                btnConferma.textContent = 'CONFERMA ORDINE';
+                btnContinua.disabled = false;
+                btnContinua.textContent = 'Continua con l\'ordine →';
             }
         }
 
