@@ -438,6 +438,7 @@
             if (carrello[index].quantita <= 0) carrello.splice(index, 1); 
             aggiornaCarrelloUI(); 
         }
+        
         function rimuoviDalCarrello(index) { 
             carrello.splice(index, 1); 
             aggiornaCarrelloUI(); 
@@ -476,8 +477,7 @@
             document.getElementById('checkoutModal').classList.add('active');
             toggleCart();
         }
-
-        async function caricaConfigurazioniPagamenti(totale) {
+                    async function caricaConfigurazioniPagamenti(totale) {
             const container = document.getElementById('paymentMethodsContainer');
             container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Caricamento metodi di pagamento...</div></div>';
             
@@ -545,7 +545,7 @@
             try {
                 const ordineData = {
                     studio_id: studioId,
-                    cliente_id: clienteId,
+                    cliente_id: clienteId || '',
                     codice_ordine: codiceOrdine,
                     cliente_nome: nome,
                     cliente_telefono: telefono,
@@ -555,7 +555,7 @@
                         nome: item.nome, 
                         prezzo: item.prezzo, 
                         quantita: item.quantita, 
-                        fotoBase64: item.fotoBase64
+                        fotoBase64: item.fotoBase64 || null
                     }))),
                     totale: totale,
                     stato: 'in_attesa_pagamento',
@@ -590,7 +590,11 @@
                 alertDiv.className = 'alert-box';
                 alertDiv.style.marginTop = '16px';
                 alertDiv.innerHTML = '<strong>Nota:</strong> Si e\' verificato un errore tecnico. Ti invitiamo a contattare lo studio al numero che hai inserito per confermare l\'ordine e completare il pagamento.';
-                document.querySelector('#successModal .modal-content').insertBefore(alertDiv, document.querySelector('#successModal button'));
+                const modalContent = document.querySelector('#successModal .modal-content');
+                const button = modalContent.querySelector('button');
+                if (button) {
+                    modalContent.insertBefore(alertDiv, button);
+                }
                 
                 carrello = [];
                 aggiornaCarrelloUI();
@@ -609,11 +613,11 @@
         function mostraMessaggioChiusura() {
             document.body.innerHTML = `
                 <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; background: #ffffff; font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px;">
-                    <div style="font-size: 64px; color: #28b463; margin-bottom: 20px;">✓</div>
-                    <h1 style="color: #996515; margin-bottom: 20px;">Ordine Completato!</h1>
+                    <div style="font-size: 64px; color: #28b463; margin-bottom: 20px;">Ordine Completato</div>
+                    <h1 style="color: #996515; margin-bottom: 20px;">Grazie per il tuo ordine!</h1>
                     <p style="color: #666666; font-size: 18px; line-height: 1.6; max-width: 500px;">
-                        Il tuo ordine è stato registrato con successo.<br>
-                        Verrai contattato dallo studio non appena sarà pronto per il ritiro.
+                        Il tuo ordine e stato registrato con successo.<br>
+                        Verrai contattato dallo studio non appena sara pronto per il ritiro.
                     </p>
                     <p style="color: #999999; font-size: 14px; margin-top: 40px;">
                         Puoi chiudere questa scheda manualmente.
