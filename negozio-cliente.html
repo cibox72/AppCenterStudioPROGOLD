@@ -75,7 +75,6 @@
         .btn:hover { transform: translateY(-2px); }
         .btn-primary { background: var(--primary-gradient); color: #ffffff; width: 100%; }
         .btn-success { background: var(--success); color: #ffffff; }
-        .btn-warning { background: var(--danger); color: #ffffff; }
         .cart-float-btn { 
             position: fixed; bottom: 24px; right: 24px; 
             background: var(--primary-gradient); color: #ffffff; 
@@ -193,21 +192,16 @@
             word-break: break-all; 
             border: 1px solid var(--border-color);
         }
-        .payment-option a { 
-            color: var(--primary-dark); 
-            font-weight: 700; 
-            text-decoration: underline; 
-        }
         .payment-btn {
             display: inline-block;
             margin-top: 8px;
-            padding: 8px 16px;
-            background: var(--primary-gradient);
+            padding: 12px 24px;
+            background: #0070ba;
             color: #ffffff;
             border-radius: 6px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 14px;
         }
         .payment-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         
@@ -245,12 +239,12 @@
 <body>
     <div class="header">
         <h1>Negozio ON-Line</h1>
-        <p>Prodotti personalizzati - Pagamento anticipato obbligatorio</p>
+        <p>Prodotti personalizzati - Ritiro in studio</p>
     </div>
     <div class="container">
         <div class="hero">
             <h2>Benvenuto nel nostro negozio</h2>
-            <p>Sfoglia i prodotti, personalizzali con le tue foto e completa l'ordine con pagamento anticipato.</p>
+            <p>Sfoglia i prodotti, personalizzali con le tue foto e completa l'ordine.</p>
         </div>
         <div id="vetrinaLoading" class="loading"><div class="spinner"></div><div>Caricamento prodotti...</div></div>
         <div id="vetrinaEmpty" class="empty-state hidden">Nessun prodotto disponibile.</div>
@@ -270,7 +264,7 @@
             <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 20px; font-weight: 700;">
                 <span>Totale:</span><span id="cartTotal">EUR 0.00</span>
             </div>
-            <button class="btn btn-primary" onclick="apriCheckout()">PROCEDI CON PAGAMENTO</button>
+            <button class="btn btn-primary" onclick="apriCheckout()">PROCEDI ALL'ORDINE</button>
         </div>
     </div>
 
@@ -282,7 +276,7 @@
             </div>
             
             <div class="alert-box">
-                <strong>ATTENZIONE:</strong> Il pagamento anticipato e obbligatorio per confermare l'ordine. Scegli uno dei metodi sotto indicati.
+                <strong>ATTENZIONE:</strong> Segui le istruzioni di pagamento indicate qui sotto per confermare l'ordine.
             </div>
 
             <div class="form-group">
@@ -304,7 +298,7 @@
 
             <div style="margin-top: 20px; padding: 16px; background: var(--primary-light); border-radius: 8px; text-align: center; border: 2px solid var(--primary);">
                 <div style="font-weight: 700; font-size: 20px; color: var(--primary-dark);" id="checkTotal">Totale: EUR 0.00</div>
-                <div style="font-size: 13px; color: var(--text-light); margin-top: 4px; font-weight: 600;">Pagamento anticipato obbligatorio - Ritiro in studio</div>
+                <div style="font-size: 13px; color: var(--text-light); margin-top: 4px; font-weight: 600;">Ritiro in studio</div>
             </div>
 
             <div style="margin-top: 20px; display: flex; gap: 10px;">
@@ -325,7 +319,7 @@
                 <div id="pagamentoLinks"></div>
             </div>
             <p style="margin-top: 16px; margin-bottom: 24px; color: var(--text-light); font-size: 14px;">
-                Completa il pagamento tramite uno dei metodi sopra indicati. Ti contatteremo per confermare il ritiro in studio.
+                Completa il pagamento tramite le istruzioni sopra indicate. Ti contatteremo per confermare il ritiro in studio.
             </p>
             <button class="btn btn-primary" onclick="location.reload()">Torna al Negozio</button>
         </div>
@@ -488,7 +482,6 @@
             const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
             document.getElementById('checkTotal').textContent = 'Totale: EUR ' + totale.toFixed(2);
             
-            // Carica configurazione pagamenti PRIMA di mostrare il modale
             await caricaConfigurazioniPagamenti(totale);
             
             document.getElementById('checkoutModal').classList.add('active');
@@ -505,38 +498,41 @@
                 const configData = await configRes.json();
                 configPagamenti = configData.success ? configData.config : null;
                 
-                let html = '<h3>Metodi di Pagamento Disponibili</h3>';
-                let hasMethods = false;
+                let html = '<h3>Metodo di Pagamento</h3>';
                 
-                if (configPagamenti && configPagamenti.metodi_pagamento) {
-                    const metodi = configPagamenti.metodi_pagamento.split(',');
+                if (configPagamenti) {
+                    const metodo = configPagamenti.metodo_pagamento_preferito;
                     
-                    if (metodi.includes('paypal') && configPagamenti.paypal_email) {
-                        hasMethods = true;
+                    if (metodo === 'paypal' && configPagamenti.paypal_email) {
                         const linkPaypal = configPagamenti.paypal_email.includes('http') ? configPagamenti.paypal_email : 'https://paypal.me/' + configPagamenti.paypal_email.split('@')[0].replace('paypal.me/', '') + '/' + totale;
-                        html += '<div class="payment-option"><h4>PayPal</h4><p>Clicca sul link per pagare immediatamente:</p><a href="' + linkPaypal + '" target="_blank" class="payment-btn">PAGA ORA CON PAYPAL</a></div>';
+                        html += '<div class="payment-option" style="background: #fff3cd; border: 2px solid #ffc107; padding: 16px; border-radius: 8px;">';
+                        html += '<h4 style="color: #856404; margin-bottom: 12px;">PayPal - Pagamento Anticipato</h4>';
+                        html += '<p>Clicca sul pulsante qui sotto per pagare immediatamente l\'importo di <strong>EUR ' + totale.toFixed(2) + '</strong>:</p>';
+                        html += '<a href="' + linkPaypal + '" target="_blank" class="payment-btn">PAGA ORA CON PAYPAL</a>';
+                        html += '<div style="margin-top: 16px; padding: 12px; background: #ffffff; border-radius: 6px; border-left: 4px solid #856404;">';
+                        html += '<strong style="color: #856404; font-size: 13px;">IMPORTANTE: Al momento del ritiro dovrai mostrare la ricevuta di pagamento PayPal (con numero di transazione, importo e data) per ritirare la merce.</strong>';
+                        html += '</div>';
+                        html += '</div>';
+                    } else if (metodo === 'studio') {
+                        html += '<div class="payment-option" style="background: #d4edda; border: 2px solid #28a745; padding: 16px; border-radius: 8px;">';
+                        html += '<h4 style="color: #155724; margin-bottom: 12px;">Pagamento in Studio</h4>';
+                        html += '<p>Potrai pagare direttamente in studio al momento del ritiro della merce.</p>';
+                        if (configPagamenti.studio_pagamento_istruzioni) {
+                            html += '<div style="background: white; padding: 12px; border-radius: 4px; margin: 12px 0; font-size: 13px;">' + configPagamenti.studio_pagamento_istruzioni + '</div>';
+                        }
+                        html += '<p style="font-size: 13px; color: #155724; margin-top: 12px;"><strong>Importo da pagare al ritiro:</strong> EUR ' + totale.toFixed(2) + '</p>';
+                        html += '</div>';
+                    } else {
+                        html += '<div class="alert-box"><strong>Metodo di pagamento non configurato</strong><p>Lo studio ti contattera a breve per concordare il pagamento. Totale: <strong>EUR ' + totale.toFixed(2) + '</strong></p></div>';
                     }
-                    if (metodi.includes('stripe') && configPagamenti.stripe_link) {
-                        hasMethods = true;
-                        html += '<div class="payment-option"><h4>Carta di Credito (Stripe)</h4><p>Pagamento sicuro con carta:</p><a href="' + configPagamenti.stripe_link + '" target="_blank" class="payment-btn">PAGA CON CARTA</a></div>';
-                    }
-                    if (metodi.includes('satispay') && configPagamenti.satispay_numero) {
-                        hasMethods = true;
-                        html += '<div class="payment-option"><h4>Satispay</h4><p>Invia l\'importo a:</p><code>' + configPagamenti.satispay_numero + '</code><p>Causale: <strong>ORDINE-NEGOZIO</strong></p></div>';
-                    }
-                    if (metodi.includes('iban') && configPagamenti.iban_numero) {
-                        hasMethods = true;
-                        html += '<div class="payment-option"><h4>Bonifico Bancario</h4><p>IBAN:</p><code>' + configPagamenti.iban_numero + '</code><p>Causale: <strong>ORDINE-NEGOZIO</strong></p></div>';
-                    }
-                }
-                
-                if (!hasMethods) {
-                    html += '<div class="alert-box"><strong>Nessun metodo di pagamento configurato</strong><p>Lo studio ti contattera a breve per concordare il pagamento. Totale: <strong>EUR ' + totale.toFixed(2) + '</strong></p></div>';
+                } else {
+                    html += '<div class="alert-box"><strong>Impossibile caricare i metodi di pagamento</strong><p>Totale da pagare: <strong>EUR ' + totale.toFixed(2) + '</strong></p><p>Lo studio ti contattera a breve per concordare il pagamento.</p></div>';
                 }
                 
                 container.innerHTML = html;
             } catch (e) {
                 console.error('Errore config pagamenti:', e);
+                const totale = carrello.reduce((sum, item) => sum + (item.prezzo * item.quantita), 0);
                 container.innerHTML = '<div class="alert-box"><strong>Impossibile caricare i metodi di pagamento</strong><p>Totale da pagare: <strong>EUR ' + totale.toFixed(2) + '</strong></p><p>Lo studio ti contattera a breve per concordare il pagamento.</p></div>';
             }
         }
@@ -575,7 +571,7 @@
                     }))),
                     totale: totale,
                     stato: 'in_attesa_pagamento',
-                    metodo_pagamento: 'anticipato',
+                    metodo_pagamento: configPagamenti ? configPagamenti.metodo_pagamento_preferito : 'non_specificato',
                     data_creazione: new Date().toISOString()
                 };
 
@@ -600,7 +596,6 @@
                 
             } catch (error) {
                 console.error('Errore ordine:', error);
-                // Anche se c'e' errore 500, mostriamo comunque il codice ordine e le istruzioni
                 document.getElementById('checkoutModal').classList.remove('active');
                 document.getElementById('successCode').textContent = codiceOrdine + ' (da confermare)';
                 document.getElementById('successModal').classList.add('active');
