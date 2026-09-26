@@ -519,14 +519,14 @@
                 const data = await response.json();
                 if (!data.success || data.tipo !== 'studio') {
                     mostraToast('Sessione non valida', 'error');
-                    setTimeout(() => window.location.href = 'index.html', 1500);
+                    setTimeout(function() { window.location.href = 'index.html'; }, 1500);
                     return;
                 }
                 studioId = data.user.id;
                 studioNome = data.user.nome || 'Studio';
                 
                 await caricaTemaGlobale();
-                setInterval(async () => { await caricaTemaGlobale(); }, 10000);
+                setInterval(function() { caricaTemaGlobale(); }, 10000);
                 
                 const loadingArea = document.getElementById('loadingArea');
                 if (loadingArea) loadingArea.classList.add('hidden');
@@ -541,7 +541,7 @@
         async function caricaTemaGlobale() {
             if (!studioId) return;
             try {
-                const response = await fetch(`${WORKER_URL}/api/studio/tema?studioId=${encodeURIComponent(studioId)}&token=${encodeURIComponent(token)}`);
+                const response = await fetch(WORKER_URL + '/api/studio/tema?studioId=' + encodeURIComponent(studioId) + '&token=' + encodeURIComponent(token));
                 const data = await response.json();
                 if (data.success && data.tema && data.tema.tema_attivo) {
                     const temaId = data.tema.tema_attivo;
@@ -569,13 +569,13 @@
         }
 
         function mostraDashboard() {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
             document.getElementById('dashboardSection').classList.add('active');
             window.scrollTo(0, 0);
         }
 
         function mostraSezione(nomeSezione) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
             document.getElementById(nomeSezione + 'Section').classList.add('active');
             window.scrollTo(0, 0);
             
@@ -601,16 +601,16 @@
             if (prodotti.length === 0) { empty.classList.remove('hidden'); grid.innerHTML = ''; return; }
             empty.classList.add('hidden');
             const categorieMap = { 'canvas': 'Canvas', 'poster': 'Poster', 'tazza': 'Tazza', 'cuscino': 'Cuscino', 'acconto': 'Acconto', 'altro': 'Altro' };
-            grid.innerHTML = prodotti.map(p => 
-                '<div class="product-card">' +
-                (p.immagine ? '<img src="' + p.immagine + '" class="product-image">' : '<div class="product-image" style="display:flex;align-items:center;justify-content:center;color:var(--text-light);">No Img</div>') +
-                '<div class="product-category">' + (categorieMap[p.categoria] || p.categoria) + '</div>' +
-                '<div class="product-name">' + p.nome + '</div>' +
-                '<div class="product-price">EUR ' + parseFloat(p.prezzo).toFixed(2) + '</div>' +
-                (p.misura ? '<div style="font-size:12px;color:var(--text-light);">' + p.misura + '</div>' : '') +
-                (p.descrizione ? '<div class="product-desc">' + p.descrizione + '</div>' : '') +
-                '</div>'
-            ).join('');
+            grid.innerHTML = prodotti.map(function(p) {
+                return '<div class="product-card">' +
+                    (p.immagine ? '<img src="' + p.immagine + '" class="product-image">' : '<div class="product-image" style="display:flex;align-items:center;justify-content:center;color:var(--text-light);">No Img</div>') +
+                    '<div class="product-category">' + (categorieMap[p.categoria] || p.categoria) + '</div>' +
+                    '<div class="product-name">' + p.nome + '</div>' +
+                    '<div class="product-price">EUR ' + parseFloat(p.prezzo).toFixed(2) + '</div>' +
+                    (p.misura ? '<div style="font-size:12px;color:var(--text-light);">' + p.misura + '</div>' : '') +
+                    (p.descrizione ? '<div class="product-desc">' + p.descrizione + '</div>' : '') +
+                    '</div>';
+            }).join('');
         }
 
         async function caricaAnagraficaClienti() {
@@ -629,7 +629,7 @@
                 
                 anagraficaClienti = data.clienti;
                 select.innerHTML = '<option value="">-- Seleziona un cliente --</option>';
-                data.clienti.forEach(c => {
+                data.clienti.forEach(function(c) {
                     const nomeCompleto = ((c.nome || '') + ' ' + (c.cognome || '')).trim();
                     const idCliente = c.id || '';
                     const telefono = c.telefono || 'No tel.';
@@ -654,7 +654,7 @@
                 return;
             }
             
-            const cliente = anagraficaClienti.find(c => c.id === idCliente);
+            const cliente = anagraficaClienti.find(function(c) { return c.id === idCliente; });
             if (cliente) {
                 const nomeCompleto = ((cliente.nome || '') + ' ' + (cliente.cognome || '')).trim();
                 document.getElementById('linkClienteNome').value = nomeCompleto;
@@ -732,7 +732,7 @@
                 const data = await res.json();
                 loading.style.display = 'none';
                 if (!data.success || data.clienti.length === 0) { empty.classList.remove('hidden'); return; }
-                grid.innerHTML = data.clienti.map(c => {
+                grid.innerHTML = data.clienti.map(function(c) {
                     const link = window.location.origin + '/AppCenterStudioPROGOLD/negozio-cliente.html?studioId=' + encodeURIComponent(studioId) + '&clienteId=' + c.id;
                     return '<div class="product-card">' +
                         '<div class="product-category">Cliente Negozio</div>' +
@@ -763,7 +763,7 @@
                     currentImageBase64 = e.target.result;
                     document.getElementById('imgPreview').src = currentImageBase64;
                     document.getElementById('imgPreview').style.display = 'block';
-                }
+                };
                 reader.readAsDataURL(input.files[0]);
             }
         }
@@ -782,7 +782,7 @@
             document.getElementById('imgPreview').style.display = 'none';
         }
 
-        async function creaProdotto(isEdit = false, editId = '') {
+        async function creaProdotto(isEdit, editId) {
             const nome = document.getElementById('prodNome').value.trim();
             const prezzo = parseFloat(document.getElementById('prodPrezzo').value);
             if (!nome || isNaN(prezzo)) { mostraToast('Compila nome e prezzo', 'error'); return; }
@@ -796,7 +796,7 @@
                 misura: document.getElementById('prodMisura').value.trim(),
                 descrizione: document.getElementById('prodDescrizione').value.trim(),
                 immagine: currentImageBase64,
-                data_creazione: isEdit ? (prodotti.find(p => p.id === editId).data_creazione) : new Date().toISOString()
+                data_creazione: isEdit ? (prodotti.find(function(p) { return p.id === editId; }).data_creazione) : new Date().toISOString()
             };
 
             const url = isEdit ? WORKER_URL + '/api/studio/negozio/prodotto/' + editId + '?token=' + token : WORKER_URL + '/api/studio/negozio/prodotto?token=' + token;
@@ -817,7 +817,7 @@
         }
 
         function modificaProdotto(id) {
-            const p = prodotti.find(x => x.id === id);
+            const p = prodotti.find(function(x) { return x.id === id; });
             if (!p) return;
             document.getElementById('formTitolo').textContent = 'Modifica Prodotto: ' + p.nome;
             document.getElementById('btnSalvaProdotto').textContent = 'AGGIORNA PRODOTTO';
@@ -842,10 +842,11 @@
                 { nome: 'Tazza Personalizzata', categoria: 'tazza', prezzo: 15, misura: '325ml', descrizione: 'Tazza in ceramica bianca con la tua foto.' },
                 { nome: 'Cuscino 40x40', categoria: 'cuscino', prezzo: 25, misura: '40x40 cm', descrizione: 'Cuscino in tessuto con stampa fronte-retro.' }
             ];
-            for (const p of defaults) {
+            for (let i = 0; i < defaults.length; i++) {
+                const p = defaults[i];
                 await fetch(WORKER_URL + '/api/studio/negozio/prodotto?token=' + token, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ...p, id: 'prod-' + Date.now() + Math.random(), studio_id: studioId, immagine: '', data_creazione: new Date().toISOString() })
+                    body: JSON.stringify({ id: 'prod-' + Date.now() + Math.random(), studio_id: studioId, nome: p.nome, categoria: p.categoria, prezzo: p.prezzo, misura: p.misura, descrizione: p.descrizione, immagine: '', data_creazione: new Date().toISOString() })
                 });
             }
             mostraToast('Prodotti default aggiunti', 'success');
@@ -866,17 +867,17 @@
             loading.style.display = 'none';
             if (prodotti.length === 0) { empty.classList.remove('hidden'); grid.innerHTML = ''; return; }
             empty.classList.add('hidden');
-            grid.innerHTML = prodotti.map(p => 
-                '<div class="product-card">' +
-                (p.immagine ? '<img src="' + p.immagine + '" class="product-image">' : '<div class="product-image" style="display:flex;align-items:center;justify-content:center;color:var(--text-light);">No Img</div>') +
-                '<div class="product-category">' + p.categoria + '</div>' +
-                '<div class="product-name">' + p.nome + '</div>' +
-                '<div class="product-price">EUR ' + parseFloat(p.prezzo).toFixed(2) + '</div>' +
-                '<div style="display:flex;gap:8px;margin-top:12px;">' +
-                '<button class="btn btn-sm btn-warning" onclick="modificaProdotto(\'' + p.id + '\')">Modifica</button>' +
-                '<button class="btn btn-sm btn-danger" onclick="eliminaProdotto(\'' + p.id + '\')">Elimina</button>' +
-                '</div></div>'
-            ).join('');
+            grid.innerHTML = prodotti.map(function(p) {
+                return '<div class="product-card">' +
+                    (p.immagine ? '<img src="' + p.immagine + '" class="product-image">' : '<div class="product-image" style="display:flex;align-items:center;justify-content:center;color:var(--text-light);">No Img</div>') +
+                    '<div class="product-category">' + p.categoria + '</div>' +
+                    '<div class="product-name">' + p.nome + '</div>' +
+                    '<div class="product-price">EUR ' + parseFloat(p.prezzo).toFixed(2) + '</div>' +
+                    '<div style="display:flex;gap:8px;margin-top:12px;">' +
+                    '<button class="btn btn-sm btn-warning" onclick="modificaProdotto(\'' + p.id + '\')">Modifica</button>' +
+                    '<button class="btn btn-sm btn-danger" onclick="eliminaProdotto(\'' + p.id + '\')">Elimina</button>' +
+                    '</div></div>';
+            }).join('');
         }
 
         async function eliminaProdotto(id) {
@@ -886,84 +887,80 @@
             caricaProdotti();
         }
 
-       async function caricaOrdini() {
-    const list = document.getElementById('ordersList');
-    const loading = document.getElementById('ordiniLoading');
-    const empty = document.getElementById('ordiniEmpty');
-    loading.style.display = 'block'; empty.classList.add('hidden'); list.innerHTML = '';
-    let stats = { att: 0, pag: 0, lav: 0, pro: 0, rit: 0 };
-    try {
-        // Aggiunto cache-buster per evitare cache del browser
-        const timestamp = Date.now();
-        const res = await fetch(WORKER_URL + '/api/studio/negozio/ordini?token=' + token + '&t=' + timestamp);
-        const data = await res.json();
-        loading.style.display = 'none';
-        const ordini = data.success ? data.ordini : [];
-        
-        console.log('Ordini ricevuti:', ordini);
-        console.log('Numero ordini:', ordini.length);
-        
-        if (ordini.length === 0) { 
-            empty.classList.remove('hidden'); 
-            document.getElementById('alertOrdini').classList.add('hidden'); 
-            document.getElementById('alertNuoviOrdini').classList.add('hidden');
-            return; 
-        }
-        
-        const inAttesa = ordini.filter(o => o.stato === 'in_attesa' || o.stato === 'in_attesa_pagamento').length;
-        console.log('Ordini in attesa:', inAttesa);
-        
-        const badge = document.getElementById('alertOrdini');
-        badge.textContent = inAttesa;
-        badge.classList.toggle('hidden', inAttesa === 0);
-        document.getElementById('alertNuoviOrdini').classList.toggle('hidden', inAttesa === 0);
-        document.getElementById('countNuoviOrdini').textContent = inAttesa;
+        async function caricaOrdini() {
+            const list = document.getElementById('ordersList');
+            const loading = document.getElementById('ordiniLoading');
+            const empty = document.getElementById('ordiniEmpty');
+            loading.style.display = 'block'; empty.classList.add('hidden'); list.innerHTML = '';
+            let stats = { att: 0, pag: 0, lav: 0, pro: 0, rit: 0 };
+            try {
+                const timestamp = Date.now();
+                const res = await fetch(WORKER_URL + '/api/studio/negozio/ordini?token=' + token + '&t=' + timestamp);
+                const data = await res.json();
+                loading.style.display = 'none';
+                const ordini = data.success ? data.ordini : [];
+                
+                console.log('Ordini ricevuti:', ordini);
+                
+                if (ordini.length === 0) { 
+                    empty.classList.remove('hidden'); 
+                    document.getElementById('alertOrdini').classList.add('hidden'); 
+                    document.getElementById('alertNuoviOrdini').classList.add('hidden');
+                    return; 
+                }
+                
+                const inAttesa = ordini.filter(function(o) { return o.stato === 'in_attesa' || o.stato === 'in_attesa_pagamento'; }).length;
+                const badge = document.getElementById('alertOrdini');
+                badge.textContent = inAttesa;
+                badge.classList.toggle('hidden', inAttesa === 0);
+                document.getElementById('alertNuoviOrdini').classList.toggle('hidden', inAttesa === 0);
+                document.getElementById('countNuoviOrdini').textContent = inAttesa;
 
-        list.innerHTML = ordini.map(o => {
-            if (o.stato === 'in_attesa' || o.stato === 'in_attesa_pagamento') stats.att++;
-            if (o.stato === 'pagato') stats.pag++;
-            if (o.stato === 'in_lavorazione') stats.lav++;
-            if (o.stato === 'pronto') stats.pro++;
-            if (o.stato === 'ritirato') stats.rit++;
-            let prods = [];
-            try { prods = JSON.parse(o.prodotti || '[]'); } catch(e) { prods = []; }
-            const badgeClass = 'badge-' + o.stato;
-            const statoText = o.stato.replace(/_/g, ' ').toUpperCase();
-            return '<div class="order-item">' +
-                '<div class="order-header">' +
-                    '<div><div class="order-code">Ordine #' + o.codice_ordine + '</div>' +
-                    '<div class="order-date">' + new Date(o.data_creazione).toLocaleDateString('it-IT') + ' - ' + o.cliente_nome + ' (' + o.cliente_telefono + ')</div></div>' +
-                    '<span class="badge ' + badgeClass + '">' + statoText + '</span>' +
-                '</div>' +
-                '<div class="order-products">' +
-                    prods.map(p => {
-                        let hasFoto = p.fotoUrl || p.fotoBase64;
-                        return '<div class="order-product">' +
-                            '<div class="order-product-info">' +
-                                '<div><strong>• ' + p.nome + ' x' + p.quantita + '</strong> - EUR ' + (p.prezzo * p.quantita).toFixed(2) + '</div>' +
-                                (hasFoto ? '<div class="order-product-actions"><button onclick="scaricaEdEliminaFotoOrdine(\'' + o.id + '\')" class="btn btn-sm btn-success" style="text-decoration:none;">Scarica ed Elimina Foto</button></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
-                            '</div>' +
-                        '</div>';
-                    }).join('') +
-                '</div>' +
-                '<div class="order-total">Totale: EUR ' + parseFloat(o.totale).toFixed(2) + '</div>' +
-                '<div class="order-actions">' +
-                    (o.stato !== 'pagato' ? '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'' + o.id + '\', \'pagato\')">Segna Pagato</button>' : '') +
-                    (o.stato !== 'in_lavorazione' ? '<button class="btn btn-sm btn-info" onclick="cambiaStato(\'' + o.id + '\', \'in_lavorazione\')">Segna In Lavorazione</button>' : '') +
-                    (o.stato !== 'pronto' ? '<button class="btn btn-sm btn-warning" onclick="segnaPronto(\'' + o.id + '\')">Segna Pronto</button>' : '') +
-                    (o.stato !== 'ritirato' ? '<button class="btn btn-sm btn-primary" onclick="segnaRitirato(\'' + o.id + '\')">Segna Ritirato</button>' : '') +
-                '</div></div>';
-        }).join('');
-    } catch (e) { 
-        console.error('Errore caricamento ordini:', e);
-        loading.style.display = 'none'; 
-    }
-    document.getElementById('statAtt').textContent = stats.att;
-    document.getElementById('statPag').textContent = stats.pag;
-    document.getElementById('statLav').textContent = stats.lav;
-    document.getElementById('statPro').textContent = stats.pro;
-    document.getElementById('statRit').textContent = stats.rit;
-}
+                list.innerHTML = ordini.map(function(o) {
+                    if (o.stato === 'in_attesa' || o.stato === 'in_attesa_pagamento') stats.att++;
+                    if (o.stato === 'pagato') stats.pag++;
+                    if (o.stato === 'in_lavorazione') stats.lav++;
+                    if (o.stato === 'pronto') stats.pro++;
+                    if (o.stato === 'ritirato') stats.rit++;
+                    let prods = [];
+                    try { prods = JSON.parse(o.prodotti || '[]'); } catch(e) { prods = []; }
+                    const badgeClass = 'badge-' + o.stato;
+                    const statoText = o.stato.replace(/_/g, ' ').toUpperCase();
+                    return '<div class="order-item">' +
+                        '<div class="order-header">' +
+                            '<div><div class="order-code">Ordine #' + o.codice_ordine + '</div>' +
+                            '<div class="order-date">' + new Date(o.data_creazione).toLocaleDateString('it-IT') + ' - ' + o.cliente_nome + ' (' + o.cliente_telefono + ')</div></div>' +
+                            '<span class="badge ' + badgeClass + '">' + statoText + '</span>' +
+                        '</div>' +
+                        '<div class="order-products">' +
+                            prods.map(function(p) {
+                                const hasFoto = p.fotoUrl || p.fotoBase64;
+                                return '<div class="order-product">' +
+                                    '<div class="order-product-info">' +
+                                        '<div><strong>• ' + p.nome + ' x' + p.quantita + '</strong> - EUR ' + (p.prezzo * p.quantita).toFixed(2) + '</div>' +
+                                        (hasFoto ? '<div class="order-product-actions"><button onclick="scaricaEdEliminaFotoOrdine(\'' + o.id + '\')" class="btn btn-sm btn-success" style="text-decoration:none;">Scarica ed Elimina Foto</button></div>' : '<span style="font-size:11px;color:var(--text-light);">Nessuna foto</span>') +
+                                    '</div>' +
+                                '</div>';
+                            }).join('') +
+                        '</div>' +
+                        '<div class="order-total">Totale: EUR ' + parseFloat(o.totale).toFixed(2) + '</div>' +
+                        '<div class="order-actions">' +
+                            (o.stato !== 'pagato' ? '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'' + o.id + '\', \'pagato\')">Segna Pagato</button>' : '') +
+                            (o.stato !== 'in_lavorazione' ? '<button class="btn btn-sm btn-info" onclick="cambiaStato(\'' + o.id + '\', \'in_lavorazione\')">Segna In Lavorazione</button>' : '') +
+                            (o.stato !== 'pronto' ? '<button class="btn btn-sm btn-warning" onclick="segnaPronto(\'' + o.id + '\')">Segna Pronto</button>' : '') +
+                            (o.stato !== 'ritirato' ? '<button class="btn btn-sm btn-primary" onclick="segnaRitirato(\'' + o.id + '\')">Segna Ritirato</button>' : '') +
+                        '</div></div>';
+                }).join('');
+            } catch (e) { 
+                console.error('Errore caricamento ordini:', e);
+                loading.style.display = 'none'; 
+            }
+            document.getElementById('statAtt').textContent = stats.att;
+            document.getElementById('statPag').textContent = stats.pag;
+            document.getElementById('statLav').textContent = stats.lav;
+            document.getElementById('statPro').textContent = stats.pro;
+            document.getElementById('statRit').textContent = stats.rit;
+        }
 
         async function scaricaEdEliminaFotoOrdine(ordineId) {
             try {
@@ -975,8 +972,8 @@
                 const result = await response.json();
                 
                 if (result.success && result.foto && result.foto.length > 0) {
-                    result.foto.forEach((f, index) => {
-                        setTimeout(() => {
+                    result.foto.forEach(function(f, index) {
+                        setTimeout(function() {
                             const link = document.createElement('a');
                             link.href = f.fotoBase64;
                             const safeName = f.nome.replace(/[^a-z0-9]/gi, '_');
@@ -987,7 +984,7 @@
                         }, index * 500);
                     });
                     mostraToast('Foto scaricate ed eliminate automaticamente dal database', 'success');
-                    setTimeout(() => caricaOrdini(), 2500);
+                    setTimeout(function() { caricaOrdini(); }, 2500);
                 } else {
                     mostraToast('Nessuna foto trovata per questo ordine', 'error');
                 }
@@ -999,7 +996,7 @@
 
         async function cambiaStato(id, stato) {
             await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + id + '?token=' + token, {
-                method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ stato })
+                method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ stato: stato })
             });
             mostraToast('Ordine aggiornato', 'success');
             caricaOrdini();
@@ -1035,7 +1032,7 @@
 
         function onMetodoChange() {
             const metodo = document.getElementById('metodoPagamentoPreferito').value;
-            ['paypal', 'studio'].forEach(m => {
+            ['paypal', 'studio'].forEach(function(m) {
                 document.getElementById('group-' + m).classList.add('hidden');
             });
             if (metodo) {
@@ -1090,7 +1087,7 @@
             toast.className = 'toast ' + tipo;
             toast.textContent = msg;
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            setTimeout(function() { toast.remove(); }, 3000);
         }
 
         function tornaPlancia() { window.location.href = 'plancia-studio.html?token=' + token; }
