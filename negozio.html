@@ -7,7 +7,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     
-    <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
     
@@ -442,8 +441,6 @@
                     <select id="metodoPagamentoPreferito" onchange="onMetodoChange()" style="padding: 12px; border: 2px solid var(--border-color); border-radius: 10px; font-size: 14px; background: #f8f9fa; color: #000000;">
                         <option value="">-- Seleziona metodo --</option>
                         <option value="paypal">Link PayPal (il cliente clicca e paga)</option>
-                        <option value="iban">Bonifico Bancario (IBAN)</option>
-                        <option value="satispay">Satispay (numero di telefono)</option>
                         <option value="studio">Pagamento in Studio (contanti o POS al ritiro)</option>
                     </select>
                 </div>
@@ -468,22 +465,6 @@
                             Senza ricevuta di pagamento, non consegnare la merce. Questo protegge te e il tuo studio da contestazioni.
                         </p>
                     </div>
-                </div>
-
-                <div id="group-iban" class="form-group hidden" style="background: var(--primary-light); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
-                    <label>Codice IBAN</label>
-                    <input type="text" id="ibanNumero" placeholder="IT00 X000 0000 0000 0000 0000 000">
-                    <div class="form-group" style="margin-top: 12px;">
-                        <label>Intestatario Conto</label>
-                        <input type="text" id="ibanIntestatario" placeholder="Nome e Cognome intestatario">
-                    </div>
-                    <div class="form-hint">Il cliente vedra l'IBAN e dovra fare un bonifico con causale: ORDINE-[codice]</div>
-                </div>
-
-                <div id="group-satispay" class="form-group hidden" style="background: var(--primary-light); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
-                    <label>Numero di Telefono Satispay</label>
-                    <input type="tel" id="satispayNumero" placeholder="+39 333 1234567">
-                    <div class="form-hint">Il cliente vedra il tuo numero e dovra inviarti l'importo tramite app Satispay.</div>
                 </div>
 
                 <div id="group-studio" class="form-group hidden" style="background: var(--primary-light); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
@@ -533,14 +514,10 @@
                 studioNome = data.user.nome || 'Studio';
                 
                 await caricaTemaGlobale();
-                
-                setInterval(async () => {
-                    await caricaTemaGlobale();
-                }, 10000);
+                setInterval(async () => { await caricaTemaGlobale(); }, 10000);
                 
                 const loadingArea = document.getElementById('loadingArea');
                 if (loadingArea) loadingArea.classList.add('hidden');
-                
                 await caricaDatiIniziali();
             } catch (error) {
                 console.error('Errore:', error);
@@ -573,10 +550,7 @@
                     root.style.setProperty('--primary-light', t.pl);
                     root.style.setProperty('--primary-gradient', t.pg);
                     root.style.setProperty('--bg-gradient', t.bg);
-                    
-                    if (typeof attivaEffettoSpeciale === 'function') {
-                        attivaEffettoSpeciale(t.effetto);
-                    }
+                    if (typeof attivaEffettoSpeciale === 'function') { attivaEffettoSpeciale(t.effetto); }
                 }
             } catch (error) { console.error('Errore tema:', error); }
         }
@@ -591,7 +565,6 @@
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(nomeSezione + 'Section').classList.add('active');
             window.scrollTo(0, 0);
-            
             if (nomeSezione === 'anteprima') renderizzaVetrina();
             else if (nomeSezione === 'clienti') caricaClienti();
             else if (nomeSezione === 'prodotti') caricaProdotti();
@@ -638,13 +611,8 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        id: clienteId, 
-                        studio_id: studioId, 
-                        nome_a: nome, 
-                        cognome_a: '', 
-                        email: '', 
-                        telefono: telefono, 
-                        tipo_evento: 'Negozio', 
+                        id: clienteId, studio_id: studioId, nome_a: nome, cognome_a: '', 
+                        email: '', telefono: telefono, tipo_evento: 'Negozio', 
                         password: 'negozio-' + clienteId,
                         data_registrazione: new Date().toISOString()
                     })
@@ -774,17 +742,14 @@
         function modificaProdotto(id) {
             const p = prodotti.find(x => x.id === id);
             if (!p) return;
-            
             document.getElementById('formTitolo').textContent = 'Modifica Prodotto: ' + p.nome;
             document.getElementById('btnSalvaProdotto').textContent = 'AGGIORNA PRODOTTO';
             document.getElementById('btnSalvaProdotto').setAttribute('onclick', 'creaProdotto(true, \'' + p.id + '\')');
-            
             document.getElementById('prodNome').value = p.nome;
             document.getElementById('prodCategoria').value = p.categoria;
             document.getElementById('prodPrezzo').value = p.prezzo;
             document.getElementById('prodMisura').value = p.misura || '';
             document.getElementById('prodDescrizione').value = p.descrizione || '';
-            
             currentImageBase64 = p.immagine || '';
             if (currentImageBase64) {
                 document.getElementById('imgPreview').src = currentImageBase64;
@@ -792,7 +757,6 @@
             } else {
                 document.getElementById('imgPreview').style.display = 'none';
             }
-            
             document.getElementById('prodottiSection').scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -917,21 +881,17 @@
                 const response = await fetch(url);
                 const blob = await response.blob();
                 const blobUrl = window.URL.createObjectURL(blob);
-                
                 const link = document.createElement('a');
                 link.href = blobUrl;
-                
                 const urlObj = new URL(url);
                 const pathParams = new URLSearchParams(urlObj.search);
                 const percorso = pathParams.get('path');
                 const nomeFile = percorso ? percorso.split('/').pop() : 'foto.jpg';
-                
                 link.download = nomeFile;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
                 window.URL.revokeObjectURL(blobUrl);
-                
                 mostraToast('Foto scaricata con successo', 'success');
             } catch (error) {
                 console.error('Errore download:', error);
@@ -949,9 +909,7 @@
 
         async function segnaPronto(id) {
             try {
-                await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + id + '/elimina-foto?token=' + token, {
-                    method: 'DELETE'
-                });
+                await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + id + '/elimina-foto?token=' + token, { method: 'DELETE' });
                 await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + id + '?token=' + token, {
                     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ stato: 'pronto' })
                 });
@@ -969,9 +927,7 @@
                 await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + id + '?token=' + token, {
                     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ stato: 'ritirato' })
                 });
-                await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + id + '/elimina?token=' + token, {
-                    method: 'DELETE'
-                });
+                await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + id + '/elimina?token=' + token, { method: 'DELETE' });
                 mostraToast('Ordine ritirato ed eliminato', 'success');
                 caricaOrdini();
             } catch (error) {
@@ -982,7 +938,7 @@
 
         function onMetodoChange() {
             const metodo = document.getElementById('metodoPagamentoPreferito').value;
-            ['paypal', 'iban', 'satispay', 'studio'].forEach(m => {
+            ['paypal', 'studio'].forEach(m => {
                 document.getElementById('group-' + m).classList.add('hidden');
             });
             if (metodo) {
@@ -998,17 +954,10 @@
                     config = data.config;
                     document.getElementById('whatsappNumero').value = config.whatsapp_numero || '';
                     document.getElementById('studioIndirizzo').value = config.studio_indirizzo || '';
-                    
                     const metodo = config.metodo_pagamento_preferito || '';
                     document.getElementById('metodoPagamentoPreferito').value = metodo;
                     onMetodoChange();
-                    
                     if (metodo === 'paypal') document.getElementById('paypalEmail').value = config.paypal_email || '';
-                    if (metodo === 'iban') {
-                        document.getElementById('ibanNumero').value = config.iban_numero || '';
-                        document.getElementById('ibanIntestatario').value = config.iban_intestatario || '';
-                    }
-                    if (metodo === 'satispay') document.getElementById('satispayNumero').value = config.satispay_numero || '';
                     if (metodo === 'studio') document.getElementById('studioPagamentoIstruzioni').value = config.studio_pagamento_istruzioni || '';
                 }
             } catch (e) { console.error('Errore caricamento config:', e); }
@@ -1016,43 +965,22 @@
 
         async function salvaConfig() {
             const metodo = document.getElementById('metodoPagamentoPreferito').value;
-            
             const data = {
                 studio_id: studioId,
                 whatsapp_numero: document.getElementById('whatsappNumero').value.trim(),
                 studio_indirizzo: document.getElementById('studioIndirizzo').value.trim(),
                 paypal_email: document.getElementById('paypalEmail').value.trim(),
-                metodo_pagamento_preferito: metodo
+                metodo_pagamento_preferito: metodo,
+                studio_pagamento_istruzioni: document.getElementById('studioPagamentoIstruzioni').value.trim()
             };
-            
-            if (metodo === 'iban') {
-                data.iban_numero = document.getElementById('ibanNumero').value.trim();
-                data.iban_intestatario = document.getElementById('ibanIntestatario').value.trim();
-            }
-            if (metodo === 'satispay') {
-                data.satispay_numero = document.getElementById('satispayNumero').value.trim();
-            }
-            if (metodo === 'studio') {
-                data.studio_pagamento_istruzioni = document.getElementById('studioPagamentoIstruzioni').value.trim();
-            }
-            
             try {
                 const response = await fetch(WORKER_URL + '/api/studio/negozio-config?token=' + token, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
                 });
-                
-                if (!response.ok) {
-                    throw new Error('Errore server: ' + response.status);
-                }
-                
+                if (!response.ok) throw new Error('Errore server: ' + response.status);
                 const result = await response.json();
-                if (result.success) {
-                    mostraToast('Configurazione salvata', 'success');
-                } else {
-                    mostraToast('Errore: ' + (result.error || 'Sconosciuto'), 'error');
-                }
+                if (result.success) mostraToast('Configurazione salvata', 'success');
+                else mostraToast('Errore: ' + (result.error || 'Sconosciuto'), 'error');
             } catch (error) {
                 console.error('Errore salvataggio config:', error);
                 mostraToast('Errore di connessione: ' + error.message, 'error');
