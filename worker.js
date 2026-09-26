@@ -658,11 +658,21 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
       }
 
-      if (path === "/api/studio/negozio-config" && request.method === "GET") {
+           if (path === "/api/studio/negozio-config" && request.method === "GET") {
         const token = url.searchParams.get("token");
+        const studioIdParam = url.searchParams.get("studioId");
+        
+        // Se c'è solo studioId (cliente pubblico), permetti l'accesso senza token
+        if (studioIdParam && !token) {
+          const result = await env.DB.prepare("SELECT * FROM negozi_config WHERE studio_id=?").bind(studioIdParam).first();
+          return new Response(JSON.stringify({ success: true, config: result }), { headers: corsHeaders });
+        }
+        
+        // Altrimenti verifica autenticazione (per lo studio)
         const sess = await verificaSessione(token);
         if (!sess || sess.tipo !== 'studio') return new Response(JSON.stringify({ error: "Non autorizzato" }), { status: 403, headers: corsHeaders });
-        const result = await env.DB.prepare("SELECT * FROM negozi_config WHERE studio_id=?").bind(sess.user_id).first();
+        const targetStudioId = studioIdParam || sess.user_id;
+        const result = await env.DB.prepare("SELECT * FROM negozi_config WHERE studio_id=?").bind(targetStudioId).first();
         return new Response(JSON.stringify({ success: true, config: result }), { headers: corsHeaders });
       }
 
