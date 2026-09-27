@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista Regali - AppCenterStudioPROGOLD</title>
     
-    <!-- INCLUSIONE SISTEMA TEMI GLOBALI -->
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
     <style>
         :root {
             --primary: #d4af37;
@@ -38,7 +37,6 @@
             flex-direction: column;
             transition: background 0.5s ease, color 0.5s ease;
         }
-        
         .branding-header {
             background: var(--primary-gradient);
             padding: 12px 24px;
@@ -401,32 +399,19 @@
                         <div class="form-hint">Importo che il cliente desidera raccogliere</div>
                     </div>
                     <div class="form-group">
-                        <label>Metodo di Pagamento *</label>
-                        <select id="metodoPagamento" onchange="onMetodoChange()">
-                            <option value="">-- Seleziona metodo --</option>
-                            <option value="paypal">PayPal</option>
-                            <option value="iban">Bonifico IBAN</option>
-                            <option value="stripe">Stripe</option>
-                            <option value="satispay">Satispay</option>
-                            <option value="altro">Altro</option>
-                        </select>
+                        <label>Link PayPal del Cliente *</label>
+                        <input type="text" id="datiPagamento" placeholder="https://paypal.me/nomecognome">
+                        <div class="form-hint">Link dove gli invitati invieranno il denaro direttamente al cliente</div>
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group" id="groupDatiPagamento" style="display:none;">
-                        <label id="labelDatiPagamento">Dati Pagamento *</label>
-                        <input type="text" id="datiPagamento" placeholder="">
-                        <div class="form-hint" id="hintDatiPagamento"></div>
-                    </div>
                     <div class="form-group">
                         <label>Messaggio di Cortesia per gli Invitati</label>
                         <textarea id="messaggioCortesia" rows="3" placeholder="Es. Con gioia vi invitiamo a contribuire al regalo di nozze..."></textarea>
                     </div>
-                </div>
-                <div class="form-row">
                     <div class="form-group">
                         <label>Messaggio di Ringraziamento (dopo augurio)</label>
-                        <textarea id="messaggioRingraziamento" rows="3" placeholder="Es. Grazie per il tuo pensiero!">Grazie per il tuo pensiero gentile! Il tuo augurio e' stato registrato e i festeggiati potranno leggerlo.</textarea>
+                        <textarea id="messaggioRingraziamento" rows="3">Grazie per il tuo pensiero gentile! Il tuo augurio e' stato registrato e i festeggiati potranno leggerlo.</textarea>
                     </div>
                 </div>
                 <button class="btn btn-success" onclick="creaListaRegali()">Genera Lista, Credenziali e QR</button>
@@ -470,7 +455,7 @@
 
                 <div class="whatsapp-buttons">
                     <button class="btn btn-info" onclick="inviaWhatsAppCliente()">Invia Credenziali al Cliente</button>
-                    <button class="btn btn-primary" onclick="inviaWhatsAppInvitati()">Crea Messaggio per Invitati</button>
+                    <button class="btn btn-primary" onclick="inviaWhatsAppInvitati()">Copia Messaggio per Invitati</button>
                 </div>
                 <div class="center-text mt-20">
                     <button class="btn btn-outline" onclick="document.getElementById('credenzialiGenerate').classList.add('hidden')">Chiudi</button>
@@ -621,14 +606,11 @@
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-        <script>
-        // Fallback di sicurezza per WORKER_URL
+
+    <script>
         if (typeof WORKER_URL === 'undefined') {
             var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
         }
-        
-        const STUDIO_NAME = "G&L Studio";
-        const STUDIO_SITE = "https://www.glstudio.it";
         
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
@@ -654,9 +636,6 @@
             }
         });
 
-        // ============================================
-        // SEZIONE TEMA GLOBALE (Aggiornata con default Oro e Nero)
-        // ============================================
         async function applicaTemaGlobale(sId) {
             if (!sId) return;
             try {
@@ -682,10 +661,7 @@
                     root.style.setProperty('--primary-light', t.pl);
                     root.style.setProperty('--primary-gradient', t.pg);
                     root.style.setProperty('--bg-gradient', t.bg);
-                    
-                    if (typeof attivaEffettoSpeciale === 'function') {
-                        attivaEffettoSpeciale(t.effetto);
-                    }
+                    if (typeof attivaEffettoSpeciale === 'function') { attivaEffettoSpeciale(t.effetto); }
                 }
             } catch (e) { console.error('Errore tema:', e); }
         }
@@ -727,8 +703,7 @@
                 errorDiv.style.display = 'block';
             }
         }
-
-        async function caricaDashboard(listaId) {
+                async function caricaDashboard(listaId) {
             document.getElementById('dashNomeCliente').textContent = currentLista.cliente_nome;
             document.getElementById('dashTipoEvento').textContent = currentLista.tipo_evento;
             document.getElementById('dashRaccolto').textContent = 'EUR ' + (currentLista.raccolto_attuale || 0);
@@ -799,67 +774,23 @@
         function stampaArchivio() { window.print(); }
         function logoutCliente() { window.location.href = window.location.pathname; }
 
-        const METODI_CONFIG = {
-            'paypal': { label: 'Link PayPal', placeholder: 'https://paypal.me/...', hint: 'Inserisci il link PayPal.me o il link di pagamento PayPal' },
-            'iban': { label: 'Coordinate IBAN', placeholder: 'IT00 X000 0000 0000 0000 0000 0000 000', hint: 'IBAN completo con intestatario' },
-            'stripe': { label: 'Link Stripe', placeholder: 'https://buy.stripe.com/...', hint: 'Link di pagamento Stripe' },
-            'satispay': { label: 'Numero Satispay o Link', placeholder: '+39 333 1234567', hint: 'Numero di telefono associato a Satispay' },
-            'altro': { label: 'Istruzioni di Pagamento', placeholder: 'Es. Contanti, Postepay, ecc.', hint: 'Descrivi il metodo di pagamento preferito' }
-        };
-
-        function onMetodoChange() {
-            const metodo = document.getElementById('metodoPagamento').value;
-            const group = document.getElementById('groupDatiPagamento');
-            const label = document.getElementById('labelDatiPagamento');
-            const input = document.getElementById('datiPagamento');
-            const hint = document.getElementById('hintDatiPagamento');
-            
-            if (metodo && METODI_CONFIG[metodo]) {
-                group.style.display = 'flex';
-                label.textContent = METODI_CONFIG[metodo].label + ' *';
-                input.placeholder = METODI_CONFIG[metodo].placeholder;
-                hint.textContent = METODI_CONFIG[metodo].hint;
-            } else {
-                group.style.display = 'none';
-            }
-        }
-
         function renderPaymentArea(lista) {
             const area = document.getElementById('pubPaymentArea');
-            const metodo = lista.metodo_pagamento;
             const dati = lista.dati_pagamento;
             
-            if (!metodo || !dati) {
+            if (!dati) {
                 area.innerHTML = '';
                 return;
             }
             
-            const config = METODI_CONFIG[metodo] || { label: metodo };
-            
             let html = '<div class="payment-box">' +
-                '<div class="payment-method">Metodo di pagamento: ' + config.label + '</div>';
-            
-            if (metodo === 'iban' || metodo === 'altro') {
-                html += '<div class="payment-data">' + dati + '</div>' +
-                    '<button class="btn btn-sm btn-info" onclick="copiaDatiPagamento(\'' + dati.replace(/'/g, "\\'") + '\')">Copia Dati</button>' +
-                    '<button class="btn btn-success mt-20" onclick="confermaPagamento()">Ho completato il pagamento</button>';
-            } else {
-                html += '<a href="' + dati + '" target="_blank" class="btn btn-success" style="font-size:16px; padding:14px 28px; display:inline-block; text-decoration:none; margin-bottom:16px;">Procedi al Pagamento</a>' +
-                    '<br><button class="btn btn-outline mt-20" onclick="confermaPagamento()">Ho completato il pagamento</button>';
-            }
-            
-            html += '<p style="font-size:13px; color:var(--text-light); margin-top:16px;">Dopo il pagamento potrai lasciare il tuo augurio ai festeggiati.</p>' +
+                '<div class="payment-method">Metodo di pagamento: Link PayPal</div>' +
+                '<a href="' + dati + '" target="_blank" class="btn btn-success" style="font-size:16px; padding:14px 28px; display:inline-block; text-decoration:none; margin-bottom:16px;">Procedi al Pagamento con PayPal</a>' +
+                '<br><button class="btn btn-outline mt-20" onclick="confermaPagamento()">Ho completato il pagamento</button>' +
+                '<p style="font-size:13px; color:var(--text-light); margin-top:16px;">Dopo aver effettuato il pagamento, clicca sul pulsante qui sopra per sbloccare il modulo e lasciare il tuo augurio ai festeggiati.</p>' +
                 '</div>';
             
             area.innerHTML = html;
-        }
-
-        function copiaDatiPagamento(testo) {
-            navigator.clipboard.writeText(testo).then(() => {
-                mostraToast('Dati di pagamento copiati', 'success');
-            }).catch(() => {
-                mostraToast('Errore nella copia', 'error');
-            });
         }
 
         function confermaPagamento() {
@@ -918,12 +849,11 @@
             const clienteNome = document.getElementById('selectedClienteNome').value;
             const tipoEvento = document.getElementById('tipoEvento').value;
             const importo = document.getElementById('importoServizio').value;
-            const metodo = document.getElementById('metodoPagamento').value;
             const datiPagamento = document.getElementById('datiPagamento').value;
             const messaggio = document.getElementById('messaggioCortesia').value.trim();
             const ringraziamento = document.getElementById('messaggioRingraziamento').value.trim();
 
-            if (!clienteId || !importo || !metodo || !datiPagamento) {
+            if (!clienteId || !importo || !datiPagamento) {
                 mostraToast('Compila tutti i campi obbligatori', 'error');
                 return;
             }
@@ -940,7 +870,7 @@
                     body: JSON.stringify({
                         id, studio_id: studioId, cliente_id: clienteId, cliente_nome: clienteNome,
                         tipo_evento: tipoEvento, importo_servizio: parseFloat(importo),
-                        metodo_pagamento: metodo, dati_pagamento: datiPagamento,
+                        metodo_pagamento: 'paypal', dati_pagamento: datiPagamento,
                         messaggio_cortesia: messaggio, messaggio_ringraziamento: ringraziamento,
                         username, password, link_pubblico: linkPubblico,
                         raccolto_attuale: 0, stato: 'in_corso'
@@ -959,7 +889,6 @@
                         link_pubblico: linkPubblico, 
                         cliente_nome: clienteNome,
                         tipo_evento: tipoEvento,
-                        metodo_pagamento: metodo,
                         dati_pagamento: datiPagamento,
                         messaggio_ringraziamento: ringraziamento
                     };
@@ -1004,7 +933,7 @@
         function inviaWhatsAppCliente() {
             if (!currentLista) return;
             const linkDashboard = window.location.origin + window.location.pathname + '?dashboard=' + currentLista.id;
-            const msg = 'Buongiorno ' + currentLista.cliente_nome + ',\n\nlo studio ha creato la tua Lista Regali per il tuo ' + currentLista.tipo_evento + '.\n\nLE TUE CREDENZIALI PRIVATE:\nUsername: ' + currentLista.username + '\nPassword: ' + currentLista.password + '\n\nLINK DASHBOARD:\n' + linkDashboard + '\n\nCon la dashboard puoi:\n- Vedere l\'importo raccolto che si aggiorna automaticamente\n- Vedere l\'archivio completo di regali e auguri\n- Stampare l\'archivio in PDF per ricambiare i regali\n\nUn cordiale saluto.';
+            const msg = 'Buongiorno ' + currentLista.cliente_nome + ',\n\nlo studio ha creato la tua Lista Regali digitale per il tuo ' + currentLista.tipo_evento + '.\n\nLE TUE CREDENZIALI PRIVATE:\nUsername: ' + currentLista.username + '\nPassword: ' + currentLista.password + '\n\nLINK DASHBOARD:\n' + linkDashboard + '\n\nCon la dashboard puoi:\n- Vedere l\'importo raccolto che si aggiorna automaticamente\n- Vedere l\'archivio completo di regali e auguri\n- Stampare l\'archivio in PDF per ricambiare i regali\n\nUn cordiale saluto.';
             window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
         }
 
