@@ -360,8 +360,7 @@
             </div>
         </div>
     </div>
-
-    <!-- ============================================ -->
+        <!-- ============================================ -->
     <!-- SEZIONE 10: MODALE SCHEDA COMPLETA STUDIO -->
     <!-- ============================================ -->
     <div id="modal-scheda-studio" class="modal-overlay">
@@ -547,7 +546,7 @@
         async function apriSchedaCompleta(btn) {
             const studioId = btn.getAttribute('data-id');
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/crm/studio/' + encodeURIComponent(studioId) + '?token=' + encodeURIComponent(token));
+                const response = await fetch(WORKER_URL + '/api/admin/scheda-studio?token=' + encodeURIComponent(token) + '&studioId=' + encodeURIComponent(studioId));
                 const data = await response.json();
                 if (data.success && data.studio) {
                     const s = data.studio;
@@ -617,8 +616,7 @@
             if (!studioCorrenteScheda) return;
             window.print();
         }
-
-        async function caricaNotifiche() {
+                async function caricaNotifiche() {
             try {
                 const response = await fetch(WORKER_URL + '/api/admin/notifiche?token=' + encodeURIComponent(token));
                 const data = await response.json();
@@ -1018,7 +1016,7 @@
         async function apriModificaStudio(btn) {
             const studioId = btn.getAttribute('data-id');
             try {
-                const response = await fetch(WORKER_URL + '/api/admin/crm/studio/' + encodeURIComponent(studioId) + '?token=' + encodeURIComponent(token));
+                const response = await fetch(WORKER_URL + '/api/admin/scheda-studio?token=' + encodeURIComponent(token) + '&studioId=' + encodeURIComponent(studioId));
                 const data = await response.json();
                 if (data.success && data.studio) {
                     const s = data.studio;
