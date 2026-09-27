@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistenza & Supporto - AppCenterStudioPROGOLD</title>
+    <link rel="stylesheet" href="temi.css">
+    <script src="temi.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #ffffff; min-height: 100vh; color: #000000; }
+        .top-bar { background: linear-gradient(135deg, #d4af37, #996515); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .top-bar h1 { color: #ffffff; font-size: 1.4em; font-weight: 600; }
+        .nav-btn { background: rgba(255,255,255,0.2); border: none; color: #ffffff; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9em; margin-left: 10px; }
+        .nav-btn:hover { background: rgba(255,255,255,0.3); }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .page-header { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 5px solid #d4af37; }
+        .page-header h2 { color: #000000; font-size: 1.6em; margin-bottom: 10px; }
+        .page-header p { color: #666666; font-size: 0.95em; }
+        .info-box { background: #fff9e6; padding: 20px; border-radius: 10px; border-left: 4px solid #d4af37; margin-bottom: 25px; }
+        .info-box h3 { color: #000000; font-size: 1.1em; margin-bottom: 10px; }
+        .info-box p { color: #000000; font-size: 0.95em; line-height: 1.6; margin-bottom: 8px; }
+        .info-box strong { color: #996515; }
+        .assistenza-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 25px; }
+        .assistenza-card { background: #ffffff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; border-top: 4px solid #d4af37; text-align: center; }
+        .assistenza-card h3 { color: #000000; font-size: 1.3em; margin-bottom: 12px; font-weight: 700; }
+        .assistenza-card p { color: #666666; font-size: 0.95em; line-height: 1.6; margin-bottom: 20px; }
+        .assistenza-icon { width: 70px; height: 70px; margin: 0 auto 15px auto; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2em; font-weight: 700; color: #ffffff; }
+        .icon-whatsapp { background: linear-gradient(135deg, #25d366, #128c7e); }
+        .icon-anydesk { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .btn-assistenza { display: block; width: 100%; padding: 15px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 1em; color: #ffffff; transition: all 0.3s ease; }
+        .btn-whatsapp { background: linear-gradient(135deg, #25d366, #128c7e); }
+        .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(37,211,102,0.4); }
+        .btn-anydesk { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .btn-anydesk:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(231,76,60,0.4); }
+        .footer-branding { text-align: center; padding: 30px 20px; color: #666666; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
+        .footer-branding strong { color: #996515; }
+        @media (max-width: 768px) { .assistenza-grid { grid-template-columns: 1fr; } .top-bar { flex-wrap: wrap; gap: 10px; } }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <h1>Assistenza & Supporto</h1>
+        <div>
+            <button class="nav-btn" onclick="tornaPlancia()">← Torna alla Plancia</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Assistenza Tecnica AppCenterStudioPROGOLD</h2>
+            <p>Supporto remoto per il tuo studio fotografico, in due semplici passi.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>Come funziona il servizio di teleassistenza</h3>
+            <p><strong>Passo 1 - WhatsApp:</strong> clicca il pulsante verde per scriverci su WhatsApp. Ti risponderemo per fissare insieme giorno e ora dell'appuntamento di assistenza. Il numero accetta solo messaggi, non chiamate.</p>
+            <p><strong>Passo 2 - AnyDesk:</strong> nel giorno e all'ora concordati, clicca il pulsante rosso per aprire il sito ufficiale di AnyDesk. Scarica o avvia il programma, poi comunicaci il tuo codice personale: ci collegheremo al tuo computer per risolvere il problema insieme a te.</p>
+        </div>
+
+        <div class="assistenza-grid">
+            <div class="assistenza-card">
+                <div class="assistenza-icon icon-whatsapp">WA</div>
+                <h3>Passo 1 - Prenota</h3>
+                <p>Scrivici su WhatsApp per fissare un appuntamento di teleassistenza. Ti risponderemo con giorno e ora disponibili.</p>
+                <button class="btn-assistenza btn-whatsapp" onclick="apriWhatsApp()">APRI WHATSAPP E PRENOTA</button>
+            </div>
+
+            <div class="assistenza-card">
+                <div class="assistenza-icon icon-anydesk">AD</div>
+                <h3>Passo 2 - Collegati</h3>
+                <p>Apri il sito ufficiale di AnyDesk, scarica o avvia il programma e tieni pronto il tuo codice per il collegamento remoto.</p>
+                <button class="btn-assistenza btn-anydesk" onclick="apriAnyDesk()">APRI ANYDESK</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-branding">
+        <p>Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong></p>
+    </div>
+
+    <script>
+        var token = '';
+        var studioNome = '';
+        var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            token = urlParams.get('token');
+            if (!token) { alert('Token non trovato. Effettua il login.'); window.location.href = 'index.html'; return; }
+            verificaSessione();
+        });
+
+        async function verificaSessione() {
+            try {
+                const response = await fetch(WORKER_URL + '/api/auth/verifica?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (!data.success) {
+                    alert('Sessione scaduta. Effettua il login.');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                if (data.tipo === 'admin') {
+                    studioNome = 'Super Admin';
+                } else if (data.tipo === 'studio' && data.user) {
+                    studioNome = data.user.nome || 'Studio';
+                } else {
+                    studioNome = 'Studio';
+                }
+            } catch (error) {
+                console.error('Errore verifica sessione:', error);
+                studioNome = 'Studio';
+            }
+        }
+
+        function apriWhatsApp() {
+            const numero = '393447507656';
+            const messaggio = 'Buongiorno, vorrei fissare un appuntamento per teleassistenza. Il mio studio è: ' + studioNome;
+            window.open('https://wa.me/' + numero + '?text=' + encodeURIComponent(messaggio), '_blank');
+        }
+
+        function apriAnyDesk() {
+            window.open('https://anydesk.com/it', '_blank');
+        }
+
+        function tornaPlancia() {
+            window.location.href = 'plancia-studio.html?token=' + encodeURIComponent(token);
+        }
+    </script>
+</body>
+</html>
