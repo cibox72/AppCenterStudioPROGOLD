@@ -34,6 +34,15 @@
         .loading-overlay { text-align: center; padding: 40px; color: #666666; }
         .spinner { border: 4px solid #fff9e6; border-top: 4px solid #d4af37; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Stili specifici per i pulsanti nella card Assistenza */
+        .assistenza-buttons { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        .btn-assistenza { flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 0.85em; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-whatsapp { background: #25d366; color: #ffffff; }
+        .btn-whatsapp:hover { background: #128c7e; }
+        .btn-anydesk { background: #ef4444; color: #ffffff; }
+        .btn-anydesk:hover { background: #dc2626; }
+        
         @media (max-width: 768px) { .modules-grid { grid-template-columns: 1fr; } .top-bar { flex-wrap: wrap; gap: 10px; } }
     </style>
 </head>
@@ -142,6 +151,29 @@
                 <p>Archivio personale di link, fornitori e risorse rapide.</p>
             </div>
 
+            <!-- CARD AGGIUNTA: PARTNER CONSIGLIATI -->
+            <div class="module-card" onclick="apriModulo('partner.html')">
+                <span class="module-code">PT</span>
+                <h3>Partner Consigliati</h3>
+                <p>Aziende partner e sponsor selezionati dal fornitore per i tuoi servizi.</p>
+                <span class="badge-status" style="background: #d4af37; color: #ffffff; border-color: #996515;">GESTIONE ADMIN</span>
+            </div>
+
+            <!-- CARD AGGIUNTA: ASSISTENZA & SUPPORTO (PER ULTIMA) -->
+            <div class="module-card" style="cursor: default;" onclick="event.stopPropagation();">
+                <span class="module-code">AS</span>
+                <h3>Assistenza & Supporto</h3>
+                <p>Contatta il fornitore per teleassistenza e supporto tecnico.</p>
+                <div class="assistenza-buttons">
+                    <button class="btn-assistenza btn-whatsapp" onclick="apriWhatsAppAssistenza()">
+                        <span>📱</span> WhatsApp
+                    </button>
+                    <button class="btn-assistenza btn-anydesk" onclick="copiaIdAnyDesk()">
+                        <span>🖥️</span> AnyDesk
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -154,6 +186,9 @@
         var studioId = '';
         var studioNome = '';
         var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
+        
+        // CONFIGURAZIONE ASSISTENZA: Inserisci qui il tuo ID AnyDesk quando necessario
+        var ANYDESK_ID_FORNITORE = ""; 
 
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -259,6 +294,29 @@
             }).finally(function() {
                 window.location.href = 'index.html';
             });
+        }
+
+        // ==========================================
+        // FUNZIONI ASSISTENZA & SUPPORTO
+        // ==========================================
+        function apriWhatsAppAssistenza() {
+            const numero = "393447507656";
+            const messaggio = "Buongiorno, vorrei fissare un appuntamento per teleassistenza. Il mio studio è: " + encodeURIComponent(studioNome);
+            window.open("https://wa.me/" + numero + "?text=" + messaggio, "_blank");
+        }
+
+        function copiaIdAnyDesk() {
+            if (!ANYDESK_ID_FORNITORE || ANYDESK_ID_FORNITORE.trim() === "") {
+                alert("L'ID AnyDesk non è ancora stato configurato dal fornitore.\n\nPer favore, contattaci via WhatsApp per richiederlo o fissare un appuntamento.");
+                apriWhatsAppAssistenza();
+            } else {
+                navigator.clipboard.writeText(ANYDESK_ID_FORNITORE).then(function() {
+                    alert("ID AnyDesk copiato negli appunti: " + ANYDESK_ID_FORNITORE + "\n\nOra puoi incollarlo nell'applicazione AnyDesk.");
+                }).catch(function(err) {
+                    console.error('Errore nella copia: ', err);
+                    alert("Impossibile copiare l'ID automaticamente. Il tuo ID di riferimento è: " + ANYDESK_ID_FORNITORE);
+                });
+            }
         }
     </script>
 </body>
