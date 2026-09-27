@@ -7,9 +7,6 @@
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
     
-    <!-- ============================================ -->
-    <!-- SEZIONE 1: CSS STYLES (Tema Oro/Nero/Bianco) -->
-    <!-- ============================================ -->
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background: #ffffff; min-height: 100vh; color: #000000; }
@@ -31,7 +28,7 @@
         .module-card .module-code { position: absolute; top: 10px; right: 15px; background: #d4af37; color: #ffffff; padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 700; }
         .module-card h3 { color: #000000; font-size: 1.2em; margin-bottom: 10px; font-weight: 600; }
         .module-card p { color: #666666; font-size: 0.9em; line-height: 1.5; }
-        .module-card .badge-status { display: inline-block; margin-top: 10px; padding: 4px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; background: #fff9e6; color: #996515; border: 1px solid #d4af37; }
+        .module-card .badge-status { display: inline-block; margin-top: 10px; padding: 4px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; background: #fff9e6; color: #996515; border: 1px solid #d4af37; transition: all 0.3s ease; }
         .footer-branding { text-align: center; padding: 30px 20px; color: #666666; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
         .footer-branding strong { color: #996515; }
         .loading-overlay { text-align: center; padding: 40px; color: #666666; }
@@ -41,9 +38,6 @@
     </style>
 </head>
 <body>
-    <!-- ============================================ -->
-    <!-- SEZIONE 2: TOP BAR (ADMIN PANEL SOLO PER ADMIN) -->
-    <!-- ============================================ -->
     <div class="top-bar">
         <h1>AppCenterStudioPROGOLD</h1>
         <div>
@@ -54,9 +48,6 @@
     </div>
 
     <div class="container">
-        <!-- ============================================ -->
-        <!-- SEZIONE 3: WELCOME SECTION -->
-        <!-- ============================================ -->
         <div class="welcome-section">
             <h2 id="benvenuto">Plancia di Controllo Studio</h2>
             <p>Gestisci tutte le funzionalita del tuo studio fotografico. Dati sincronizzati in tempo reale sul cloud.</p>
@@ -67,40 +58,32 @@
             <div id="studio-info" class="studio-id" style="display: none;">ID: -</div>
         </div>
 
-        <!-- ============================================ -->
-        <!-- SEZIONE 4: MODULES GRID (13 CARD) -->
-        <!-- ============================================ -->
         <div class="modules-grid" id="modules-grid" style="display: none;">
             
-            <!-- CARD 1: IM - Impostazioni (Scheda Anagrafica) -->
             <div class="module-card" onclick="apriModulo('scheda-anagrafica.html')">
                 <span class="module-code">IM</span>
                 <h3>Impostazioni</h3>
                 <p>Scheda anagrafica, logo, messaggi automatici e link studio.</p>
             </div>
 
-            <!-- CARD 2: ID - Registra Clienti ID -->
             <div class="module-card" onclick="apriModulo('registra-clienti-id.html')">
                 <span class="module-code">ID</span>
                 <h3>Registra Clienti ID</h3>
                 <p>Registrazione anagrafica clienti con ID univoco.</p>
             </div>
 
-            <!-- CARD 3: LC - Listini, Categorie & Contratti -->
             <div class="module-card" onclick="apriModulo('listini-categorie.html')">
                 <span class="module-code">LC</span>
                 <h3>Listini, Categorie & Contratti</h3>
                 <p>Crea listini, gestisci categorie e archivio contratti.</p>
             </div>
 
-            <!-- CARD 4: PV - Preventivi & Contratti -->
             <div class="module-card" onclick="apriModulo('preventivi.html')">
                 <span class="module-code">PV</span>
                 <h3>Preventivi & Contratti</h3>
                 <p>Crea preventivi, invia via WhatsApp e trasforma in contratti.</p>
             </div>
 
-            <!-- CARD 5: SA - Seleziona Cartelle Clienti -->
             <div class="module-card" onclick="apriModulo('selezione-album.html')">
                 <span class="module-code">SA</span>
                 <h3>Seleziona Cartelle Clienti</h3>
@@ -108,21 +91,18 @@
                 <span class="badge-status">SELEZIONE IN ATTESA</span>
             </div>
 
-            <!-- CARD 6: GR - GRU -->
             <div class="module-card" onclick="apriModulo('gru.html')">
                 <span class="module-code">GR</span>
                 <h3>GRU</h3>
                 <p>Gestione risorse e utility dello studio.</p>
             </div>
 
-            <!-- CARD 7: WF - Workflow -->
             <div class="module-card" onclick="apriModulo('workflow.html')">
                 <span class="module-code">WF</span>
                 <h3>Workflow</h3>
                 <p>Stato avanzamento foto e video per ogni cliente.</p>
             </div>
 
-            <!-- CARD 8: GC - Gallerie Clienti -->
             <div class="module-card" onclick="apriModulo('gallerie.html')">
                 <span class="module-code">GC</span>
                 <h3>Gallerie Clienti</h3>
@@ -130,37 +110,31 @@
                 <span class="badge-status">NUOVO</span>
             </div>
 
-            <!-- CARD 9: LR - Lista Regali -->
             <div class="module-card" onclick="apriModulo('lista-regali.html')">
                 <span class="module-code">LR</span>
                 <h3>Lista Regali</h3>
                 <p>Crowdfunding e messaggi di auguri per eventi.</p>
             </div>
 
-            <!-- CARD 10: NZ - Negozio Online -->
             <div class="module-card" onclick="apriModulo('negozio.html')">
                 <span class="module-code">NZ</span>
                 <h3>Negozio Online</h3>
                 <p>Prodotti, ordini e configurazione pagamenti.</p>
-                <!-- MODIFICA AGGIUNTA: aggiunto id="badge-ordini-negozio" -->
-                <span class="badge-status" id="badge-ordini-negozio">0 ORDINI IN ATTESA</span>
+                <span class="badge-status" id="badge-ordini-negozio">0 ORDINI DA PROCESSARE</span>
             </div>
 
-            <!-- CARD 11: RC - Ricevute -->
             <div class="module-card" onclick="apriModulo('ricevute.html')">
                 <span class="module-code">RC</span>
                 <h3>Ricevute</h3>
                 <p>Gestisci le ricevute fiscali e i pagamenti dei clienti.</p>
             </div>
 
-            <!-- CARD 12: AG - Agenda -->
             <div class="module-card" onclick="apriModulo('agenda.html')">
                 <span class="module-code">AG</span>
                 <h3>Agenda</h3>
                 <p>Calendario eventi e appuntamenti dello studio.</p>
             </div>
 
-            <!-- CARD 13: LN - Link Utili -->
             <div class="module-card" onclick="apriModulo('link-utili.html')">
                 <span class="module-code">LN</span>
                 <h3>Link Utili</h3>
@@ -174,9 +148,6 @@
         <p>Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong></p>
     </div>
 
-    <!-- ============================================ -->
-    <!-- SEZIONE 5: JAVASCRIPT -->
-    <!-- ============================================ -->
     <script>
         var token = '';
         var studioId = '';
@@ -201,23 +172,19 @@
                     return;
                 }
                 
-                // Gestione differenziata per Admin e Studio
                 if (data.tipo === 'admin') {
                     studioId = 'admin';
                     studioNome = 'Super Admin';
                     document.getElementById('benvenuto').textContent = 'Benvenuto, ' + studioNome;
                     document.getElementById('studio-info').textContent = 'Ruolo: Amministratore di Sistema';
-                    // MOSTRA PULSANTE ADMIN PANEL SOLO PER ADMIN
                     document.getElementById('btn-admin-panel').style.display = 'inline-block';
                 } else if (data.tipo === 'studio' && data.user) {
                     studioId = data.user.id;
                     studioNome = data.user.nome || 'Studio';
                     document.getElementById('benvenuto').textContent = 'Benvenuto, ' + studioNome;
                     document.getElementById('studio-info').textContent = 'ID Studio: ' + studioId;
-                    // NASCONDI PULSANTE ADMIN PANEL PER GLI STUDI
                     document.getElementById('btn-admin-panel').style.display = 'none';
                     
-                    // CONTROLLO SCADENZA LICENZA (solo per studio)
                     if (data.user.scadenza) {
                         const oggi = new Date();
                         const scadenza = new Date(data.user.scadenza);
@@ -226,9 +193,6 @@
                         }
                     }
 
-                    // ==========================================
-                    // SEZIONE 5.1: CONTROLLO SCHEDA ANAGRAFICA OBBLIGATORIA
-                    // ==========================================
                     if (data.user.scheda_completata === 0 || data.user.scheda_completata === null || data.user.scheda_completata === undefined) {
                         setTimeout(function() {
                             alert('Benvenuto! Prima di accedere alla plancia, devi compilare la scheda anagrafica del tuo studio. I dati inseriti appariranno su contratti, preventivi e ricevute.');
@@ -246,7 +210,6 @@
                 document.getElementById('studio-info').style.display = 'block';
                 document.getElementById('modules-grid').style.display = 'grid';
                 
-                // MODIFICA AGGIUNTA: Chiama la funzione per aggiornare il badge degli ordini
                 aggiornaConteggioOrdini();
                 
             } catch (error) {
@@ -255,18 +218,19 @@
             }
         }
 
-        // MODIFICA AGGIUNTA: Funzione per contare gli ordini in attesa e aggiornare il badge
         async function aggiornaConteggioOrdini() {
             if (studioId === 'admin') return;
             try {
                 const response = await fetch(WORKER_URL + '/api/studio/negozio/ordini?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 if (data.success && data.ordini) {
-                    const ordiniInAttesa = data.ordini.filter(o => o.stato === 'in_attesa' || o.stato === 'in_attesa_pagamento').length;
+                    const ordiniDaProcessare = data.ordini.filter(function(o) { 
+                        return o.stato === 'in_attesa' || o.stato === 'in_attesa_pagamento' || o.stato === 'pagato'; 
+                    }).length;
                     const badge = document.getElementById('badge-ordini-negozio');
                     if (badge) {
-                        badge.textContent = ordiniInAttesa + ' ORDINI IN ATTESA';
-                        if (ordiniInAttesa > 0) {
+                        badge.textContent = ordiniDaProcessare + ' ORDINI DA PROCESSARE';
+                        if (ordiniDaProcessare > 0) {
                             badge.style.background = '#e74c3c';
                             badge.style.color = '#ffffff';
                             badge.style.borderColor = '#c0392b';
