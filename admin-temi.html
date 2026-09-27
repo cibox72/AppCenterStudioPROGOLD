@@ -7,9 +7,6 @@
     <link rel="stylesheet" href="temi.css">
     <script src="temi.js"></script>
     
-    <!-- ============================================ -->
-    <!-- SEZIONE 1: CSS STYLES (Tema Oro/Nero/Bianco) -->
-    <!-- ============================================ -->
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background: #ffffff; min-height: 100vh; color: #000000; }
@@ -41,7 +38,7 @@
         .badge-trial { background: #fdebd0; color: #d35400; }
         .badge-scaduto { background: #fadbd8; color: #c0392b; }
         .badge-bozza { background: #fdebd0; color: #d35400; }
-        .badge-attiva { background: #d5f5e3; color: #1e8449; }
+        .badge-inattivo { background: #fadbd8; color: #c0392b; }
         .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9em; display: inline-flex; align-items: center; gap: 8px; }
         .btn-primary { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; }
         .btn-outline { background: transparent; border: 2px solid #d4af37; color: #996515; }
@@ -55,6 +52,7 @@
         .form-group label { display: block; margin-bottom: 8px; color: #000000; font-weight: 600; font-size: 0.9em; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 15px; border: 2px solid #d5d8dc; border-radius: 10px; font-size: 0.95em; background: #f8f9fa; color: #000000; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #d4af37; background: #ffffff; }
+        .form-hint { font-size: 0.85em; color: #666666; margin-top: 5px; }
         .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
         .tab { padding: 12px 25px; background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; cursor: pointer; font-weight: 600; color: #000000; }
         .tab:hover { background: #fff9e6; }
@@ -91,26 +89,41 @@
         .notification-item small { color: #666666; font-size: 0.85em; }
         .notification-actions { display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
         .actions-cell { display: flex; gap: 8px; flex-wrap: wrap; }
-        .offerta-card { background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #d4af37; transition: all 0.3s ease; }
-        .offerta-card:hover { border-color: #d4af37; background: #fff9e6; }
-        .offerta-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
-        .offerta-header h4 { color: #000000; font-size: 1.2em; margin: 0; }
-        .offerta-tipo { background: #fff9e6; color: #996515; padding: 4px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 600; border: 1px solid #d4af37; }
-        .offerta-descrizione { color: #666666; font-size: 0.95em; margin-bottom: 10px; line-height: 1.5; }
-        .offerta-dettagli { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 15px; font-size: 0.9em; }
-        .offerta-dettagli span { color: #000000; }
-        .offerta-dettagli strong { color: #996515; }
-        .offerta-actions { display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid #d5d8dc; padding-top: 15px; }
+        .offerta-card, .partner-card { background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #d4af37; transition: all 0.3s ease; }
+        .offerta-card:hover, .partner-card:hover { border-color: #d4af37; background: #fff9e6; }
+        .partner-card.inattivo { opacity: 0.6; border-left-color: #999999; }
+        .offerta-header, .partner-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
+        .offerta-header h4, .partner-header h4 { color: #000000; font-size: 1.2em; margin: 0; }
+        .offerta-tipo, .partner-tipo { background: #fff9e6; color: #996515; padding: 4px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 600; border: 1px solid #d4af37; }
+        .offerta-descrizione, .partner-descrizione { color: #666666; font-size: 0.95em; margin-bottom: 10px; line-height: 1.5; }
+        .offerta-dettagli, .partner-dettagli { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 15px; font-size: 0.9em; }
+        .offerta-dettagli span, .partner-dettagli span { color: #000000; }
+        .offerta-dettagli strong, .partner-dettagli strong { color: #996515; }
+        .offerta-actions, .partner-actions { display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid #d5d8dc; padding-top: 15px; align-items: center; }
         .whatsapp-preview { background: #e5ddd5; padding: 15px; border-radius: 10px; margin-top: 15px; border-left: 4px solid #25d366; }
         .whatsapp-preview h5 { color: #000000; margin-bottom: 10px; }
         .whatsapp-preview p { color: #000000; font-size: 0.95em; line-height: 1.5; white-space: pre-wrap; }
+        
+        /* Toggle switch per archivio partner */
+        .toggle-container { display: flex; align-items: center; gap: 10px; margin-right: 15px; }
+        .toggle-label { font-size: 0.85em; font-weight: 600; color: #000000; }
+        .toggle-switch { position: relative; width: 50px; height: 24px; background: #d5d8dc; border-radius: 12px; transition: background 0.3s; cursor: pointer; }
+        .toggle-switch.active { background: #28b463; }
+        .toggle-slider { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: #ffffff; border-radius: 50%; transition: transform 0.3s; }
+        .toggle-switch.active .toggle-slider { transform: translateX(26px); }
+        
+        /* Logo upload e preview */
+        .logo-upload-area { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .logo-upload-area input[type="file"] { flex: 1; min-width: 200px; }
+        .logo-preview-box { width: 100px; height: 100px; border: 2px dashed #d4af37; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: #fff9e6; overflow: hidden; }
+        .logo-preview-box img, .logo-preview-box object { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .logo-preview-box .placeholder { color: #996515; font-size: 0.75em; font-weight: 600; text-align: center; padding: 5px; }
+        .partner-logo-preview { max-width: 100px; max-height: 100px; object-fit: contain; border: 1px solid #d5d8dc; border-radius: 8px; padding: 5px; background: #ffffff; }
+        
         @media (max-width: 768px) { .form-grid, .stats-grid { grid-template-columns: 1fr; } .section-header { flex-direction: column; align-items: flex-start; gap: 15px; } .modal-content { padding: 25px; } .actions-cell { flex-direction: column; } .scheda-riga { flex-direction: column; } .scheda-riga label { min-width: auto; } }
     </style>
 </head>
 <body>
-    <!-- ============================================ -->
-    <!-- SEZIONE 2: TOP BAR -->
-    <!-- ============================================ -->
     <div class="top-bar">
         <h1>Admin Panel - CRM</h1>
         <div>
@@ -122,17 +135,15 @@
     <div class="container">
         <div class="page-header">
             <h2>Admin Panel - CRM & Notifiche</h2>
-            <p>Gestione studi, notifiche, offerte promozionali e personalizzazione della dashboard</p>
+            <p>Gestione studi, notifiche, offerte promozionali, partner e personalizzazione della dashboard</p>
         </div>
 
-        <!-- ============================================ -->
-        <!-- SEZIONE 3: STATS & TABS -->
-        <!-- ============================================ -->
         <div class="stats-grid">
             <div class="stat-card"><div class="stat-icon">S</div><div class="stat-info"><h3 id="count-studi">0</h3><p>Studi Registrati</p></div></div>
             <div class="stat-card"><div class="stat-icon">N</div><div class="stat-info"><h3 id="count-notifiche">0</h3><p>Notifiche</p></div></div>
             <div class="stat-card"><div class="stat-icon">A</div><div class="stat-info"><h3 id="count-archivio">0</h3><p>Archivio Studi</p></div></div>
             <div class="stat-card"><div class="stat-icon">O</div><div class="stat-info"><h3 id="count-offerte">0</h3><p>Offerte Attive</p></div></div>
+            <div class="stat-card"><div class="stat-icon">P</div><div class="stat-info"><h3 id="count-partner">0</h3><p>Partner Attivi</p></div></div>
         </div>
 
         <div class="tabs">
@@ -140,14 +151,12 @@
             <div class="tab" onclick="switchTab('notifiche')">Notifiche</div>
             <div class="tab" onclick="switchTab('archivio')">Archivio Studi</div>
             <div class="tab" onclick="switchTab('offerte')">Offerte Promo</div>
+            <div class="tab" onclick="switchTab('partner')">Partner Consigliati</div>
+            <div class="tab" onclick="switchTab('assistenza')">Teleassistenza</div>
             <div class="tab" onclick="switchTab('tema')">Tema Admin</div>
             <div class="tab" onclick="switchTab('crea')">Crea Studio</div>
         </div>
-
-        <!-- ============================================ -->
-        <!-- SEZIONE 4: TAB ELENCO STUDI -->
-        <!-- ============================================ -->
-        <div id="tab-studi" class="tab-content active">
+                <div id="tab-studi" class="tab-content active">
             <div class="section">
                 <div class="section-header">
                     <h3>Elenco Studi Registrati</h3>
@@ -172,9 +181,6 @@
             </div>
         </div>
 
-        <!-- ============================================ -->
-        <!-- SEZIONE 5: TAB NOTIFICHE -->
-        <!-- ============================================ -->
         <div id="tab-notifiche" class="tab-content">
             <div class="section">
                 <div class="section-header">
@@ -187,9 +193,6 @@
             </div>
         </div>
 
-        <!-- ============================================ -->
-        <!-- SEZIONE 6: TAB ARCHIVIO -->
-        <!-- ============================================ -->
         <div id="tab-archivio" class="tab-content">
             <div class="section">
                 <div class="section-header">
@@ -216,16 +219,12 @@
             </div>
         </div>
 
-        <!-- ============================================ -->
-        <!-- SEZIONE 7: TAB OFFERTE PROMO -->
-        <!-- ============================================ -->
         <div id="tab-offerte" class="tab-content">
             <div class="section">
                 <div class="section-header">
                     <h3>Crea Nuova Offerta Promozionale</h3>
                     <p style="color: #666666;">Le offerte verranno inviate agli studi tramite WhatsApp</p>
                 </div>
-                
                 <form id="form-offerta" onsubmit="salvaOfferta(event)">
                     <input type="hidden" id="offerta_id" value="">
                     <div class="form-grid">
@@ -285,7 +284,6 @@
                     </div>
                 </form>
             </div>
-
             <div class="section">
                 <div class="section-header">
                     <h3>Archivio Offerte</h3>
@@ -297,9 +295,91 @@
             </div>
         </div>
 
-        <!-- ============================================ -->
-        <!-- SEZIONE 8: TAB TEMA -->
-        <!-- ============================================ -->
+        <!-- NUOVA TAB: PARTNER CONSIGLIATI -->
+        <div id="tab-partner" class="tab-content">
+            <div class="section">
+                <div class="section-header">
+                    <h3>Gestione Partner Consigliati</h3>
+                    <p style="color: #666666;">Aggiungi aziende partner che verranno visualizzate nella plancia di tutti gli studi.</p>
+                </div>
+                <form id="form-partner" onsubmit="salvaPartner(event)">
+                    <input type="hidden" id="partner_id" value="">
+                    <input type="hidden" id="partner_logo_base64" value="">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nome Azienda *</label>
+                            <input type="text" id="partner_nome" required placeholder="Es. Tipografia Premium" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Link Sito Web *</label>
+                            <input type="url" id="partner_link" required placeholder="https://www.esempio.com" autocomplete="off">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Logo Azienda (jpeg, png o pdf) *</label>
+                            <div class="logo-upload-area">
+                                <input type="file" id="partner_logo_file" accept="image/jpeg,image/png,application/pdf" onchange="anteprimaLogo(this)">
+                                <div class="logo-preview-box" id="logoPreviewBox">
+                                    <div class="placeholder">Anteprima<br>logo</div>
+                                </div>
+                            </div>
+                            <p class="form-hint">Carica il logo fornito dal partner. Formati accettati: JPEG, PNG, PDF. Il file verrà salvato automaticamente.</p>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Descrizione Breve *</label>
+                            <textarea id="partner_descrizione" required rows="3" placeholder="Descrivi brevemente l'azienda e il rapporto di partnership..." autocomplete="off"></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Servizi Offerti</label>
+                            <textarea id="partner_servizi" rows="3" placeholder="Es. Stampa foto professionali, Album di lusso, Cornici artigianali, Spedizione gratuita..." autocomplete="off"></textarea>
+                        </div>
+                    </div>
+                    <div style="margin-top: 25px; display: flex; gap: 15px; flex-wrap: wrap;">
+                        <button type="submit" class="btn btn-primary" id="btn-salva-partner">SALVA PARTNER</button>
+                        <button type="button" class="btn btn-outline" onclick="pulisciFormPartner()">PULISCI FORM</button>
+                    </div>
+                </form>
+            </div>
+            <div class="section">
+                <div class="section-header">
+                    <h3>Archivio Partner</h3>
+                    <p style="color: #666666;">Usa il toggle per attivare/disattivare la visibilità. I partner inattivi non appariranno nella plancia degli studi.</p>
+                </div>
+                <div id="loading-partner" class="loading"><div class="spinner"></div><p>Caricamento partner...</p></div>
+                <div id="lista-partner"></div>
+                <div id="empty-partner" class="empty-state" style="display: none;"><p>Nessun partner configurato. Aggiungi il primo usando il form sopra.</p></div>
+            </div>
+        </div>
+
+        <!-- NUOVA TAB: TELEASSISTENZA -->
+        <div id="tab-assistenza" class="tab-content">
+            <div class="section">
+                <div class="section-header">
+                    <h3>Configurazione Teleassistenza</h3>
+                    <p style="color: #666666;">Configura l'ID AnyDesk che gli studi vedranno nella loro plancia per richiedere assistenza.</p>
+                </div>
+                <div class="info-box">
+                    <strong>Come funziona:</strong> Gli studi vedranno nella loro plancia una card "Assistenza & Supporto" con due pulsanti: WhatsApp (per contattarti) e AnyDesk (per copiare il tuo ID). Configura qui sotto il tuo ID AnyDesk attuale.
+                </div>
+                <form id="form-assistenza" onsubmit="salvaConfigAssistenza(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>ID AnyDesk del Fornitore</label>
+                            <input type="text" id="anydesk_id" placeholder="Es. 123 456 789" autocomplete="off">
+                            <p class="form-hint">Inserisci il tuo ID AnyDesk attuale. Gli studi potranno copiarlo per connettersi a te in teleassistenza.</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Numero WhatsApp Assistenza</label>
+                            <input type="tel" id="whatsapp_assistenza" placeholder="3447507656" value="3447507656" autocomplete="off">
+                            <p class="form-hint">Numero che gli studi useranno per contattarti via WhatsApp (solo messaggi, no chiamate).</p>
+                        </div>
+                    </div>
+                    <div style="margin-top: 25px;">
+                        <button type="submit" class="btn btn-primary">SALVA CONFIGURAZIONE</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div id="tab-tema" class="tab-content">
             <div class="section">
                 <h3>PERSONALIZZA TEMA ADMIN</h3>
@@ -313,9 +393,6 @@
             </div>
         </div>
 
-        <!-- ============================================ -->
-        <!-- SEZIONE 9: TAB CREA STUDIO -->
-        <!-- ============================================ -->
         <div id="tab-crea" class="tab-content">
             <div class="section">
                 <h3>Crea Nuovo Studio</h3>
@@ -349,11 +426,7 @@
             </div>
         </div>
     </div>
-
-    <!-- ============================================ -->
-    <!-- SEZIONE 10: MODALE SCHEDA COMPLETA STUDIO -->
-    <!-- ============================================ -->
-    <div id="modal-scheda-studio" class="modal-overlay">
+        <div id="modal-scheda-studio" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Scheda Completa Studio</h2>
@@ -371,9 +444,6 @@
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- SEZIONE 11: MODALE DETTAGLIO NOTIFICA -->
-    <!-- ============================================ -->
     <div id="modal-notifica" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -388,38 +458,30 @@
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- SEZIONE 12: MODALE INVIO WHATSAPP -->
-    <!-- ============================================ -->
     <div id="modal-whatsapp" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Invia Offerta via WhatsApp</h2>
                 <button class="close-modal" onclick="chiudiModalWhatsApp()">x</button>
             </div>
-            
             <div class="info-box">
                 <strong>Studio:</strong> <span id="wa-studio-nome"></span><br>
                 <strong>Telefono:</strong> <span id="wa-studio-telefono"></span>
             </div>
-
             <div class="form-group">
                 <label>Seleziona Offerta dall'Archivio *</label>
                 <select id="wa-offerta-select" onchange="aggiornaAnteprimaWhatsApp()">
                     <option value="">-- Seleziona un'offerta --</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label>Messaggio da Inviare (modificabile)</label>
                 <textarea id="wa-messaggio" rows="8" autocomplete="off"></textarea>
             </div>
-
             <div class="whatsapp-preview">
                 <h5>Anteprima Messaggio</h5>
                 <p id="wa-anteprima">Seleziona un'offerta per vedere l'anteprima...</p>
             </div>
-
             <div style="display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
                 <button class="btn btn-success" onclick="inviaWhatsApp()" style="flex: 1;">APRI WHATSAPP E INVIA</button>
                 <button class="btn btn-outline" onclick="chiudiModalWhatsApp()" style="flex: 1;">Annulla</button>
@@ -431,27 +493,19 @@
         <p>Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></p>
     </div>
 
-    <!-- ============================================ -->
-    <!-- SEZIONE 13: JAVASCRIPT -->
-    <!-- ============================================ -->
     <script>
-        // COSTANTE IMMUTABILE - Non può essere sovrascritta da temi.js o altri script
         const WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
-        
-        // Verifica immediata del valore
-        console.log('[ADMIN] WORKER_URL impostato a:', WORKER_URL);
-        
         var token = '';
         var studioCorrenteScheda = null;
         var notificaCorrente = null;
         var studioWhatsAppCorrente = null;
         var offerteDisponibili = [];
+        var partnerDisponibili = [];
 
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             token = urlParams.get('token');
             if (!token) { alert('Token non trovato. Effettua il login.'); window.location.href = 'index.html'; return; }
-            console.log('[ADMIN] Token caricato:', token ? 'OK' : 'MANCANTE');
             caricaDati();
         });
 
@@ -460,6 +514,8 @@
             await caricaNotifiche(); 
             await caricaArchivio(); 
             await caricaOfferte(); 
+            await caricaPartner(); 
+            await caricaConfigAssistenza();
             await caricaTema(); 
             await controllaScadenzeENotifica(); 
         }
@@ -473,9 +529,7 @@
 
         async function caricaStudi() {
             try {
-                const url = WORKER_URL + '/api/admin/crm/studi?token=' + encodeURIComponent(token);
-                console.log('[ADMIN] caricaStudi URL:', url);
-                const response = await fetch(url);
+                const response = await fetch(WORKER_URL + '/api/admin/crm/studi?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 document.getElementById('loading-studi').style.display = 'none';
                 if (data.success && data.studi.length > 0) {
@@ -510,9 +564,7 @@
 
         async function apriSchedaCompleta(studioId) {
             try {
-                const url = WORKER_URL + '/api/admin/crm/studio/' + studioId + '?token=' + encodeURIComponent(token);
-                console.log('[ADMIN] apriSchedaCompleta URL:', url);
-                const response = await fetch(url);
+                const response = await fetch(WORKER_URL + '/api/admin/crm/studio/' + studioId + '?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 if (data.success && data.studio) {
                     const s = data.studio;
@@ -584,9 +636,7 @@
 
         async function caricaNotifiche() {
             try {
-                const url = WORKER_URL + '/api/admin/notifiche?token=' + encodeURIComponent(token);
-                console.log('[ADMIN] caricaNotifiche URL:', url);
-                const response = await fetch(url);
+                const response = await fetch(WORKER_URL + '/api/admin/notifiche?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 document.getElementById('loading-notifiche').style.display = 'none';
                 if (data.success && data.notifiche && data.notifiche.length > 0) {
@@ -618,21 +668,17 @@
 
         async function controllaScadenzeENotifica() {
             try {
-                const url = WORKER_URL + '/api/admin/crm/studi?token=' + encodeURIComponent(token);
-                const response = await fetch(url);
+                const response = await fetch(WORKER_URL + '/api/admin/crm/studi?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 if (data.success && data.studi) {
                     const oggi = new Date();
                     const listaNotifiche = document.getElementById('lista-notifiche');
-                    
                     data.studi.forEach(function(studio) {
                         if (studio.scadenza) {
                             const dataScadenza = new Date(studio.scadenza);
                             const diffGiorni = Math.ceil((dataScadenza - oggi) / (1000 * 60 * 60 * 24));
-                            
                             if (diffGiorni <= 3) {
                                 const colore = diffGiorni < 0 ? '#c0392b' : '#d35400';
-                                
                                 const div = document.createElement('div');
                                 div.className = 'notification-item unread';
                                 div.style.borderLeft = '4px solid ' + colore;
@@ -643,7 +689,6 @@
                                         '<button class="btn btn-sm btn-success" onclick="contattaWhatsAppScadenza(\'' + (studio.telefono || '') + '\', \'' + (studio.nome || '').replace(/'/g, "\\'") + '\')">Contatta su WhatsApp</button>' +
                                         '<button class="btn btn-sm btn-danger" onclick="eliminaNotificaScadenza(this)">Elimina</button>' +
                                     '</div>';
-                                
                                 listaNotifiche.insertBefore(div, listaNotifiche.firstChild);
                             }
                         }
@@ -671,9 +716,7 @@
 
         async function apriDettaglioNotifica(id) {
             try {
-                const url = WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token);
-                console.log('[ADMIN] apriDettaglioNotifica URL:', url);
-                const response = await fetch(url);
+                const response = await fetch(WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 if (data.success && data.notifica) {
                     const n = data.notifica;
@@ -724,19 +767,14 @@
 
         async function eliminaNotifica(id) {
             try { 
-                const url = WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token);
-                await fetch(url, { method: 'DELETE' }); 
+                await fetch(WORKER_URL + '/api/admin/notifica/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' }); 
                 caricaNotifiche(); 
-            } catch (error) { 
-                console.error('Errore elimina notifica:', error); 
-            }
+            } catch (error) { console.error('Errore elimina notifica:', error); }
         }
 
         async function caricaArchivio() {
             try {
-                const url = WORKER_URL + '/api/admin/archivio-studi?token=' + encodeURIComponent(token);
-                console.log('[ADMIN] caricaArchivio URL:', url);
-                const response = await fetch(url);
+                const response = await fetch(WORKER_URL + '/api/admin/archivio-studi?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 document.getElementById('loading-archivio').style.display = 'none';
                 if (data.success && data.studi && data.studi.length > 0) {
@@ -767,9 +805,7 @@
 
         async function caricaOfferte() {
             try {
-                const url = WORKER_URL + '/api/admin/offerte?token=' + encodeURIComponent(token);
-                console.log('[ADMIN] caricaOfferte URL:', url);
-                const response = await fetch(url);
+                const response = await fetch(WORKER_URL + '/api/admin/offerte?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 document.getElementById('loading-offerte').style.display = 'none';
                 if (data.success && data.offerte) {
@@ -837,17 +873,9 @@
                 const url = idEsistente ? WORKER_URL + '/api/admin/offerte/' + idEsistente + '?token=' + encodeURIComponent(token) : WORKER_URL + '/api/admin/offerte?token=' + encodeURIComponent(token);
                 const response = await fetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati) });
                 const result = await response.json();
-                if (result.success) {
-                    alert('Offerta salvata con successo!');
-                    pulisciFormOfferta();
-                    await caricaOfferte();
-                } else {
-                    alert('Errore: ' + result.error);
-                }
-            } catch (error) {
-                console.error('Errore salvataggio offerta:', error);
-                alert('Errore di connessione.');
-            }
+                if (result.success) { alert('Offerta salvata con successo!'); pulisciFormOfferta(); await caricaOfferte(); } 
+                else { alert('Errore: ' + result.error); }
+            } catch (error) { console.error('Errore salvataggio offerta:', error); alert('Errore di connessione.'); }
         }
 
         function modificaOfferta(id) {
@@ -887,8 +915,7 @@
         async function eliminaOfferta(id) {
             if (!confirm('Eliminare questa offerta?')) return;
             try {
-                const url = WORKER_URL + '/api/admin/offerte/' + id + '?token=' + encodeURIComponent(token);
-                const response = await fetch(url, { method: 'DELETE' });
+                const response = await fetch(WORKER_URL + '/api/admin/offerte/' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
                 const result = await response.json();
                 if (result.success) { alert('Offerta eliminata.'); await caricaOfferte(); }
                 else { alert('Errore: ' + result.error); }
@@ -899,6 +926,293 @@
             document.getElementById('form-offerta').reset();
             document.getElementById('offerta_id').value = '';
             document.getElementById('btn-salva-offerta').textContent = 'SALVA OFFERTA';
+        }
+
+        // ==========================================
+        // FUNZIONI GESTIONE PARTNER CONSIGLIATI
+        // ==========================================
+        function anteprimaLogo(input) {
+            const previewBox = document.getElementById('logoPreviewBox');
+            const base64Field = document.getElementById('partner_logo_base64');
+            
+            if (!input.files || !input.files[0]) {
+                previewBox.innerHTML = '<div class="placeholder">Anteprima<br>logo</div>';
+                base64Field.value = '';
+                return;
+            }
+            
+            const file = input.files[0];
+            const fileType = file.type;
+            const maxSize = 1 * 1024 * 1024; // 1MB
+            
+            if (file.size > maxSize) {
+                alert('Il file è troppo grande (max 1MB). Ridimensiona il logo e riprova.');
+                input.value = '';
+                previewBox.innerHTML = '<div class="placeholder">Anteprima<br>logo</div>';
+                base64Field.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64 = e.target.result;
+                base64Field.value = base64;
+                
+                if (fileType === 'application/pdf') {
+                    previewBox.innerHTML = '<object data="' + base64 + '" type="application/pdf" style="width:100%;height:100%;"><div class="placeholder">PDF<br>caricato</div></object>';
+                } else {
+                    previewBox.innerHTML = '<img src="' + base64 + '" alt="Anteprima logo">';
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function caricaPartner() {
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/partner?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                document.getElementById('loading-partner').style.display = 'none';
+                
+                if (data.success && data.partner) {
+                    partnerDisponibili = data.partner;
+                    const partnerAttivi = partnerDisponibili.filter(function(p) { return p.attivo === 1; });
+                    document.getElementById('count-partner').textContent = partnerAttivi.length;
+                    const lista = document.getElementById('lista-partner');
+                    lista.innerHTML = '';
+                    
+                    if (partnerDisponibili.length === 0) {
+                        document.getElementById('empty-partner').style.display = 'block';
+                    } else {
+                        document.getElementById('empty-partner').style.display = 'none';
+                        partnerDisponibili.forEach(function(p) {
+                            const isActive = p.attivo === 1;
+                            const statoClass = isActive ? 'badge-attivo' : 'badge-inattivo';
+                            const statoTesto = isActive ? 'Attivo' : 'Non attivo';
+                            const cardClass = isActive ? '' : 'inattivo';
+                            
+                            let logoHtml = '';
+                            if (p.logo_url) {
+                                if (p.logo_url.startsWith('data:application/pdf')) {
+                                    logoHtml = '<object data="' + p.logo_url + '" type="application/pdf" class="partner-logo-preview"><div class="placeholder">PDF</div></object>';
+                                } else if (p.logo_url.startsWith('data:image')) {
+                                    logoHtml = '<img src="' + p.logo_url + '" class="partner-logo-preview" alt="Logo">';
+                                } else {
+                                    logoHtml = '<img src="' + p.logo_url + '" class="partner-logo-preview" alt="Logo">';
+                                }
+                            } else {
+                                logoHtml = '<div class="partner-logo-preview" style="display:flex;align-items:center;justify-content:center;color:#996515;font-weight:700;font-size:0.8em;">LOGO</div>';
+                            }
+                            
+                            const div = document.createElement('div');
+                            div.className = 'partner-card ' + cardClass;
+                            div.innerHTML = '' +
+                                '<div class="partner-header">' +
+                                    '<h4>' + (p.nome_azienda || 'Partner') + ' <span class="badge ' + statoClass + '">' + statoTesto + '</span></h4>' +
+                                '</div>' +
+                                '<div style="display:flex; gap:15px; align-items:flex-start; margin-bottom:10px;">' +
+                                    logoHtml +
+                                    '<div style="flex:1;">' +
+                                        '<div class="partner-descrizione">' + (p.descrizione || '') + '</div>' +
+                                        '<div class="partner-dettagli">' +
+                                            (p.servizi ? '<span><strong>Servizi:</strong> ' + p.servizi + '</span>' : '') +
+                                            (p.link_sito ? '<span><strong>Sito:</strong> <a href="' + p.link_sito + '" target="_blank" style="color:#996515; text-decoration:underline;">Visita</a></span>' : '') +
+                                        '</div>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="partner-actions">' +
+                                    '<div class="toggle-container">' +
+                                        '<span class="toggle-label">Visibile:</span>' +
+                                        '<div class="toggle-switch ' + (isActive ? 'active' : '') + '" onclick="toggleStatoPartner(\'' + p.id + '\', ' + (isActive ? 0 : 1) + ')">' +
+                                            '<div class="toggle-slider"></div>' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<button class="btn btn-sm btn-outline" onclick="modificaPartner(\'' + p.id + '\')">Modifica</button>' +
+                                    '<button class="btn btn-sm btn-danger" onclick="eliminaPartner(\'' + p.id + '\')">Elimina</button>' +
+                                '</div>';
+                            lista.appendChild(div);
+                        });
+                    }
+                } else {
+                    document.getElementById('empty-partner').style.display = 'block';
+                    document.getElementById('count-partner').textContent = '0';
+                }
+            } catch (error) {
+                console.error('Errore caricamento partner:', error);
+                document.getElementById('loading-partner').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento</p>';
+            }
+        }
+
+        async function toggleStatoPartner(id, nuovoStato) {
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/partner/' + id + '?token=' + encodeURIComponent(token), {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ attivo: nuovoStato })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    await caricaPartner();
+                } else {
+                    alert('Errore: ' + (result.error || 'Sconosciuto'));
+                }
+            } catch (error) {
+                console.error('Errore toggle stato:', error);
+                alert('Errore di connessione al server.');
+            }
+        }
+
+        async function salvaPartner(event) {
+            event.preventDefault();
+            const idEsistente = document.getElementById('partner_id').value;
+            const logoBase64 = document.getElementById('partner_logo_base64').value;
+            
+            const dati = {
+                id: idEsistente || ('partner-' + Date.now()),
+                nome_azienda: document.getElementById('partner_nome').value.trim(),
+                link_sito: document.getElementById('partner_link').value.trim(),
+                descrizione: document.getElementById('partner_descrizione').value.trim(),
+                servizi: document.getElementById('partner_servizi').value.trim(),
+                logo_url: logoBase64,
+                data_creazione: idEsistente ? undefined : new Date().toISOString()
+            };
+
+            if (!dati.nome_azienda || !dati.link_sito || !dati.descrizione) {
+                alert('Compila tutti i campi obbligatori (*)');
+                return;
+            }
+
+            if (!idEsistente && !logoBase64) {
+                alert('Carica il logo dell\'azienda (campo obbligatorio per i nuovi partner)');
+                return;
+            }
+
+            try {
+                const method = idEsistente ? 'PUT' : 'POST';
+                const url = idEsistente ? 
+                    WORKER_URL + '/api/admin/partner/' + idEsistente + '?token=' + encodeURIComponent(token) : 
+                    WORKER_URL + '/api/admin/partner?token=' + encodeURIComponent(token);
+                
+                const response = await fetch(url, { 
+                    method: method, 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify(dati) 
+                });
+                const result = await response.json();
+                
+                if (result.success) { 
+                    alert('Partner salvato con successo!'); 
+                    pulisciFormPartner(); 
+                    await caricaPartner(); 
+                } else { 
+                    alert('Errore: ' + (result.error || 'Sconosciuto')); 
+                }
+            } catch (error) { 
+                console.error('Errore salvataggio partner:', error); 
+                alert('Errore di connessione al server.'); 
+            }
+        }
+
+        function modificaPartner(id) {
+            const partner = partnerDisponibili.find(function(p) { return p.id === id; });
+            if (!partner) { alert('Partner non trovato'); return; }
+            document.getElementById('partner_id').value = partner.id;
+            document.getElementById('partner_nome').value = partner.nome_azienda || '';
+            document.getElementById('partner_link').value = partner.link_sito || '';
+            document.getElementById('partner_descrizione').value = partner.descrizione || '';
+            document.getElementById('partner_servizi').value = partner.servizi || '';
+            document.getElementById('partner_logo_base64').value = partner.logo_url || '';
+            
+            const previewBox = document.getElementById('logoPreviewBox');
+            if (partner.logo_url) {
+                if (partner.logo_url.startsWith('data:application/pdf')) {
+                    previewBox.innerHTML = '<object data="' + partner.logo_url + '" type="application/pdf" style="width:100%;height:100%;"><div class="placeholder">PDF</div></object>';
+                } else if (partner.logo_url.startsWith('data:image')) {
+                    previewBox.innerHTML = '<img src="' + partner.logo_url + '" alt="Anteprima logo">';
+                } else {
+                    previewBox.innerHTML = '<img src="' + partner.logo_url + '" alt="Anteprima logo">';
+                }
+            } else {
+                previewBox.innerHTML = '<div class="placeholder">Anteprima<br>logo</div>';
+            }
+            
+            document.getElementById('btn-salva-partner').textContent = 'AGGIORNA PARTNER';
+            window.scrollTo({ top: document.getElementById('form-partner').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        async function eliminaPartner(id) {
+            const partner = partnerDisponibili.find(function(p) { return p.id === id; });
+            if (!confirm('Sei sicuro di voler eliminare il partner "' + (partner ? partner.nome_azienda : '') + '"?\n\nQuesta azione è irreversibile.')) {
+                return;
+            }
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/partner/' + id + '?token=' + encodeURIComponent(token), { 
+                    method: 'DELETE' 
+                });
+                const result = await response.json();
+                if (result.success) { 
+                    alert('Partner eliminato con successo.'); 
+                    await caricaPartner(); 
+                } else { 
+                    alert('Errore: ' + (result.error || 'Sconosciuto')); 
+                }
+            } catch (error) { 
+                console.error('Errore eliminazione:', error); 
+                alert('Errore di connessione al server.'); 
+            }
+        }
+
+        function pulisciFormPartner() {
+            document.getElementById('form-partner').reset();
+            document.getElementById('partner_id').value = '';
+            document.getElementById('partner_logo_base64').value = '';
+            document.getElementById('logoPreviewBox').innerHTML = '<div class="placeholder">Anteprima<br>logo</div>';
+            document.getElementById('btn-salva-partner').textContent = 'SALVA PARTNER';
+        }
+
+        // ==========================================
+        // FUNZIONI TELEASSISTENZA
+        // ==========================================
+        async function caricaConfigAssistenza() {
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/config-assistenza?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (data.success && data.config) {
+                    document.getElementById('anydesk_id').value = data.config.anydesk_id || '';
+                    document.getElementById('whatsapp_assistenza').value = data.config.whatsapp_numero || '3447507656';
+                }
+            } catch (error) {
+                console.error('Errore caricamento config assistenza:', error);
+            }
+        }
+
+        async function salvaConfigAssistenza(event) {
+            event.preventDefault();
+            const dati = {
+                anydesk_id: document.getElementById('anydesk_id').value.trim(),
+                whatsapp_numero: document.getElementById('whatsapp_assistenza').value.trim()
+            };
+            
+            if (!dati.anydesk_id) {
+                alert('Inserisci l\'ID AnyDesk');
+                return;
+            }
+            
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/config-assistenza?token=' + encodeURIComponent(token), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dati)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Configurazione assistenza salvata con successo!');
+                } else {
+                    alert('Errore: ' + (result.error || 'Sconosciuto'));
+                }
+            } catch (error) {
+                console.error('Errore salvataggio config:', error);
+                alert('Errore di connessione al server.');
+            }
         }
 
         function apriWhatsApp(studioId, studioNome, studioTelefono) {
@@ -960,8 +1274,7 @@
 
         async function caricaTema() {
             try {
-                const url = WORKER_URL + '/api/admin/tema?token=' + encodeURIComponent(token);
-                const response = await fetch(url);
+                const response = await fetch(WORKER_URL + '/api/admin/tema?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 if (data.success && data.tema) {
                     document.getElementById('tema-attuale').innerHTML = '<p style="color: #000000; font-weight: 600;">Tema attuale: <span style="color: #996515;">' + data.tema.tema_attivo + '</span></p>';
@@ -985,8 +1298,7 @@
                 data_registrazione: new Date().toISOString().split('T')[0]
             };
             try {
-                const url = WORKER_URL + '/api/admin/crm/studio?token=' + encodeURIComponent(token);
-                const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati) });
+                const response = await fetch(WORKER_URL + '/api/admin/crm/studio?token=' + encodeURIComponent(token), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati) });
                 const result = await response.json();
                 if (result.success) { alert('Studio creato con successo!'); document.getElementById('form-crea-studio').reset(); caricaStudi(); } 
                 else { alert('Errore: ' + result.error); }
