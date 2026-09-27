@@ -110,6 +110,7 @@
         .whatsapp-reminder { background: #d4edda; border-left: 4px solid var(--success); padding: 12px; border-radius: 6px; margin-top: 8px; font-size: 12px; color: #155724; }
         .foto-indicator { display: inline-block; padding: 4px 8px; background: #eafaf1; color: var(--success); border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 8px; }
         .foto-pending { display: inline-block; padding: 4px 8px; background: #fff3cd; color: #856404; border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 8px; }
+        .foto-thumb { width: 80px; height: 80px; object-fit: contain; border-radius: 6px; border: 2px solid var(--primary); background: #f8f9fa; margin-right: 12px; }
         @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } .products-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -259,7 +260,7 @@
             <div id="alertNuoviOrdini" class="alert-box hidden">
                 <div style="font-size: 24px; color: var(--danger); font-weight: 800;">!</div>
                 <div>
-                    <div style="font-weight: 700; color: var(--danger); margin-bottom: 4px;">Nuovi Ordini in Attesa</div>
+                    <div style="font-weight: 700; color: var(--danger); margin-bottom: 4px;">Nuovi Ordini da Processare</div>
                     <div>Hai <strong id="countNuoviOrdini">0</strong> ordini da processare</div>
                 </div>
             </div>
@@ -281,7 +282,7 @@
             <div class="card">
                 <div class="card-title">Configurazione Negozio</div>
                 <div style="background: var(--primary-light); padding: 16px; border-radius: 8px; margin-bottom: 24px; border-left: 4px solid var(--primary);">
-                    <strong>Nota Operativa:</strong> Il cliente carica le foto sul sito (solo per anteprima). Per la stampa, il cliente invia le foto originali via WhatsApp come ALLEGATO FILE. Controlla WhatsApp Web per scaricare le foto ad alta risoluzione.
+                    <strong>Nota Operativa:</strong> Il cliente carica le foto sul sito (compresse per anteprima). Per la stampa, il cliente invia le foto originali via WhatsApp come ALLEGATO FILE. Controlla WhatsApp Web per scaricare le foto ad alta risoluzione.
                 </div>
                 <div class="card-title" style="font-size: 18px; margin-top: 0;">Dati per il Ritiro</div>
                 <div class="form-row">
@@ -689,12 +690,12 @@
                     document.getElementById('alertNuoviOrdini').classList.add('hidden');
                     return; 
                 }
-                const inAttesa = ordini.filter(function(o) { return o.stato === 'in_attesa' || o.stato === 'in_attesa_pagamento'; }).length;
+                const daProcessare = ordini.filter(function(o) { return o.stato === 'in_attesa' || o.stato === 'in_attesa_pagamento' || o.stato === 'pagato'; }).length;
                 const badge = document.getElementById('alertOrdini');
-                badge.textContent = inAttesa;
-                badge.classList.toggle('hidden', inAttesa === 0);
-                document.getElementById('alertNuoviOrdini').classList.toggle('hidden', inAttesa === 0);
-                document.getElementById('countNuoviOrdini').textContent = inAttesa;
+                badge.textContent = daProcessare;
+                badge.classList.toggle('hidden', daProcessare === 0);
+                document.getElementById('alertNuoviOrdini').classList.toggle('hidden', daProcessare === 0);
+                document.getElementById('countNuoviOrdini').textContent = daProcessare;
                 list.innerHTML = ordini.map(function(o) {
                     if (o.stato === 'in_attesa' || o.stato === 'in_attesa_pagamento') stats.att++;
                     else if (o.stato === 'pagato') stats.pag++;
@@ -706,7 +707,7 @@
                     const badgeClass = 'badge-' + o.stato;
                     const statoText = o.stato.replace(/_/g, ' ').toUpperCase();
                     const nextAction = getNextAction(o.stato, o.id);
-                    return '<div class="order-item">' +
+                    return '<div class="order-item" id="ordine_' + o.id + '">' +
                         '<div class="order-header">' +
                             '<div><div class="order-code">Ordine #' + o.codice_ordine + '</div>' +
                             '<div class="order-date">' + new Date(o.data_creazione).toLocaleDateString('it-IT') + ' - ' + o.cliente_nome + ' (' + o.cliente_telefono + ')</div></div>' +
@@ -714,20 +715,24 @@
                         '</div>' +
                         '<div class="order-products">' +
                             prods.map(function(p) {
-                                const hasFoto = p.hasFoto;
+                                const hasFoto = p.fotoBase64;
                                 const fotoInviata = p.fotoInviataWhatsApp;
                                 return '<div class="order-product">' +
                                     '<div class="order-product-info">' +
                                         '<div><strong>• ' + p.nome + ' x' + p.quantita + '</strong> - EUR ' + (p.prezzo * p.quantita).toFixed(2) + 
                                         (hasFoto ? (fotoInviata ? '<span class="foto-indicator">✓ Foto originale ricevuta via WhatsApp</span>' : '<span class="foto-pending">⚠ In attesa foto originale via WhatsApp</span>') : '') + 
                                         '</div>' +
+                                        (hasFoto ? '<div style="margin-top:8px;"><img src="' + hasFoto + '" class="foto-thumb" alt="Anteprima"></div>' : '') +
                                     '</div>' +
                                 '</div>';
                             }).join('') +
                         '</div>' +
                         '<div class="whatsapp-reminder"><strong>Promemoria:</strong> Controlla WhatsApp Web per scaricare le foto originali ad alta risoluzione inviate dal cliente come allegato file.</div>' +
                         '<div class="order-total">Totale: EUR ' + parseFloat(o.totale).toFixed(2) + '</div>' +
-                        '<div class="order-actions">' + nextAction + '</div></div>';
+                        '<div class="order-actions">' + 
+                            '<button class="btn btn-sm btn-info" onclick="stampaOrdine(\'' + o.id + '\')"> Stampa Ordine</button>' +
+                            nextAction + 
+                        '</div></div>';
                 }).join('');
             } catch (e) { 
                 console.error('Errore caricamento ordini:', e);
@@ -738,6 +743,88 @@
             document.getElementById('statLav').textContent = stats.lav;
             document.getElementById('statPro').textContent = stats.pro;
             document.getElementById('statRit').textContent = stats.rit;
+        }
+
+        async function stampaOrdine(ordineId) {
+            try {
+                const res = await fetch(WORKER_URL + '/api/studio/negozio/ordini?token=' + token);
+                const data = await res.json();
+                const ordini = data.success ? data.ordini : [];
+                const ordine = ordini.find(function(o) { return o.id === ordineId; });
+                if (!ordine) { mostraToast('Ordine non trovato', 'error'); return; }
+                
+                let prods = [];
+                try { prods = JSON.parse(ordine.prodotti || '[]'); } catch(e) { prods = []; }
+                
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                doc.setFontSize(20);
+                doc.setTextColor(153, 101, 21);
+                doc.text('ORDINE #' + ordine.codice_ordine, 14, 20);
+                
+                doc.setFontSize(11);
+                doc.setTextColor(0, 0, 0);
+                doc.text('Data: ' + new Date(ordine.data_creazione).toLocaleDateString('it-IT'), 14, 30);
+                doc.text('Cliente: ' + ordine.cliente_nome, 14, 37);
+                doc.text('Telefono: ' + ordine.cliente_telefono, 14, 44);
+                doc.text('Email: ' + ordine.cliente_email, 14, 51);
+                doc.text('Stato: ' + ordine.stato.replace(/_/g, ' ').toUpperCase(), 14, 58);
+                
+                const tableData = prods.map(function(p) {
+                    return [p.nome, 'x' + p.quantita, 'EUR ' + (p.prezzo * p.quantita).toFixed(2), p.fotoInviataWhatsApp ? 'SI' : 'NO'];
+                });
+                
+                doc.autoTable({
+                    startY: 65,
+                    head: [['Prodotto', 'Qty', 'Prezzo', 'Foto WhatsApp']],
+                    body: tableData,
+                    theme: 'striped',
+                    headStyles: { fillColor: [212, 175, 55] }
+                });
+                
+                const finalY = doc.lastAutoTable.finalY + 10;
+                doc.setFontSize(14);
+                doc.setTextColor(153, 101, 21);
+                doc.text('Totale: EUR ' + parseFloat(ordine.totale).toFixed(2), 14, finalY);
+                
+                doc.save('Ordine_' + ordine.codice_ordine + '.pdf');
+                
+                await eliminaFotoDopoStampa(ordineId);
+                
+            } catch (error) {
+                console.error('Errore stampa:', error);
+                mostraToast('Errore durante la stampa', 'error');
+            }
+        }
+
+        async function eliminaFotoDopoStampa(ordineId) {
+            try {
+                const res = await fetch(WORKER_URL + '/api/studio/negozio/ordini?token=' + token);
+                const data = await res.json();
+                const ordini = data.success ? data.ordini : [];
+                const ordine = ordini.find(function(o) { return o.id === ordineId; });
+                if (!ordine) return;
+                
+                let prods = [];
+                try { prods = JSON.parse(ordine.prodotti || '[]'); } catch(e) { prods = []; }
+                
+                const prodottiPuliti = prods.map(function(p) {
+                    const cleaned = { id: p.id, nome: p.nome, prezzo: p.prezzo, quantita: p.quantita, fotoInviataWhatsApp: p.fotoInviataWhatsApp || false };
+                    return cleaned;
+                });
+                
+                await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + ordineId + '?token=' + token, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ stato: ordine.stato, prodotti: JSON.stringify(prodottiPuliti) })
+                });
+                
+                mostraToast('Ordine stampato e foto eliminate dal database', 'success');
+                caricaOrdini();
+            } catch (error) {
+                console.error('Errore eliminazione foto:', error);
+            }
         }
 
         function getNextAction(stato, id) {
