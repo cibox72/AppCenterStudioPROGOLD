@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Partner - AppCenterStudioPROGOLD</title>
+    <link rel="stylesheet" href="temi.css">
+    <script src="temi.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #ffffff; min-height: 100vh; color: #000000; }
+        .top-bar { background: linear-gradient(135deg, #d4af37, #996515); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .top-bar h1 { color: #ffffff; font-size: 1.4em; font-weight: 600; }
+        .nav-btn { background: rgba(255,255,255,0.2); border: none; color: #ffffff; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9em; margin-left: 10px; }
+        .nav-btn:hover { background: rgba(255,255,255,0.3); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .page-header { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-left: 5px solid #d4af37; }
+        .page-header h2 { color: #000000; font-size: 1.6em; margin-bottom: 10px; }
+        .page-header p { color: #666666; font-size: 0.95em; }
+        .section { background: #ffffff; padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d5d8dc; border-top: 4px solid #d4af37; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .section-header h3 { color: #000000; font-size: 1.2em; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #000000; font-weight: 600; font-size: 0.9em; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 15px; border: 2px solid #d5d8dc; border-radius: 10px; font-size: 0.95em; background: #f8f9fa; color: #000000; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #d4af37; background: #ffffff; }
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9em; display: inline-flex; align-items: center; gap: 8px; margin-right: 8px; margin-bottom: 8px; }
+        .btn-primary { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; }
+        .btn-outline { background: transparent; border: 2px solid #d4af37; color: #996515; }
+        .btn-outline:hover { background: #fff9e6; }
+        .btn-danger { background: linear-gradient(135deg, #f1948a, #e74c3c); color: #ffffff; }
+        .btn-sm { padding: 6px 12px; font-size: 0.8em; }
+        .partner-card { background: #ffffff; border: 2px solid #d5d8dc; border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #d4af37; transition: all 0.3s ease; }
+        .partner-card:hover { border-color: #d4af37; background: #fff9e6; }
+        .partner-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
+        .partner-header h4 { color: #000000; font-size: 1.2em; margin: 0; }
+        .partner-descrizione { color: #666666; font-size: 0.95em; margin-bottom: 10px; line-height: 1.5; }
+        .partner-dettagli { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 15px; font-size: 0.9em; }
+        .partner-dettagli span { color: #000000; }
+        .partner-dettagli strong { color: #996515; }
+        .partner-actions { display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid #d5d8dc; padding-top: 15px; }
+        .partner-logo-preview { max-width: 80px; max-height: 80px; object-fit: contain; border: 1px solid #d5d8dc; border-radius: 8px; padding: 5px; background: #ffffff; }
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; display: inline-block; }
+        .badge-attivo { background: #d5f5e3; color: #1e8449; }
+        .badge-nascosto { background: #fdebd0; color: #d35400; }
+        .loading { text-align: center; padding: 40px; color: #666666; }
+        .spinner { border: 4px solid #fff9e6; border-top: 4px solid #d4af37; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .empty-state { text-align: center; padding: 40px; color: #666666; }
+        .footer-branding { text-align: center; padding: 30px 20px; color: #666666; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
+        .footer-branding strong { color: #996515; }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <h1>Gestione Partner Consigliati</h1>
+        <div>
+            <button class="nav-btn" onclick="window.location.href='admin.html?token=' + encodeURIComponent(token)">← Torna all'Admin Panel</button>
+            <button class="nav-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Partner e Sponsor</h2>
+            <p>Gestisci le aziende partner che verranno visualizzate nella plancia di tutti gli studi fotografici.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h3 id="form-title">Aggiungi Nuovo Partner</h3>
+            </div>
+            <form id="form-partner" onsubmit="salvaPartner(event)">
+                <input type="hidden" id="partner_id" value="">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nome Azienda *</label>
+                        <input type="text" id="partner_nome" required placeholder="Es. Tipografia Premium" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>Link Sito Web *</label>
+                        <input type="url" id="partner_link" required placeholder="https://www.esempio.com" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>Stato Visibilità</label>
+                        <select id="partner_stato">
+                            <option value="1">Attivo (Visibile agli studi)</option>
+                            <option value="0">Nascosto</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>URL Logo (opzionale)</label>
+                        <input type="text" id="partner_logo" placeholder="https://..." autocomplete="off">
+                        <p style="color: #666666; font-size: 0.85em; margin-top: 5px;">Lascia vuoto per usare un'icona default. Il logo verrà ridimensionato automaticamente.</p>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Descrizione Breve *</label>
+                        <textarea id="partner_descrizione" required rows="3" placeholder="Descrivi brevemente l'azienda e il rapporto di partnership..." autocomplete="off"></textarea>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Servizi Offerti</label>
+                        <textarea id="partner_servizi" rows="3" placeholder="Es. Stampa foto professionali, Album di lusso, Cornici artigianali, Spedizione gratuita..." autocomplete="off"></textarea>
+                    </div>
+                </div>
+                <div style="margin-top: 25px; display: flex; gap: 15px; flex-wrap: wrap;">
+                    <button type="submit" class="btn btn-primary" id="btn-salva-partner">SALVA PARTNER</button>
+                    <button type="button" class="btn btn-outline" onclick="pulisciFormPartner()">PULISCI FORM</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h3>Elenco Partner Configurati</h3>
+            </div>
+            <div id="loading-partner" class="loading">
+                <div class="spinner"></div>
+                <p>Caricamento partner...</p>
+            </div>
+            <div id="lista-partner"></div>
+            <div id="empty-partner" class="empty-state" style="display: none;">
+                <p>Nessun partner configurato. Aggiungi il primo usando il form sopra.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-branding">
+        <p>Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong></p>
+    </div>
+
+    <script>
+        var token = '';
+        var partnerDisponibili = [];
+        var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            token = urlParams.get('token');
+            if (!token) { 
+                alert('Token non trovato. Effettua il login.'); 
+                window.location.href = 'index.html'; 
+                return; 
+            }
+            caricaPartner();
+        });
+
+        async function caricaPartner() {
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/partner?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                document.getElementById('loading-partner').style.display = 'none';
+                
+                if (data.success && data.partner) {
+                    partnerDisponibili = data.partner;
+                    const lista = document.getElementById('lista-partner');
+                    lista.innerHTML = '';
+                    
+                    if (partnerDisponibili.length === 0) {
+                        document.getElementById('empty-partner').style.display = 'block';
+                    } else {
+                        document.getElementById('empty-partner').style.display = 'none';
+                        partnerDisponibili.forEach(function(p) {
+                            const statoClass = p.attivo === 1 ? 'badge-attivo' : 'badge-nascosto';
+                            const statoTesto = p.attivo === 1 ? 'Attivo' : 'Nascosto';
+                            const logoHtml = p.logo_url ? 
+                                '<img src="' + p.logo_url + '" class="partner-logo-preview" alt="Logo">' : 
+                                '<div class="partner-logo-preview" style="display:flex;align-items:center;justify-content:center;color:#996515;font-weight:700;font-size:0.8em;">LOGO</div>';
+                            
+                            const div = document.createElement('div');
+                            div.className = 'partner-card';
+                            div.innerHTML = '' +
+                                '<div class="partner-header">' +
+                                    '<h4>' + (p.nome_azienda || 'Partner') + '</h4>' +
+                                    '<span class="badge ' + statoClass + '">' + statoTesto + '</span>' +
+                                '</div>' +
+                                '<div style="display:flex; gap:15px; align-items:flex-start; margin-bottom:10px;">' +
+                                    logoHtml +
+                                    '<div style="flex:1;">' +
+                                        '<div class="partner-descrizione">' + (p.descrizione || '') + '</div>' +
+                                        '<div class="partner-dettagli">' +
+                                            (p.servizi ? '<span><strong>Servizi:</strong> ' + p.servizi + '</span>' : '') +
+                                            (p.link_sito ? '<span><strong>Sito:</strong> <a href="' + p.link_sito + '" target="_blank" style="color:#996515; text-decoration:underline;">Visita</a></span>' : '') +
+                                        '</div>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="partner-actions">' +
+                                    '<button class="btn btn-sm btn-outline" onclick="modificaPartner(\'' + p.id + '\')">Modifica</button>' +
+                                    '<button class="btn btn-sm btn-danger" onclick="eliminaPartner(\'' + p.id + '\')">Elimina</button>' +
+                                '</div>';
+                            lista.appendChild(div);
+                        });
+                    }
+                } else {
+                    document.getElementById('empty-partner').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Errore caricamento partner:', error);
+                document.getElementById('loading-partner').innerHTML = '<p style="color: #e74c3c;">Errore nel caricamento. Controlla la console.</p>';
+            }
+        }
+
+        async function salvaPartner(event) {
+            event.preventDefault();
+            const idEsistente = document.getElementById('partner_id').value;
+            const dati = {
+                id: idEsistente || ('partner-' + Date.now()),
+                nome_azienda: document.getElementById('partner_nome').value.trim(),
+                link_sito: document.getElementById('partner_link').value.trim(),
+                attivo: parseInt(document.getElementById('partner_stato').value),
+                descrizione: document.getElementById('partner_descrizione').value.trim(),
+                servizi: document.getElementById('partner_servizi').value.trim(),
+                logo_url: document.getElementById('partner_logo').value.trim(),
+                data_creazione: idEsistente ? undefined : new Date().toISOString()
+            };
+
+            if (!dati.nome_azienda || !dati.link_sito || !dati.descrizione) {
+                alert('Compila tutti i campi obbligatori (*)');
+                return;
+            }
+
+            try {
+                const method = idEsistente ? 'PUT' : 'POST';
+                const url = idEsistente ? 
+                    WORKER_URL + '/api/admin/partner/' + idEsistente + '?token=' + encodeURIComponent(token) : 
+                    WORKER_URL + '/api/admin/partner?token=' + encodeURIComponent(token);
+                
+                const response = await fetch(url, { 
+                    method: method, 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify(dati) 
+                });
+                const result = await response.json();
+                
+                if (result.success) { 
+                    alert('Partner salvato con successo!'); 
+                    pulisciFormPartner(); 
+                    await caricaPartner(); 
+                } else { 
+                    alert('Errore: ' + (result.error || 'Sconosciuto')); 
+                }
+            } catch (error) { 
+                console.error('Errore salvataggio partner:', error); 
+                alert('Errore di connessione al server.'); 
+            }
+        }
+
+        function modificaPartner(id) {
+            const partner = partnerDisponibili.find(function(p) { return p.id === id; });
+            if (!partner) { 
+                alert('Partner non trovato'); 
+                return; 
+            }
+            document.getElementById('partner_id').value = partner.id;
+            document.getElementById('partner_nome').value = partner.nome_azienda || '';
+            document.getElementById('partner_link').value = partner.link_sito || '';
+            document.getElementById('partner_stato').value = partner.attivo !== undefined ? partner.attivo.toString() : '1';
+            document.getElementById('partner_descrizione').value = partner.descrizione || '';
+            document.getElementById('partner_servizi').value = partner.servizi || '';
+            document.getElementById('partner_logo').value = partner.logo_url || '';
+            
+            document.getElementById('form-title').textContent = 'Modifica Partner: ' + partner.nome_azienda;
+            document.getElementById('btn-salva-partner').textContent = 'AGGIORNA PARTNER';
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function eliminaPartner(id) {
+            const partner = partnerDisponibili.find(function(p) { return p.id === id; });
+            if (!confirm('Sei sicuro di voler eliminare il partner "' + (partner ? partner.nome_azienda : '') + '"?\n\nQuesta azione è irreversibile.')) {
+                return;
+            }
+            try {
+                const response = await fetch(WORKER_URL + '/api/admin/partner/' + id + '?token=' + encodeURIComponent(token), { 
+                    method: 'DELETE' 
+                });
+                const result = await response.json();
+                if (result.success) { 
+                    alert('Partner eliminato con successo.'); 
+                    await caricaPartner(); 
+                } else { 
+                    alert('Errore: ' + (result.error || 'Sconosciuto')); 
+                }
+            } catch (error) { 
+                console.error('Errore eliminazione:', error); 
+                alert('Errore di connessione al server.'); 
+            }
+        }
+
+        function pulisciFormPartner() {
+            document.getElementById('form-partner').reset();
+            document.getElementById('partner_id').value = '';
+            document.getElementById('form-title').textContent = 'Aggiungi Nuovo Partner';
+            document.getElementById('btn-salva-partner').textContent = 'SALVA PARTNER';
+        }
+
+        function logout() {
+            fetch(WORKER_URL + '/api/auth/logout', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ token: token }) 
+            }).finally(function() { 
+                window.location.href = 'index.html'; 
+            });
+        }
+    </script>
+</body>
+</html>
