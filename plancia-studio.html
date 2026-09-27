@@ -29,6 +29,19 @@
         .module-card h3 { color: #000000; font-size: 1.2em; margin-bottom: 10px; font-weight: 600; }
         .module-card p { color: #666666; font-size: 0.9em; line-height: 1.5; }
         .module-card .badge-status { display: inline-block; margin-top: 10px; padding: 4px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; background: #fff9e6; color: #996515; border: 1px solid #d4af37; transition: all 0.3s ease; }
+        
+        /* NUOVO CSS: Badge urgente (rosso lampeggiante) per selezioni da fare */
+        .badge-urgente {
+            background: #e74c3c !important;
+            color: #ffffff !important;
+            border: 1px solid #c0392b !important;
+            animation: pulseUrgente 1.2s infinite !important;
+        }
+        @keyframes pulseUrgente {
+            0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            50% { opacity: 0.85; transform: scale(1.05); box-shadow: 0 0 0 8px rgba(231, 76, 60, 0); }
+        }
+        
         .footer-branding { text-align: center; padding: 30px 20px; color: #666666; font-size: 0.9em; border-top: 1px solid #d5d8dc; margin-top: 40px; }
         .footer-branding strong { color: #996515; }
         .loading-overlay { text-align: center; padding: 40px; color: #666666; }
@@ -88,7 +101,7 @@
                 <span class="module-code">SA</span>
                 <h3>Seleziona Cartelle Clienti</h3>
                 <p>Gestione caricamento gallerie e selezione album.</p>
-                <span class="badge-status">SELEZIONE IN ATTESA</span>
+                <span class="badge-status" id="badge-selezioni-sa">0 SELEZIONI DA FARE</span>
             </div>
 
             <div class="module-card" onclick="apriModulo('gru.html')">
@@ -148,8 +161,7 @@
     <div class="footer-branding">
         <p>Piattaforma sviluppata e gestita da <strong>AppCenterStudioPROGOLD</strong></p>
     </div>
-
-    <script>
+        <script>
         var token = '';
         var studioId = '';
         var studioNome = '';
@@ -212,6 +224,7 @@
                 document.getElementById('modules-grid').style.display = 'grid';
                 
                 aggiornaConteggioOrdini();
+                aggiornaConteggioSelezioni();
                 
             } catch (error) {
                 console.error('Errore verifica sessione:', error);
@@ -244,6 +257,34 @@
                 }
             } catch (error) {
                 console.error('Errore aggiornamento conteggio ordini:', error);
+            }
+        }
+
+        // NUOVA FUNZIONE: Conta le selezioni album arrivate dal cliente ma non ancora lavorate dallo studio
+        async function aggiornaConteggioSelezioni() {
+            if (studioId === 'admin') return;
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/selezioni-album?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (data.success && data.selezioni) {
+                    // Conta le selezioni con stato "selezione_ricevuta" o "in_attesa" (arrivate dal cliente ma non scaricate dallo studio)
+                    const selezioniDaFare = data.selezioni.filter(function(s) { 
+                        return s.stato === 'selezione_ricevuta' || s.stato === 'in_attesa'; 
+                    }).length;
+                    const badge = document.getElementById('badge-selezioni-sa');
+                    if (badge) {
+                        badge.textContent = selezioniDaFare + ' SELEZIONI DA FARE';
+                        if (selezioniDaFare > 0) {
+                            // Rosso lampeggiante urgente
+                            badge.classList.add('badge-urgente');
+                        } else {
+                            // Oro fisso (stato normale)
+                            badge.classList.remove('badge-urgente');
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Errore aggiornamento conteggio selezioni:', error);
             }
         }
 
