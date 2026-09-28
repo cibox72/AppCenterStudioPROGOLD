@@ -179,7 +179,7 @@
         <!-- SEZIONE 4: TABS -->
         <!-- ============================================ -->
         <div class="tabs" id="tabs-container" style="display: none;">
-            <div class="tab active" onclick="switchTab('crea')">Crea Preventivo</div>
+            <div class="tab active" onclick="nuovoPreventivo()">Crea Preventivo</div>
             <div class="tab" onclick="switchTab('archivio-preventivi')">Archivio Preventivi</div>
             <div class="tab" onclick="switchTab('archivio-contratti')">Archivio Contratti</div>
         </div>
@@ -786,9 +786,21 @@
             document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
             if (event && event.target) event.target.classList.add('active');
             document.getElementById('tab-' + tabName).classList.add('active');
-            if (tabName === 'crea') {
-                resettaStatoModifica();
-            }
+        }
+
+        function nuovoPreventivo() {
+            resettaStatoModifica();
+            document.getElementById('form-preventivo').reset();
+            document.getElementById('prev_data').valueAsDate = new Date();
+            document.getElementById('prev_numero').value = 'PREV-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 9000) + 1000);
+            serviziSelezionati = [];
+            acconti = [];
+            pianoPagamento = [];
+            renderServiziSelezionati();
+            renderAcconti();
+            renderPiano();
+            calcolaTotali();
+            switchTab('crea');
         }
 
         function resettaStatoModifica() {
