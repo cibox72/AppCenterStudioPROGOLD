@@ -184,9 +184,6 @@
     <script>
         var token = '';
         var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
-        // MODIFICA CHIRURGICA: dizionario locale dei servizi caricati
-        // Serve per evitare la chiamata GET al server quando si apre la modale modifica
-        var serviziAttuali = {};
 
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -220,12 +217,6 @@
                 }
                 
                 if (data.success && data.servizi && data.servizi.length > 0) {
-                    // MODIFICA CHIRURGICA: salvo tutti i servizi nel dizionario locale
-                    serviziAttuali = {};
-                    data.servizi.forEach(function(s) {
-                        if (s && s.id) serviziAttuali[s.id] = s;
-                    });
-
                     document.getElementById('empty-servizi').style.display = 'none';
                     const archivio = document.getElementById('archivio-servizi');
                     archivio.innerHTML = '';
@@ -260,7 +251,6 @@
                         });
                     }
                 } else {
-                    serviziAttuali = {};
                     document.getElementById('empty-servizi').style.display = 'block';
                 }
             } catch (error) {
@@ -299,19 +289,24 @@
             }
         }
 
-        // MODIFICA CHIRURGICA: la funzione ora legge dal dizionario locale serviziAttuali
-        // invece di fare una chiamata GET al server (che dava 404 perché l'endpoint non esiste)
-        function apriModale(id) {
-            const s = serviziAttuali[id];
-            if (!s) {
-                alert('Servizio non trovato in memoria. Ricarica la pagina con Ctrl+F5 e riprova.');
-                return;
+        async function apriModale(id) {
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/servizio/' + id + '?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (data.success && data.servizio) {
+                    const s = data.servizio;
+                    document.getElementById('mod_id').value = s.id;
+                    document.getElementById('mod_categoria').value = s.categoria || 'Altro';
+                    document.getElementById('mod_prezzo').value = s.prezzo || 0;
+                    document.getElementById('mod_descrizione').value = s.descrizione || '';
+                    document.getElementById('modal-modifica').classList.add('active');
+                } else {
+                    alert('Errore nel caricamento del servizio: ' + (data.error || 'Sconosciuto'));
+                }
+            } catch (error) {
+                console.error('Errore caricamento servizio:', error);
+                alert('Errore di connessione durante il caricamento del servizio.');
             }
-            document.getElementById('mod_id').value = s.id;
-            document.getElementById('mod_categoria').value = s.categoria || 'Altro';
-            document.getElementById('mod_prezzo').value = s.prezzo || 0;
-            document.getElementById('mod_descrizione').value = s.descrizione || '';
-            document.getElementById('modal-modifica').classList.add('active');
         }
 
         function chiudiModale() {
