@@ -189,7 +189,7 @@
         <!-- ============================================ -->
         <div id="tab-crea" class="tab-content active">
             <div class="section">
-                <h3 class="section-title">PREVENTIVO / CONTRATTO NUOVO</h3>
+                <h3 class="section-title" id="titolo-form-crea">PREVENTIVO / CONTRATTO NUOVO</h3>
                 
                 <form id="form-preventivo" onsubmit="salvaPreventivo(event)">
                     <div class="form-grid-2">
@@ -408,16 +408,17 @@
                     </div>
 
                     <!-- AZIONI -->
+                    <!-- MODIFICA CHIRURGICA: aggiunto pulsante SALVA MODIFICHE (nascosto di default) -->
                     <div class="actions-bar">
                         <button type="submit" class="btn btn-primary">SALVA PREVENTIVO</button>
+                        <button type="button" class="btn btn-warning" id="btn-salva-modifica" style="display:none;" onclick="salvaModifica()">SALVA MODIFICHE</button>
                         <button type="button" class="btn btn-outline" onclick="generaPDF()">STAMPA PDF</button>
                         <button type="button" class="btn btn-success" onclick="convertiInContratto()">CONVERTI IN CONTRATTO</button>
                     </div>
                 </form>
             </div>
         </div>
-
-        <!-- ============================================ -->
+                <!-- ============================================ -->
         <!-- SEZIONE 6: TAB ARCHIVIO PREVENTIVI -->
         <!-- ============================================ -->
         <div id="tab-archivio-preventivi" class="tab-content">
@@ -599,6 +600,9 @@
         var datiStudio = null;
         var preventivoCorrenteId = null;
         var agendaEventId = null;
+        // MODIFICA CHIRURGICA: variabili per gestione modalità modifica
+        var contrattoCorrenteId = null;
+        var modalitaModificaTipo = null; // null | 'preventivo' | 'contratto'
 
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -779,11 +783,23 @@
             document.getElementById('cliente_b_provincia').value = c.provincia || '';
         }
 
+        // MODIFICA CHIRURGICA: switchTab resetta lo stato quando si torna su "Crea"
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
             document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
-            event.target.classList.add('active');
+            if (event && event.target) event.target.classList.add('active');
             document.getElementById('tab-' + tabName).classList.add('active');
+            if (tabName === 'crea') {
+                resettaStatoModifica();
+            }
+        }
+
+        function resettaStatoModifica() {
+            preventivoCorrenteId = null;
+            contrattoCorrenteId = null;
+            modalitaModificaTipo = null;
+            document.getElementById('btn-salva-modifica').style.display = 'none';
+            document.getElementById('titolo-form-crea').textContent = 'PREVENTIVO / CONTRATTO NUOVO';
         }
 
         function apriMapsClienteA() {
@@ -998,7 +1014,7 @@
             const c = parseCliente(cliente);
             return ((c.nome || '') + ' ' + (c.cognome || '')).trim() || '-';
         }
-
+                // MODIFICA CHIRURGICA: salvaPreventivo ora gestisce sia POST (nuovo) che PUT (modifica preventivo)
         async function salvaPreventivo(event) {
             event.preventDefault();
             if (window.isSavingPreventivo) {
@@ -1036,11 +1052,21 @@
             };
             
             try {
-                const response = await fetch(WORKER_URL + '/api/studio/preventivo?token=' + encodeURIComponent(token), {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dati)
-                });
+                // MODIFICA CHIRURGICA: se siamo in modalità modifica preventivo, usa PUT
+                let response;
+                if (modalitaModificaTipo === 'preventivo' && preventivoCorrenteId) {
+                    response = await fetch(WORKER_URL + '/api/studio/preventivo/' + preventivoCorrenteId + '?token=' + encodeURIComponent(token), {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(dati)
+                    });
+                } else {
+                    response = await fetch(WORKER_URL + '/api/studio/preventivo?token=' + encodeURIComponent(token), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(dati)
+                    });
+                }
                 const result = await response.json();
                 if (result.success) {
                     preventivoCorrenteId = dati.id;
@@ -1053,7 +1079,22 @@
                         console.log('⚠️ Nessuna data evento, non chiamo aggiornaAgenda');
                     }
                     
-                    alert('Preventivo salvato con successo!');
+                    if (modalitaModificaTipo === 'preventivo') {
+                        alert('Preventivo aggiornato con successo!');
+                        resettaStatoModifica();
+                        document.getElementById('form-preventivo').reset();
+                        document.getElementById('prev_data').valueAsDate = new Date();
+                        document.getElementById('prev_numero').value = 'PREV-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 9000) + 1000);
+                        serviziSelezionati = [];
+                        acconti = [];
+                        pianoPagamento = [];
+                        renderServiziSelezionati();
+                        renderAcconti();
+                        renderPiano();
+                        calcolaTotali();
+                    } else {
+                        alert('Preventivo salvato con successo!');
+                    }
                     await caricaPreventivi();
                 } else {
                     alert('Errore: ' + result.error);
@@ -1063,6 +1104,82 @@
                 alert('Errore di connessione.');
             } finally {
                 window.isSavingPreventivo = false;
+            }
+        }
+
+        // MODIFICA CHIRURGICA: funzione per salvare modifiche (pulsante SALVA MODIFICHE)
+        async function salvaModifica() {
+            if (modalitaModificaTipo === 'contratto' && contrattoCorrenteId) {
+                await salvaModificaContratto();
+            } else if (modalitaModificaTipo === 'preventivo' && preventivoCorrenteId) {
+                document.getElementById('form-preventivo').requestSubmit();
+            } else {
+                alert('Nessun documento in modifica.');
+            }
+        }
+
+        async function salvaModificaContratto() {
+            if (window.isSavingContratto) return;
+            window.isSavingContratto = true;
+
+            const cognomeCliente = document.getElementById('cliente_a_cognome').value || 'Cliente';
+            const tipoServizio = document.getElementById('evento_tipo').value || 'Servizio';
+            const dataEvento = document.getElementById('evento_data').value;
+            const numeroDoc = document.getElementById('prev_numero').value;
+
+            const dati = {
+                numero_contratto: numeroDoc,
+                numero: numeroDoc,
+                data_emissione: document.getElementById('prev_data').value,
+                data_servizio: dataEvento,
+                tipo_servizio: tipoServizio,
+                luogo_cerimonia: document.getElementById('evento_luogo_cerimonia').value,
+                luogo_ricevimento: document.getElementById('evento_luogo_ricevimento').value,
+                cliente_a: getClienteA(),
+                cliente_b: getClienteB(),
+                servizi: serviziSelezionati,
+                acconti: acconti,
+                piano_pagamento: pianoPagamento,
+                sconto_perc: parseFloat(document.getElementById('sconto_perc').value) || 0,
+                sconto_fisso: parseFloat(document.getElementById('sconto_fisso').value) || 0,
+                accettato: document.getElementById('prev_accettato').checked,
+                note: document.getElementById('prev_note').value,
+                totale_finale: parseFloat(document.getElementById('importo_totale').textContent.replace(' EUR', '').replace(',', '.')) || 0,
+                stato: 'attivo'
+            };
+
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/contratti/' + contrattoCorrenteId + '?token=' + encodeURIComponent(token), {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dati)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    if (dataEvento) {
+                        await aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, true);
+                    }
+                    alert('Contratto aggiornato con successo!');
+                    resettaStatoModifica();
+                    document.getElementById('form-preventivo').reset();
+                    document.getElementById('prev_data').valueAsDate = new Date();
+                    document.getElementById('prev_numero').value = 'PREV-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 9000) + 1000);
+                    serviziSelezionati = [];
+                    acconti = [];
+                    pianoPagamento = [];
+                    renderServiziSelezionati();
+                    renderAcconti();
+                    renderPiano();
+                    calcolaTotali();
+                    await caricaContratti();
+                } else {
+                    alert('Errore: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Errore aggiornamento contratto:', error);
+                alert('Errore di connessione.');
+            } finally {
+                window.isSavingContratto = false;
             }
         }
 
@@ -1081,7 +1198,6 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
         const titoloEvento = tipoServizio + ' ' + cognomeCliente + ' - ' + (accettato ? 'confermato' : 'da confermare');
         const descrizioneEvento = 'Preventivo/Contratto - ' + tipoServizio;
 
-        // ✅ CONTROLLO DUPLICATI: verifica se ci sono già eventi nella stessa data
         let squadraScelta = 'Squadra 1';
         try {
             const checkResponse = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token) + '&data=' + dataEvento);
@@ -1089,9 +1205,7 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
             
             if (checkData.success && checkData.eventi && checkData.eventi.length > 0) {
                 const eventiEsistenti = checkData.eventi;
-                
-                // Escludi l'evento corrente (se stiamo modificando un preventivo esistente)
-                const eventIdCorrente = 'agenda-' + (preventivoCorrenteId || '');
+                const eventIdCorrente = 'agenda-' + (preventivoCorrenteId || contrattoCorrenteId || '');
                 const altriEventi = eventiEsistenti.filter(e => e.id !== eventIdCorrente);
                 
                 if (altriEventi.length > 0) {
@@ -1118,8 +1232,7 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
             console.warn('⚠️ Impossibile verificare eventi esistenti:', checkError);
         }
 
-        // ✅ ID STABILE: Usa l'ID del preventivo
-        const eventId = 'agenda-' + (preventivoCorrenteId || ('prev-' + Date.now()));
+        const eventId = 'agenda-' + (preventivoCorrenteId || contrattoCorrenteId || ('prev-' + Date.now()));
         console.log('🆔 ID evento stabile:', eventId);
 
         const datiAgenda = {
@@ -1169,7 +1282,8 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
             document.getElementById('pdf-studio-details').textContent = dettagliStudio;
             
             const numeroDoc = document.getElementById('prev_numero').value;
-            const tipoDoc = numeroDoc.toUpperCase().startsWith('CTR') ? 'CONTRATTO' : 'PREVENTIVO';
+            // MODIFICA CHIRURGICA: riconosce se stiamo modificando un contratto
+            const tipoDoc = (numeroDoc.toUpperCase().startsWith('CTR') || modalitaModificaTipo === 'contratto') ? 'CONTRATTO' : 'PREVENTIVO';
             document.getElementById('pdf-titolo-doc').textContent = tipoDoc;
             document.getElementById('pdf-numero-data').textContent = 'N. ' + numeroDoc + ' - Data: ' + formatDataIT(document.getElementById('prev_data').value);
             
@@ -1214,6 +1328,11 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
         }
 
         async function convertiInContratto() {
+            // MODIFICA CHIRURGICA: blocca se si sta già modificando un contratto
+            if (modalitaModificaTipo === 'contratto') {
+                alert('Questo documento è già un contratto. Usa SALVA MODIFICHE per aggiornarlo.');
+                return;
+            }
             if (!confirm('Convertire questo preventivo in contratto? L\'evento in agenda sara\' marcato come confermato.')) return;
             const cognomeCliente = document.getElementById('cliente_a_cognome').value || 'Cliente';
             const tipoServizio = document.getElementById('evento_tipo').value || 'Servizio';
@@ -1252,6 +1371,7 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
                     await aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, true);
                     alert('Contratto creato con successo! Evento in agenda aggiornato a "confermato".');
                     await caricaContratti();
+                    resettaStatoModifica();
                 } else {
                     alert('Errore: ' + result.error);
                 }
@@ -1260,8 +1380,7 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
                 alert('Errore di connessione.');
             }
         }
-
-        function renderTabellaPreventivi() {
+                function renderTabellaPreventivi() {
             if (preventiviDisponibili.length === 0) {
                 document.getElementById('empty-preventivi').style.display = 'block';
                 document.getElementById('tabella-preventivi').style.display = 'none';
@@ -1308,8 +1427,10 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
             setTimeout(function() { generaPDF(); }, 500);
         }
 
+        // MODIFICA CHIRURGICA: attiva pulsante SALVA MODIFICHE e setta modalitaModificaTipo
         function caricaDatiInForm(p, solaLettura) {
             preventivoCorrenteId = p.id;
+            contrattoCorrenteId = null;
             document.getElementById('prev_numero').value = p.numero || '';
             document.getElementById('prev_data').value = p.data_emissione || '';
             document.getElementById('evento_tipo').value = p.tipo_servizio || '';
@@ -1351,68 +1472,80 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
             renderAcconti();
             renderPiano();
             calcolaTotali();
-            if (solaLettura) { alert('Preventivo caricato in modalita\' visualizzazione. Clicca "Modifica" per modificare i dati.'); }
+            
+            // MODIFICA CHIRURGICA: attiva pulsante SALVA MODIFICHE quando non è sola lettura
+            if (solaLettura) {
+                alert('Preventivo caricato in modalita\' visualizzazione. Clicca "Modifica" per modificare i dati.');
+                modalitaModificaTipo = null;
+                document.getElementById('btn-salva-modifica').style.display = 'none';
+                document.getElementById('titolo-form-crea').textContent = 'VISUALIZZA PREVENTIVO';
+            } else {
+                modalitaModificaTipo = 'preventivo';
+                document.getElementById('btn-salva-modifica').style.display = 'inline-flex';
+                document.getElementById('btn-salva-modifica').textContent = 'SALVA MODIFICHE PREVENTIVO';
+                document.getElementById('titolo-form-crea').textContent = 'MODIFICA PREVENTIVO ' + (p.numero || '');
+            }
             switchTab('crea');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         async function eliminaPreventivo(id) {
-    const preventivo = preventiviDisponibili.find(p => p.id === id);
-    if (!preventivo) {
-        alert('Preventivo non trovato.');
-        return;
-    }
-    
-    const eventId = 'agenda-' + id;
-    let eventoDaEliminare = null;
-    
-    try {
-        const agendaResponse = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token));
-        const agendaData = await agendaResponse.json();
-        
-        if (agendaData.success && agendaData.eventi) {
-            eventoDaEliminare = agendaData.eventi.find(e => e.id === eventId);
+            const preventivo = preventiviDisponibili.find(p => p.id === id);
+            if (!preventivo) {
+                alert('Preventivo non trovato.');
+                return;
+            }
+            
+            const eventId = 'agenda-' + id;
+            let eventoDaEliminare = null;
+            
+            try {
+                const agendaResponse = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token));
+                const agendaData = await agendaResponse.json();
+                
+                if (agendaData.success && agendaData.eventi) {
+                    eventoDaEliminare = agendaData.eventi.find(e => e.id === eventId);
+                }
+            } catch (err) {
+                console.warn('Impossibile verificare evento agenda:', err);
+            }
+            
+            let messaggioConferma = 'Eliminare questo preventivo?';
+            
+            if (eventoDaEliminare) {
+                if (eventoDaEliminare.stato === 'Da Confermare') {
+                    messaggioConferma += '\n\n⚠️ Verrà eliminato ANCHE l\'evento in agenda (stato: Da Confermare).';
+                } else if (eventoDaEliminare.stato === 'Confermato') {
+                    messaggioConferma += '\n\n✅ L\'evento in agenda è CONFERMATO e NON verrà eliminato (probabilmente è già un contratto).';
+                }
+            }
+            
+            if (!confirm(messaggioConferma)) return;
+            
+            try {
+                if (eventoDaEliminare && eventoDaEliminare.stato === 'Da Confermare') {
+                    await fetch(WORKER_URL + '/api/studio/agenda/' + eventId + '?token=' + encodeURIComponent(token), { 
+                        method: 'DELETE' 
+                    });
+                    console.log('🗑️ Evento agenda eliminato (era Da Confermare):', eventId);
+                } else if (eventoDaEliminare && eventoDaEliminare.stato === 'Confermato') {
+                    console.log('✅ Evento agenda CONFERMATO mantenuto intatto:', eventId);
+                }
+                
+                const response = await fetch(WORKER_URL + '/api/studio/preventivo/' + id + '?token=' + encodeURIComponent(token), { 
+                    method: 'DELETE' 
+                });
+                const result = await response.json();
+                if (result.success) { 
+                    alert('Preventivo eliminato.'); 
+                    await caricaPreventivi(); 
+                } else { 
+                    alert('Errore: ' + result.error); 
+                }
+            } catch (error) { 
+                console.error('Errore eliminazione:', error); 
+            }
         }
-    } catch (err) {
-        console.warn('Impossibile verificare evento agenda:', err);
-    }
-    
-    let messaggioConferma = 'Eliminare questo preventivo?';
-    
-    if (eventoDaEliminare) {
-        if (eventoDaEliminare.stato === 'Da Confermare') {
-            messaggioConferma += '\n\n⚠️ Verrà eliminato ANCHE l\'evento in agenda (stato: Da Confermare).';
-        } else if (eventoDaEliminare.stato === 'Confermato') {
-            messaggioConferma += '\n\n✅ L\'evento in agenda è CONFERMATO e NON verrà eliminato (probabilmente è già un contratto).';
-        }
-    }
-    
-    if (!confirm(messaggioConferma)) return;
-    
-    try {
-        if (eventoDaEliminare && eventoDaEliminare.stato === 'Da Confermare') {
-            await fetch(WORKER_URL + '/api/studio/agenda/' + eventId + '?token=' + encodeURIComponent(token), { 
-                method: 'DELETE' 
-            });
-            console.log('🗑️ Evento agenda eliminato (era Da Confermare):', eventId);
-        } else if (eventoDaEliminare && eventoDaEliminare.stato === 'Confermato') {
-            console.log('✅ Evento agenda CONFERMATO mantenuto intatto:', eventId);
-        }
-        
-        const response = await fetch(WORKER_URL + '/api/studio/preventivo/' + id + '?token=' + encodeURIComponent(token), { 
-            method: 'DELETE' 
-        });
-        const result = await response.json();
-        if (result.success) { 
-            alert('Preventivo eliminato.'); 
-            await caricaPreventivi(); 
-        } else { 
-            alert('Errore: ' + result.error); 
-        }
-    } catch (error) { 
-        console.error('Errore eliminazione:', error); 
-    }
-}
 
         function renderTabellaContratti() {
             if (contrattiDisponibili.length === 0) {
@@ -1468,7 +1601,9 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
             setTimeout(function() { generaPDF(); }, 500);
         }
 
+        // MODIFICA CHIRURGICA: attiva pulsante SALVA MODIFICHE per contratti
         function caricaDatiContrattoInForm(c, solaLettura) {
+            contrattoCorrenteId = c.id;
             preventivoCorrenteId = null;
             document.getElementById('prev_numero').value = c.numero_contratto || c.numero || '';
             document.getElementById('prev_data').value = c.data_emissione || '';
@@ -1511,7 +1646,19 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
             renderAcconti();
             renderPiano();
             calcolaTotali();
-            if (solaLettura) { alert('Contratto caricato in modalita\' visualizzazione. Clicca "Modifica" per modificare i dati.'); }
+            
+            // MODIFICA CHIRURGICA: attiva pulsante SALVA MODIFICHE quando non è sola lettura
+            if (solaLettura) {
+                alert('Contratto caricato in modalita\' visualizzazione. Clicca "Modifica" per modificare i dati.');
+                modalitaModificaTipo = null;
+                document.getElementById('btn-salva-modifica').style.display = 'none';
+                document.getElementById('titolo-form-crea').textContent = 'VISUALIZZA CONTRATTO';
+            } else {
+                modalitaModificaTipo = 'contratto';
+                document.getElementById('btn-salva-modifica').style.display = 'inline-flex';
+                document.getElementById('btn-salva-modifica').textContent = 'SALVA MODIFICHE CONTRATTO';
+                document.getElementById('titolo-form-crea').textContent = 'MODIFICA CONTRATTO ' + (c.numero_contratto || c.numero || '');
+            }
             switchTab('crea');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
