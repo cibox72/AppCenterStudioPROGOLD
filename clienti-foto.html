@@ -85,6 +85,9 @@
         .btn-primary { background: var(--primary-gradient); color: #ffffff; }
         .btn-outline { background: transparent; color: var(--primary-dark); border: 2px solid var(--primary); }
         .btn-outline:hover { background: var(--primary-light); }
+        .btn-danger { background: linear-gradient(135deg, #f1948a, #e74c3c); color: #ffffff; }
+        .btn-danger:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3); }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
         .client-list { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
         .client-item { 
@@ -113,6 +116,18 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         .hidden { display: none !important; }
+        
+        /* Stili per la tabella Archivio Selezioni */
+        .archivio-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .archivio-table thead { background: var(--primary-gradient); color: #ffffff; }
+        .archivio-table th { padding: 12px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; }
+        .archivio-table td { padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        .archivio-table tbody tr:hover { background: var(--primary-light); }
+        .badge-stato { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; }
+        .badge-attesa { background: #fdebd0; color: #d35400; }
+        .badge-completata { background: #d4efdf; color: #1e8449; }
+        .badge-scaduta { background: #fadbd8; color: #c0392b; }
+        .action-buttons { display: flex; gap: 8px; }
     </style>
 </head>
 <body>
@@ -171,12 +186,38 @@
                 </div>
                 <div class="client-list" id="clientList"></div>
             </div>
+
+            <div class="card-3d">
+                <div class="card-title">Archivio Selezioni Attive</div>
+                <div id="loadingArchivio" class="loading" style="padding: 20px;">
+                    <div class="spinner"></div>
+                    <div>Caricamento archivio...</div>
+                </div>
+                <div id="archivioContent" style="overflow-x: auto;">
+                    <table class="archivio-table" id="archivioTable" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>ID CLIENTE</th>
+                                <th>NOME</th>
+                                <th>USERNAME</th>
+                                <th>PASSWORD</th>
+                                <th>STATO</th>
+                                <th>SCADENZA</th>
+                                <th>AZIONI</th>
+                            </tr>
+                        </thead>
+                        <tbody id="archivioBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
         <div class="footer-branding">Piattaforma sviluppata da AppCenterStudioPROGOLD</div>
     </div>
     <div class="toast-container" id="toastContainer"></div>
-        <script>
+    
+    <script>
         // Fallback di sicurezza per WORKER_URL se non e definito in temi.js
         if (typeof WORKER_URL === 'undefined') {
             var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
@@ -186,6 +227,7 @@
         const token = urlParams.get('token');
         let studioId = null;
         let clienti = [];
+        let selezioniAttive = [];
 
         document.addEventListener('DOMContentLoaded', async function() {
             if (!token) { window.location.href = 'index.html'; return; }
@@ -214,6 +256,8 @@
                 
                 // Carica i clienti dall'ANAGRAFICA blindata
                 await caricaClienti();
+                // Carica le selezioni attive
+                await caricaSelezioneAttive();
             } catch (error) {
                 console.error('Errore:', error);
                 mostraToast('Errore di connessione', 'error');
@@ -260,6 +304,101 @@
                 select.innerHTML = '<option value="">-- Errore di caricamento --</option>';
             }
             document.getElementById('loadingClienti').style.display = 'none';
+        }
+
+        // ============================================
+        // CARICAMENTO SELEZIONI ATTIVE
+        // ============================================
+        async function caricaSelezioneAttive() {
+            document.getElementById('loadingArchivio').style.display = 'block';
+            
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/selezioni-album?token=${encodeURIComponent(token)}`);
+                const data = await response.json();
+                
+                if (data.success && data.selezioni) {
+                    selezioniAttive = data.selezioni;
+                    renderArchivioSelezioni();
+                } else {
+                    document.getElementById('archivioBody').innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--text-light);">Nessuna selezione attiva</td></tr>';
+                    document.getElementById('archivioTable').style.display = 'table';
+                }
+            } catch (error) {
+                console.error('Errore caricamento selezioni:', error);
+                document.getElementById('archivioBody').innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--danger);">Errore di caricamento</td></tr>';
+                document.getElementById('archivioTable').style.display = 'table';
+            }
+            document.getElementById('loadingArchivio').style.display = 'none';
+        }
+
+        function renderArchivioSelezioni() {
+            const tbody = document.getElementById('archivioBody');
+            
+            if (selezioniAttive.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--text-light);">Nessuna selezione attiva</td></tr>';
+                document.getElementById('archivioTable').style.display = 'table';
+                return;
+            }
+            
+            tbody.innerHTML = selezioniAttive.map(sel => {
+                const statoClass = sel.stato === 'selezione_ricevuta' ? 'badge-completata' : (sel.stato === 'in_attesa' ? 'badge-attesa' : 'badge-scaduta');
+                const statoText = sel.stato === 'selezione_ricevuta' ? 'COMPLETATA' : (sel.stato === 'in_attesa' ? 'IN ATTESA' : 'SCADUTA');
+                const scadenza = sel.data_scadenza ? new Date(sel.data_scadenza).toLocaleDateString('it-IT') : '-';
+                
+                return `
+                    <tr>
+                        <td><strong>${sel.cliente_id || '-'}</strong></td>
+                        <td>${sel.cliente_nome || '-'}</td>
+                        <td><code>${sel.username || '-'}</code></td>
+                        <td><code>${sel.password || '-'}</code></td>
+                        <td><span class="badge-stato ${statoClass}">${statoText}</span></td>
+                        <td>${scadenza}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-outline btn-sm" onclick="copiaLinkSelezione('${sel.id}', '${sel.username}', '${sel.password}')">Copia</button>
+                                <button class="btn btn-danger btn-sm" onclick="eliminaSelezione('${sel.id}', '${sel.cliente_nome}')">Elimina</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            document.getElementById('archivioTable').style.display = 'table';
+        }
+
+        function copiaLinkSelezione(selezioneId, username, password) {
+            const link = `https://cibox72.github.io/AppCenterStudioPROGOLD/selezione-album-cliente.html?id=${selezioneId}&username=${username}&password=${password}`;
+            navigator.clipboard.writeText(link).then(() => {
+                mostraToast('Link copiato negli appunti!', 'success');
+            }).catch(() => {
+                mostraToast('Impossibile copiare il link', 'error');
+            });
+        }
+
+        async function eliminaSelezione(selezioneId, clienteNome) {
+            if (!confirm(`Eliminare la selezione per ${clienteNome}? Questa azione non può essere annullata.`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${WORKER_URL}/api/studio/selezione-album/elimina?token=${encodeURIComponent(token)}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ selezione_id: selezioneId })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    mostraToast('Selezione eliminata con successo', 'success');
+                    await caricaSelezioneAttive(); // Ricarica la lista
+                } else {
+                    mostraToast('Errore: ' + (result.error || 'Impossibile eliminare'), 'error');
+                }
+            } catch (error) {
+                console.error('Errore eliminazione:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
         }
 
         // ============================================
