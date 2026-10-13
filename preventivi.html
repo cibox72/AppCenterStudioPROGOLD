@@ -1271,7 +1271,7 @@
                     console.log('✅ Evento salvato con successo:', eventId, 'Data:', dataEvento, 'Squadra:', squadraScelta);
                     agendaEventId = eventId;
                 } else {
-                    console.error('❌ Errore creazione evento:', result.error);
+                    console.error(' Errore creazione evento:', result.error);
                 }
                 
                 console.log('=== FINE aggiornaAgenda ===');
@@ -1415,7 +1415,7 @@
         }
 
         // ============================================
-        // NUOVO: INVIO PREVENTIVO VIA WHATSAPP
+        // INVIO PREVENTIVO VIA WHATSAPP
         // ============================================
         function normalizzaNumeroWhatsApp(tel) {
             if (!tel) return null;
@@ -1438,7 +1438,12 @@
             msg += 'le inviamo il preventivo n. ' + numero + ' di ' + nomeStudio + '.\n';
             msg += 'Importo totale: ' + totale + '\n';
             msg += 'Saldo residuo: ' + saldo + '\n';
-            msg += 'In allegato il PDF con tutti i dettagli.\n';
+            msg += 'In allegato il PDF con tutti i dettagli.\n\n';
+            msg += 'Per accettare, la preghiamo di:\n';
+            msg += '1. Stampare il preventivo\n';
+            msg += '2. Firmarlo in calce\n';
+            msg += '3. Reinviarlo fotografato/scannerizzato via WhatsApp\n\n';
+            msg += 'Una volta ricevuto, procederemo a convertirlo in contratto.\n';
             msg += 'Grazie per la fiducia!';
             return msg;
         }
@@ -1610,7 +1615,7 @@
                         const eventId = 'agenda-' + id;
                         try {
                             await fetch(WORKER_URL + '/api/studio/agenda/' + eventId + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
-                            console.log('🗑️ Evento agenda eliminato:', eventId);
+                            console.log('️ Evento agenda eliminato:', eventId);
                         } catch (e) { console.warn('Evento agenda non eliminabile:', e); }
                     }
                     alert('Preventivo eliminato.'); 
@@ -1747,7 +1752,7 @@
                 if (result.success) {
                     try {
                         await fetch(WORKER_URL + '/api/studio/agenda/agenda-' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
-                        console.log('🗑️ Evento agenda diretto eliminato: agenda-' + id);
+                        console.log('️ Evento agenda diretto eliminato: agenda-' + id);
                     } catch (e) { console.warn('Evento agenda diretto non eliminabile:', e); }
                     if (contratto) {
                         const ca = parseCliente(contratto.cliente_a);
