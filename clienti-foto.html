@@ -274,18 +274,15 @@
             select.innerHTML = '<option value="">-- Caricamento anagrafica... --</option>';
 
             try {
-                // MODIFICA CHIAVE: Usa l'endpoint dell'anagrafica clienti blindata
                 const response = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti?token=${encodeURIComponent(token)}`);
                 const data = await response.json();
                 
                 if (data.success && data.clienti) {
                     clienti = data.clienti;
                     
-                    // Popola il menu a tendina con i dati corretti dell'anagrafica
                     select.innerHTML = '<option value="">-- Seleziona un cliente dall\'anagrafica --</option>' + 
                         clienti.map(c => `<option value="${c.id}">${c.nome} ${c.cognome} (ID: ${c.id})</option>`).join('');
                     
-                    // Popola la lista clienti in basso
                     document.getElementById('clientList').innerHTML = clienti.map(c => `
                         <div class="client-item">
                             <div class="client-info">
@@ -325,7 +322,7 @@
                 }
             } catch (error) {
                 console.error('Errore caricamento selezioni:', error);
-                document.getElementById('archivioBody').innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--danger);">Errore di caricamento</td></tr>';
+                document.getElementById('archivioBody').innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--danger);">Errore di caricamento (Controlla che il Worker sia in Deploy)</td></tr>';
                 document.getElementById('archivioTable').style.display = 'table';
             }
             document.getElementById('loadingArchivio').style.display = 'none';
@@ -356,7 +353,7 @@
                         <td>
                             <div class="action-buttons">
                                 <button class="btn btn-outline btn-sm" onclick="copiaLinkSelezione('${sel.id}', '${sel.username}', '${sel.password}')">Copia</button>
-                                <button class="btn btn-danger btn-sm" onclick="eliminaSelezione('${sel.id}', '${sel.cliente_nome}')">Elimina</button>
+                                <button class="btn btn-danger btn-sm" onclick="eliminaSelezione('${sel.id}', '${sel.cliente_nome || 'Cliente'}')">Elimina</button>
                             </div>
                         </td>
                     </tr>
@@ -376,7 +373,7 @@
         }
 
         async function eliminaSelezione(selezioneId, clienteNome) {
-            if (!confirm(`Eliminare la selezione per ${clienteNome}? Questa azione non può essere annullata.`)) {
+            if (!confirm(`Eliminare la selezione per ${clienteNome}? Questa azione non può essere annullata e cancellerà anche le foto caricate.`)) {
                 return;
             }
             
@@ -410,7 +407,6 @@
             const inputFiles = document.getElementById('cfFileInput');
             const btnCarica = document.getElementById('btnCarica');
 
-            // Passo 1: Selezionato un cliente? Sblocca il nome cartella
             if (clienteId) {
                 inputCartella.disabled = false;
                 inputCartella.style.backgroundColor = '#ffffff';
@@ -423,7 +419,6 @@
                 return;
             }
 
-            // Passo 2: Scritto il nome della cartella? Sblocca file e pulsante
             if (inputCartella.value.trim().length > 0) {
                 inputFiles.disabled = false;
                 inputFiles.style.backgroundColor = '#ffffff';
@@ -454,7 +449,6 @@
                 return; 
             }
 
-            // Blocca il pulsante durante l'upload
             btnCarica.disabled = true;
             btnCarica.textContent = 'Caricamento in corso...';
 
@@ -480,15 +474,14 @@
                 }
             }
 
-            // Ripristina il pulsante
             btnCarica.disabled = false;
             btnCarica.textContent = 'CARICA CARTELLA';
 
             if (caricati > 0) {
                 mostraToast(caricati + ' foto caricate con successo in "' + nomeCartella + '"', 'success');
-                fileInput.value = ''; // Resetta l'input file
-                document.getElementById('cfNomeCartella').value = ''; // Resetta il nome cartella
-                abilitaPassoSuccessivo(); // Riapplica la validazione sequenziale
+                fileInput.value = '';
+                document.getElementById('cfNomeCartella').value = '';
+                abilitaPassoSuccessivo();
             } else {
                 mostraToast('Errore nel caricamento delle foto. Riprova.', 'error');
             }
