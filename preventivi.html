@@ -564,6 +564,10 @@
             </div>
         </div>
         <div class="pdf-section">
+            <h3>Piano di Pagamento</h3>
+            <div id="pdf-piano-list"></div>
+        </div>
+        <div class="pdf-section">
             <h3>Note e Condizioni</h3>
             <p class="pdf-note" id="pdf-note"></p>
         </div>
@@ -587,7 +591,7 @@
     <!-- SEZIONE 11: JAVASCRIPT -->
     <!-- ============================================ -->
     <script>
-                var token = '';
+        var token = '';
         var studioId = '';
         var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
         var serviziSelezionati = [];
@@ -963,8 +967,7 @@
             pianoPagamento.splice(index, 1);
             renderPiano();
         }
-
-        function calcolaTotali() {
+                function calcolaTotali() {
             let totaleServizi = 0;
             serviziSelezionati.forEach(function(s) { totaleServizi += s.prezzo; });
             const scontoPerc = parseFloat(document.getElementById('sconto_perc').value) || 0;
@@ -1024,7 +1027,8 @@
             const c = parseCliente(cliente);
             return ((c.nome || '') + ' ' + (c.cognome || '')).trim() || '-';
         }
-                async function salvaPreventivo(event) {
+        
+        async function salvaPreventivo(event) {
             event.preventDefault();
             if (window.isSavingPreventivo) {
                 console.log('⚠️ Salvataggio già in corso, ignoro');
@@ -1190,91 +1194,91 @@
             }
         }
 
-async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettato) {
-    console.log('=== INIZIO aggiornaAgenda ===');
-    console.log('Parametri:', { tipoServizio, cognomeCliente, dataEvento, accettato });
-    console.log('preventivoCorrenteId:', preventivoCorrenteId);
-    
-    if (!dataEvento) {
-        console.log('❌ Nessuna data evento, skip');
-        return;
-    }
-    
-    try {
-        const statoEvento = accettato ? 'Confermato' : 'Da Confermare';
-        const titoloEvento = tipoServizio + ' ' + cognomeCliente + ' - ' + (accettato ? 'confermato' : 'da confermare');
-        const descrizioneEvento = 'Preventivo/Contratto - ' + tipoServizio;
-
-        let squadraScelta = 'Squadra 1';
-        try {
-            const checkResponse = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token) + '&data=' + dataEvento);
-            const checkData = await checkResponse.json();
+        async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettato) {
+            console.log('=== INIZIO aggiornaAgenda ===');
+            console.log('Parametri:', { tipoServizio, cognomeCliente, dataEvento, accettato });
+            console.log('preventivoCorrenteId:', preventivoCorrenteId);
             
-            if (checkData.success && checkData.eventi && checkData.eventi.length > 0) {
-                const eventiEsistenti = checkData.eventi;
-                const eventIdCorrente = 'agenda-' + (preventivoCorrenteId || contrattoCorrenteId || '');
-                const altriEventi = eventiEsistenti.filter(e => e.id !== eventIdCorrente);
-                
-                if (altriEventi.length > 0) {
-                    const listaEventi = altriEventi.map(e => {
-                        const cliente = e.cliente || 'N/D';
-                        const tipo = e.tipo_servizio || e.titolo || 'Servizio';
-                        const squadra = e.squadra || 'N/D';
-                        return `• ${tipo} - ${cliente} (${squadra})`;
-                    }).join('\n');
+            if (!dataEvento) {
+                console.log('❌ Nessuna data evento, skip');
+                return;
+            }
+            
+            try {
+                const statoEvento = accettato ? 'Confermato' : 'Da Confermare';
+                const titoloEvento = tipoServizio + ' ' + cognomeCliente + ' - ' + (accettato ? 'confermato' : 'da confermare');
+                const descrizioneEvento = 'Preventivo/Contratto - ' + tipoServizio;
+
+                let squadraScelta = 'Squadra 1';
+                try {
+                    const checkResponse = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token) + '&data=' + dataEvento);
+                    const checkData = await checkResponse.json();
                     
-                    const messaggio = `⚠️ ATTENZIONE: Esistono già ${altriEventi.length} event${altriEventi.length > 1 ? 'i' : 'o'} in questa data (${formatDataIT(dataEvento)}):\n\n${listaEventi}\n\nVuoi assegnare un collaboratore diverso per evitare sovrapposizioni?\n\nOK = Inserisci nome collaboratore\nAnnulla = Mantieni Squadra 1`;
-                    
-                    const scelta = confirm(messaggio);
-                    
-                    if (scelta) {
-                        const squadraInput = prompt('Inserisci il nome del collaboratore (es. "Mario 3331234567"):', '');
-                        if (squadraInput && squadraInput.trim() !== '') {
-                            squadraScelta = squadraInput.trim();
+                    if (checkData.success && checkData.eventi && checkData.eventi.length > 0) {
+                        const eventiEsistenti = checkData.eventi;
+                        const eventIdCorrente = 'agenda-' + (preventivoCorrenteId || contrattoCorrenteId || '');
+                        const altriEventi = eventiEsistenti.filter(e => e.id !== eventIdCorrente);
+                        
+                        if (altriEventi.length > 0) {
+                            const listaEventi = altriEventi.map(e => {
+                                const cliente = e.cliente || 'N/D';
+                                const tipo = e.tipo_servizio || e.titolo || 'Servizio';
+                                const squadra = e.squadra || 'N/D';
+                                return `• ${tipo} - ${cliente} (${squadra})`;
+                            }).join('\n');
+                            
+                            const messaggio = `⚠️ ATTENZIONE: Esistono già ${altriEventi.length} event${altriEventi.length > 1 ? 'i' : 'o'} in questa data (${formatDataIT(dataEvento)}):\n\n${listaEventi}\n\nVuoi assegnare un collaboratore diverso per evitare sovrapposizioni?\n\nOK = Inserisci nome collaboratore\nAnnulla = Mantieni Squadra 1`;
+                            
+                            const scelta = confirm(messaggio);
+                            
+                            if (scelta) {
+                                const squadraInput = prompt('Inserisci il nome del collaboratore (es. "Mario 3331234567"):', '');
+                                if (squadraInput && squadraInput.trim() !== '') {
+                                    squadraScelta = squadraInput.trim();
+                                }
+                            }
                         }
                     }
+                } catch (checkError) {
+                    console.warn('⚠️ Impossibile verificare eventi esistenti:', checkError);
                 }
+
+                const eventId = 'agenda-' + (preventivoCorrenteId || contrattoCorrenteId || ('prev-' + Date.now()));
+                console.log('🆔 ID evento stabile:', eventId);
+
+                const datiAgenda = {
+                    id: eventId,
+                    titolo: titoloEvento,
+                    data: dataEvento,
+                    descrizione: descrizioneEvento,
+                    tipo_servizio: tipoServizio,
+                    cliente: cognomeCliente,
+                    stato: statoEvento,
+                    squadra: squadraScelta,
+                    data_creazione: new Date().toISOString()
+                };
+                
+                console.log('➕ Creazione/aggiornamento evento:', datiAgenda);
+
+                const response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datiAgenda)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    console.log('✅ Evento salvato con successo:', eventId, 'Data:', dataEvento, 'Squadra:', squadraScelta);
+                    agendaEventId = eventId;
+                } else {
+                    console.error('❌ Errore creazione evento:', result.error);
+                }
+                
+                console.log('=== FINE aggiornaAgenda ===');
+            } catch (error) {
+                console.error('❌ Errore aggiornamento agenda:', error);
             }
-        } catch (checkError) {
-            console.warn('⚠️ Impossibile verificare eventi esistenti:', checkError);
         }
-
-        const eventId = 'agenda-' + (preventivoCorrenteId || contrattoCorrenteId || ('prev-' + Date.now()));
-        console.log('🆔 ID evento stabile:', eventId);
-
-        const datiAgenda = {
-            id: eventId,
-            titolo: titoloEvento,
-            data: dataEvento,
-            descrizione: descrizioneEvento,
-            tipo_servizio: tipoServizio,
-            cliente: cognomeCliente,
-            stato: statoEvento,
-            squadra: squadraScelta,
-            data_creazione: new Date().toISOString()
-        };
-        
-        console.log('➕ Creazione/aggiornamento evento:', datiAgenda);
-
-        const response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(datiAgenda)
-        });
-
-        const result = await response.json();
-        if (result.success) {
-            console.log('✅ Evento salvato con successo:', eventId, 'Data:', dataEvento, 'Squadra:', squadraScelta);
-            agendaEventId = eventId;
-        } else {
-            console.error('❌ Errore creazione evento:', result.error);
-        }
-        
-        console.log('=== FINE aggiornaAgenda ===');
-    } catch (error) {
-        console.error('❌ Errore aggiornamento agenda:', error);
-    }
-}
         
         function generaPDF() {
             if (!datiStudio) {
@@ -1328,6 +1332,30 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
             document.getElementById('pdf-totale').textContent = document.getElementById('importo_totale').textContent;
             document.getElementById('pdf-acconti').textContent = document.getElementById('totale_acconti').textContent;
             document.getElementById('pdf-saldo').textContent = document.getElementById('saldo_residuo').textContent;
+            
+            // PIANO DI PAGAMENTO
+            const pianoList = document.getElementById('pdf-piano-list');
+            pianoList.innerHTML = '';
+            if (pianoPagamento.length === 0) {
+                pianoList.innerHTML = '<div class="pdf-row"><label>Nessun piano di pagamento specificato</label><span>-</span></div>';
+            } else {
+                let totalePiano = 0;
+                pianoPagamento.forEach(function(p, index) {
+                    const row = document.createElement('div');
+                    row.className = 'pdf-row';
+                    const descrizione = p.descrizione || 'Voce ' + (index + 1);
+                    const importo = parseFloat(p.importo) || 0;
+                    totalePiano += importo;
+                    row.innerHTML = '<label>' + descrizione + ':</label><span>' + importo.toFixed(2) + ' EUR</span>';
+                    pianoList.appendChild(row);
+                });
+                const totalRow = document.createElement('div');
+                totalRow.className = 'pdf-row';
+                totalRow.style.cssText = 'border-top: 2px solid #d4af37; margin-top: 5px; padding-top: 5px; font-weight: 700;';
+                totalRow.innerHTML = '<label>Totale Piano:</label><span style="color: #996515;">' + totalePiano.toFixed(2) + ' EUR</span>';
+                pianoList.appendChild(totalRow);
+            }
+            
             document.getElementById('pdf-note').textContent = document.getElementById('prev_note').value || 'Nessuna nota aggiuntiva.';
             
             window.print();
@@ -1444,7 +1472,8 @@ async function aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, accettat
 
             alert('Promemoria: clicca STAMPA PDF, salva il file PDF e allegalo nella chat WhatsApp appena aperta (icona graffetta).');
         }
-                function renderTabellaPreventivi() {
+        
+        function renderTabellaPreventivi() {
             if (preventiviDisponibili.length === 0) {
                 document.getElementById('empty-preventivi').style.display = 'block';
                 document.getElementById('tabella-preventivi').style.display = 'none';
