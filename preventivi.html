@@ -359,7 +359,10 @@
                     <div class="sub-section">
                         <h4>Acconti Ricevuti</h4>
                         <div id="acconti-list"></div>
-                        <button type="button" class="btn btn-outline btn-sm" onclick="aggiungiAcconto()">+ Aggiungi Acconto</button>
+                        <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                            <button type="button" class="btn btn-outline btn-sm" onclick="aggiungiAcconto()">+ Aggiungi Acconto</button>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="salvaAcconti()" id="btn-salva-acconti" style="display: none; margin-left: 10px;">💾 Salva Acconti</button>
+                        </div>
                     </div>
 
                     <!-- PIANO DI PAGAMENTO (EVIDENZIATO E SENZA DATE) -->
@@ -937,12 +940,49 @@
                     '<button type="button" class="btn btn-sm btn-danger" onclick="rimuoviAcconto(' + index + ')">X</button>';
                 container.appendChild(div);
             });
+            const btnSalva = document.getElementById('btn-salva-acconti');
+            if (acconti.length > 0) {
+                btnSalva.style.display = 'inline-flex';
+            } else {
+                btnSalva.style.display = 'none';
+            }
             calcolaTotali();
         }
 
         function rimuoviAcconto(index) {
             acconti.splice(index, 1);
             renderAcconti();
+        }
+
+        async function salvaAcconti() {
+            if (!contrattoCorrenteId && !preventivoCorrenteId) {
+                alert('Prima salva il preventivo/contratto, poi potrai aggiungere acconti.');
+                return;
+            }
+            try {
+                let url, method;
+                if (contrattoCorrenteId) {
+                    url = WORKER_URL + '/api/studio/contratti/' + contrattoCorrenteId + '?token=' + encodeURIComponent(token);
+                    method = 'PUT';
+                } else {
+                    url = WORKER_URL + '/api/studio/preventivo/' + preventivoCorrenteId + '?token=' + encodeURIComponent(token);
+                    method = 'PUT';
+                }
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ acconti: acconti, piano_pagamento: pianoPagamento })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Acconti salvati con successo!');
+                } else {
+                    alert('Errore: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Errore salvataggio acconti:', error);
+                alert('Errore di connessione.');
+            }
         }
 
         function aggiungiPianoVoce() {
@@ -1200,7 +1240,7 @@
             console.log('preventivoCorrenteId:', preventivoCorrenteId);
             
             if (!dataEvento) {
-                console.log('❌ Nessuna data evento, skip');
+                console.log(' Nessuna data evento, skip');
                 return;
             }
             
@@ -1258,7 +1298,7 @@
                     data_creazione: new Date().toISOString()
                 };
                 
-                console.log('➕ Creazione/aggiornamento evento:', datiAgenda);
+                console.log(' Creazione/aggiornamento evento:', datiAgenda);
 
                 const response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token), {
                     method: 'POST',
@@ -1271,7 +1311,7 @@
                     console.log('✅ Evento salvato con successo:', eventId, 'Data:', dataEvento, 'Squadra:', squadraScelta);
                     agendaEventId = eventId;
                 } else {
-                    console.error(' Errore creazione evento:', result.error);
+                    console.error('❌ Errore creazione evento:', result.error);
                 }
                 
                 console.log('=== FINE aggiornaAgenda ===');
@@ -1370,8 +1410,9 @@
             const cognomeCliente = document.getElementById('cliente_a_cognome').value || 'Cliente';
             const tipoServizio = document.getElementById('evento_tipo').value || 'Servizio';
             const dataEvento = document.getElementById('evento_data').value;
+            const nuovoIdContratto = 'contr-' + Date.now();
             const dati = {
-                id: 'contr-' + Date.now(),
+                id: nuovoIdContratto,
                 numero_contratto: document.getElementById('prev_numero').value.replace('PREV', 'CTR'),
                 numero: document.getElementById('prev_numero').value,
                 data_contratto: new Date().toISOString().split('T')[0],
@@ -1402,9 +1443,17 @@
                 const result = await response.json();
                 if (result.success) {
                     await aggiornaAgenda(tipoServizio, cognomeCliente, dataEvento, true);
-                    alert('Contratto creato con successo! Evento in agenda aggiornato a "confermato".');
+                    
+                    // MODIFICA: Non resettare il form, ma impostarlo in modalità modifica contratto
+                    contrattoCorrenteId = nuovoIdContratto;
+                    preventivoCorrenteId = null;
+                    modalitaModificaTipo = 'contratto';
+                    document.getElementById('btn-salva-modifica').style.display = 'inline-flex';
+                    document.getElementById('btn-salva-modifica').textContent = 'SALVA MODIFICHE CONTRATTO';
+                    document.getElementById('titolo-form-crea').textContent = 'MODIFICA CONTRATTO ' + dati.numero_contratto;
+                    
+                    alert('Contratto creato con successo! Ora puoi aggiungere acconti e salvarli con il pulsante "Salva Acconti".');
                     await caricaContratti();
-                    resettaStatoModifica();
                 } else {
                     alert('Errore: ' + result.error);
                 }
@@ -1599,7 +1648,7 @@
             
             let messaggioConferma = 'Eliminare questo preventivo?';
             if (contrattoConvertito) {
-                messaggioConferma += '\n\n⚠️ Esiste un contratto convertito da questo preventivo: l\'appuntamento in agenda NON verrà eliminato (appartiene al contratto).';
+                messaggioConferma += '\n\n️ Esiste un contratto convertito da questo preventivo: l\'appuntamento in agenda NON verrà eliminato (appartiene al contratto).';
             } else {
                 messaggioConferma += '\n\n🗑️ Verrà eliminato anche l\'appuntamento in agenda collegato.';
             }
@@ -1615,7 +1664,7 @@
                         const eventId = 'agenda-' + id;
                         try {
                             await fetch(WORKER_URL + '/api/studio/agenda/' + eventId + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
-                            console.log('️ Evento agenda eliminato:', eventId);
+                            console.log('🗑️ Evento agenda eliminato:', eventId);
                         } catch (e) { console.warn('Evento agenda non eliminabile:', e); }
                     }
                     alert('Preventivo eliminato.'); 
