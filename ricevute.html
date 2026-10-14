@@ -314,14 +314,13 @@
                     numero: ricevutaCorrente.numero,
                     data: ricevutaCorrente.data,
                     cliente: ricevutaCorrente.cliente,
-                    indirizzo: ricevutaCorrente.indirizzo,
+                    indirizzo: ricevutaCorrente.indirizzo || '', // CORREZIONE: se vuoto, usa stringa vuota invece di undefined
                     importo: ricevutaCorrente.importo,
                     descrizione: ricevutaCorrente.descrizione,
-                    note: ricevutaCorrente.note,
+                    note: ricevutaCorrente.note || '', // CORREZIONE: se vuoto, usa stringa vuota invece di undefined
                     data_creazione: new Date().toISOString()
                 };
                 
-                // CORREZIONE APPLICATA QUI: aggiunto ?token= all'URL
                 const response = await fetch(WORKER_URL + '/api/studio/ricevuta?token=' + encodeURIComponent(token), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
