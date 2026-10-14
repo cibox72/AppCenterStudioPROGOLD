@@ -642,23 +642,18 @@
             if (!confirm('Aggiungere 15 prodotti default alla vetrina?')) return;
             
             const defaults = [
-                // 3 CUSCINI
                 { nome: 'Cuscino Arredo Quadrato', categoria: 'cuscino', prezzo: 25.00, misura: '40x40 cm', descrizione: 'Cuscino decorativo con stampa personalizzata' },
                 { nome: 'Cuscino Arredo Rettangolare', categoria: 'cuscino', prezzo: 30.00, misura: '50x30 cm', descrizione: 'Cuscino decorativo allungato' },
                 { nome: 'Cuscino Morbido XL', categoria: 'cuscino', prezzo: 35.00, misura: '60x60 cm', descrizione: 'Cuscino extra morbido per divano' },
-                // 3 TELE
                 { nome: 'Tela su Legno Piccola', categoria: 'canvas', prezzo: 45.00, misura: '30x40 cm', descrizione: 'Stampa su tela montata su telaio in legno' },
                 { nome: 'Tela su Legno Media', categoria: 'canvas', prezzo: 65.00, misura: '50x70 cm', descrizione: 'Stampa su tela di alta qualità con bordi avvolti' },
                 { nome: 'Tela su Legno Grande', categoria: 'canvas', prezzo: 95.00, misura: '70x100 cm', descrizione: 'Stampa su tela formato poster per arredamento' },
-                // 3 TAZZE
                 { nome: 'Tazza in Ceramica Classica', categoria: 'tazza', prezzo: 15.00, misura: '325 ml', descrizione: 'Tazza bianca in ceramica con stampa a 360 gradi' },
                 { nome: 'Tazza con Interno Colorato', categoria: 'tazza', prezzo: 18.00, misura: '325 ml', descrizione: 'Tazza bianca con interno e manico del colore scelto' },
                 { nome: 'Tazza Termica da Viaggio', categoria: 'tazza', prezzo: 22.00, misura: '400 ml', descrizione: 'Tazza in acciaio inox con coperchio ermetico' },
-                // 3 PUZZLE
                 { nome: 'Puzzle 120 Pezzi', categoria: 'altro', prezzo: 20.00, misura: '38x28 cm', descrizione: 'Puzzle personalizzato formato bambino' },
                 { nome: 'Puzzle 500 Pezzi', categoria: 'altro', prezzo: 30.00, misura: '48x36 cm', descrizione: 'Puzzle personalizzato formato standard' },
                 { nome: 'Puzzle 1000 Pezzi', categoria: 'altro', prezzo: 40.00, misura: '68x48 cm', descrizione: 'Puzzle personalizzato formato grande per appassionati' },
-                // 3 STAMPE
                 { nome: 'Stampa Fine Art Piccola', categoria: 'poster', prezzo: 15.00, misura: '20x30 cm', descrizione: 'Stampa su carta fotografica opaca di alta qualità' },
                 { nome: 'Stampa Fine Art Media', categoria: 'poster', prezzo: 25.00, misura: '30x40 cm', descrizione: 'Stampa su carta fotografica lucida o opaca' },
                 { nome: 'Stampa Fine Art Grande', categoria: 'poster', prezzo: 40.00, misura: '50x70 cm', descrizione: 'Stampa su carta fotografica formato poster' }
@@ -754,7 +749,7 @@
                     try { prods = JSON.parse(o.prodotti || '[]'); } catch(e) { prods = []; }
                     const badgeClass = 'badge-' + o.stato;
                     const statoText = o.stato.replace(/_/g, ' ').toUpperCase();
-                    const nextAction = getNextAction(o.stato, o.id);
+                    const nextAction = getNextAction(o.stato, o.id, o.prodotti);
                     return '<div class="order-item" id="ordine_' + o.id + '">' +
                         '<div class="order-header">' +
                             '<div><div class="order-code">Ordine #' + o.codice_ordine + '</div>' +
@@ -875,16 +870,54 @@
             }
         }
 
-        function getNextAction(stato, id) {
+        function getNextAction(stato, id, prodottiJson) {
+            let extraBtn = '';
+            if (stato === 'in_attesa' || stato === 'in_attesa_pagamento') {
+                extraBtn = '<button class="btn btn-sm btn-outline" style="border-color: #25d366; color: #128c7e; font-weight:700;" onclick="confermaFotoWhatsApp(\'' + id + '\')">✓ Ho ricevuto le foto su WhatsApp</button> ';
+            }
             const actions = {
-                'in_attesa': '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'' + id + '\', \'pagato\')">Segna Pagato</button>',
-                'in_attesa_pagamento': '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'' + id + '\', \'pagato\')">Segna Pagato</button>',
+                'in_attesa': extraBtn + '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'' + id + '\', \'pagato\')">Segna Pagato</button>',
+                'in_attesa_pagamento': extraBtn + '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'' + id + '\', \'pagato\')">Segna Pagato</button>',
                 'pagato': '<button class="btn btn-sm btn-info" onclick="cambiaStato(\'' + id + '\', \'in_lavorazione\')">Segna In Lavorazione</button>',
                 'in_lavorazione': '<button class="btn btn-sm btn-warning" onclick="cambiaStato(\'' + id + '\', \'pronto\')">Segna Pronto</button>',
                 'pronto': '<button class="btn btn-sm btn-primary" onclick="segnaRitirato(\'' + id + '\')">Segna Ritirato</button>',
                 'ritirato': ''
             };
             return actions[stato] || '';
+        }
+
+        async function confermaFotoWhatsApp(ordineId) {
+            if (!confirm('Confermi di aver ricevuto le foto originali via WhatsApp per questo ordine? Il sistema sbloccherà il flusso di lavoro.')) return;
+            try {
+                const res = await fetch(WORKER_URL + '/api/studio/negozio/ordini?token=' + token);
+                const data = await res.json();
+                const ordini = data.success ? data.ordini : [];
+                const ordine = ordini.find(function(o) { return o.id === ordineId; });
+                if (!ordine) return;
+
+                let prods = [];
+                try { prods = JSON.parse(ordine.prodotti || '[]'); } catch(e) { prods = []; }
+
+                const prodottiAggiornati = prods.map(function(p) {
+                    p.fotoInviataWhatsApp = true;
+                    return p;
+                });
+
+                await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + ordineId + '?token=' + token, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        stato: ordine.stato, 
+                        prodotti: JSON.stringify(prodottiAggiornati) 
+                    })
+                });
+
+                mostraToast('Ricezione foto confermata. Ora puoi procedere con il flusso.', 'success');
+                caricaOrdini();
+            } catch (error) {
+                console.error('Errore conferma foto:', error);
+                mostraToast('Errore di connessione', 'error');
+            }
         }
 
         async function cambiaStato(id, stato) {
