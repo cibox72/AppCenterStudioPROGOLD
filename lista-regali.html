@@ -246,7 +246,6 @@
         .login-container h2 { font-size: 28px; color: var(--primary-dark); margin-bottom: 24px; font-family: 'Georgia', serif; transition: color 0.5s ease; }
         .login-container .form-group { margin-bottom: 16px; text-align: left; }
 
-        /* STILI OCCHIETTO PASSWORD */
         .password-wrapper {
             position: relative;
             display: flex;
@@ -443,11 +442,11 @@
                 <div class="card-title">Crea Nuova Lista Regali</div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Cliente *</label>
-                        <input type="text" id="searchCliente" placeholder="Cerca ID o Nome..." oninput="cercaCliente(this.value)">
-                        <input type="hidden" id="selectedClienteId">
-                        <input type="hidden" id="selectedClienteNome">
-                        <div id="resultsCliente" style="position:absolute; background:#ffffff; border:1px solid var(--border-color); width:100%; max-height:150px; overflow-y:auto; z-index:10; display:none; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1);"></div>
+                        <label>Seleziona Contratto *</label>
+                        <input type="text" id="searchContratto" placeholder="Cerca numero contratto o nome..." oninput="cercaContratto(this.value)" autocomplete="off">
+                        <input type="hidden" id="selectedContrattoId">
+                        <input type="hidden" id="selectedClienteNomeCompleto">
+                        <div id="resultsContratto" style="position:absolute; background:#ffffff; border:1px solid var(--border-color); width:100%; max-height:150px; overflow-y:auto; z-index:10; display:none; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1);"></div>
                     </div>
                     <div class="form-group">
                         <label>Tipo di Evento *</label>
@@ -706,7 +705,6 @@
             }
         });
 
-        // FUNZIONE OCCHIETTO PASSWORD
         function togglePassword() {
             const passwordInput = document.getElementById('loginPassword');
             const eyeIcon = document.getElementById('eyeIcon');
@@ -723,17 +721,17 @@
             }
         }
 
-        // FUNZIONE AGGIUNTA: Estrae solo i nomi di battesimo
         function estraiSoloNomi(nomeCompleto) {
             if (!nomeCompleto) return "I Festeggiati";
-            // Divide per " e " (case insensitive) per gestire più persone
-            const persone = nomeCompleto.split(/\s+e\s+/i);
-            const primiNomi = persone.map(persona => {
-                // Divide ogni persona per spazio e prende la prima parola (il nome)
-                return persona.trim().split(/\s+/)[0];
-            });
-            // Ricompatta con " e "
-            return primiNomi.join(" e ");
+            if (nomeCompleto.toLowerCase().includes(' e ')) {
+                const persone = nomeCompleto.split(/\s+e\s+/i);
+                const primiNomi = persone.map(persona => {
+                    return persona.trim().split(/\s+/)[0];
+                });
+                return primiNomi.join(" e ");
+            } else {
+                return nomeCompleto.trim().split(/\s+/)[0];
+            }
         }
 
         async function applicaTemaGlobale(sId) {
@@ -805,7 +803,6 @@
         }
 
         async function caricaDashboard(listaId) {
-            // MODIFICA: Usa estraiSoloNomi per mostrare solo i nomi di battesimo
             document.getElementById('dashNomeCliente').textContent = estraiSoloNomi(currentLista.cliente_nome);
             document.getElementById('dashTipoEvento').textContent = currentLista.tipo_evento;
             document.getElementById('dashRaccolto').textContent = 'EUR ' + (currentLista.raccolto_attuale || 0);
@@ -934,43 +931,87 @@
             caricaArchivioListe();
         }
 
-        let debounceTimer;
-        function cercaCliente(query) {
-            clearTimeout(debounceTimer);
-            const div = document.getElementById('resultsCliente');
+        let debounceContrattoTimer;
+        function cercaContratto(query) {
+            clearTimeout(debounceContrattoTimer);
+            const div = document.getElementById('resultsContratto');
             if (query.length < 2) { div.style.display = 'none'; return; }
-            debounceTimer = setTimeout(async () => {
-                const res = await fetch(`${WORKER_URL}/api/studio/anagrafica-clienti/ricerca?q=${encodeURIComponent(query)}&token=${encodeURIComponent(token)}`);
-                const data = await res.json();
-                if (data.success && data.clienti.length > 0) {
-                    div.innerHTML = data.clienti.map(c => `
-                        <div style="padding:12px; cursor:pointer; border-bottom:1px solid #f0f0f0; font-size:14px; color:#000000;" onclick="selezionaCliente('${c.id}', '${c.nome}', '${c.cognome}')">
-                            <strong>${c.id}</strong> - ${c.nome} ${c.cognome}
-                        </div>
-                    `).join('');
-                    div.style.display = 'block';
-                } else { div.style.display = 'none'; }
+            debounceContrattoTimer = setTimeout(async () => {
+                try {
+                    const res = await fetch(`${WORKER_URL}/api/studio/contratti?token=${encodeURIComponent(token)}`);
+                    const data = await res.json();
+                    if (data.success && data.contratti) {
+                        const filtered = data.contratti.filter(c => {
+                            const num = (c.numero_contratto || c.numero || '').toLowerCase();
+                            let nome = '';
+                            try {
+                                const ca = JSON.parse(c.cliente_a || '{}');
+                                nome = (ca.nome + ' ' + ca.cognome).toLowerCase();
+                            } catch(e) {}
+                            return num.includes(query.toLowerCase()) || nome.includes(query.toLowerCase());
+                        });
+                        
+                        if (filtered.length > 0) {
+                            div.innerHTML = filtered.map(c => {
+                                let nomeCompleto = '';
+                                try {
+                                    const ca = JSON.parse(c.cliente_a || '{}');
+                                    const cb = JSON.parse(c.cliente_b || '{}');
+                                    nomeCompleto = (ca.nome + ' ' + ca.cognome).trim();
+                                    if (cb && cb.nome) {
+                                        nomeCompleto += ' e ' + cb.nome + ' ' + cb.cognome;
+                                    }
+                                } catch(e) {
+                                    nomeCompleto = c.cliente_a || 'Cliente';
+                                }
+                                const num = c.numero_contratto || c.numero || 'N/D';
+                                const safeNome = nomeCompleto.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                                const safeTipo = (c.tipo_servizio || '').replace(/'/g, "\\'");
+                                return `
+                                    <div style="padding:12px; cursor:pointer; border-bottom:1px solid #f0f0f0; font-size:14px; color:#000000;" onclick="selezionaContratto('${c.id}', '${safeNome}', '${safeTipo}')">
+                                        <strong>${num}</strong> - ${nomeCompleto}
+                                    </div>
+                                `;
+                            }).join('');
+                            div.style.display = 'block';
+                        } else {
+                            div.style.display = 'none';
+                        }
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
             }, 300);
         }
 
-        function selezionaCliente(id, nome, cognome) {
-            document.getElementById('selectedClienteId').value = id;
-            document.getElementById('selectedClienteNome').value = nome + ' ' + cognome;
-            document.getElementById('searchCliente').value = id + ' - ' + nome + ' ' + cognome;
-            document.getElementById('resultsCliente').style.display = 'none';
+        function selezionaContratto(id, nomeCompleto, tipoServizio) {
+            document.getElementById('selectedContrattoId').value = id;
+            document.getElementById('selectedClienteNomeCompleto').value = nomeCompleto;
+            document.getElementById('searchContratto').value = nomeCompleto;
+            if (tipoServizio) {
+                const select = document.getElementById('tipoEvento');
+                for (let i = 0; i < select.options.length; i++) {
+                    if (select.options[i].value.toLowerCase() === tipoServizio.toLowerCase() || 
+                        tipoServizio.toLowerCase().includes(select.options[i].value.toLowerCase())) {
+                        select.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+            document.getElementById('resultsContratto').style.display = 'none';
         }
 
         async function creaListaRegali() {
-            const clienteId = document.getElementById('selectedClienteId').value;
-            const clienteNome = document.getElementById('selectedClienteNome').value;
+            const contrattoId = document.getElementById('selectedContrattoId').value;
+            const clienteNome = document.getElementById('selectedClienteNomeCompleto').value;
             const tipoEvento = document.getElementById('tipoEvento').value;
             const importo = document.getElementById('importoServizio').value;
             const datiPagamento = document.getElementById('datiPagamento').value;
             const messaggio = document.getElementById('messaggioCortesia').value.trim();
             const ringraziamento = document.getElementById('messaggioRingraziamento').value.trim();
 
-            if (!clienteId || !importo || !datiPagamento) {
-                mostraToast('Compila tutti i campi obbligatori', 'error');
+            if (!contrattoId || !importo || !datiPagamento) {
+                mostraToast('Compila tutti i campi obbligatori (Seleziona un contratto)', 'error');
                 return;
             }
 
@@ -985,7 +1026,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        id, studio_id: studioId, cliente_id: clienteId, cliente_nome: clienteNome,
+                        id, studio_id: studioId, cliente_id: contrattoId, cliente_nome: clienteNome,
                         tipo_evento: tipoEvento, importo_servizio: parseFloat(importo),
                         metodo_pagamento: 'paypal', dati_pagamento: datiPagamento,
                         messaggio_cortesia: messaggio, messaggio_ringraziamento: ringraziamento,
@@ -1196,7 +1237,6 @@
                     document.getElementById('loadingArea').classList.add('hidden');
                     document.getElementById('publicView').classList.remove('hidden');
                     
-                    // MODIFICA: Usa estraiSoloNomi per mostrare solo i nomi di battesimo
                     document.getElementById('pubNomeCliente').textContent = estraiSoloNomi(currentLista.cliente_nome);
                     document.getElementById('pubTipoEvento').textContent = currentLista.tipo_evento;
                     document.getElementById('pubMessaggioStudio').textContent = currentLista.messaggio_cortesia || 'Con gioia vi invitiamo a contribuire al regalo di ' + estraiSoloNomi(currentLista.cliente_nome) + '.';
