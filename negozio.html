@@ -52,7 +52,7 @@
         .form-group input, .form-group select, .form-group textarea { padding: 12px 14px; border: 2px solid var(--border-color); border-radius: 10px; font-size: 14px; background: #f8f9fa; color: #000000; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); background: #ffffff; }
         .form-hint { font-size: 12px; color: var(--text-light); margin-top: 4px; font-style: italic; }
-        .btn { padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-right: 8px; margin-bottom: 8px; }
+        .btn { padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-right: 8px; margin-bottom: 8px; text-decoration: none; display: inline-block; text-align: center; }
         .btn:hover { transform: translateY(-2px); }
         .btn-primary { background: var(--primary-gradient); color: #ffffff; }
         .btn-success { background: linear-gradient(135deg, #58d68d, #28b463); color: #ffffff; }
@@ -143,7 +143,7 @@
                 </div>
                 <div class="dash-card" onclick="mostraSezione('clienti')">
                     <div class="card-title">Archivio Clienti</div>
-                    <div class="card-desc">Visualizza tutti i clienti generati e i loro link di accesso.</div>
+                    <div class="card-desc">Visualizza tutti i clienti generati, link e credenziali per rinvio.</div>
                 </div>
                 <div class="dash-card" onclick="mostraSezione('prodotti')">
                     <div class="card-title">Gestione Prodotti</div>
@@ -160,7 +160,8 @@
                 </div>
             </div>
         </div>
-                <div id="anteprimaSection" class="section">
+        
+        <div id="anteprimaSection" class="section">
             <div class="vetrina-header">
                 <h2>Negozio <span class="studio-nome" id="vetrinaNomeStudio">Caricamento...</span></h2>
                 <p>Benvenuto! Scegli i tuoi prodotti personalizzati. Ritiro merce presso lo studio.</p>
@@ -172,6 +173,7 @@
                 <div class="products-grid" id="vetrinaGrid"></div>
             </div>
         </div>
+        
         <div id="linkSection" class="section">
             <div class="card">
                 <div class="card-title">Genera Link per il Cliente</div>
@@ -208,6 +210,7 @@
                 </div>
             </div>
         </div>
+        
         <div id="clientiSection" class="section">
             <div class="card">
                 <div class="card-title">Archivio Clienti Negozio</div>
@@ -216,6 +219,7 @@
                 <div class="products-grid" id="clientiGrid"></div>
             </div>
         </div>
+        
         <div id="prodottiSection" class="section">
             <div class="card">
                 <div class="card-title" id="formTitolo">Nuovo Prodotto</div>
@@ -246,7 +250,7 @@
                 <div style="margin-top: 20px;">
                     <button class="btn btn-primary" id="btnSalvaProdotto" onclick="creaProdotto()">CREA PRODOTTO</button>
                     <button class="btn btn-outline" onclick="resetFormProdotto()">Annulla / Nuovo</button>
-                    <button class="btn btn-outline" onclick="aggiungiProdottiDefault()">AGGIUNGI PRODOTTI DEFAULT</button>
+                    <button class="btn btn-success" onclick="aggiungiProdottiDefault()">AGGIUNGI 15 PRODOTTI DEFAULT</button>
                 </div>
             </div>
             <div class="card">
@@ -256,6 +260,7 @@
                 <div class="products-grid" id="prodottiGrid"></div>
             </div>
         </div>
+        
         <div id="ordiniSection" class="section">
             <div id="alertNuoviOrdini" class="alert-box hidden">
                 <div style="font-size: 24px; color: var(--danger); font-weight: 800;">!</div>
@@ -278,6 +283,7 @@
                 <div id="ordersList"></div>
             </div>
         </div>
+        
         <div id="configSection" class="section">
             <div class="card">
                 <div class="card-title">Configurazione Negozio</div>
@@ -314,7 +320,8 @@
     <div class="footer-branding" style="text-align: center; padding: 24px; color: var(--text-light); font-size: 13px; border-top: 1px solid var(--border-color); margin-top: 40px;">
         Servizio offerto da <strong class="studio-nome" id="footerStudioName" style="color: var(--primary-dark);">Caricamento...</strong>
     </div>
-        <script>
+    
+    <script>
         if (typeof WORKER_URL === 'undefined') {
             var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
         }
@@ -526,15 +533,25 @@
                 if (!data.success || data.clienti.length === 0) { empty.classList.remove('hidden'); return; }
                 grid.innerHTML = data.clienti.map(function(c) {
                     const link = window.location.origin + '/AppCenterStudioPROGOLD/negozio-cliente.html?studioId=' + encodeURIComponent(studioId) + '&clienteId=' + c.id;
+                    const telefonoPulito = (c.telefono || '').replace(/\D/g, '');
+                    const msg = encodeURIComponent('Ciao ' + (c.nome_a || 'Cliente') + ',\n\necco il link per accedere al tuo negozio personalizzato:\n\n' + link + '\n\nIl tuo codice cliente è: ' + c.id + '\n\nBuon acquisto!');
+                    const waLink = telefonoPulito ? 'https://wa.me/' + telefonoPulito + '?text=' + msg : '#';
+                    
                     return '<div class="product-card">' +
                         '<div class="product-category">Cliente Negozio</div>' +
-                        '<div class="product-name">' + (c.nome_a || '') + '</div>' +
-                        '<div style="font-size:12px;color:var(--text-light);margin-bottom:8px;">' + (c.telefono || '') + '</div>' +
-                        '<div style="background:var(--primary-light);padding:8px;border-radius:6px;margin-bottom:12px;border:1px solid var(--border-color);">' +
-                        '<div style="font-size:10px;color:var(--text-light);font-weight:600;">Link:</div>' +
-                        '<div style="font-size:11px;word-break:break-all;font-family:monospace;">' + link + '</div></div>' +
-                        '<button class="btn btn-sm btn-outline" onclick="navigator.clipboard.writeText(\'' + link + '\');mostraToast(\'Copiato\',\'success\')">Copia Link</button>' +
+                        '<div class="product-name">' + (c.nome_a || '') + ' ' + (c.cognome_a || '') + '</div>' +
+                        '<div style="font-size:12px;color:var(--text-light);margin-bottom:8px;">Tel: ' + (c.telefono || 'Non specificato') + '</div>' +
+                        '<div style="background:var(--primary-light);padding:12px;border-radius:8px;margin-bottom:12px;border:1px solid var(--border-color);">' +
+                        '<div style="font-size:10px;color:var(--text-light);font-weight:600;">ID Cliente (Credenziale di accesso):</div>' +
+                        '<div style="font-size:13px;font-weight:700;color:var(--primary-dark);margin-bottom:8px;">' + c.id + '</div>' +
+                        '<div style="font-size:10px;color:var(--text-light);font-weight:600;">Link Negozio:</div>' +
+                        '<div style="font-size:11px;word-break:break-all;font-family:monospace;margin-bottom:8px;">' + link + '</div>' +
+                        '</div>' +
+                        '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+                        '<button class="btn btn-sm btn-outline" onclick="navigator.clipboard.writeText(\'' + link + '\');mostraToast(\'Link copiato\',\'success\')">Copia Link</button>' +
+                        (telefonoPulito ? '<a href="' + waLink + '" target="_blank" class="btn btn-sm btn-whatsapp" style="text-decoration:none;color:#fff;display:inline-flex;align-items:center;justify-content:center;">Rinvia WhatsApp</a>' : '') +
                         '<button class="btn btn-sm btn-danger" onclick="eliminaCliente(\'' + c.id + '\')">Elimina</button>' +
+                        '</div>' +
                     '</div>';
                 }).join('');
             } catch (e) { loading.style.display = 'none'; mostraToast('Errore', 'error'); }
@@ -562,7 +579,7 @@
         function resetFormProdotto() {
             document.getElementById('formTitolo').textContent = 'Nuovo Prodotto';
             document.getElementById('btnSalvaProdotto').textContent = 'CREA PRODOTTO';
-            document.getElementById('btnSalvaProdotto').setAttribute('onclick', 'creaProdotto(false, "")');
+            document.getElementById('btnSalvaProdotto').setAttribute('onclick', 'creaProdotto()');
             document.getElementById('prodNome').value = '';
             document.getElementById('prodCategoria').value = 'canvas';
             document.getElementById('prodPrezzo').value = '';
@@ -622,18 +639,49 @@
         }
 
         async function aggiungiProdottiDefault() {
+            if (!confirm('Aggiungere 15 prodotti default alla vetrina?')) return;
+            
             const defaults = [
-                { nome: 'Tazza Personalizzata', categoria: 'tazza', prezzo: 15, misura: '325ml', descrizione: 'Tazza in ceramica bianca con la tua foto.' },
-                { nome: 'Cuscino 40x40', categoria: 'cuscino', prezzo: 25, misura: '40x40 cm', descrizione: 'Cuscino in tessuto con stampa fronte-retro.' }
+                // 3 CUSCINI
+                { nome: 'Cuscino Arredo Quadrato', categoria: 'cuscino', prezzo: 25.00, misura: '40x40 cm', descrizione: 'Cuscino decorativo con stampa personalizzata' },
+                { nome: 'Cuscino Arredo Rettangolare', categoria: 'cuscino', prezzo: 30.00, misura: '50x30 cm', descrizione: 'Cuscino decorativo allungato' },
+                { nome: 'Cuscino Morbido XL', categoria: 'cuscino', prezzo: 35.00, misura: '60x60 cm', descrizione: 'Cuscino extra morbido per divano' },
+                // 3 TELE
+                { nome: 'Tela su Legno Piccola', categoria: 'canvas', prezzo: 45.00, misura: '30x40 cm', descrizione: 'Stampa su tela montata su telaio in legno' },
+                { nome: 'Tela su Legno Media', categoria: 'canvas', prezzo: 65.00, misura: '50x70 cm', descrizione: 'Stampa su tela di alta qualità con bordi avvolti' },
+                { nome: 'Tela su Legno Grande', categoria: 'canvas', prezzo: 95.00, misura: '70x100 cm', descrizione: 'Stampa su tela formato poster per arredamento' },
+                // 3 TAZZE
+                { nome: 'Tazza in Ceramica Classica', categoria: 'tazza', prezzo: 15.00, misura: '325 ml', descrizione: 'Tazza bianca in ceramica con stampa a 360 gradi' },
+                { nome: 'Tazza con Interno Colorato', categoria: 'tazza', prezzo: 18.00, misura: '325 ml', descrizione: 'Tazza bianca con interno e manico del colore scelto' },
+                { nome: 'Tazza Termica da Viaggio', categoria: 'tazza', prezzo: 22.00, misura: '400 ml', descrizione: 'Tazza in acciaio inox con coperchio ermetico' },
+                // 3 PUZZLE
+                { nome: 'Puzzle 120 Pezzi', categoria: 'altro', prezzo: 20.00, misura: '38x28 cm', descrizione: 'Puzzle personalizzato formato bambino' },
+                { nome: 'Puzzle 500 Pezzi', categoria: 'altro', prezzo: 30.00, misura: '48x36 cm', descrizione: 'Puzzle personalizzato formato standard' },
+                { nome: 'Puzzle 1000 Pezzi', categoria: 'altro', prezzo: 40.00, misura: '68x48 cm', descrizione: 'Puzzle personalizzato formato grande per appassionati' },
+                // 3 STAMPE
+                { nome: 'Stampa Fine Art Piccola', categoria: 'poster', prezzo: 15.00, misura: '20x30 cm', descrizione: 'Stampa su carta fotografica opaca di alta qualità' },
+                { nome: 'Stampa Fine Art Media', categoria: 'poster', prezzo: 25.00, misura: '30x40 cm', descrizione: 'Stampa su carta fotografica lucida o opaca' },
+                { nome: 'Stampa Fine Art Grande', categoria: 'poster', prezzo: 40.00, misura: '50x70 cm', descrizione: 'Stampa su carta fotografica formato poster' }
             ];
+            
             for (let i = 0; i < defaults.length; i++) {
                 const p = defaults[i];
                 await fetch(WORKER_URL + '/api/studio/negozio/prodotto?token=' + token, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: 'prod-' + Date.now() + Math.random(), studio_id: studioId, nome: p.nome, categoria: p.categoria, prezzo: p.prezzo, misura: p.misura, descrizione: p.descrizione, immagine: '', data_creazione: new Date().toISOString() })
+                    body: JSON.stringify({ 
+                        id: 'prod-' + Date.now() + '-' + i, 
+                        studio_id: studioId, 
+                        nome: p.nome, 
+                        categoria: p.categoria, 
+                        prezzo: p.prezzo, 
+                        misura: p.misura, 
+                        descrizione: p.descrizione, 
+                        immagine: '', 
+                        data_creazione: new Date().toISOString() 
+                    })
                 });
             }
-            mostraToast('Prodotti default aggiunti', 'success');
+            mostraToast('15 Prodotti default aggiunti con successo!', 'success');
             caricaProdotti();
         }
 
