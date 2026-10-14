@@ -99,7 +99,23 @@
                             <option value="Ritratto">Ritratto</option>
                             <option value="Evento Aziendale">Evento Aziendale</option>
                             <option value="Compleanno">Compleanno</option>
-                            <option value="Altro">Altro</option>
+                            <option value="Maternity">Maternity</option>
+                            <option value="New Born">New Born</option>
+                            <option value="Family">Family</option>
+                            <option value="Maternity-New Born">Maternity-New Born</option>
+                            <option value="New Born-Family">New Born-Family</option>
+                            <option value="Maternity-New Born-Family">Maternity-New Born-Family</option>
+                            <option value="Natale">Natale</option>
+                            <option value="Carnevale">Carnevale</option>
+                            <option value="Mather Day">Mather Day</option>
+                            <option value="Father day">Father day</option>
+                            <option value="Smash Cake">Smash Cake</option>
+                            <option value="Gender Reveal">Gender Reveal</option>
+                            <option value="Saggio">Saggio</option>
+                            <option value="Anniversario">Anniversario</option>
+                            <option value="18 Compleanno">18 Compleanno</option>
+                            <option value="Sala Posa">Sala Posa</option>
+                            <option value="Altro servizi">Altro servizi</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -156,7 +172,23 @@
                         <option value="Ritratto">Ritratto</option>
                         <option value="Evento Aziendale">Evento Aziendale</option>
                         <option value="Compleanno">Compleanno</option>
-                        <option value="Altro">Altro</option>
+                        <option value="Maternity">Maternity</option>
+                        <option value="New Born">New Born</option>
+                        <option value="Family">Family</option>
+                        <option value="Maternity-New Born">Maternity-New Born</option>
+                        <option value="New Born-Family">New Born-Family</option>
+                        <option value="Maternity-New Born-Family">Maternity-New Born-Family</option>
+                        <option value="Natale">Natale</option>
+                        <option value="Carnevale">Carnevale</option>
+                        <option value="Mather Day">Mather Day</option>
+                        <option value="Father day">Father day</option>
+                        <option value="Smash Cake">Smash Cake</option>
+                        <option value="Gender Reveal">Gender Reveal</option>
+                        <option value="Saggio">Saggio</option>
+                        <option value="Anniversario">Anniversario</option>
+                        <option value="18 Compleanno">18 Compleanno</option>
+                        <option value="Sala Posa">Sala Posa</option>
+                        <option value="Altro servizi">Altro servizi</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -178,7 +210,8 @@
     <div class="footer-branding">
         <p>Piattaforma sviluppata da <strong>AppCenterStudioPROGOLD</strong></p>
     </div>
-        <!-- ============================================ -->
+    
+    <!-- ============================================ -->
     <!-- SEZIONE 7: JAVASCRIPT -->
     <!-- ============================================ -->
     <script>
@@ -223,7 +256,7 @@
                     
                     const categorie = {};
                     data.servizi.forEach(function(s) {
-                        const cat = s.categoria || 'Altro';
+                        const cat = s.categoria || 'Altro servizi';
                         if (!categorie[cat]) categorie[cat] = [];
                         categorie[cat].push(s);
                     });
@@ -242,7 +275,7 @@
                                     '<h4>' + (s.descrizione || 'Senza descrizione') + '</h4>' +
                                     '<span class="service-price">' + parseFloat(s.prezzo).toFixed(2) + ' EUR</span>' +
                                 '</div>' +
-                                '<span class="service-category">' + (s.categoria || 'Altro') + '</span>' +
+                                '<span class="service-category">' + (s.categoria || 'Altro servizi') + '</span>' +
                                 '<div class="service-actions">' +
                                     '<button class="btn btn-sm btn-outline" onclick="apriModale(\'' + s.id + '\')">Modifica</button>' +
                                     '<button class="btn btn-sm btn-danger" onclick="eliminaServizio(\'' + s.id + '\')">Elimina</button>' +
@@ -296,7 +329,7 @@
                 if (data.success && data.servizio) {
                     const s = data.servizio;
                     document.getElementById('mod_id').value = s.id;
-                    document.getElementById('mod_categoria').value = s.categoria || 'Altro';
+                    document.getElementById('mod_categoria').value = s.categoria || 'Altro servizi';
                     document.getElementById('mod_prezzo').value = s.prezzo || 0;
                     document.getElementById('mod_descrizione').value = s.descrizione || '';
                     document.getElementById('modal-modifica').classList.add('active');
