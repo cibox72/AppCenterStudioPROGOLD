@@ -321,7 +321,8 @@
                     data_creazione: new Date().toISOString()
                 };
                 
-                const response = await fetch(WORKER_URL + '/api/studio/ricevuta', {
+                // CORREZIONE APPLICATA QUI: aggiunto ?token= all'URL
+                const response = await fetch(WORKER_URL + '/api/studio/ricevuta?token=' + encodeURIComponent(token), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dati)
