@@ -897,15 +897,22 @@
             
             tbody.innerHTML = listaSelezione.map(s => {
                 let statoClass = 'status-pending', statoText = 'IN ATTESA';
-                let azioni = `<button class="btn btn-sm btn-outline" onclick="copiaLinkArchivio('${s.id}')">Copia</button>`;
+                // MODIFICA: Aggiunto pulsante Elimina anche per lo stato IN ATTESA e SELEZIONE RICEVUTA
+                let azioni = `
+                    <button class="btn btn-sm btn-outline" onclick="copiaLinkArchivio('${s.id}')">Copia</button>
+                    <button class="btn btn-sm btn-danger" onclick="eliminaSelezione('${s.id}')">Elimina</button>
+                `;
 
                 if (s.stato === 'selezione_ricevuta') {
                     statoClass = 'status-received'; statoText = 'SELEZIONE RICEVUTA';
-                    azioni = `<button class="btn btn-sm btn-success" onclick="scaricaSelezione('${s.id}')">SCARICA</button>`;
+                    azioni = `
+                        <button class="btn btn-sm btn-success" onclick="scaricaSelezione('${s.id}')">SCARICA</button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminaSelezione('${s.id}')">Elimina</button>
+                    `;
                 } else if (s.stato === 'scaricata') {
                     statoClass = 'status-downloaded'; statoText = 'SCARICATA';
                     azioni = `
-                        <button class="btn btn-sm btn-warning" onclick="pulisciCloudOra('${s.id}')">️ Pulisci Cloud Ora</button>
+                        <button class="btn btn-sm btn-warning" onclick="pulisciCloudOra('${s.id}')">Pulisci Cloud Ora</button>
                         <button class="btn btn-sm btn-danger" onclick="eliminaSelezione('${s.id}')">Elimina</button>
                     `;
                 } else if (s.stato === 'completata') {
@@ -977,8 +984,7 @@
                 }
             } catch (error) { mostraToast('Errore di connessione', 'error'); }
         }
-
-        async function eliminaSelezione(id) {
+                async function eliminaSelezione(id) {
             if (!confirm('Eliminare definitivamente questa selezione e tutti i file?')) return;
             try {
                 const response = await fetch(`${WORKER_URL}/api/studio/selezione-album/elimina?token=${encodeURIComponent(token)}`, {
