@@ -503,6 +503,7 @@
                 <div class="cred-box">
                     <div class="label">Link Dashboard (per il cliente)</div>
                     <div class="value small" id="genDashLink">---</div>
+                    <button class="btn btn-sm btn-info mt-20" onclick="copiaLinkDashboardCliente()">Copia Link Dashboard</button>
                 </div>
 
                 <div class="cred-box">
@@ -1084,6 +1085,15 @@
             if (!currentLista) return;
             navigator.clipboard.writeText(currentLista.link_pubblico).then(() => {
                 mostraToast('Link invitati copiato', 'success');
+            }).catch(() => {
+                mostraToast('Errore nella copia', 'error');
+            });
+        }
+
+        function copiaLinkDashboardCliente() {
+            if (!currentLista) return;
+            navigator.clipboard.writeText(currentLista.link_dashboard).then(() => {
+                mostraToast('Link dashboard copiato', 'success');
             }).catch(() => {
                 mostraToast('Errore nella copia', 'error');
             });
