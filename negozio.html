@@ -83,7 +83,7 @@
         .order-product-info { display: flex; flex-direction: column; gap: 4px; flex: 1; }
         .order-product-actions { display: flex; gap: 8px; align-items: center; }
         .order-total { font-size: 18px; font-weight: 700; color: var(--primary-dark); text-align: right; margin-top: 12px; }
-        .order-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+        .order-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
         .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
         .badge-attesa { background: #fef9e7; color: #d35400; }
         .badge-pagato { background: #eafaf1; color: var(--success); }
@@ -111,6 +111,24 @@
         .foto-indicator { display: inline-block; padding: 4px 8px; background: #eafaf1; color: var(--success); border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 8px; }
         .foto-pending { display: inline-block; padding: 4px 8px; background: #fff3cd; color: #856404; border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 8px; }
         .foto-thumb { width: 80px; height: 80px; object-fit: contain; border-radius: 6px; border: 2px solid var(--primary); background: #f8f9fa; margin-right: 12px; }
+        .stato-actions-wrapper {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px dashed var(--border-color);
+        }
+        .stato-hint {
+            background: #fff3cd;
+            border-left: 4px solid #f1c40f;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: #856404;
+            font-weight: 600;
+        }
+        .stato-hint strong {
+            color: #664d03;
+        }
         @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } .products-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -763,7 +781,7 @@
                                 return '<div class="order-product">' +
                                     '<div class="order-product-info">' +
                                         '<div><strong>• ' + p.nome + ' x' + p.quantita + '</strong> - EUR ' + (p.prezzo * p.quantita).toFixed(2) + 
-                                        (hasFoto ? (fotoInviata ? '<span class="foto-indicator">✓ Foto originale ricevuta via WhatsApp</span>' : '<span class="foto-pending">⚠ In attesa foto originale via WhatsApp</span>') : '') + 
+                                        (hasFoto ? (fotoInviata ? '<span class="foto-indicator">Foto originale ricevuta via WhatsApp</span>' : '<span class="foto-pending">In attesa foto originale via WhatsApp</span>') : '') + 
                                         '</div>' +
                                         (hasFoto ? '<div style="margin-top:8px;"><img src="' + hasFoto + '" class="foto-thumb" alt="Anteprima"></div>' : '') +
                                     '</div>' +
@@ -773,7 +791,7 @@
                         '<div class="whatsapp-reminder"><strong>Promemoria:</strong> Controlla WhatsApp Web per scaricare le foto originali ad alta risoluzione inviate dal cliente come allegato file.</div>' +
                         '<div class="order-total">Totale: EUR ' + parseFloat(o.totale).toFixed(2) + '</div>' +
                         '<div class="order-actions">' + 
-                            '<button class="btn btn-sm btn-info" onclick="stampaOrdine(\'' + o.id + '\')"> Stampa Ordine</button>' +
+                            '<button class="btn btn-sm btn-info" onclick="stampaOrdine(\'' + o.id + '\')">Stampa Ordine</button>' +
                             nextAction + 
                         '</div></div>';
                 }).join('');
@@ -871,19 +889,27 @@
         }
 
         function getNextAction(stato, id, prodottiJson) {
-            let extraBtn = '';
+            let html = '<div class="stato-actions-wrapper">';
+            
             if (stato === 'in_attesa' || stato === 'in_attesa_pagamento') {
-                extraBtn = '<button class="btn btn-sm btn-outline" style="border-color: #25d366; color: #128c7e; font-weight:700;" onclick="confermaFotoWhatsApp(\'' + id + '\')">✓ Ho ricevuto le foto su WhatsApp</button> ';
+                html += '<div class="stato-hint"><strong>Passaggio 1:</strong> Clicca il pulsante verde per confermare il pagamento ricevuto. Questo sbloccherà i passaggi successivi.</div>';
+                html += '<button class="btn btn-sm btn-outline" style="border-color: #25d366; color: #128c7e; font-weight:700;" onclick="confermaFotoWhatsApp(\'' + id + '\')">Ho ricevuto le foto su WhatsApp</button> ';
+                html += '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'' + id + '\', \'pagato\')">Conferma Pagamento Ricevuto</button>';
+            } else if (stato === 'pagato') {
+                html += '<div class="stato-hint"><strong>Passaggio 2:</strong> Clicca il pulsante blu per avviare la lavorazione dell\'ordine.</div>';
+                html += '<button class="btn btn-sm btn-info" onclick="cambiaStato(\'' + id + '\', \'in_lavorazione\')">Avvia Lavorazione</button>';
+            } else if (stato === 'in_lavorazione') {
+                html += '<div class="stato-hint"><strong>Passaggio 3:</strong> Clicca il pulsante giallo quando l\'ordine è pronto per il ritiro.</div>';
+                html += '<button class="btn btn-sm btn-warning" onclick="cambiaStato(\'' + id + '\', \'pronto\')">Segna come Pronto</button>';
+            } else if (stato === 'pronto') {
+                html += '<div class="stato-hint"><strong>Passaggio 4:</strong> Clicca il pulsante oro quando il cliente ritira l\'ordine. L\'ordine verrà rimosso dalla lista.</div>';
+                html += '<button class="btn btn-sm btn-primary" onclick="segnaRitirato(\'' + id + '\')">Conferma Ritiro Cliente</button>';
+            } else if (stato === 'ritirato') {
+                html += '<div class="stato-hint" style="background:#eafaf1;border-left-color:#28b463;color:#155724;"><strong>Ordine completato:</strong> Questo ordine è stato ritirato e archiviato.</div>';
             }
-            const actions = {
-                'in_attesa': extraBtn + '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'' + id + '\', \'pagato\')">Segna Pagato</button>',
-                'in_attesa_pagamento': extraBtn + '<button class="btn btn-sm btn-success" onclick="cambiaStato(\'' + id + '\', \'pagato\')">Segna Pagato</button>',
-                'pagato': '<button class="btn btn-sm btn-info" onclick="cambiaStato(\'' + id + '\', \'in_lavorazione\')">Segna In Lavorazione</button>',
-                'in_lavorazione': '<button class="btn btn-sm btn-warning" onclick="cambiaStato(\'' + id + '\', \'pronto\')">Segna Pronto</button>',
-                'pronto': '<button class="btn btn-sm btn-primary" onclick="segnaRitirato(\'' + id + '\')">Segna Ritirato</button>',
-                'ritirato': ''
-            };
-            return actions[stato] || '';
+            
+            html += '</div>';
+            return html;
         }
 
         async function confermaFotoWhatsApp(ordineId) {
@@ -929,7 +955,7 @@
         }
 
         async function segnaRitirato(id) {
-            if (!confirm('Confermi che l\'ordine e stato ritirato? Verra eliminato dalla lista.')) return;
+            if (!confirm('Confermi che l\'ordine è stato ritirato dal cliente? Verrà eliminato dalla lista.')) return;
             try {
                 await fetch(WORKER_URL + '/api/studio/negozio/ordine/' + id + '?token=' + token, {
                     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ stato: 'ritirato' })
