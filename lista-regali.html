@@ -437,7 +437,8 @@
                 <p id="loginError" style="color:var(--danger); margin-top:16px; display:none;"></p>
             </div>
         </div>
-                <div id="studioView" class="hidden">
+        
+        <div id="studioView" class="hidden">
             <div class="card">
                 <div class="card-title">Crea Nuova Lista Regali</div>
                 <div class="form-row">
@@ -675,7 +676,8 @@
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-        <script>
+    
+    <script>
         if (typeof WORKER_URL === 'undefined') {
             var WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
         }
@@ -719,6 +721,19 @@
                 eyeIcon.style.display = 'block';
                 eyeOffIcon.style.display = 'none';
             }
+        }
+
+        // FUNZIONE AGGIUNTA: Estrae solo i nomi di battesimo
+        function estraiSoloNomi(nomeCompleto) {
+            if (!nomeCompleto) return "I Festeggiati";
+            // Divide per " e " (case insensitive) per gestire più persone
+            const persone = nomeCompleto.split(/\s+e\s+/i);
+            const primiNomi = persone.map(persona => {
+                // Divide ogni persona per spazio e prende la prima parola (il nome)
+                return persona.trim().split(/\s+/)[0];
+            });
+            // Ricompatta con " e "
+            return primiNomi.join(" e ");
         }
 
         async function applicaTemaGlobale(sId) {
@@ -790,7 +805,8 @@
         }
 
         async function caricaDashboard(listaId) {
-            document.getElementById('dashNomeCliente').textContent = currentLista.cliente_nome;
+            // MODIFICA: Usa estraiSoloNomi per mostrare solo i nomi di battesimo
+            document.getElementById('dashNomeCliente').textContent = estraiSoloNomi(currentLista.cliente_nome);
             document.getElementById('dashTipoEvento').textContent = currentLista.tipo_evento;
             document.getElementById('dashRaccolto').textContent = 'EUR ' + (currentLista.raccolto_attuale || 0);
             document.getElementById('dashCosto').textContent = 'EUR ' + currentLista.importo_servizio;
@@ -1180,9 +1196,10 @@
                     document.getElementById('loadingArea').classList.add('hidden');
                     document.getElementById('publicView').classList.remove('hidden');
                     
-                    document.getElementById('pubNomeCliente').textContent = currentLista.cliente_nome;
+                    // MODIFICA: Usa estraiSoloNomi per mostrare solo i nomi di battesimo
+                    document.getElementById('pubNomeCliente').textContent = estraiSoloNomi(currentLista.cliente_nome);
                     document.getElementById('pubTipoEvento').textContent = currentLista.tipo_evento;
-                    document.getElementById('pubMessaggioStudio').textContent = currentLista.messaggio_cortesia || 'Con gioia vi invitiamo a contribuire al regalo di ' + currentLista.cliente_nome + '.';
+                    document.getElementById('pubMessaggioStudio').textContent = currentLista.messaggio_cortesia || 'Con gioia vi invitiamo a contribuire al regalo di ' + estraiSoloNomi(currentLista.cliente_nome) + '.';
                     
                     renderPaymentArea(currentLista);
 
