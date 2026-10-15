@@ -32,6 +32,8 @@
         .form-group label .required { color: #c0392b; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 15px; border: 2px solid #d5d8dc; border-radius: 10px; font-size: 0.95em; background: #f8f9fa; color: #000000; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #d4af37; background: #ffffff; }
+        .form-group select optgroup { font-weight: 700; color: #996515; background: #fff9e6; }
+        .form-group select option { font-weight: 400; color: #000000; }
         .btn { padding: 12px 25px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.95em; display: inline-flex; align-items: center; gap: 8px; }
         .btn-primary { background: linear-gradient(135deg, #d4af37, #996515); color: #ffffff; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(212,175,55,0.3); }
@@ -61,7 +63,7 @@
         .totals-row.total span { color: #996515; }
         .servizi-list { margin-top: 15px; }
         .servizio-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #ffffff; border: 1px solid #d5d8dc; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #d4af37; }
-        .servizio-item:hover { background: #fff9e6; }
+        .servizio-item:hover { border-color: #d4af37; background: #fff9e6; }
         .servizio-info { flex: 1; }
         .servizio-info h5 { color: #000000; margin-bottom: 3px; }
         .servizio-info p { color: #666666; font-size: 0.85em; }
@@ -309,14 +311,48 @@
                                 <label>Tipo di Servizio *</label>
                                 <select id="evento_tipo" required>
                                     <option value="">-- Seleziona --</option>
-                                    <option value="Matrimonio">Matrimonio</option>
-                                    <option value="Comunione">Comunione</option>
-                                    <option value="Cresima">Cresima</option>
-                                    <option value="Battesimo">Battesimo</option>
-                                    <option value="Ritratto">Ritratto</option>
-                                    <option value="Evento Aziendale">Evento Aziendale</option>
-                                    <option value="Compleanno">Compleanno</option>
-                                    <option value="Altro">Altro</option>
+                                    <optgroup label="🎭 MATRIMONIO E CERIMONIE RELIGIOSE">
+                                        <option value="Matrimonio">Matrimonio</option>
+                                        <option value="Comunione">Comunione</option>
+                                        <option value="Cresima">Cresima</option>
+                                        <option value="Battesimo">Battesimo</option>
+                                    </optgroup>
+                                    <optgroup label="👶 MATERNITÀ E FAMIGLIA">
+                                        <option value="Maternity">Maternity</option>
+                                        <option value="New Born">New Born</option>
+                                        <option value="Family">Family</option>
+                                        <option value="Maternity-New Born">Maternity-New Born</option>
+                                        <option value="New Born-Family">New Born-Family</option>
+                                        <option value="Maternity-New Born-Family">Maternity-New Born-Family</option>
+                                    </optgroup>
+                                    <optgroup label="🎉 EVENTI E CELEBRAZIONI">
+                                        <option value="Compleanno">Compleanno</option>
+                                        <option value="18 Compleanno">18 Compleanno</option>
+                                        <option value="Anniversario">Anniversario</option>
+                                        <option value="Smash Cake">Smash Cake</option>
+                                        <option value="Gender Reveal">Gender Reveal</option>
+                                        <option value="Saggio">Saggio</option>
+                                    </optgroup>
+                                    <optgroup label="🎄 FESTIVITÀ E RICORRENZE">
+                                        <option value="Natale">Natale</option>
+                                        <option value="Carnevale">Carnevale</option>
+                                        <option value="Mather Day">Mather Day</option>
+                                        <option value="Father day">Father day</option>
+                                    </optgroup>
+                                    <optgroup label="💼 SERVIZI COMMERCIALI E PROFESSIONALI">
+                                        <option value="Evento Aziendale">Evento Aziendale</option>
+                                        <option value="Composit modelle">Composit modelle</option>
+                                        <option value="Still-life">Still-life</option>
+                                        <option value="Book fotografico">Book fotografico</option>
+                                        <option value="Servizi Commerciali">Servizi Commerciali</option>
+                                    </optgroup>
+                                    <optgroup label="📸 RITRATTI E SALA POSA">
+                                        <option value="Ritratto">Ritratto</option>
+                                        <option value="Sala Posa">Sala Posa</option>
+                                    </optgroup>
+                                    <optgroup label="📋 ALTRO">
+                                        <option value="Altro servizi">Altro servizi</option>
+                                    </optgroup>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -1240,7 +1276,7 @@
             console.log('preventivoCorrenteId:', preventivoCorrenteId);
             
             if (!dataEvento) {
-                console.log(' Nessuna data evento, skip');
+                console.log('⏭️ Nessuna data evento, skip');
                 return;
             }
             
@@ -1298,7 +1334,7 @@
                     data_creazione: new Date().toISOString()
                 };
                 
-                console.log(' Creazione/aggiornamento evento:', datiAgenda);
+                console.log('📝 Creazione/aggiornamento evento:', datiAgenda);
 
                 const response = await fetch(WORKER_URL + '/api/studio/agenda?token=' + encodeURIComponent(token), {
                     method: 'POST',
@@ -1648,7 +1684,7 @@
             
             let messaggioConferma = 'Eliminare questo preventivo?';
             if (contrattoConvertito) {
-                messaggioConferma += '\n\n️ Esiste un contratto convertito da questo preventivo: l\'appuntamento in agenda NON verrà eliminato (appartiene al contratto).';
+                messaggioConferma += '\n\n⚠️ Esiste un contratto convertito da questo preventivo: l\'appuntamento in agenda NON verrà eliminato (appartiene al contratto).';
             } else {
                 messaggioConferma += '\n\n🗑️ Verrà eliminato anche l\'appuntamento in agenda collegato.';
             }
@@ -1801,7 +1837,7 @@
                 if (result.success) {
                     try {
                         await fetch(WORKER_URL + '/api/studio/agenda/agenda-' + id + '?token=' + encodeURIComponent(token), { method: 'DELETE' });
-                        console.log('️ Evento agenda diretto eliminato: agenda-' + id);
+                        console.log('🗑️ Evento agenda diretto eliminato: agenda-' + id);
                     } catch (e) { console.warn('Evento agenda diretto non eliminabile:', e); }
                     if (contratto) {
                         const ca = parseCliente(contratto.cliente_a);
