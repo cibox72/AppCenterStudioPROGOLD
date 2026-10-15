@@ -76,6 +76,8 @@
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2); background: #ffffff;
         }
+        .form-group select optgroup { font-weight: 700; color: #996515; background: #fff9e6; }
+        .form-group select option { font-weight: 400; color: #000000; }
         .btn {
             padding: 12px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
             cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
@@ -243,12 +245,48 @@
                         <label>Tipo di Servizio *</label>
                         <select id="newTipoServizio">
                             <option value="">-- Seleziona tipo --</option>
-                            <option value="Matrimonio">Matrimonio</option>
-                            <option value="Battesimo">Battesimo</option>
-                            <option value="Comunione">Comunione</option>
-                            <option value="Ritratto/Family">Ritratto / Family</option>
-                            <option value="Evento">Evento</option>
-                            <option value="Altro">Altro</option>
+                            <optgroup label="🎭 MATRIMONIO E CERIMONIE RELIGIOSE">
+                                <option value="Matrimonio">Matrimonio</option>
+                                <option value="Comunione">Comunione</option>
+                                <option value="Cresima">Cresima</option>
+                                <option value="Battesimo">Battesimo</option>
+                            </optgroup>
+                            <optgroup label="👶 MATERNITÀ E FAMIGLIA">
+                                <option value="Maternity">Maternity</option>
+                                <option value="New Born">New Born</option>
+                                <option value="Family">Family</option>
+                                <option value="Maternity-New Born">Maternity-New Born</option>
+                                <option value="New Born-Family">New Born-Family</option>
+                                <option value="Maternity-New Born-Family">Maternity-New Born-Family</option>
+                            </optgroup>
+                            <optgroup label="🎉 EVENTI E CELEBRAZIONI">
+                                <option value="Compleanno">Compleanno</option>
+                                <option value="18 Compleanno">18 Compleanno</option>
+                                <option value="Anniversario">Anniversario</option>
+                                <option value="Smash Cake">Smash Cake</option>
+                                <option value="Gender Reveal">Gender Reveal</option>
+                                <option value="Saggio">Saggio</option>
+                            </optgroup>
+                            <optgroup label="🎄 FESTIVITÀ E RICORRENZE">
+                                <option value="Natale">Natale</option>
+                                <option value="Carnevale">Carnevale</option>
+                                <option value="Mather Day">Mather Day</option>
+                                <option value="Father day">Father day</option>
+                            </optgroup>
+                            <optgroup label="💼 SERVIZI COMMERCIALI E PROFESSIONALI">
+                                <option value="Evento Aziendale">Evento Aziendale</option>
+                                <option value="Composit modelle">Composit modelle</option>
+                                <option value="Still-life">Still-life</option>
+                                <option value="Book fotografico">Book fotografico</option>
+                                <option value="Servizi Commerciali">Servizi Commerciali</option>
+                            </optgroup>
+                            <optgroup label="📸 RITRATTI E SALA POSA">
+                                <option value="Ritratto">Ritratto</option>
+                                <option value="Sala Posa">Sala Posa</option>
+                            </optgroup>
+                            <optgroup label="📋 ALTRO">
+                                <option value="Altro servizi">Altro servizi</option>
+                            </optgroup>
                         </select>
                     </div>
                 </div>
