@@ -73,47 +73,17 @@
 
         <div class="modules-grid" id="modules-grid" style="display: none;">
             
+            <!-- RIGA 1 -->
             <div class="module-card" onclick="apriModulo('scheda-anagrafica.html')">
                 <span class="module-code">IM</span>
                 <h3>Impostazioni</h3>
                 <p>Scheda anagrafica, logo, messaggi automatici e link studio.</p>
             </div>
 
-            <div class="module-card" onclick="apriModulo('registra-clienti-id.html')">
-                <span class="module-code">ID</span>
-                <h3>Registra Clienti ID</h3>
-                <p>Registrazione anagrafica clienti con ID univoco.</p>
-            </div>
-
-            <div class="module-card" onclick="apriModulo('listini-categorie.html')">
-                <span class="module-code">LC</span>
-                <h3>Listini, Categorie & Contratti</h3>
-                <p>Crea listini, gestisci categorie e archivio contratti.</p>
-            </div>
-
-            <div class="module-card" onclick="apriModulo('preventivi.html')">
-                <span class="module-code">PV</span>
-                <h3>Preventivi & Contratti</h3>
-                <p>Crea preventivi, invia via WhatsApp e trasforma in contratti.</p>
-            </div>
-
-            <div class="module-card" onclick="apriModulo('selezione-album.html')">
-                <span class="module-code">SA</span>
-                <h3>Seleziona Cartelle Clienti</h3>
-                <p>Gestione caricamento gallerie e selezione album.</p>
-                <span class="badge-status" id="badge-selezioni-sa">0 SELEZIONI DA FARE</span>
-            </div>
-
-            <div class="module-card" onclick="apriModulo('gru.html')">
-                <span class="module-code">GR</span>
-                <h3>GRU</h3>
-                <p>Gestione risorse e utility dello studio.</p>
-            </div>
-
-            <div class="module-card" onclick="apriModulo('workflow.html')">
-                <span class="module-code">WF</span>
-                <h3>Workflow</h3>
-                <p>Stato avanzamento foto e video per ogni cliente.</p>
+            <div class="module-card" onclick="apriModulo('agenda.html')">
+                <span class="module-code">AG</span>
+                <h3>Agenda</h3>
+                <p>Calendario eventi e appuntamenti dello studio.</p>
             </div>
 
             <div class="module-card" onclick="apriModulo('gallerie.html')">
@@ -123,11 +93,23 @@
                 <span class="badge-status">NUOVO</span>
             </div>
 
-            <div class="module-card" onclick="apriModulo('lista-regali.html')">
-                <span class="module-code">LR</span>
-                <h3>Lista Regali</h3>
-                <p>Crowdfunding e messaggi di auguri per eventi.</p>
-                <span class="badge-status" style="background: #e74c3c; color: #ffffff; border-color: #c0392b; animation: pulse 2s infinite;">NOVITÀ</span>
+            <div class="module-card" onclick="apriModulo('link-utili.html')">
+                <span class="module-code">LN</span>
+                <h3>Link Utili</h3>
+                <p>Archivio personale di link, fornitori e risorse rapide.</p>
+            </div>
+
+            <!-- RIGA 2 -->
+            <div class="module-card" onclick="apriModulo('registra-clienti-id.html')">
+                <span class="module-code">ID</span>
+                <h3>Registra Clienti ID</h3>
+                <p>Registrazione anagrafica clienti con ID univoco.</p>
+            </div>
+
+            <div class="module-card" onclick="apriModulo('workflow.html')">
+                <span class="module-code">WF</span>
+                <h3>Workflow</h3>
+                <p>Stato avanzamento foto e video per ogni cliente.</p>
             </div>
 
             <div class="module-card" onclick="apriModulo('negozio.html')">
@@ -137,25 +119,6 @@
                 <span class="badge-status" id="badge-ordini-negozio">0 ORDINI DA PROCESSARE</span>
             </div>
 
-            <div class="module-card" onclick="apriModulo('ricevute.html')">
-                <span class="module-code">RC</span>
-                <h3>Ricevute</h3>
-                <p>Gestisci le ricevute fiscali e i pagamenti dei clienti.</p>
-            </div>
-
-            <div class="module-card" onclick="apriModulo('agenda.html')">
-                <span class="module-code">AG</span>
-                <h3>Agenda</h3>
-                <p>Calendario eventi e appuntamenti dello studio.</p>
-            </div>
-
-            <div class="module-card" onclick="apriModulo('link-utili.html')">
-                <span class="module-code">LN</span>
-                <h3>Link Utili</h3>
-                <p>Archivio personale di link, fornitori e risorse rapide.</p>
-            </div>
-
-            <!-- NUOVA CARD: PARTNER CONSIGLIATI -->
             <div class="module-card" onclick="apriModulo('partner.html')">
                 <span class="module-code">PT</span>
                 <h3>Partner Consigliati</h3>
@@ -163,12 +126,51 @@
                 <span class="badge-status">CONSIGLIATI</span>
             </div>
 
-            <!-- NUOVA CARD: ASSISTENZA -->
+            <!-- RIGA 3 -->
+            <div class="module-card" onclick="apriModulo('listini-categorie.html')">
+                <span class="module-code">LC</span>
+                <h3>Listini, Categorie & Contratti</h3>
+                <p>Crea listini, gestisci categorie e archivio contratti.</p>
+            </div>
+
+            <div class="module-card" onclick="apriModulo('selezione-album.html')">
+                <span class="module-code">SA</span>
+                <h3>Seleziona Cartelle Clienti</h3>
+                <p>Gestione caricamento gallerie e selezione album.</p>
+                <span class="badge-status" id="badge-selezioni-sa">0 SELEZIONI DA FARE</span>
+            </div>
+
+            <div class="module-card" onclick="apriModulo('lista-regali.html')">
+                <span class="module-code">LR</span>
+                <h3>Lista Regali</h3>
+                <p>Crowdfunding e messaggi di auguri per eventi.</p>
+                <span class="badge-status" style="background: #e74c3c; color: #ffffff; border-color: #c0392b; animation: pulse 2s infinite;">NOVITÀ</span>
+            </div>
+
             <div class="module-card" onclick="apriModulo('assistenza.html')">
                 <span class="module-code">AS</span>
                 <h3>Assistenza & Supporto</h3>
                 <p>Contatta il supporto tecnico via WhatsApp o AnyDesk.</p>
                 <span class="badge-status" style="background: #25d366; color: #ffffff; border-color: #128c7e;">ATTIVO 24/7</span>
+            </div>
+
+            <!-- RIGA 4 -->
+            <div class="module-card" onclick="apriModulo('preventivi.html')">
+                <span class="module-code">PV</span>
+                <h3>Preventivi & Contratti</h3>
+                <p>Crea preventivi, invia via WhatsApp e trasforma in contratti.</p>
+            </div>
+
+            <div class="module-card" onclick="apriModulo('gru.html')">
+                <span class="module-code">GR</span>
+                <h3>GRU</h3>
+                <p>Gestione risorse e utility dello studio.</p>
+            </div>
+
+            <div class="module-card" onclick="apriModulo('ricevute.html')">
+                <span class="module-code">RC</span>
+                <h3>Ricevute</h3>
+                <p>Gestisci le ricevute fiscali e i pagamenti dei clienti.</p>
             </div>
 
         </div>
