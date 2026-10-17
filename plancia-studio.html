@@ -30,7 +30,7 @@
         .module-card p { color: #666666; font-size: 0.9em; line-height: 1.5; }
         .module-card .badge-status { display: inline-block; margin-top: 10px; padding: 4px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; background: #fff9e6; color: #996515; border: 1px solid #d4af37; transition: all 0.3s ease; }
         
-        /* NUOVO CSS: Badge urgente (rosso lampeggiante) per selezioni da fare */
+        /* Badge urgente (rosso lampeggiante) per selezioni da fare */
         .badge-urgente {
             background: #e74c3c !important;
             color: #ffffff !important;
@@ -173,6 +173,14 @@
                 <p>Gestisci le ricevute fiscali e i pagamenti dei clienti.</p>
             </div>
 
+            <!-- RIGA 4 - NUOVA CARD PRENOTAZIONI SESSIONI -->
+            <div class="module-card" onclick="apriModulo('gestione-prenotazioni.html')">
+                <span class="module-code">PS</span>
+                <h3>Prenotazioni Sessioni</h3>
+                <p>Gestione campagne (Natale, Carnevale...) e prenotazioni clienti con acconto.</p>
+                <span class="badge-status" id="badge-prenotazioni-ps">0 PRENOTAZIONI IN ATTESA</span>
+            </div>
+
         </div>
     </div>
 
@@ -243,6 +251,7 @@
                 
                 aggiornaConteggioOrdini();
                 aggiornaConteggioSelezioni();
+                aggiornaConteggioPrenotazioni();
                 
             } catch (error) {
                 console.error('Errore verifica sessione:', error);
@@ -278,14 +287,12 @@
             }
         }
 
-        // NUOVA FUNZIONE: Conta le selezioni album arrivate dal cliente ma non ancora lavorate dallo studio
         async function aggiornaConteggioSelezioni() {
             if (studioId === 'admin') return;
             try {
                 const response = await fetch(WORKER_URL + '/api/studio/selezioni-album?token=' + encodeURIComponent(token));
                 const data = await response.json();
                 if (data.success && data.selezioni) {
-                    // Conta le selezioni con stato "selezione_ricevuta" o "in_attesa" (arrivate dal cliente ma non scaricate dallo studio)
                     const selezioniDaFare = data.selezioni.filter(function(s) { 
                         return s.stato === 'selezione_ricevuta' || s.stato === 'in_attesa'; 
                     }).length;
@@ -293,16 +300,39 @@
                     if (badge) {
                         badge.textContent = selezioniDaFare + ' SELEZIONI DA FARE';
                         if (selezioniDaFare > 0) {
-                            // Rosso lampeggiante urgente
                             badge.classList.add('badge-urgente');
                         } else {
-                            // Oro fisso (stato normale)
                             badge.classList.remove('badge-urgente');
                         }
                     }
                 }
             } catch (error) {
                 console.error('Errore aggiornamento conteggio selezioni:', error);
+            }
+        }
+
+        // NUOVA FUNZIONE: Conta le prenotazioni in attesa di verifica pagamento
+        async function aggiornaConteggioPrenotazioni() {
+            if (studioId === 'admin') return;
+            try {
+                const response = await fetch(WORKER_URL + '/api/studio/elenco-prenotazioni?token=' + encodeURIComponent(token));
+                const data = await response.json();
+                if (data.success && data.prenotazioni) {
+                    const inAttesa = data.prenotazioni.filter(function(p) { 
+                        return p.stato === 'in_attesa_pagamento'; 
+                    }).length;
+                    const badge = document.getElementById('badge-prenotazioni-ps');
+                    if (badge) {
+                        badge.textContent = inAttesa + ' PRENOTAZIONI IN ATTESA';
+                        if (inAttesa > 0) {
+                            badge.classList.add('badge-urgente');
+                        } else {
+                            badge.classList.remove('badge-urgente');
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Errore aggiornamento conteggio prenotazioni:', error);
             }
         }
 
