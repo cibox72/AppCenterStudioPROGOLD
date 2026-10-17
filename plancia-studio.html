@@ -30,7 +30,6 @@
         .module-card p { color: #666666; font-size: 0.9em; line-height: 1.5; }
         .module-card .badge-status { display: inline-block; margin-top: 10px; padding: 4px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; background: #fff9e6; color: #996515; border: 1px solid #d4af37; transition: all 0.3s ease; }
         
-        /* Badge urgente (rosso lampeggiante) per selezioni da fare */
         .badge-urgente {
             background: #e74c3c !important;
             color: #ffffff !important;
@@ -167,18 +166,18 @@
                 <p>Gestione risorse e utility dello studio.</p>
             </div>
 
-            <div class="module-card" onclick="apriModulo('ricevute.html')">
-                <span class="module-code">RC</span>
-                <h3>Ricevute</h3>
-                <p>Gestisci le ricevute fiscali e i pagamenti dei clienti.</p>
-            </div>
-
-            <!-- RIGA 4 - NUOVA CARD PRENOTAZIONI SESSIONI -->
+            <!-- CARD PRENOTAZIONI SESSIONI (SPOSTATA PRIMA DI RICEVUTE) -->
             <div class="module-card" onclick="apriModulo('gestione-prenotazioni.html')">
                 <span class="module-code">PS</span>
                 <h3>Prenotazioni Sessioni</h3>
                 <p>Gestione campagne (Natale, Carnevale...) e prenotazioni clienti con acconto.</p>
                 <span class="badge-status" id="badge-prenotazioni-ps">0 PRENOTAZIONI IN ATTESA</span>
+            </div>
+
+            <div class="module-card" onclick="apriModulo('ricevute.html')">
+                <span class="module-code">RC</span>
+                <h3>Ricevute</h3>
+                <p>Gestisci le ricevute fiscali e i pagamenti dei clienti.</p>
             </div>
 
         </div>
@@ -311,7 +310,6 @@
             }
         }
 
-        // NUOVA FUNZIONE: Conta le prenotazioni in attesa di verifica pagamento
         async function aggiornaConteggioPrenotazioni() {
             if (studioId === 'admin') return;
             try {
