@@ -33,12 +33,12 @@
         .btn-success { background: linear-gradient(135deg, #58d68d, #28b463); color: #ffffff; }
         .btn-warning { background: linear-gradient(135deg, #f9e79f, #f1c40f); color: #000000; }
         .btn-danger { background: linear-gradient(135deg, #f1948a, #e74c3c); color: #ffffff; }
+        .btn-outline { background: transparent; border: 2px solid #d4af37; color: #996515; }
         .btn-sm { padding: 6px 12px; font-size: 0.8em; }
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75em; font-weight: 700; text-transform: uppercase; }
         .badge-attesa { background: #fef9e7; color: #d35400; }
         .badge-confermata { background: #eafaf1; color: #1e8449; }
         .badge-cancellata { background: #fdedec; color: #c0392b; }
-        .badge-spostata { background: #eaf2f8; color: #2980b9; }
         .prenotazione-card { background: #ffffff; border: 1px solid #d5d8dc; border-left: 4px solid #d4af37; border-radius: 10px; padding: 20px; margin-bottom: 15px; transition: 0.3s; }
         .prenotazione-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .prenotazione-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; }
@@ -53,6 +53,28 @@
         .checkbox-group { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 8px; }
         .checkbox-group label { display: flex; align-items: center; gap: 6px; font-weight: 500; cursor: pointer; }
         .checkbox-group input[type="checkbox"] { width: 18px; height: 18px; accent-color: #d4af37; }
+        .hidden { display: none !important; }
+        
+        /* Upload immagine */
+        .upload-area {
+            border: 2px dashed #d4af37;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            background: #fff9e6;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .upload-area:hover { background: #fff3cd; border-color: #996515; }
+        .upload-area input[type="file"] { display: none; }
+        .upload-area .upload-text { color: #996515; font-weight: 600; }
+        .upload-area .upload-hint { color: #666666; font-size: 0.85em; margin-top: 5px; }
+        .preview-container { margin-top: 15px; text-align: center; }
+        .preview-container img, .preview-container embed {
+            max-width: 300px; max-height: 200px; border-radius: 8px; border: 2px solid #d4af37;
+        }
+        .upload-progress { margin-top: 10px; color: #996515; font-weight: 600; display: none; }
+        .file-error { color: #e74c3c; font-size: 0.85em; margin-top: 5px; font-weight: 600; display: none; }
     </style>
 </head>
 <body>
@@ -77,6 +99,7 @@
                 </div>
                 <form id="formCampagna" onsubmit="salvaCampagna(event)">
                     <input type="hidden" id="campagnaId">
+                    <input type="hidden" id="fotoUrlUpload">
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Nome Campagna *</label>
@@ -95,11 +118,20 @@
                             <input type="number" id="importoAcconto" required step="0.01" min="0" placeholder="10.00">
                         </div>
                     </div>
+                    
+                    <!-- UPLOAD IMMAGINE (sostituisce il campo URL) -->
                     <div class="form-group">
-                        <label>URL Immagine di Copertina *</label>
-                        <input type="url" id="fotoUrl" required placeholder="https://esempio.com/natale.jpg">
-                        <small style="color: #666; font-size: 0.85em;">Carica prima l'immagine nella tua galleria e incolla qui il link diretto.</small>
+                        <label>Immagine di Copertina della Campagna *</label>
+                        <label for="fileImmagine" class="upload-area">
+                            <div class="upload-text">📁 Clicca per caricare un'immagine o un PDF</div>
+                            <div class="upload-hint">Formati accettati: JPEG, PNG, PDF (max 5 MB)</div>
+                            <input type="file" id="fileImmagine" accept="image/jpeg,image/png,application/pdf" onchange="gestisciUploadFile(event)">
+                        </label>
+                        <div class="file-error" id="fileError"></div>
+                        <div class="upload-progress" id="uploadProgress"> Caricamento in corso...</div>
+                        <div class="preview-container" id="previewContainer"></div>
                     </div>
+
                     <div class="form-group">
                         <label>Messaggio di Benvenuto *</label>
                         <textarea id="messaggioBenvenuto" rows="3" required placeholder="Cari clienti, sono aperte le prenotazioni per..."></textarea>
@@ -135,7 +167,7 @@
                     </div>
 
                     <div style="margin-top: 25px; display: flex; gap: 15px;">
-                        <button type="submit" class="btn btn-primary">Salva Campagna</button>
+                        <button type="submit" class="btn btn-primary" id="btnSalvaCampagna">Salva Campagna</button>
                         <button type="button" class="btn btn-outline" onclick="resetFormCampagna()">Pulisci</button>
                     </div>
                 </form>
@@ -208,6 +240,7 @@
         const WORKER_URL = 'https://appcenter-backend.mairaluigi-b2f.workers.dev';
         let campagneList = [];
         let prenotazioneDaSpostareId = null;
+        let fotoUrlSalvata = '';
 
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -230,8 +263,87 @@
             }
         }
 
+        // GESTIONE UPLOAD FILE
+        async function gestisciUploadFile(event) {
+            const file = event.target.files[0];
+            const errorDiv = document.getElementById('fileError');
+            const progressDiv = document.getElementById('uploadProgress');
+            const previewDiv = document.getElementById('previewContainer');
+            
+            errorDiv.style.display = 'none';
+            previewDiv.innerHTML = '';
+            
+            if (!file) return;
+            
+            // Validazione tipo
+            const tipiAccettati = ['image/jpeg', 'image/png', 'application/pdf'];
+            if (!tipiAccettati.includes(file.type)) {
+                errorDiv.textContent = '❌ Formato non valido. Accetta solo JPEG, PNG o PDF.';
+                errorDiv.style.display = 'block';
+                event.target.value = '';
+                return;
+            }
+            
+            // Validazione dimensione (5 MB)
+            if (file.size > 5 * 1024 * 1024) {
+                errorDiv.textContent = '❌ File troppo grande. Massimo 5 MB consentito.';
+                errorDiv.style.display = 'block';
+                event.target.value = '';
+                return;
+            }
+            
+            // Anteprima locale
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewDiv.innerHTML = '<img src="' + e.target.result + '" alt="Anteprima">';
+                };
+                reader.readAsDataURL(file);
+            } else if (file.type === 'application/pdf') {
+                previewDiv.innerHTML = '<div style="padding: 20px; background: #fff9e6; border-radius: 8px;">📄 PDF: ' + file.name + '</div>';
+            }
+            
+            // Upload su R2
+            progressDiv.style.display = 'block';
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('clienteId', 'campagne');
+                formData.append('folder', 'foto');
+                formData.append('filename', Date.now() + '_' + file.name.replace(/\s+/g, '_'));
+                
+                const res = await fetch(WORKER_URL + '/api/studio/upload?token=' + encodeURIComponent(token) + '&clienteId=campagne&folder=foto&filename=' + encodeURIComponent(Date.now() + '_' + file.name), {
+                    method: 'POST',
+                    body: file
+                });
+                
+                const result = await res.json();
+                progressDiv.style.display = 'none';
+                
+                if (result.success) {
+                    fotoUrlSalvata = result.url;
+                    previewDiv.innerHTML += '<div style="margin-top: 10px; color: #28b463; font-weight: 600;">✅ File caricato con successo!</div>';
+                } else {
+                    errorDiv.textContent = '❌ Errore upload: ' + (result.error || 'Sconosciuto');
+                    errorDiv.style.display = 'block';
+                    fotoUrlSalvata = '';
+                }
+            } catch (e) {
+                progressDiv.style.display = 'none';
+                errorDiv.textContent = ' Errore di connessione durante l\'upload.';
+                errorDiv.style.display = 'block';
+                fotoUrlSalvata = '';
+            }
+        }
+
         async function salvaCampagna(event) {
             event.preventDefault();
+            
+            if (!fotoUrlSalvata) {
+                alert('⚠️ Devi prima caricare un\'immagine o un PDF per la copertina della campagna.');
+                return;
+            }
+            
             const metodiAttivi = [];
             if (document.getElementById('metodoPaypal').checked) metodiAttivi.push('PayPal');
             if (document.getElementById('metodoPostepay').checked) metodiAttivi.push('Postepay');
@@ -243,7 +355,7 @@
                 data_inizio: document.getElementById('dataInizio').value,
                 data_fine: document.getElementById('dataFine').value,
                 importo_acconto: parseFloat(document.getElementById('importoAcconto').value),
-                foto_url: document.getElementById('fotoUrl').value,
+                foto_url: fotoUrlSalvata,
                 messaggio_benvenuto: document.getElementById('messaggioBenvenuto').value,
                 condizioni: document.getElementById('condizioni').value,
                 metodi_pagamento: metodiAttivi.join(','),
@@ -258,23 +370,38 @@
                 link_pubblico: window.location.origin + window.location.pathname.replace('gestione-prenotazioni.html', 'prenota-sessione.html') + '?campagnaId=ID_DA_SOSTITUIRE'
             };
 
+            const btn = document.getElementById('btnSalvaCampagna');
+            btn.disabled = true;
+            btn.textContent = 'Salvataggio...';
+
             try {
                 const res = await fetch(WORKER_URL + '/api/studio/campagne-sessioni?token=' + encodeURIComponent(token), {
                     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dati)
                 });
                 const result = await res.json();
+                btn.disabled = false;
+                btn.textContent = 'Salva Campagna';
+                
                 if (result.success) {
-                    alert('Campagna salvata con successo!');
+                    alert('✅ Campagna salvata con successo!');
                     resetFormCampagna();
                 } else {
                     alert('Errore: ' + result.error);
                 }
-            } catch (e) { alert('Errore di connessione.'); }
+            } catch (e) { 
+                btn.disabled = false;
+                btn.textContent = 'Salva Campagna';
+                alert('Errore di connessione.'); 
+            }
         }
 
         function resetFormCampagna() {
             document.getElementById('formCampagna').reset();
             ['paypal', 'postepay', 'iban', 'custom'].forEach(m => toggleMetodo(m));
+            document.getElementById('previewContainer').innerHTML = '';
+            document.getElementById('fileError').style.display = 'none';
+            document.getElementById('uploadProgress').style.display = 'none';
+            fotoUrlSalvata = '';
         }
 
         async function caricaCampagneSelect() {
@@ -336,7 +463,6 @@
                         let badgeClass = 'badge-attesa';
                         if (p.stato === 'confermata') badgeClass = 'badge-confermata';
                         if (p.stato === 'cancellata') badgeClass = 'badge-cancellata';
-                        if (p.stato === 'spostata') badgeClass = 'badge-spostata';
 
                         let azioni = '';
                         if (p.stato === 'in_attesa_pagamento') {
