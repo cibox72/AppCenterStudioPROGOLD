@@ -1292,15 +1292,28 @@
         }
 
         function inviaWhatsApp() {
-            const messaggio = document.getElementById('wa-messaggio').value;
+            let messaggio = document.getElementById('wa-messaggio').value;
             if (!messaggio) { alert('Inserisci un messaggio'); return; }
+            
             let telefono = studioWhatsAppCorrente.telefono || '';
             telefono = telefono.replace(/\s+/g, '').replace(/\+/g, '');
             if (!telefono) {
                 telefono = prompt('Numero telefono non trovato. Inserisci il numero WhatsApp (con prefisso internazionale, es. 393331234567):');
                 if (!telefono) return;
             }
-            const url = 'https://wa.me/' + telefono + '?text=' + encodeURIComponent(messaggio);
+
+            // --- MODIFICA RICHIESTA: Aggiunta automatica di Username, Password e Link App ---
+            const studioId = studioWhatsAppCorrente.id;
+            const passwordField = document.getElementById('pass-' + studioId);
+            const password = passwordField ? passwordField.value : 'Non disponibile';
+            const appLink = 'https://cibox72.github.io/AppCenterStudioPROGOLD/index.html';
+
+            const credenzialiText = `\n\n--- I TUOI DATI DI ACCESSO ---\n👤 Username: ${studioId}\n🔑 Password: ${password}\n🔗 Link App: ${appLink}\n------------------------------`;
+            
+            const messaggioFinale = messaggio + credenzialiText;
+            // -----------------------------------------------------------------------------
+
+            const url = 'https://wa.me/' + telefono + '?text=' + encodeURIComponent(messaggioFinale);
             window.open(url, '_blank');
             chiudiModalWhatsApp();
         }
